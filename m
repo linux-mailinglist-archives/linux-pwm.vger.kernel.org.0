@@ -1,153 +1,130 @@
-Return-Path: <linux-pwm+bounces-6813-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6814-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2D216B00694
-	for <lists+linux-pwm@lfdr.de>; Thu, 10 Jul 2025 17:26:10 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B00BAB0082A
+	for <lists+linux-pwm@lfdr.de>; Thu, 10 Jul 2025 18:08:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 91F7E3AB692
-	for <lists+linux-pwm@lfdr.de>; Thu, 10 Jul 2025 15:25:15 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1114F16750C
+	for <lists+linux-pwm@lfdr.de>; Thu, 10 Jul 2025 16:04:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E50C274670;
-	Thu, 10 Jul 2025 15:25:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08F7D198E9B;
+	Thu, 10 Jul 2025 16:04:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sbNzlHFk"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="dhsQ6K+s"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C9062741A4;
-	Thu, 10 Jul 2025 15:25:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D686E271441
+	for <linux-pwm@vger.kernel.org>; Thu, 10 Jul 2025 16:04:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752161138; cv=none; b=lJyM1L7x5kqByMD5+dgTysGfA7KBQNIx70afqyb1nJw8m+kN00h+d8uU61lEon+naBxV2DEfY3Jx/QpU+Bd4ZD2gmS3JH9wHImkQw0HVyCBw3y9Kth/rmotJxw7C2IBTdqvVbjBP/YEWa4O5LOZHPAbINP8R7F1zAQ7vlXOHkbQ=
+	t=1752163475; cv=none; b=QgWJ4GLBi4LhwiL1Oq0VfiymyFcmGMCntyvfFnCMBbrVJW5/SzgjyeMtUuKSduFxmYMpBfkyNRMzdE6GdnkI4BmY1NF8jO5UrtzfI89Qd9XGWuTAGbccJlG67KaoNlp3YWAsPKHnWOBe/C15dTZrFzFfDfhJCRT5z49yAaGX6Yo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752161138; c=relaxed/simple;
-	bh=D08Lkk2/aUoWyaOxgce4WKYWUMnpW+kGZF62H6dE1og=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CrRGVMfmQvtBYLU9laVjWedpwFOxRu3A95esBd+KyInBHD2IoJkbTGB1e/dr8xa5kc8jq46cZUgjeqprFqbX4fgd1lncfBTh1pKt8OXm3/vUWSM+HsMQKd/mvGWz5JvRCK/e3+eUjAQY3GCuoPQjvOikluWfbuCdxIoxzKBzQ9Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sbNzlHFk; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E056C4CEE3;
-	Thu, 10 Jul 2025 15:25:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752161135;
-	bh=D08Lkk2/aUoWyaOxgce4WKYWUMnpW+kGZF62H6dE1og=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=sbNzlHFkSHr2wwFrXT/oCFx04FFufvhMd+QHP2p9Tx88ZCipeqOLTY2JWx5SfjmF3
-	 MAbaQK3u8fOzh5ZP6zT7KW8kjYadwCBNwALnVO/sN9ogjx74dqO4K5W+TOckaIOpB+
-	 gXyJUfoDLh9OeDZnIKiDYZXaI6uH85CQlP2kDUcpg6OIijpWE4+QS++x2pJRb3SzrK
-	 lG92meFv/whim9PpfXhf5IvlGcaSHDGi6c7j2IfOkK+Gq+9OZdrUS8X0+1/ueXRSof
-	 fsaEghgHMNELqGuwl6KfTWW+9lsKBXHKvuq/VaqMdadl+LoH74u8cV7q3QxXmrJl0z
-	 LF5h4KD7AbImw==
-Date: Thu, 10 Jul 2025 17:25:33 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Michal Wilczynski <m.wilczynski@samsung.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Benno Lossin <lossin@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Drew Fustini <fustini@kernel.org>, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v10 0/7] Rust Abstractions for PWM subsystem with TH1520
- PWM driver
-Message-ID: <4hmb3di5x2iei43nmrykrj5wzlltrf3vrnqvexiablonbscn57@4bbsz5c76t63>
-References: <CGME20250707094926eucas1p155bd967b6986c4a999776839b1aa1fc6@eucas1p1.samsung.com>
- <20250707-rust-next-pwm-working-fan-for-sending-v10-0-d0c5cf342004@samsung.com>
- <e8a4a821-e7e4-4bcd-a2ac-f6b684b6ceea@samsung.com>
- <ipvaegqlkco5qinhvn33mqvg7ev2walvs74xtzvhimxsfsfzhv@gcmpxcdtetdn>
- <e77eab1c-446f-4620-95be-d343684d1e95@samsung.com>
+	s=arc-20240116; t=1752163475; c=relaxed/simple;
+	bh=h6itR3ghj2JqUTT+9BV9AGn9AmwkvZzKvcQUXaYn548=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fj7kBdtvnVmK5zSp3LmswPH2rnyEX6MDHhZi5DLqUzZ0XMn5CPocYoOXZi+z/FKEx4uVJd7Y3+LE3r1b4lXkf8s+qR2z7rtLI/Sv4NVQWb2SsV7exbH7bdVVgxrhs4SWN/iYAUk3aBD6nHD7+95F7rEHDrnO6fV00W9TFGpJR7I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=dhsQ6K+s; arc=none smtp.client-ip=209.85.208.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-6097d144923so2391218a12.1
+        for <linux-pwm@vger.kernel.org>; Thu, 10 Jul 2025 09:04:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1752163471; x=1752768271; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=d1TwLB8dIO1lOi7BSFaI3hsDRPn3KXX/zTDFy63gJTs=;
+        b=dhsQ6K+s8+5fUeLl3U1lCor76UoBjql1vlTwSAGY3P/ijq2CVL4JVvBkNK8z0VOdbd
+         iCpwuP8Q56Lwva8fElKiwPY9Ms8gZuCIHOAMDFGG7QXj0D6VHI7F+M2MQshPP0YQB6Q8
+         WZKEV9++UuRwcQThO6pRxLY99baFKJlxOO6aQLYp+1UasoP8D7+WCFPYbl1BzynTWO9F
+         TpmJVTzbesFPbIZK5mafHfzE2PUKSQp5jK8tFWW0FFY6yvbGZE2mfvgdUFpZWpEA/cRQ
+         hkOWJLSOgYNjKz+tfDoyuUQfqF9C7MsmmxIl8J9oEAhBlU8Aw1ZC7Z0P5oBvNkyYDWHJ
+         5SVg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752163471; x=1752768271;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=d1TwLB8dIO1lOi7BSFaI3hsDRPn3KXX/zTDFy63gJTs=;
+        b=VbK+xPwC6s+39GgqgvCkmLIxRtrUqd1iHKAYVK/VlDy9Je/rRhjmfopjDr8rWXA0gM
+         4A+mgAiji/ilkhv+MzlzQdGslYW9FRfQwVMWO2lRkMA+snGmaT474VUo9oxZ+ifEmh0H
+         mdypaOhxZR9as+W95J9/Qurpvsx8ZDfli36/xVPsbowjYrv2XZzAWk+vSGMaUOAgwyBj
+         QxcIO2yBdHC0vsFfJFULDEAziOROARS9UL0DZqi2hhRJyCYDmy8W9lZ8kqNZZOTT/ow2
+         79/i2nnVsvUsdl2n780y3betfAHOw2nhfAee85yjHT+A98p1LpaDKsfEApafd5BtRV8r
+         rUCg==
+X-Gm-Message-State: AOJu0YzJuuEeLPDRLRrNxLU3/3wGTWUYK76BAAndMnsJUukVKvoZUsib
+	+7h/m1hR0PMZ/YmrjlH2mztnXJcNeu/3qsm90eDc1fa7dgIlmLBhxUxC4ubjU+0v+SQpTaJyVEp
+	oZP83
+X-Gm-Gg: ASbGncu8EPHstgwWhwD0BxqNk0LVgZB86Uvk4J/flEzxSzTxeCS9/Hr6ZXWtW6Hu6Vf
+	IuMDhLSnI3Xo83v7QSy8rzbZ+JnZ7H9BT7KlMT3bqzF7cd/jqTSaZy0KmsJdQGoVmA4KL/J8n7W
+	nMRHnu9A9VQPq/d0v97AH+RTpRe37UZZgqc8dKQaXjtE/vEs9MZIZT2kozNSMMtiFuE3x/4IbaY
+	TPvvwLGfZ5G3yT0nLgUZuvf9sLnPjCmfKADdIX2q4hY2VoVItiiKEa+9WnxPAn20n/092BI1J74
+	9dHI8acUTkHs8MjwL5SamuXGjZZBQ2TpiqdC5hKEtkdZ+o2ejTwcPj2kHK1TgNBWQ97+gwwulxB
+	pbl427IV2yPg599W/N/R3clZMAXTU
+X-Google-Smtp-Source: AGHT+IGu5hFyng7HuYZKDIZ0ko3w+3oHE7HgVpxx2Y1xH+Ql/PBj7SaY6BYLKd6+3UcP4IRbB8COlA==
+X-Received: by 2002:a05:6402:35d3:b0:60c:679e:b957 with SMTP id 4fb4d7f45d1cf-611c1cb733fmr4141489a12.1.1752163470879;
+        Thu, 10 Jul 2025 09:04:30 -0700 (PDT)
+Received: from localhost (p200300f65f06ab0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f06:ab04::1b9])
+        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-611c9796432sm1033411a12.73.2025.07.10.09.04.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Jul 2025 09:04:30 -0700 (PDT)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: linux-pwm@vger.kernel.org
+Subject: [PATCH libpwm] pwmround/pwmset: Fix check for invalid duty_offset
+Date: Thu, 10 Jul 2025 18:04:18 +0200
+Message-ID: <20250710160417.2089742-2-u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.49.0
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="vsmmyrmvbcyclmm4"
-Content-Disposition: inline
-In-Reply-To: <e77eab1c-446f-4620-95be-d343684d1e95@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1647; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=h6itR3ghj2JqUTT+9BV9AGn9AmwkvZzKvcQUXaYn548=; b=owGbwMvMwMXY3/A7olbonx/jabUkhoz8J43VfgJrWX4FGb0S4ezZF5/d6PTldcZavTqT/RMfV lzunWXayWjMwsDIxSArpshi37gm06pKLrJz7b/LMINYmUCmMHBxCsBEupM5GJbohSTHsaseCst6 ciHpYcuGSkeHu7FNDMLB+ZPumv+blCP8JMbZ6a2wmfmJjmrOS7xfJ04LuSrxqPbr5pQL9TmNGVv eim9NP3wzJss8ptfJtrPfk4vN3VjmLLuQc8LeBRe/P7G/VaDxulmFsahv4RSWfEvWJc8f8y5gkG /Zu0Z3wiq/9MJIEfHlpR8lO29Z3Fnq+7lvi3/MVq6dAv3rWVctK+X5UfjcuFDbf8E0cdVp7boTD dOYeL5o698pZLh7cXJ50cv7H1fMel6uVdKmKOxmNE3M7j1/jP2dbVlfJvuHOqsF3Ij/9XGjZmDY ysDcFXWhMvekLJ59V3r+4nTSjL1TrNzn787JV16jvm0aAA==
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 
+.period_length_ns == .duty_offset_ns == 0 is a valid waveform that
+shouldn't trigger a warning.
 
---vsmmyrmvbcyclmm4
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v10 0/7] Rust Abstractions for PWM subsystem with TH1520
- PWM driver
-MIME-Version: 1.0
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+---
+ pwmround.c | 2 +-
+ pwmset.c   | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Hello Michal,
+diff --git a/pwmround.c b/pwmround.c
+index 860446668d3a..da3c018c4494 100644
+--- a/pwmround.c
++++ b/pwmround.c
+@@ -61,7 +61,7 @@ int main(int argc, char *const argv[])
+ 		fprintf(stderr, "Warning: invalid waveform: duty_length = %llu > period_length = %llu\n",
+ 			(unsigned long long)wf.duty_length_ns, (unsigned long long)wf.period_length_ns);
+ 
+-	if (wf.duty_offset_ns >= wf.period_length_ns)
++	if (wf.period_length_ns && wf.duty_offset_ns >= wf.period_length_ns)
+ 		fprintf(stderr, "Warning: invalid waveform: duty_offset = %llu >= period_length = %llu\n",
+ 			(unsigned long long)wf.duty_offset_ns, (unsigned long long)wf.period_length_ns);
+ 
+diff --git a/pwmset.c b/pwmset.c
+index 0fdc1a34cc2f..4c3d50109f6a 100644
+--- a/pwmset.c
++++ b/pwmset.c
+@@ -69,7 +69,7 @@ int main(int argc, char *const argv[])
+ 		fprintf(stderr, "Warning: invalid waveform: duty_length = %llu > period_length = %llu\n",
+ 			(unsigned long long)wf.duty_length_ns, (unsigned long long)wf.period_length_ns);
+ 
+-	if (wf.duty_offset_ns >= wf.period_length_ns)
++	if (wf.period_length_ns && wf.duty_offset_ns >= wf.period_length_ns)
+ 		fprintf(stderr, "Warning: invalid waveform: duty_offset = %llu >= period_length = %llu\n",
+ 			(unsigned long long)wf.duty_offset_ns, (unsigned long long)wf.period_length_ns);
+ 
 
-On Thu, Jul 10, 2025 at 03:48:08PM +0200, Michal Wilczynski wrote:
-> On 7/10/25 15:10, Uwe Kleine-K=F6nig wrote:
-> > On Thu, Jul 10, 2025 at 10:42:07AM +0200, Michal Wilczynski wrote:
-> >> On 7/7/25 11:48, Michal Wilczynski wrote:
-> >>> The series is structured as follows:
-> >>>  - Expose static function pwmchip_release.
-> >=20
-> > Is this really necessary? I didn't try to understand the requirements
-> > yet, but I wonder about that. If you get the pwmchip from
-> > __pwmchip_add() the right thing to do to release it is to call
-> > pwmchip_remove(). Feels like a layer violation.
->=20
-> It's required to prevent a memory leak in a specific, critical failure
-> scenario. The sequence of events is as follows:
->=20
->     pwm::Chip::new() succeeds, allocating both the C struct pwm_chip and
->     the Rust drvdata.
->=20
->     pwm::Registration::register() (which calls pwmchip_add()) fails for
->     some reason.
+base-commit: 3a9a9d36d95e8aa5ed563590d53c1715285a5ffb
+-- 
+2.49.0
 
-If you called pwmchip_alloc() but not yet pwmchip_add(), the right
-function to call for cleanup is pwmchip_put().
-
->     The ARef<Chip> returned by new() is dropped, its reference count
->     goes to zero, and our custom release_callback is called.
->=20
-> [...]
-> >>> ---
-> >>> base-commit: 47753b5a1696283930a78aae79b29371f96f5bca
-> >=20
-> > I have problems applying this series and don't have this base commit in
-> > my repo.
->=20
-> Sorry for the confusion. Base commit doesn't exist in the mainline
-> kernel or linux-next, cause I've added some dependecies for compilation,
-> like IoMem for the driver (uploaded full branch on github [1]). The
-> bindings however doesn't depend on anything that's not in linux-next.
-
-The series didn't apply to my pwm/for-next branch.
-
-Note that the base-commit should always be a publically known commit.
-See the chapter about "Base Tree Information" in git-format-patch(1).
-
-Best regards
-Uwe
-
---vsmmyrmvbcyclmm4
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhv22oACgkQj4D7WH0S
-/k7FGwf/cqRWrlLanx6ioFRjOHNq0dg1uOzf9q5rmP+qdZZDUVpurU+JPbrTIyng
-NkftG4puPCrcs4b7Xkn7KS1bA302jmVka4SChzfg17kxpi/b5EofhGVr/ugZawtg
-bKQGDuRQTkzwXfaqAa178a7PccvyzXUL40H7MREmLIjeeo2Qvh5lMUj7NcHWjfkJ
-JtfCpq5VKkYyyxgD/M7n/0210G3ukwej2RhdWjkAwW1u09RCYBg13oy8fmtTAJkO
-+/T/7BXuRxhQDBXKM7SwRySTqcH/CkvS6xXVBT5QZya3KSNbfQM9OV3moE0GzB2u
-OabPXlh8CQ3Pwo1DFGc6g/7ZY9+Iag==
-=KUxs
------END PGP SIGNATURE-----
-
---vsmmyrmvbcyclmm4--
 
