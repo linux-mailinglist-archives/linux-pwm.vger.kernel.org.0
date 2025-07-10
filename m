@@ -1,130 +1,135 @@
-Return-Path: <linux-pwm+bounces-6814-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6815-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B00BAB0082A
-	for <lists+linux-pwm@lfdr.de>; Thu, 10 Jul 2025 18:08:50 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D4155B00810
+	for <lists+linux-pwm@lfdr.de>; Thu, 10 Jul 2025 18:06:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 1114F16750C
-	for <lists+linux-pwm@lfdr.de>; Thu, 10 Jul 2025 16:04:39 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 238F13A8405
+	for <lists+linux-pwm@lfdr.de>; Thu, 10 Jul 2025 16:06:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 08F7D198E9B;
-	Thu, 10 Jul 2025 16:04:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13C2E2741A6;
+	Thu, 10 Jul 2025 16:06:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="dhsQ6K+s"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wn+yU0e9"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D686E271441
-	for <linux-pwm@vger.kernel.org>; Thu, 10 Jul 2025 16:04:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D46FC198E9B;
+	Thu, 10 Jul 2025 16:06:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752163475; cv=none; b=QgWJ4GLBi4LhwiL1Oq0VfiymyFcmGMCntyvfFnCMBbrVJW5/SzgjyeMtUuKSduFxmYMpBfkyNRMzdE6GdnkI4BmY1NF8jO5UrtzfI89Qd9XGWuTAGbccJlG67KaoNlp3YWAsPKHnWOBe/C15dTZrFzFfDfhJCRT5z49yAaGX6Yo=
+	t=1752163594; cv=none; b=h5Bad3qassyEPCQcuHBDei4fDhV2YSNN9s8eeNO9fwp9EJTT7YhbvH+EtEFft8P0IIswEBr54byxdE0lgfhzOoZAtLRY1FvwsLj4ObgFS/XquTBGXPbCiq+VWnEjcCad9AjnyksDIyDg2GjQR1h0OR016Wo0dnybo1njOsYlkac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752163475; c=relaxed/simple;
-	bh=h6itR3ghj2JqUTT+9BV9AGn9AmwkvZzKvcQUXaYn548=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=fj7kBdtvnVmK5zSp3LmswPH2rnyEX6MDHhZi5DLqUzZ0XMn5CPocYoOXZi+z/FKEx4uVJd7Y3+LE3r1b4lXkf8s+qR2z7rtLI/Sv4NVQWb2SsV7exbH7bdVVgxrhs4SWN/iYAUk3aBD6nHD7+95F7rEHDrnO6fV00W9TFGpJR7I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=dhsQ6K+s; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-6097d144923so2391218a12.1
-        for <linux-pwm@vger.kernel.org>; Thu, 10 Jul 2025 09:04:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1752163471; x=1752768271; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=d1TwLB8dIO1lOi7BSFaI3hsDRPn3KXX/zTDFy63gJTs=;
-        b=dhsQ6K+s8+5fUeLl3U1lCor76UoBjql1vlTwSAGY3P/ijq2CVL4JVvBkNK8z0VOdbd
-         iCpwuP8Q56Lwva8fElKiwPY9Ms8gZuCIHOAMDFGG7QXj0D6VHI7F+M2MQshPP0YQB6Q8
-         WZKEV9++UuRwcQThO6pRxLY99baFKJlxOO6aQLYp+1UasoP8D7+WCFPYbl1BzynTWO9F
-         TpmJVTzbesFPbIZK5mafHfzE2PUKSQp5jK8tFWW0FFY6yvbGZE2mfvgdUFpZWpEA/cRQ
-         hkOWJLSOgYNjKz+tfDoyuUQfqF9C7MsmmxIl8J9oEAhBlU8Aw1ZC7Z0P5oBvNkyYDWHJ
-         5SVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752163471; x=1752768271;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=d1TwLB8dIO1lOi7BSFaI3hsDRPn3KXX/zTDFy63gJTs=;
-        b=VbK+xPwC6s+39GgqgvCkmLIxRtrUqd1iHKAYVK/VlDy9Je/rRhjmfopjDr8rWXA0gM
-         4A+mgAiji/ilkhv+MzlzQdGslYW9FRfQwVMWO2lRkMA+snGmaT474VUo9oxZ+ifEmh0H
-         mdypaOhxZR9as+W95J9/Qurpvsx8ZDfli36/xVPsbowjYrv2XZzAWk+vSGMaUOAgwyBj
-         QxcIO2yBdHC0vsFfJFULDEAziOROARS9UL0DZqi2hhRJyCYDmy8W9lZ8kqNZZOTT/ow2
-         79/i2nnVsvUsdl2n780y3betfAHOw2nhfAee85yjHT+A98p1LpaDKsfEApafd5BtRV8r
-         rUCg==
-X-Gm-Message-State: AOJu0YzJuuEeLPDRLRrNxLU3/3wGTWUYK76BAAndMnsJUukVKvoZUsib
-	+7h/m1hR0PMZ/YmrjlH2mztnXJcNeu/3qsm90eDc1fa7dgIlmLBhxUxC4ubjU+0v+SQpTaJyVEp
-	oZP83
-X-Gm-Gg: ASbGncu8EPHstgwWhwD0BxqNk0LVgZB86Uvk4J/flEzxSzTxeCS9/Hr6ZXWtW6Hu6Vf
-	IuMDhLSnI3Xo83v7QSy8rzbZ+JnZ7H9BT7KlMT3bqzF7cd/jqTSaZy0KmsJdQGoVmA4KL/J8n7W
-	nMRHnu9A9VQPq/d0v97AH+RTpRe37UZZgqc8dKQaXjtE/vEs9MZIZT2kozNSMMtiFuE3x/4IbaY
-	TPvvwLGfZ5G3yT0nLgUZuvf9sLnPjCmfKADdIX2q4hY2VoVItiiKEa+9WnxPAn20n/092BI1J74
-	9dHI8acUTkHs8MjwL5SamuXGjZZBQ2TpiqdC5hKEtkdZ+o2ejTwcPj2kHK1TgNBWQ97+gwwulxB
-	pbl427IV2yPg599W/N/R3clZMAXTU
-X-Google-Smtp-Source: AGHT+IGu5hFyng7HuYZKDIZ0ko3w+3oHE7HgVpxx2Y1xH+Ql/PBj7SaY6BYLKd6+3UcP4IRbB8COlA==
-X-Received: by 2002:a05:6402:35d3:b0:60c:679e:b957 with SMTP id 4fb4d7f45d1cf-611c1cb733fmr4141489a12.1.1752163470879;
-        Thu, 10 Jul 2025 09:04:30 -0700 (PDT)
-Received: from localhost (p200300f65f06ab0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f06:ab04::1b9])
-        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-611c9796432sm1033411a12.73.2025.07.10.09.04.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Jul 2025 09:04:30 -0700 (PDT)
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: linux-pwm@vger.kernel.org
-Subject: [PATCH libpwm] pwmround/pwmset: Fix check for invalid duty_offset
-Date: Thu, 10 Jul 2025 18:04:18 +0200
-Message-ID: <20250710160417.2089742-2-u.kleine-koenig@baylibre.com>
-X-Mailer: git-send-email 2.49.0
+	s=arc-20240116; t=1752163594; c=relaxed/simple;
+	bh=Fk52qRo41GJW4xL0+HTc/RNFLjudUlL2qsEG2/excFE=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=MCcrpgCqrv907+dMX8wF/XwZ9FpdcC+xtV4cRAjkBuBH9L5+C/CkpnKKvkglzJMCETuhdH/FSnLb2773YS1gkyAXnXV3Um7wl4ukGmr36vUD2g8jUUJ7D6mwki59+vnxemwHEWIDl13TukDHmp+AO5kc9lFM0bkrqeTkgiut6SQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wn+yU0e9; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 171ABC4CEE3;
+	Thu, 10 Jul 2025 16:06:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752163593;
+	bh=Fk52qRo41GJW4xL0+HTc/RNFLjudUlL2qsEG2/excFE=;
+	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
+	b=Wn+yU0e9Luzl4qwqU/u3K5hKm02tu5Ou1bSFcFxwq+rE28/Xfjm1wXJgV9FN+FOb0
+	 HC4uxzA8QyZCfr5uiSqpnoIBrR8PXgtmNqfzaTHN1laNLrd6I00yRAizy+pDUXjr/K
+	 +UzGmKFxbomOecwvxWoDUQawtejSWMMKKlxkd8UhswNKpmf1e5yNMqFlAG75B3Xm22
+	 3Vyj+IDc8fhD+OuWBvL/3LDjfgtT7FnMgyz33vo3afhvFQDc9R31KrHgkbbShA352H
+	 7oDEsTn90JoGAPNLkS4i6A6DvnFLq9b+4UCMLMD1gxGNDAHF4HNx9nWUGQ7c0DtXpN
+	 1qzZqWBlfsHag==
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1647; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=h6itR3ghj2JqUTT+9BV9AGn9AmwkvZzKvcQUXaYn548=; b=owGbwMvMwMXY3/A7olbonx/jabUkhoz8J43VfgJrWX4FGb0S4ezZF5/d6PTldcZavTqT/RMfV lzunWXayWjMwsDIxSArpshi37gm06pKLrJz7b/LMINYmUCmMHBxCsBEupM5GJbohSTHsaseCst6 ciHpYcuGSkeHu7FNDMLB+ZPumv+blCP8JMbZ6a2wmfmJjmrOS7xfJ04LuSrxqPbr5pQL9TmNGVv eim9NP3wzJss8ptfJtrPfk4vN3VjmLLuQc8LeBRe/P7G/VaDxulmFsahv4RSWfEvWJc8f8y5gkG /Zu0Z3wiq/9MJIEfHlpR8lO29Z3Fnq+7lvi3/MVq6dAv3rWVctK+X5UfjcuFDbf8E0cdVp7boTD dOYeL5o698pZLh7cXJ50cv7H1fMel6uVdKmKOxmNE3M7j1/jP2dbVlfJvuHOqsF3Ij/9XGjZmDY ysDcFXWhMvekLJ59V3r+4nTSjL1TrNzn787JV16jvm0aAA==
-X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
+Date: Thu, 10 Jul 2025 18:06:26 +0200
+Message-Id: <DB8I5J8ZY7QF.2D8HEN6JX4HSZ@kernel.org>
+Subject: Re: [PATCH v10 0/7] Rust Abstractions for PWM subsystem with TH1520
+ PWM driver
+Cc: "Michal Wilczynski" <m.wilczynski@samsung.com>, "Miguel Ojeda"
+ <ojeda@kernel.org>, "Alex Gaynor" <alex.gaynor@gmail.com>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Andreas
+ Hindborg" <a.hindborg@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>,
+ "Trevor Gross" <tmgross@umich.edu>, "Guo Ren" <guoren@kernel.org>, "Fu Wei"
+ <wefu@redhat.com>, "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
+ <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Paul Walmsley"
+ <paul.walmsley@sifive.com>, "Palmer Dabbelt" <palmer@dabbelt.com>, "Albert
+ Ou" <aou@eecs.berkeley.edu>, "Alexandre Ghiti" <alex@ghiti.fr>, "Marek
+ Szyprowski" <m.szyprowski@samsung.com>, "Benno Lossin" <lossin@kernel.org>,
+ "Michael Turquette" <mturquette@baylibre.com>, "Drew Fustini"
+ <fustini@kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
+ <linux-riscv@lists.infradead.org>, <devicetree@vger.kernel.org>, "Krzysztof
+ Kozlowski" <krzysztof.kozlowski@linaro.org>
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+From: "Danilo Krummrich" <dakr@kernel.org>
+References: <CGME20250707094926eucas1p155bd967b6986c4a999776839b1aa1fc6@eucas1p1.samsung.com> <20250707-rust-next-pwm-working-fan-for-sending-v10-0-d0c5cf342004@samsung.com> <e8a4a821-e7e4-4bcd-a2ac-f6b684b6ceea@samsung.com> <ipvaegqlkco5qinhvn33mqvg7ev2walvs74xtzvhimxsfsfzhv@gcmpxcdtetdn> <e77eab1c-446f-4620-95be-d343684d1e95@samsung.com> <4hmb3di5x2iei43nmrykrj5wzlltrf3vrnqvexiablonbscn57@4bbsz5c76t63>
+In-Reply-To: <4hmb3di5x2iei43nmrykrj5wzlltrf3vrnqvexiablonbscn57@4bbsz5c76t63>
 
-.period_length_ns == .duty_offset_ns == 0 is a valid waveform that
-shouldn't trigger a warning.
+On Thu Jul 10, 2025 at 5:25 PM CEST, Uwe Kleine-K=C3=B6nig wrote:
+> Hello Michal,
+>
+> On Thu, Jul 10, 2025 at 03:48:08PM +0200, Michal Wilczynski wrote:
+>> On 7/10/25 15:10, Uwe Kleine-K=C3=B6nig wrote:
+>> > On Thu, Jul 10, 2025 at 10:42:07AM +0200, Michal Wilczynski wrote:
+>> >> On 7/7/25 11:48, Michal Wilczynski wrote:
+>> >>> The series is structured as follows:
+>> >>>  - Expose static function pwmchip_release.
+>> >=20
+>> > Is this really necessary? I didn't try to understand the requirements
+>> > yet, but I wonder about that. If you get the pwmchip from
+>> > __pwmchip_add() the right thing to do to release it is to call
+>> > pwmchip_remove(). Feels like a layer violation.
+>>=20
+>> It's required to prevent a memory leak in a specific, critical failure
+>> scenario. The sequence of events is as follows:
+>>=20
+>>     pwm::Chip::new() succeeds, allocating both the C struct pwm_chip and
+>>     the Rust drvdata.
+>>=20
+>>     pwm::Registration::register() (which calls pwmchip_add()) fails for
+>>     some reason.
+>
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
----
- pwmround.c | 2 +-
- pwmset.c   | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+(Just trying to help clear up the confusion.)
 
-diff --git a/pwmround.c b/pwmround.c
-index 860446668d3a..da3c018c4494 100644
---- a/pwmround.c
-+++ b/pwmround.c
-@@ -61,7 +61,7 @@ int main(int argc, char *const argv[])
- 		fprintf(stderr, "Warning: invalid waveform: duty_length = %llu > period_length = %llu\n",
- 			(unsigned long long)wf.duty_length_ns, (unsigned long long)wf.period_length_ns);
- 
--	if (wf.duty_offset_ns >= wf.period_length_ns)
-+	if (wf.period_length_ns && wf.duty_offset_ns >= wf.period_length_ns)
- 		fprintf(stderr, "Warning: invalid waveform: duty_offset = %llu >= period_length = %llu\n",
- 			(unsigned long long)wf.duty_offset_ns, (unsigned long long)wf.period_length_ns);
- 
-diff --git a/pwmset.c b/pwmset.c
-index 0fdc1a34cc2f..4c3d50109f6a 100644
---- a/pwmset.c
-+++ b/pwmset.c
-@@ -69,7 +69,7 @@ int main(int argc, char *const argv[])
- 		fprintf(stderr, "Warning: invalid waveform: duty_length = %llu > period_length = %llu\n",
- 			(unsigned long long)wf.duty_length_ns, (unsigned long long)wf.period_length_ns);
- 
--	if (wf.duty_offset_ns >= wf.period_length_ns)
-+	if (wf.period_length_ns && wf.duty_offset_ns >= wf.period_length_ns)
- 		fprintf(stderr, "Warning: invalid waveform: duty_offset = %llu >= period_length = %llu\n",
- 			(unsigned long long)wf.duty_offset_ns, (unsigned long long)wf.period_length_ns);
- 
+> If you called pwmchip_alloc() but not yet pwmchip_add(), the right
+> function to call for cleanup is pwmchip_put().
 
-base-commit: 3a9a9d36d95e8aa5ed563590d53c1715285a5ffb
--- 
-2.49.0
+That is exactly what is happening when ARef<Chip> is dropped. If the refere=
+nce
+count drops to zero, pwmchip_release() is called, which frees the chip. How=
+ever,
+this would leave the driver's private data allocation behind, which is owne=
+d by
+the Chip instance.
 
+So, in Rust we not only have to free the chip itself on release, but also t=
+he
+driver's private data. The solution Michal went for is overwriting the PWM
+chip's dev->release() with a callback that drops the driver's private data =
+and
+subsequently calls the "original" pwmchip_release().
+
+This is a common pattern in Rust that we use in DRM as well. One thing that=
+ is
+different in DRM is, that a struct drm_device (equivalent of struct pwm_chi=
+p in
+this case), has it's own release callback for drivers that we can attach to=
+.
+
+PWM does not have such a callback AFAICS, hence the Rust abstraction uses t=
+he
+underlying device's release callback and then forwards to pwmchip_release()=
+.
+
+Hope this helps. :)
 
