@@ -1,53 +1,53 @@
-Return-Path: <linux-pwm+bounces-6834-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6838-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D4ABB017D5
-	for <lists+linux-pwm@lfdr.de>; Fri, 11 Jul 2025 11:31:42 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id F37FCB017E2
+	for <lists+linux-pwm@lfdr.de>; Fri, 11 Jul 2025 11:32:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 0477F3A4C8A
-	for <lists+linux-pwm@lfdr.de>; Fri, 11 Jul 2025 09:31:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 58B515A20FC
+	for <lists+linux-pwm@lfdr.de>; Fri, 11 Jul 2025 09:32:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FA4C27E07B;
-	Fri, 11 Jul 2025 09:30:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8548928033E;
+	Fri, 11 Jul 2025 09:30:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="R282osRz"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="g17GWOvo"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467641F3B85;
-	Fri, 11 Jul 2025 09:30:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEFDE27E7DA;
+	Fri, 11 Jul 2025 09:30:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752226239; cv=none; b=d1fP71l4CQY3FD+2/1dGrvWTXH8JkClxFCKpyuZGAAik2xrZ8Bd2cGS0dwEeQyLqIaAHsNRcqhnbQ7RmmdekZd050h+zhzFOCTwPm7I1K6uvYHqeu4vOouAml33YMmMpTN4motC4nOj37xHNy49tQK322UMnJPS2zjvB17vwvjk=
+	t=1752226242; cv=none; b=iNHgXrowk3FLvzr8k0nEisPg85us0tiIoKZjCdZce5AOd+kbh37bxc3Xv+SSHZQHQcdYkmUf6qlU+VNzQxdvzP3u1DOHf9ZLAY54jk1Ychr/J9TzRc2i7dKiFvPzFj9ZtPDKdKi4fENRHVkl/r17go23jk5o1pEgFvfaUloqUyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752226239; c=relaxed/simple;
-	bh=ivCv2diegFAI10yvN/kIznk53Nc/V6s4C22VehNSBd4=;
+	s=arc-20240116; t=1752226242; c=relaxed/simple;
+	bh=jlaQE+mBCVIwqEguA1eCJbvaVXOs/PTbp4pNB9rSZPg=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=PWhR3qNJtY4P0lUfDaItlbI99Lzz8ymxlQ+LrnNdH+NWduDH/+z/Zyu6cud3+/ZjsVPTeRUk1/u3rQs222TvU8C7JqIJ9Tf8/noXSCpnxT3fwBy53OeGr9J8h00aYiTBtS9njLqnDQwRl4Ya5r36kWA3bLGykVUy/20TUXDxFmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=R282osRz; arc=none smtp.client-ip=217.70.183.193
+	 In-Reply-To:To:Cc; b=VN26NsLK6M/AzrWPHOKqaGniDFgq8KGo3OiYp14x3Dot1LttWJkgXqsYQNj864ItWEifR7xwe6nDQcpUvIEHD1phJSd87Vrc+MiXbdR2oXMjK3OHZnxG5987UzJgYy7/fjWQopQhs01DqjlqLxCE7p82ynlVgvRYYI18/CWs40M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=g17GWOvo; arc=none smtp.client-ip=217.70.183.193
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id E39A2439EE;
-	Fri, 11 Jul 2025 09:30:32 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D014743A23;
+	Fri, 11 Jul 2025 09:30:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1752226233;
+	t=1752226234;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=l3qubtbFuYPrSo/BjVwcQQS6M3xWsCf4JaEdFKScetg=;
-	b=R282osRzJjwbVDYVIkobv4mFWkn3G697uj5sVLp8/qqoHemTsUn6caqXrmwgeE2R0j0Ekk
-	17LY7+Zz6k/L9cbsYGt7tFMuet+344HE2Kc+TC3DohJ5QNRALPxvCW3L9svONLE70ql3/6
-	rXQOmSgwOUJO2MTTSEQbMm+CBWcTeInDtbWTaemF4LKxEwGtsi3Wuk9S9ze+Gf7mIEVtjq
-	gitwB7yDIwJ7+OBEhHFHMVq3zgYdy9MsO7ZBDq+JmVcVQyxavLT7yPup1EBnzhSu2qNiLB
-	SHDD9i4k/P4lmILbxtT36y/di53Uo+5yHgFXV3X7C7s2Ghny+qYgrkawp9fslA==
+	bh=YX1y/TAYW9gFFD0bPjtqpqJsDxZpj/LtkE9fuNee9O4=;
+	b=g17GWOvob+l+fMiYzsflIPvis2t9E3uAFZjYSD+PyfSr2O3VRI5jLUCf6iCS0GEdNc1wbE
+	OioT8ScpQWW6wCql42FcOygHcQUPqiozhaLdR8TLRjKIBRGbUyy8HVvoPh9smC0tdp1Y2M
+	VIhI6ryxU57PA5OSd6M+1wWlBHI6ClcFXUr3j4xwH+YOwSbEB95vkAXafGgHZNT+gp9sd5
+	nYK430FawaG63hStQquDsUs58KD/0nfz+QlF4F3XJTZE+h2ugj3H31DdtuK5izROVfH8YG
+	zbsjdMPVp9qWSf+Hn0wZEmZnvTRnFCGFiTRJuBLCyymLHOVIZrUGLo5QDyKStA==
 From: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Date: Fri, 11 Jul 2025 11:29:49 +0200
-Subject: [PATCH v11 09/10] input: misc: Add support for MAX7360 rotary
+Date: Fri, 11 Jul 2025 11:29:50 +0200
+Subject: [PATCH v11 10/10] MAINTAINERS: Add entry on MAX7360 driver
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250711-mdb-max7360-support-v11-9-cf1dee2a7d4c@bootlin.com>
+Message-Id: <20250711-mdb-max7360-support-v11-10-cf1dee2a7d4c@bootlin.com>
 References: <20250711-mdb-max7360-support-v11-0-cf1dee2a7d4c@bootlin.com>
 In-Reply-To: <20250711-mdb-max7360-support-v11-0-cf1dee2a7d4c@bootlin.com>
 To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -77,11 +77,11 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
  Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1752226224; l=7729;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1752226224; l=1082;
  i=mathieu.dubois-briand@bootlin.com; s=20241219; h=from:subject:message-id;
- bh=ivCv2diegFAI10yvN/kIznk53Nc/V6s4C22VehNSBd4=;
- b=G5BdFszhqk0MwilhnUTaLShZdZMMIc1l5m+lGxrMJzlFav3PZ8HascU706a5/D7Nk9To64wez
- SiDkHpf6f5SCejki403LbgsWIesQ54s4W4FX9aW70wpQgRRnNK0iOsO
+ bh=jlaQE+mBCVIwqEguA1eCJbvaVXOs/PTbp4pNB9rSZPg=;
+ b=xkAWR+f0YXCFa50KQg3Nk/PGiSNumgMki5xODJj6nQGqhVoLYou6LWCqArUOrAvc7W8cWQcjM
+ m5LiI84ZM8FCB+TwFh4VMKr28WMAwycRDTRS9ZT+MV53YzzrINy7681
 X-Developer-Key: i=mathieu.dubois-briand@bootlin.com; a=ed25519;
  pk=1PVTmzPXfKvDwcPUzG0aqdGoKZJA3b9s+3DqRlm0Lww=
 X-GND-State: clean
@@ -90,248 +90,37 @@ X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdegvdeliecutefuodetggdotef
  hdrohhrghdprhgtphhtthhopehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhrtghpthhtohepuggvvhhitggvthhrvggvsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtohepsghrghhlsegsghguvghvrdhplhdprhgtphhtthhopegsrhhoohhnihgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrgh
 X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-Add driver for Maxim Integrated MAX7360 rotary encoder controller,
-supporting a single rotary switch.
+Add myself as maintainer of Maxim MAX7360 driver and device-tree bindings.
 
-Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 ---
- drivers/input/misc/Kconfig          |  10 ++
- drivers/input/misc/Makefile         |   1 +
- drivers/input/misc/max7360-rotary.c | 192 ++++++++++++++++++++++++++++++++++++
- 3 files changed, 203 insertions(+)
+ MAINTAINERS | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-index f5496ca0c0d2..0bc9d121c984 100644
---- a/drivers/input/misc/Kconfig
-+++ b/drivers/input/misc/Kconfig
-@@ -230,6 +230,16 @@ config INPUT_M68K_BEEP
- 	tristate "M68k Beeper support"
- 	depends on M68K
+diff --git a/MAINTAINERS b/MAINTAINERS
+index fad6cb025a19..81423ac75720 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -14806,6 +14806,19 @@ L:	linux-iio@vger.kernel.org
+ S:	Maintained
+ F:	drivers/iio/temperature/max30208.c
  
-+config INPUT_MAX7360_ROTARY
-+	tristate "Maxim MAX7360 Rotary Encoder"
-+	depends on MFD_MAX7360
-+	help
-+	  If you say yes here you get support for the rotary encoder on the
-+	  Maxim MAX7360 I/O Expander.
++MAXIM MAX7360 KEYPAD LED MFD DRIVER
++M:	Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
++S:	Maintained
++F:	Documentation/devicetree/bindings/gpio/maxim,max7360-gpio.yaml
++F:	Documentation/devicetree/bindings/mfd/maxim,max7360.yaml
++F:	drivers/gpio/gpio-max7360.c
++F:	drivers/input/keyboard/max7360-keypad.c
++F:	drivers/input/misc/max7360-rotary.c
++F:	drivers/mfd/max7360.c
++F:	drivers/pinctrl/pinctrl-max7360.c
++F:	drivers/pwm/pwm-max7360.c
++F:	include/linux/mfd/max7360.h
 +
-+	  To compile this driver as a module, choose M here: the module will be
-+	  called max7360_rotary.
-+
- config INPUT_MAX77650_ONKEY
- 	tristate "Maxim MAX77650 ONKEY support"
- 	depends on MFD_MAX77650
-diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
-index 6d91804d0a6f..c454fba3a3ae 100644
---- a/drivers/input/misc/Makefile
-+++ b/drivers/input/misc/Makefile
-@@ -51,6 +51,7 @@ obj-$(CONFIG_INPUT_IQS7222)		+= iqs7222.o
- obj-$(CONFIG_INPUT_KEYSPAN_REMOTE)	+= keyspan_remote.o
- obj-$(CONFIG_INPUT_KXTJ9)		+= kxtj9.o
- obj-$(CONFIG_INPUT_M68K_BEEP)		+= m68kspkr.o
-+obj-$(CONFIG_INPUT_MAX7360_ROTARY)	+= max7360-rotary.o
- obj-$(CONFIG_INPUT_MAX77650_ONKEY)	+= max77650-onkey.o
- obj-$(CONFIG_INPUT_MAX77693_HAPTIC)	+= max77693-haptic.o
- obj-$(CONFIG_INPUT_MAX8925_ONKEY)	+= max8925_onkey.o
-diff --git a/drivers/input/misc/max7360-rotary.c b/drivers/input/misc/max7360-rotary.c
-new file mode 100644
-index 000000000000..385831ef34b6
---- /dev/null
-+++ b/drivers/input/misc/max7360-rotary.c
-@@ -0,0 +1,192 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright 2025 Bootlin
-+ *
-+ * Author: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/device/devres.h>
-+#include <linux/dev_printk.h>
-+#include <linux/init.h>
-+#include <linux/input.h>
-+#include <linux/interrupt.h>
-+#include <linux/mfd/max7360.h>
-+#include <linux/property.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_wakeirq.h>
-+#include <linux/regmap.h>
-+#include <linux/types.h>
-+
-+#define MAX7360_ROTARY_DEFAULT_STEPS 24
-+
-+struct max7360_rotary {
-+	struct input_dev *input;
-+	struct regmap *regmap;
-+	unsigned int debounce_ms;
-+
-+	unsigned int pos;
-+
-+	u32 steps;
-+	u32 axis;
-+	bool relative_axis;
-+	bool rollover;
-+};
-+
-+static void max7360_rotary_report_event(struct max7360_rotary *max7360_rotary, int steps)
-+{
-+	if (max7360_rotary->relative_axis) {
-+		input_report_rel(max7360_rotary->input, max7360_rotary->axis, steps);
-+	} else {
-+		int pos = max7360_rotary->pos;
-+		int maxval = max7360_rotary->steps;
-+
-+		/*
-+		 * Add steps to the position.
-+		 * Make sure added steps are always in ]-maxval; maxval[
-+		 * interval, so (pos + maxval) is always >= 0.
-+		 * Then set back pos to the [0; maxval[ interval.
-+		 */
-+		pos += steps % maxval;
-+		if (max7360_rotary->rollover)
-+			pos = (pos + maxval) % maxval;
-+		else
-+			pos = clamp(pos, 0, maxval - 1);
-+
-+		max7360_rotary->pos = pos;
-+		input_report_abs(max7360_rotary->input, max7360_rotary->axis, max7360_rotary->pos);
-+	}
-+
-+	input_sync(max7360_rotary->input);
-+}
-+
-+static irqreturn_t max7360_rotary_irq(int irq, void *data)
-+{
-+	struct max7360_rotary *max7360_rotary = data;
-+	struct device *dev = max7360_rotary->input->dev.parent;
-+	unsigned int val;
-+	int error;
-+
-+	error = regmap_read(max7360_rotary->regmap, MAX7360_REG_RTR_CNT, &val);
-+	if (error < 0) {
-+		dev_err(dev, "Failed to read rotary counter\n");
-+		return IRQ_NONE;
-+	}
-+
-+	if (val == 0)
-+		return IRQ_NONE;
-+
-+	max7360_rotary_report_event(max7360_rotary, sign_extend32(val, 7));
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int max7360_rotary_hw_init(struct max7360_rotary *max7360_rotary)
-+{
-+	struct device *dev = max7360_rotary->input->dev.parent;
-+	int val;
-+	int error;
-+
-+	val = FIELD_PREP(MAX7360_ROT_DEBOUNCE, max7360_rotary->debounce_ms) |
-+	      FIELD_PREP(MAX7360_ROT_INTCNT, 1) | MAX7360_ROT_INTCNT_DLY;
-+	error = regmap_write(max7360_rotary->regmap, MAX7360_REG_RTRCFG, val);
-+	if (error)
-+		dev_err(dev, "Failed to set max7360 rotary encoder configuration\n");
-+
-+	return error;
-+}
-+
-+static int max7360_rotary_probe(struct platform_device *pdev)
-+{
-+	struct max7360_rotary *max7360_rotary;
-+	struct device *dev = &pdev->dev;
-+	struct input_dev *input;
-+	struct regmap *regmap;
-+	int irq;
-+	int error;
-+
-+	regmap = dev_get_regmap(dev->parent, NULL);
-+	if (!regmap)
-+		return dev_err_probe(dev, -ENODEV, "Could not get parent regmap\n");
-+
-+	irq = fwnode_irq_get_byname(dev_fwnode(dev->parent), "inti");
-+	if (irq < 0)
-+		return dev_err_probe(dev, irq, "Failed to get IRQ\n");
-+
-+	max7360_rotary = devm_kzalloc(dev, sizeof(*max7360_rotary), GFP_KERNEL);
-+	if (!max7360_rotary)
-+		return -ENOMEM;
-+
-+	max7360_rotary->regmap = regmap;
-+
-+	device_property_read_u32(dev->parent, "linux,axis", &max7360_rotary->axis);
-+	max7360_rotary->rollover = device_property_read_bool(dev->parent,
-+							     "rotary-encoder,rollover");
-+	max7360_rotary->relative_axis =
-+		device_property_read_bool(dev->parent, "rotary-encoder,relative-axis");
-+
-+	error = device_property_read_u32(dev->parent, "rotary-encoder,steps",
-+					 &max7360_rotary->steps);
-+	if (error)
-+		max7360_rotary->steps = MAX7360_ROTARY_DEFAULT_STEPS;
-+
-+	device_property_read_u32(dev->parent, "rotary-debounce-delay-ms",
-+				 &max7360_rotary->debounce_ms);
-+	if (max7360_rotary->debounce_ms > MAX7360_ROT_DEBOUNCE_MAX)
-+		return dev_err_probe(dev, -EINVAL, "Invalid debounce timing: %u\n",
-+				     max7360_rotary->debounce_ms);
-+
-+	input = devm_input_allocate_device(dev);
-+	if (!input)
-+		return -ENOMEM;
-+
-+	max7360_rotary->input = input;
-+
-+	input->id.bustype = BUS_I2C;
-+	input->name = pdev->name;
-+
-+	if (max7360_rotary->relative_axis)
-+		input_set_capability(input, EV_REL, max7360_rotary->axis);
-+	else
-+		input_set_abs_params(input, max7360_rotary->axis, 0, max7360_rotary->steps, 0, 1);
-+
-+	error = devm_request_threaded_irq(dev, irq, NULL, max7360_rotary_irq,
-+					  IRQF_ONESHOT | IRQF_SHARED,
-+					  "max7360-rotary", max7360_rotary);
-+	if (error)
-+		return dev_err_probe(dev, error, "Failed to register interrupt\n");
-+
-+	error = input_register_device(input);
-+	if (error)
-+		return dev_err_probe(dev, error, "Could not register input device\n");
-+
-+	error = max7360_rotary_hw_init(max7360_rotary);
-+	if (error)
-+		return dev_err_probe(dev, error, "Failed to initialize max7360 rotary\n");
-+
-+	device_init_wakeup(dev, true);
-+	error = dev_pm_set_wake_irq(dev, irq);
-+	if (error)
-+		dev_warn(dev, "Failed to set up wakeup irq: %d\n", error);
-+
-+	return 0;
-+}
-+
-+static void max7360_rotary_remove(struct platform_device *pdev)
-+{
-+	dev_pm_clear_wake_irq(&pdev->dev);
-+	device_init_wakeup(&pdev->dev, false);
-+}
-+
-+static struct platform_driver max7360_rotary_driver = {
-+	.driver = {
-+		.name	= "max7360-rotary",
-+	},
-+	.probe		= max7360_rotary_probe,
-+	.remove		= max7360_rotary_remove,
-+};
-+module_platform_driver(max7360_rotary_driver);
-+
-+MODULE_DESCRIPTION("MAX7360 Rotary driver");
-+MODULE_AUTHOR("Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>");
-+MODULE_LICENSE("GPL");
+ MAXIM MAX77650 PMIC MFD DRIVER
+ M:	Bartosz Golaszewski <brgl@bgdev.pl>
+ L:	linux-kernel@vger.kernel.org
 
 -- 
 2.39.5
