@@ -1,223 +1,225 @@
-Return-Path: <linux-pwm+bounces-6839-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6840-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA714B01C25
-	for <lists+linux-pwm@lfdr.de>; Fri, 11 Jul 2025 14:36:46 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 63F66B01F7C
+	for <lists+linux-pwm@lfdr.de>; Fri, 11 Jul 2025 16:50:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4F5D03AC32E
-	for <lists+linux-pwm@lfdr.de>; Fri, 11 Jul 2025 12:36:19 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AF8665857D1
+	for <lists+linux-pwm@lfdr.de>; Fri, 11 Jul 2025 14:50:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF4082BE658;
-	Fri, 11 Jul 2025 12:36:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1CC82E9EB0;
+	Fri, 11 Jul 2025 14:50:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="C1irTKJK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gkdkEKbz"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC3C72BDC0F
-	for <linux-pwm@vger.kernel.org>; Fri, 11 Jul 2025 12:36:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98F2A28725E;
+	Fri, 11 Jul 2025 14:50:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752237403; cv=none; b=NnOHUAmtTwc5nG56Px+35RAvkvkgKs0oMq9v7MRoYnHZSOBjSDRjrB6NRACO/kKPCTsBW9Scaq6QUyJQacfVMdcwHp9wgcWwBUdkyGQMGIHbutCt/RNPf6NyPtB29ak/YQ7jOvEjbAEAtsUVLgtl/SNPtriYrtGbgBoXfMYc6mY=
+	t=1752245444; cv=none; b=hfE7AsvkzEzfzDt/Vt3yls8fvwLCzpFNjZRWb33SGJNdzEC42LOQmUBcFUk3ZzLrjvgj2j/1rTQMl+RtAkWfIqAs1KOwaW+rj79cHiXC2fhZAZxHYuYflFfew0etp16B8UwM4SN8zJq3OGC0da0oHYQ+KyjU/1kLFN+UOpXrAo0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752237403; c=relaxed/simple;
-	bh=3k7zeyqd7SmF+I9Quix2UZLh1NAmpJ08rR0/1iKfNfc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=UXxoYM/egU5zIqOZwnUcuTAZwFO0pL3JXv+3VAjjWj5FWm9DFbG4qi0lfx8PzQgjuca9P/uPNEHGqZYduQeVO/WJRivdbW6bdRLaPd18x5FaDmT1s/sf85ucwYM5aZTlaFqisQrFX//PYHWLst/VFQKWHawwxJ2Apd18dEn9fXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=C1irTKJK; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250711123640euoutp012c5acf82249e8f1f24b65f5cb4134ae3~RMqGxE-pa0438104381euoutp01G
-	for <linux-pwm@vger.kernel.org>; Fri, 11 Jul 2025 12:36:40 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250711123640euoutp012c5acf82249e8f1f24b65f5cb4134ae3~RMqGxE-pa0438104381euoutp01G
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1752237400;
-	bh=K0K/KtJbTXHNw0pmcTrwWsLkly4FuPuuoVVC7z5NRQU=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=C1irTKJKR6dh7Zyb0hzv5ZIWVDUNbUFWxCqT3Z09Oirx/34YrJ7RKqeNSd3wCC3Ji
-	 IJHkR0vLQvRNN+rNzQJgYvbmdLrcjiJiV5ZFOgtOudkwD5LrcsUnataJLfTIPiwJIC
-	 vNXQ5zUwT/XPaG02QKWIcb1NAG85KB7+rU74SHTY=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250711123639eucas1p1941aef7a8b0e49493b430463f97136db~RMqF-42Wd2355023550eucas1p1H;
-	Fri, 11 Jul 2025 12:36:39 +0000 (GMT)
-Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250711123637eusmtip2a6e5e3c4f720153c14660001342b34a8~RMqEx1kL50333203332eusmtip2h;
-	Fri, 11 Jul 2025 12:36:37 +0000 (GMT)
-Message-ID: <020b8036-8959-4733-a5ab-ce8c963ce869@samsung.com>
-Date: Fri, 11 Jul 2025 14:36:37 +0200
+	s=arc-20240116; t=1752245444; c=relaxed/simple;
+	bh=f7cDjsfYPdriIgbQb8YGdKasotUmE5cLXTOLFytF0io=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fGQiIoWSFu+ZDHjEcfIrTuGnr1SmJ9KiAvgeZ0tQIFMbumY/iRQC+foDDdV+61BkFzko5ni7v6PcAWdc7wCSmKk1q0GsSEaIxgfO8gctQp7JAPAw0silgSMxEFN0gXIALcqjO7ykp7KbcmJRmSR43e9e0R2QVYtjDJsXQ1vEW6M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gkdkEKbz; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92E27C4CEED;
+	Fri, 11 Jul 2025 14:50:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752245444;
+	bh=f7cDjsfYPdriIgbQb8YGdKasotUmE5cLXTOLFytF0io=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=gkdkEKbzsDiMv4RtOFiBMMGIOCuL14UGF4GvAp0pra/zVrI9un62BvfuR+HbOvvkP
+	 CyubUoCgzdntLhzTrM+QVUTVUg9tUhaTaq8yR5VV9mndHZroNCbA0xruIvY/xWTCgY
+	 Oi0ItRuP/wMULghV4N5z/aXUuCgUM/CGt9RBOui3JhIAvtDvMxISvooZw9A4qwlYxr
+	 XfvZ8ZoS+Sz5z0JNTTID4kxdeNNekl0NTvKuzDDcHyiM8DjRtaLjynaMmGYoPpp1d1
+	 zHOBJZGluzRw1VnRcMeh/b6YyZQh3CQXvbxf1GhN5v93Vz0MJwwYr1wXx+rjfN0jEs
+	 Te9Ev4z08EevQ==
+Date: Fri, 11 Jul 2025 16:50:41 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Kamel Bouhara <kamel.bouhara@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
+	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	andriy.shevchenko@intel.com, =?utf-8?Q?Gr=C3=A9gory?= Clement <gregory.clement@bootlin.com>, 
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v11 04/10] pwm: max7360: Add MAX7360 PWM support
+Message-ID: <j6zavgfpiq7s7cnfkghn2y6fv4h4ziqtpyp7igwmovqlyuasoq@hozlyjcpsxth>
+References: <20250711-mdb-max7360-support-v11-0-cf1dee2a7d4c@bootlin.com>
+ <20250711-mdb-max7360-support-v11-4-cf1dee2a7d4c@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v10 0/7] Rust Abstractions for PWM subsystem with TH1520
- PWM driver
-To: Danilo Krummrich <dakr@kernel.org>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
-	<ukleinek@kernel.org>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas
-	Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor
-	Gross <tmgross@umich.edu>, Guo Ren <guoren@kernel.org>, Fu Wei
-	<wefu@redhat.com>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
-	<krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Paul Walmsley
-	<paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou
-	<aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, Marek Szyprowski
-	<m.szyprowski@samsung.com>, Benno Lossin <lossin@kernel.org>, Michael
-	Turquette <mturquette@baylibre.com>, Drew Fustini <fustini@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org, Krzysztof Kozlowski
-	<krzysztof.kozlowski@linaro.org>
-Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <DB8OT5ZZ4SRO.WP5PBFLML683@kernel.org>
-Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250711123639eucas1p1941aef7a8b0e49493b430463f97136db
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250707094926eucas1p155bd967b6986c4a999776839b1aa1fc6
-X-EPHeader: CA
-X-CMS-RootMailID: 20250707094926eucas1p155bd967b6986c4a999776839b1aa1fc6
-References: <CGME20250707094926eucas1p155bd967b6986c4a999776839b1aa1fc6@eucas1p1.samsung.com>
-	<20250707-rust-next-pwm-working-fan-for-sending-v10-0-d0c5cf342004@samsung.com>
-	<e8a4a821-e7e4-4bcd-a2ac-f6b684b6ceea@samsung.com>
-	<ipvaegqlkco5qinhvn33mqvg7ev2walvs74xtzvhimxsfsfzhv@gcmpxcdtetdn>
-	<e77eab1c-446f-4620-95be-d343684d1e95@samsung.com>
-	<4hmb3di5x2iei43nmrykrj5wzlltrf3vrnqvexiablonbscn57@4bbsz5c76t63>
-	<DB8I5J8ZY7QF.2D8HEN6JX4HSZ@kernel.org>
-	<cbxpqormchajfcnf7xxopd7j7igriqus4cuu5jfvxb3mbfb5tu@qz4rc67vjyif>
-	<DB8OT5ZZ4SRO.WP5PBFLML683@kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="hzchddujgha2ujw2"
+Content-Disposition: inline
+In-Reply-To: <20250711-mdb-max7360-support-v11-4-cf1dee2a7d4c@bootlin.com>
 
 
+--hzchddujgha2ujw2
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Subject: Re: [PATCH v11 04/10] pwm: max7360: Add MAX7360 PWM support
+MIME-Version: 1.0
 
-On 7/10/25 23:19, Danilo Krummrich wrote:
-> On Thu Jul 10, 2025 at 10:57 PM CEST, Uwe Kleine-König wrote:
->> On Thu, Jul 10, 2025 at 06:06:26PM +0200, Danilo Krummrich wrote:
->>> On Thu Jul 10, 2025 at 5:25 PM CEST, Uwe Kleine-König wrote:
->>>> Hello Michal,
->>>>
->>>> On Thu, Jul 10, 2025 at 03:48:08PM +0200, Michal Wilczynski wrote:
->>>>> On 7/10/25 15:10, Uwe Kleine-König wrote:
->>>>>> On Thu, Jul 10, 2025 at 10:42:07AM +0200, Michal Wilczynski wrote:
->>>>>>> On 7/7/25 11:48, Michal Wilczynski wrote:
->>>>>>>> The series is structured as follows:
->>>>>>>>  - Expose static function pwmchip_release.
->>>>>>
->>>>>> Is this really necessary? I didn't try to understand the requirements
->>>>>> yet, but I wonder about that. If you get the pwmchip from
->>>>>> __pwmchip_add() the right thing to do to release it is to call
->>>>>> pwmchip_remove(). Feels like a layer violation.
->>>>>
->>>>> It's required to prevent a memory leak in a specific, critical failure
->>>>> scenario. The sequence of events is as follows:
->>>>>
->>>>>     pwm::Chip::new() succeeds, allocating both the C struct pwm_chip and
->>>>>     the Rust drvdata.
->>>>>
->>>>>     pwm::Registration::register() (which calls pwmchip_add()) fails for
->>>>>     some reason.
->>>>
->>>
->>> (Just trying to help clear up the confusion.)
->>
->> Very appreciated!
->>
->>>> If you called pwmchip_alloc() but not yet pwmchip_add(), the right
->>>> function to call for cleanup is pwmchip_put().
->>>
->>> That is exactly what is happening when ARef<Chip> is dropped. If the reference
->>> count drops to zero, pwmchip_release() is called, which frees the chip. However,
->>> this would leave the driver's private data allocation behind, which is owned by
->>> the Chip instance.
->>
->> I don't understand that. The chip and the driver private data both are
->> located in the same allocation. How is this a problem of the driver
->> private data only then? The kfree() in pwmchip_release() is good enough
->> for both?!
-> 
-> Not in the current abstractions, there are two allocations, one for the Chip and
-> one for the driver's private data, or in other words the abstraction uses
-> pwmchip_set_drvdata() and pwmchip_get_drvdata().
-> 
-> Having a brief look at pwmchip_alloc(), it seems to me that PWM supports the
-> subclassing pattern with pwmchip_priv().
-> 
-> We should probably take advantage of that. Assuming we do that, the Rust
-> abstraction still needs a release() callback because we still need to call
-> drop_in_place() in order to get the destructor of the driver's private data
-> type called. We actually missed this in DRM and I fixed it up recently [1].
-> 
-> @Michal: With the subclassing pattern the Chip structure would look like this:
-> 
-> 	#[repr(C)]
-> 	#[pin_data]
-> 	pub struct Chip<T> {
-> 	   inner: Opaque<bindings::pwm_chip>,
-> 	   #[pin]
-> 	   data: T,
-> 	}
-}
+Hello Mathieu,
 
-Hello
+On Fri, Jul 11, 2025 at 11:29:44AM +0200, Mathieu Dubois-Briand wrote:
+> diff --git a/drivers/pwm/pwm-max7360.c b/drivers/pwm/pwm-max7360.c
+> new file mode 100644
+> index 000000000000..0eb83135f658
+> --- /dev/null
+> +++ b/drivers/pwm/pwm-max7360.c
+> @@ -0,0 +1,193 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright 2025 Bootlin
+> + *
+> + * Author: Kamel BOUHARA <kamel.bouhara@bootlin.com>
+> + * Author: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+> + *
 
-Thank you both for the detailed feedback and suggestions.
+A link to the data sheet here would be awesome. I found it at
 
-Danilo, you are right, we should absolutely use the subclassing pattern
-to have a single allocation for the chip and driver data. This is a much
-cleaner design.
+https://www.analog.com/media/en/technical-documentation/data-sheets/MAX7360.pdf
 
-As I looked into this, the main difference is that the C struct pwm_chip
-doesn't have a fixed size because of the pwms[] array at the end. This
-prevents us from using the exact struct layout you suggested.
+> [...]
+> +static int max7360_pwm_round_waveform_tohw(struct pwm_chip *chip,
+> +					   struct pwm_device *pwm,
+> +					   const struct pwm_waveform *wf,
+> +					   void *_wfhw)
+> +{
+> +	struct max7360_pwm_waveform *wfhw = _wfhw;
+> +	u64 duty_steps;
+> +
+> +	/*
+> +	 * Ignore user provided values for period_length_ns and duty_offset_ns:
+> +	 * we only support fixed period of MAX7360_PWM_PERIOD_NS and offset of 0.
+> +	 */
+> +	if (wf->duty_length_ns >= MAX7360_PWM_PERIOD_NS)
+> +		duty_steps = MAX7360_PWM_MAX_RES;
+> +	else
+> +		duty_steps = (u32)wf->duty_length_ns * MAX7360_PWM_MAX_RES / MAX7360_PWM_PERIOD_NS;
 
-pub pwms: __IncompleteArrayField<pwm_device>,
+I read through the data sheet and I think the right formula for
+duty_steps is:
 
-Therefore, to correctly implement the subclassing pattern, it would be
-sufficient to leave the current struct as is and use pwmchip_get_drvdata to
-acquire pointers to the allocated drvdata.
+	if (wf->duty_length_ns >= MAX7360_PWM_PERIOD_NS) {
+		duty_steps = 255;
+	} else {
+		duty_steps = (u32)wf->duty_length_ns * 256 / MAX7360_PWM_PERIOD_NS;
+		if (duty_steps == 255)
+			duty_steps = 254;
+	}
 
-pub struct Chip<T: PwmOps>(Opaque<bindings::pwm_chip>, PhantomData<T>);
+(Using magic constants here, but in the end these should be cpp symbols
+of course.)
 
-This will still achieve the goal of a single allocation via
-pwmchip_alloc's sizeof_priv argument, while working around the DST
-limitation.
+> +	wfhw->duty_steps = min(MAX7360_PWM_MAX_RES, duty_steps);
+> +	wfhw->enabled = !!wf->period_length_ns;
+> +
+> +	return 0;
+> +}
+> +
+> +static int max7360_pwm_round_waveform_fromhw(struct pwm_chip *chip, struct pwm_device *pwm,
+> +					     const void *_wfhw, struct pwm_waveform *wf)
+> +{
+> +	const struct max7360_pwm_waveform *wfhw = _wfhw;
+> +
+> +	wf->period_length_ns = wfhw->enabled ? MAX7360_PWM_PERIOD_NS : 0;
+> +	wf->duty_offset_ns = 0;
+> +
+> +	if (wfhw->enabled)
+> +		wf->duty_length_ns = DIV_ROUND_UP(wfhw->duty_steps * MAX7360_PWM_PERIOD_NS,
+> +						  MAX7360_PWM_MAX_RES);
+> +	else
+> +		wf->duty_length_ns = 0;
 
-> 
-> And in the release() callback would look like this:
-> 
->     extern "C" fn release(ptr: *mut bindings::pwm_chip) {
->         // CAST: Casting `ptr` to `Chip<T>` is valid, since [...].
->         let this = ptr.cast<Chip<T>>();
+The matching code here is:
 
-I think this would use pwmchip_get_drvdata instead.
+	if (wfhw->duty_steps == 255)
+		wf->duty_length_ns = MAX7360_PWM_PERIOD_NS;
+	else
+		wf->duty_length_ns = DIV_ROUND_UP(wfhw->duty_steps * MAX7360_PWM_PERIOD_NS, 256)
 
-> 
->         // SAFETY:
->         // - When `release` runs it is guaranteed that there is no further access to `this`.
->         // - `this` is valid for dropping.
->         unsafe { core::ptr::drop_in_place(this) };
->     }
-> 
-> This is exactly what we're doing in DRM as well, I would have recommended this
-> to begin with, but I didn't recognize that PWM supports subclassing. :)
-> 
-> I recommend having a look at [2].
-> 
-> [1] https://lore.kernel.org/all/20250629153747.72536-1-dakr@kernel.org/
-> [2] https://gitlab.freedesktop.org/drm/misc/kernel/-/blob/drm-misc-fixes/rust/kernel/drm/device.rs
-> 
+This is arguably a strange design, but f_OSC = 128 kHz and the fixed
+period being 2 ms is a strong indication that the divider is 256 and not
+255. If you don't agree to the manual (e.g. because you measured the
+output and saw your formula to be true), please add a code comment about
+that.
 
-Best regards,
--- 
-Michal Wilczynski <m.wilczynski@samsung.com>
+When you have measureing equipment at hand it would be great if you
+could verify that the right fromhw implementation isn't:
+
+	wf->duty_length_ns = DIV_ROUND_UP(wfhw->duty_steps * MAX7360_PWM_PERIOD_NS, 256)
+
+even for wfhw->duty_steps == 255. (Which would mean that the PWM cannot
+provide a 100% duty cycle.)
+
+> +static int max7360_pwm_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct pwm_chip *chip;
+> +	struct regmap *regmap;
+> +	int ret;
+> +
+> +	regmap = dev_get_regmap(dev->parent, NULL);
+> +	if (!regmap)
+> +		return dev_err_probe(dev, -ENODEV, "could not get parent regmap\n");
+> +
+> +	/*
+> +	 * This MFD sub-device does not have any associated device tree node:
+> +	 * properties are stored in the device node of the parent (MFD) device
+> +	 * and this same node is used in phandles of client devices.
+> +	 * Reuse this device tree node here, as otherwise the PWM subsystem
+> +	 * would be confused by this topology.
+> +	 */
+> +	device_set_of_node_from_dev(dev, dev->parent);
+> +
+> +	chip = devm_pwmchip_alloc(dev, MAX7360_NUM_PWMS, 0);
+> +	if (IS_ERR(chip))
+> +		return PTR_ERR(chip);
+> +	chip->ops = &max7360_pwm_ops;
+> +
+> +	pwmchip_set_drvdata(chip, regmap);
+> +
+> +	ret = devm_pwmchip_add(dev, chip);
+> +	if (ret)
+> +		return dev_err_probe(dev, ret, "failed to add PWM chip\n");
+
+Please start error messages with a capital letter.
+
+Best regards
+Uwe
+
+--hzchddujgha2ujw2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhxJL4ACgkQj4D7WH0S
+/k4S6Af+OP9Xr/XyQhfCdozOq2IuZOzTvXZVWWn6sR7p0bRMZDSX1IfwDcvdb63z
+qRUXpBHJaW8grNb+hmwTbRxmHWUCGjhH4VBGUmtfP8fv+QfC35r8ie8Batp8VkOG
+N7+9Z0x5mqd7FLtoJ8TDmxgDzvMzEHyzMdEUmKL/53NxYXpIszBHtB9+5vYszxel
+DaIPmYHyU2JBBAEiSO3LRztZqLOpizDnjhdADLP8ZugJfCTpy5/vymIrc4u3oRxh
+1Mn85JaS8LNhFoVIzBLo35o7yD2eWdrmCRlcsyzExXi7aSJW2o5ZW6ilW4IhovVx
+q+Ox8XFxB7ol5KCtc69MrwYW8HrRAQ==
+=oqCg
+-----END PGP SIGNATURE-----
+
+--hzchddujgha2ujw2--
 
