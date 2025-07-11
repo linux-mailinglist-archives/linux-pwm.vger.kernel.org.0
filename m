@@ -1,225 +1,205 @@
-Return-Path: <linux-pwm+bounces-6840-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6841-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63F66B01F7C
-	for <lists+linux-pwm@lfdr.de>; Fri, 11 Jul 2025 16:50:52 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 267DAB02048
+	for <lists+linux-pwm@lfdr.de>; Fri, 11 Jul 2025 17:19:35 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id AF8665857D1
-	for <lists+linux-pwm@lfdr.de>; Fri, 11 Jul 2025 14:50:52 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BE4C73ACF86
+	for <lists+linux-pwm@lfdr.de>; Fri, 11 Jul 2025 15:19:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1CC82E9EB0;
-	Fri, 11 Jul 2025 14:50:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E7752E4252;
+	Fri, 11 Jul 2025 15:19:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gkdkEKbz"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="X7shbcxo"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98F2A28725E;
-	Fri, 11 Jul 2025 14:50:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7110C274658
+	for <linux-pwm@vger.kernel.org>; Fri, 11 Jul 2025 15:19:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752245444; cv=none; b=hfE7AsvkzEzfzDt/Vt3yls8fvwLCzpFNjZRWb33SGJNdzEC42LOQmUBcFUk3ZzLrjvgj2j/1rTQMl+RtAkWfIqAs1KOwaW+rj79cHiXC2fhZAZxHYuYflFfew0etp16B8UwM4SN8zJq3OGC0da0oHYQ+KyjU/1kLFN+UOpXrAo0=
+	t=1752247167; cv=none; b=fks8z4LqcwsuprWiq623oj/lWKfD/x/qldyFfmGmXr2qN8yLMoW/ocHuh3coL7c0y84Us279CRSNcB9Zt4PV3Ha1+t+zZ+JfexYpTa5yKL8LB67HS29ShbmiK6x/t1dhLXrk1mmsbMKdWWCVhRjOfua6oRvDGdBCi8LryqLhDg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752245444; c=relaxed/simple;
-	bh=f7cDjsfYPdriIgbQb8YGdKasotUmE5cLXTOLFytF0io=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fGQiIoWSFu+ZDHjEcfIrTuGnr1SmJ9KiAvgeZ0tQIFMbumY/iRQC+foDDdV+61BkFzko5ni7v6PcAWdc7wCSmKk1q0GsSEaIxgfO8gctQp7JAPAw0silgSMxEFN0gXIALcqjO7ykp7KbcmJRmSR43e9e0R2QVYtjDJsXQ1vEW6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gkdkEKbz; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92E27C4CEED;
-	Fri, 11 Jul 2025 14:50:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752245444;
-	bh=f7cDjsfYPdriIgbQb8YGdKasotUmE5cLXTOLFytF0io=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gkdkEKbzsDiMv4RtOFiBMMGIOCuL14UGF4GvAp0pra/zVrI9un62BvfuR+HbOvvkP
-	 CyubUoCgzdntLhzTrM+QVUTVUg9tUhaTaq8yR5VV9mndHZroNCbA0xruIvY/xWTCgY
-	 Oi0ItRuP/wMULghV4N5z/aXUuCgUM/CGt9RBOui3JhIAvtDvMxISvooZw9A4qwlYxr
-	 XfvZ8ZoS+Sz5z0JNTTID4kxdeNNekl0NTvKuzDDcHyiM8DjRtaLjynaMmGYoPpp1d1
-	 zHOBJZGluzRw1VnRcMeh/b6YyZQh3CQXvbxf1GhN5v93Vz0MJwwYr1wXx+rjfN0jEs
-	 Te9Ev4z08EevQ==
-Date: Fri, 11 Jul 2025 16:50:41 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Cc: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Kamel Bouhara <kamel.bouhara@bootlin.com>, Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
-	Michael Walle <mwalle@kernel.org>, Mark Brown <broonie@kernel.org>, 
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	andriy.shevchenko@intel.com, =?utf-8?Q?Gr=C3=A9gory?= Clement <gregory.clement@bootlin.com>, 
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v11 04/10] pwm: max7360: Add MAX7360 PWM support
-Message-ID: <j6zavgfpiq7s7cnfkghn2y6fv4h4ziqtpyp7igwmovqlyuasoq@hozlyjcpsxth>
-References: <20250711-mdb-max7360-support-v11-0-cf1dee2a7d4c@bootlin.com>
- <20250711-mdb-max7360-support-v11-4-cf1dee2a7d4c@bootlin.com>
+	s=arc-20240116; t=1752247167; c=relaxed/simple;
+	bh=6eTk+Rez1Dx2t25BtPQK5sIIRmyaEOyXGPPSgCgLmA4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=gvnvmo3s0l9ynxnan6iaIkHdahYHb8rnLFU8ofD6KqLh3f4JBZt7kG/lgD7p43rLOURPSCLXzK4MpLaLYGrMqBPlwXxP92K3EqRelOX2M1NvsEDl77+s6+aaLU2nJ1CpO7ZrrzBppkmKgdE9vFu7BnMMMF+7GukAx5A7Vb6kjp4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=X7shbcxo; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20250711151922euoutp021915a1dbd9a12f603a0cc6a0170bb07e~RO4LFOL_z2996929969euoutp02J
+	for <linux-pwm@vger.kernel.org>; Fri, 11 Jul 2025 15:19:22 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20250711151922euoutp021915a1dbd9a12f603a0cc6a0170bb07e~RO4LFOL_z2996929969euoutp02J
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1752247162;
+	bh=fcewOa5OLVmZ08COtX/6ELxglwPgWvCAwEjTgpYJRbc=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=X7shbcxoHz4/uuqF31DM3XkNqucBXTZUladGlprSDimOpHNXkHJJ3JjmjhCu+/fFb
+	 wmMNyvRmvQNaPuS9ZhG1VC2An5K1xFx+I+4LV6xE6UvvQ8pWIFb8F+z2W+2Sh4Icz9
+	 lVSSRl43P5tpHNLREEzpRtG1cSMv7z/r1YS4Hah8=
+Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20250711151922eucas1p14c32b8004eb7275d4af8efe31dd9c678~RO4Kgc8GB1992419924eucas1p1J;
+	Fri, 11 Jul 2025 15:19:22 +0000 (GMT)
+Received: from [192.168.1.44] (unknown [106.210.136.40]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250711151921eusmtip1884570ece80ba5dfe41229c79334008b~RO4JY_dRl2903329033eusmtip1f;
+	Fri, 11 Jul 2025 15:19:21 +0000 (GMT)
+Message-ID: <8acb5b54-c01b-4427-9ada-596897b96a10@samsung.com>
+Date: Fri, 11 Jul 2025 17:19:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="hzchddujgha2ujw2"
-Content-Disposition: inline
-In-Reply-To: <20250711-mdb-max7360-support-v11-4-cf1dee2a7d4c@bootlin.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v10 0/7] Rust Abstractions for PWM subsystem with TH1520
+ PWM driver
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, Andreas
+	Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor
+	Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Guo Ren
+	<guoren@kernel.org>, Fu Wei <wefu@redhat.com>, Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer
+	Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Alexandre
+	Ghiti <alex@ghiti.fr>, Marek Szyprowski <m.szyprowski@samsung.com>, Benno
+	Lossin <lossin@kernel.org>, Michael Turquette <mturquette@baylibre.com>,
+	Drew Fustini <fustini@kernel.org>, linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org,
+	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, Krzysztof
+	Kozlowski <krzysztof.kozlowski@linaro.org>
+Content-Language: en-US
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+In-Reply-To: <i5ee2u45kmcb2su743th744ofnmk4lkfq44iqvfwdjwscv3bz7@pjakppae22na>
+Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20250711151922eucas1p14c32b8004eb7275d4af8efe31dd9c678
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20250707094926eucas1p155bd967b6986c4a999776839b1aa1fc6
+X-EPHeader: CA
+X-CMS-RootMailID: 20250707094926eucas1p155bd967b6986c4a999776839b1aa1fc6
+References: <CGME20250707094926eucas1p155bd967b6986c4a999776839b1aa1fc6@eucas1p1.samsung.com>
+	<20250707-rust-next-pwm-working-fan-for-sending-v10-0-d0c5cf342004@samsung.com>
+	<e8a4a821-e7e4-4bcd-a2ac-f6b684b6ceea@samsung.com>
+	<ipvaegqlkco5qinhvn33mqvg7ev2walvs74xtzvhimxsfsfzhv@gcmpxcdtetdn>
+	<e77eab1c-446f-4620-95be-d343684d1e95@samsung.com>
+	<4hmb3di5x2iei43nmrykrj5wzlltrf3vrnqvexiablonbscn57@4bbsz5c76t63>
+	<ad17dc8a-80b7-4344-a1be-6cf780567aaa@samsung.com>
+	<i5ee2u45kmcb2su743th744ofnmk4lkfq44iqvfwdjwscv3bz7@pjakppae22na>
 
 
---hzchddujgha2ujw2
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [PATCH v11 04/10] pwm: max7360: Add MAX7360 PWM support
-MIME-Version: 1.0
 
-Hello Mathieu,
+On 7/10/25 22:39, Uwe Kleine-König wrote:
+> Hello,
+> 
+> On Thu, Jul 10, 2025 at 06:58:41PM +0200, Michal Wilczynski wrote:
+>> On 7/10/25 17:25, Uwe Kleine-König wrote:
+>>> On Thu, Jul 10, 2025 at 03:48:08PM +0200, Michal Wilczynski wrote:
+>>>> On 7/10/25 15:10, Uwe Kleine-König wrote:
+>>>>> On Thu, Jul 10, 2025 at 10:42:07AM +0200, Michal Wilczynski wrote:
+>>>>>> On 7/7/25 11:48, Michal Wilczynski wrote:
+>>>>>>> The series is structured as follows:
+>>>>>>>  - Expose static function pwmchip_release.
+>>>>>
+>>>>> Is this really necessary? I didn't try to understand the requirements
+>>>>> yet, but I wonder about that. If you get the pwmchip from
+>>>>> __pwmchip_add() the right thing to do to release it is to call
+>>>>> pwmchip_remove(). Feels like a layer violation.
+>>>>
+>>>> It's required to prevent a memory leak in a specific, critical failure
+>>>> scenario. The sequence of events is as follows:
+>>>>
+>>>>     pwm::Chip::new() succeeds, allocating both the C struct pwm_chip and
+>>>>     the Rust drvdata.
+>>>>
+>>>>     pwm::Registration::register() (which calls pwmchip_add()) fails for
+>>>>     some reason.
+>>>
+>>> If you called pwmchip_alloc() but not yet pwmchip_add(), the right
+>>> function to call for cleanup is pwmchip_put().
+>>>
+>>>>     The ARef<Chip> returned by new() is dropped, its reference count
+>>>>     goes to zero, and our custom release_callback is called.
+>>>>
+>>>> [...]
+>>>>>>> ---
+>>>>>>> base-commit: 47753b5a1696283930a78aae79b29371f96f5bca
+>>>>>
+>>>>> I have problems applying this series and don't have this base commit in
+>>>>> my repo.
+>>>>
+>>>> Sorry for the confusion. Base commit doesn't exist in the mainline
+>>>> kernel or linux-next, cause I've added some dependecies for compilation,
+>>>> like IoMem for the driver (uploaded full branch on github [1]). The
+>>>> bindings however doesn't depend on anything that's not in linux-next.
+>>>
+>>> The series didn't apply to my pwm/for-next branch.
+>>>
+>>> Note that the base-commit should always be a publically known commit.
+>>> See the chapter about "Base Tree Information" in git-format-patch(1).
+>>
+>> Hello Uwe,
+>>
+>> Okay, thank you for the clarification. I understand the requirement for
+>> a public base commit.
+>>
+>> My intention was to include the TH1520 driver primarily as a practical
+>> demonstration of the new abstractions. However the driver can't be
+>> merged as is, since it depends on the unmerged IoMem series and won't
+>> compile against a public commit.
+>>
+>> I will rebase the series on pwm/for-next and drop the driver and its
+>> associated device tree patches for now. I'll send a new version
+>> containing just the core PWM abstraction patches, which apply cleanly.
+>>
+>> I will resubmit the driver patches once their dependencies are available
+>> in a public tree.
+> 
+> If you base your tree on (say) v6.16-rc1, then add some Rust
+> dependencies up to 47753b5a1696283930a78aae79b29371f96f5bca and then add
+> your series, you just do:
+> 
+> 	git format-patch --base v6.16-rc1 47753b5a1696283930a78aae79b29371f96f5bca..
+> 
+> . This results in a base-commit line that I (and maybe also build bots)
+> can use and a bunch of further lines listing the commits between
+> v6.16-rc1 and 47753b5a1696283930a78aae79b29371f96f5bca that might be
+> findable on lore.k.o.
 
-On Fri, Jul 11, 2025 at 11:29:44AM +0200, Mathieu Dubois-Briand wrote:
-> diff --git a/drivers/pwm/pwm-max7360.c b/drivers/pwm/pwm-max7360.c
-> new file mode 100644
-> index 000000000000..0eb83135f658
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-max7360.c
-> @@ -0,0 +1,193 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright 2025 Bootlin
-> + *
-> + * Author: Kamel BOUHARA <kamel.bouhara@bootlin.com>
-> + * Author: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-> + *
+Hi Uwe,
 
-A link to the data sheet here would be awesome. I found it at
+Thank you very much for the detailed advice on using git format-patch
+--base. I appreciate you taking the time to explain the workflow.
 
-https://www.analog.com/media/en/technical-documentation/data-sheets/MAX7360.pdf
+I investigated this approach, and the difficulty is that the IoMem
+series [1], which my driver depends on, is itself based on an
+integration tree rather than a clean public tag.
 
-> [...]
-> +static int max7360_pwm_round_waveform_tohw(struct pwm_chip *chip,
-> +					   struct pwm_device *pwm,
-> +					   const struct pwm_waveform *wf,
-> +					   void *_wfhw)
-> +{
-> +	struct max7360_pwm_waveform *wfhw = _wfhw;
-> +	u64 duty_steps;
-> +
-> +	/*
-> +	 * Ignore user provided values for period_length_ns and duty_offset_ns:
-> +	 * we only support fixed period of MAX7360_PWM_PERIOD_NS and offset of 0.
-> +	 */
-> +	if (wf->duty_length_ns >= MAX7360_PWM_PERIOD_NS)
-> +		duty_steps = MAX7360_PWM_MAX_RES;
-> +	else
-> +		duty_steps = (u32)wf->duty_length_ns * MAX7360_PWM_MAX_RES / MAX7360_PWM_PERIOD_NS;
+This means that to create a series based on v6.16-rc1, I would have to
+include a very large number of intermediate commits from linux-next,
+which, would not be helpful for review.
 
-I read through the data sheet and I think the right formula for
-duty_steps is:
+Therefore, I believe that dropping the driver and its device tree
+patches for now is the best path forward. This will result in a much
+smaller, self contained series for the core PWM abstractions that
+applies cleanly to your pwm/for-next branch.
 
-	if (wf->duty_length_ns >= MAX7360_PWM_PERIOD_NS) {
-		duty_steps = 255;
-	} else {
-		duty_steps = (u32)wf->duty_length_ns * 256 / MAX7360_PWM_PERIOD_NS;
-		if (duty_steps == 255)
-			duty_steps = 254;
-	}
 
-(Using magic constants here, but in the end these should be cpp symbols
-of course.)
+[1] - https://lore.kernel.org/rust-for-linux/20250704-topics-tyr-platform_iomem-v12-0-1d3d4bd8207d@collabora.com/
+> 
+> Best regards
+> Uwe
 
-> +	wfhw->duty_steps = min(MAX7360_PWM_MAX_RES, duty_steps);
-> +	wfhw->enabled = !!wf->period_length_ns;
-> +
-> +	return 0;
-> +}
-> +
-> +static int max7360_pwm_round_waveform_fromhw(struct pwm_chip *chip, struct pwm_device *pwm,
-> +					     const void *_wfhw, struct pwm_waveform *wf)
-> +{
-> +	const struct max7360_pwm_waveform *wfhw = _wfhw;
-> +
-> +	wf->period_length_ns = wfhw->enabled ? MAX7360_PWM_PERIOD_NS : 0;
-> +	wf->duty_offset_ns = 0;
-> +
-> +	if (wfhw->enabled)
-> +		wf->duty_length_ns = DIV_ROUND_UP(wfhw->duty_steps * MAX7360_PWM_PERIOD_NS,
-> +						  MAX7360_PWM_MAX_RES);
-> +	else
-> +		wf->duty_length_ns = 0;
-
-The matching code here is:
-
-	if (wfhw->duty_steps == 255)
-		wf->duty_length_ns = MAX7360_PWM_PERIOD_NS;
-	else
-		wf->duty_length_ns = DIV_ROUND_UP(wfhw->duty_steps * MAX7360_PWM_PERIOD_NS, 256)
-
-This is arguably a strange design, but f_OSC = 128 kHz and the fixed
-period being 2 ms is a strong indication that the divider is 256 and not
-255. If you don't agree to the manual (e.g. because you measured the
-output and saw your formula to be true), please add a code comment about
-that.
-
-When you have measureing equipment at hand it would be great if you
-could verify that the right fromhw implementation isn't:
-
-	wf->duty_length_ns = DIV_ROUND_UP(wfhw->duty_steps * MAX7360_PWM_PERIOD_NS, 256)
-
-even for wfhw->duty_steps == 255. (Which would mean that the PWM cannot
-provide a 100% duty cycle.)
-
-> +static int max7360_pwm_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev = &pdev->dev;
-> +	struct pwm_chip *chip;
-> +	struct regmap *regmap;
-> +	int ret;
-> +
-> +	regmap = dev_get_regmap(dev->parent, NULL);
-> +	if (!regmap)
-> +		return dev_err_probe(dev, -ENODEV, "could not get parent regmap\n");
-> +
-> +	/*
-> +	 * This MFD sub-device does not have any associated device tree node:
-> +	 * properties are stored in the device node of the parent (MFD) device
-> +	 * and this same node is used in phandles of client devices.
-> +	 * Reuse this device tree node here, as otherwise the PWM subsystem
-> +	 * would be confused by this topology.
-> +	 */
-> +	device_set_of_node_from_dev(dev, dev->parent);
-> +
-> +	chip = devm_pwmchip_alloc(dev, MAX7360_NUM_PWMS, 0);
-> +	if (IS_ERR(chip))
-> +		return PTR_ERR(chip);
-> +	chip->ops = &max7360_pwm_ops;
-> +
-> +	pwmchip_set_drvdata(chip, regmap);
-> +
-> +	ret = devm_pwmchip_add(dev, chip);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "failed to add PWM chip\n");
-
-Please start error messages with a capital letter.
-
-Best regards
-Uwe
-
---hzchddujgha2ujw2
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmhxJL4ACgkQj4D7WH0S
-/k4S6Af+OP9Xr/XyQhfCdozOq2IuZOzTvXZVWWn6sR7p0bRMZDSX1IfwDcvdb63z
-qRUXpBHJaW8grNb+hmwTbRxmHWUCGjhH4VBGUmtfP8fv+QfC35r8ie8Batp8VkOG
-N7+9Z0x5mqd7FLtoJ8TDmxgDzvMzEHyzMdEUmKL/53NxYXpIszBHtB9+5vYszxel
-DaIPmYHyU2JBBAEiSO3LRztZqLOpizDnjhdADLP8ZugJfCTpy5/vymIrc4u3oRxh
-1Mn85JaS8LNhFoVIzBLo35o7yD2eWdrmCRlcsyzExXi7aSJW2o5ZW6ilW4IhovVx
-q+Ox8XFxB7ol5KCtc69MrwYW8HrRAQ==
-=oqCg
------END PGP SIGNATURE-----
-
---hzchddujgha2ujw2--
+Best regards,
+-- 
+Michal Wilczynski <m.wilczynski@samsung.com>
 
