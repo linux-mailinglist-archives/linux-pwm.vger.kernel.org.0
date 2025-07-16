@@ -1,264 +1,233 @@
-Return-Path: <linux-pwm+bounces-6844-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6845-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id D07B9B06E7E
-	for <lists+linux-pwm@lfdr.de>; Wed, 16 Jul 2025 09:06:25 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id F31F2B06F54
+	for <lists+linux-pwm@lfdr.de>; Wed, 16 Jul 2025 09:46:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D2BE23A55A1
-	for <lists+linux-pwm@lfdr.de>; Wed, 16 Jul 2025 07:05:57 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3C7621A66251
+	for <lists+linux-pwm@lfdr.de>; Wed, 16 Jul 2025 07:46:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B85C289805;
-	Wed, 16 Jul 2025 07:06:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1DF228B7DB;
+	Wed, 16 Jul 2025 07:46:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CEcEHM2I"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="mLqF3euY"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay5-d.mail.gandi.net (relay5-d.mail.gandi.net [217.70.183.197])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 388F42868B7;
-	Wed, 16 Jul 2025 07:06:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9045025F790;
+	Wed, 16 Jul 2025 07:46:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.197
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752649583; cv=none; b=gb1eT2lhzH+J8TyI5mlu0HjRJXeS33izCTP8IOSn/y8PSIKArJCkhsUGriQTIrrzgMh7DuNZ+2kUYfjrRBOeedKUUMlhHXD6E1OONKguKPaMri2yFqw+MwOHwcj6vXGQZEzsR9oa7RAbrbiMyFgTyaNY1FGo7885Iyyqi2USFSc=
+	t=1752651982; cv=none; b=EA2s0CTMPvupHTAnmK0CpvZs1m19eCBQj9vFklPsy5dU0FooZajDyGo0DIlHvzxu8aKzFM+RXULHh+f+wf5d2xZ2cDwL5Z7tDFvgx/Z1BDalARJSrrIs8tGtLzDiLCr7Q+FMv3xL8xWJGyGrlnmgKf+IZ0Yl97naeUNLcG1rosE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752649583; c=relaxed/simple;
-	bh=2v8aTWJzavPgsJvmRGcpLNKIpQM1xydyPQ5QDNfpnCk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=sjnBhCRkiGvK0cuO9ymEwzHzRwRj3/KvI4Em06Yyfai2OcUKJHSHh7Fs7I9KLyubX9re/tFFKHn1qaRhl8Dwjig4f87YHaFU9xXzwHLqxEIsBeuVm8BKmNkyUKHvG0k7cunRA9UioIpZ8ZOUBNdZVWbuyVPA4/yZtzJsxwK/Dys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CEcEHM2I; arc=none smtp.client-ip=209.85.208.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-60c4f796446so9254009a12.1;
-        Wed, 16 Jul 2025 00:06:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752649579; x=1753254379; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=sy1qfF6J0yZ4M9hDUBcxMOCwE6+RueoLeBAi6Q3h16A=;
-        b=CEcEHM2IBlWOi3T/ZlZa7NLd7mRy0xY487TC5uZo5zfCZ46iu/6wE+o6XZB421Nymd
-         /30CbN0ipHpBkuTyu1vCreDMwibVQziLFAxOI8LDh9bjDeUwFBOUCy3fq/hgjVeHtr5M
-         4ozE4GgKq1fcDX41MVAtU1k4bK6SkLb399nwxxe0hlTrZN36kIGvq8UXG76+ClhunpoG
-         Om3UBc6AE1d9vt8opgafixKr1yXvedNn9C15EGt4Cq8liPZSw2embfKSD0E+9HSDjYob
-         X7862NYT6YLVAErEfAj5vyL5aR3/B8BeEnMm5TSNp95fHM5PLtZlwjdE5n+JbRA5Sol5
-         Q5/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752649579; x=1753254379;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=sy1qfF6J0yZ4M9hDUBcxMOCwE6+RueoLeBAi6Q3h16A=;
-        b=amjlByP2D24kKJBPH+ilL6trKxv2cOHbBdMiNizO2ThGCyhEvTtlYIYreVKm61XCCA
-         Vq9o9KWxisU8iX3UMRBMZsm/C8zvzg/fnrRmo7IQ7teL45yLyIKQJXocWCVahEXBHgQw
-         fAg3zdg5lg8p24VOdlDhP8EfAgW0lmmiEhH7sDGJ/SkeNh6ocS8VL6v2WUsRglT4PVmk
-         pIcCSEmzol/7gL5shk6a06tStLUWKQEIpJSKgcniHuhNNqna4cZeYen+MR8S4SOCh0eQ
-         gbVMmX3mHR5UrAewMIMiB3cUtS0t45i+8FhtUGxKhL5FL+lr/hExE3EHMvparkd0/69m
-         RtrA==
-X-Forwarded-Encrypted: i=1; AJvYcCUDdFVs05doTEN1mIGn2F8AiTPzh1U5pXVgjH0m4rI7pzf0/XX6vtSK8JcuRiTTwwMC2EU/E4w1XyDd@vger.kernel.org, AJvYcCX6VOnFDjTpsBUzdkLEYOZ1nTDISzFORhdcA8zI6UTCXsSPZjNr7aH+eOHD+2P/oponlGUpGAcwi77GYg==@vger.kernel.org, AJvYcCXUfNIDyHUrrHbddBRtA8KhM7Wzzz1eqo91h6e33u1MsOcJMFaRBf+HL16Nfw5VQx92b4kVqfc14v0SsP6b@vger.kernel.org
-X-Gm-Message-State: AOJu0YzhJUE8gAfGYvc+lT4bwpFhwwNIbsYXsiEFqMgm21KacltHfYnB
-	ZJEFS5EhaelLU1IsmJnhRJj/Ng9+Y2B3bdcysDIj1TEy63tifiz5oHic
-X-Gm-Gg: ASbGncvSY0X0WvEqj1U/gnzSyiOUEwFyG+NiXJuvQtn6Jd2CCGJ0rVtxXRt2EqwZO0M
-	BKpWiIAJgqlQdTTce8vR/bIHGYnlzW9AnutdXH+y+HOKSOMO/xxjONWRRG+V/nQIJcs846pdJkD
-	PjfeKDlLQHyUwBK3QArugokZDwlf87LfclwkPdjk9mQhn+7QlxKH0aRtOaI9xVVayFegjsLe8AV
-	mWQqIarFk87SFQdGxuHllLlYVWSv0vMHkS6UwFSuX4Hzqcmh7+vusine4At6KX0YvT1P2l6mRW0
-	QI6TUTfkZH5qVQnuccH2M9f0jgtbOslN0W6dh1c+ObOg447z3GKSmBKy2uHsQ3R+UbxPpuPWlkl
-	IAYt+UlJ23UF6UeYiDaqXQ4o0sVsuNybRr6RqXDlE
-X-Google-Smtp-Source: AGHT+IGq7oFEenjuXbxDNQjcsj9gWmgJnvZG8GpNaxkXhGYLzXzBwzP/VpQHzk2fr7XLaslvSUvxKA==
-X-Received: by 2002:a05:6402:40c3:b0:608:2e97:4399 with SMTP id 4fb4d7f45d1cf-61281e9bc83mr1868801a12.4.1752649579148;
-        Wed, 16 Jul 2025 00:06:19 -0700 (PDT)
-Received: from legfed1 (lis01.vpn.liebherr.com. [193.27.220.234])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-611c97335e2sm8473152a12.41.2025.07.16.00.06.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Jul 2025 00:06:18 -0700 (PDT)
-Date: Wed, 16 Jul 2025 09:06:16 +0200
-From: Dimitri Fedrau <dima.fedrau@gmail.com>
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: dimitri.fedrau@liebherr.com, Jean Delvare <jdelvare@suse.com>,
-	Guenter Roeck <linux@roeck-us.net>, linux-pwm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org
-Subject: Re: [PATCH v4 1/2] pwm: mc33xs2410: add hwmon support
-Message-ID: <20250716070616.GA5639@legfed1>
-References: <20250708-mc33xs2410-hwmon-v4-0-95b9e3ea5f5c@liebherr.com>
- <20250708-mc33xs2410-hwmon-v4-1-95b9e3ea5f5c@liebherr.com>
- <fxzkuflnasxp73fyf262wk5yx7yfnb5druegdujhzll3wjn6r5@n4xg6gs6segi>
+	s=arc-20240116; t=1752651982; c=relaxed/simple;
+	bh=WvyN1vdWhCD7797ocIEM78+/KhxekVcT+AOQcmtLic8=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
+	 References:In-Reply-To; b=G2DdaP382i1zys2uJo9rZehjS3ofC3MpJUOaYcFICs34dCod2qnuzfRHn+ZVh+6BNw8txYxKUqui5QhmgISHcDGE3/kHImY8/zLEMNaPUm7GPMPHmjUeWmwCZis2en8xpWRr+EG7T3uAet5pd81/CXu1Y9WW0wi8tY6ReZDU1KY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=mLqF3euY; arc=none smtp.client-ip=217.70.183.197
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: by mail.gandi.net (Postfix) with ESMTPSA id D80CE44365;
+	Wed, 16 Jul 2025 07:46:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
+	t=1752651976;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mVnzIorq+3eHat4uDbQQ9kodVbAlWxfOepQytsnXCts=;
+	b=mLqF3euY4Wg+hiLmK9WFO8FKhslC4FY6ba0ydsshfwu6wScP4ri8sN/QCy8x5I9ibFsCTd
+	SOZGIV69Sy2iVQKktLmos+zAlVbkgvc9rRAo0PXLFcOPyw/7eQHB6CzaFMTqvgsq1i3AvX
+	bP9xstnjzuEPzwRaoYZASBcDJ6ZbSdlVrIhwHSygli4PZANm37lTVUdCBimH+7YRcObyGM
+	RUzMZ23/2z3jy/ZkaDpooUVxEdKOJdipUKgC/XDchW8m9KDK2aM+XbUca2/NUVaOBa9Iyj
+	vkJDbHl7ccq8h2jISugRA0+Q+RRbGGeCT/11KrUbSpWoE3j1Z8rPVe1aepmshQ==
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <fxzkuflnasxp73fyf262wk5yx7yfnb5druegdujhzll3wjn6r5@n4xg6gs6segi>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 16 Jul 2025 09:46:14 +0200
+Message-Id: <DBDB9TTHTCKT.2MZJIDJGFPTDB@bootlin.com>
+Subject: Re: [PATCH v11 04/10] pwm: max7360: Add MAX7360 PWM support
+Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
+ Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ "Dmitry Torokhov" <dmitry.torokhov@gmail.com>, "Michael Walle"
+ <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, <andriy.shevchenko@intel.com>,
+ =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Thomas
+ Petazzoni" <thomas.petazzoni@bootlin.com>, "Andy Shevchenko"
+ <andriy.shevchenko@linux.intel.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
+References: <20250711-mdb-max7360-support-v11-0-cf1dee2a7d4c@bootlin.com>
+ <20250711-mdb-max7360-support-v11-4-cf1dee2a7d4c@bootlin.com>
+ <j6zavgfpiq7s7cnfkghn2y6fv4h4ziqtpyp7igwmovqlyuasoq@hozlyjcpsxth>
+In-Reply-To: <j6zavgfpiq7s7cnfkghn2y6fv4h4ziqtpyp7igwmovqlyuasoq@hozlyjcpsxth>
+X-GND-State: clean
+X-GND-Score: -100
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdehjedugecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhepggfgtgffkffuvefhvffofhgjsehtqhertdertdejnecuhfhrohhmpedfofgrthhhihgvuhcuffhusghoihhsqdeurhhirghnugdfuceomhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnheplefhhfetleegfeegfedviedtvedvvddtfedvfeegheeitdeiiefgvdeiteetlefgnecuffhomhgrihhnpegrnhgrlhhoghdrtghomhdpsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvfedprhgtphhtthhopehukhhlvghinhgvkheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhgvvgeskhgvrhhnv
+ ghlrdhorhhgpdhrtghpthhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
+X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-Hi Uwe,
-
-Am Wed, Jul 16, 2025 at 08:39:14AM +0200 schrieb Uwe Kleine-König:
-> Hello Dimitri,
-> 
-> On Tue, Jul 08, 2025 at 06:13:03PM +0200, Dimitri Fedrau via B4 Relay wrote:
-> > diff --git a/drivers/pwm/pwm-mc33xs2410.c b/drivers/pwm/pwm-mc33xs2410.c
-> > index a1ac3445ccdb4709d92e0075d424a8abc1416eee..e70ed90bfdac77f5c777f0ba66d670331a515d12 100644
-> > --- a/drivers/pwm/pwm-mc33xs2410.c
-> > +++ b/drivers/pwm/pwm-mc33xs2410.c
-> > @@ -18,10 +18,12 @@
-> >   *   rather something in between.
-> >   */
-> >  
-> > +#include <linux/auxiliary_bus.h>
-> >  #include <linux/bitfield.h>
-> >  #include <linux/delay.h>
-> >  #include <linux/err.h>
-> >  #include <linux/math64.h>
-> > +#include <linux/mc33xs2410.h>
-> >  #include <linux/minmax.h>
-> >  #include <linux/module.h>
-> >  #include <linux/of.h>
-> > @@ -120,12 +122,19 @@ static int mc33xs2410_read_reg(struct spi_device *spi, u8 reg, u16 *val, u8 flag
-> >  	return mc33xs2410_read_regs(spi, &reg, flag, val, 1);
-> >  }
-> >  
-> > -static int mc33xs2410_read_reg_ctrl(struct spi_device *spi, u8 reg, u16 *val)
-> > +int mc33xs2410_read_reg_ctrl(struct spi_device *spi, u8 reg, u16 *val)
-> >  {
-> >  	return mc33xs2410_read_reg(spi, reg, val, MC33XS2410_FRAME_IN_DATA_RD);
-> >  }
-> > +EXPORT_SYMBOL_NS_GPL(mc33xs2410_read_reg_ctrl, "PWM_MC33XS2410");
-> 
-> To reduce repetition (a bit) you can consider to define
-> DEFAULT_SYMBOL_NAMESPACE.
-> 
-Will add it in V5.
-
-> > -static int mc33xs2410_modify_reg(struct spi_device *spi, u8 reg, u8 mask, u8 val)
-> > +int mc33xs2410_read_reg_diag(struct spi_device *spi, u8 reg, u16 *val)
-> > +{
-> > +	return mc33xs2410_read_reg(spi, reg, val, 0);
-> > +}
-> > +EXPORT_SYMBOL_NS_GPL(mc33xs2410_read_reg_diag, "PWM_MC33XS2410");
-> > +
-> > +int mc33xs2410_modify_reg(struct spi_device *spi, u8 reg, u8 mask, u8 val)
-> >  {
-> >  	u16 tmp;
-> >  	int ret;
-> > @@ -139,6 +148,7 @@ static int mc33xs2410_modify_reg(struct spi_device *spi, u8 reg, u8 mask, u8 val
-> >  
-> >  	return mc33xs2410_write_reg(spi, reg, tmp);
-> >  }
-> > +EXPORT_SYMBOL_NS_GPL(mc33xs2410_modify_reg, "PWM_MC33XS2410");
-> >  
-> >  static u8 mc33xs2410_pwm_get_freq(u64 period)
-> >  {
-> > @@ -297,6 +307,52 @@ static const struct pwm_ops mc33xs2410_pwm_ops = {
-> >  	.get_state = mc33xs2410_pwm_get_state,
-> >  };
-> >  
-> > +static void mc33xs2410_adev_release(struct device *dev)
-> > +{
-> > +	struct auxiliary_device *adev = to_auxiliary_dev(dev);
-> > +
-> > +	kfree(adev);
-> > +}
-> > +
-> > +static void mc33xs2410_unregister_adev(void *_adev)
-> > +{
-> > +	struct auxiliary_device *adev = _adev;
-> > +
-> > +	auxiliary_device_delete(adev);
-> > +	auxiliary_device_uninit(adev);
-> > +}
-> 
-> This is a copy of auxiliary_device_destroy(). But see below.
+On Fri Jul 11, 2025 at 4:50 PM CEST, Uwe Kleine-K=C3=B6nig wrote:
+> Hello Mathieu,
 >
-Yes, you are right.
-
-> > +static int mc33xs2410_hwmon_register(struct device *dev)
-> > +{
-> > +	struct auxiliary_device *adev;
-> > +	int ret;
-> > +
-> > +	adev = kzalloc(sizeof(*adev), GFP_KERNEL);
-> > +	if (!adev)
-> > +		return -ENOMEM;
-> > +
-> > +	adev->name = "hwmon";
-> > +	adev->dev.parent = dev;
-> > +	adev->dev.release = mc33xs2410_adev_release;
-> > +	adev->id = 0;
-> > +
-> > +	ret = auxiliary_device_init(adev);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret = auxiliary_device_add(adev);
-> > +	if (ret) {
-> > +		auxiliary_device_uninit(adev);
-> > +		return ret;
-> > +	}
-> > +
-> > +	ret = devm_add_action_or_reset(dev, mc33xs2410_unregister_adev, adev);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	return 0;
-> > +}
-> 
-> This function is equivalent to devm_auxiliary_device_create(dev, "hwmon", NULL);
+> On Fri, Jul 11, 2025 at 11:29:44AM +0200, Mathieu Dubois-Briand wrote:
+>> diff --git a/drivers/pwm/pwm-max7360.c b/drivers/pwm/pwm-max7360.c
+>> new file mode 100644
+>> index 000000000000..0eb83135f658
+>> --- /dev/null
+>> +++ b/drivers/pwm/pwm-max7360.c
+>> @@ -0,0 +1,193 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * Copyright 2025 Bootlin
+>> + *
+>> + * Author: Kamel BOUHARA <kamel.bouhara@bootlin.com>
+>> + * Author: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+>> + *
 >
-Thanks for finding this, will implement it in V5.
+> A link to the data sheet here would be awesome. I found it at
+>
+> https://www.analog.com/media/en/technical-documentation/data-sheets/MAX73=
+60.pdf
+>
 
-> > +
-> >  static int mc33xs2410_reset(struct device *dev)
-> >  {
-> >  	struct gpio_desc *reset_gpio;
-> > @@ -361,6 +417,10 @@ static int mc33xs2410_probe(struct spi_device *spi)
-> >  	if (ret < 0)
-> >  		return dev_err_probe(dev, ret, "Failed to add pwm chip\n");
-> >  
-> > +	ret = mc33xs2410_hwmon_register(dev);
-> > +	if (ret < 0)
-> > +		return dev_err_probe(dev, ret, "Failed to register hwmon device\n");
-> > +
-> >  	return 0;
-> >  }
-> >  
-> > diff --git a/include/linux/mc33xs2410.h b/include/linux/mc33xs2410.h
-> > new file mode 100644
-> > index 0000000000000000000000000000000000000000..15a0b0b595fe00a369cee45f2d30b2d912b612bb
-> > --- /dev/null
-> > +++ b/include/linux/mc33xs2410.h
-> > @@ -0,0 +1,14 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
-> > +/*
-> > + * Copyright (C) 2024 Liebherr-Electronics and Drives GmbH
-> > + */
-> > +#ifndef _MC33XS2410_H
-> > +#define _MC33XS2410_H
-> > +
-> > +#include <linux/spi/spi.h>
-> > +
-> > +int mc33xs2410_read_reg_ctrl(struct spi_device *spi, u8 reg, u16 *val);
-> > +int mc33xs2410_read_reg_diag(struct spi_device *spi, u8 reg, u16 *val);
-> > +int mc33xs2410_modify_reg(struct spi_device *spi, u8 reg, u8 mask, u8 val);
-> > +
-> > +#endif /* _MC33XS2410_H */
-> 
-> I consider it elegant to have the
-> 
-> 	MODULE_IMPORT_NS("PWM_MC33XS2410")
-> 
-> in the header. This is nice because the namespacing is completely
-> transparant to consumers and all they need it the right #include as if
-> there was no namespacing at all.
-> 
-Yes, will implement it as you suggested.
+Sure, I will add the link.
 
-Thanks for your input.
+>> [...]
+>> +static int max7360_pwm_round_waveform_tohw(struct pwm_chip *chip,
+>> +					   struct pwm_device *pwm,
+>> +					   const struct pwm_waveform *wf,
+>> +					   void *_wfhw)
+>> +{
+>> +	struct max7360_pwm_waveform *wfhw =3D _wfhw;
+>> +	u64 duty_steps;
+>> +
+>> +	/*
+>> +	 * Ignore user provided values for period_length_ns and duty_offset_ns=
+:
+>> +	 * we only support fixed period of MAX7360_PWM_PERIOD_NS and offset of=
+ 0.
+>> +	 */
+>> +	if (wf->duty_length_ns >=3D MAX7360_PWM_PERIOD_NS)
+>> +		duty_steps =3D MAX7360_PWM_MAX_RES;
+>> +	else
+>> +		duty_steps =3D (u32)wf->duty_length_ns * MAX7360_PWM_MAX_RES / MAX736=
+0_PWM_PERIOD_NS;
+>
+> I read through the data sheet and I think the right formula for
+> duty_steps is:
+>
+> 	if (wf->duty_length_ns >=3D MAX7360_PWM_PERIOD_NS) {
+> 		duty_steps =3D 255;
+> 	} else {
+> 		duty_steps =3D (u32)wf->duty_length_ns * 256 / MAX7360_PWM_PERIOD_NS;
+> 		if (duty_steps =3D=3D 255)
+> 			duty_steps =3D 254;
+> 	}
+>
+> (Using magic constants here, but in the end these should be cpp symbols
+> of course.)
+>
+>> +	wfhw->duty_steps =3D min(MAX7360_PWM_MAX_RES, duty_steps);
+>> +	wfhw->enabled =3D !!wf->period_length_ns;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int max7360_pwm_round_waveform_fromhw(struct pwm_chip *chip, str=
+uct pwm_device *pwm,
+>> +					     const void *_wfhw, struct pwm_waveform *wf)
+>> +{
+>> +	const struct max7360_pwm_waveform *wfhw =3D _wfhw;
+>> +
+>> +	wf->period_length_ns =3D wfhw->enabled ? MAX7360_PWM_PERIOD_NS : 0;
+>> +	wf->duty_offset_ns =3D 0;
+>> +
+>> +	if (wfhw->enabled)
+>> +		wf->duty_length_ns =3D DIV_ROUND_UP(wfhw->duty_steps * MAX7360_PWM_PE=
+RIOD_NS,
+>> +						  MAX7360_PWM_MAX_RES);
+>> +	else
+>> +		wf->duty_length_ns =3D 0;
+>
+> The matching code here is:
+>
+> 	if (wfhw->duty_steps =3D=3D 255)
+> 		wf->duty_length_ns =3D MAX7360_PWM_PERIOD_NS;
+> 	else
+> 		wf->duty_length_ns =3D DIV_ROUND_UP(wfhw->duty_steps * MAX7360_PWM_PERI=
+OD_NS, 256)
+>
+> This is arguably a strange design, but f_OSC =3D 128 kHz and the fixed
+> period being 2 ms is a strong indication that the divider is 256 and not
+> 255. If you don't agree to the manual (e.g. because you measured the
+> output and saw your formula to be true), please add a code comment about
+> that.
+>
 
-Best regards,
-Dimitri Fedrau
+Yes, I did a few measurements, and you are right. I'm fixing the code as
+you described.
+
+> When you have measureing equipment at hand it would be great if you
+> could verify that the right fromhw implementation isn't:
+>
+> 	wf->duty_length_ns =3D DIV_ROUND_UP(wfhw->duty_steps * MAX7360_PWM_PERIO=
+D_NS, 256)
+>
+> even for wfhw->duty_steps =3D=3D 255. (Which would mean that the PWM cann=
+ot
+> provide a 100% duty cycle.)
+>
+
+No, I confirm, values from 0 to 254 provide a duty cycle from 0 to
+254/256. A value of 255 provides a 100% duty cycle.
+
+>> +static int max7360_pwm_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev =3D &pdev->dev;
+>> +	struct pwm_chip *chip;
+>> +	struct regmap *regmap;
+>> +	int ret;
+>> +
+>> +	regmap =3D dev_get_regmap(dev->parent, NULL);
+>> +	if (!regmap)
+>> +		return dev_err_probe(dev, -ENODEV, "could not get parent regmap\n");
+>> ...
+>> +
+>> +	ret =3D devm_pwmchip_add(dev, chip);
+>> +	if (ret)
+>> +		return dev_err_probe(dev, ret, "failed to add PWM chip\n");
+>
+> Please start error messages with a capital letter.
+>
+
+Fixed, thanks.
+
+> Best regards
+> Uwe
+
+Thanks for your review,
+Mathieu
+
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
 
