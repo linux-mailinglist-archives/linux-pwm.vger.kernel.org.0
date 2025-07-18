@@ -1,88 +1,146 @@
-Return-Path: <linux-pwm+bounces-6852-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6853-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F360B09CED
-	for <lists+linux-pwm@lfdr.de>; Fri, 18 Jul 2025 09:46:20 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id B3EF5B09DD2
+	for <lists+linux-pwm@lfdr.de>; Fri, 18 Jul 2025 10:24:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 766683AE7C3
-	for <lists+linux-pwm@lfdr.de>; Fri, 18 Jul 2025 07:45:51 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 457A31C42271
+	for <lists+linux-pwm@lfdr.de>; Fri, 18 Jul 2025 08:25:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C26AE28150F;
-	Fri, 18 Jul 2025 07:46:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6D20221557;
+	Fri, 18 Jul 2025 08:24:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=growora.pl header.i=@growora.pl header.b="dXnMLNcw"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="NZC7xGRb"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail.growora.pl (mail.growora.pl [51.254.119.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f49.google.com (mail-lf1-f49.google.com [209.85.167.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25D162798FE
-	for <linux-pwm@vger.kernel.org>; Fri, 18 Jul 2025 07:46:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=51.254.119.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44E5B1D8DFB
+	for <linux-pwm@vger.kernel.org>; Fri, 18 Jul 2025 08:24:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752824770; cv=none; b=om2rFgJkRXvuswL9PrkhFJSP867Z0EwPnlHpGaWM5iKNU3Iw+8Gr3cq/b2Vjtdzb9UrTYloYEbbjW04JER2RLgwAGmsm4NVXx74swG54e2lRZObTZOZjVGnu3ncfrEZmDWS1F/X+O0NNSjY9dqvcvYHFb8Om01RqVszI47HYW4U=
+	t=1752827089; cv=none; b=Bs4HIsgjeNab72RAaNzeeVh6C6f8RQL9Lo5VwCE9mIEcTBKoGcCQd7yGChyV9cltFZbW52Do+1/lHo3ViOXapo34mLOFfMutUpflq1eQ/APaus2wTykx/3Fp4CWm6txJaTOvTEDsKnQscPclk7++WzXeiWq2gzMi1A+C/wWO+Yc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752824770; c=relaxed/simple;
-	bh=RSy3akR1+Z0TK1MqUcCTAhuNDshd4oA9g7Cu4aFIABY=;
-	h=Message-ID:Date:From:To:Subject:MIME-Version:Content-Type; b=idxeXgMzPpD8i6K/naAD35RUl/fNsSRJzD4H4JXozdy801r1ivdPVUxUkiXTTgefdadSQ4XNCCV6zrgVdliK5kiu+Tlfl0CqwOHBaxLhl00mQnxXxMdI/9nni+QtNSPZjRg0g6BU70fCbaHpUceoPTeFs+7oOg//czuNW7UgL3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=growora.pl; spf=pass smtp.mailfrom=growora.pl; dkim=pass (2048-bit key) header.d=growora.pl header.i=@growora.pl header.b=dXnMLNcw; arc=none smtp.client-ip=51.254.119.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=growora.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=growora.pl
-Received: by mail.growora.pl (Postfix, from userid 1002)
-	id 4DA8D24688; Fri, 18 Jul 2025 09:41:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=growora.pl; s=mail;
-	t=1752824541; bh=RSy3akR1+Z0TK1MqUcCTAhuNDshd4oA9g7Cu4aFIABY=;
-	h=Date:From:To:Subject:From;
-	b=dXnMLNcwMBSo/sE00XXNKmV2/Vj4VntvnKlQe27gWEO9XH/4uWMT/T95C9DpbNADp
-	 XKRT2wMjf4yo4ojRrsfvey9Hhn+5Y2Rj6NdLop9R680zRRm5sSOK2ABOGhAJjeO8gP
-	 ReoAKq9IZHyJJ2V+U6CCVs9aWT5ikSNe8xa1+P4+2wfHua3apVePovXQxK9LaBcMMw
-	 loK2jxpCU1K8TVdFmojQ7Yf1VzYR8Om9udlDgNMnKvZCq2OmhYukM/NbKWEzAK6aj/
-	 bYT7yQbqgGyda2ylTHgWZcd5jxXjKYKZ4uo44wdCl5qt6h8Z6sr9aNgA5KyKrs3ZPP
-	 YKaI392EOYEng==
-Received: by mail.growora.pl for <linux-pwm@vger.kernel.org>; Fri, 18 Jul 2025 07:40:59 GMT
-Message-ID: <20250718084500-0.1.kp.29a03.0.fedeztnu9f@growora.pl>
-Date: Fri, 18 Jul 2025 07:40:59 GMT
-From: "Mateusz Hopczak" <mateusz.hopczak@growora.pl>
-To: <linux-pwm@vger.kernel.org>
-Subject: Wsparcie programistyczne - termin spotkania 
-X-Mailer: mail.growora.pl
+	s=arc-20240116; t=1752827089; c=relaxed/simple;
+	bh=a3MIC7RxixPUwwhGsl42BKsPKoxmkQUFuNgilLzgAQQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=V222VbTX9iqm/qhWsWch7w3N7KJqVGC6dlyHN/plhxI+VMJO1aLWZZXRx3sryIbHYXxbc+WfjM7iS5eewj2wbECI/UhddvsGhLi1oabkn7xmUvOMapjOvEIs7Z/zLOxJmHHUy1w7OaoLrbFnD3kVcrdluqi+hpw4EjOegpJm0zU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=NZC7xGRb; arc=none smtp.client-ip=209.85.167.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-lf1-f49.google.com with SMTP id 2adb3069b0e04-5562838ce68so1799005e87.2
+        for <linux-pwm@vger.kernel.org>; Fri, 18 Jul 2025 01:24:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1752827086; x=1753431886; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nDy9TTBigj7nc3pLpQhSmWpeNqPalWZSN8wozU2T8n8=;
+        b=NZC7xGRbeWBISykkL42c63rxZe+myLzF7kcsjr3iOrQlZngCQPEBxTNnrLIgielbmn
+         0V20wBJR4S9UdeKobo09D9QAMgBxAkyWym5FPv3BcZGrXuwDtBAPgSpm2Mgo4Dmg6Shz
+         ocj1kH3i79PlSCbHwSKXFiQ4ONe96+OerZitv69kDW88rl3ufUSz+wfXhFrY9jWbtZQu
+         NHjlJqKdpNOvIuA2nd1dStCNlzAs7PXVlsgUjqeoYKz+JkQShSNT2wzwxwbkAlsEjtkE
+         ULEF6GfpxN9QZ65sQWDFCpvwuF43BLIKoTu99PDkgqZBKVUiMRq2XdE9U8b4nKVeBs8R
+         1+7A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752827086; x=1753431886;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=nDy9TTBigj7nc3pLpQhSmWpeNqPalWZSN8wozU2T8n8=;
+        b=Jh14A4TscqViLWXlk/oiMfJcHxJ1SaL6gPt0rUw4mKpoRBjWWooeUljICAE5RQlIy3
+         fcAdTaiW6KbDODW/W2J/eTzJoht/6vOq/FpJ6GZi6Bs567lm/JH73me8qktMFzloP8FI
+         my5CuBrRnkhH7uuAteqgV/5btePZ2Ey6GZmCgNWLHspB17zmiGmhbuAfRDSu8PMnOrOR
+         T8C/YoM8QYE7+xHfJGrPwcY2xqSB3fLx0ABbHNo8BWf8iw1bngFfs8VEiYNVb2gMprJ1
+         zC+McZA2MSGfBa3+HC+AZo1PHknO2K+PwqPLA3p7aU2FQPXxEOsAn9cNB23qW9802rhZ
+         VJWw==
+X-Gm-Message-State: AOJu0YzmBntZXaBjv3ZvmIQGhRyV6L3lqR+0Pk6T+JYi0CGc1kS0Lzoh
+	4vyeLGJSCFfFVVsBXVsVeMOVx3j/S8edqfZlfwViEmvuiJp7JLoenrONq8nQ2LZ1DV0lAVQf7X6
+	Tyctdc2UljYlZh/uAHQjVomjjSyVwQrzRoCB9Mzau4A==
+X-Gm-Gg: ASbGncsXb+kpCIdVJg56G8Yb3z/FV+ybFS3UuYlak5DulKOfxhqxnrfCewK6l5IVpdM
+	OchEZKExhKO9/d22m//3lJmNf/t6Wt/thniEA53zjJLLB+JAqWr9Om8MoWlRaNPguD+A7qAfIlV
+	0hmVrda0uJsZh8/v3w0AHDq1MqOSFEQFhLDKY5kOvLzLiLHUU/PB34YPnemfRc7iqTy+f7dtdHo
+	LpZ0+4uHanjPnsunwm16qzKWIgTN8HczK8j1paX1zjKGUt+
+X-Google-Smtp-Source: AGHT+IFecY9ddtgeFWtrSq4/qItewsVx5rXnyCa9Gnx3yNTpoIlCl9hmQqq62ZgP9tK1+Hs15tO0SCuUkwfIeQMfPc4=
+X-Received: by 2002:a05:6512:3402:b0:554:f74b:78ae with SMTP id
+ 2adb3069b0e04-55a23f388e9mr3654046e87.31.1752827086370; Fri, 18 Jul 2025
+ 01:24:46 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20250717151117.1828585-2-u.kleine-koenig@baylibre.com>
+In-Reply-To: <20250717151117.1828585-2-u.kleine-koenig@baylibre.com>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Date: Fri, 18 Jul 2025 10:24:35 +0200
+X-Gm-Features: Ac12FXyB2RNStkSqdQL4qgdh5iipyZ8EEKsKQ8ozC2QQ16JzE-lIp7tuD27i7dE
+Message-ID: <CAMRc=MdVLxBcH7EbVC_ce_V74W1+pLTX0js5__db1puVwwXAnw@mail.gmail.com>
+Subject: Re: [PATCH v2] pwm: Provide a gpio device for waveform drivers
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: linux-pwm@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
+	Clemens Gruber <clemens.gruber@pqgruber.com>, linux-gpio@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-Szanowni Pa=C5=84stwo,
+On Thu, Jul 17, 2025 at 5:11=E2=80=AFPM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@baylibre.com> wrote:
+>
+> A PWM is a more general concept than an output-only GPIO. When using
+> duty_length =3D period_length the PWM looks like an active GPIO, with
+> duty_length =3D 0 like an inactive GPIO. With the waveform abstraction
+> there is enough control over the configuration to ensure that PWMs that
+> cannot generate a constant signal at both levels error out.
+>
+> The pwm-pca9685 driver already provides a gpio chip. When this driver is
+> converted to the waveform callbacks, the gpio part can just be dropped.
+>
+> Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@baylibre.com>
+> ---
+> Hello,
+>
+> I found some uncommitted changes in my tree that belong in this patch.
+> This v2 actually compiles ...
+>
+> Best regards
+> Uwe
+>
 
-czy w Pa=C5=84stwa firmie rozwa=C5=BCaj=C4=85 Pa=C5=84stwo rozw=C3=B3j no=
-wego oprogramowania lub potrzebuj=C4=85 zaufanego zespo=C5=82u, kt=C3=B3r=
-y przejmie odpowiedzialno=C5=9B=C4=87 za stron=C4=99 technologiczn=C4=85 =
-projektu?
+[...]
 
-Jeste=C5=9Bmy butikowym software housem z 20-osobowym zespo=C5=82em in=C5=
-=BCynier=C3=B3w. Specjalizujemy si=C4=99 w projektach high-tech i deeptec=
-h =E2=80=93 od zaawansowanych system=C3=B3w AI/ML, przez blockchain i IoT=
-, a=C5=BC po aplikacje mobilne, webowe i symulacyjne (m.in. Unreal Engine=
-).
+> +
+>  /**
+>   * __pwmchip_add() - register a new PWM chip
+>   * @chip: the PWM chip to add
+> @@ -2449,9 +2494,33 @@ int __pwmchip_add(struct pwm_chip *chip, struct mo=
+dule *owner)
+>         if (ret)
+>                 goto err_device_add;
+>
+> +       if (IS_ENABLED(CONFIG_PWM_PROVIDE_GPIO) && chip->ops->write_wavef=
+orm) {
+> +               struct device *parent =3D pwmchip_parent(chip);
+> +
+> +               chip->gpio =3D (typeof(chip->gpio)){
+> +                       .label =3D dev_name(parent),
+> +                       .parent =3D parent,
+> +                       .request =3D pwm_gpio_request,
+> +                       .free =3D pwm_gpio_free,
+> +                       .get_direction =3D pwm_gpio_get_direction,
+> +                       .set_rv =3D pwm_gpio_set,
+> +                       .base =3D -1,
+> +                       .ngpio =3D chip->npwm,
+> +                       .can_sleep =3D true,
+> +               };
 
-Wspieramy firmy technologiczne oraz startupy na r=C3=B3=C5=BCnych etapach=
-: od koncepcji, przez development, po skalowanie i optymalizacj=C4=99. Dz=
-ia=C5=82amy elastycznie =E2=80=93 jako partnerzy, podwykonawcy lub ventur=
-e builderzy.
+I would have probably just assigned each field separately and avoid
+the cast but it's your code so I don't have a strong opinion.
 
-Je=C5=9Bli szukaj=C4=85 Pa=C5=84stwo zespo=C5=82u, kt=C3=B3ry rozumie z=C5=
-=82o=C5=BCono=C5=9B=C4=87 projekt=C3=B3w i wnosi realn=C4=85 warto=C5=9B=C4=
-=87 technologiczn=C4=85 =E2=80=93 ch=C4=99tnie porozmawiamy.
+Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
-Czy mogliby=C5=9Bmy um=C3=B3wi=C4=87 si=C4=99 na kr=C3=B3tk=C4=85 rozmow=C4=
-=99, by sprawdzi=C4=87 potencja=C5=82 wsp=C3=B3=C5=82pracy?
-
-
-Z pozdrowieniami
-Mateusz Hopczak
+[...]
 
