@@ -1,156 +1,155 @@
-Return-Path: <linux-pwm+bounces-6854-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6855-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 90ABBB0AAE6
-	for <lists+linux-pwm@lfdr.de>; Fri, 18 Jul 2025 21:59:03 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 114E2B0B2F7
+	for <lists+linux-pwm@lfdr.de>; Sun, 20 Jul 2025 02:20:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 111531891503
-	for <lists+linux-pwm@lfdr.de>; Fri, 18 Jul 2025 19:59:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0EAAC17DC44
+	for <lists+linux-pwm@lfdr.de>; Sun, 20 Jul 2025 00:20:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAAB9202F8E;
-	Fri, 18 Jul 2025 19:58:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FB3DD299;
+	Sun, 20 Jul 2025 00:20:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="CwHsqvg7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gp/L4yUe"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E86120101D
-	for <linux-pwm@vger.kernel.org>; Fri, 18 Jul 2025 19:58:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C7815A8;
+	Sun, 20 Jul 2025 00:20:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752868739; cv=none; b=WXynpdKsx/TzMZqZjzqqw9Azi4o4K0eLBlgdrUiS6F9ZL33QAK4hoaXkhaOw7e7QlJ8nRKaOFQKhIYYRZVJvCX0lRKsb98wj3cfE94gUqkuI9kP2be/TkWoxwrsBNaYxfpRqKRKsSNQVBWjOvu39reeP+a3zEFPEPYZOaBSd5eE=
+	t=1752970847; cv=none; b=bdliAp7R8+2mWdd8i+nVCKYxKVKj4mMfeaACMf1DFIJVBREUhSRI6jQNt5iPx028EyYUrq6zXbbTVxDIf1xr2KB9RwoOn7lQxgt1/f9YxkGoHsLO4zBuRSCNwJbyYb5Wwi6h9V540FdLkXaVScyI6tNmQALWf13Ga36EUFUxIFE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752868739; c=relaxed/simple;
-	bh=ntRTCkdiLACtDDyxHl0JzZPk6ugxEpVRhEIHX4HyXsY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=uVymgObd7gW64H7M8bmWGbUj+ZIRK4FL0TkaBiVnB4kXl+lv5VvY2h5sFd9a08VXkc/2IEIU77+2JsMaW0CnzH6zRtZk/e+6Isul8mttL47Bjz7bA7B1PkKeFKSrJ5qmxjdBbqwzJlTNWaXd9VddqmPFmGHAiMBhmTbMpXKAHeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=CwHsqvg7; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-6070293103cso3785949a12.0
-        for <linux-pwm@vger.kernel.org>; Fri, 18 Jul 2025 12:58:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1752868735; x=1753473535; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=TG/A8MD9h2Qm+mGXUoB5bwhbq1t5xQPNJH1ji2Dq7cQ=;
-        b=CwHsqvg7lQ9UWbSemVDKfgYOf+19arHOjavsYOERHuSiiZpLMeSnX4XLlKojMGfNfL
-         tVN1p004uW+lQlFrGDD/oJg5WF8gkZFX+vDN85uei+26neQmh0g2SPp2S4+yvg8vxHCM
-         oFsjVRBFedB8tOlIE401tkLm6ngwqSsLApdSrsNnKo6REbkpRvFrTfQEx163HxcrVO18
-         6rasjgGhp2ze79NJjnuxMlrNbsAKakoTHr+ALzCF6ijwCFJyDUmfuTBj9nDPRUtDnu+w
-         3l8tfzpONU3S/7+TaDzkZQxRDBg8qpTiomK13pJae0hwvL9r9BL7YzOyi4pqlUwUgY5v
-         vDGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752868735; x=1753473535;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=TG/A8MD9h2Qm+mGXUoB5bwhbq1t5xQPNJH1ji2Dq7cQ=;
-        b=wLREtfK3J/pnoJ038DH8tArBHB31Gtff7c2uPVY4bTD1vd3iGsxzZBOJUA/hhNKOy8
-         ILk97XVrxnJIRQhj8N+YCnxPplf5JvwhzXyzUB4/AVfSGgMD3g1ZJIHf2Y5gpwsj7L1s
-         ZSfDMVG0IiVCsOezFRp1lOjMWMHM2inORXVXYV+eRiqWlqDjmQeVioY4g4MOIZeneCl4
-         PYvKov7srGivYATT1k2GLuDe/4fvSn/SmmzpaOEGbptqDBkNnKQ5eYdgsKWf5MgGLCbN
-         GoIg0sP+xEoUs5DwVarIuqLPHukE2iJSW/dGO5foeptnIyKXSIRfjnjw/m9jpN8ZVriI
-         CCQA==
-X-Gm-Message-State: AOJu0Yyj9r6vIs2bbciSBQ8Cisi1/jRMsB/FxCTtitmRAgSvwMQW9WBL
-	juDCEMMOERlLMNc7rLFxNbD5lcrak4Q0k3avdXZtgsPfZRDvBjWNo0qXcD+ZxgJBSoM=
-X-Gm-Gg: ASbGncttKjWXJAk1ei47c3CgDLLZvxFZHZ/MNAqI/kA/gOkCQX5KLipAxzXu5QpkooM
-	Q158MoImVHSrP8MSSV9Z8VH3MIOp5LpRhN5kNGCUWbap/xCOLnV4M7XQNBRJCj+Ca5OVd8oNcW0
-	ycllwrGIU4fC0hlFAokuXXkhE7g9WtCUSvIupEUA2ILJvYU9GT8PbICcsCbNwxohvgvb+SVN1YD
-	lf09OXliPYhiooGfZ7Cjcv3sVCFSe9u/IaqoJnhWfW38OCavH9IAGCtDc63h/2CgiZ9pld+w8BQ
-	cEa09hOcmLXKnvXRzZx35xARBjqPpv2q48BBV7TdII1KqK6DPyEYiBf3rjOAhcFi31PrB+oZ/0z
-	6RZyk1tVZrBYZmK1xwwdEmr8IHcY=
-X-Google-Smtp-Source: AGHT+IGZLmz3m5l0IF0Yg7TQTgu7wIO/R+HbeCFkO6tY9HA7GXMvUK7u4rtRvY6OYiVsxWmV3DbWYw==
-X-Received: by 2002:a17:907:1c15:b0:ae0:685b:5e9f with SMTP id a640c23a62f3a-ae9cdd82e9fmr1255906666b.3.1752868734219;
-        Fri, 18 Jul 2025 12:58:54 -0700 (PDT)
-Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-aec6ca3005bsm172320166b.88.2025.07.18.12.58.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 18 Jul 2025 12:58:52 -0700 (PDT)
-Date: Fri, 18 Jul 2025 21:58:51 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: linux-pwm@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, 
-	Clemens Gruber <clemens.gruber@pqgruber.com>, linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v2] pwm: Provide a gpio device for waveform drivers
-Message-ID: <sjhu4c7yjwbkl4c56okpwpjtufdi245ok2j3nsssrqfsrpybpy@nsjr3wrydhnz>
-References: <20250717151117.1828585-2-u.kleine-koenig@baylibre.com>
- <CAMRc=MdVLxBcH7EbVC_ce_V74W1+pLTX0js5__db1puVwwXAnw@mail.gmail.com>
+	s=arc-20240116; t=1752970847; c=relaxed/simple;
+	bh=OtFSKnQJLty8pNLNiDG+01ViY9iOpad5TmroInGnKcw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=oJTFZUSHxbx3356YFalhtkTTNo2d181UTWXY5Lln8e07Qw7tIf9QJJ3N2ZzODX8rMzAzWwCmfKYZv5Vyr8w6cOATA1TtzOrnICVr7sWtYPHdHQjnLOe75LStJIgguOLCr69LJvPJg0QZYyav3Wh3YvMelNM5qwe/vEZ7b+vNuM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gp/L4yUe; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF514C4CEE3;
+	Sun, 20 Jul 2025 00:20:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752970846;
+	bh=OtFSKnQJLty8pNLNiDG+01ViY9iOpad5TmroInGnKcw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=gp/L4yUeeuj6moNS7hE8ns2uEdOo4Nyg0bhcpd4SZ0ID+jaFjSLW4qjENp5xWKOxs
+	 ba8zlU3l729BseY5uWou352gHYh1h/FgxSDKWrIyUfnCsVExiTxOQCXPXTKSGHn04e
+	 Fr3B4B8EjJUZLppBfVeGODlDFcqnQerC6JLGlTJwFzDf40DACNofGhMJwffixr24qK
+	 FwoRyYbnlLpwGXOo84BbZQj899W/CBoVmQerDv65bcQvKrpeCxCNx0T8uYn5Lmm4MC
+	 jc7IQ/t1Ct51Hz605ZImGBeZZVVmGfcYGybqxA/S9eHoRo4jldYV/1sAIKwwqnd4gF
+	 2yghXXgl36L3w==
+From: William Breathitt Gray <wbg@kernel.org>
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: William Breathitt Gray <wbg@kernel.org>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Sebastian Reichel <sebastian.reichel@collabora.com>,
+	Kever Yang <kever.yang@rock-chips.com>,
+	Yury Norov <yury.norov@gmail.com>,
+	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	Dave Ertman <david.m.ertman@intel.com>,
+	Ira Weiny <ira.weiny@intel.com>,
+	Leon Romanovsky <leon@kernel.org>,
+	Lee Jones <lee@kernel.org>,
+	linux-gpio@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-rockchip@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	linux-iio@vger.kernel.org,
+	kernel@collabora.com,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Detlev Casanova <detlev.casanova@collabora.com>
+Subject: Re: [PATCH v2 6/7] counter: Add rockchip-pwm-capture driver
+Date: Sun, 20 Jul 2025 09:20:15 +0900
+Message-ID: <20250720002024.696040-1-wbg@kernel.org>
+X-Mailer: git-send-email 2.50.1
+In-Reply-To: <20250602-rk3576-pwm-v2-6-a6434b0ce60c@collabora.com>
+References: 
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="fomhupbbsnhnwfob"
-Content-Disposition: inline
-In-Reply-To: <CAMRc=MdVLxBcH7EbVC_ce_V74W1+pLTX0js5__db1puVwwXAnw@mail.gmail.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3362; i=wbg@kernel.org; h=from:subject; bh=OtFSKnQJLty8pNLNiDG+01ViY9iOpad5TmroInGnKcw=; b=owGbwMvMwCW21SPs1D4hZW3G02pJDBk1ZoZ8Gz+aTdhw53D1hbVX5Nc3ZaxsPTyL8/YuN56Cw FKrq62WHaUsDGJcDLJiiiy95mfvPrikqvHjxfxtMHNYmUCGMHBxCsBEli5g+GcXl79B3f4I/867 8fImitd+ThGcE1JmLzIzvlMjR/6602qG/9H/Jmx+MC3/sEbhh10T7266ybuXNelCScrmxZ2RmW0 3XnMBAA==
+X-Developer-Key: i=wbg@kernel.org; a=openpgp; fpr=8D37CDDDE0D22528F8E89FB6B54856CABE12232B
+Content-Transfer-Encoding: 8bit
 
+On Mon, Jun 02, 2025 at 06:19:17PM +0200, Nicolas Frattaroli wrote:
+> Among many other things, Rockchip's new PWMv4 IP in the RK3576 supports
+> PWM capture functionality.
+> 
+> Add a basic driver for this that works to capture period and duty cycle
+> values and return them as nanoseconds to the user. It's quite basic, but
+> works well enough to demonstrate the device function exclusion stuff
+> that mfpwm does, in order to eventually support all the functions of
+> this device in drivers within their appropriate subsystems, without them
+> interfering with each other.
+> 
+> Once enabled, the counter driver waits for enough high-to-low and
+> low-to-high interrupt signals to arrive, and then writes the cycle count
+> register values into some atomic members of the driver instance's state
+> struct. The read callback can then do the conversion from cycle count to
+> the more useful period and duty cycle nanosecond values, which require
+> knowledge of the clock rate, which requires a call that the interrupt
+> handler cannot make itself because said call may sleep.
+> 
+> To detect the condition of a PWM signal disappearing, i.e. turning off,
+> we modify the delay value of a delayed worker whose job it is to simply
+> set those atomic members to zero. Should the "timeout" so to speak be
+> reached, we assume the PWM signal is off. This isn't perfect; it
+> obviously introduces a latency between it being off and the counter
+> reporting it as such. Because there isn't a way to reset the internal
+> double-buffered cycle count in the hardware, we filter out unreliable
+> periods above the timeout value in the counter read callback.
+> 
+> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 
---fomhupbbsnhnwfob
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2] pwm: Provide a gpio device for waveform drivers
-MIME-Version: 1.0
+Hi Nicolas,
 
-Hello Bartosz,
+Would you help me understand the computations in this driver?
 
-On Fri, Jul 18, 2025 at 10:24:35AM +0200, Bartosz Golaszewski wrote:
-> On Thu, Jul 17, 2025 at 5:11=E2=80=AFPM Uwe Kleine-K=C3=B6nig
-> <u.kleine-koenig@baylibre.com> wrote:
-> > @@ -2449,9 +2494,33 @@ int __pwmchip_add(struct pwm_chip *chip, struct =
-module *owner)
-> >         if (ret)
-> >                 goto err_device_add;
-> >
-> > +       if (IS_ENABLED(CONFIG_PWM_PROVIDE_GPIO) && chip->ops->write_wav=
-eform) {
-> > +               struct device *parent =3D pwmchip_parent(chip);
-> > +
-> > +               chip->gpio =3D (typeof(chip->gpio)){
-> > +                       .label =3D dev_name(parent),
-> > +                       .parent =3D parent,
-> > +                       .request =3D pwm_gpio_request,
-> > +                       .free =3D pwm_gpio_free,
-> > +                       .get_direction =3D pwm_gpio_get_direction,
-> > +                       .set_rv =3D pwm_gpio_set,
-> > +                       .base =3D -1,
-> > +                       .ngpio =3D chip->npwm,
-> > +                       .can_sleep =3D true,
-> > +               };
->=20
-> I would have probably just assigned each field separately and avoid
-> the cast but it's your code so I don't have a strong opinion.
+If I understand the purpose of this driver correctly, it's meant to
+compute the period and duty cycle of a PWM signal. What do LPC and HPC
+represent? I'm guessing they are the low period count (LPC) and the high
+period count (HPC). So then you calculate the total period by adding
+LPC and HPC, whereas the duty cycle derives from HPC.
 
-This is not a cast but an initializer. The nice side effect is that all
-unmentioned struct members are default initialized, so there is no need
-for an explicit memset(..., 0, ...);.
-=20
-> Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Am I understanding the algorithm correctly? What are the units of HPC
+and LPC; are they ticks from the core clock? Are PWMV4_INT_LPC and
+PWM4_INT_HPC the change-of-state interrupts for LPC and HPC
+respectively?
 
-Thanks
-Uwe
+The Counter subsystem can be used to derive the period and duty cycle of
+a signal, but I believe there's a more idiomatic way to implement this.
+Existing counter drivers such as microchip-tcb-capture achieve this by
+leveraging Counter events exposed via the Counter chrdev interface.
 
---fomhupbbsnhnwfob
-Content-Type: application/pgp-signature; name="signature.asc"
+The basic idea would be:
+    * Expose LPC and HPC as count0 and count1;
+    * Push the PWMV4_INT_LPC and PWMV4_INT_HPC interrupts as
+      COUNTER_EVENT_CHANGE_OF_STATE events on channel 0 and channel 1
+      respectively;
+    * Register Counter watches in userspace to capture LPC and HPC on
+      each interrupt;
 
------BEGIN PGP SIGNATURE-----
+The Counter chrdev interface records a timestamp in nanoseconds with
+each event capture. So to compute period and duty cycle, you would
+subtract the difference between two HPC/LPC captures; the difference in
+the timestamps gives you the elapsed time between the two captures in
+nanoseconds.
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmh6p3cACgkQj4D7WH0S
-/k7i6ggAsasseJwqk2bwjYrRTCy8aRkoGSy4ivEt5VlVtAzWnju2kTQ+ZHsX0EdK
-4ZpUKvlY2BUEW+t05narXQp8U2cLNUbkH0lQRRgidu2zWuZw8+mPuaEnhGN1hPqo
-diGMmomibe+2D25y7AX836MzltfVA0zHXYERqNWdK8iWKC3cMv5TrvABgrd4uOp3
-P33BFHOSdJwPD7r7KO5AnMS+cRZnZ4F0u6tgEJJd8i5OyI4HtUol4kyYmJuBgtKQ
-8l25SCvdTuCOfwiZwp/qnJEaA1DuhJpWLxIBOXaEXTqiyepvJr6CjW4Q0lP07Scf
-w4+PzI7x6Rp77U/xlJ4aA/G4qkaYqw==
-=LWCr
------END PGP SIGNATURE-----
+Would that design work for your use case?
 
---fomhupbbsnhnwfob--
+William Breathitt Gray
 
