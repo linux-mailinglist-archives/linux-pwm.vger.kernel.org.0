@@ -1,155 +1,174 @@
-Return-Path: <linux-pwm+bounces-6855-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6856-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 114E2B0B2F7
-	for <lists+linux-pwm@lfdr.de>; Sun, 20 Jul 2025 02:20:53 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 06C65B0C21E
+	for <lists+linux-pwm@lfdr.de>; Mon, 21 Jul 2025 13:04:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0EAAC17DC44
-	for <lists+linux-pwm@lfdr.de>; Sun, 20 Jul 2025 00:20:53 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C7D671891AB2
+	for <lists+linux-pwm@lfdr.de>; Mon, 21 Jul 2025 11:04:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3FB3DD299;
-	Sun, 20 Jul 2025 00:20:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5CCC28FFDE;
+	Mon, 21 Jul 2025 11:04:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gp/L4yUe"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u9dOftA3"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C7815A8;
-	Sun, 20 Jul 2025 00:20:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 859A51D540;
+	Mon, 21 Jul 2025 11:04:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752970847; cv=none; b=bdliAp7R8+2mWdd8i+nVCKYxKVKj4mMfeaACMf1DFIJVBREUhSRI6jQNt5iPx028EyYUrq6zXbbTVxDIf1xr2KB9RwoOn7lQxgt1/f9YxkGoHsLO4zBuRSCNwJbyYb5Wwi6h9V540FdLkXaVScyI6tNmQALWf13Ga36EUFUxIFE=
+	t=1753095843; cv=none; b=ZTTN3vH3yQJ5RsgjSsY6F8bpm+7+AMwq5Famaw1xsnfsNOUgwmlwfq6qXXJWFx/UOmR70Bnx12RHTidLi3d/so0YK69JPk750ds29ZWUd0N8OMdX3u80jQ1h/E76x+LUMNEECh46R5DViDFAOYItUg0G+GPBBve6+28w/BwLtf0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752970847; c=relaxed/simple;
-	bh=OtFSKnQJLty8pNLNiDG+01ViY9iOpad5TmroInGnKcw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oJTFZUSHxbx3356YFalhtkTTNo2d181UTWXY5Lln8e07Qw7tIf9QJJ3N2ZzODX8rMzAzWwCmfKYZv5Vyr8w6cOATA1TtzOrnICVr7sWtYPHdHQjnLOe75LStJIgguOLCr69LJvPJg0QZYyav3Wh3YvMelNM5qwe/vEZ7b+vNuM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gp/L4yUe; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF514C4CEE3;
-	Sun, 20 Jul 2025 00:20:38 +0000 (UTC)
+	s=arc-20240116; t=1753095843; c=relaxed/simple;
+	bh=EcW+PuwhhXhVoa+pRSceK3tuWnx91zSNXUwkaiOBF8c=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZTlDnozOK60vQl81gwY0zuu6tO0AwY6Gwohvks4aodJ82CeMwC7XIqaoWaSA3MLIrucZPMLqjhcMW8wyRh1R4kYHXP+dFAJVw1U5kj/x1VEsBfNJDlL5iedleRmv5mb/aZGALqosub7cC4PYRM0B1xekvBpiVwPPhduiVUbdalk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u9dOftA3; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1423EC4CEED;
+	Mon, 21 Jul 2025 11:04:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752970846;
-	bh=OtFSKnQJLty8pNLNiDG+01ViY9iOpad5TmroInGnKcw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gp/L4yUeeuj6moNS7hE8ns2uEdOo4Nyg0bhcpd4SZ0ID+jaFjSLW4qjENp5xWKOxs
-	 ba8zlU3l729BseY5uWou352gHYh1h/FgxSDKWrIyUfnCsVExiTxOQCXPXTKSGHn04e
-	 Fr3B4B8EjJUZLppBfVeGODlDFcqnQerC6JLGlTJwFzDf40DACNofGhMJwffixr24qK
-	 FwoRyYbnlLpwGXOo84BbZQj899W/CBoVmQerDv65bcQvKrpeCxCNx0T8uYn5Lmm4MC
-	 jc7IQ/t1Ct51Hz605ZImGBeZZVVmGfcYGybqxA/S9eHoRo4jldYV/1sAIKwwqnd4gF
-	 2yghXXgl36L3w==
-From: William Breathitt Gray <wbg@kernel.org>
-To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-Cc: William Breathitt Gray <wbg@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Sebastian Reichel <sebastian.reichel@collabora.com>,
-	Kever Yang <kever.yang@rock-chips.com>,
-	Yury Norov <yury.norov@gmail.com>,
-	Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	Dave Ertman <david.m.ertman@intel.com>,
-	Ira Weiny <ira.weiny@intel.com>,
-	Leon Romanovsky <leon@kernel.org>,
-	Lee Jones <lee@kernel.org>,
-	linux-gpio@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-rockchip@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	linux-iio@vger.kernel.org,
-	kernel@collabora.com,
-	Jonas Karlman <jonas@kwiboo.se>,
-	Detlev Casanova <detlev.casanova@collabora.com>
-Subject: Re: [PATCH v2 6/7] counter: Add rockchip-pwm-capture driver
-Date: Sun, 20 Jul 2025 09:20:15 +0900
-Message-ID: <20250720002024.696040-1-wbg@kernel.org>
-X-Mailer: git-send-email 2.50.1
-In-Reply-To: <20250602-rk3576-pwm-v2-6-a6434b0ce60c@collabora.com>
-References: 
+	s=k20201202; t=1753095842;
+	bh=EcW+PuwhhXhVoa+pRSceK3tuWnx91zSNXUwkaiOBF8c=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=u9dOftA3ryJYz+Ay2nJJO8r8Hjj/RBFk0OgmQdtlf1ef3l6DokAE5VHSbTQQBdGeX
+	 Qs420DHiuJsJdHGxj2+MO60aUY+0fPelpG7Zs6f4LQHL/+GScWKMwlUZNa6ARyTbTn
+	 0l7Lac6JhTYbLZDtPLQ05t/ebureu9JR/BoCoG39DPhfOiFsmDFIGNAswmIRQ1H22R
+	 nw397Iu/AyML2rPT6zYqAA1lc6HIqW3xlP7RXKuAMNms2X7fGJWJ6zdBx0opk0qbRr
+	 WObsBeaqSg0ThVBTem2M+P4/ZK7jaRP/oG6qtjYG2wq6q4Rrgz6ook2haBB4v3DwKY
+	 AvAGuqkAACxoA==
+Date: Mon, 21 Jul 2025 13:03:59 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Fabio Estevam <festevam@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
+	linux-pwm@vger.kernel.org, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] pwm: imx-tpm: reset counter if CMOD is 0
+Message-ID: <7wsbi7pcwa2otxqkon3zfat7faprhr3l7wc35fkzctmm3cv67m@ph6w7hzwt322>
+References: <20250714123634.6442-1-laurentiumihalcea111@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3362; i=wbg@kernel.org; h=from:subject; bh=OtFSKnQJLty8pNLNiDG+01ViY9iOpad5TmroInGnKcw=; b=owGbwMvMwCW21SPs1D4hZW3G02pJDBk1ZoZ8Gz+aTdhw53D1hbVX5Nc3ZaxsPTyL8/YuN56Cw FKrq62WHaUsDGJcDLJiiiy95mfvPrikqvHjxfxtMHNYmUCGMHBxCsBEli5g+GcXl79B3f4I/867 8fImitd+ThGcE1JmLzIzvlMjR/6602qG/9H/Jmx+MC3/sEbhh10T7266ybuXNelCScrmxZ2RmW0 3XnMBAA==
-X-Developer-Key: i=wbg@kernel.org; a=openpgp; fpr=8D37CDDDE0D22528F8E89FB6B54856CABE12232B
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="umamwlivydbce7bu"
+Content-Disposition: inline
+In-Reply-To: <20250714123634.6442-1-laurentiumihalcea111@gmail.com>
 
-On Mon, Jun 02, 2025 at 06:19:17PM +0200, Nicolas Frattaroli wrote:
-> Among many other things, Rockchip's new PWMv4 IP in the RK3576 supports
-> PWM capture functionality.
-> 
-> Add a basic driver for this that works to capture period and duty cycle
-> values and return them as nanoseconds to the user. It's quite basic, but
-> works well enough to demonstrate the device function exclusion stuff
-> that mfpwm does, in order to eventually support all the functions of
-> this device in drivers within their appropriate subsystems, without them
-> interfering with each other.
-> 
-> Once enabled, the counter driver waits for enough high-to-low and
-> low-to-high interrupt signals to arrive, and then writes the cycle count
-> register values into some atomic members of the driver instance's state
-> struct. The read callback can then do the conversion from cycle count to
-> the more useful period and duty cycle nanosecond values, which require
-> knowledge of the clock rate, which requires a call that the interrupt
-> handler cannot make itself because said call may sleep.
-> 
-> To detect the condition of a PWM signal disappearing, i.e. turning off,
-> we modify the delay value of a delayed worker whose job it is to simply
-> set those atomic members to zero. Should the "timeout" so to speak be
-> reached, we assume the PWM signal is off. This isn't perfect; it
-> obviously introduces a latency between it being off and the counter
-> reporting it as such. Because there isn't a way to reset the internal
-> double-buffered cycle count in the hardware, we filter out unreliable
-> periods above the timeout value in the counter read callback.
-> 
-> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 
-Hi Nicolas,
+--umamwlivydbce7bu
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2] pwm: imx-tpm: reset counter if CMOD is 0
+MIME-Version: 1.0
 
-Would you help me understand the computations in this driver?
+Hello Laurentiu,
 
-If I understand the purpose of this driver correctly, it's meant to
-compute the period and duty cycle of a PWM signal. What do LPC and HPC
-represent? I'm guessing they are the low period count (LPC) and the high
-period count (HPC). So then you calculate the total period by adding
-LPC and HPC, whereas the duty cycle derives from HPC.
+On Mon, Jul 14, 2025 at 08:36:34AM -0400, Laurentiu Mihalcea wrote:
+> From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+>=20
+> As per the i.MX93 TRM, section 67.3.2.1 "MOD register update", the value
+> of the TPM counter does NOT get updated when writing MOD.MOD unless
+> SC.CMOD !=3D 0. Therefore, with the current code, assuming the following
+> sequence:
+>=20
+> 	1) pwm_disable()
+> 	2) pwm_apply_might_sleep() /* period is changed here */
+> 	3) pwm_enable()
+>=20
+> and assuming only one channel is active, if CNT.COUNT is higher than the
+> MOD.MOD value written during the pwm_apply_might_sleep() call then, when
+> re-enabling the PWM during pwm_enable(), the counter will end up resetting
+> after UINT32_MAX - CNT.COUNT + MOD.MOD cycles instead of MOD.MOD cycles as
+> normally expected.
+>=20
+> Fix this problem by forcing a reset of the TPM counter before MOD.MOD is
+> written.
+>=20
+> Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
 
-Am I understanding the algorithm correctly? What are the units of HPC
-and LPC; are they ticks from the core clock? Are PWMV4_INT_LPC and
-PWM4_INT_HPC the change-of-state interrupts for LPC and HPC
-respectively?
+This needs backporting to stable, right? So we need a reference to the
+commit that introduced the problem. I guess that's 738a1cfec2ed ("pwm:
+Add i.MX TPM PWM driver support")? (Please add a matching Fixes: line in
+your v3.)
 
-The Counter subsystem can be used to derive the period and duty cycle of
-a signal, but I believe there's a more idiomatic way to implement this.
-Existing counter drivers such as microchip-tcb-capture achieve this by
-leveraging Counter events exposed via the Counter chrdev interface.
+> ---
+> Changes in v2:
+>   - dropped the "VERY IMPORTANT" bit as per Uwe's suggestion.
+>   - Link to v1: https://lore.kernel.org/lkml/20250701220147.1007786-1-lau=
+rentiumihalcea111@gmail.com/
+>=20
+>  drivers/pwm/pwm-imx-tpm.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+>=20
+> diff --git a/drivers/pwm/pwm-imx-tpm.c b/drivers/pwm/pwm-imx-tpm.c
+> index 7ee7b65b9b90..b15c22796ba9 100644
+> --- a/drivers/pwm/pwm-imx-tpm.c
+> +++ b/drivers/pwm/pwm-imx-tpm.c
+> @@ -204,6 +204,19 @@ static int pwm_imx_tpm_apply_hw(struct pwm_chip *chi=
+p,
+>  		val |=3D FIELD_PREP(PWM_IMX_TPM_SC_PS, p->prescale);
+>  		writel(val, tpm->base + PWM_IMX_TPM_SC);
+> =20
+> +		/*
+> +		 * if CMOD is set to 0 then writing MOD will NOT reset the
+> +		 * value of the TPM counter.
+> +		 *
+> +		 * Therefore, if CNT.COUNT > MOD.MOD, the counter will reset
+> +		 * after UINT32_MAX - CNT.COUNT + MOD.MOD cycles, which is
+> +		 * incorrect.
+> +		 *
+> +		 * To avoid this, we need to force a reset of the
+> +		 * counter before writing the new MOD value.
+> +		 */
 
-The basic idea would be:
-    * Expose LPC and HPC as count0 and count1;
-    * Push the PWMV4_INT_LPC and PWMV4_INT_HPC interrupts as
-      COUNTER_EVENT_CHANGE_OF_STATE events on channel 0 and channel 1
-      respectively;
-    * Register Counter watches in userspace to capture LPC and HPC on
-      each interrupt;
+I asked in reply to v1 about these register semantics. The idea was not
+that you explain them by mail, but improve the comment accordingly that
+someone reading the driver doesn't need to consult the reference manual
+to understand it.
 
-The Counter chrdev interface records a timestamp in nanoseconds with
-each event capture. So to compute period and duty cycle, you would
-subtract the difference between two HPC/LPC captures; the difference in
-the timestamps gives you the elapsed time between the two captures in
-nanoseconds.
+So maybe something like:
 
-Would that design work for your use case?
+	/*
+	 * If the counter is disabled (CMOD =3D=3D 0), programming the new
+	 * period length (MOD) doesn't reset the counter (CNT). If
+	 * CNT.COUNT happens to be bigger than the new MOD value it will
+	 * reset way to late. So reset it manually to zero.
+	 */
 
-William Breathitt Gray
+?
+
+> +		if (!cmod)
+> +			writel(0x0, tpm->base + PWM_IMX_TPM_CNT);
+>  		/*
+>  		 * set period count:
+>  		 * if the PWM is disabled (CMOD[1:0] =3D 2b00), then MOD register
+
+Best regards
+Uwe
+
+--umamwlivydbce7bu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmh+HpwACgkQj4D7WH0S
+/k4BGwf+P6kPo7r1ntY/Esoxxhlamfit/RB+dpcIWq3XtsaG5FJjB9BtFHeBQUs3
+MgzKcSUT04Ka4PRhM0pFJnJtOTZ2YA5l8tsjM1CHLQXHuYW9x335vbkzjnn3PcBj
+thDW2pGSiSioUrY9HHo+JwHeqPSRQaZMNvBroQvxsJyVZd8Cd1lmA1S6+hTDsM6l
+ZRqetIHUwQFlFZtAu4DF+J5ApamyNkwmrKFskNX32yKkhcJjYbhgx0H4Ei4ZdbQy
+VRdBztPhA+4N+7v3rmUVmnj9NRzjd5yuoMPDdNjVEmuuI2n4q3iPYPK2Xkx1xqQa
+U9Lw9/bDBBnrfC4N79YWPy4WQ+3HCw==
+=yx+y
+-----END PGP SIGNATURE-----
+
+--umamwlivydbce7bu--
 
