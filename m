@@ -1,56 +1,84 @@
-Return-Path: <linux-pwm+bounces-6856-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6857-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 06C65B0C21E
-	for <lists+linux-pwm@lfdr.de>; Mon, 21 Jul 2025 13:04:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7EBABB0C249
+	for <lists+linux-pwm@lfdr.de>; Mon, 21 Jul 2025 13:11:16 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C7D671891AB2
-	for <lists+linux-pwm@lfdr.de>; Mon, 21 Jul 2025 11:04:26 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F0365540EF5
+	for <lists+linux-pwm@lfdr.de>; Mon, 21 Jul 2025 11:11:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5CCC28FFDE;
-	Mon, 21 Jul 2025 11:04:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54124293B70;
+	Mon, 21 Jul 2025 11:11:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u9dOftA3"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="G6vzLZYl"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 859A51D540;
-	Mon, 21 Jul 2025 11:04:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93FB521CA0A
+	for <linux-pwm@vger.kernel.org>; Mon, 21 Jul 2025 11:11:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753095843; cv=none; b=ZTTN3vH3yQJ5RsgjSsY6F8bpm+7+AMwq5Famaw1xsnfsNOUgwmlwfq6qXXJWFx/UOmR70Bnx12RHTidLi3d/so0YK69JPk750ds29ZWUd0N8OMdX3u80jQ1h/E76x+LUMNEECh46R5DViDFAOYItUg0G+GPBBve6+28w/BwLtf0=
+	t=1753096272; cv=none; b=i58j7iYS0hH5PKEOwYsXwOA11Bkfo6ssgsqR+bl0MS6wcw9kiXD2DPyNdkHqezhRMUlngRq8Y3VXSJko9XI+d/e1Y+zlEq4FQkmfyWog9LwJpAQdD7UMKZYT+TnVk0KmsVU3U/ge0InJzJPFrbXiR/niIwg95lL1WLsQc3oH0VI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753095843; c=relaxed/simple;
-	bh=EcW+PuwhhXhVoa+pRSceK3tuWnx91zSNXUwkaiOBF8c=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZTlDnozOK60vQl81gwY0zuu6tO0AwY6Gwohvks4aodJ82CeMwC7XIqaoWaSA3MLIrucZPMLqjhcMW8wyRh1R4kYHXP+dFAJVw1U5kj/x1VEsBfNJDlL5iedleRmv5mb/aZGALqosub7cC4PYRM0B1xekvBpiVwPPhduiVUbdalk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u9dOftA3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1423EC4CEED;
-	Mon, 21 Jul 2025 11:04:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753095842;
-	bh=EcW+PuwhhXhVoa+pRSceK3tuWnx91zSNXUwkaiOBF8c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=u9dOftA3ryJYz+Ay2nJJO8r8Hjj/RBFk0OgmQdtlf1ef3l6DokAE5VHSbTQQBdGeX
-	 Qs420DHiuJsJdHGxj2+MO60aUY+0fPelpG7Zs6f4LQHL/+GScWKMwlUZNa6ARyTbTn
-	 0l7Lac6JhTYbLZDtPLQ05t/ebureu9JR/BoCoG39DPhfOiFsmDFIGNAswmIRQ1H22R
-	 nw397Iu/AyML2rPT6zYqAA1lc6HIqW3xlP7RXKuAMNms2X7fGJWJ6zdBx0opk0qbRr
-	 WObsBeaqSg0ThVBTem2M+P4/ZK7jaRP/oG6qtjYG2wq6q4Rrgz6ook2haBB4v3DwKY
-	 AvAGuqkAACxoA==
-Date: Mon, 21 Jul 2025 13:03:59 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	linux-pwm@vger.kernel.org, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] pwm: imx-tpm: reset counter if CMOD is 0
-Message-ID: <7wsbi7pcwa2otxqkon3zfat7faprhr3l7wc35fkzctmm3cv67m@ph6w7hzwt322>
-References: <20250714123634.6442-1-laurentiumihalcea111@gmail.com>
+	s=arc-20240116; t=1753096272; c=relaxed/simple;
+	bh=6+F0aA6lSTB5A6jgWKkS8W5cXN2DyWMYZgBse8oy7Pg=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=m0ycAlkUYcdbrOGbY7hw9kFFKbzwGELR96hX1+KNGwYrtVu3Bj4Gk/iyolDnVOK9SrDPj26WuHEzoprVgc23c0PsntN1lT6ZGqzd6kns0GJdBU83JOSZrf55oaxZkZyemqR1rKEcufO/Uv2Jm5f/NnZ5cV3tPV88NmMVDa4ZvoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=G6vzLZYl; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-45619d70c72so39501025e9.0
+        for <linux-pwm@vger.kernel.org>; Mon, 21 Jul 2025 04:11:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1753096267; x=1753701067; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6+F0aA6lSTB5A6jgWKkS8W5cXN2DyWMYZgBse8oy7Pg=;
+        b=G6vzLZYlOX1qDlbq0acSel5/0avGAAZ78xaf58vHmsdNoOnKaUAoOH+Wl7wpE6dBSD
+         v2RkCBQ8leyGTloZ5SwIt82sR8rGxkTuhfoU5uJJS37CmXTiY9E4vmsUZbDSENdnKcYX
+         efPYnqNh9rZCEic9g3hCsiyMKiD/+hKKUev9mruIkXxNoi1Oay4VQpm5xkhChQ8fYNxS
+         7JYCsr0gce24ErADoRGpthcjVe8yIclx8grPTXwX8+nKaaxFdgwbL8PGd3yDu58Mc9vk
+         hgROyZokKzctgWxN6iVpxN75Fmh/EHNk5oDGUvvhv3OsU++64FYAB2M96JaK/fCqOyI/
+         kObQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753096267; x=1753701067;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6+F0aA6lSTB5A6jgWKkS8W5cXN2DyWMYZgBse8oy7Pg=;
+        b=AU04jmePBmzai8hVv7kXTnbAgHZ5WfkxjTTGxBIF4QmfMrm9krncSTEKAjYpEf0g+k
+         cn/FeCPVcvX4B6GAFhKaMes8FAQ+/3e6lo73G6DIvDET2LX9czepc/yDkWmw5LF6LIog
+         rd+NctCi8z/MkN6WJNQFG9zcoGBig0FnehlauPRapa3bfWuus0Gdxs9qYCu3AEhqPIUi
+         yPB9JUqHBxNbMS5herWmU70aSBpH5ZHgsLqXTjaIWucbLb9qFqiWaNNURhC+Js3y+TKT
+         qsosJXuoUp+TGxXSKFpAek7mHc0v5EB/CGWIXfWDThucujSJqYDw0Lo0clCRePWcQNqW
+         lVdw==
+X-Gm-Message-State: AOJu0YyBtQeE1Mti9tnDCCEBQ6kpyPszrX/1No6+rkDOvUfIZS4LHvww
+	5lWMmGaKYbZGMf5pZEeIyGODEhXMc3H0Dsfipx0CjH80yPF7PQaxgLPh1NBeqbm1QL9rbsjn1mr
+	uCaS8
+X-Gm-Gg: ASbGncufXQmA2hGo0WqixF+SoOM4hTSOCwky53VyihWkKU1o21kNwTlbWTnzlQaC2Mq
+	8+S6tlv7gINcv1QUBD7zg+oTrq6kirf7PvJqx3dfUfuu6VED1s8bpqVanRukiUpclxBA7PNXSuR
+	dmoObMgypZydG7VBW7gdpmYGd/K0e6m8qu7A/ayUiXU+jqV7P6D8ZwTzp0MM4zeBZhblnP5UCvE
+	R3f9SRZGprpzjm5XfzJW/YVvvZP6gyhWi1+b/p6rW/oDGeTjeqHWSM+L+BcrydT7jmMWBETYhNc
+	VDhbIQf0XagWxbVoCcMT/KtNxFTc20hVCvF7ZcxffpAu+b+0XwuCMel6bSVSjHb4g6oa3DkCRz+
+	PGYU9WVUsdENas4jLbgKHc+uYd8Goyvd9UKLKNLYCi89KDBV4BMFw/9w/QIt2l5kW
+X-Google-Smtp-Source: AGHT+IHSLpLAQmtEaVegY2WjXVIf3tzQJWQp0aJe3AdNFfADdPJxIAQ1SWG5/rvcyS0/LAIBmzOlGA==
+X-Received: by 2002:a05:600c:5246:b0:456:189e:223a with SMTP id 5b1f17b1804b1-456347b5ccfmr163288035e9.10.1753096266511;
+        Mon, 21 Jul 2025 04:11:06 -0700 (PDT)
+Received: from localhost (p200300f65f06ab0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f06:ab04::1b9])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4562e7f4289sm157046225e9.7.2025.07.21.04.11.05
+        for <linux-pwm@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 21 Jul 2025 04:11:05 -0700 (PDT)
+Date: Mon, 21 Jul 2025 13:11:04 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: linux-pwm@vger.kernel.org
+Subject: Re: [PATCH libpwm 0/4] sysfs: Various fixes and an improvement
+Message-ID: <k7uxf7fpgv5qtncnerdclycirw2qsiy6seldlhko5fv6qtssxb@6vavb574i5pr>
+References: <cover.1751995302.git.u.kleine-koenig@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -58,117 +86,46 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="umamwlivydbce7bu"
+	protocol="application/pgp-signature"; boundary="hortfzb5cmrefhnr"
 Content-Disposition: inline
-In-Reply-To: <20250714123634.6442-1-laurentiumihalcea111@gmail.com>
+In-Reply-To: <cover.1751995302.git.u.kleine-koenig@baylibre.com>
 
 
---umamwlivydbce7bu
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+--hortfzb5cmrefhnr
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2] pwm: imx-tpm: reset counter if CMOD is 0
+Subject: Re: [PATCH libpwm 0/4] sysfs: Various fixes and an improvement
 MIME-Version: 1.0
 
-Hello Laurentiu,
+Hello,
 
-On Mon, Jul 14, 2025 at 08:36:34AM -0400, Laurentiu Mihalcea wrote:
-> From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
->=20
-> As per the i.MX93 TRM, section 67.3.2.1 "MOD register update", the value
-> of the TPM counter does NOT get updated when writing MOD.MOD unless
-> SC.CMOD !=3D 0. Therefore, with the current code, assuming the following
-> sequence:
->=20
-> 	1) pwm_disable()
-> 	2) pwm_apply_might_sleep() /* period is changed here */
-> 	3) pwm_enable()
->=20
-> and assuming only one channel is active, if CNT.COUNT is higher than the
-> MOD.MOD value written during the pwm_apply_might_sleep() call then, when
-> re-enabling the PWM during pwm_enable(), the counter will end up resetting
-> after UINT32_MAX - CNT.COUNT + MOD.MOD cycles instead of MOD.MOD cycles as
-> normally expected.
->=20
-> Fix this problem by forcing a reset of the TPM counter before MOD.MOD is
-> written.
->=20
-> Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
+On Tue, Jul 08, 2025 at 07:24:12PM +0200, Uwe Kleine-K=F6nig wrote:
+> while working on the pwm-mediatek driver I found a few corners in libpwm
+> that doesn't seem to have seen much testing before with a driver that
+> can only implement normal polarity.
 
-This needs backporting to stable, right? So we need a reference to the
-commit that introduced the problem. I guess that's 738a1cfec2ed ("pwm:
-Add i.MX TPM PWM driver support")? (Please add a matching Fixes: line in
-your v3.)
-
-> ---
-> Changes in v2:
->   - dropped the "VERY IMPORTANT" bit as per Uwe's suggestion.
->   - Link to v1: https://lore.kernel.org/lkml/20250701220147.1007786-1-lau=
-rentiumihalcea111@gmail.com/
->=20
->  drivers/pwm/pwm-imx-tpm.c | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->=20
-> diff --git a/drivers/pwm/pwm-imx-tpm.c b/drivers/pwm/pwm-imx-tpm.c
-> index 7ee7b65b9b90..b15c22796ba9 100644
-> --- a/drivers/pwm/pwm-imx-tpm.c
-> +++ b/drivers/pwm/pwm-imx-tpm.c
-> @@ -204,6 +204,19 @@ static int pwm_imx_tpm_apply_hw(struct pwm_chip *chi=
-p,
->  		val |=3D FIELD_PREP(PWM_IMX_TPM_SC_PS, p->prescale);
->  		writel(val, tpm->base + PWM_IMX_TPM_SC);
-> =20
-> +		/*
-> +		 * if CMOD is set to 0 then writing MOD will NOT reset the
-> +		 * value of the TPM counter.
-> +		 *
-> +		 * Therefore, if CNT.COUNT > MOD.MOD, the counter will reset
-> +		 * after UINT32_MAX - CNT.COUNT + MOD.MOD cycles, which is
-> +		 * incorrect.
-> +		 *
-> +		 * To avoid this, we need to force a reset of the
-> +		 * counter before writing the new MOD value.
-> +		 */
-
-I asked in reply to v1 about these register semantics. The idea was not
-that you explain them by mail, but improve the comment accordingly that
-someone reading the driver doesn't need to consult the reference manual
-to understand it.
-
-So maybe something like:
-
-	/*
-	 * If the counter is disabled (CMOD =3D=3D 0), programming the new
-	 * period length (MOD) doesn't reset the counter (CNT). If
-	 * CNT.COUNT happens to be bigger than the new MOD value it will
-	 * reset way to late. So reset it manually to zero.
-	 */
-
-?
-
-> +		if (!cmod)
-> +			writel(0x0, tpm->base + PWM_IMX_TPM_CNT);
->  		/*
->  		 * set period count:
->  		 * if the PWM is disabled (CMOD[1:0] =3D 2b00), then MOD register
+applied with the announced fixup to patch #2 to
+https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/libpwm.git main
+=2E
 
 Best regards
 Uwe
 
---umamwlivydbce7bu
+--hortfzb5cmrefhnr
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmh+HpwACgkQj4D7WH0S
-/k4BGwf+P6kPo7r1ntY/Esoxxhlamfit/RB+dpcIWq3XtsaG5FJjB9BtFHeBQUs3
-MgzKcSUT04Ka4PRhM0pFJnJtOTZ2YA5l8tsjM1CHLQXHuYW9x335vbkzjnn3PcBj
-thDW2pGSiSioUrY9HHo+JwHeqPSRQaZMNvBroQvxsJyVZd8Cd1lmA1S6+hTDsM6l
-ZRqetIHUwQFlFZtAu4DF+J5ApamyNkwmrKFskNX32yKkhcJjYbhgx0H4Ei4ZdbQy
-VRdBztPhA+4N+7v3rmUVmnj9NRzjd5yuoMPDdNjVEmuuI2n4q3iPYPK2Xkx1xqQa
-U9Lw9/bDBBnrfC4N79YWPy4WQ+3HCw==
-=yx+y
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmh+ID8ACgkQj4D7WH0S
+/k7gOgf+KF216u9mMQzulSLeFfYrDs3WH1ul8h5EcHQriby691Zmd0h5WYL08SSE
+tXlqgAckl8Ot6LS22zo5lKUJhMWmOpohCKYAy8IVwjOuFyd6G2G2/PD++MsuwVQA
+ZkrEMuXRbXppoXaWEK1//U917K8llFCAnJIZBMZUATnxpaJsOyA9i+zFuNtOSK+I
+14zuhRhohd6rSVtKcAux1Op5xzjW/XBHYJgMFN42vzs9Y3dSot9gVAnULLX0UQas
+l/VkBC6ZAtguVb2V+i7rPpM39743H/dktkD+HAPAOHPIWKBR/PYGpWOZcWahYe02
+CaJKzyCjHzO+VLDEwIdllJOoAalksg==
+=IFLB
 -----END PGP SIGNATURE-----
 
---umamwlivydbce7bu--
+--hortfzb5cmrefhnr--
 
