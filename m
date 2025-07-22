@@ -1,53 +1,53 @@
-Return-Path: <linux-pwm+bounces-6864-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6865-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A16CFB0E1B1
-	for <lists+linux-pwm@lfdr.de>; Tue, 22 Jul 2025 18:24:40 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id AD8BAB0E1B6
+	for <lists+linux-pwm@lfdr.de>; Tue, 22 Jul 2025 18:24:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 91D9E7B51AC
-	for <lists+linux-pwm@lfdr.de>; Tue, 22 Jul 2025 16:23:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 37C9216B0D3
+	for <lists+linux-pwm@lfdr.de>; Tue, 22 Jul 2025 16:24:45 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 471EF27E048;
-	Tue, 22 Jul 2025 16:24:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 69A0627E7DA;
+	Tue, 22 Jul 2025 16:24:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ZNI6dIFV"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="EhmMYKje"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from relay6-d.mail.gandi.net (relay6-d.mail.gandi.net [217.70.183.198])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CCFC27A127;
-	Tue, 22 Jul 2025 16:24:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7901627AC5C;
+	Tue, 22 Jul 2025 16:24:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753201450; cv=none; b=qZJ5IQcAt2HS/9zVlgF6rxM3qiay6z3Zb01h6XVk3HtNLWtOZYBmhayUXnPEZ8ViC8SA0oiN0COeCHT9sc5CqlBriICy21bqn1dUcNSlsKTlJrlWuav+bILqRGtHx9xDRqv9j8BSvU42sGn+PEhYjo+6iQ5c9SOZlAspZjCGK08=
+	t=1753201451; cv=none; b=L7UzXp/zuwNszLgePaSJiaZDgTZYsO2VkZLHB2cB+VT0Wq3n8Rz+QiXkd5+PeLHZYf/95svmy3E9h2vxk6u0P6yaUPH3jHLivYMBWzsg4CODkBiYHmQCgDulchyOrhzhbE9u3zUfy1K2DRq0Bqv1qkkH0LnA7OtCOeReWTucK6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753201450; c=relaxed/simple;
-	bh=Vfwr3T6oFIr11ChPVQ4cLfkvMx4CouG1IEddNOdLMdg=;
+	s=arc-20240116; t=1753201451; c=relaxed/simple;
+	bh=B59nQRM4OCJKfHLvX2oaTSXwxhw78E4Kff9lIuci+5w=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=XymFn56id0iKoDbXQGH6fr4iWPKa1llzBxp0KtA7Fbj2F8NoWydvbqDO9uSHfvR8uBXclCbAZFxmjt8I1xIPOpAjcdCNwTZrX3bqP0lPrifP6HAvbJaDDxuXaO6uZvHECz1OIQfNOc5VbrnTsoIXzqE7+d8zDscGeVbxsQYzPuk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ZNI6dIFV; arc=none smtp.client-ip=217.70.183.198
+	 In-Reply-To:To:Cc; b=XFmSPy/rl47mIC/qxVR5MEAfkFL74twpQhOU/D3yD7TXZY9o7Tulf5jBnKYiCSx/4Vwj7W4GJ0d7jloaTS2xjKb8Z1rJNbz81+KXLI1oeqSZR8UL4qOkorq1vlOKLpTr4WjTKj1gMLAXpOqWtLEXoBvWpu5oL/dEVg3PLp8wG7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=EhmMYKje; arc=none smtp.client-ip=217.70.183.198
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id B1D17442BE;
-	Tue, 22 Jul 2025 16:24:04 +0000 (UTC)
+Received: by mail.gandi.net (Postfix) with ESMTPSA id C671143292;
+	Tue, 22 Jul 2025 16:24:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1753201445;
+	t=1753201446;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=t/2/VGmKfyMKjx1nQXnOEIb84oP44Mh6hiFeixIS2G0=;
-	b=ZNI6dIFVWNPd5PGwKDJuA3Z6cLziCUwjxFECMFI1DM8LVbOsqVBY5jpqbAIkHVzpgm84/R
-	6xvvwXu4TzB2ZWbcHcDxSe/PFrpPeJ71aptGEAg/PsE+sjLR2e11qHPOtLDyJeRersIS/T
-	c7PavbBsPcItUmrfol4Q6skgd2KuzbBkjrjNXwy9ikVk4bmnv56R2DT2BDg/AfZMG6cVBb
-	/kb2vhaVamlvUbV9ebnB93FeqEGTjQh/RdQl8KAwKwklz5IM534G8nQnJlrPdk00CApnQb
-	RmdyGPepS8WTMLoJpKtVUJck0GATqP3Q1z0KWwNdld9gP/I6bF2mLH+0KrmREg==
+	bh=jBMjx8v8dFWA7l8aFxli1l7Noq+zfsEDhaB6354aIiA=;
+	b=EhmMYKjewtnzADA/n669HNXzXjchAWoMbQ3fmwjxZh/Qb5eAn9gb9ZfR4ENWrTzRYnga9g
+	8ER+PC1LognSafR8gnseRt19YTmuT0etUdOiM29SDiB+wRFpp7qxQw5+xUjFgNQ21X9LYQ
+	9h1ZqrAAQpBPmYIBtE11Jc/TJkXgzunMQpYzWauvPQaF0eBL05RBqHaMKEZikweq2a2D5U
+	r9AiMueNnndFfmc5/XXakg1bEblhdLyNRNFXI+pGlbP2tO7I3zgoG496khL9I9E8al00Zx
+	hPB/BkBCHFhLRKDId5ZH4gwaDujuDP2PjpfK1K1e+bNIU9dRYQkMwy+gUaNJjw==
 From: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Date: Tue, 22 Jul 2025 18:23:47 +0200
-Subject: [PATCH v12 03/10] pinctrl: Add MAX7360 pinctrl driver
+Date: Tue, 22 Jul 2025 18:23:48 +0200
+Subject: [PATCH v12 04/10] pwm: max7360: Add MAX7360 PWM support
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -56,7 +56,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250722-mdb-max7360-support-v12-3-3747721a8d02@bootlin.com>
+Message-Id: <20250722-mdb-max7360-support-v12-4-3747721a8d02@bootlin.com>
 References: <20250722-mdb-max7360-support-v12-0-3747721a8d02@bootlin.com>
 In-Reply-To: <20250722-mdb-max7360-support-v12-0-3747721a8d02@bootlin.com>
 To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -78,284 +78,277 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>, 
  Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1753201440; l=9011;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1753201440; l=8231;
  i=mathieu.dubois-briand@bootlin.com; s=20241219; h=from:subject:message-id;
- bh=Vfwr3T6oFIr11ChPVQ4cLfkvMx4CouG1IEddNOdLMdg=;
- b=4yOWmJFbVHMGrApee5Eo2KOfmkOj7K0Fg9jF8JjZ2cksLuZgruJguQ6HFADtlwYHBFByVi0rC
- bQHNaQWXMseBZvOpvExbcAow0w+V1sj8XMoNazbuZejLtKBlNyQrFP6
+ bh=y0xadsyuEhq8dPG/0EBjvPHdE0OxVl29OXK2WOiCV8k=;
+ b=JQwQEEBbQHmCgl9N0lSZ0OQR0pjRiV2PH2Z37gZBLyVCekKRj0RG3mgUxyRD09eaI+kofUZgQ
+ FVEqJBx/j2TB/V3nGupML4Vc4rVAr/kxU4QopBjIQRWsWoqjFP751Ds
 X-Developer-Key: i=mathieu.dubois-briand@bootlin.com; a=ed25519;
  pk=1PVTmzPXfKvDwcPUzG0aqdGoKZJA3b9s+3DqRlm0Lww=
 X-GND-State: clean
 X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdejheefiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpeforghthhhivghuucffuhgsohhishdquehrihgrnhguuceomhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnheptdfhgeetvddvheejieehheehueetjeelkedtfeehhefgfeeglefhteegtddthfetnecukfhppedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejieenucevlhhushhtvghrufhiiigvpedunecurfgrrhgrmhepihhnvghtpedvrgdtudemtggsudegmeehheeimeejrgdttdemfehftghfmehfsgdtugemuddviedvmedvvgejiedphhgvlhhopegluddvjedrtddruddrudgnpdhmrghilhhfrhhomhepmhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomhdpnhgspghrtghpthhtohepvdegpdhrtghpthhtoheplhhinhhushdrfigrlhhlvghijheslhhinhgrrhhordhorhhgpdhrtghpthhtohepmhifrghllhgvsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegrnhgurhhihidrshhhv
- ghvtghhvghnkhhosehinhhtvghlrdgtohhmpdhrtghpthhtoheprhgrfhgrvghlsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlihhnuhigqdhpfihmsehvghgvrhdrkhgvrhhnvghlrdhorhhgpdhrtghpthhtoheptghonhhorhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehlvggvsehkvghrnhgvlhdrohhrgh
+X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdejheefiecutefuodetggdotefrodftvfcurfhrohhfihhlvgemucfitefpfffkpdcuggftfghnshhusghstghrihgsvgenuceurghilhhouhhtmecufedtudenucesvcftvggtihhpihgvnhhtshculddquddttddmnecujfgurhephfffufggtgfgkfhfjgfvvefosehtjeertdertdejnecuhfhrohhmpeforghthhhivghuucffuhgsohhishdquehrihgrnhguuceomhgrthhhihgvuhdrughusghoihhsqdgsrhhirghnugessghoohhtlhhinhdrtghomheqnecuggftrfgrthhtvghrnhepjeeliefghefhvdekgeeuveehieejteetudejieethefhvdeghffgtefhkeeukeetnecuffhomhgrihhnpegrnhgrlhhoghdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplgduvdejrddtrddurddungdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvgedprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopehmfigrlhhlvgeskhgvrhhnvghlrdhor
+ hhgpdhrtghpthhtoheprghnughrihihrdhshhgvvhgthhgvnhhkohesihhnthgvlhdrtghomhdprhgtphhtthhopehrrghfrggvlheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhhriihkodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhhinhhugidqphifmhesvhhgvghrrdhkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhorhhg
 X-GND-Sasl: mathieu.dubois-briand@bootlin.com
 
-Add driver for Maxim Integrated MAX7360 pinctrl on the PORT pins. Pins
-can be used either for GPIO, PWM or rotary encoder functionalities.
+From: Kamel Bouhara <kamel.bouhara@bootlin.com>
 
+Add driver for Maxim Integrated MAX7360 PWM controller, supporting up to
+8 independent PWM outputs.
+
+Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+Co-developed-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 ---
- drivers/pinctrl/Kconfig           |  11 ++
- drivers/pinctrl/Makefile          |   1 +
- drivers/pinctrl/pinctrl-max7360.c | 215 ++++++++++++++++++++++++++++++++++++++
- 3 files changed, 227 insertions(+)
+ drivers/pwm/Kconfig       |  10 +++
+ drivers/pwm/Makefile      |   1 +
+ drivers/pwm/pwm-max7360.c | 206 ++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 217 insertions(+)
 
-diff --git a/drivers/pinctrl/Kconfig b/drivers/pinctrl/Kconfig
-index 33db9104df17..98448db31456 100644
---- a/drivers/pinctrl/Kconfig
-+++ b/drivers/pinctrl/Kconfig
-@@ -346,6 +346,17 @@ config PINCTRL_LPC18XX
- 	help
- 	  Pinctrl driver for NXP LPC18xx/43xx System Control Unit (SCU).
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index d9bcd1e8413e..c8352e503e3b 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -423,6 +423,16 @@ config PWM_LPSS_PLATFORM
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called pwm-lpss-platform.
  
-+config PINCTRL_MAX7360
-+	tristate "MAX7360 Pincontrol support"
++config PWM_MAX7360
++	tristate "MAX7360 PWMs"
 +	depends on MFD_MAX7360
-+	select PINMUX
-+	select GENERIC_PINCONF
 +	help
-+	  Say Y here to enable pin control support for Maxim MAX7360 keypad
-+	  controller.
-+	  This keypad controller has 8 GPIO pins that may work as GPIO, or PWM,
-+	  or rotary encoder alternate modes.
++	  PWM driver for Maxim Integrated MAX7360 multifunction device, with
++	  support for up to 8 PWM outputs.
 +
- config PINCTRL_MAX77620
- 	tristate "MAX77620/MAX20024 Pincontrol support"
- 	depends on MFD_MAX77620 && OF
-diff --git a/drivers/pinctrl/Makefile b/drivers/pinctrl/Makefile
-index ac27e88677d1..974a179b5593 100644
---- a/drivers/pinctrl/Makefile
-+++ b/drivers/pinctrl/Makefile
-@@ -36,6 +36,7 @@ obj-$(CONFIG_PINCTRL_FALCON)	+= pinctrl-falcon.o
- obj-$(CONFIG_PINCTRL_LOONGSON2) += pinctrl-loongson2.o
- obj-$(CONFIG_PINCTRL_XWAY)	+= pinctrl-xway.o
- obj-$(CONFIG_PINCTRL_LPC18XX)	+= pinctrl-lpc18xx.o
-+obj-$(CONFIG_PINCTRL_MAX7360)	+= pinctrl-max7360.o
- obj-$(CONFIG_PINCTRL_MAX77620)	+= pinctrl-max77620.o
- obj-$(CONFIG_PINCTRL_MCP23S08_I2C)	+= pinctrl-mcp23s08_i2c.o
- obj-$(CONFIG_PINCTRL_MCP23S08_SPI)	+= pinctrl-mcp23s08_spi.o
-diff --git a/drivers/pinctrl/pinctrl-max7360.c b/drivers/pinctrl/pinctrl-max7360.c
++	  To compile this driver as a module, choose M here: the module
++	  will be called pwm-max7360.
++
+ config PWM_MC33XS2410
+ 	tristate "MC33XS2410 PWM support"
+ 	depends on OF
+diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+index 96160f4257fc..7e30f30bec50 100644
+--- a/drivers/pwm/Makefile
++++ b/drivers/pwm/Makefile
+@@ -37,6 +37,7 @@ obj-$(CONFIG_PWM_LPC32XX)	+= pwm-lpc32xx.o
+ obj-$(CONFIG_PWM_LPSS)		+= pwm-lpss.o
+ obj-$(CONFIG_PWM_LPSS_PCI)	+= pwm-lpss-pci.o
+ obj-$(CONFIG_PWM_LPSS_PLATFORM)	+= pwm-lpss-platform.o
++obj-$(CONFIG_PWM_MAX7360)	+= pwm-max7360.o
+ obj-$(CONFIG_PWM_MC33XS2410)	+= pwm-mc33xs2410.o
+ obj-$(CONFIG_PWM_MEDIATEK)	+= pwm-mediatek.o
+ obj-$(CONFIG_PWM_MESON)		+= pwm-meson.o
+diff --git a/drivers/pwm/pwm-max7360.c b/drivers/pwm/pwm-max7360.c
 new file mode 100644
-index 000000000000..abfaff468bad
+index 000000000000..e3743c8dd20f
 --- /dev/null
-+++ b/drivers/pinctrl/pinctrl-max7360.c
-@@ -0,0 +1,215 @@
++++ b/drivers/pwm/pwm-max7360.c
+@@ -0,0 +1,206 @@
 +// SPDX-License-Identifier: GPL-2.0-only
 +/*
 + * Copyright 2025 Bootlin
 + *
++ * Author: Kamel BOUHARA <kamel.bouhara@bootlin.com>
 + * Author: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
++ *
++ * PWM functionality of the MAX7360 multi-function device.
++ * https://www.analog.com/media/en/technical-documentation/data-sheets/MAX7360.pdf
++ *
++ * Limitations:
++ * - Only supports normal polarity.
++ * - The period is fixed to 2 ms.
++ * - Only the duty cycle can be changed, new values are applied at the beginning
++ *   of the next cycle.
++ * - When disabled, the output is put in Hi-Z immediately.
 + */
-+
-+#include <linux/array_size.h>
++#include <linux/bits.h>
 +#include <linux/dev_printk.h>
-+#include <linux/device.h>
-+#include <linux/device/devres.h>
 +#include <linux/err.h>
-+#include <linux/init.h>
++#include <linux/math64.h>
 +#include <linux/mfd/max7360.h>
++#include <linux/minmax.h>
++#include <linux/mod_devicetable.h>
 +#include <linux/module.h>
 +#include <linux/platform_device.h>
++#include <linux/pwm.h>
 +#include <linux/regmap.h>
-+#include <linux/stddef.h>
++#include <linux/time.h>
++#include <linux/types.h>
 +
-+#include <linux/pinctrl/pinctrl.h>
-+#include <linux/pinctrl/pinconf-generic.h>
-+#include <linux/pinctrl/pinmux.h>
++#define MAX7360_NUM_PWMS			8
++#define MAX7360_PWM_MAX				255
++#define MAX7360_PWM_STEPS			256
++#define MAX7360_PWM_PERIOD_NS			(2 * NSEC_PER_MSEC)
 +
-+#include "core.h"
-+#include "pinmux.h"
-+
-+struct max7360_pinctrl {
-+	struct pinctrl_dev *pctldev;
-+	struct pinctrl_desc pinctrl_desc;
++struct max7360_pwm_waveform {
++	u8 duty_steps;
++	bool enabled;
 +};
 +
-+static const struct pinctrl_pin_desc max7360_pins[] = {
-+	PINCTRL_PIN(0, "PORT0"),
-+	PINCTRL_PIN(1, "PORT1"),
-+	PINCTRL_PIN(2, "PORT2"),
-+	PINCTRL_PIN(3, "PORT3"),
-+	PINCTRL_PIN(4, "PORT4"),
-+	PINCTRL_PIN(5, "PORT5"),
-+	PINCTRL_PIN(6, "PORT6"),
-+	PINCTRL_PIN(7, "PORT7"),
-+};
-+
-+static const unsigned int port0_pins[] = {0};
-+static const unsigned int port1_pins[] = {1};
-+static const unsigned int port2_pins[] = {2};
-+static const unsigned int port3_pins[] = {3};
-+static const unsigned int port4_pins[] = {4};
-+static const unsigned int port5_pins[] = {5};
-+static const unsigned int port6_pins[] = {6};
-+static const unsigned int port7_pins[] = {7};
-+static const unsigned int rotary_pins[] = {6, 7};
-+
-+static const struct pingroup max7360_groups[] = {
-+	PINCTRL_PINGROUP("PORT0", port0_pins, ARRAY_SIZE(port0_pins)),
-+	PINCTRL_PINGROUP("PORT1", port1_pins, ARRAY_SIZE(port1_pins)),
-+	PINCTRL_PINGROUP("PORT2", port2_pins, ARRAY_SIZE(port2_pins)),
-+	PINCTRL_PINGROUP("PORT3", port3_pins, ARRAY_SIZE(port3_pins)),
-+	PINCTRL_PINGROUP("PORT4", port4_pins, ARRAY_SIZE(port4_pins)),
-+	PINCTRL_PINGROUP("PORT5", port5_pins, ARRAY_SIZE(port5_pins)),
-+	PINCTRL_PINGROUP("PORT6", port6_pins, ARRAY_SIZE(port6_pins)),
-+	PINCTRL_PINGROUP("PORT7", port7_pins, ARRAY_SIZE(port7_pins)),
-+	PINCTRL_PINGROUP("ROTARY", rotary_pins, ARRAY_SIZE(rotary_pins)),
-+};
-+
-+static int max7360_pinctrl_get_groups_count(struct pinctrl_dev *pctldev)
++static int max7360_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
 +{
-+	return ARRAY_SIZE(max7360_groups);
-+}
-+
-+static const char *max7360_pinctrl_get_group_name(struct pinctrl_dev *pctldev,
-+						  unsigned int group)
-+{
-+	return max7360_groups[group].name;
-+}
-+
-+static int max7360_pinctrl_get_group_pins(struct pinctrl_dev *pctldev,
-+					  unsigned int group,
-+					  const unsigned int **pins,
-+					  unsigned int *num_pins)
-+{
-+	*pins = max7360_groups[group].pins;
-+	*num_pins = max7360_groups[group].npins;
-+	return 0;
-+}
-+
-+static const struct pinctrl_ops max7360_pinctrl_ops = {
-+	.get_groups_count = max7360_pinctrl_get_groups_count,
-+	.get_group_name = max7360_pinctrl_get_group_name,
-+	.get_group_pins = max7360_pinctrl_get_group_pins,
-+#ifdef CONFIG_OF
-+	.dt_node_to_map = pinconf_generic_dt_node_to_map_pin,
-+	.dt_free_map = pinconf_generic_dt_free_map,
-+#endif
-+};
-+
-+static const char * const simple_groups[] = {
-+	"PORT0", "PORT1", "PORT2", "PORT3",
-+	"PORT4", "PORT5", "PORT6", "PORT7",
-+};
-+
-+static const char * const rotary_groups[] = { "ROTARY" };
-+
-+#define MAX7360_PINCTRL_FN_GPIO		0
-+#define MAX7360_PINCTRL_FN_PWM		1
-+#define MAX7360_PINCTRL_FN_ROTARY	2
-+static const struct pinfunction max7360_functions[] = {
-+	[MAX7360_PINCTRL_FN_GPIO] = PINCTRL_PINFUNCTION("gpio", simple_groups,
-+							ARRAY_SIZE(simple_groups)),
-+	[MAX7360_PINCTRL_FN_PWM] = PINCTRL_PINFUNCTION("pwm", simple_groups,
-+						       ARRAY_SIZE(simple_groups)),
-+	[MAX7360_PINCTRL_FN_ROTARY] = PINCTRL_PINFUNCTION("rotary", rotary_groups,
-+							  ARRAY_SIZE(rotary_groups)),
-+};
-+
-+static int max7360_get_functions_count(struct pinctrl_dev *pctldev)
-+{
-+	return ARRAY_SIZE(max7360_functions);
-+}
-+
-+static const char *max7360_get_function_name(struct pinctrl_dev *pctldev, unsigned int selector)
-+{
-+	return max7360_functions[selector].name;
-+}
-+
-+static int max7360_get_function_groups(struct pinctrl_dev *pctldev, unsigned int selector,
-+				       const char * const **groups,
-+				       unsigned int * const num_groups)
-+{
-+	*groups = max7360_functions[selector].groups;
-+	*num_groups = max7360_functions[selector].ngroups;
-+
-+	return 0;
-+}
-+
-+static int max7360_set_mux(struct pinctrl_dev *pctldev, unsigned int selector,
-+			   unsigned int group)
-+{
-+	struct regmap *regmap = dev_get_regmap(pctldev->dev->parent, NULL);
-+	int val;
++	struct regmap *regmap = pwmchip_get_drvdata(chip);
 +
 +	/*
-+	 * GPIO and PWM functions are the same: we only need to handle the
-+	 * rotary encoder function, on pins 6 and 7.
++	 * Make sure we use the individual PWM configuration register and not
++	 * the global one.
++	 * We never need to use the global one, so there is no need to revert
++	 * that in the .free() callback.
 +	 */
-+	if (max7360_groups[group].pins[0] >= 6) {
-+		if (selector == MAX7360_PINCTRL_FN_ROTARY)
-+			val = MAX7360_GPIO_CFG_RTR_EN;
-+		else
-+			val = 0;
++	return regmap_write_bits(regmap, MAX7360_REG_PWMCFG(pwm->hwpwm),
++				 MAX7360_PORT_CFG_COMMON_PWM, 0);
++}
 +
-+		return regmap_write_bits(regmap, MAX7360_REG_GPIOCFG, MAX7360_GPIO_CFG_RTR_EN, val);
++static int max7360_pwm_round_waveform_tohw(struct pwm_chip *chip,
++					   struct pwm_device *pwm,
++					   const struct pwm_waveform *wf,
++					   void *_wfhw)
++{
++	struct max7360_pwm_waveform *wfhw = _wfhw;
++	u64 duty_steps;
++
++	/*
++	 * Ignore user provided values for period_length_ns and duty_offset_ns:
++	 * we only support fixed period of MAX7360_PWM_PERIOD_NS and offset of 0.
++	 * Values from 0 to 254 as duty_steps will provide duty cycles of 0/256
++	 * to 254/256, while value 255 will provide a duty cycle of 100%.
++	 */
++	if (wf->duty_length_ns >= MAX7360_PWM_PERIOD_NS) {
++		duty_steps = MAX7360_PWM_MAX;
++	} else {
++		duty_steps = (u32)wf->duty_length_ns * MAX7360_PWM_STEPS / MAX7360_PWM_PERIOD_NS;
++		if (duty_steps == MAX7360_PWM_MAX)
++			duty_steps = MAX7360_PWM_MAX - 1;
++	}
++
++	wfhw->duty_steps = min(MAX7360_PWM_MAX, duty_steps);
++	wfhw->enabled = !!wf->period_length_ns;
++
++	return 0;
++}
++
++static int max7360_pwm_round_waveform_fromhw(struct pwm_chip *chip, struct pwm_device *pwm,
++					     const void *_wfhw, struct pwm_waveform *wf)
++{
++	const struct max7360_pwm_waveform *wfhw = _wfhw;
++
++	wf->period_length_ns = wfhw->enabled ? MAX7360_PWM_PERIOD_NS : 0;
++	wf->duty_offset_ns = 0;
++
++	if (wfhw->enabled) {
++		if (wfhw->duty_steps == MAX7360_PWM_MAX)
++			wf->duty_length_ns = MAX7360_PWM_PERIOD_NS;
++		else
++			wf->duty_length_ns = DIV_ROUND_UP(wfhw->duty_steps * MAX7360_PWM_PERIOD_NS,
++							  MAX7360_PWM_STEPS);
++	} else {
++		wf->duty_length_ns = 0;
 +	}
 +
 +	return 0;
 +}
 +
-+static const struct pinmux_ops max7360_pmxops = {
-+	.get_functions_count = max7360_get_functions_count,
-+	.get_function_name = max7360_get_function_name,
-+	.get_function_groups = max7360_get_function_groups,
-+	.set_mux = max7360_set_mux,
-+	.strict = true,
++static int max7360_pwm_write_waveform(struct pwm_chip *chip,
++				      struct pwm_device *pwm,
++				      const void *_wfhw)
++{
++	struct regmap *regmap = pwmchip_get_drvdata(chip);
++	const struct max7360_pwm_waveform *wfhw = _wfhw;
++	unsigned int val;
++	int ret;
++
++	if (wfhw->enabled) {
++		ret = regmap_write(regmap, MAX7360_REG_PWM(pwm->hwpwm), wfhw->duty_steps);
++		if (ret)
++			return ret;
++	}
++
++	val = wfhw->enabled ? BIT(pwm->hwpwm) : 0;
++	return regmap_write_bits(regmap, MAX7360_REG_GPIOCTRL, BIT(pwm->hwpwm), val);
++}
++
++static int max7360_pwm_read_waveform(struct pwm_chip *chip,
++				     struct pwm_device *pwm,
++				     void *_wfhw)
++{
++	struct regmap *regmap = pwmchip_get_drvdata(chip);
++	struct max7360_pwm_waveform *wfhw = _wfhw;
++	unsigned int val;
++	int ret;
++
++	ret = regmap_read(regmap, MAX7360_REG_GPIOCTRL, &val);
++	if (ret)
++		return ret;
++
++	if (val & BIT(pwm->hwpwm)) {
++		wfhw->enabled = true;
++		ret = regmap_read(regmap, MAX7360_REG_PWM(pwm->hwpwm), &val);
++		if (ret)
++			return ret;
++
++		wfhw->duty_steps = val;
++	} else {
++		wfhw->enabled = false;
++		wfhw->duty_steps = 0;
++	}
++
++	return 0;
++}
++
++static const struct pwm_ops max7360_pwm_ops = {
++	.request = max7360_pwm_request,
++	.round_waveform_tohw = max7360_pwm_round_waveform_tohw,
++	.round_waveform_fromhw = max7360_pwm_round_waveform_fromhw,
++	.read_waveform = max7360_pwm_read_waveform,
++	.write_waveform = max7360_pwm_write_waveform,
 +};
 +
-+static int max7360_pinctrl_probe(struct platform_device *pdev)
++static int max7360_pwm_probe(struct platform_device *pdev)
 +{
-+	struct regmap *regmap;
-+	struct pinctrl_desc *pd;
-+	struct max7360_pinctrl *chip;
 +	struct device *dev = &pdev->dev;
++	struct pwm_chip *chip;
++	struct regmap *regmap;
++	int ret;
 +
 +	regmap = dev_get_regmap(dev->parent, NULL);
 +	if (!regmap)
 +		return dev_err_probe(dev, -ENODEV, "Could not get parent regmap\n");
 +
-+	chip = devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
-+	if (!chip)
-+		return -ENOMEM;
-+
-+	pd = &chip->pinctrl_desc;
-+
-+	pd->pctlops = &max7360_pinctrl_ops;
-+	pd->pmxops = &max7360_pmxops;
-+	pd->name = dev_name(dev);
-+	pd->pins = max7360_pins;
-+	pd->npins = MAX7360_MAX_GPIO;
-+	pd->owner = THIS_MODULE;
-+
 +	/*
 +	 * This MFD sub-device does not have any associated device tree node:
 +	 * properties are stored in the device node of the parent (MFD) device
 +	 * and this same node is used in phandles of client devices.
-+	 * Reuse this device tree node here, as otherwise the pinctrl subsystem
++	 * Reuse this device tree node here, as otherwise the PWM subsystem
 +	 * would be confused by this topology.
 +	 */
 +	device_set_of_node_from_dev(dev, dev->parent);
 +
-+	chip->pctldev = devm_pinctrl_register(dev, pd, chip);
-+	if (IS_ERR(chip->pctldev))
-+		return dev_err_probe(dev, PTR_ERR(chip->pctldev), "can't register controller\n");
++	chip = devm_pwmchip_alloc(dev, MAX7360_NUM_PWMS, 0);
++	if (IS_ERR(chip))
++		return PTR_ERR(chip);
++	chip->ops = &max7360_pwm_ops;
++
++	pwmchip_set_drvdata(chip, regmap);
++
++	ret = devm_pwmchip_add(dev, chip);
++	if (ret)
++		return dev_err_probe(dev, ret, "Failed to add PWM chip\n");
 +
 +	return 0;
 +}
 +
-+static struct platform_driver max7360_pinctrl_driver = {
++static struct platform_driver max7360_pwm_driver = {
 +	.driver = {
-+		.name	= "max7360-pinctrl",
++		.name = "max7360-pwm",
++		.probe_type = PROBE_PREFER_ASYNCHRONOUS,
 +	},
-+	.probe		= max7360_pinctrl_probe,
++	.probe = max7360_pwm_probe,
 +};
-+module_platform_driver(max7360_pinctrl_driver);
++module_platform_driver(max7360_pwm_driver);
 +
-+MODULE_DESCRIPTION("MAX7360 pinctrl driver");
++MODULE_DESCRIPTION("MAX7360 PWM driver");
++MODULE_AUTHOR("Kamel BOUHARA <kamel.bouhara@bootlin.com>");
 +MODULE_AUTHOR("Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>");
 +MODULE_LICENSE("GPL");
 
