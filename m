@@ -1,371 +1,164 @@
-Return-Path: <linux-pwm+bounces-6874-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6875-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1DC42B0F95F
-	for <lists+linux-pwm@lfdr.de>; Wed, 23 Jul 2025 19:39:54 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id DD742B0FCFE
+	for <lists+linux-pwm@lfdr.de>; Thu, 24 Jul 2025 00:38:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3AB5A3BC59C
-	for <lists+linux-pwm@lfdr.de>; Wed, 23 Jul 2025 17:37:24 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 934347A0305
+	for <lists+linux-pwm@lfdr.de>; Wed, 23 Jul 2025 22:37:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 727C6228C9D;
-	Wed, 23 Jul 2025 17:35:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F618270575;
+	Wed, 23 Jul 2025 22:38:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Iw975G9v"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d0WB83ER"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f181.google.com (mail-pg1-f181.google.com [209.85.215.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 382CA2222A7;
-	Wed, 23 Jul 2025 17:35:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97AC31D54D8;
+	Wed, 23 Jul 2025 22:38:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753292107; cv=none; b=VZGTwq4L/O9y2qfjn18bmHp7KMhu3OjV7WODe9rrRvMAC7/Ay7sKMMplIByP7n8sfdM+ZONX0yotXVjWNFZwZ+82BvrA1QfYEtvyCfxPzO7YPCvchITolig6v+MYXgCdleQBoDRcD1UnsxSEnr8u2YzGy31ivfCILhET9saxB2Q=
+	t=1753310328; cv=none; b=GTZ8l2qRkH6tJjZvKkD3opy1ZveQWYhOJFZDlrVjcaS+cWb9ZQk5Qu8LZ2f5E1crb/cnBRGR/4qVzRFQtIKmQVEgExlnLb4o1R+Y0y8iGYfT3OMmiA5MykIVmHOgJiSh3psE2laA+gLGkQdlSQWDaE2Fay/MfnHn57PNCmUstJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753292107; c=relaxed/simple;
-	bh=hBmYcaNHoIqZydKfbh8wgcy7HWw8qwr/hO73PbZOsWk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TuHf2xJNJTqpYCJofuwA0k4rdMNlQmavBWbya4Xw/P7rzFsZK3AM0fY/2Qx0LuEjMFiZEE3w3hxbc8U2tzQ8i+TWW0QUJnfFEuPsMIRCRFDJyyGqiz2yjry0ymTR1BxQA7xH4cXn7lVu66kYShvkjQahmvG0oIq9NHv+DMB8IuA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Iw975G9v; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id AF057C4CEF1;
-	Wed, 23 Jul 2025 17:35:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753292106;
-	bh=hBmYcaNHoIqZydKfbh8wgcy7HWw8qwr/hO73PbZOsWk=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=Iw975G9vP3k4kKCoH2XJDvsdqQM5ltnpznHImCa2KflV/9Stdmcrz675XAjXqBRPg
-	 PE6ORU2bGRr6pXBS/mVUd/wbx8yfIwTOzro7gJmlSRPxjeJRdgDeT3fdvYJrkf1yu+
-	 5c82MJ4WMCfuRNDTRPRZkrIr1Fom/v2IcqNqS5YRG/tzQeuFDSiSeDISiQ/Ga8NiaS
-	 GbdkP/9NHff1B5jgj+zdNG1dJRKBbpIMLQ/vkfxjtGPVfBWLlpDPRL4X08tLDPGulv
-	 qA7dEwvP7NoBYMnf+MTbv2+JBH+W/eD3e9mDWMHUc9+nSKh4+gIWvvwrHFMkBPSgde
-	 MFA5loM+tEWZw==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CADBC87FC5;
-	Wed, 23 Jul 2025 17:35:06 +0000 (UTC)
-From: Dimitri Fedrau via B4 Relay <devnull+dimitri.fedrau.liebherr.com@kernel.org>
-Date: Wed, 23 Jul 2025 19:34:57 +0200
-Subject: [PATCH v5 2/2] hwmon: add support for MC33XS2410 hardware
- monitoring
+	s=arc-20240116; t=1753310328; c=relaxed/simple;
+	bh=rllKm6oEcsaGEQDno4+nOwkZcdrVP5eCwS1QXpejhk4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MPmmIwmFdOJUV1s+KGs3M/1nf8wr6rRB+OBfOM3KSfssMNWusXDRF9tnsUm0kjJJ4i0FS/tuHDfoSZkJQgkb6B9uIi2lIYZhHWeuRsEJNTtWRg+xpwUlCTCQBkZDDU85tqfJl195lAku1qIg2bPLugBKA15F1gv2nhz0a4RWXzs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=d0WB83ER; arc=none smtp.client-ip=209.85.215.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pg1-f181.google.com with SMTP id 41be03b00d2f7-b34ab678931so376771a12.0;
+        Wed, 23 Jul 2025 15:38:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1753310326; x=1753915126; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=httEGtEqD2JKhBONVOlAdsuEcxaTZjP6OdJ8FhoZGUc=;
+        b=d0WB83ER+trZWLbQAbCMJ73d3AIWjRklUJLD9IyBQTiBKo1hoh4gOqk7AGar6LjuKe
+         Im6QJUj7obENSmH7IuJoodEd0YyG7FDyt0Dfx5qudlbzoXBRVm/Wu07eNQ7fkcmnBjCa
+         yzOssOvWUQeKfc3ypn6dzp/5yfW0jiULW6zaL1neo1WuIibs64E69IYqxAl0xLg2QnLs
+         kJPRhHnOkg+UdxR+EmrsR6gfPFnSPUuQDv4vzP+8WO2By6p/CxE0LvKgaYhT7lO/91KF
+         UD9tgq/iY/06m7DEVsMuneT1sNeymcxUcG4Rd/VFc0wTBxoE0VixdkiTn7BcISOVJpAD
+         tu5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753310326; x=1753915126;
+        h=content-transfer-encoding:in-reply-to:autocrypt:from
+         :content-language:references:cc:to:subject:user-agent:mime-version
+         :date:message-id:sender:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=httEGtEqD2JKhBONVOlAdsuEcxaTZjP6OdJ8FhoZGUc=;
+        b=XsO6LM5TdN5y0HvuVpIPrJmogjqxtpOY2t6s0VkpaoiT5oVj7hsYMypWeuIj6gn8Yr
+         KE5uIm/2QcZoptFBriNi6rEdhJY5/lait0ZZNbrpYiH5BHDr0bRSLQcdD6GUAhMNUXpd
+         +dKhfAimBTQ1dbp70ih15B31WmLl2Q+oblH3kehQSb8CHgAxbxvG95oOlJv8P8QB1rQ1
+         AKvDIklNCGDlM13iVevYz7ES9t6hQoBb63WY5FlhMFSEWd5i/cfLLCXZqq7MI4LDDPBv
+         dnyOw1p/z9wKybrdwlgVZheJT0IvA5YU5O2BYmuzS6zysCA4AVJP38UZC4zElGGJe+Y4
+         +s0g==
+X-Forwarded-Encrypted: i=1; AJvYcCUM5AG0MG04+88PssDIGl/+yiJfnIS5QMMt05PybJch0mvJOBvG0waamdXh0pEOqGtOSSuGMsl/z3r6mSM=@vger.kernel.org, AJvYcCUog1EZFO3osS5iOWHS5lAw9SwrxnTHikvjxju9qAOfEbWxHLocjh5faZezJbGrtbpZ7xaMAoPO+b3Ivrz/@vger.kernel.org, AJvYcCXOwHWEkgScHbIj3NxsO6+6yiuJP/dU3SBXMN4K/W5dcck0hRxXGNI4E+zV/6x2+L4JdiOU2lK67fo=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzlT/NAy2IDPCZm+6yx27sxatBrp0+6PBwPeSRu/VUIIzW7S1dv
+	T2MtRq+vWmdbCuS3Qj9JVKgs7FfQXjXRIBc2IH8KCg3aMIxynqVPgBf2cfJ8Gw==
+X-Gm-Gg: ASbGncssx/jSN++Em8U07erLJ9l4vZTr5DL3D2N8mWZTh2OqnwI+FI5hraWpx68BdZV
+	58xffDLnb8vlRi6UV0TZIjQLIJV3Zlm60sTpDn84dtQQ6dOuIF3huTxQEzIXo4QayM/YiRY2t4J
+	rbQU1y97VSVv3yHJmX1rpRgiRpDYAEqXdR+tInEoKM2D0xb8KwfB5SMsYJwaKhdbkzXGCE9Y6MW
+	RPvTBUzS22EcYYb5uiCH5cyX0etc3maq6kXYOCkVsM4o+mu6E355F6SeK3PW1nd875DbB+SW1Ak
+	mDziACWbeSWIpwnqnXL50RtGTLHYOAi44FHH+US+Onr23l78mJx8/YiEHU5gGJQcGAJrpkRir1I
+	mCKEWn65mtCZ1lApFN8NEYe2pM4yAfpBPzevHY2GiMiuGCjxm9guvLcGYZbn3Ku+G25dl3kAIng
+	aOWoy2lw==
+X-Google-Smtp-Source: AGHT+IHakvZZ3TUObRGKro7UVd2Yr8Ej1rtAPvox7bw0ZmXr5fCcKBn4M0OqVIvJGwFyJ7+j8EsOoQ==
+X-Received: by 2002:a05:6a20:430f:b0:225:7617:66ff with SMTP id adf61e73a8af0-23d4905c6fdmr6898282637.20.1753310325853;
+        Wed, 23 Jul 2025 15:38:45 -0700 (PDT)
+Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-b3f6c09baecsm73443a12.24.2025.07.23.15.38.44
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 23 Jul 2025 15:38:45 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Message-ID: <039cc421-eac2-4fc3-ac51-b1e5d5faa54b@roeck-us.net>
+Date: Wed, 23 Jul 2025 15:38:44 -0700
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250723-mc33xs2410-hwmon-v5-2-f62aab71cd59@liebherr.com>
-References: <20250723-mc33xs2410-hwmon-v5-0-f62aab71cd59@liebherr.com>
-In-Reply-To: <20250723-mc33xs2410-hwmon-v5-0-f62aab71cd59@liebherr.com>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, 
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/2] hwmon: add support for MC33XS2410 hardware
+ monitoring
+To: dimitri.fedrau@liebherr.com, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
+ <ukleinek@kernel.org>, Jean Delvare <jdelvare@suse.com>,
  Jonathan Corbet <corbet@lwn.net>
-Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org, 
- Dimitri Fedrau <dimitri.fedrau@liebherr.com>, 
+Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hwmon@vger.kernel.org, linux-doc@vger.kernel.org,
  Dimitri Fedrau <dima.fedrau@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1753292105; l=8847;
- i=dimitri.fedrau@liebherr.com; s=20241202; h=from:subject:message-id;
- bh=YCCOttXZ9iOZy8OoouzxY5slMvI1RSmNaE/50XP8LQ8=;
- b=q2Q9U7owpZSCdSikq27SLgh4CUvrElB2yDXwFneDlqJUgIi8lt8r6Po+B6eTs3724EZE2U4H+
- hcHPAQZ8FiQBLV2lNat1ufVeWGcO++gm6E9Qv49ENBdWSbu2s0RTIeE
-X-Developer-Key: i=dimitri.fedrau@liebherr.com; a=ed25519;
- pk=rT653x09JSQvotxIqQl4/XiI4AOiBZrdOGvxDUbb5m8=
-X-Endpoint-Received: by B4 Relay for dimitri.fedrau@liebherr.com/20241202
- with auth_id=290
-X-Original-From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
-Reply-To: dimitri.fedrau@liebherr.com
+References: <20250723-mc33xs2410-hwmon-v5-0-f62aab71cd59@liebherr.com>
+ <20250723-mc33xs2410-hwmon-v5-2-f62aab71cd59@liebherr.com>
+Content-Language: en-US
+From: Guenter Roeck <linux@roeck-us.net>
+Autocrypt: addr=linux@roeck-us.net; keydata=
+ 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
+ np3900V20aS7eD9K8GTU0TGC1pyz6IVJwIE=
+In-Reply-To: <20250723-mc33xs2410-hwmon-v5-2-f62aab71cd59@liebherr.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+On 7/23/25 10:34, Dimitri Fedrau via B4 Relay wrote:
+> From: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
+> 
+> The device is able to monitor temperature, voltage and current of each of
+> the four outputs. Add basic support for monitoring the temperature of the
+> four outputs and the die temperature.
+> 
+> Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
 
-The device is able to monitor temperature, voltage and current of each of
-the four outputs. Add basic support for monitoring the temperature of the
-four outputs and the die temperature.
+Acked-by: Guenter Roeck <linux@roeck-us.net>
 
-Signed-off-by: Dimitri Fedrau <dimitri.fedrau@liebherr.com>
----
- Documentation/hwmon/index.rst            |   1 +
- Documentation/hwmon/mc33xs2410_hwmon.rst |  34 ++++++
- drivers/hwmon/Kconfig                    |  10 ++
- drivers/hwmon/Makefile                   |   1 +
- drivers/hwmon/mc33xs2410_hwmon.c         | 178 +++++++++++++++++++++++++++++++
- 5 files changed, 224 insertions(+)
+I am not sure what the plan is, but for now I'll assume that
+the series will be applied through the pwm subsystem.
 
-diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
-index b45bfb4ebf30823094fe82726d2237f90be17642..d292a86ac5da902cad02c1965c90f5de530489df 100644
---- a/Documentation/hwmon/index.rst
-+++ b/Documentation/hwmon/index.rst
-@@ -167,6 +167,7 @@ Hardware Monitoring Kernel Drivers
-    max77705
-    max8688
-    mc13783-adc
-+   mc33xs2410_hwmon
-    mc34vr500
-    mcp3021
-    menf21bmc
-diff --git a/Documentation/hwmon/mc33xs2410_hwmon.rst b/Documentation/hwmon/mc33xs2410_hwmon.rst
-new file mode 100644
-index 0000000000000000000000000000000000000000..8a2136ef913911851874179620815f4e74e6e5e9
---- /dev/null
-+++ b/Documentation/hwmon/mc33xs2410_hwmon.rst
-@@ -0,0 +1,34 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+Kernel driver mc33xs2410_hwmon
-+==============================
-+
-+Supported devices:
-+
-+  * NXPs MC33XS2410
-+
-+    Datasheet: https://www.nxp.com/docs/en/data-sheet/MC33XS2410.pdf
-+
-+Authors:
-+
-+	Dimitri Fedrau <dimitri.fedrau@liebherr.com>
-+
-+Description
-+-----------
-+
-+The MC33XS2410 is a four channel self-protected high-side switch featuring
-+hardware monitoring functions such as temperature, current and voltages for each
-+of the four channels.
-+
-+Sysfs entries
-+-------------
-+
-+======================= ======================================================
-+temp1_label		"Central die temperature"
-+temp1_input		Measured temperature of central die
-+
-+temp[2-5]_label		"Channel [1-4] temperature"
-+temp[2-5]_input		Measured temperature of a single channel
-+temp[2-5]_alarm		Temperature alarm
-+temp[2-5]_max		Maximal temperature
-+======================= ======================================================
-diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-index 079620dd42862ef5e026697e9e1b1fcd5b8be298..9d28fcf7cd2a6f9e2f54694a717bd85ff4047b46 100644
---- a/drivers/hwmon/Kconfig
-+++ b/drivers/hwmon/Kconfig
-@@ -700,6 +700,16 @@ config SENSORS_MC13783_ADC
-         help
-           Support for the A/D converter on MC13783 and MC13892 PMIC.
- 
-+config SENSORS_MC33XS2410
-+	tristate "MC33XS2410 HWMON support"
-+	depends on PWM_MC33XS2410
-+	help
-+	  If you say yes here you get hardware monitoring support for
-+	  MC33XS2410.
-+
-+	  This driver can also be built as a module. If so, the module
-+	  will be called mc33xs2410_hwmon.
-+
- config SENSORS_FSCHMD
- 	tristate "Fujitsu Siemens Computers sensor chips"
- 	depends on (X86 || COMPILE_TEST) && I2C
-diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-index 48e5866c0c9a7677089d1001a9c5ae4adebff5d5..cd8bc4752b4dbf015c6eb46157626f4e8f87dfae 100644
---- a/drivers/hwmon/Makefile
-+++ b/drivers/hwmon/Makefile
-@@ -165,6 +165,7 @@ obj-$(CONFIG_SENSORS_MAX31790)	+= max31790.o
- obj-$(CONFIG_MAX31827) += max31827.o
- obj-$(CONFIG_SENSORS_MAX77705) += max77705-hwmon.o
- obj-$(CONFIG_SENSORS_MC13783_ADC)+= mc13783-adc.o
-+obj-$(CONFIG_SENSORS_MC33XS2410) += mc33xs2410_hwmon.o
- obj-$(CONFIG_SENSORS_MC34VR500)	+= mc34vr500.o
- obj-$(CONFIG_SENSORS_MCP3021)	+= mcp3021.o
- obj-$(CONFIG_SENSORS_TC654)	+= tc654.o
-diff --git a/drivers/hwmon/mc33xs2410_hwmon.c b/drivers/hwmon/mc33xs2410_hwmon.c
-new file mode 100644
-index 0000000000000000000000000000000000000000..23eb90e337091724c5562703df7d77a5fae6253b
---- /dev/null
-+++ b/drivers/hwmon/mc33xs2410_hwmon.c
-@@ -0,0 +1,178 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2025 Liebherr-Electronics and Drives GmbH
-+ */
-+
-+#include <linux/auxiliary_bus.h>
-+#include <linux/bitfield.h>
-+#include <linux/bitops.h>
-+#include <linux/hwmon.h>
-+#include <linux/mc33xs2410.h>
-+#include <linux/module.h>
-+
-+/* ctrl registers */
-+
-+#define MC33XS2410_TEMP_WT			0x29
-+#define MC33XS2410_TEMP_WT_MASK			GENMASK(7, 0)
-+
-+/* diag registers */
-+
-+/* chan in { 1 ... 4 } */
-+#define MC33XS2410_OUT_STA(chan)		(0x02 + (chan) - 1)
-+#define MC33XS2410_OUT_STA_OTW			BIT(8)
-+
-+#define MC33XS2410_TS_TEMP_DIE			0x26
-+#define MC33XS2410_TS_TEMP_MASK			GENMASK(9, 0)
-+
-+/* chan in { 1 ... 4 } */
-+#define MC33XS2410_TS_TEMP(chan)		(0x2f + (chan) - 1)
-+
-+static const struct hwmon_channel_info * const mc33xs2410_hwmon_info[] = {
-+	HWMON_CHANNEL_INFO(temp,
-+			   HWMON_T_LABEL | HWMON_T_INPUT,
-+			   HWMON_T_LABEL | HWMON_T_INPUT | HWMON_T_MAX |
-+			   HWMON_T_ALARM,
-+			   HWMON_T_LABEL | HWMON_T_INPUT | HWMON_T_MAX |
-+			   HWMON_T_ALARM,
-+			   HWMON_T_LABEL | HWMON_T_INPUT | HWMON_T_MAX |
-+			   HWMON_T_ALARM,
-+			   HWMON_T_LABEL | HWMON_T_INPUT | HWMON_T_MAX |
-+			   HWMON_T_ALARM),
-+	NULL,
-+};
-+
-+static umode_t mc33xs2410_hwmon_is_visible(const void *data,
-+					   enum hwmon_sensor_types type,
-+					   u32 attr, int channel)
-+{
-+	switch (attr) {
-+	case hwmon_temp_input:
-+	case hwmon_temp_alarm:
-+	case hwmon_temp_label:
-+		return 0444;
-+	case hwmon_temp_max:
-+		return 0644;
-+	default:
-+		return 0;
-+	}
-+}
-+
-+static int mc33xs2410_hwmon_read(struct device *dev,
-+				 enum hwmon_sensor_types type,
-+				 u32 attr, int channel, long *val)
-+{
-+	struct spi_device *spi = dev_get_drvdata(dev);
-+	u16 reg_val;
-+	int ret;
-+	u8 reg;
-+
-+	switch (attr) {
-+	case hwmon_temp_input:
-+		reg = (channel == 0) ? MC33XS2410_TS_TEMP_DIE :
-+				       MC33XS2410_TS_TEMP(channel);
-+		ret = mc33xs2410_read_reg_diag(spi, reg, &reg_val);
-+		if (ret < 0)
-+			return ret;
-+
-+		/* LSB is 0.25 degree celsius */
-+		*val = FIELD_GET(MC33XS2410_TS_TEMP_MASK, reg_val) * 250 - 40000;
-+		return 0;
-+	case hwmon_temp_alarm:
-+		ret = mc33xs2410_read_reg_diag(spi, MC33XS2410_OUT_STA(channel),
-+					       &reg_val);
-+		if (ret < 0)
-+			return ret;
-+
-+		*val = FIELD_GET(MC33XS2410_OUT_STA_OTW, reg_val);
-+		return 0;
-+	case hwmon_temp_max:
-+		ret = mc33xs2410_read_reg_ctrl(spi, MC33XS2410_TEMP_WT, &reg_val);
-+		if (ret < 0)
-+			return ret;
-+
-+		/* LSB is 1 degree celsius */
-+		*val = FIELD_GET(MC33XS2410_TEMP_WT_MASK, reg_val) * 1000 - 40000;
-+		return 0;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+static int mc33xs2410_hwmon_write(struct device *dev,
-+				  enum hwmon_sensor_types type, u32 attr,
-+				  int channel, long val)
-+{
-+	struct spi_device *spi = dev_get_drvdata(dev);
-+
-+	switch (attr) {
-+	case hwmon_temp_max:
-+		val = clamp_val(val, -40000, 215000);
-+
-+		/* LSB is 1 degree celsius */
-+		val = (val / 1000) + 40;
-+		return mc33xs2410_modify_reg(spi, MC33XS2410_TEMP_WT,
-+					     MC33XS2410_TEMP_WT_MASK, val);
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+static const char *const mc33xs2410_temp_label[] = {
-+	"Central die temperature",
-+	"Channel 1 temperature",
-+	"Channel 2 temperature",
-+	"Channel 3 temperature",
-+	"Channel 4 temperature",
-+};
-+
-+static int mc33xs2410_read_string(struct device *dev,
-+				  enum hwmon_sensor_types type,
-+				  u32 attr, int channel, const char **str)
-+{
-+	*str = mc33xs2410_temp_label[channel];
-+
-+	return 0;
-+}
-+
-+static const struct hwmon_ops mc33xs2410_hwmon_hwmon_ops = {
-+	.is_visible = mc33xs2410_hwmon_is_visible,
-+	.read = mc33xs2410_hwmon_read,
-+	.read_string = mc33xs2410_read_string,
-+	.write = mc33xs2410_hwmon_write,
-+};
-+
-+static const struct hwmon_chip_info mc33xs2410_hwmon_chip_info = {
-+	.ops = &mc33xs2410_hwmon_hwmon_ops,
-+	.info = mc33xs2410_hwmon_info,
-+};
-+
-+static int mc33xs2410_hwmon_probe(struct auxiliary_device *adev,
-+				  const struct auxiliary_device_id *id)
-+{
-+	struct device *dev = &adev->dev;
-+	struct spi_device *spi = container_of(dev->parent, struct spi_device, dev);
-+	struct device *hwmon;
-+
-+	hwmon = devm_hwmon_device_register_with_info(dev, NULL, spi,
-+						     &mc33xs2410_hwmon_chip_info,
-+						     NULL);
-+	return PTR_ERR_OR_ZERO(hwmon);
-+}
-+
-+static const struct auxiliary_device_id mc33xs2410_hwmon_ids[] = {
-+	{
-+		.name = "pwm_mc33xs2410.hwmon",
-+	},
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(auxiliary, mc33xs2410_hwmon_ids);
-+
-+static struct auxiliary_driver mc33xs2410_hwmon_driver = {
-+	.probe = mc33xs2410_hwmon_probe,
-+	.id_table = mc33xs2410_hwmon_ids,
-+};
-+module_auxiliary_driver(mc33xs2410_hwmon_driver);
-+
-+MODULE_DESCRIPTION("NXP MC33XS2410 hwmon driver");
-+MODULE_AUTHOR("Dimitri Fedrau <dimitri.fedrau@liebherr.com>");
-+MODULE_LICENSE("GPL");
-
--- 
-2.39.5
-
+Thanks,
+Guenter
 
 
