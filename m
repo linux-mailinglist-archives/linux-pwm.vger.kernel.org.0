@@ -1,461 +1,1046 @@
-Return-Path: <linux-pwm+bounces-6892-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6893-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF1A0B12131
-	for <lists+linux-pwm@lfdr.de>; Fri, 25 Jul 2025 17:46:04 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9EB0BB1215E
+	for <lists+linux-pwm@lfdr.de>; Fri, 25 Jul 2025 17:57:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 8D0A81CC6185
-	for <lists+linux-pwm@lfdr.de>; Fri, 25 Jul 2025 15:46:16 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 512A43A95C8
+	for <lists+linux-pwm@lfdr.de>; Fri, 25 Jul 2025 15:56:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 795B624418D;
-	Fri, 25 Jul 2025 15:45:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 567102EE985;
+	Fri, 25 Jul 2025 15:56:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="NP1xlP9V"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="AgZ6wXFg"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38BDF24677E
-	for <linux-pwm@vger.kernel.org>; Fri, 25 Jul 2025 15:45:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753458356; cv=none; b=WqsGpKMgt/TGvlR8x6gaRqwLV3QB4H32Q9Mb12qUwlreb0cqnPAF867sEEcJN+tpAtHFax7z6At+GJOomw7A+6zdGxHeGKqgZfRno8cc0e6qLi8khUi4zPQBg9PVhtL9lavXZt8b/v469plNXTNxeNB+1nRQIfiEGlefL3WCh+A=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753458356; c=relaxed/simple;
-	bh=JVTMa1u9uKOzTEr4zF5qVt0q2p6fcHsxcxX+/IcWAvo=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=XgjbpyoYBYcJvpG6LlKUxnfR3pom49pTLF3wDuyqcuql+Ji6rW5wtlk8hybvFpR53uXaZ10TCEKSl5Z4JuLhVKYJgN3FKIBmmzByG9qNJPqhnW3gGTamizUml+DLNCtirIzuYJOHx4uZ01PRtc+8oaSE2UrrG0aAZ0/I9HXNsag=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=NP1xlP9V; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-455b00339c8so16038565e9.3
-        for <linux-pwm@vger.kernel.org>; Fri, 25 Jul 2025 08:45:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1753458352; x=1754063152; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=naH0zBfJIyOjDeXHISo3GWSZjSEthCAmEqnzdT+LFjw=;
-        b=NP1xlP9VduDJ4U8yYqwZhUGR6J93vSwuo8Z3xH/YAZYEjXai3b7msXvzOMC9nHMkRm
-         KnYHJoG5dhpe/hgQoF857DXLGNQM7lS2rJObkQWGSKbbf3fja4eVdmmE+p4gPHswOz3H
-         LKDzoB/bUECwALLoVDBJ9Duqs3mKZWmbfLW54P9XaCox75yrpnmZ3Yyopy9jDGGoIzza
-         s6SS+MAim1JXue/WaiMXUcOlGLfNdPhkJIrj8tG2s8NEukmJDEM1UQ5aRgB8sDwx7X0N
-         WVQ3hEzW5AfRKFK9Ol1r2hiUOFI03Do/0ejItp8cEjeU8M0Nn04QGCTK4rnIdYwfp95W
-         Sgng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753458352; x=1754063152;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=naH0zBfJIyOjDeXHISo3GWSZjSEthCAmEqnzdT+LFjw=;
-        b=J33coHe/oI1qvu+0Q0bYHuln7vsPEYHLXJpFWaV7gYe31TqEVoI9d/nA4fMrtS2h+u
-         N4fgaYj9CK9Pl1dCcGW7Bxolv2knb+BRMYPcnp1wEGNacYG613Hir7oeU+yLxLokUb24
-         GHhz19nynLXYFd/xDQ3gB3rQL5/UM7lo1b+zx7tG64NTroHAmeXRVZ/KG4BNY66MGzbn
-         df71GrMqNpqUzVW0ymvl24vdVQdAoRgzQcs6cI1iqGsEGo+ay9iTep513lz1T0u+7WZp
-         cbmABuGI1ywVV1pqIesETe61BOAECQY3ScBVEcOixrLeNMJ7sBDDvsJReEm8DO2wp72K
-         ybZA==
-X-Gm-Message-State: AOJu0YxYUBqyKpBG1aWCX5jNE9Jasa9nXuQJcYFvf4F2lxp2Y7O7NvyC
-	VQcbVIm6L3SbjVxkXG/RiPDTcLT3fVTHEJI7c7Xp2f2XeZz2V8r2hLoIhpaL26+g60A=
-X-Gm-Gg: ASbGncuAWHK3OGA1fDWUcSlw7jaA0rwBCYjXE6riQKiV0yud2klvFP7TkX6ZKODCm1L
-	zx9UlxLkV4FETseyXF32V9GDzq1NLk5JmSW+afM5SdYToRx3k8PZUkrotoam3Vd8iBduxU6Y5Pk
-	oNQlxx6eHCV48QHHoTVjMQMsp47RW5CRRht7Y0qNFUJbrvidvSX7VlQ/5cjTGg9ITwfV8di/r16
-	76KfT6dCKKyFGXCYYeOMmk/ibJoJbFFtdd4Mf35mwCAgR+TTmBXmUhq5HZjap7wfyEb0hNvw+/C
-	yIWfSgvMexAIkQwteqKR8v+lu6XfTo5BQRtCpRusDzjmlOC2dljuw8dL8s1j7UvxYqp2mUkZXBV
-	pNqk/+Ch/2VY8px+1KsgUtpnaq+JVYqpBpdNxqyGS/h4Nv2xlV4vcDFqBw5Cltyey
-X-Google-Smtp-Source: AGHT+IEu8ytExD33oY8pDlifvvoC9Uw4+3MTOanmfCvAAGoz6TXxb9utudI1/HDDkQ0BFNyvOatJtw==
-X-Received: by 2002:a05:600c:4f87:b0:456:133f:a02d with SMTP id 5b1f17b1804b1-4587644278emr27146735e9.17.1753458352317;
-        Fri, 25 Jul 2025 08:45:52 -0700 (PDT)
-Received: from localhost (p200300f65f06ab0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f06:ab04::1b9])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3b778f0c2d8sm217740f8f.59.2025.07.25.08.45.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 25 Jul 2025 08:45:51 -0700 (PDT)
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: linux-pwm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org
-Subject: [PATCH v2 8/8] pwm: mediatek: Convert to waveform API
-Date: Fri, 25 Jul 2025 17:45:12 +0200
-Message-ID: <20250725154506.2610172-18-u.kleine-koenig@baylibre.com>
-X-Mailer: git-send-email 2.50.0
-In-Reply-To: <20250725154506.2610172-10-u.kleine-koenig@baylibre.com>
-References: <20250725154506.2610172-10-u.kleine-koenig@baylibre.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5996124677E;
+	Fri, 25 Jul 2025 15:56:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1753459017; cv=pass; b=JOqwwKWZwWaPtEO4EhJfMsZ/QlnrtOYdMb3QVKivdPU8V08c7T2LhFv5Tu0xQhhDNjHY8BN7i9IlfYDmGUhIG1ICqRVqWKeYADlGoaKDseSt20VM8L55lBqbvfRmnn9iE+rD34M1SbhdJqFrwYzyVi/GaUF7F3om1jt0Q+NNKu4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1753459017; c=relaxed/simple;
+	bh=7z6ALilZGGcVq9OEqBnSz4ScHL7AEzk+/Bv10iEc6Ng=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=NqQKr6nxE7B+gXbdVxrE+CQbg1E2nWndKl7c4Kk9AOy/blHzzxqOslYl7XzSWEo6/KZLTwLMid3xdYYcqqeJtYliVTzN618Fyp8bFvR5jJ+Xm5QiyguP7DqBoySz/li80+VRDkbioChADwVxbKEqSfxWBC5ssU4yXela4JU4W+4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=AgZ6wXFg; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+ARC-Seal: i=1; a=rsa-sha256; t=1753458981; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=IGIWm36T9IvuyGU68zv6ZMToi9jtIlncR4sLpblLyt2wtAecWScQz1w7rtpaUWrzVWMrk4LRxnuymM9nMp8ycHqCl8BoRBHsuuUQNOGDTfVkEMIw4cpOQgbUlFJ02XIWNVLYMKR5tvfVP9BnhqGseQXWIDrtufWH8bUOp/k9jZY=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1753458981; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=E9pUD5LyN2FDLdQtIzuQV7vwiykn8dLc91OSN57RN3I=; 
+	b=SyhnDNT8HG+Ph8m7Sh0U/AsJgDh9UHopJPAwmmN+PbthTL73E7CtGN7f5z13LygO+YliyEORZazhg53wuqaq50hFv/1rQnlhuf2dDFIJvKpFoTDm6XvP4IL6vmu0rExuuI5aJnC8L2jII5HxYhesgGShJJmpF0KfMTLFBsHOZUw=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1753458981;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=E9pUD5LyN2FDLdQtIzuQV7vwiykn8dLc91OSN57RN3I=;
+	b=AgZ6wXFgHQUUq43WO17mH32pVQ6HAlL2tgs+9blEiyZj+Q1CMDLzQzgH0SZbR0B0
+	ZNCO+kxxh+1bui8NjtB9b1lgiLapng6JkFFp/nrvFRtg5yCQJevS0v3+nKg44B4Qri0
+	FXTkibyr9fEfnhjdQyC3YYcS9FR4AaGepA25B33o=
+Received: by mx.zohomail.com with SMTPS id 1753458979249732.4888301970183;
+	Fri, 25 Jul 2025 08:56:19 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=11070; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=JVTMa1u9uKOzTEr4zF5qVt0q2p6fcHsxcxX+/IcWAvo=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBog6aYnbWwK1WCYiQ3Y4ZhcAgzh73Cq5IQthP54 ezkCFDJX8aJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCaIOmmAAKCRCPgPtYfRL+ TrWIB/sEWcWCZgK8EaNr/3uB1XUq1mHUFi+V7SaMzsEzr1JKVcFnK2jxMwaqdEXxjIUdyXgD9vg CVmN9Eef0UqFsuxVNRLcZBr9w9+MBTqiir6tGQTZGGvIaKMeyh0KMCV9cTr1OVebd/GkdvCZpKm O+cbD4n+KNf1CmTrWn+gHQQI/wWJ9juV8j661yZa0tq8zVffwLg/wNzz3+9sZnDVfoeF/PrAwgc altyxw0AIrqWYmAtCUxc71+w3SJp76MsIojD+BNLU2DCbyragZ6m0To8/2tMflJDfjJY2+x4Skn 5Ezd9DKCvtxxidp/BN+H0sqI/92AN0k6Zk5zTYKsAvgj6itR
-X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.600.51.1.1\))
+Subject: Re: [PATCH v12 3/3] rust: pwm: Add complete abstraction layer
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <20250717-rust-next-pwm-working-fan-for-sending-v12-3-40f73defae0c@samsung.com>
+Date: Fri, 25 Jul 2025 12:56:00 -0300
+Cc: =?utf-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ Miguel Ojeda <ojeda@kernel.org>,
+ Alex Gaynor <alex.gaynor@gmail.com>,
+ Boqun Feng <boqun.feng@gmail.com>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>,
+ Drew Fustini <drew@pdp7.com>,
+ Guo Ren <guoren@kernel.org>,
+ Fu Wei <wefu@redhat.com>,
+ Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>,
+ Paul Walmsley <paul.walmsley@sifive.com>,
+ Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>,
+ Alexandre Ghiti <alex@ghiti.fr>,
+ Marek Szyprowski <m.szyprowski@samsung.com>,
+ Benno Lossin <lossin@kernel.org>,
+ Michael Turquette <mturquette@baylibre.com>,
+ Drew Fustini <fustini@kernel.org>,
+ linux-kernel@vger.kernel.org,
+ linux-pwm@vger.kernel.org,
+ rust-for-linux@vger.kernel.org,
+ linux-riscv@lists.infradead.org,
+ devicetree@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <42C9DF97-2E0F-453B-800A-1DA49BF8F29F@collabora.com>
+References: <20250717-rust-next-pwm-working-fan-for-sending-v12-0-40f73defae0c@samsung.com>
+ <CGME20250717090833eucas1p16c916450b59a77d81bd013527755cb21@eucas1p1.samsung.com>
+ <20250717-rust-next-pwm-working-fan-for-sending-v12-3-40f73defae0c@samsung.com>
+To: Michal Wilczynski <m.wilczynski@samsung.com>
+X-Mailer: Apple Mail (2.3826.600.51.1.1)
+X-ZohoMailClient: External
 
-Implement the new waveform callbacks which makes the usage of this
-hardware more flexible and allows to use it via the pwm character
+Hi Michal,
+
+> On 17 Jul 2025, at 06:08, Michal Wilczynski <m.wilczynski@samsung.com> =
+wrote:
+>=20
+> Introduce a comprehensive abstraction layer for the PWM subsystem to
+> enable writing drivers in Rust.
+>=20
+> Because `Device`, `Chip`, and `PwmOps` all refer to each other, they
+> form a single, indivisible unit with circular dependencies. They are
+> introduced together in this single commit to create a complete,
+> compilable abstraction layer.
+>=20
+> The main components are:
+> - Data Wrappers: Safe, idiomatic wrappers for core C types like
+>   `pwm_device`, and `pwm_chip`.
+>=20
+> - PwmOps Trait: An interface that drivers can implement to provide
+>   their hardware-specific logic, mirroring the C `pwm_ops` interface.
+>=20
+> - FFI VTable and Adapter: A bridge to connect the high-level PwmOps =
+trait
+>   to the C kernel's pwm_ops vtable.
+>=20
+> - Allocation and Lifetime Management: A high-level `Chip::new()`
+>   API to safely allocate a chip and a `Registration` guard that =
+integrates
+>   with `devres` to manage the chip's registration with the PWM core.
+>   An `AlwaysRefCounted` implementation and a custom release handler
+>   prevent memory leaks by managing the chip's lifetime and freeing
+>   driver data correctly.
+>=20
+> Reviewed-by: Danilo Krummrich <dakr@kernel.org>
+> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+> ---
+> rust/kernel/pwm.rs | 653 =
+++++++++++++++++++++++++++++++++++++++++++++++++++++-
+> 1 file changed, 651 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/rust/kernel/pwm.rs b/rust/kernel/pwm.rs
+> index =
+3fad101406eac728d9b12083fad7abf7b7f89b25..d881f662f0758fb0a8678386081e8cc2=
+37980871 100644
+> --- a/rust/kernel/pwm.rs
+> +++ b/rust/kernel/pwm.rs
+> @@ -8,10 +8,14 @@
+>=20
+> use crate::{
+>     bindings,
+> +    container_of,
+> +    device::{self, Bound},
+> +    devres,
+> +    error::{self, to_result},
+>     prelude::*,
+> -    types::Opaque,
+> +    types::{ARef, AlwaysRefCounted, Opaque},
+> };
+> -use core::convert::TryFrom;
+> +use core::{convert::TryFrom, marker::PhantomData, ptr::NonNull};
+>=20
+> /// PWM polarity. Mirrors [`enum =
+pwm_polarity`](srctree/include/linux/pwm.h).
+> #[derive(Copy, Clone, Debug, PartialEq, Eq)]
+> @@ -135,3 +139,648 @@ pub fn enabled(&self) -> bool {
+>         self.0.enabled
+>     }
+> }
+> +
+> +/// Describes the outcome of a `round_waveform` operation.
+> +#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+> +pub enum RoundingOutcome {
+> +    /// The requested waveform was achievable exactly or by rounding =
+values down.
+> +    ExactOrRoundedDown,
+> +
+> +    /// The requested waveform could only be achieved by rounding up.
+> +    RoundedUp,
+> +}
+> +
+> +/// Wrapper for a PWM device [`struct =
+pwm_device`](srctree/include/linux/pwm.h).
+> +#[repr(transparent)]
+> +pub struct Device(Opaque<bindings::pwm_device>);
+> +
+> +impl Device {
+> +    /// Creates a reference to a [`Device`] from a valid C pointer.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// The caller must ensure that `ptr` is valid and remains valid =
+for the lifetime of the
+> +    /// returned [`Device`] reference.
+> +    pub(crate) unsafe fn as_ref<'a>(ptr: *mut bindings::pwm_device) =
+-> &'a Self {
+> +        // SAFETY: The safety requirements guarantee the validity of =
+the dereference, while the
+> +        // `Device` type being transparent makes the cast ok.
+> +        unsafe { &*ptr.cast::<Self>() }
+> +    }
+
+from_raw(). See [0].
+
+> +
+> +    /// Returns a raw pointer to the underlying `pwm_device`.
+> +    fn as_raw(&self) -> *mut bindings::pwm_device {
+> +        self.0.get()
+> +    }
+> +
+> +    /// Gets the hardware PWM index for this device within its chip.
+> +    pub fn hwpwm(&self) -> u32 {
+> +        // SAFETY: `self.as_raw()` provides a valid pointer for =
+`self`'s lifetime.
+> +        unsafe { (*self.as_raw()).hwpwm }
+> +    }
+> +
+> +    /// Gets a reference to the parent `Chip` that this device =
+belongs to.
+> +    pub fn chip<T: PwmOps>(&self) -> &Chip<T> {
+> +        // SAFETY: `self.as_raw()` provides a valid pointer. =
+(*self.as_raw()).chip
+> +        // is assumed to be a valid pointer to `pwm_chip` managed by =
+the kernel.
+> +        // Chip::as_ref's safety conditions must be met.
+> +        unsafe { Chip::<T>::as_ref((*self.as_raw()).chip) }
+> +    }
+> +
+> +    /// Gets the label for this PWM device, if any.
+> +    pub fn label(&self) -> Option<&CStr> {
+> +        // SAFETY: self.as_raw() provides a valid pointer.
+> +        let label_ptr =3D unsafe { (*self.as_raw()).label };
+> +        if label_ptr.is_null() {
+> +            None
+> +        } else {
+> +            // SAFETY: label_ptr is non-null and points to a C string
+> +            // managed by the kernel, valid for the lifetime of the =
+PWM device.
+> +            Some(unsafe { CStr::from_char_ptr(label_ptr) })
+> +        }
+> +    }
+
+nit: this can be written more concisely, but I personally don=E2=80=99t =
+mind.
+
+> +
+> +    /// Gets a copy of the board-dependent arguments for this PWM =
 device.
+> +    pub fn args(&self) -> Args {
+> +        // SAFETY: self.as_raw() gives a valid pointer to =
+`pwm_device`.
+> +        // The `args` field is a valid `pwm_args` struct embedded =
+within `pwm_device`.
+> +        // `Args::from_c_ptr`'s safety conditions are met by =
+providing this pointer.
+> +        unsafe { Args::from_c_ptr(&(*self.as_raw()).args) }
+> +    }
+> +
+> +    /// Gets a copy of the current state of this PWM device.
+> +    pub fn state(&self) -> State {
+> +        // SAFETY: `self.as_raw()` gives a valid pointer. =
+`(*self.as_raw()).state`
+> +        // is a valid `pwm_state` struct. `State::from_c` copies this =
+data.
+> +        State::from_c(unsafe { (*self.as_raw()).state })
+> +    }
+> +
+> +    /// Sets the PWM waveform configuration and enables the PWM =
+signal.
+> +    pub fn set_waveform(&self, wf: &Waveform, exact: bool) -> Result =
+{
+> +        let c_wf =3D bindings::pwm_waveform::from(*wf);
+> +
+> +        // SAFETY: `self.as_raw()` provides a valid `*mut pwm_device` =
+pointer.
+> +        // `&c_wf` is a valid pointer to a `pwm_waveform` struct. The =
+C function
+> +        // handles all necessary internal locking.
+> +        let ret =3D unsafe { =
+bindings::pwm_set_waveform_might_sleep(self.as_raw(), &c_wf, exact) };
+> +        to_result(ret)
+> +    }
+> +
+> +    /// Queries the hardware for the configuration it would apply for =
+a given
+> +    /// request.
+> +    pub fn round_waveform(&self, wf: &mut Waveform) -> =
+Result<RoundingOutcome> {
+> +        let mut c_wf =3D bindings::pwm_waveform::from(*wf);
+> +
+> +        // SAFETY: `self.as_raw()` provides a valid `*mut pwm_device` =
+pointer.
+> +        // `&mut c_wf` is a valid pointer to a mutable `pwm_waveform` =
+struct that
+> +        // the C function will update.
+> +        let ret =3D unsafe { =
+bindings::pwm_round_waveform_might_sleep(self.as_raw(), &mut c_wf) };
+> +
+> +        to_result(ret)?;
+> +
+> +        *wf =3D Waveform::from(c_wf);
+> +
+> +        if ret =3D=3D 1 {
+> +            Ok(RoundingOutcome::RoundedUp)
+> +        } else {
+> +            Ok(RoundingOutcome::ExactOrRoundedDown)
+> +        }
+> +    }
+> +
+> +    /// Reads the current waveform configuration directly from the =
+hardware.
+> +    pub fn get_waveform(&self) -> Result<Waveform> {
+> +        let mut c_wf =3D bindings::pwm_waveform::default();
+> +
+> +        // SAFETY: `self.as_raw()` is a valid pointer. We provide a =
+valid pointer
+> +        // to a stack-allocated `pwm_waveform` struct for the kernel =
+to fill.
+> +        let ret =3D unsafe { =
+bindings::pwm_get_waveform_might_sleep(self.as_raw(), &mut c_wf) };
+> +
+> +        to_result(ret)?;
+> +
+> +        Ok(Waveform::from(c_wf))
+> +    }
+> +}
+> +
+> +/// Trait defining the operations for a PWM driver.
+> +pub trait PwmOps: 'static + Sized {
+> +    /// The driver-specific hardware representation of a waveform.
+> +    ///
+> +    /// This type must be [`Copy`], [`Default`], and fit within =
+`PWM_WFHWSIZE`.
+> +    type WfHw: Copy + Default;
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
----
- drivers/pwm/pwm-mediatek.c | 283 +++++++++++++++++++++----------------
- 1 file changed, 164 insertions(+), 119 deletions(-)
+Can=E2=80=99t you use a build_assert!() here? i.e.:
 
-diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-index e3db54995f7b..8ad289b06352 100644
---- a/drivers/pwm/pwm-mediatek.c
-+++ b/drivers/pwm/pwm-mediatek.c
-@@ -135,50 +135,53 @@ static inline u32 pwm_mediatek_readl(struct pwm_mediatek_chip *chip,
- 		     num * chip->soc->chanreg_width + offset);
- }
- 
--static void pwm_mediatek_enable(struct pwm_chip *chip, struct pwm_device *pwm)
--{
--	struct pwm_mediatek_chip *pc = to_pwm_mediatek_chip(chip);
--	u32 value;
--
--	value = readl(pc->regs);
--	value |= BIT(pwm->hwpwm);
--	writel(value, pc->regs);
--}
--
--static void pwm_mediatek_disable(struct pwm_chip *chip, struct pwm_device *pwm)
--{
--	struct pwm_mediatek_chip *pc = to_pwm_mediatek_chip(chip);
--	u32 value;
--
--	value = readl(pc->regs);
--	value &= ~BIT(pwm->hwpwm);
--	writel(value, pc->regs);
--}
--
--static int pwm_mediatek_config(struct pwm_chip *chip, struct pwm_device *pwm,
--			       u64 duty_ns, u64 period_ns)
-+struct pwm_mediatek_waveform {
-+	u32 enable;
-+	u32 con;
-+	u32 width;
-+	u32 thres;
-+};
-+
-+static int pwm_mediatek_round_waveform_tohw(struct pwm_chip *chip, struct pwm_device *pwm,
-+					    const struct pwm_waveform *wf, void *_wfhw)
- {
-+	struct pwm_mediatek_waveform *wfhw = _wfhw;
- 	struct pwm_mediatek_chip *pc = to_pwm_mediatek_chip(chip);
- 	u32 clkdiv, enable;
--	u32 reg_width = PWMDWIDTH, reg_thres = PWMTHRES;
- 	u64 cnt_period, cnt_duty;
- 	unsigned long clk_rate;
--	int ret;
-+	int ret = 0;
- 
--	ret = pwm_mediatek_clk_enable(pc, pwm->hwpwm);
--	if (ret < 0)
--		return ret;
-+	if (wf->period_length_ns == 0) {
-+		*wfhw = (typeof(*wfhw)){
-+			.con = 0,
-+		};
-+
-+		return 0;
-+	}
-+
-+	if (!pc->clk_pwms[pwm->hwpwm].rate) {
-+		struct clk *clk = pc->clk_pwms[pwm->hwpwm].clk;
-+
-+		ret = clk_prepare_enable(clk);
-+		if (ret)
-+			return ret;
-+
-+		pc->clk_pwms[pwm->hwpwm].rate = clk_get_rate(clk);
-+
-+		clk_disable_unprepare(clk);
-+
-+		if (pc->clk_pwms[pwm->hwpwm].rate == 0 ||
-+		    pc->clk_pwms[pwm->hwpwm].rate > 1000000000)
-+			return -EINVAL;
-+	}
- 
- 	clk_rate = pc->clk_pwms[pwm->hwpwm].rate;
- 
--	/* Make sure we use the bus clock and not the 26MHz clock */
--	if (pc->soc->pwm_ck_26m_sel_reg)
--		writel(0, pc->regs + pc->soc->pwm_ck_26m_sel_reg);
--
--	cnt_period = mul_u64_u64_div_u64(period_ns, clk_rate, NSEC_PER_SEC);
-+	cnt_period = mul_u64_u64_div_u64(wf->period_length_ns, clk_rate, NSEC_PER_SEC);
- 	if (cnt_period == 0) {
--		ret = -ERANGE;
--		goto out;
-+		cnt_period = 1;
-+		ret = 1;
- 	}
- 
- 	if (cnt_period > FIELD_MAX(PWMDWIDTH_PERIOD) + 1) {
-@@ -193,7 +196,7 @@ static int pwm_mediatek_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 		clkdiv = 0;
- 	}
- 
--	cnt_duty = mul_u64_u64_div_u64(duty_ns, clk_rate, NSEC_PER_SEC) >> clkdiv;
-+	cnt_duty = mul_u64_u64_div_u64(wf->duty_length_ns, clk_rate, NSEC_PER_SEC) >> clkdiv;
- 	if (cnt_duty > cnt_period)
- 		cnt_duty = cnt_period;
- 
-@@ -206,123 +209,165 @@ static int pwm_mediatek_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 
- 	cnt_period -= 1;
- 
--	dev_dbg(&chip->dev, "pwm#%u: %lld/%lld @%lu -> CON: %x, PERIOD: %llx, DUTY: %llx\n",
--		pwm->hwpwm, duty_ns, period_ns, clk_rate, clkdiv, cnt_period, cnt_duty);
-+	dev_dbg(&chip->dev, "pwm#%u: %lld/%lld @%lu -> ENABLE: %x, CON: %x, PERIOD: %llx, DUTY: %llx\n",
-+		pwm->hwpwm, wf->duty_length_ns, wf->period_length_ns, clk_rate,
-+		enable, clkdiv, cnt_period, cnt_duty);
- 
--	if (pc->soc->pwm45_fixup && pwm->hwpwm > 2) {
--		/*
--		 * PWM[4,5] has distinct offset for PWMDWIDTH and PWMTHRES
--		 * from the other PWMs on MT7623.
--		 */
--		reg_width = PWM45DWIDTH_FIXUP;
--		reg_thres = PWM45THRES_FIXUP;
--	}
--
--	pwm_mediatek_writel(pc, pwm->hwpwm, PWMCON, BIT(15) | clkdiv);
--	pwm_mediatek_writel(pc, pwm->hwpwm, reg_width, cnt_period);
--
--	if (enable) {
--		pwm_mediatek_writel(pc, pwm->hwpwm, reg_thres, cnt_duty);
--		pwm_mediatek_enable(chip, pwm);
--	} else {
--		pwm_mediatek_disable(chip, pwm);
--	}
--
--	pwm_mediatek_clk_disable(pc, pwm->hwpwm);
-+	*wfhw = (typeof(*wfhw)){
-+		.enable = enable,
-+		.con = clkdiv,
-+		.width = cnt_period,
-+		.thres = cnt_duty,
-+	};
- 
- 	return ret;
- }
- 
--static int pwm_mediatek_apply(struct pwm_chip *chip, struct pwm_device *pwm,
--			      const struct pwm_state *state)
-+static int pwm_mediatek_round_waveform_fromhw(struct pwm_chip *chip, struct pwm_device *pwm,
-+					      const void *_wfhw, struct pwm_waveform *wf)
- {
-+	const struct pwm_mediatek_waveform *wfhw = _wfhw;
- 	struct pwm_mediatek_chip *pc = to_pwm_mediatek_chip(chip);
--	int err;
-+	u32 clkdiv, cnt_period, cnt_duty;
-+	unsigned long clk_rate;
- 
--	if (state->polarity != PWM_POLARITY_NORMAL)
--		return -EINVAL;
-+	/*
-+	 * When _wfhw was populated, the clock was on, so .rate is
-+	 * already set appropriately.
-+	 */
-+	clk_rate = pc->clk_pwms[pwm->hwpwm].rate;
- 
--	if (!state->enabled) {
--		if (pwm->state.enabled) {
--			pwm_mediatek_disable(chip, pwm);
--			pwm_mediatek_clk_disable(pc, pwm->hwpwm);
--		}
-+	clkdiv = FIELD_GET(PWMCON_CLKDIV, wfhw->con);
-+	cnt_period = FIELD_GET(PWMDWIDTH_PERIOD, wfhw->width);
-+	cnt_duty = FIELD_GET(PWMTHRES_DUTY, wfhw->thres);
- 
--		return 0;
--	}
-+	/*
-+	 * cnt_period is a 13 bit value, NSEC_PER_SEC is 30 bits wide
-+	 * and clkdiv is less than 8, so the multiplication doesn't
-+	 * overflow an u64.
-+	 */
-+	*wf = (typeof(*wf)){
-+		.period_length_ns =
-+			DIV_ROUND_UP_ULL((u64)(cnt_period + 1) * NSEC_PER_SEC << clkdiv, clk_rate),
-+		.duty_length_ns =
-+			wfhw->enable ?
-+			DIV_ROUND_UP_ULL((u64)(cnt_duty + 1) * NSEC_PER_SEC << clkdiv, clk_rate) : 0,
-+		.duty_offset_ns = 0,
-+	};
-+	dev_dbg(&chip->dev, "pwm#%u: ENABLE: %x, CLKDIV: %x, PERIOD: %x, DUTY: %x @%lu -> %lld/%lld\n",
-+		pwm->hwpwm, wfhw->enable, clkdiv, cnt_period, cnt_duty, clk_rate,
-+		wf->duty_length_ns, wf->period_length_ns);
- 
--	err = pwm_mediatek_config(chip, pwm, state->duty_cycle, state->period);
--	if (err)
--		return err;
--
--	if (!pwm->state.enabled) {
--		err = pwm_mediatek_clk_enable(pc, pwm->hwpwm);
--		if (err < 0)
--			return err;
--	}
--
--	return err;
-+	return 0;
- }
- 
--static int pwm_mediatek_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
--				  struct pwm_state *state)
-+static int pwm_mediatek_read_waveform(struct pwm_chip *chip,
-+				      struct pwm_device *pwm, void *_wfhw)
- {
-+	struct pwm_mediatek_waveform *wfhw = _wfhw;
- 	struct pwm_mediatek_chip *pc = to_pwm_mediatek_chip(chip);
--	int ret;
--	u32 enable;
-+	u32 enable, clkdiv, cnt_period, cnt_duty;
- 	u32 reg_width = PWMDWIDTH, reg_thres = PWMTHRES;
--
--	if (pc->soc->pwm45_fixup && pwm->hwpwm > 2) {
--		/*
--		 * PWM[4,5] has distinct offset for PWMDWIDTH and PWMTHRES
--		 * from the other PWMs on MT7623.
--		 */
--		reg_width = PWM45DWIDTH_FIXUP;
--		reg_thres = PWM45THRES_FIXUP;
--	}
-+	int ret;
- 
- 	ret = pwm_mediatek_clk_enable(pc, pwm->hwpwm);
- 	if (ret < 0)
- 		return ret;
- 
- 	enable = readl(pc->regs);
--	if (enable & BIT(pwm->hwpwm)) {
--		u32 clkdiv, cnt_period, cnt_duty;
--		unsigned long clk_rate;
--
--		clk_rate = pc->clk_pwms[pwm->hwpwm].rate;
--
--		state->enabled = true;
--		state->polarity = PWM_POLARITY_NORMAL;
--
--		clkdiv = FIELD_GET(PWMCON_CLKDIV,
--				   pwm_mediatek_readl(pc, pwm->hwpwm, PWMCON));
--		cnt_period = FIELD_GET(PWMDWIDTH_PERIOD,
--				       pwm_mediatek_readl(pc, pwm->hwpwm, reg_width));
--		cnt_duty = FIELD_GET(PWMTHRES_DUTY,
--				     pwm_mediatek_readl(pc, pwm->hwpwm, reg_thres));
- 
-+	if (pc->soc->pwm45_fixup && pwm->hwpwm > 2) {
- 		/*
--		 * cnt_period is a 13 bit value, NSEC_PER_SEC is 30 bits wide
--		 * and clkdiv is less than 8, so the multiplication doesn't
--		 * overflow an u64.
-+		 * PWM[4,5] has distinct offset for PWMDWIDTH and PWMTHRES
-+		 * from the other PWMs on MT7623.
- 		 */
--		state->period =
--			DIV_ROUND_UP_ULL((u64)cnt_period * NSEC_PER_SEC << clkdiv, clk_rate);
--		state->duty_cycle =
--			DIV_ROUND_UP_ULL((u64)cnt_duty * NSEC_PER_SEC << clkdiv, clk_rate);
--	} else {
--		state->enabled = false;
-+		reg_width = PWM45DWIDTH_FIXUP;
-+		reg_thres = PWM45THRES_FIXUP;
- 	}
- 
-+	clkdiv = FIELD_GET(PWMCON_CLKDIV, pwm_mediatek_readl(pc, pwm->hwpwm, PWMCON));
-+	cnt_period = FIELD_GET(PWMDWIDTH_PERIOD, pwm_mediatek_readl(pc, pwm->hwpwm, reg_width));
-+	cnt_duty = FIELD_GET(PWMTHRES_DUTY, pwm_mediatek_readl(pc, pwm->hwpwm, reg_thres));
-+
-+	*wfhw = (typeof(*wfhw)){
-+		.enable = enable & BIT(pwm->hwpwm),
-+		.con = BIT(15) | clkdiv,
-+		.width = cnt_period,
-+		.thres = cnt_duty,
-+	};
-+
-+	pwm_mediatek_clk_disable(pc, pwm->hwpwm);
-+
-+	return ret;
-+}
-+
-+static int pwm_mediatek_write_waveform(struct pwm_chip *chip,
-+				       struct pwm_device *pwm, const void *_wfhw)
-+{
-+	const struct pwm_mediatek_waveform *wfhw = _wfhw;
-+	struct pwm_mediatek_chip *pc = to_pwm_mediatek_chip(chip);
-+	u32 ctrl;
-+	int ret;
-+
-+	ret = pwm_mediatek_clk_enable(pc, pwm->hwpwm);
-+	if (ret < 0)
-+		return ret;
-+
-+	ctrl = readl(pc->regs);
-+
-+	if (wfhw->con & BIT(15)) {
-+		u32 reg_width = PWMDWIDTH, reg_thres = PWMTHRES;
-+
-+		if (pc->soc->pwm45_fixup && pwm->hwpwm > 2) {
-+			/*
-+			 * PWM[4,5] has distinct offset for PWMDWIDTH and PWMTHRES
-+			 * from the other PWMs on MT7623.
-+			 */
-+			reg_width = PWM45DWIDTH_FIXUP;
-+			reg_thres = PWM45THRES_FIXUP;
-+		}
-+
-+		if (!(ctrl & BIT(pwm->hwpwm))) {
-+			ctrl |= BIT(pwm->hwpwm);
-+			writel(ctrl, pc->regs);
-+
-+			/*
-+			 * The clks are already on, just increasing the usage
-+			 * counter doesn't fail.
-+			 */
-+			ret = pwm_mediatek_clk_enable(pc, pwm->hwpwm);
-+			if (unlikely(ret < 0))
-+				goto out;
-+		}
-+
-+		/* Make sure we use the bus clock and not the 26MHz clock */
-+		if (pc->soc->pwm_ck_26m_sel_reg)
-+			writel(0, pc->regs + pc->soc->pwm_ck_26m_sel_reg);
-+
-+		pwm_mediatek_writel(pc, pwm->hwpwm, PWMCON, wfhw->con);
-+		pwm_mediatek_writel(pc, pwm->hwpwm, reg_width, wfhw->width);
-+		pwm_mediatek_writel(pc, pwm->hwpwm, reg_thres, wfhw->thres);
-+	} else {
-+		if (ctrl & BIT(pwm->hwpwm)) {
-+			ctrl &= ~BIT(pwm->hwpwm);
-+			writel(ctrl, pc->regs);
-+
-+			pwm_mediatek_clk_disable(pc, pwm->hwpwm);
-+		}
-+	}
-+
-+out:
- 	pwm_mediatek_clk_disable(pc, pwm->hwpwm);
- 
- 	return ret;
- }
- 
- static const struct pwm_ops pwm_mediatek_ops = {
--	.apply = pwm_mediatek_apply,
--	.get_state = pwm_mediatek_get_state,
-+	.sizeof_wfhw = sizeof(struct pwm_mediatek_waveform),
-+	.round_waveform_tohw = pwm_mediatek_round_waveform_tohw,
-+	.round_waveform_fromhw = pwm_mediatek_round_waveform_fromhw,
-+	.read_waveform = pwm_mediatek_read_waveform,
-+	.write_waveform = pwm_mediatek_write_waveform,
- };
- 
- static int pwm_mediatek_init_used_clks(struct pwm_mediatek_chip *pc)
--- 
-2.50.0
+    #[doc(hidden)]
+    const _CHECK_SZ: () =3D {
+        build_assert!(core::mem::size_of::<Self::WfHw>() <=3D =
+bindings::PWM_WFHWSIZE as usize);
+    };
+
+
+> +
+> +    /// Optional hook for when a PWM device is requested.
+> +    fn request(
+> +        _chip: &Chip<Self>,
+> +        _pwm: &Device,
+> +        _parent_dev: &device::Device<Bound>,
+> +    ) -> Result {
+> +        Ok(())
+> +    }
+> +
+> +    /// Optional hook for capturing a PWM signal.
+> +    fn capture(
+> +        _chip: &Chip<Self>,
+> +        _pwm: &Device,
+> +        _result: &mut bindings::pwm_capture,
+> +        _timeout: usize,
+> +        _parent_dev: &device::Device<Bound>,
+> +    ) -> Result {
+> +        Err(ENOTSUPP)
+> +    }
+> +
+> +    /// Convert a generic waveform to the hardware-specific =
+representation.
+> +    /// This is typically a pure calculation and does not perform =
+I/O.
+> +    fn round_waveform_tohw(
+> +        _chip: &Chip<Self>,
+> +        _pwm: &Device,
+> +        _wf: &Waveform,
+> +    ) -> Result<(c_int, Self::WfHw)> {
+
+
+I don't think we should use tuples if we can help it. They massively =
+hurt
+comprehension, i.e.:
+
+(c_int, Self::WfHw)
+
+What is c_int here? and although Self::WfHw is at least clearer given =
+the
+surrounding context, it's still not great. Compare to:
+
+struct RoundWaveform {
+  a_descriptive_field_name: c_int,
+  same_here: Self::WfHw
+}
+
+The above is much better.
+
+
+> +        Err(ENOTSUPP)
+> +    }
+> +
+> +    /// Convert a hardware-specific representation back to a generic =
+waveform.
+> +    /// This is typically a pure calculation and does not perform =
+I/O.
+> +    fn round_waveform_fromhw(
+> +        _chip: &Chip<Self>,
+> +        _pwm: &Device,
+> +        _wfhw: &Self::WfHw,
+> +        _wf: &mut Waveform,
+> +    ) -> Result<c_int> {
+> +        Err(ENOTSUPP)
+> +    }
+
+Please include at least a description of what this returns.
+
+> +
+> +    /// Read the current hardware configuration into the =
+hardware-specific representation.
+> +    fn read_waveform(
+> +        _chip: &Chip<Self>,
+> +        _pwm: &Device,
+> +        _parent_dev: &device::Device<Bound>,
+> +    ) -> Result<Self::WfHw> {
+> +        Err(ENOTSUPP)
+> +    }
+> +
+> +    /// Write a hardware-specific waveform configuration to the =
+hardware.
+> +    fn write_waveform(
+> +        _chip: &Chip<Self>,
+> +        _pwm: &Device,
+> +        _wfhw: &Self::WfHw,
+> +        _parent_dev: &device::Device<Bound>,
+> +    ) -> Result {
+> +        Err(ENOTSUPP)
+> +    }
+> +}
+
+Blank line?
+
+> +/// Bridges Rust `PwmOps` to the C `pwm_ops` vtable.
+> +struct Adapter<T: PwmOps> {
+> +    _p: PhantomData<T>,
+> +}
+> +
+> +impl<T: PwmOps> Adapter<T> {
+> +    const VTABLE: PwmOpsVTable =3D create_pwm_ops::<T>();
+> +
+> +    /// # Safety
+> +    ///
+> +    /// `wfhw_ptr` must be valid for writes of `size_of::<T::WfHw>()` =
+bytes.
+> +    unsafe fn serialize_wfhw(wfhw: &T::WfHw, wfhw_ptr: *mut c_void) =
+-> Result {
+> +        let size =3D core::mem::size_of::<T::WfHw>();
+> +        if size > bindings::PWM_WFHWSIZE as usize {
+> +            return Err(EINVAL);
+> +        }
+
+See my previous comment on using build_assert if possible.
+
+> +
+> +        // SAFETY: The caller ensures `wfhw_ptr` is valid for `size` =
+bytes.
+> +        unsafe {
+> +            core::ptr::copy_nonoverlapping(
+> +                core::ptr::from_ref::<T::WfHw>(wfhw).cast::<u8>(),
+> +                wfhw_ptr.cast::<u8>(),
+> +                size,
+> +            );
+> +        }
+> +
+> +        Ok(())
+> +    }
+> +
+> +    /// # Safety
+> +    ///
+> +    /// `wfhw_ptr` must be valid for reads of `size_of::<T::WfHw>()` =
+bytes.
+> +    unsafe fn deserialize_wfhw(wfhw_ptr: *const c_void) -> =
+Result<T::WfHw> {
+> +        let size =3D core::mem::size_of::<T::WfHw>();
+> +        if size > bindings::PWM_WFHWSIZE as usize {
+> +            return Err(EINVAL);
+> +        }
+> +
+> +        let mut wfhw =3D T::WfHw::default();
+> +        // SAFETY: The caller ensures `wfhw_ptr` is valid for `size` =
+bytes.
+> +        unsafe {
+> +            core::ptr::copy_nonoverlapping(
+> +                wfhw_ptr.cast::<u8>(),
+> +                core::ptr::from_mut::<T::WfHw>(&mut =
+wfhw).cast::<u8>(),
+> +                size,
+> +            );
+> +        }
+> +
+> +        Ok(wfhw)
+> +    }
+> +
+> +    /// # Safety
+> +    ///
+> +    /// `dev` must be a valid pointer to a `bindings::device` =
+embedded within a
+> +    /// `bindings::pwm_chip`. This function is called by the device =
+core when the
+> +    /// last reference to the device is dropped.
+> +    unsafe extern "C" fn release_callback(dev: *mut bindings::device) =
+{
+> +        // SAFETY: The function's contract guarantees that `dev` =
+points to a `device`
+> +        // field embedded within a valid `pwm_chip`. `container_of!` =
+can therefore
+> +        // safely calculate the address of the containing struct.
+> +        let c_chip_ptr =3D unsafe { container_of!(dev, =
+bindings::pwm_chip, dev) };
+> +
+> +        // SAFETY: `c_chip_ptr` is a valid pointer to a `pwm_chip` as =
+established
+> +        // above. Calling this FFI function is safe.
+> +        let drvdata_ptr =3D unsafe { =
+bindings::pwmchip_get_drvdata(c_chip_ptr) };
+> +
+> +        // SAFETY: The driver data was initialized in `new`. We run =
+its destructor here.
+> +        unsafe { core::ptr::drop_in_place(drvdata_ptr.cast::<T>()) };
+> +
+> +        // Now, call the original release function to free the =
+`pwm_chip` itself.
+> +        // SAFETY: `dev` is the valid pointer passed into this =
+callback, which is
+> +        // the expected argument for `pwmchip_release`.
+> +        unsafe { bindings::pwmchip_release(dev); }
+> +    }
+> +
+> +    /// # Safety
+> +    ///
+> +    /// Pointers from C must be valid.
+> +    unsafe extern "C" fn request_callback(
+> +        c: *mut bindings::pwm_chip,
+> +        p: *mut bindings::pwm_device,
+
+=E2=80=9Cp=E2=80=9D and =E2=80=9Cc=E2=80=9D are not good names. I =
+understand that this is a mere callback, but still.
+
+> +    ) -> c_int {
+> +        // SAFETY: PWM core guarentees `c` and `p` are valid =
+pointers.
+> +        let (chip, pwm) =3D unsafe { (Chip::<T>::as_ref(c), =
+Device::as_ref(p)) };
+> +
+> +        // SAFETY: The PWM core guarantees the parent device exists =
+and is bound during callbacks.
+> +        let bound_parent =3D unsafe { chip.bound_parent_device() };
+> +        match T::request(chip, pwm, bound_parent) {
+> +            Ok(()) =3D> 0,
+> +            Err(e) =3D> e.to_errno(),
+> +        }
+> +    }
+> +
+> +    /// # Safety
+> +    ///
+> +    /// Pointers from C must be valid.
+> +    unsafe extern "C" fn capture_callback(
+> +        c: *mut bindings::pwm_chip,
+> +        p: *mut bindings::pwm_device,
+> +        res: *mut bindings::pwm_capture,
+> +        timeout: usize,
+> +    ) -> c_int {
+> +        // SAFETY: Relies on the function's contract that `c` and `p` =
+are valid pointers.
+> +        let (chip, pwm, result) =3D
+> +            unsafe { (Chip::<T>::as_ref(c), Device::as_ref(p), &mut =
+*res) };
+> +
+> +        // SAFETY: The PWM core guarantees the parent device exists =
+and is bound during callbacks.
+> +        let bound_parent =3D unsafe { chip.bound_parent_device() };
+> +        match T::capture(chip, pwm, result, timeout, bound_parent) {
+> +            Ok(()) =3D> 0,
+> +            Err(e) =3D> e.to_errno(),
+> +        }
+> +    }
+> +
+> +    /// # Safety
+> +    ///
+> +    /// Pointers from C must be valid.
+> +    unsafe extern "C" fn round_waveform_tohw_callback(
+> +        c: *mut bindings::pwm_chip,
+> +        p: *mut bindings::pwm_device,
+> +        w: *const bindings::pwm_waveform,
+> +        wh: *mut c_void,
+> +    ) -> c_int {
+> +        // SAFETY: Relies on the function's contract that `c` and `p` =
+are valid pointers.
+> +        let (chip, pwm, wf) =3D unsafe {
+> +            (
+> +                Chip::<T>::as_ref(c),
+> +                Device::as_ref(p),
+> +                Waveform::from(*w),
+> +            )
+> +        };
+> +        match T::round_waveform_tohw(chip, pwm, &wf) {
+> +            Ok((status, wfhw)) =3D> {
+> +                // SAFETY: `wh` is valid per this function's safety =
+contract.
+> +                if unsafe { Self::serialize_wfhw(&wfhw, wh) =
+}.is_err() {
+> +                    return EINVAL.to_errno();
+> +                }
+> +                status
+> +            }
+> +            Err(e) =3D> e.to_errno(),
+> +        }
+> +    }
+> +
+> +    /// # Safety
+> +    ///
+> +    /// Pointers from C must be valid.
+> +    unsafe extern "C" fn round_waveform_fromhw_callback(
+> +        c: *mut bindings::pwm_chip,
+> +        p: *mut bindings::pwm_device,
+> +        wh: *const c_void,
+> +        w: *mut bindings::pwm_waveform,
+> +    ) -> c_int {
+> +        // SAFETY: Relies on the function's contract that `c` and `p` =
+are valid pointers.
+> +        let (chip, pwm) =3D unsafe { (Chip::<T>::as_ref(c), =
+Device::as_ref(p)) };
+> +        // SAFETY: `deserialize_wfhw`'s safety contract is met by =
+this function's contract.
+> +        let wfhw =3D match unsafe { Self::deserialize_wfhw(wh) } {
+> +            Ok(v) =3D> v,
+> +            Err(e) =3D> return e.to_errno(),
+> +        };
+> +
+> +        let mut rust_wf =3D Waveform::default();
+> +        match T::round_waveform_fromhw(chip, pwm, &wfhw, &mut =
+rust_wf) {
+> +            Ok(ret) =3D> {
+> +                // SAFETY: `w` is guaranteed valid by the C caller.
+> +                unsafe {
+> +                    *w =3D rust_wf.into();
+> +                };
+> +                ret
+> +            }
+> +            Err(e) =3D> e.to_errno(),
+> +        }
+> +    }
+> +
+> +    /// # Safety
+> +    ///
+> +    /// Pointers from C must be valid.
+> +    unsafe extern "C" fn read_waveform_callback(
+> +        c: *mut bindings::pwm_chip,
+> +        p: *mut bindings::pwm_device,
+> +        wh: *mut c_void,
+> +    ) -> c_int {
+> +        // SAFETY: Relies on the function's contract that `c` and `p` =
+are valid pointers.
+> +        let (chip, pwm) =3D unsafe { (Chip::<T>::as_ref(c), =
+Device::as_ref(p)) };
+> +
+> +        // SAFETY: The PWM core guarantees the parent device exists =
+and is bound during callbacks.
+> +        let bound_parent =3D unsafe { chip.bound_parent_device() };
+> +        match T::read_waveform(chip, pwm, bound_parent) {
+> +            // SAFETY: `wh` is valid per this function's safety =
+contract.
+> +            Ok(wfhw) =3D> match unsafe { Self::serialize_wfhw(&wfhw, =
+wh) } {
+> +                Ok(()) =3D> 0,
+> +                Err(e) =3D> e.to_errno(),
+> +            },
+> +            Err(e) =3D> e.to_errno(),
+> +        }
+> +    }
+> +
+> +    /// # Safety
+> +    ///
+> +    /// Pointers from C must be valid.
+> +    unsafe extern "C" fn write_waveform_callback(
+> +        c: *mut bindings::pwm_chip,
+> +        p: *mut bindings::pwm_device,
+> +        wh: *const c_void,
+> +    ) -> c_int {
+> +        // SAFETY: Relies on the function's contract that `c` and `p` =
+are valid pointers.
+> +        let (chip, pwm) =3D unsafe { (Chip::<T>::as_ref(c), =
+Device::as_ref(p)) };
+> +
+> +        // SAFETY: The PWM core guarantees the parent device exists =
+and is bound during callbacks.
+> +        let bound_parent =3D unsafe { chip.bound_parent_device() };
+> +
+> +        // SAFETY: `wh` is valid per this function's safety contract.
+> +        let wfhw =3D match unsafe { Self::deserialize_wfhw(wh) } {
+> +            Ok(v) =3D> v,
+> +            Err(e) =3D> return e.to_errno(),
+> +        };
+> +        match T::write_waveform(chip, pwm, &wfhw, bound_parent) {
+> +            Ok(()) =3D> 0,
+> +            Err(e) =3D> e.to_errno(),
+> +        }
+> +    }
+> +}
+> +
+> +/// VTable structure wrapper for PWM operations.
+> +/// Mirrors [`struct pwm_ops`](srctree/include/linux/pwm.h).
+> +#[repr(transparent)]
+> +pub struct PwmOpsVTable(bindings::pwm_ops);
+> +
+> +// SAFETY: PwmOpsVTable is Send. The vtable contains only function =
+pointers
+> +// and a size, which are simple data types that can be safely moved =
+across
+> +// threads. The thread-safety of calling these functions is handled =
+by the
+> +// kernel's locking mechanisms.
+> +unsafe impl Send for PwmOpsVTable {}
+> +
+> +// SAFETY: PwmOpsVTable is Sync. The vtable is immutable after it is =
+created,
+> +// so it can be safely referenced and accessed concurrently by =
+multiple threads
+> +// e.g. to read the function pointers.
+> +unsafe impl Sync for PwmOpsVTable {}
+> +
+> +impl PwmOpsVTable {
+> +    /// Returns a raw pointer to the underlying `pwm_ops` struct.
+> +    pub(crate) fn as_raw(&self) -> *const bindings::pwm_ops {
+> +        &self.0
+> +    }
+> +}
+> +
+> +/// Creates a PWM operations vtable for a type `T` that implements =
+`PwmOps`.
+> +///
+> +/// This is used to bridge Rust trait implementations to the C =
+`struct pwm_ops`
+> +/// expected by the kernel.
+> +pub const fn create_pwm_ops<T: PwmOps>() -> PwmOpsVTable {
+> +    // SAFETY: `core::mem::zeroed()` is unsafe. For `pwm_ops`, all =
+fields are
+> +    // `Option<extern "C" fn(...)>` or data, so a zeroed pattern =
+(None/0) is valid initially.
+> +    let mut ops: bindings::pwm_ops =3D unsafe { core::mem::zeroed() =
+};
+> +
+> +    ops.request =3D Some(Adapter::<T>::request_callback);
+> +    ops.capture =3D Some(Adapter::<T>::capture_callback);
+> +
+> +    ops.round_waveform_tohw =3D =
+Some(Adapter::<T>::round_waveform_tohw_callback);
+> +    ops.round_waveform_fromhw =3D =
+Some(Adapter::<T>::round_waveform_fromhw_callback);
+> +    ops.read_waveform =3D Some(Adapter::<T>::read_waveform_callback);
+> +    ops.write_waveform =3D =
+Some(Adapter::<T>::write_waveform_callback);
+> +    ops.sizeof_wfhw =3D core::mem::size_of::<T::WfHw>();
+> +
+> +    PwmOpsVTable(ops)
+> +}
+> +
+> +/// Wrapper for a PWM chip/controller ([`struct =
+pwm_chip`](srctree/include/linux/pwm.h)).
+> +#[repr(transparent)]
+> +pub struct Chip<T: PwmOps>(Opaque<bindings::pwm_chip>, =
+PhantomData<T>);
+> +
+> +impl<T: PwmOps> Chip<T> {
+> +    /// Creates a reference to a [`Chip`] from a valid pointer.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// The caller must ensure that `ptr` is valid and remains valid =
+for the lifetime of the
+> +    /// returned [`Chip`] reference.
+> +    pub(crate) unsafe fn as_ref<'a>(ptr: *mut bindings::pwm_chip) -> =
+&'a Self {
+> +        // SAFETY: The safety requirements guarantee the validity of =
+the dereference, while the
+> +        // `Chip` type being transparent makes the cast ok.
+> +        unsafe { &*ptr.cast::<Self>() }
+> +    }
+> +
+> +    /// Returns a raw pointer to the underlying `pwm_chip`.
+> +    pub(crate) fn as_raw(&self) -> *mut bindings::pwm_chip {
+> +        self.0.get()
+> +    }
+> +
+> +    /// Gets the number of PWM channels (hardware PWMs) on this chip.
+> +    pub fn npwm(&self) -> u32 {
+
+This name is not good IMHO. We don=E2=80=99t have to provide a 1:1 match =
+with C.
+
+> +        // SAFETY: `self.as_raw()` provides a valid pointer for =
+`self`'s lifetime.
+> +        unsafe { (*self.as_raw()).npwm }
+> +    }
+> +
+> +    /// Returns `true` if the chip supports atomic operations for =
+configuration.
+> +    pub fn is_atomic(&self) -> bool {
+> +        // SAFETY: `self.as_raw()` provides a valid pointer for =
+`self`'s lifetime.
+> +        unsafe { (*self.as_raw()).atomic }
+> +    }
+> +
+> +    /// Returns a reference to the embedded `struct device` =
+abstraction.
+> +    pub fn device(&self) -> &device::Device {
+> +        // SAFETY: `self.as_raw()` provides a valid pointer to =
+`bindings::pwm_chip`.
+> +        // The `dev` field is an instance of `bindings::device` =
+embedded within `pwm_chip`.
+> +        // Taking a pointer to this embedded field is valid.
+> +        // `device::Device` is `#[repr(transparent)]`.
+> +        // The lifetime of the returned reference is tied to `self`.
+> +        unsafe { device::Device::as_ref(&raw mut =
+(*self.as_raw()).dev) }
+> +    }
+
+IIRC, these are supposed to be prefixed with =E2=80=9C-=E2=80=9C to =
+highlight that it=E2=80=99s a bulleted list.
+
+> +
+> +    /// Gets the *typed* driver specific data associated with this =
+chip's embedded device.
+
+I don=E2=80=99t think this emphasis adds anything of value. (IMHO)
+
+> +    pub fn drvdata(&self) -> &T {
+
+This is off-topic (sorry), but I wonder if this shouldn=E2=80=99t be =
+renamed =E2=80=9Cdriver_data()=E2=80=9D across the tree.
+
+> +        // SAFETY: `pwmchip_get_drvdata` returns the pointer to the =
+private data area,
+> +        // which we know holds our `T`. The pointer is valid for the =
+lifetime of `self`.
+> +        unsafe { =
+&*bindings::pwmchip_get_drvdata(self.as_raw()).cast::<T>() }
+> +    }
+> +
+> +    /// Returns a reference to the parent device of this PWM chip's =
+device.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// The caller must guarantee that the parent device exists and =
+is bound.
+> +    /// This is guaranteed by the PWM core during `PwmOps` callbacks.
+> +    unsafe fn bound_parent_device(&self) -> &device::Device<Bound> {
+> +        // SAFETY: Per the function's safety contract, the parent =
+device exists.
+> +        let parent =3D unsafe { =
+self.device().parent().unwrap_unchecked() };
+> +
+> +        // SAFETY: Per the function's safety contract, the parent =
+device is bound.
+> +        // The pointer is cast from `&Device` to `&Device<Bound>`.
+> +        unsafe { =
+&*core::ptr::from_ref(parent).cast::<device::Device<Bound>>() }
+> +    }
+> +
+> +    /// Allocates and wraps a PWM chip using =
+`bindings::pwmchip_alloc`.
+> +    ///
+> +    /// Returns an [`ARef<Chip>`] managing the chip's lifetime via =
+refcounting
+> +    /// on its embedded `struct device`.
+> +    pub fn new(
+> +        parent_dev: &device::Device,
+> +        npwm: u32,
+> +        data: impl pin_init::PinInit<T, Error>,
+> +    ) -> Result<ARef<Self>> {
+> +
+> +        let sizeof_priv =3D core::mem::size_of::<T>();
+> +        // SAFETY: `pwmchip_alloc` allocates memory for the C struct =
+and our private data.
+> +        let c_chip_ptr_raw =3D unsafe {
+> +            bindings::pwmchip_alloc(parent_dev.as_raw(), npwm, =
+sizeof_priv)
+> +        };
+> +
+> +        let c_chip_ptr: *mut bindings::pwm_chip =3D =
+error::from_err_ptr(c_chip_ptr_raw)?;
+> +
+> +        // SAFETY: The `drvdata` pointer is the start of the private =
+area, which is where
+> +        // we will construct our `T` object.
+> +        let drvdata_ptr =3D unsafe { =
+bindings::pwmchip_get_drvdata(c_chip_ptr) };
+> +
+> +        // SAFETY: We construct the `T` object in-place in the =
+allocated private memory.
+> +        unsafe { data.__pinned_init(drvdata_ptr.cast())? };
+> +
+> +        // SAFETY: `c_chip_ptr` points to a valid chip.
+> +        unsafe { (*c_chip_ptr).dev.release =3D =
+Some(Adapter::<T>::release_callback); }
+> +
+> +        // SAFETY: `c_chip_ptr` points to a valid chip.
+> +        // The `Adapter`'s `VTABLE` has a 'static lifetime, so the =
+pointer
+> +        // returned by `as_raw()` is always valid.
+> +        unsafe { (*c_chip_ptr).ops =3D Adapter::<T>::VTABLE.as_raw(); =
+}
+> +
+> +        // Cast the `*mut bindings::pwm_chip` to `*mut Chip`. This is =
+valid because
+> +        // `Chip` is `repr(transparent)` over =
+`Opaque<bindings::pwm_chip>`, and
+> +        // `Opaque<T>` is `repr(transparent)` over `T`.
+> +        let chip_ptr_as_self =3D c_chip_ptr.cast::<Self>();
+> +
+> +        // SAFETY: `chip_ptr_as_self` points to a valid `Chip` =
+(layout-compatible with
+> +        // `bindings::pwm_chip`) whose embedded device has refcount =
+1.
+> +        // `ARef::from_raw` takes this pointer and manages it via =
+`AlwaysRefCounted`.
+> +        Ok(unsafe { =
+ARef::from_raw(NonNull::new_unchecked(chip_ptr_as_self)) })
+> +    }
+> +}
+> +
+> +// SAFETY: Implements refcounting for `Chip` using the embedded =
+`struct device`.
+> +unsafe impl<T: PwmOps> AlwaysRefCounted for Chip<T> {
+> +    #[inline]
+> +    fn inc_ref(&self) {
+> +        // SAFETY: `self.0.get()` points to a valid `pwm_chip` =
+because `self` exists.
+> +        // The embedded `dev` is valid. `get_device` increments its =
+refcount.
+> +        unsafe { bindings::get_device(&raw mut (*self.0.get()).dev); =
+}
+> +    }
+> +
+> +    #[inline]
+> +    unsafe fn dec_ref(obj: NonNull<Chip<T>>) {
+> +        let c_chip_ptr =3D obj.cast::<bindings::pwm_chip>().as_ptr();
+> +
+> +        // SAFETY: `obj` is a valid pointer to a `Chip` (and thus =
+`bindings::pwm_chip`)
+> +        // with a non-zero refcount. `put_device` handles decrement =
+and final release.
+> +        unsafe { bindings::put_device(&raw mut (*c_chip_ptr).dev); }
+> +    }
+> +}
+> +
+> +// SAFETY: `Chip` is a wrapper around `*mut bindings::pwm_chip`. The =
+underlying C
+> +// structure's state is managed and synchronized by the kernel's =
+device model
+> +// and PWM core locking mechanisms. Therefore, it is safe to move the =
+`Chip`
+> +// wrapper (and the pointer it contains) across threads.
+> +unsafe impl<T: PwmOps + Send> Send for Chip<T> {}
+> +
+> +// SAFETY: It is safe for multiple threads to have shared access =
+(`&Chip`) because
+> +// the `Chip` data is immutable from the Rust side without holding =
+the appropriate
+> +// kernel locks, which the C core is responsible for. Any interior =
+mutability is
+> +// handled and synchronized by the C kernel code.
+> +unsafe impl<T: PwmOps + Sync> Sync for Chip<T> {}
+> +
+> +/// A resource guard that ensures `pwmchip_remove` is called on drop.
+> +///
+> +/// This struct is intended to be managed by the `devres` framework =
+by transferring its ownership
+> +/// via [`Devres::register`]. This ties the lifetime of the PWM chip =
+registration
+> +/// to the lifetime of the underlying device.
+> +pub struct Registration<T: PwmOps> {
+> +    chip: ARef<Chip<T>>,
+> +}
+> +
+> +impl<T: 'static + PwmOps  + Send + Sync> Registration<T> {
+> +    /// Registers a PWM chip with the PWM subsystem.
+> +    ///
+> +    /// Transfers its ownership to the `devres` framework, which ties =
+its lifetime
+> +    /// to the parent device.
+> +    /// On unbind of the parent device, the `devres` entry will be =
+dropped, automatically
+> +    /// calling `pwmchip_remove`. This function should be called from =
+the driver's `probe`.
+> +    pub fn register(
+> +        dev: &device::Device<Bound>,
+> +        chip: ARef<Chip<T>>,
+> +    ) -> Result {
+> + let chip_parent =3D chip.device().parent().ok_or(EINVAL)?;
+> +        if dev.as_raw() !=3D chip_parent.as_raw() {
+> +            return Err(EINVAL);
+> +        }
+> +
+> +        let c_chip_ptr =3D chip.as_raw();
+> +
+> +        // SAFETY: `c_chip_ptr` points to a valid chip with its ops =
+initialized.
+> +        // `__pwmchip_add` is the C function to register the chip =
+with the PWM core.
+> +        unsafe {
+> +            to_result(bindings::__pwmchip_add(c_chip_ptr, =
+core::ptr::null_mut()))?;
+> +        }
+> +
+> +        let registration =3D Registration { chip };
+> +
+> +        devres::Devres::new_foreign_owned(dev, registration, =
+GFP_KERNEL)
+> +    }
+> +}
+> +
+> +impl<T: PwmOps> Drop for Registration<T> {
+> +    fn drop(&mut self) {
+> +        let chip_raw =3D self.chip.as_raw();
+> +
+> +        // SAFETY: `chip_raw` points to a chip that was successfully =
+registered.
+> +        // `bindings::pwmchip_remove` is the correct C function to =
+unregister it.
+> +        // This `drop` implementation is called automatically by =
+`devres` on driver unbind.
+> +        unsafe { bindings::pwmchip_remove(chip_raw); }
+> +    }
+> +}
+>=20
+> --=20
+> 2.34.1
+>=20
+>=20
+
+
+=E2=80=94 Daniel
+
+[0] =
+https://lore.kernel.org/rust-for-linux/20250711-device-as-ref-v2-0-1b16ab6=
+402d7@google.com/
 
 
