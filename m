@@ -1,83 +1,94 @@
-Return-Path: <linux-pwm+bounces-6881-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6882-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7BC86B115AB
-	for <lists+linux-pwm@lfdr.de>; Fri, 25 Jul 2025 03:17:21 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B0D5B119A5
+	for <lists+linux-pwm@lfdr.de>; Fri, 25 Jul 2025 10:15:42 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 16B567B5F48
-	for <lists+linux-pwm@lfdr.de>; Fri, 25 Jul 2025 01:15:52 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 879EB1CC8161
+	for <lists+linux-pwm@lfdr.de>; Fri, 25 Jul 2025 08:16:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E29681C5F1B;
-	Fri, 25 Jul 2025 01:17:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91FE92BF005;
+	Fri, 25 Jul 2025 08:15:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o+aJSYfp"
+	dkim=pass (2048-bit key) header.d=launchiq.pl header.i=@launchiq.pl header.b="P2yswGP2"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.launchiq.pl (mail.launchiq.pl [57.129.61.186])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE6352BAF4;
-	Fri, 25 Jul 2025 01:17:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5DE02BEC2F
+	for <linux-pwm@vger.kernel.org>; Fri, 25 Jul 2025 08:15:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.129.61.186
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753406236; cv=none; b=LsM3ZeHzVOJcgYQQ5G1U2h9yc2Hq0KDsXkmEoB3x8iBvKtX0+pRx7ADC4TOePsNUv21PrOavabU9zjOf2wPpg5fULloJynByk3Ye3dGfC9/XRf2Tnl5ByuXRVcPTGNXoOei/NzaQIvAeS5jPy4mmuVazfM3CzOTUQX8Vity3HgY=
+	t=1753431329; cv=none; b=TAwncqX7mmP1qKYlAsBLrALW8L8b+CKp45Nqq6vSrTcMVEmk8ytH8OC1gBaYZ+ga++eWlqGQmHtltJZX5PnO3Pbo1VZOBu6wUHQZic6E8wte235XVOjPrMbKxeTEjUY+plO8j7ngucePXfhCAmmLj/niiUkBBQjRXIpgbTpm02M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753406236; c=relaxed/simple;
-	bh=MnFJ7F8dY8RvB8dXoNRYk2Dv6tZAdeeE7q2scZZoEqo=;
-	h=Content-Type:MIME-Version:In-Reply-To:References:Subject:From:Cc:
-	 To:Date:Message-ID; b=egdeXJG1exf/9WoYJFv3gqbE5qtZRzyGlxgwz06Ns/p5601+HmSqrYG8oGAcebUbDHDJYvwRl3VuGods9YRsVS7xqCxztuj3cUhmo7ZNcDPvpZimuT9MQbLwj1mjWKrb6SIGPqX/t80drPOK+idLC+KpW15uac4GEx+g9XaVa9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o+aJSYfp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35A8CC4CEED;
-	Fri, 25 Jul 2025 01:17:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753406236;
-	bh=MnFJ7F8dY8RvB8dXoNRYk2Dv6tZAdeeE7q2scZZoEqo=;
-	h=In-Reply-To:References:Subject:From:Cc:To:Date:From;
-	b=o+aJSYfpF5TboYnl9G/eoK+bTmhLeJ66iWVe6BHwQs3bR/2tvsw9pQxqOpyt0EOw2
-	 TR+gdWEvAmJfeENxYksaR7BmiI4XrAvoEULKXdbWDm2dxTG46REvQdPhjgS4S3qaiu
-	 0j9I2mS9GM//n0dGFnc+7f3FMdJ+u1Bc7g9v7KAbQCRDP8KD0RrIJD+IBXF5NqQFI1
-	 EXfKIEqY1uQMhAUY1IdgJO95MPT+5mwsfTHzxNbM6DN7n/QHnOFz7+s+mOt20WEbQE
-	 0vxfdpXeVLCMFrNzaKs8lLosT4jCFDObiDSRtGeW6R35BG9oAD3iEj581vNe6K8GyH
-	 BM0yjnIR2/5mg==
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1753431329; c=relaxed/simple;
+	bh=1nV56yiRn7w88ZKIfi9xMzQzsEglWEb9KKVoIWzOJTA=;
+	h=Message-ID:Date:From:To:Subject:MIME-Version:Content-Type; b=UEuBj2wltRQ+k19vN6tgIx+LT7l6LoInL1dRVqRcwKRxCFF6E2SQzf5dm4sFpx2N+wvhT9DTW4rmxgK85aHpMVMsU741FxBdfh5UkJtXJyWp5KyCLvAHBRqCRaOrxj5GAl85YWBCAqArpYUe1gdawbE7tbOjKbT6+Rkd5Lu12wI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=launchiq.pl; spf=pass smtp.mailfrom=launchiq.pl; dkim=pass (2048-bit key) header.d=launchiq.pl header.i=@launchiq.pl header.b=P2yswGP2; arc=none smtp.client-ip=57.129.61.186
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=launchiq.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=launchiq.pl
+Received: by mail.launchiq.pl (Postfix, from userid 1002)
+	id 7A41B24C70; Fri, 25 Jul 2025 08:15:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=launchiq.pl; s=mail;
+	t=1753431319; bh=1nV56yiRn7w88ZKIfi9xMzQzsEglWEb9KKVoIWzOJTA=;
+	h=Date:From:To:Subject:From;
+	b=P2yswGP2N2oChdtTw5GPkbGnqn3W7lnEzaH7l13Z5C7e8hZkG7sLGl2aWi9b7B3hn
+	 B0pNhNVTBsrE+GkFmKQe6LlQQmUEw6VR2zbMwkUM5w3HJg7Us8yFUZTlP1r4CdKGFj
+	 4q+Dn4OeHpP1goy9PnwSjBRhBif5FPegO3kk+lGeQB0IpzoLtYoITZ+sA/SXPgRxLg
+	 fjbVJAx3hyAtxk1ZOHri9kEDFwjWTVtB09NIn/kfOarAiq6kR1dOvN01UObp1uzgGa
+	 q+NYGsNMrsWMd5bJnQr9ft5y6/fFJkN2GgmVdyqVSwYkaUqExggwhDD27zL3pdQgLC
+	 KvgwpTd3fWRcw==
+Received: by mail.launchiq.pl for <linux-pwm@vger.kernel.org>; Fri, 25 Jul 2025 08:15:14 GMT
+Message-ID: <20250725064500-0.1.3k.afdc.0.ul87xex6rz@launchiq.pl>
+Date: Fri, 25 Jul 2025 08:15:14 GMT
+From: "Grzegorz Sutor" <grzegorz.sutor@launchiq.pl>
+To: <linux-pwm@vger.kernel.org>
+Subject: Umowa vPPA - termin spotkania
+X-Mailer: mail.launchiq.pl
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20250623-rust-next-pwm-working-fan-for-sending-v5-8-0ca23747c23e@samsung.com>
-References: <20250623-rust-next-pwm-working-fan-for-sending-v5-0-0ca23747c23e@samsung.com> <CGME20250623180907eucas1p10c0ca6b667debcc8139402d97e4ef800@eucas1p1.samsung.com> <20250623-rust-next-pwm-working-fan-for-sending-v5-8-0ca23747c23e@samsung.com>
-Subject: Re: [PATCH v5 8/9] riscv: dts: thead: Add PVT node
-From: Stephen Boyd <sboyd@kernel.org>
-Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org
-To: Albert Ou <aou@eecs.berkeley.edu>, Alex Gaynor <alex.gaynor@gmail.com>, Alexandre Ghiti <alex@ghiti.fr>, Alice Ryhl <aliceryhl@google.com>, Andreas Hindborg <a.hindborg@kernel.org>, Benno Lossin <lossin@kernel.org>, =?utf-8?q?Bj=C3=B6rn?= Roy Baron <bjorn3_gh@protonmail.com>, Boqun Feng <boqun.feng@gmail.com>, Conor Dooley <conor+dt@kernel.org>, Danilo Krummrich <dakr@kernel.org>, Drew Fustini <drew@pdp7.com>, Fu Wei <wefu@redhat.com>, Gary Guo <gary@garyguo.net>, Guo Ren <guoren@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Michael Turquette <mturquette@baylibre.com>, Michal Wilczynski <m.wilczynski@samsung.com>, Miguel Ojeda <ojeda@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Paul Walmsley <paul.walmsley@sifive.com>, Rob Herring <robh@kernel.org>, Trevor Gross <tmgross@umich.edu>, Uwe =?utf-8?q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Date: Thu, 24 Jul 2025 18:17:15 -0700
-Message-ID: <175340623531.3513.5896709502242556676@lazor>
-User-Agent: alot/0.11
 
-Quoting Michal Wilczynski (2025-06-23 11:08:56)
-> Add PVT DT node for thermal sensor.
->=20
-> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
-> ---
->  arch/riscv/boot/dts/thead/th1520.dtsi | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->=20
-> diff --git a/arch/riscv/boot/dts/thead/th1520.dtsi b/arch/riscv/boot/dts/=
-thead/th1520.dtsi
-> index 26996422e1efe5d2dde68819c2cec1c3fa782a23..bef30780034e06b07aa29b27b=
-0225ea891a4b531 100644
-> --- a/arch/riscv/boot/dts/thead/th1520.dtsi
-> +++ b/arch/riscv/boot/dts/thead/th1520.dtsi
-> @@ -669,6 +669,17 @@ padctrl_aosys: pinctrl@fffff4a000 {
->                         thead,pad-group =3D <1>;
->                 };
-> =20
-> +               pvt: pvt@fffff4e000 {
+Dzie=C5=84 dobry,
 
-Node name should probably be 'thermal-sensor@fffff4e000' then.
+mamy rozwi=C4=85zanie, kt=C3=B3re pozwala zabezpieczy=C4=87 korzystn=C4=85=
+ cen=C4=99 energii na d=C5=82ugie lata =E2=80=94 bez konieczno=C5=9Bci zm=
+iany obecnego dostawcy i bez inwestycji w instalacje odnawialne.
+
+Proponujemy wsp=C3=B3=C5=82prac=C4=99 w oparciu o wirtualne umowy PPA (vP=
+PA) =E2=80=93 to rozliczany finansowo kontrakt oparty na cenach SPOT, kt=C3=
+=B3ry:
+
+=E2=80=A2 stabilizuje koszty energii na 3 do 7 lat,
+=E2=80=A2 wspiera realizacj=C4=99 polityki ESG i obni=C5=BCa =C5=9Blad w=C4=
+=99glowy,
+=E2=80=A2 zapewnia elastyczno=C5=9B=C4=87 zakupow=C4=85 =E2=80=93 cz=C4=99=
+=C5=9B=C4=87 energii w sta=C5=82ej cenie z OZE, reszta  =20
+  rozliczana na bie=C5=BC=C4=85co,
+=E2=80=A2 nie wymaga zmian technicznych ani formalnych po stronie Pa=C5=84=
+stwa firmy.
+
+Wsp=C3=B3=C5=82pracujemy z przedsi=C4=99biorstwami zu=C5=BCywaj=C4=85cymi=
+ od 3 do 30 GWh rocznie =E2=80=93 g=C5=82=C3=B3wnie z bran=C5=BC takich j=
+ak przemys=C5=82, logistyka, handel, automotive, IT i data center.
+
+Ch=C4=99tnie przygotujemy bezp=C5=82atn=C4=85 wycen=C4=99 i indywidualn=C4=
+=85 propozycj=C4=99 kontraktu, dostosowan=C4=85 do profilu zu=C5=BCycia e=
+nergii w Pa=C5=84stwa firmie.
+
+Je=C5=9Bli temat jest dla Pa=C5=84stwa interesuj=C4=85cy, z przyjemno=C5=9B=
+ci=C4=85 przeka=C5=BC=C4=99 wi=C4=99cej informacji lub um=C3=B3wi=C4=99 s=
+potkanie z naszym specjalist=C4=85.
+
+
+Z wyrazami szacunku.
+Grzegorz Sutor
 
