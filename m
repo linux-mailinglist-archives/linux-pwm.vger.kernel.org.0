@@ -1,285 +1,246 @@
-Return-Path: <linux-pwm+bounces-6895-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6896-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9BF9CB13841
-	for <lists+linux-pwm@lfdr.de>; Mon, 28 Jul 2025 11:53:02 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1BDEDB138FC
+	for <lists+linux-pwm@lfdr.de>; Mon, 28 Jul 2025 12:31:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id A7B601884A18
-	for <lists+linux-pwm@lfdr.de>; Mon, 28 Jul 2025 09:49:42 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 76BE43B6C6E
+	for <lists+linux-pwm@lfdr.de>; Mon, 28 Jul 2025 10:30:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B7D225486D;
-	Mon, 28 Jul 2025 09:45:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A49D20125F;
+	Mon, 28 Jul 2025 10:31:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F0rFXn+s"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="KLD00ixd"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7C692528E1;
-	Mon, 28 Jul 2025 09:45:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 055821C6BE
+	for <linux-pwm@vger.kernel.org>; Mon, 28 Jul 2025 10:31:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753695958; cv=none; b=ntXPfv/d8zuZ3CsmAtJ2W8osXHS8MfSvv5oPxcORfJ1HaHSCz03TdJfmEbFpD2C2X73g1LbH0Qd/1YvjFqLcNKPJmZRC1OrwrB6ODSqTySe3ay9gwOdaqMFeN8VzMm3qCWwX/AY6WOG4Y65KA7bcAADglZAizgAa11dRXmGu1EA=
+	t=1753698686; cv=none; b=oMsNb9q0tyyuUjMISdOW2p2h/uSS2ZDzvlfE5qO7/uqUf7QEOXzoi3/3oExcVIu6LR1BsRqp3oag7B7oUWTGBsPn6Cppy90hqRU/beujO3VHl2HPNO2dA5YTShsaM8S6yAzOgEQe1N4fg+EenD05yRwCdsJMWFhiL2XTaZ9IPzo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753695958; c=relaxed/simple;
-	bh=XgeMqHBvZI8GGsevR51bGWO14j9HG8BS2EPLyCs+U74=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=JxbWTsazkm71xeSPfH4eYsVC8jrj+HJeUdpzY+j9UgJOvxagGcoXIOMifxbXRdhTsOEpMD++IB/UmdALE8pWt1FtMmomOg68zE4HeSVy86HAPVSp25I68x5QP7xEgCMOmu+PT8u1USh9Eq4zie0nswCOqlhfbr8TgmvbHVlWXzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F0rFXn+s; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A7CEC4CEE7;
-	Mon, 28 Jul 2025 09:45:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753695958;
-	bh=XgeMqHBvZI8GGsevR51bGWO14j9HG8BS2EPLyCs+U74=;
-	h=Date:From:To:Cc:Subject:From;
-	b=F0rFXn+sFrkktutzkUWQWEK0mPthKRax8hZEZ0XMhRz8k13eO39Atb48BZPu9hjbT
-	 3v2U0ghVQXXZBlXSSFbHKe5HwUIqb4JtKfNSwf7fr0pwy4ESqyyWYYv2Vnb1eoggA/
-	 zV6X3AWDVAD2bNr7Rlo8d7VAhSU1VMKzI9Zm3AsdjtJOg8EBHiKWH0auQltoqvxjx4
-	 bYKfpFx3SE0NtpxPVeyvz1U7zZvHE7FFE6XAyp/aoHOA1qkpO0CYXZaQUY0muWPdHl
-	 sj05M8fre29liskB35+aBa4HkCGrSk/Pd79qJ6UNilxRLNNDCAttNsm6vssItdbBk1
-	 0TnQST8ZWyH0Q==
-Date: Mon, 28 Jul 2025 11:45:55 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Guenter Roeck <linux@roeck-us.net>, Lee Jones <lee@kernel.org>, 
-	Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>
-Subject: [GIT PULL] pwm: Changes for v6.17-rc1
-Message-ID: <aukywky7iv22b3noqkzx42hod5zbhgfgrhrt4uddg6c5k7nzlb@oey3yxxhroj6>
+	s=arc-20240116; t=1753698686; c=relaxed/simple;
+	bh=fr2sMayk+dxmv8PYp2bPRYDp+i45PTMIsl+txmuuBxA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=e5iJCXlP2rbN3w7srVgaQN6eISz0Mm1K0ffqEFLyF6hKphedQmSRXRIHvOK2vmyHexku/jjyKq3W0+LlHCd0j2vfIw1aqY/KaYOEAWz6mHBMcE3r/E89MnwCENKrPVeOF1RTZj9WSdG9BC2FN5peDE5PYkbNU0j8weN1GK9LpwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=KLD00ixd; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1753698682;
+	bh=fr2sMayk+dxmv8PYp2bPRYDp+i45PTMIsl+txmuuBxA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KLD00ixd1h76FA7vAK4g+5ZbjutxtwRH+azhwUNgHmFoXi7COHA0Y6NKxDDKDcxOI
+	 Cr2mn6GnWMQ6pcyye0AgJtp6E4/GdLRVmpm+3mdrS3Q+nbGi/qHrhHNBXpQ1FUXeiX
+	 cl9N2RqmSFcknA/vV/ftwjpRatRjdOnX9c34MrVBrpO/wtAII0fuHnyi92JAcHZq/+
+	 KuZT2c14PN3TNj3+0CKnz8FLgjQKYcfLcALiDQEIRZExMuCjTcVkFJQLwVt6jBhfh1
+	 ouOWZrXpbXbFd2VNdiNI+5Sb+F4HM8rYHlm/zf2Ib2g0POxBlKiWQaRXLPdKvADaEJ
+	 YBB3iUppD+qcQ==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id CEA1A17E1439;
+	Mon, 28 Jul 2025 12:31:21 +0200 (CEST)
+Message-ID: <8ff50873-f6c5-4c83-bb65-0f234eaf8172@collabora.com>
+Date: Mon, 28 Jul 2025 12:31:20 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="7w4iqxp5wccgkzc6"
-Content-Disposition: inline
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] pwm: mediatek: Fix duty and period setting
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>, John Crispin <john@phrozen.org>
+Cc: linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+References: <20250724210041.2513590-2-u.kleine-koenig@baylibre.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250724210041.2513590-2-u.kleine-koenig@baylibre.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+
+Il 24/07/25 23:00, Uwe Kleine-König ha scritto:
+> The period generated by the hardware is
+> 
+> 	(PWMDWIDTH + 1) << CLKDIV) / freq
+> 
+> according to my tests with a signal analyser and also the documentation.
+> 
+> The current algorithm doesn't consider the `+ 1` part and so configures
+> slightly too high periods. The same issue exists for the duty cycle
+> setting. So subtract 1 from both the register values for period and
+> duty cycle. If period is 0, bail out, if duty_cycle is 0, just disable
+> the PWM which results in a constant low output.
+> 
+> Note that clk handling is dropped from pwm_mediatek_{en,dis}able to
+> handle duty_cycle = 0, so the calls in pwm_mediatek_apply() have to be
+> modified to do clk handling, too.
+
+The changes LGTM, but please split those in two commits, one that fixes the +1
+and one that changes the clock handling.
+
+After which:
+
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+
+Cheers,
+Angelo
+
+> 
+> Fixes: caf065f8fd58 ("pwm: Add MediaTek PWM support")
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+> ---
+> Hello,
+> 
+> changes since (implicit) v1,
+> https://lore.kernel.org/linux-pwm/20250710163705.2095418-2-u.kleine-koenig@baylibre.com/:
+> 
+>   - Drop superflous parenthesis from commit log
+>   - To implement drop the enable register instead of bit 15 in the CON
+>     register, adapt commit log accordingly.
+> 
+> Best regards
+> Uwe
+> 
+>   drivers/pwm/pwm-mediatek.c | 76 ++++++++++++++++++++------------------
+>   1 file changed, 41 insertions(+), 35 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
+> index 6777c511622a..4460bbca2582 100644
+> --- a/drivers/pwm/pwm-mediatek.c
+> +++ b/drivers/pwm/pwm-mediatek.c
+> @@ -121,6 +121,26 @@ static inline void pwm_mediatek_writel(struct pwm_mediatek_chip *chip,
+>   	writel(value, chip->regs + chip->soc->reg_offset[num] + offset);
+>   }
+>   
+> +static void pwm_mediatek_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+> +{
+> +	struct pwm_mediatek_chip *pc = to_pwm_mediatek_chip(chip);
+> +	u32 value;
+> +
+> +	value = readl(pc->regs);
+> +	value |= BIT(pwm->hwpwm);
+> +	writel(value, pc->regs);
+> +}
+> +
+> +static void pwm_mediatek_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+> +{
+> +	struct pwm_mediatek_chip *pc = to_pwm_mediatek_chip(chip);
+> +	u32 value;
+> +
+> +	value = readl(pc->regs);
+> +	value &= ~BIT(pwm->hwpwm);
+> +	writel(value, pc->regs);
+> +}
+> +
+>   static int pwm_mediatek_config(struct pwm_chip *chip, struct pwm_device *pwm,
+>   			       int duty_ns, int period_ns)
+>   {
+> @@ -150,7 +170,10 @@ static int pwm_mediatek_config(struct pwm_chip *chip, struct pwm_device *pwm,
+>   	do_div(resolution, clk_rate);
+>   
+>   	cnt_period = DIV_ROUND_CLOSEST_ULL((u64)period_ns * 1000, resolution);
+> -	while (cnt_period > 8191) {
+> +	if (!cnt_period)
+> +		return -EINVAL;
+> +
+> +	while (cnt_period > 8192) {
+>   		resolution *= 2;
+>   		clkdiv++;
+>   		cnt_period = DIV_ROUND_CLOSEST_ULL((u64)period_ns * 1000,
+> @@ -173,9 +196,16 @@ static int pwm_mediatek_config(struct pwm_chip *chip, struct pwm_device *pwm,
+>   	}
+>   
+>   	cnt_duty = DIV_ROUND_CLOSEST_ULL((u64)duty_ns * 1000, resolution);
+> +
+>   	pwm_mediatek_writel(pc, pwm->hwpwm, PWMCON, BIT(15) | clkdiv);
+> -	pwm_mediatek_writel(pc, pwm->hwpwm, reg_width, cnt_period);
+> -	pwm_mediatek_writel(pc, pwm->hwpwm, reg_thres, cnt_duty);
+> +	pwm_mediatek_writel(pc, pwm->hwpwm, reg_width, cnt_period - 1);
+> +
+> +	if (cnt_duty) {
+> +		pwm_mediatek_writel(pc, pwm->hwpwm, reg_thres, cnt_duty - 1);
+> +		pwm_mediatek_enable(chip, pwm);
+> +	} else {
+> +		pwm_mediatek_disable(chip, pwm);
+> +	}
+>   
+>   out:
+>   	pwm_mediatek_clk_disable(chip, pwm);
+> @@ -183,35 +213,6 @@ static int pwm_mediatek_config(struct pwm_chip *chip, struct pwm_device *pwm,
+>   	return ret;
+>   }
+>   
+> -static int pwm_mediatek_enable(struct pwm_chip *chip, struct pwm_device *pwm)
+> -{
+> -	struct pwm_mediatek_chip *pc = to_pwm_mediatek_chip(chip);
+> -	u32 value;
+> -	int ret;
+> -
+> -	ret = pwm_mediatek_clk_enable(chip, pwm);
+> -	if (ret < 0)
+> -		return ret;
+> -
+> -	value = readl(pc->regs);
+> -	value |= BIT(pwm->hwpwm);
+> -	writel(value, pc->regs);
+> -
+> -	return 0;
+> -}
+> -
+> -static void pwm_mediatek_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+> -{
+> -	struct pwm_mediatek_chip *pc = to_pwm_mediatek_chip(chip);
+> -	u32 value;
+> -
+> -	value = readl(pc->regs);
+> -	value &= ~BIT(pwm->hwpwm);
+> -	writel(value, pc->regs);
+> -
+> -	pwm_mediatek_clk_disable(chip, pwm);
+> -}
+> -
+>   static int pwm_mediatek_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>   			      const struct pwm_state *state)
+>   {
+> @@ -221,8 +222,10 @@ static int pwm_mediatek_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>   		return -EINVAL;
+>   
+>   	if (!state->enabled) {
+> -		if (pwm->state.enabled)
+> +		if (pwm->state.enabled) {
+>   			pwm_mediatek_disable(chip, pwm);
+> +			pwm_mediatek_clk_disable(chip, pwm);
+> +		}
+>   
+>   		return 0;
+>   	}
+> @@ -231,8 +234,11 @@ static int pwm_mediatek_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>   	if (err)
+>   		return err;
+>   
+> -	if (!pwm->state.enabled)
+> -		err = pwm_mediatek_enable(chip, pwm);
+> +	if (!pwm->state.enabled) {
+> +		err = pwm_mediatek_clk_enable(chip, pwm);
+> +		if (err < 0)
+> +			return err;
+> +	}
+>   
+>   	return err;
+>   }
+> 
+> base-commit: a02b105fe9f2b82cbd13b13a98c2b9ffae4a7c27
 
 
---7w4iqxp5wccgkzc6
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: [GIT PULL] pwm: Changes for v6.17-rc1
-MIME-Version: 1.0
-
-Hello Linus,
-
-the following changes since commit e04c78d86a9699d136910cfc0bdcf01087e3267e:
-
-  Linux 6.16-rc2 (2025-06-15 13:49:41 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git tags/p=
-wm/for-6.17-rc1
-
-for you to fetch changes up to 68b9272ca7ac948b71aba482ef8244dee8032f46:
-
-  pwm: raspberrypi-poe: Fix spelling mistake "Firwmware" -> "Firmware" (202=
-5-07-24 23:04:16 +0200)
-
-----------------------------------------------------------------
-pwm: Changes for v6.17-rc1
-
-Apart from the usual mix of new drivers (pwm-argon-fan-hat), adding
-support for variants to existing drivers, minor improvements to both
-drivers and docs, device tree documenation updates, the noteworthy
-changes are:
-
- - A pull of pm-runtime-6.17-rc1 to make it possible to apply
-   a582469541a3 ("pwm: img: Remove redundant pm_runtime_mark_last_busy()
-   calls"). Note this updates the base for my tree to 6.16-rc2.
-
- - A hwmon companion driver to pwm-mc33xs2410 living in drivers/hwmon
-   and acked by Guenter Roeck
-
- - chardev support for PWM devices
-   This leverages atomic PWM updates to userspace and at the same time
-   simplifies and accelerates PWM configuration changes.
-
-----------------------------------------------------------------
-
-Lee provided another immutable branch containing patches by Nuno S=E1,
-including PWM changes at
-git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-gpio-input=
--pwm-v6.17
-, but I didn't merge it as there is no conflict with my tree and so I
-don't see a benefit in polluting the diffstat of this PR. The pwm
-related changes in there of course have my blessing anyhow.
-
-The three topmost patches are in next only since next-20250725, the
-others are in next since next-20250710. Two of the three "new" patches
-are quite simple. The third is the hwmon change, that I didn't want to
-hold back to free both the hwmon guys and me from the need to coordinate
-this change for a whole development cycle.
-
-I considered waiting a bit with my PR to give these changes a bit more
-exposure in next, but giving your travel plans I decided to create it
-early as usual.
-
-Diffstat below and thanks too all contributors.
-
-Please pull the pwm/for-6.17-rc1 tag into 6.17-rc1.
-
-Thanks
-Uwe
-
-
-AngeloGioacchino Del Regno (3):
-      dt-bindings: pwm: mediatek,mt2712-pwm: Add support for MT6991/MT8196
-      pwm: pwm-mediatek: Pass PWM_CK_26M_SEL from platform data
-      pwm: pwm-mediatek: Add support for PWM IP V3.0.2 in MT6991/MT8196
-
-Colin Ian King (1):
-      pwm: raspberrypi-poe: Fix spelling mistake "Firwmware" -> "Firmware"
-
-David Lechner (1):
-      dt-bindings: pwm: adi,axi-pwmgen: Update documentation link
-
-Dimitri Fedrau (2):
-      pwm: mc33xs2410: add hwmon support
-      hwmon: add support for MC33XS2410 hardware monitoring
-
-Fabrice Gasnier (1):
-      pwm: stm32: add support for stm32mp25
-
-Frank Li (2):
-      dt-bindings: pwm: convert lpc1850-sct-pwm.txt to yaml format
-      dt-bindings: pwm: Convert lpc32xx-pwm.txt to yaml format
-
-Guodong Xu (3):
-      dt-bindings: pwm: marvell,pxa-pwm: Add SpacemiT K1 PWM support
-      pwm: pxa: Add optional reset control
-      pwm: pxa: Allow to enable for SpacemiT K1 SoC
-
-Longbin Li (3):
-      dt-bindings: pwm: sophgo: Add pwm controller for SG2044
-      pwm: sophgo-sg2042: Reorganize the code structure
-      pwm: sophgo-sg2042: Add support for SG2044
-
-Marek Vasut (3):
-      dt-bindings: vendor-prefixes: Document Argon40
-      dt-bindings: pwm: argon40,fan-hat: Document Argon40 Fan HAT
-      pwm: argon-fan-hat: Add Argon40 Fan HAT support
-
-Michal Wilczynski (1):
-      pwm: Expose PWM_WFHWSIZE in public header
-
-Nicolas Frattaroli (1):
-      pwm: rockchip: Round period/duty down on apply, up on get
-
-Nylon Chen (3):
-      riscv: dts: sifive: unleashed/unmatched: Remove PWM controlled LED's =
-active-low properties
-      pwm: sifive: Fix PWM algorithm and clarify inverted compare behavior
-      pwm: sifive: Fix rounding and idempotency issues in apply and get_sta=
-te
-
-Sakari Ailus (7):
-      PM: runtime: Document return values of suspend-related API functions
-      PM: runtime: Mark last busy stamp in pm_runtime_put_autosuspend()
-      PM: runtime: Mark last busy stamp in pm_runtime_put_sync_autosuspend()
-      PM: runtime: Mark last busy stamp in pm_runtime_autosuspend()
-      PM: runtime: Mark last busy stamp in pm_request_autosuspend()
-      Documentation: PM: *_autosuspend() functions update last busy time
-      pwm: img: Remove redundant pm_runtime_mark_last_busy() calls
-
-Uwe Kleine-K=F6nig (13):
-      pwm: Fix invalid state detection
-      pwm: mediatek: Ensure to disable clocks in error path
-      pwm: Add support for pwmchip devices for faster and easier userspace =
-access
-      pwm: atmel: Drop driver local locking
-      pwm: clps711x: Drop driver local locking
-      pwm: fsl-ftm: Drop driver local locking
-      pwm: lpc18xx-sct: Drop driver local locking
-      pwm: microchip-core: Drop driver local locking
-      pwm: sti: Drop driver local locking
-      pwm: sun4i: Drop driver local locking
-      pwm: twl-led: Drop driver local locking
-      docs: pwm: Adapt Locking paragraph to reality
-      Merge tag 'pm-runtime-6.17-rc1' of https://git.kernel.org/pub/scm/lin=
-ux/kernel/git/rafael/linux-pm
-
- .../devicetree/bindings/pwm/adi,axi-pwmgen.yaml    |   2 +-
- .../devicetree/bindings/pwm/argon40,fan-hat.yaml   |  48 +++
- .../devicetree/bindings/pwm/lpc1850-sct-pwm.txt    |  20 --
- .../devicetree/bindings/pwm/lpc32xx-pwm.txt        |  17 -
- .../devicetree/bindings/pwm/marvell,pxa-pwm.yaml   |  35 ++-
- .../bindings/pwm/mediatek,mt2712-pwm.yaml          |   5 +
- .../bindings/pwm/nxp,lpc1850-sct-pwm.yaml          |  54 ++++
- .../devicetree/bindings/pwm/nxp,lpc3220-pwm.yaml   |  44 +++
- .../devicetree/bindings/pwm/sophgo,sg2042-pwm.yaml |   4 +-
- .../devicetree/bindings/vendor-prefixes.yaml       |   2 +
- Documentation/driver-api/pwm.rst                   |  13 +-
- Documentation/hwmon/index.rst                      |   1 +
- Documentation/hwmon/mc33xs2410_hwmon.rst           |  34 ++
- Documentation/power/runtime_pm.rst                 |  50 ++-
- .../riscv/boot/dts/sifive/hifive-unleashed-a00.dts |  12 +-
- .../riscv/boot/dts/sifive/hifive-unmatched-a00.dts |  12 +-
- drivers/hwmon/Kconfig                              |  10 +
- drivers/hwmon/Makefile                             |   1 +
- drivers/hwmon/mc33xs2410_hwmon.c                   | 178 +++++++++++
- drivers/pwm/Kconfig                                |  14 +-
- drivers/pwm/Makefile                               |   1 +
- drivers/pwm/core.c                                 | 350 +++++++++++++++++=
-++--
- drivers/pwm/pwm-argon-fan-hat.c                    | 109 +++++++
- drivers/pwm/pwm-atmel.c                            |  12 -
- drivers/pwm/pwm-clps711x.c                         |   8 -
- drivers/pwm/pwm-fsl-ftm.c                          |  28 +-
- drivers/pwm/pwm-img.c                              |   2 -
- drivers/pwm/pwm-lpc18xx-sct.c                      |  14 -
- drivers/pwm/pwm-mc33xs2410.c                       |  20 +-
- drivers/pwm/pwm-mediatek.c                         |  51 +--
- drivers/pwm/pwm-microchip-core.c                   |  17 +-
- drivers/pwm/pwm-pxa.c                              |   6 +
- drivers/pwm/pwm-rockchip.c                         |  33 +-
- drivers/pwm/pwm-sifive.c                           |  52 ++-
- drivers/pwm/pwm-sophgo-sg2042.c                    | 143 +++++++--
- drivers/pwm/pwm-sti.c                              |  23 +-
- drivers/pwm/pwm-stm32.c                            |  42 ++-
- drivers/pwm/pwm-sun4i.c                            |  10 -
- drivers/pwm/pwm-twl-led.c                          |  49 +--
- include/linux/mc33xs2410.h                         |  16 +
- include/linux/pm_runtime.h                         | 187 +++++++++--
- include/linux/pwm.h                                |   5 +
- include/uapi/linux/pwm.h                           |  53 ++++
- 43 files changed, 1423 insertions(+), 364 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pwm/argon40,fan-hat.y=
-aml
- delete mode 100644 Documentation/devicetree/bindings/pwm/lpc1850-sct-pwm.t=
-xt
- delete mode 100644 Documentation/devicetree/bindings/pwm/lpc32xx-pwm.txt
- create mode 100644 Documentation/devicetree/bindings/pwm/nxp,lpc1850-sct-p=
-wm.yaml
- create mode 100644 Documentation/devicetree/bindings/pwm/nxp,lpc3220-pwm.y=
-aml
- create mode 100644 Documentation/hwmon/mc33xs2410_hwmon.rst
- create mode 100644 drivers/hwmon/mc33xs2410_hwmon.c
- create mode 100644 drivers/pwm/pwm-argon-fan-hat.c
- create mode 100644 include/linux/mc33xs2410.h
- create mode 100644 include/uapi/linux/pwm.h
-
---7w4iqxp5wccgkzc6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmiHRtAACgkQj4D7WH0S
-/k6MpwgArqrVZJCOPE850ZQNJQwjuXH3JBup6TZV5D99NI5tszpuzFEeO4tkEDGt
-wkSRpuneZHRRtEzIAXoqBHc2+gQrwlLMcv+jTSNMWER1frqQo5qaz3ZKeSbHllpH
-SzkEG0jyUGeU3ZeraxNnCp6nbdWWblKESXvSfqdWnnQgAE2knxvCiwcVoCTtAmNH
-H8SP4Os7r1ThJK78Tqf0Ov56UTxnVmi0bDm2MQUniDTlp9W9+SrdSdyNIyRhWXpp
-bJmmhtQEzq5y8swbZYi6Nk1F1qoqL1iaq674p4p3GlH4lN3EHHurpe4lLfKlm6hW
-RkzS+ACPE84f9FE+mSr2ak4Hnb/b7g==
-=0vgo
------END PGP SIGNATURE-----
-
---7w4iqxp5wccgkzc6--
 
