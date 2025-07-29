@@ -1,56 +1,88 @@
-Return-Path: <linux-pwm+bounces-6909-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6910-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8DCF8B150F3
-	for <lists+linux-pwm@lfdr.de>; Tue, 29 Jul 2025 18:10:30 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D7953B150F9
+	for <lists+linux-pwm@lfdr.de>; Tue, 29 Jul 2025 18:11:50 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 296327A1A8D
-	for <lists+linux-pwm@lfdr.de>; Tue, 29 Jul 2025 16:09:00 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 065111880509
+	for <lists+linux-pwm@lfdr.de>; Tue, 29 Jul 2025 16:12:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4EFE286897;
-	Tue, 29 Jul 2025 16:10:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E2AB1D9346;
+	Tue, 29 Jul 2025 16:11:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FTA0aK9U"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="O0GVoZEJ"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75E25222597;
-	Tue, 29 Jul 2025 16:10:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55E9F186295
+	for <linux-pwm@vger.kernel.org>; Tue, 29 Jul 2025 16:11:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753805423; cv=none; b=CU7zao/E8uRqto8SkVROOzLOwvcW0o463K8U1SVNlqRJFaBZTmwIRHh8ASz4N7vDftFJJ8fHVF1TLY34OpKX2K2b5X17tGQa1KL92rb7NRwxqPkfsEgAgz8yhe5bdCr36y85ZfAi1q3s/AWsBNIE7O0ZnvfJI1DitRVGGcqi/3I=
+	t=1753805507; cv=none; b=fA+dpUybVRyJV64fDlfnzNLXbFs5CtWOPo/iCIqubgoGkQGYfgDgH4/EIpRVDl4vaxKrH+NyWJCgxrWSvdT2p5mY62YWIVphT11PsKFAFJldrTcpM7BbjrPI7omGH25+34r0hvT2r+R1j9Xr3xlCRIkbQumCXKycsZPVIhsNc/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753805423; c=relaxed/simple;
-	bh=8PqRrJ4T1GIZlo9A5K1NFm+LtDjYC1pJgTCd4O4aAMI=;
+	s=arc-20240116; t=1753805507; c=relaxed/simple;
+	bh=VDtPTKqTc5z/jqP/+uh8ORCsNOPfoYWtzoB09pyCPhU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=N5UC06zx5G0MWYfwMWIKOPQ+insDWcyBdUdoW8bVNEEdYq7aNvTagCBkt9jFqGQI5Xs+aQ/cFdU5XDQDjq8dGUUPtDz38U7YGr37OzDoAtkuMG/Wwngjjbfxnun/lyDe8XJkU4PKB4ZANKEZZp3Wdwry3gMOohILgpL8d34MlHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FTA0aK9U; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51CF4C4CEEF;
-	Tue, 29 Jul 2025 16:10:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1753805422;
-	bh=8PqRrJ4T1GIZlo9A5K1NFm+LtDjYC1pJgTCd4O4aAMI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FTA0aK9UOoK2ym/J1kozYqDufRATC87ozTu2dcOE8R9riGJty2rKAH0ZFwyS5etFG
-	 znwiee/8xiGhtqzLxLAi79OYj5gGqeevHhw+dEXpY5Z1McQ8cWJ42pGi815NRBDhJK
-	 7jl+GMCchEUyoMkK6m7dCQhEnMwF85xdwQuNP2uKWNYnfGCNqyTmdz4g58FmeTzjF+
-	 9C12Q0PBu3+TUV9aaeZURd1EwZr4KPRCF1231dnTIeMXWjOIEQKw05WY515GP0SkGC
-	 h8ZTqThxhxX9t0UB2tMyv5XoDA1BR2AIU4NuJTltnXXKRSpRWOVziBbvNsMnUI5UgW
-	 WdEgRH/dnRJuw==
-Date: Tue, 29 Jul 2025 18:10:20 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Laurentiu Mihalcea <laurentiumihalcea111@gmail.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	linux-pwm@vger.kernel.org, imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] pwm: imx-tpm: reset counter if CMOD is 0
-Message-ID: <ylg2wadbfbyg6ncvoxxz5zthxokphs52lgzscus4qwqgn7q3vy@xzljjzukbtle>
-References: <20250728194144.22884-1-laurentiumihalcea111@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=MO/AZ8RJ/nC2sBGryTu5hq2oiSJ3EHV0rBHAUPyJe1dSatD24t5kLi3LpSB44eMeXvT8rhTEtcsybIaNjdSm5RtA310EkudA4psdYeFEdOG1bNLXqFfP5Bsxgqdr+dMdhrii68mcYn1aetDmywGMtQlaC7LaJOU9wPvvO/0LPFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=O0GVoZEJ; arc=none smtp.client-ip=209.85.128.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-451d41e1ad1so35331135e9.1
+        for <linux-pwm@vger.kernel.org>; Tue, 29 Jul 2025 09:11:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1753805503; x=1754410303; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=NE/MXzUMZS+44xcmHH89HI/9f+w1SgEl87LO7gVP//E=;
+        b=O0GVoZEJjtHAZa/hV12vxtRnbydpi31Cxo+mdEFhbU1mjWxxBjHRMfrfdYnpZXoZSQ
+         6Vuovi+ljPLydjqEu2Of819+34V9GPVgvrfq24LcKSxapVV+5a8CXNNYm9xwl9CDJBBR
+         KsnwJtWzVtuEba/syjtO8PUqbqc63AMre5+/CMYgofSUGm+UENyFNwyzZ07yMa8nX7IC
+         TZkacIWV4fJy31CsrktgT62krKDWO4AQCn7OKljp5VnO1toT5d2Vw/0LTerB5bCkfLkK
+         W9qkVyz3HG/RQqZIWZYbVvcowhcONaSCJTqckcYneu63GAedM848C5PQPOijSUXobw+l
+         UiKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1753805503; x=1754410303;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=NE/MXzUMZS+44xcmHH89HI/9f+w1SgEl87LO7gVP//E=;
+        b=hX+F18UD/vtvuD+rTmgMYjjASBgWdptKI1zi/uvj6ab2MivKKDEz5E+K73b2hxgkn/
+         aNqTgPQKcEGbmFioScs7h/2udbzc8odjRwXo+LnI3J075GveZgs7l9gJQJ7GaqgXd9IU
+         R0PKNNe65pHls9HPFVxVNAOlx42ILe4/7ZW8sl830Iyk3TTJkGy6tZViuj/i9UPT4lKA
+         sKM4hK+prhFefUcZKsF/Cfjkn7+hQW98WfCXo99tphQbB/seFtJ9wVFhMBztvkPLw0Fo
+         zuRGBBsCOgo1cFQCnfR+R7KaxiNPfehbnDRsLUJnvyUQDeLrIcPsqiBRVrhYCbF7EsNb
+         xgSA==
+X-Forwarded-Encrypted: i=1; AJvYcCXxqBGAXR6XxbxgegTMZYdQPKNTNfTXw6uL3JoC+M7WOC0ASwy1wbcO+ecSEI3RNmF8sxFLZkmIjg4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyQ5zAAIGFH7UaSuVFql3zf9QRvuoGfPu7/ljK8EjJWwAEYGx85
+	6IQKWnwrPbx4OWV34a3PtiMdJubSusO5zE5LXXZcUJFS2lQc6B5rSlong/BPIam+P+0gfe9JcKc
+	Bkrsc
+X-Gm-Gg: ASbGncu1j/fetcT6mV6DrjhXmBJMsjlf2NRgdljHpGVx+2ZI4OSy7hDJ7Ned05NTV/X
+	0XTQZMQzZmvxY0d0+WMPPQU2XpB3tU914WLVkuiuc3+OgY/Da3iCqRqKMSXhi2KVlQSSFHQU046
+	wUqpS0btmDZDzTLWjVY1LmF5JR6i+27jD2Gj1AEH8gUj59u69c+6uIDnFfbhZFlr3dN0rRyA2X7
+	eBY+aromDiEuJ0uiK78JfijCBXbaAFZ3NiJhW3zXQljdsUDE4CQ35rO5zXt7mPzGEMRI+4VhVpE
+	7dVRtVJFveqQMzMMJEPghSl5iH2Fk8qwKLQEltO0L7RAafLfjlaFzRd+6Q8dRf1Eb6YQSrIyver
+	CdvgX/PwfAeeXtj4lp78qUWr20pFbZZ+MkNVeW1Xl05KGqSNQ6OL2jVgE/DjIJvyx
+X-Google-Smtp-Source: AGHT+IHiv1ekgWGQ9lIBRubNcJRWHtn+F6BZSVr06aOsETrpLIQ4sL11Zd7N187ZXHB8fb0D1LxR2w==
+X-Received: by 2002:a05:600d:15a:10b0:456:24aa:958e with SMTP id 5b1f17b1804b1-45892d3779dmr2509355e9.0.1753805503409;
+        Tue, 29 Jul 2025 09:11:43 -0700 (PDT)
+Received: from localhost (p200300f65f06ab0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f06:ab04::1b9])
+        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4587054f686sm199914665e9.14.2025.07.29.09.11.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 29 Jul 2025 09:11:42 -0700 (PDT)
+Date: Tue, 29 Jul 2025 18:11:41 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, 
+	John Crispin <john@phrozen.org>, linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH v3 0/2] pwm: mediatek: Fix duty and period setting
+Message-ID: <uqazab4e4srnpw3lh7ewxmlywbdvjgl54idhqi25n5oegfd7oe@7nskmsyftfr6>
+References: <cover.1753717973.git.u.kleine-koenig@baylibre.com>
+ <bb4d8100-ceb2-4ce1-bf27-86fe21ce2aad@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -58,71 +90,76 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="lcvyewca57ejyx32"
+	protocol="application/pgp-signature"; boundary="qjtsiiolmtxft4yv"
 Content-Disposition: inline
-In-Reply-To: <20250728194144.22884-1-laurentiumihalcea111@gmail.com>
+In-Reply-To: <bb4d8100-ceb2-4ce1-bf27-86fe21ce2aad@collabora.com>
 
 
---lcvyewca57ejyx32
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+--qjtsiiolmtxft4yv
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3] pwm: imx-tpm: reset counter if CMOD is 0
+Subject: Re: [PATCH v3 0/2] pwm: mediatek: Fix duty and period setting
 MIME-Version: 1.0
 
-Hello Laurentiu,
+On Tue, Jul 29, 2025 at 12:07:43PM +0200, AngeloGioacchino Del Regno wrote:
+> Il 28/07/25 18:00, Uwe Kleine-K=F6nig ha scritto:
+> > Hello,
+> >=20
+> > here comes v3 of the (formerly patch, now) series to fix duty_cycle and
+> > period setting for the mediatek PWM driver.
+> >=20
+> > v2: https://lore.kernel.org/linux-pwm/20250724210041.2513590-2-u.kleine=
+-koenig@baylibre.com
+> >=20
+> > Changes since v2:
+> >=20
+> >   - Split changed clock handling into a separate patch (suggested by
+> >     AngeloGioacchino)
+> >   - Drop
+> >=20
+> > 	if (err < 0)
+> > 	        return err;
+> >=20
+> >     just before an unconditional
+> >=20
+> > 	return err;
+> >=20
+> >     .
+> >=20
+> >=20
+> > I didn't add a R-b for AngeloGioacchino yet, as it felt wrong to do that
+> > for a patch that he didn't see before. So assuming you're happy, please
+> > provide the tag again for this v3.
+> >=20
+>=20
+> For the whole series
+>=20
+> Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collab=
+ora.com>
 
-On Mon, Jul 28, 2025 at 03:41:44PM -0400, Laurentiu Mihalcea wrote:
-> From: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
->=20
-> As per the i.MX93 TRM, section 67.3.2.1 "MOD register update", the value
-> of the TPM counter does NOT get updated when writing MOD.MOD unless
-> SC.CMOD !=3D 0. Therefore, with the current code, assuming the following
-> sequence:
->=20
-> 	1) pwm_disable()
-> 	2) pwm_apply_might_sleep() /* period is changed here */
-> 	3) pwm_enable()
->=20
-> and assuming only one channel is active, if CNT.COUNT is higher than the
-> MOD.MOD value written during the pwm_apply_might_sleep() call then, when
-> re-enabling the PWM during pwm_enable(), the counter will end up resetting
-> after UINT32_MAX - CNT.COUNT + MOD.MOD cycles instead of MOD.MOD cycles as
-> normally expected.
->=20
-> Fix this problem by forcing a reset of the TPM counter before MOD.MOD is
-> written.
->=20
-> Fixes: 738a1cfec2ed ("pwm: Add i.MX TPM PWM driver support")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Laurentiu Mihalcea <laurentiu.mihalcea@nxp.com>
-
-Thanks for the respin, looks good now. For consistency I capitalized
-"Reset" in the Subject.
-
-Applied to
+Thanks, I added a Cc: stable and applied it to
 https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/fixes
-
-=2E I'll give that a day or two in next and then send it to Linus for
+=2E Will give it a bit of time in next and then send it to Linus for
 6.17-rc1.
 
-Thanks
+Best regards
 Uwe
 
---lcvyewca57ejyx32
+--qjtsiiolmtxft4yv
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmiI8mgACgkQj4D7WH0S
-/k79agf+LH57UR0G6y7RA0SZ7VTuCOOu8rGs7cN4IkwsVO/fpcWnZvidGDVERCL7
-HCk0IuDvQJIk1zCIv54AgJkHcMk3HtWfWf/lYM5QhVZxHbHQSKEDQgMM6J2pAEBJ
-uE0PJ+4fvdYrPY0YPQhSIICwuKS+rhUyFi5ksRbeKetgMRtuiBEFETkt1MmfWOWd
-cGDljyV724kVk3uD6PpuK1OMdWb9Rx09ZMCxwER+HllGGks2Esiia0F3NLIXQm8R
-8p1a9CRVSq/zNO+/vS83imY/XAmwkOJ2ucS/oH+zFhu3EJQysY3FSzXsen+ywl7V
-YKCb1/VjVFk7SX7puGqqE2Viv9oXJA==
-=N9cL
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmiI8rYACgkQj4D7WH0S
+/k42wQf+LyIe+PzHJ/dc2HatljzBygTMblA26mlrv0teYNlNBdKlX7PnqbDXfUWP
+vMC2CPTlk6JPJFCmjSHo/vNDb8EEnkmntXlsl/eYes3Hcp1VBUqsc0BoKy2NjGJk
+z90KVF7RsaJuKX9mb+1noo4LK/fPydLHzuwNBlPQJs7upZWxWxUe21Qzz97vJlhn
+VKru19L8uGvL8rN+anZzv5Vx+DLHOBO8ukE6MDQ+znDgsjxoWCByhUrPDfXNOhK0
+BzoaF203kjqj7LzOxNKqYG26vZTXhZc+qe3BtZMziqyIgZP3rAa05jFaZdsqGZ+K
+rOvtkC+kH0yS/cU5Q5XSS7HhqsyNZQ==
+=mMtw
 -----END PGP SIGNATURE-----
 
---lcvyewca57ejyx32--
+--qjtsiiolmtxft4yv--
 
