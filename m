@@ -1,151 +1,130 @@
-Return-Path: <linux-pwm+bounces-6913-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6914-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 345EDB15440
-	for <lists+linux-pwm@lfdr.de>; Tue, 29 Jul 2025 22:17:32 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id D6234B15A1F
+	for <lists+linux-pwm@lfdr.de>; Wed, 30 Jul 2025 10:02:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 577D2560A74
-	for <lists+linux-pwm@lfdr.de>; Tue, 29 Jul 2025 20:17:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 014CD3AEC8B
+	for <lists+linux-pwm@lfdr.de>; Wed, 30 Jul 2025 08:02:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0221F1581EE;
-	Tue, 29 Jul 2025 20:17:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CCBF22236EB;
+	Wed, 30 Jul 2025 08:02:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="hz+qrJgA"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="OQoEY3/P"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAFFF2A1D1
-	for <linux-pwm@vger.kernel.org>; Tue, 29 Jul 2025 20:17:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D31E1D54F7
+	for <linux-pwm@vger.kernel.org>; Wed, 30 Jul 2025 08:02:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753820247; cv=none; b=TGwEjpjYV7ITxPJecsaGAFN/4hb8j+jOHtB8LB6y9v1CN8CaE+bapmdGO69HHglTodi8nnMw0gYTxY3ZAGiwAhrPL75fPYdeKM7cYUO2ci4UQb/DO3pXLqshoVHeDdaeGdiF3RvvzUNvNsFe1C5+J2M7vPlsdDQSFe2hjeBwbD4=
+	t=1753862553; cv=none; b=pQaRfwVTZho26dJA8amZ3huwjnFHXRdHfUSDLv4ptKtM+1bO+a/cpVSsSc6D/1TipsRT9ZVns3mLDRuRHYnvqu1zaZ5BM+z2LLeocUpZdIJQDcAvcv2KqoiVbqEqtduB4kG0nrDuormF9OLfdxIAcnNIcxl1Sf/++sm0kLC14BM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753820247; c=relaxed/simple;
-	bh=WV9Qd8VswLll4F/W1lnqlWzljnHTNQ+aOkT7Q5f8HDM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NmVYtAt0ruks6TL6rhHSnp8j5cGN5LgtzEa5PYJtjC1LntNO12g7hMAflYRsXcQfAtT8nKkszZrThaKmO4FaN6XdxcbF2yUkz9BeH8WJYSc8VjPLms2lq833mciTRBOQYqUeEe8fbZAzwgdAwXrNqfIdwjzu4jvQbWb0zIzJ5QA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=hz+qrJgA; arc=none smtp.client-ip=209.85.208.52
+	s=arc-20240116; t=1753862553; c=relaxed/simple;
+	bh=agfyIII4mp97ONNwlinO6Lmb2Evn27byCFYiuZZKV7A=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=rzp1H2Bofx6yGILW4qFGjZPeTiFI2JHdEUKQzvu2fewTD2qPxdK10iojuL7RnnbBfagKU0BofIMZPQEem0GGsIJVXRCILkdzqQL1zc8+cXpHWaiVkoPJ/N67/PTIvTtc49bn2xcx/eHM+idvDH88OEyDGc+j+fmMrHGNAAnNqPc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=OQoEY3/P; arc=none smtp.client-ip=209.85.221.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-61557997574so362861a12.3
-        for <linux-pwm@vger.kernel.org>; Tue, 29 Jul 2025 13:17:25 -0700 (PDT)
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3b783d851e6so3400782f8f.0
+        for <linux-pwm@vger.kernel.org>; Wed, 30 Jul 2025 01:02:30 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1753820244; x=1754425044; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=WV9Qd8VswLll4F/W1lnqlWzljnHTNQ+aOkT7Q5f8HDM=;
-        b=hz+qrJgAk9W297WtkxuXqNM/GUn7mOcrFPD/xijgwi3t6XZkISD6xTronVpcc6s6cb
-         MYrJKSXcg0mwD5nh1iS6Ov0DdvfhuLmI/16t25hvwa0ZmzQPaIohB8W+aA3CjHlz1lvb
-         CX7QHXi9oceNp5fsSN8TDPP6lHofLoQQT2iQZ30NQNpwhXDhcBzdy94cWStWl9NuPaDm
-         WbR5opD4LnBLln7M/LroyvLC+3xmNY5pBXIyTFRPT9aw6vA5VY6xhxR7mbXWpe2RHT6n
-         1YpRupn6Ktm5fR2BTxZRg8z0+ICUGFm4l5aR833kY2nEkN+zih3q+nojSDBtir6HRNI2
-         IbJg==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1753862548; x=1754467348; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=d+iuNBYez4oTUNiURS3VsPhFHa4QuwFczr9t3CnaQEU=;
+        b=OQoEY3/PP1E81fQ572htz7sYRo8h0YFxR/8HOokNu3NfVpqIxstOCXNaqrnGFL2hvh
+         Xnwu0BpAtwCyVPi70EN1n4kSIDARAfqphoIAZ9xE9TVGb2ic1VSlhmmugKhfxRmB8fDg
+         6IHUyPzhNI409PPb3p5aJ9lIeZ1Qpgwa0nZ2ohW22m4z/uc/cLHz2vYnHjniYwV06CfI
+         zdSPajFtuR1HJCYl0rWX1DnDOHvm5pkardl8GnNJ/DEBmmQ2O0kRwsJEvObdNXjxRBCH
+         NkXK34l3e3C9ZNxJauMeIF/AtIWH39agU5YR1xb0LXAccbKEaYgM8p9OxPh1ocrQdH3P
+         ZoTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753820244; x=1754425044;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=WV9Qd8VswLll4F/W1lnqlWzljnHTNQ+aOkT7Q5f8HDM=;
-        b=uaB1hsbeLmxJ+A3pVHkV0fm6QRgXVepBYRHLezpgv5nKmHJ+2UDRJE/Gr9fsFscJKy
-         A3C/NdUCXKTNAtIwNvBrd37qRtnE6zV8zj6EniGCGhl/rS753pSl9UvQqm3QoH2lPuC5
-         kKr9+PmXOW2ilx0jkg1aUZKH2sQMn1og38zZo2LM2qV+anmb19K++2cfefw0Au2sDu6M
-         NYSlyK/TVN6OF3td62iq1YLaBggTQPh2tgBr0s0lKIy0DppIDTTD1hFnG1iOVW3Rerw+
-         osCD5fuhbXQIG3dZUHg7XllAyxM4S3/mPJDoqBuJ/5X90RDdxxdAnWSFJVodLQqP7TtL
-         TIgg==
-X-Forwarded-Encrypted: i=1; AJvYcCV2+g40GxwSDj7pb6Jafrwr0kkLzFUtM5qmYeIfr3G+n0HRkosTpALfgcagA4rMnGyLWf20AkWEV5M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzO9p9lNKGCMyoGiqg7wnRlxw0qfNCspI7Odvn/0fVhqOJJPfAk
-	jSLYdtgI+4FnLaNjmz4MiC0wEEscXM4EPG+yMuXwKh5U2ypwuNDDEoJFo4+KIN0K44M=
-X-Gm-Gg: ASbGncstcTnxd2dujk50bNOj5l3UIrl78PJNIRPLO9A7rO5P3rremp/R8V944YGiALR
-	DORd8JruLYgmniPYXjXY7bpnUhXKeLm/qGxOl7Sjd4elzaONqDtQY0ErWAPrMSL2kpJRVimAg4s
-	wPto2w3+rdWHoVcS0W2Eu1mh8FyFtDx8413UWm9bDmZC9yHOM0CxSxa49JAJa4Ue9Ze0R8X+AuG
-	AzmaQa6sJOD9EvoEdrcNxWCrRsqV78nRqYQFsbvL4pEnMGkYI7K4LfUBhp8F4i7r3IMn46AHwEV
-	SR2/uppKvxEeJtADJXRGHGQ+Zc155gB5qV1yuavayGSpJdpnPzQAJOS6dlCbYrlhN3rMF56rjcR
-	6tJ/RpvQZVNpP9fZ1981BPgKt9ONxPuf+RnWnZw==
-X-Google-Smtp-Source: AGHT+IEFcub92jjAML4HPfzljPRcZ/77M1VzhjyaMyYsWNiY6ZAsBgO9tT8uZc14CT8rztQkaVJldw==
-X-Received: by 2002:a05:6402:3595:b0:612:a77e:1816 with SMTP id 4fb4d7f45d1cf-61586a81e8emr904905a12.0.1753820243958;
-        Tue, 29 Jul 2025 13:17:23 -0700 (PDT)
-Received: from localhost ([2a02:8071:b783:6940:36f3:9aff:fec2:7e46])
-        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-61539ab9188sm3192426a12.26.2025.07.29.13.17.23
+        d=1e100.net; s=20230601; t=1753862548; x=1754467348;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=d+iuNBYez4oTUNiURS3VsPhFHa4QuwFczr9t3CnaQEU=;
+        b=JV1WqHUxvfR8B+0jh6bLYLtXPna+4yD5sffdfvE9NNXX+4S21QeJN1BWIsWf7gRJkv
+         YtJOunIA7WYwLvh2I+TXPlSXX5FRYNtRMCJZgUA3dPMpcdT60+zFVrOa/pgC9/4H47tO
+         OtWS77BCi7pAmVQAUy5CGfAjd8FSUePH0m2ad6E/PCRSODu1OsNARM5tgYzvSqjBR4aq
+         tK5Fxa7yefKzBEJEygdlrGJeEjeNB/HjE2pylUeh21HreQrWKQCprwuEEYl0Gdzn+7wd
+         bARaJMPXg7qCTHrbEjgf71K8WjpEgL4mb+NUjxqgX6U+lNhyptmTpVJ+OCRD8wo1QXQu
+         OJ9g==
+X-Gm-Message-State: AOJu0YwFH+c+ujEOEYQg/LTG0JePzCeobuPrW0kjOFwx2+4V6WCU0Etn
+	1Yurbct1DGghB8CWwMOpNcIvy+Xal+1GYNPeNHbZsQggdZAEhKhgQBNxPbt4RJ7BI4mm2pY6MDd
+	drKg2
+X-Gm-Gg: ASbGncsVenwRJreGAdjzxrDHwx4O1m75nOZZN158v0WZ1NboL88RG0fqhR9qOTfi+Eg
+	K9pA33ue6VosdSh3+dKO2uBIwB3TWvtBR/1mpmMdnfSsC6WAqCb92DJe+yAdpwac09CY0r4uFjh
+	ilyN0BPclnjMngiG6RJNeS7H/STIN1fnmxpwPXOpxO6IoKBCKYhlcLZ8zLMBT7aeieB/YJw9CzR
+	9aftJ86QnaJFMR4k+QvjejOioFr3k1licqzCtM3dcW7P1i7Lp6QvA9Nk9s22mtdCQTHjghc76+u
+	9jX1ukT/Fc+NFWxr/GymPI3nkCL3grrgGsuLokOcIwufUEZWbTHvspJ3timHipnH7wjyRweJxmI
+	FBFiYsZUO8LvNFyk9sznYnqnXs+yuZL4aECOeiEJkYPfyOBbstsLc6NvLFn3MelG3
+X-Google-Smtp-Source: AGHT+IFC7q72MpVtFG8Aanjwe/vGxnqFgVTnH+lzwRsgXhxpSe2HsSTZCv1ofOSgZ9HtFx/ajFZ62A==
+X-Received: by 2002:a05:6000:2004:b0:3b7:89a2:bb8c with SMTP id ffacd0b85a97d-3b794fd73b1mr1936111f8f.16.1753862548520;
+        Wed, 30 Jul 2025 01:02:28 -0700 (PDT)
+Received: from localhost (p200300f65f06ab0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f06:ab04::1b9])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3b778f034a6sm15060922f8f.47.2025.07.30.01.02.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Jul 2025 13:17:23 -0700 (PDT)
-Date: Tue, 29 Jul 2025 22:17:20 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: FLAVIO SULIGOI <f.suligoi@asem.it>, Lee Jones <lee@kernel.org>, 
-	Daniel Thompson <danielt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>
-Cc: Helge Deller <deller@gmx.de>, Daniel Thompson <danielt@kernel.org>, 
-	"dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, 
-	"linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
-Subject: Re: EXTERNAL: [PATCH 0/2] backlight: mp3309c: Drop pwm_apply_args()
-Message-ID: <lv6otiqcqa434anam2gx4czhh3jac4stlkl6w5aasqlb5c2ohj@mzvf4gc2bxsz>
-References: <cover.1751361465.git.u.kleine-koenig@baylibre.com>
- <PH0PR22MB37899F7A6262C599400AF912FA4FA@PH0PR22MB3789.namprd22.prod.outlook.com>
+        Wed, 30 Jul 2025 01:02:28 -0700 (PDT)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: linux-pwm@vger.kernel.org
+Cc: David Lechner <david@lechnology.com>
+Subject: [PATCH] pwm: tiecap: Document behaviour of hardware disable
+Date: Wed, 30 Jul 2025 10:02:20 +0200
+Message-ID: <20250730080219.183181-2-u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.50.0
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ndpangs3ennqytsz"
-Content-Disposition: inline
-In-Reply-To: <PH0PR22MB37899F7A6262C599400AF912FA4FA@PH0PR22MB3789.namprd22.prod.outlook.com>
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1134; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=agfyIII4mp97ONNwlinO6Lmb2Evn27byCFYiuZZKV7A=; b=owGbwMvMwMXY3/A7olbonx/jabUkhozOi9235UpzvB5bMKrJWm29dK67Z8KC254x2+4bsquvy 1zK1jK5k9GYhYGRi0FWTJHFvnFNplWVXGTn2n+XYQaxMoFMYeDiFICJpCzlYNheElv/9OqO18uT DB7UWii2Ghh/kf1W0x3RxaJlYfxIb/LCZv9T0ikvmdYaOSYr+v+r/isl/FE/4++8sM/MHX1ngha 1CQi5GSu/kVmx6BtT8DG3NUIvV+x+miCx7H2GsLykeNPFmVqbuCNyhXutjI6e+mXjffbpwl4Vu7 X8qZqV9w2uGXwW37NsUdQS+dhZH08knVzpM2NpR4m/dOfnh0nOLXtvvO2/ttbCt6hsQesurRlSO 2rk9zOk7W9/6979cP2aqxXHt35/XqPluSDa+99NbyF3T/1KfQ/ZZqn/GfJfvASzlps7dTWqp5rJ b5JQexJ4ZULGOtcVrlrPt7G2/PtxP5bjY+SdJx2P2WrqAA==
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 
+According to David Lechner[1] disabling a tiecap PWM makes the PWM pin
+an input. The reported problem is fixed in commit deaeeda2051f
+("backlight: pwm_bl: Don't rely on a disabled PWM emiting inactive
+state"). Document the behaviour in the driver for future reference.
 
---ndpangs3ennqytsz
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: EXTERNAL: [PATCH 0/2] backlight: mp3309c: Drop pwm_apply_args()
-MIME-Version: 1.0
+[1] https://lore.kernel.org/linux-pwm/39a472c0-ba24-de7b-8783-a16a71b172cd@lechnology.com
 
-[Updating Daniel's email address as the linaro one stopped working]
-
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+---
 Hello,
 
-On Mon, Jul 07, 2025 at 03:44:25PM +0000, FLAVIO SULIGOI wrote:
-> > the first patch of this series is what I really care about: There are
-> > hardly any drivers left that use pwm_apply_args(). When all of them are
-> > converted to not use it any more, I intend to drop that function.
-> >=20
-> > The 2nd patch is just a change that I noticed while editing the driver
-> > that is IMHO nice. If you don't agree and only apply the first patch, I
-> > won't argue. It's an alternative approach to what Daniel Thompson did in
-> > commit 7ee6478d5aa9 ("backlight: mp3309c: Fully initialize
-> > backlight_properties during probe").
->=20
-> I've tested your patches on my board and all is ok.
-
-@Flavio:
-A Tested-by in this reply to the cover letter is understood by b4 (which
-is the tool most maintainers use to apply patches from the mailing
-list). So there wouldn't have been a need to reply to each mail
-individually.
-
-@backlight maintainers:
-This patch didn't make it into next yet, I guess it's too late for
-6.17-rc1 now?
+found David's old mail while archiving stuff from my inbox ... :-)
 
 Best regards
 Uwe
 
---ndpangs3ennqytsz
-Content-Type: application/pgp-signature; name="signature.asc"
+ drivers/pwm/pwm-tiecap.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
------BEGIN PGP SIGNATURE-----
+diff --git a/drivers/pwm/pwm-tiecap.c b/drivers/pwm/pwm-tiecap.c
+index d91b2bdc88fc..67cc5e8bdb0e 100644
+--- a/drivers/pwm/pwm-tiecap.c
++++ b/drivers/pwm/pwm-tiecap.c
+@@ -3,6 +3,10 @@
+  * ECAP PWM driver
+  *
+  * Copyright (C) 2012 Texas Instruments, Inc. - https://www.ti.com/
++ *
++ * Hardware properties:
++ * - On disable the PWM pin becomes an input, so the behaviour depends on
++ *   external wiring.
+  */
+ 
+ #include <linux/module.h>
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmiJLE0ACgkQj4D7WH0S
-/k62qwgAnN30pyYbtWid6YYqnkI/SakoRr8lH8xnQ7FpBuTLizy1TJ+Rq5QPBW9G
-OHoyHIkdXLY98NluE1dEAL4OhwsHkKOtuU2LUe+d4tCvANSdr3dSuqf8VGkwtrvH
-hIVM2oiS0gGNdfvBHmEJ/TTd3Aw8bif3F4L2zkwmOGruxi6eAkh+TXkOXHkBZNXJ
-wdY7mjnO6XkXB4OG6cUvX0N01zRjxtT6Bv+NQcLqnQL2n69erh9XmFvgMPBwA5v5
-aPURv9W38wM/QTCGrs0H56lnCFFp4FJy1w8P7CUnSjnhvqhCs6KbyTt1VD7eFX9K
-MXDbvP6A5jwrE/7msBl9s7d6MIVqlg==
-=tAXd
------END PGP SIGNATURE-----
-
---ndpangs3ennqytsz--
+base-commit: 54efec8782214652b331c50646013f8526570e8d
+-- 
+2.50.0
 
