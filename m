@@ -1,89 +1,67 @@
-Return-Path: <linux-pwm+bounces-6918-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6919-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E6B70B16ED4
-	for <lists+linux-pwm@lfdr.de>; Thu, 31 Jul 2025 11:42:14 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3C3DCB16F13
+	for <lists+linux-pwm@lfdr.de>; Thu, 31 Jul 2025 12:00:39 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DC8D93B0B3C
-	for <lists+linux-pwm@lfdr.de>; Thu, 31 Jul 2025 09:41:44 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 33C213AE2F7
+	for <lists+linux-pwm@lfdr.de>; Thu, 31 Jul 2025 10:00:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F8FE28A718;
-	Thu, 31 Jul 2025 09:42:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 978C41C68A6;
+	Thu, 31 Jul 2025 10:00:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="XtbHuCnP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eLC7+6ij"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-f50.google.com (mail-ej1-f50.google.com [209.85.218.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 705D52264A3
-	for <linux-pwm@vger.kernel.org>; Thu, 31 Jul 2025 09:42:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69CC51E51D;
+	Thu, 31 Jul 2025 10:00:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1753954922; cv=none; b=uPA8qtxHiPqBdBWZ45ZmoXBJOcEsDxfSvx4A6TcLJPyV5ZP10UhNBBO7t13kouDkIb2k3dI4EXcxLrNTnIoqRZJWHoVZj+olOnploL7GgXmJ8zffiX+tn/1x2xkacljf3Wfj53r2jYb2btVLpIudDntGcpkqCexsQTarrTDOfmY=
+	t=1753956036; cv=none; b=taRFpT2hHwxR38+gNOxxaC6V3cRIyN9IkbPXq/JpfnvvXU8T3lkFKfnp0kXcCGjVRutA3cZbXLAs6xFvlDSd/eRCRzbi/FWEjXg/MPjBGGoMsiYMrFlGqcjBZT0Pud+BXsvNcRR4nFkwkY35+RBQWKTvA34p/e4No6LLFfMVins=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1753954922; c=relaxed/simple;
-	bh=QnOkZh2xfL40YRumGUqUgGUVFVo0T+Nn2lfElsVl5SA=;
+	s=arc-20240116; t=1753956036; c=relaxed/simple;
+	bh=nIIy3EtagONm9o7fIocsy3fvnqj5DKyDI9AvQpz+YsA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=hTihuGj2LBAH7VVeYmB9WyKz8mAf/xlzQ/QvNEctSLqduEQAFhCkQa3FOO9kAUH2ctPdzGSj33L3OF5ki0xT5PV56XF8RdW6YoTn1PerUPeHENH5oEBoty8vw//OaOlyIXEdMuVMLKdrndztrDUvGOhLZfn/Ie7kYs2SRkuuoow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=XtbHuCnP; arc=none smtp.client-ip=209.85.218.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ej1-f50.google.com with SMTP id a640c23a62f3a-af910372ab3so178333466b.1
-        for <linux-pwm@vger.kernel.org>; Thu, 31 Jul 2025 02:42:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1753954919; x=1754559719; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=QnOkZh2xfL40YRumGUqUgGUVFVo0T+Nn2lfElsVl5SA=;
-        b=XtbHuCnPgShawN42UuT/Qb3Pi2h8R3QsL6qB2isbVBJ1h98GBpNF/MOFItlxq5+mtZ
-         pmksa4C/mKxzy4fud0jCazKn14NvAdWG+e5RLSvhs3AMyODYJgFG8bvF1b5KpoergXyK
-         54g75FzJ+VepIzkSy0wKs+PrZutDMvVnXX1GCfMam0yBAyTI5a2yNVss95jfKxJAAnkx
-         Hltyjia7HzcJuXj09baeQOm6RuoFPfA0TVQVeEASly5UxoAYHbeKaXeI+Xgth7GmUqI9
-         6OSSONEvtDN6IeVOwM8gagEhlslAWaVfVc98/5fsmckknxK90GQ9Po4FwCbt+LB9fpiM
-         nSrw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1753954919; x=1754559719;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QnOkZh2xfL40YRumGUqUgGUVFVo0T+Nn2lfElsVl5SA=;
-        b=nlnnI1U1lgsccidDrdkFrztsun5G5AHhlvFsBJ7T3ch7t9NTxEgAev8M+63Xy9xnIv
-         9Rswh5FT+MaX/cRKFTgAzXFN9puCzy4DFsrRGcw4dbkDxTgslXv4zsXRxdRV7fYALyai
-         8VBUGToTNvNknm352g/dFkn0TMEYzvY/Y0FospKisziOQZnp62uhyavhVRQndDlT0qUh
-         DCOIWJ1nHs81jK10nfprVJ652WfUXbp/7YLaH5irHnP9UbfEmBL2LelNbobU6F8GZN85
-         blvFD9r3MMFfzBlLuqUNO7NgHbcafx4YVUX+5AX4XqVbw3+2PGgOcwy0rOG/z86W/VA7
-         VfZw==
-X-Forwarded-Encrypted: i=1; AJvYcCUPPKdP/+FEE3T8GYzTciuLybc091Ha7VgILIWn6irF58+OjjNJpCqH1RkBcxZPxZgzMABv/Ps6AVk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxmGDSc9/bvkQJSUH7u3c1GrROx5FFLKIQAl1G+b3Oq99/aVr7n
-	IjlxPk6saZcaQAn5Cl4mKCmAbZmtlvxGYXBFy8VUex71XscczVCt4Wigbh9edawgL0k=
-X-Gm-Gg: ASbGncuzdIS+ec0XXZyautP/sCKFnIgp+EA/pvWyDo5FGwMAIWTMTx+VblyLcgIy//r
-	XvbdqDGUzmOhSusKBAhXscMEE4dk0fAuJIc9002Uuw8xb2tYGBIQBLc5vFxb5Dy1iEUKNz6kquh
-	/GH2I18Xx6hWcxO9oaObD2klnBkVhU4KcgUtpuCboWEZf36qX/6inelwsE3Yxq5a7JBKmtl4wPL
-	juRQOOvasnEHDqGiQP+2Djo73mCZDUG5qwGFcRI2MA6LMXYa941jluNhabVYdrijxtgs4zRiuP7
-	Fc7uDvjW9ft+ggXo6jAbWOShyQdd9GUo6XBGyGkEgHPdxpurbHx/k3nTICyOHlG6nKTq8NPZ3kh
-	Sk5o2rVwp5y+1UMAAl+i2J1auP4XdLyVixqgRKBi5U2oeYO8L9fNejIbO7kPCKRwC
-X-Google-Smtp-Source: AGHT+IGLYXVQtDxNwo330E93me7kT0e10jyCYoV37P7PPC8dqrFgzE417WGD+xvPdcDnkSu32KUyXA==
-X-Received: by 2002:a17:907:3c88:b0:ae8:8d00:76c3 with SMTP id a640c23a62f3a-af91bf24846mr181679666b.29.1753954918666;
-        Thu, 31 Jul 2025 02:41:58 -0700 (PDT)
-Received: from localhost (p200300f65f06ab0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f06:ab04::1b9])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-af91a21c039sm82055866b.110.2025.07.31.02.41.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 31 Jul 2025 02:41:58 -0700 (PDT)
-Date: Thu, 31 Jul 2025 11:41:56 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, linux-iio@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: timer: renesas,rz-mtu3: Use #pwm-cells = <3>
-Message-ID: <n4ivjvd6hq7phwkzbmvg2tqtejc6ufcybslnyh62kegjkhdvoj@cvfjwstrhlwh>
-References: <20250527205823.377785-2-u.kleine-koenig@baylibre.com>
- <fmn3mrcbih3oq6hgl45jipdofko46ur2sux5p4lf3nzlpahklr@3tm5molhdfdx>
+	 Content-Type:Content-Disposition:In-Reply-To; b=rUZE+qaC0IXxPo8Qbo6tWTYbK/GsZymMlWDSToPzIaObboKbRGdBWJS2lLORzN/xJgiXkhvaB2NpsiG+kH6u65VLVwTIXBEFfifb63+EmVQcjxuElsVXyq/Jwj3b5QTDCGlmSFps+IpY4dgutiX1FCtz0KN/EvRdDUnlVuYtHl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eLC7+6ij; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 96C17C4CEEF;
+	Thu, 31 Jul 2025 10:00:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1753956036;
+	bh=nIIy3EtagONm9o7fIocsy3fvnqj5DKyDI9AvQpz+YsA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=eLC7+6ijyBPGKVEMVLfwY+Uw6w5la+YyHP/0svxYWWgTFagJusQ8YCt5h4K9Qtm0W
+	 fbrDqzIHcEFwXtz/8R1k+qnVGmHJN5o8B7/o2YJiD3ybv9+NhnnPJrBUd2iuVkpUa8
+	 YYYqqfimZw0V4cfMDJIpaQjmGJiF4wX1cAEABFHg8Z8oTrFq9Q54sseSj4nJXfyJHX
+	 EYltQcNTEyRH/UM9T21J0eGc3M9obqQuaUxWHB4BPHCl0GPUHmT76oqYxuQ03M1kEz
+	 qe1lxG2BGYaCC71S+ehz0G2qPrCwVtDYWeuiROsBXwFkBUc87nrnR91ESTs81SFsj6
+	 858ooeFMMIHTQ==
+Date: Thu, 31 Jul 2025 12:00:33 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Andre Przywara <andre.przywara@arm.com>
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+	Aleksandr Shubin <privatesub2@gmail.com>, linux-kernel@vger.kernel.org, 
+	Conor Dooley <conor.dooley@microchip.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, 
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Cheo Fusi <fusibrandon13@gmail.com>, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v12 1/3] dt-bindings: pwm: Add binding for Allwinner
+ D1/T113-S3/R329 PWM controller
+Message-ID: <6d2cq657lkwrzntlwwyc5drgkh4vsetkppugrhjedpp7hlvdh5@lqwe34oyuuvb>
+References: <20250427142500.151925-1-privatesub2@gmail.com>
+ <20250427142500.151925-2-privatesub2@gmail.com>
+ <20250512235619.30cff739@minigeek.lan>
+ <20250619094407c4c849f3@mail.local>
+ <20250619131044.20b45d8d@donnerap.manchester.arm.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -91,60 +69,171 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="m7medg3g5ye5skkb"
+	protocol="application/pgp-signature"; boundary="xadqunur2iav4gmf"
 Content-Disposition: inline
-In-Reply-To: <fmn3mrcbih3oq6hgl45jipdofko46ur2sux5p4lf3nzlpahklr@3tm5molhdfdx>
+In-Reply-To: <20250619131044.20b45d8d@donnerap.manchester.arm.com>
 
 
---m7medg3g5ye5skkb
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+--xadqunur2iav4gmf
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] dt-bindings: timer: renesas,rz-mtu3: Use #pwm-cells = <3>
+Subject: Re: [PATCH v12 1/3] dt-bindings: pwm: Add binding for Allwinner
+ D1/T113-S3/R329 PWM controller
 MIME-Version: 1.0
 
-Hello Daniel,
+Hello Andre,
 
-On Mon, Jun 16, 2025 at 03:08:41PM +0200, Uwe Kleine-K=F6nig wrote:
-> On Tue, May 27, 2025 at 10:58:22PM +0200, Uwe Kleine-K=F6nig wrote:
-> > With the goal to unify all PWM bindings to use #pwm-cells =3D <3> update
-> > the renesas,rz-mtu3 binding accordingly. Keep <2> documented as a
-> > deprecated value at least until the in-tree device trees are fixed
-> > accordingly.
-> >=20
-> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
+On Thu, Jun 19, 2025 at 01:10:44PM +0100, Andre Przywara wrote:
+> On Thu, 19 Jun 2025 11:44:07 +0200
+> Alexandre Belloni <alexandre.belloni@bootlin.com> wrote:
 >=20
-> I would expect that with the positive feedback by Biju Das and Rob
-> Herring it's on you to pick up this patch. Or would you prefer that I
-> take it via PWM?
+> Hi Alexandre,
+>=20
+> > On 12/05/2025 23:56:19+0100, Andre Przywara wrote:
+> > > On Sun, 27 Apr 2025 17:24:53 +0300
+> > > Aleksandr Shubin <privatesub2@gmail.com> wrote:
+> > >=20
+> > > Hi,
+> > >  =20
+> > > > Allwinner's D1, T113-S3 and R329 SoCs have a new pwm
+> > > > controller witch is different from the previous pwm-sun4i.
+> > > >=20
+> > > > The D1 and T113 are identical in terms of peripherals,
+> > > > they differ only in the architecture of the CPU core, and
+> > > > even share the majority of their DT. Because of that,
+> > > > using the same compatible makes sense.
+> > > > The R329 is a different SoC though, and should have
+> > > > a different compatible string added, especially as there
+> > > > is a difference in the number of channels.
+> > > >=20
+> > > > D1 and T113s SoCs have one PWM controller with 8 channels.
+> > > > R329 SoC has two PWM controllers in both power domains, one of
+> > > > them has 9 channels (CPUX one) and the other has 6 (CPUS one).
+> > > >=20
+> > > > Add a device tree binding for them.
+> > > >=20
+> > > > Reviewed-by: Conor Dooley <conor.dooley@microchip.com>
+> > > > Signed-off-by: Aleksandr Shubin <privatesub2@gmail.com>
+> > > > ---
+> > > >  .../bindings/pwm/allwinner,sun20i-pwm.yaml    | 84 +++++++++++++++=
+++++
+> > > >  1 file changed, 84 insertions(+)
+> > > >  create mode 100644 Documentation/devicetree/bindings/pwm/allwinner=
+,sun20i-pwm.yaml
+> > > >=20
+> > > > diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun20i=
+-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.yaml
+> > > > new file mode 100644
+> > > > index 000000000000..4b25e94a8e46
+> > > > --- /dev/null
+> > > > +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun20i-pwm.ya=
+ml
+> > > > @@ -0,0 +1,84 @@
+> > > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > > +%YAML 1.2
+> > > > +---
+> > > > +$id: http://devicetree.org/schemas/pwm/allwinner,sun20i-pwm.yaml#
+> > > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > > +
+> > > > +title: Allwinner D1, T113-S3 and R329 PWM
+> > > > +
+> > > > +maintainers:
+> > > > +  - Aleksandr Shubin <privatesub2@gmail.com>
+> > > > +  - Brandon Cheo Fusi <fusibrandon13@gmail.com>
+> > > > +
+> > > > +properties:
+> > > > +  compatible:
+> > > > +    oneOf:
+> > > > +      - const: allwinner,sun20i-d1-pwm
+> > > > +      - items:
+> > > > +          - const: allwinner,sun50i-r329-pwm
+> > > > +          - const: allwinner,sun20i-d1-pwm
+> > > > +
+> > > > +  reg:
+> > > > +    maxItems: 1
+> > > > +
+> > > > +  "#pwm-cells":
+> > > > +    const: 3
+> > > > +
+> > > > +  clocks:
+> > > > +    items:
+> > > > +      - description: Bus clock
+> > > > +      - description: 24 MHz oscillator
+> > > > +      - description: APB clock
+> > > > +
+> > > > +  clock-names:
+> > > > +    items:
+> > > > +      - const: bus
+> > > > +      - const: hosc
+> > > > +      - const: apb
+> > > > +
+> > > > +  resets:
+> > > > +    maxItems: 1
+> > > > +
+> > > > +  allwinner,npwms:
+> > > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > > +    description: The number of PWM channels configured for this in=
+stance
+> > > > +    enum: [6, 8, 9] =20
+> > >=20
+> > > Do we really need to be so restrictive here? The IP has an
+> > > "architectural" limit of 16 channels (due to the MMIO register layout
+> > > and status/control bits usage in some registers), so can't we just le=
+ave
+> > > this value to be anything between 1 and 16 here? If people configure
+> > > this wrongly, it's their fault, I'd say? Without confining this furth=
+er
+> > > based on the respective compatible strings this enum is less useful
+> > > anyway, I think. The Allwinner A523 uses the same IP, and supports all
+> > > 16 channels, the V853 implements 12, that's what I quickly found
+> > > already, and there might be more examples in the future, so I'd rather
+> > > open this up.
+> > >  =20
+> >=20
+> > Do we really need this property? I feel like the number of PWM channels=
+ should be
+> > something the driver could infer from the compatible string as we are g=
+oing to
+> > have one compatible string per SoC anyway.
+>=20
+> Well yes, this would work, but I feel like it creates unnecessary churn to
+> touch the driver every time some new SoC with the same IP pops up, and
+> where just the number of channels is different - see above for a list of
+> SoCs we already know about, and there are more in the pipe. It also means
+> stable kernels would already work.
 
-I understood your silence as "Please pick that patch up via your PWM
-tree" and did that now.
+Having a property that specifies the number of PWM outputs is fine for
+me.
 
-Applied to
+There is some prior art for that: mxs-pwm.yaml has fsl,pwm-number;
+pwm-st.txt has st,pwm-num-chan with that semantic.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
-next
+Given that this is a fundamental concept of a pwm chip, I'd say giving
+that a generic name without vendor prefix is justified. I suggest to go
+for
 
-=2E
+	npwms =3D <..>;
+
+which matches ngpios that is specified for gpio chips.
 
 Best regards
 Uwe
 
---m7medg3g5ye5skkb
+--xadqunur2iav4gmf
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmiLOmEACgkQj4D7WH0S
-/k56gQf/YVbE8M4YImhXFa56R+9I6mz7mcCrs5jdK4BGolG38W3TFlZeG2daO2nh
-MdBRKKRp2w9UTC1sM30Vm3/xuSpVgRKzBCIrgWgrrkIyZ1r1b6DqBc8D4Tz424Yt
-sgEB9dsoygEHyp34HxePgqG3fOgwbhwVd7Ww/IDBaM8kxDXxf4OfG34krIJhLEJw
-9+v5HZTlnLJEeBBqxytwp+v4fb+b4vBLlmZhLp1Kj2IPZGLgFFADAFDPpmRHf0Op
-e3CmdYPWGgDCPSQUV7w0DMY0bzcpvl3IXjGKD5MCObCrxnHxAoikvViOA7DRFe/i
-FgWZgSCLMO3luQ6woVmvzYeaEnII2g==
-=fddD
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmiLPr4ACgkQj4D7WH0S
+/k6qWwf/UfJJoL8d1i9SVPk/Syl4ySb6I9d8VOpLaDSJfkSpXLfkxhBEvlXyOXAn
+FzlTMz893YPQTTpTeuEmFMebZhM62aQoFwRTw8NecOLepM3Y/3ia5Q+wS/goyNf3
+NKMXMcqIeyF2BiQc1PvBTInND72IGsRqzuScnGVZtoAgz8IOEgigclMY5cc4mbGX
+CsbLwoTC9F9MXYHQp2j+2VpL3qf89ug6zXdXq+j4YSRYaBj9LuPCFhTN921V6MfP
+18OK7KI7rfJpJUuVPcpnmM0nH7Z9hTXM3kQFdiSwGd6QexuESuw3KBCdfDwuRpoI
+4nSRBPbwtqh1Eq7AwAuqT07vbY/DRQ==
+=JDZ2
 -----END PGP SIGNATURE-----
 
---m7medg3g5ye5skkb--
+--xadqunur2iav4gmf--
 
