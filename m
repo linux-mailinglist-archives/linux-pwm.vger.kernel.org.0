@@ -1,263 +1,83 @@
-Return-Path: <linux-pwm+bounces-6937-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6938-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id EE24FB198D0
-	for <lists+linux-pwm@lfdr.de>; Mon,  4 Aug 2025 02:38:27 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 86741B19DF1
+	for <lists+linux-pwm@lfdr.de>; Mon,  4 Aug 2025 10:49:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 752951897A95
-	for <lists+linux-pwm@lfdr.de>; Mon,  4 Aug 2025 00:38:46 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 434FA3A5164
+	for <lists+linux-pwm@lfdr.de>; Mon,  4 Aug 2025 08:49:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2129E1E2312;
-	Mon,  4 Aug 2025 00:37:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CEC9A23D294;
+	Mon,  4 Aug 2025 08:49:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GZy/PS5y"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="lt4LunEh"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD521C549F;
-	Mon,  4 Aug 2025 00:37:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCD581917E3
+	for <linux-pwm@vger.kernel.org>; Mon,  4 Aug 2025 08:49:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754267859; cv=none; b=IvQmV6XT7xX9RPWhriGkfLuoflNZxV9ZNpiciTTwaW5POvB3rwoPM2wpj6Z1aCAnBtUnbq2ayi1qu9vWzimhaHFNDItnqBthEn4YXnRhn9EG/lPJs/WnZ5++qvJBfxyuKuKDujs3DPXcclMWbkEl4jaXghGajkqNVofB/bb5pO0=
+	t=1754297375; cv=none; b=jCYL49gktSnM2dOGjtQfcJh2Y3BVZ30eikzkqaF/ZNHJMIHFZNAvtQtlOKMJFOK7iCPu9/Uv+YQ9OouE9Uh087eOOkSfpD62b0jluJpyrHD3swckQ+Tb2YYS4rZhXqFxW4Pu9iIFdDzyNP3g241zmLqditxDOob/CHyXVsLqc8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754267859; c=relaxed/simple;
-	bh=txRPniFTRLZVu8VM82rwbrs8l8vLsWoAuoYnAth+f5s=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NIJ+m0e1SUDTVUjsEhOTD+Lx3XGcKu9unV5qfygpXpn3HNgrYmmYX/w0HMentZxr9BwHh68yuT0p7jJukexCRa7w2roDA4pLdL+IEPNtBZzUXwsWUxVhg7mCqcKiMZUOc0aySH9Qij3pj3u32filOWelYBec8Bp2mfO0NaJCLPs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GZy/PS5y; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FB4FC4CEF0;
-	Mon,  4 Aug 2025 00:37:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754267858;
-	bh=txRPniFTRLZVu8VM82rwbrs8l8vLsWoAuoYnAth+f5s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GZy/PS5yXFFe4mR8YclpC4J45IiyqQsMclIpK+XdyWJUeQsEdP3zOp2covKo6Ar3h
-	 ncs5lg6umIG+Yg2EdUkgv/OaqcngzFilL4CSHnGglqXeJqqJUFVEIx3Nlhwipr7eVw
-	 vaBcs6f9UrnTCAp/2N1B/0TUW2JsC6u34hJtYNgFYxdTNifCH2cCpPZs7ikrnzo9vu
-	 QWKcynGWRXmMUDXsH1pPmy38wiXzg5H+0Ex8Snh9Jc9qvKPMpGIHAhgX0w/0byXnho
-	 DpE3NPkc0wQG7+0sc+M7IEdjJDrHdO+famsMliSr0q1IE0dFO2Kp3ASq31YvR3ldNH
-	 fhQuzDzshBi5A==
-From: Sasha Levin <sashal@kernel.org>
-To: patches@lists.linux.dev,
-	stable@vger.kernel.org
-Cc: Nylon Chen <nylon.chen@sifive.com>,
-	Zong Li <zong.li@sifive.com>,
-	Vincent Chen <vincent.chen@sifive.com>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	paul.walmsley@sifive.com,
-	samuel.holland@sifive.com,
-	linux-pwm@vger.kernel.org,
-	linux-riscv@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.1 24/51] pwm: sifive: Fix PWM algorithm and clarify inverted compare behavior
-Date: Sun,  3 Aug 2025 20:36:16 -0400
-Message-Id: <20250804003643.3625204-24-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250804003643.3625204-1-sashal@kernel.org>
-References: <20250804003643.3625204-1-sashal@kernel.org>
+	s=arc-20240116; t=1754297375; c=relaxed/simple;
+	bh=kEGNcRKii091OoZOGBge+aHBW6zYX0bGJrlr0K3nWNo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=jhHTvkduXyYuFglT2Q+YFAB4zhgZQt90jQYR1p4k/I8SoGhOHXr60aLsvz5+pQve9W9Pt9lNuiV43hNflSf9MJSwSBiiEeGjwwnAw2vpFR8e4ZAH7KpHHN6iwAIdJZf3OO/1IbbsgOAgbvYqltjyL8pV9Bq34wuWkKWtgNCbwfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=lt4LunEh; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1754297372;
+	bh=kEGNcRKii091OoZOGBge+aHBW6zYX0bGJrlr0K3nWNo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lt4LunEh6xeDTdscoj61LEXgzFVU3LukujP6O2+cDi4VCjOw0rdF+GDsJzH5d2bQb
+	 aE7xUdrIULgB6iNNO29i/cxHYGAmgmGfYaN63Z9iNvPKL0ZbDWxsCqcW0YKDaHvjQ0
+	 UR4bwwwMmTR8P+eLFhATB7OsFEYn7fgcIDd8Ai9fMcDP2IUnd/CU0x5ZijxKdbwQlF
+	 R6IZCSu5YEZERGMo6U8RghFdvshVOpcd4+UBSmGWEKPlQnINUcAqXBphTAMrqYwL7X
+	 5KS3dLO0iT68XqpSUz2DuRlINkIBwPlkfgVR8/qtwG6XKRivHA7f/USgxeI9nryYmS
+	 TDZzECPwqw4HQ==
+Received: from [192.168.1.100] (2-237-20-237.ip236.fastwebnet.it [2.237.20.237])
+	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits))
+	(No client certificate requested)
+	(Authenticated sender: kholk11)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id AB10D17E048E;
+	Mon,  4 Aug 2025 10:49:31 +0200 (CEST)
+Message-ID: <75a48820-a79d-41f3-9e96-b49332865eb0@collabora.com>
+Date: Mon, 4 Aug 2025 10:49:31 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.147
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 8/8] pwm: mediatek: Convert to waveform API
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+ Matthias Brugger <matthias.bgg@gmail.com>
+Cc: linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-mediatek@lists.infradead.org
+References: <20250725154506.2610172-10-u.kleine-koenig@baylibre.com>
+ <20250725154506.2610172-18-u.kleine-koenig@baylibre.com>
+From: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Content-Language: en-US
+In-Reply-To: <20250725154506.2610172-18-u.kleine-koenig@baylibre.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
 
-From: Nylon Chen <nylon.chen@sifive.com>
+Il 25/07/25 17:45, Uwe Kleine-König ha scritto:
+> Implement the new waveform callbacks which makes the usage of this
+> hardware more flexible and allows to use it via the pwm character
+> device.
+> 
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
 
-[ Upstream commit 7dbc4432ea6bf9d709391eb57f1e9fb44e99845a ]
+Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
 
-The `frac` variable represents the pulse inactive time, and the result
-of this algorithm is the pulse active time. Therefore, we must reverse
-the result.
-
-Although the SiFive Reference Manual states "pwms >= pwmcmpX -> HIGH",
-the hardware behavior is inverted due to a fixed XNOR with 0. As a result,
-the pwmcmp register actually defines the low (inactive) portion of the pulse.
-
-The reference is SiFive FU740-C000 Manual[0]
-
-Link: https://sifive.cdn.prismic.io/sifive/1a82e600-1f93-4f41-b2d8-86ed8b16acba_fu740-c000-manual-v1p6.pdf [0]
-
-Co-developed-by: Zong Li <zong.li@sifive.com>
-Signed-off-by: Zong Li <zong.li@sifive.com>
-Co-developed-by: Vincent Chen <vincent.chen@sifive.com>
-Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
-Signed-off-by: Nylon Chen <nylon.chen@sifive.com>
-Link: https://lore.kernel.org/r/20250529035341.51736-3-nylon.chen@sifive.com
-Signed-off-by: Uwe Kleine-König <ukleinek@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
-
-LLM Generated explanations, may be completely bogus:
-
-**Backport Status: YES**
-
-This commit should be backported to stable kernel trees. Here's my
-extensive analysis:
-
-## Critical Bug Fix Analysis
-
-1. **The commit fixes a significant functional bug** - The PWM algorithm
-   was fundamentally broken:
-   - The `frac` variable was incorrectly used (lines 158-161 in
-     original, now 168-171)
-   - The driver was writing the duty cycle value directly to PWMCMP
-     register (line 193), but the hardware actually expects the
-     **inactive** (low) time
-   - This results in inverted PWM output behavior where users get the
-     opposite duty cycle from what they request
-
-2. **Hardware behavior discrepancy** - The commit reveals and fixes a
-   critical mismatch between documentation and actual hardware:
-   - The documentation states "pwms >= pwmcmpX -> HIGH"
-   - But the hardware has a hard-tied XNOR with 0 that inverts this
-     behavior
-   - The driver now correctly compensates for this hardware quirk
-
-3. **User-visible impact**:
-   - **In `pwm_sifive_get_state()`**: The driver now correctly inverts
-     the value read from hardware (lines 115->122-126)
-   - **In `pwm_sifive_apply()`**: The driver now inverts the duty cycle
-     before writing to hardware (lines 162->171)
-   - **Polarity change**: Changed from `PWM_POLARITY_INVERSED` to
-     `PWM_POLARITY_NORMAL` (lines 126->137, 142->152)
-   - **Documentation fix**: Updated comment from "cannot generate 100%
-     duty" to "cannot generate 0% duty" (lines 11->27, 160->170)
-
-4. **The fix is relatively small and contained**:
-   - Changes are isolated to the PWM algorithm logic
-   - No architectural changes or new features
-   - Simple mathematical inversion: `duty = (1U << PWM_SIFIVE_CMPWIDTH)
-     - 1 - inactive`
-
-5. **No risky side effects**:
-   - The change is straightforward and mathematically correct
-   - Doesn't affect other subsystems
-   - Maintains the same register interface
-
-6. **Affects all SiFive PWM users**:
-   - Any system using SiFive FU540 or FU740 SoCs would have incorrect
-     PWM output
-   - This includes various RISC-V development boards and embedded
-     systems
-   - Users would get inverted duty cycles, potentially breaking motor
-     controls, LED dimming, etc.
-
-7. **Clear documentation reference**:
-   - The commit references the official SiFive FU740-C000 Manual
-   - Provides clear explanation of the hardware behavior mismatch
-
-The bug causes PWM outputs to be inverted from user expectations, which
-is a significant functional issue that would affect any system relying
-on proper PWM behavior for motor control, LED dimming, or other PWM-
-dependent functionality. The fix is clean, minimal, and addresses a
-clear hardware/software mismatch that exists in production systems.
-
- drivers/pwm/pwm-sifive.c | 39 +++++++++++++++++++++++++++++++--------
- 1 file changed, 31 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-index 393a4b97fc19..e87b16e10daa 100644
---- a/drivers/pwm/pwm-sifive.c
-+++ b/drivers/pwm/pwm-sifive.c
-@@ -4,11 +4,28 @@
-  * For SiFive's PWM IP block documentation please refer Chapter 14 of
-  * Reference Manual : https://static.dev.sifive.com/FU540-C000-v1.0.pdf
-  *
-+ * PWM output inversion: According to the SiFive Reference manual
-+ * the output of each comparator is high whenever the value of pwms is
-+ * greater than or equal to the corresponding pwmcmpX[Reference Manual].
-+ *
-+ * Figure 29 in the same manual shows that the pwmcmpXcenter bit is
-+ * hard-tied to 0 (XNOR), which effectively inverts the comparison so that
-+ * the output goes HIGH when  `pwms < pwmcmpX`.
-+ *
-+ * In other words, each pwmcmp register actually defines the **inactive**
-+ * (low) period of the pulse, not the active time exactly opposite to what
-+ * the documentation text implies.
-+ *
-+ * To compensate, this driver always **inverts** the duty value when reading
-+ * or writing pwmcmp registers , so that users interact with a conventional
-+ * **active-high** PWM interface.
-+ *
-+ *
-  * Limitations:
-  * - When changing both duty cycle and period, we cannot prevent in
-  *   software that the output might produce a period with mixed
-  *   settings (new period length and old duty cycle).
-- * - The hardware cannot generate a 100% duty cycle.
-+ * - The hardware cannot generate a 0% duty cycle.
-  * - The hardware generates only inverted output.
-  */
- #include <linux/clk.h>
-@@ -109,9 +126,14 @@ static int pwm_sifive_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 				struct pwm_state *state)
- {
- 	struct pwm_sifive_ddata *ddata = pwm_sifive_chip_to_ddata(chip);
--	u32 duty, val;
-+	u32 duty, val, inactive;
- 
--	duty = readl(ddata->regs + PWM_SIFIVE_PWMCMP(pwm->hwpwm));
-+	inactive = readl(ddata->regs + PWM_SIFIVE_PWMCMP(pwm->hwpwm));
-+	/*
-+	 * PWM hardware uses 'inactive' counts in pwmcmp, so invert to get actual duty.
-+	 * Here, 'inactive' is the low time and we compute duty as max_count - inactive.
-+	 */
-+	duty = (1U << PWM_SIFIVE_CMPWIDTH) - 1 - inactive;
- 
- 	state->enabled = duty > 0;
- 
-@@ -122,7 +144,7 @@ static int pwm_sifive_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 	state->period = ddata->real_period;
- 	state->duty_cycle =
- 		(u64)duty * ddata->real_period >> PWM_SIFIVE_CMPWIDTH;
--	state->polarity = PWM_POLARITY_INVERSED;
-+	state->polarity = PWM_POLARITY_NORMAL;
- 
- 	return 0;
- }
-@@ -136,9 +158,9 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	unsigned long long num;
- 	bool enabled;
- 	int ret = 0;
--	u32 frac;
-+	u32 frac, inactive;
- 
--	if (state->polarity != PWM_POLARITY_INVERSED)
-+	if (state->polarity != PWM_POLARITY_NORMAL)
- 		return -EINVAL;
- 
- 	cur_state = pwm->state;
-@@ -156,8 +178,9 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	 */
- 	num = (u64)duty_cycle * (1U << PWM_SIFIVE_CMPWIDTH);
- 	frac = DIV64_U64_ROUND_CLOSEST(num, state->period);
--	/* The hardware cannot generate a 100% duty cycle */
-+	/* The hardware cannot generate a 0% duty cycle */
- 	frac = min(frac, (1U << PWM_SIFIVE_CMPWIDTH) - 1);
-+	inactive = (1U << PWM_SIFIVE_CMPWIDTH) - 1 - frac;
- 
- 	mutex_lock(&ddata->lock);
- 	if (state->period != ddata->approx_period) {
-@@ -189,7 +212,7 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 		}
- 	}
- 
--	writel(frac, ddata->regs + PWM_SIFIVE_PWMCMP(pwm->hwpwm));
-+	writel(inactive, ddata->regs + PWM_SIFIVE_PWMCMP(pwm->hwpwm));
- 
- 	if (!state->enabled)
- 		clk_disable(ddata->clk);
--- 
-2.39.5
 
 
