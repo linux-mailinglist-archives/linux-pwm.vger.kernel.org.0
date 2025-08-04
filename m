@@ -1,46 +1,46 @@
-Return-Path: <linux-pwm+bounces-6936-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6937-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id E4198B19876
-	for <lists+linux-pwm@lfdr.de>; Mon,  4 Aug 2025 02:36:00 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id EE24FB198D0
+	for <lists+linux-pwm@lfdr.de>; Mon,  4 Aug 2025 02:38:27 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6FBA2166699
-	for <lists+linux-pwm@lfdr.de>; Mon,  4 Aug 2025 00:35:56 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 752951897A95
+	for <lists+linux-pwm@lfdr.de>; Mon,  4 Aug 2025 00:38:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAD151DB92C;
-	Mon,  4 Aug 2025 00:35:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2129E1E2312;
+	Mon,  4 Aug 2025 00:37:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CnzxTNez"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GZy/PS5y"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAB492BD11;
-	Mon,  4 Aug 2025 00:35:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAD521C549F;
+	Mon,  4 Aug 2025 00:37:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754267722; cv=none; b=iKCAsyJajKmL4I9h+j2sOPTngb3uHDbZZgec+B+yda57QvDFRNB583GupVSR5DDJnxHZb5jBbh3dxPHeJ2J4xQxdIgJNSX72sZS0EsMCtMBsXWB3ot+pVo70w5gqYHVJrvzKVDc3G/9DEMS+eM4DTmFWXqOqRU+ydTascHLirkc=
+	t=1754267859; cv=none; b=IvQmV6XT7xX9RPWhriGkfLuoflNZxV9ZNpiciTTwaW5POvB3rwoPM2wpj6Z1aCAnBtUnbq2ayi1qu9vWzimhaHFNDItnqBthEn4YXnRhn9EG/lPJs/WnZ5++qvJBfxyuKuKDujs3DPXcclMWbkEl4jaXghGajkqNVofB/bb5pO0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754267722; c=relaxed/simple;
-	bh=fegMuF5UZ/Spn63p/x4of6NBHssIbAf2BJWJP0OC5JQ=;
+	s=arc-20240116; t=1754267859; c=relaxed/simple;
+	bh=txRPniFTRLZVu8VM82rwbrs8l8vLsWoAuoYnAth+f5s=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YWqQ5jIANS1ObF0mFpwRrnZee8yqNuE6xGhlPlSmGjjslQAwbbtZZk1fKEcVduhBt8vXlbG1G4SD5DoiMeAj585WyCZ+Ff++FdpI4ruhwkEKVk48Ubdh30umGTTsq92T+DDe+9EwxBWjzmp4LN+ERdUP91r4ILcLrNlYimInTkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CnzxTNez; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7382C4CEEB;
-	Mon,  4 Aug 2025 00:35:20 +0000 (UTC)
+	 MIME-Version:Content-Type; b=NIJ+m0e1SUDTVUjsEhOTD+Lx3XGcKu9unV5qfygpXpn3HNgrYmmYX/w0HMentZxr9BwHh68yuT0p7jJukexCRa7w2roDA4pLdL+IEPNtBZzUXwsWUxVhg7mCqcKiMZUOc0aySH9Qij3pj3u32filOWelYBec8Bp2mfO0NaJCLPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GZy/PS5y; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FB4FC4CEF0;
+	Mon,  4 Aug 2025 00:37:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754267722;
-	bh=fegMuF5UZ/Spn63p/x4of6NBHssIbAf2BJWJP0OC5JQ=;
+	s=k20201202; t=1754267858;
+	bh=txRPniFTRLZVu8VM82rwbrs8l8vLsWoAuoYnAth+f5s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CnzxTNezJ8jkigDXPfiI/sR5uozqjSSGR8HXpcAQVDY8ZTWnKDQH17hy30JtBVMD4
-	 SR+rcKqwzkq4GWQdFTdTRNqWrjjdWqNhD60OifS/GTtN+qMVKETWcjHvBz8YlwFqZk
-	 zrndHQ63CHJ+dln1JDQnCou5G024tWQ5vhkrWv6r+F35N6vvi26arWpsh5wqKtLdru
-	 X90oAyBv7LPhhfuaFvTNXekZS/6pD/SycLbr/QBNwoHQMGdtVFuzyCNOI/Co0yi7M0
-	 k36FTxqrvwMJZAM0yuUfDVtvMfidW2scc7scNloM39bitVVywFNuLfcQzruQ9d/DSM
-	 qnifa/tplEWhA==
+	b=GZy/PS5yXFFe4mR8YclpC4J45IiyqQsMclIpK+XdyWJUeQsEdP3zOp2covKo6Ar3h
+	 ncs5lg6umIG+Yg2EdUkgv/OaqcngzFilL4CSHnGglqXeJqqJUFVEIx3Nlhwipr7eVw
+	 vaBcs6f9UrnTCAp/2N1B/0TUW2JsC6u34hJtYNgFYxdTNifCH2cCpPZs7ikrnzo9vu
+	 QWKcynGWRXmMUDXsH1pPmy38wiXzg5H+0Ex8Snh9Jc9qvKPMpGIHAhgX0w/0byXnho
+	 DpE3NPkc0wQG7+0sc+M7IEdjJDrHdO+famsMliSr0q1IE0dFO2Kp3ASq31YvR3ldNH
+	 fhQuzDzshBi5A==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
@@ -53,12 +53,12 @@ Cc: Nylon Chen <nylon.chen@sifive.com>,
 	samuel.holland@sifive.com,
 	linux-pwm@vger.kernel.org,
 	linux-riscv@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.6 28/59] pwm: sifive: Fix PWM algorithm and clarify inverted compare behavior
-Date: Sun,  3 Aug 2025 20:33:42 -0400
-Message-Id: <20250804003413.3622950-28-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.1 24/51] pwm: sifive: Fix PWM algorithm and clarify inverted compare behavior
+Date: Sun,  3 Aug 2025 20:36:16 -0400
+Message-Id: <20250804003643.3625204-24-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250804003413.3622950-1-sashal@kernel.org>
-References: <20250804003413.3622950-1-sashal@kernel.org>
+In-Reply-To: <20250804003643.3625204-1-sashal@kernel.org>
+References: <20250804003643.3625204-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -68,7 +68,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.6.101
+X-stable-base: Linux 6.1.147
 Content-Transfer-Encoding: 8bit
 
 From: Nylon Chen <nylon.chen@sifive.com>
@@ -166,7 +166,7 @@ clear hardware/software mismatch that exists in production systems.
  1 file changed, 31 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-index eabddb7c7820..2e6253c671df 100644
+index 393a4b97fc19..e87b16e10daa 100644
 --- a/drivers/pwm/pwm-sifive.c
 +++ b/drivers/pwm/pwm-sifive.c
 @@ -4,11 +4,28 @@
@@ -199,7 +199,7 @@ index eabddb7c7820..2e6253c671df 100644
   * - The hardware generates only inverted output.
   */
  #include <linux/clk.h>
-@@ -110,9 +127,14 @@ static int pwm_sifive_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+@@ -109,9 +126,14 @@ static int pwm_sifive_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
  				struct pwm_state *state)
  {
  	struct pwm_sifive_ddata *ddata = pwm_sifive_chip_to_ddata(chip);
@@ -216,7 +216,7 @@ index eabddb7c7820..2e6253c671df 100644
  
  	state->enabled = duty > 0;
  
-@@ -123,7 +145,7 @@ static int pwm_sifive_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
+@@ -122,7 +144,7 @@ static int pwm_sifive_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
  	state->period = ddata->real_period;
  	state->duty_cycle =
  		(u64)duty * ddata->real_period >> PWM_SIFIVE_CMPWIDTH;
@@ -225,7 +225,7 @@ index eabddb7c7820..2e6253c671df 100644
  
  	return 0;
  }
-@@ -137,9 +159,9 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+@@ -136,9 +158,9 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
  	unsigned long long num;
  	bool enabled;
  	int ret = 0;
@@ -237,7 +237,7 @@ index eabddb7c7820..2e6253c671df 100644
  		return -EINVAL;
  
  	cur_state = pwm->state;
-@@ -157,8 +179,9 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+@@ -156,8 +178,9 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
  	 */
  	num = (u64)duty_cycle * (1U << PWM_SIFIVE_CMPWIDTH);
  	frac = DIV64_U64_ROUND_CLOSEST(num, state->period);
@@ -248,7 +248,7 @@ index eabddb7c7820..2e6253c671df 100644
  
  	mutex_lock(&ddata->lock);
  	if (state->period != ddata->approx_period) {
-@@ -190,7 +213,7 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+@@ -189,7 +212,7 @@ static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *pwm,
  		}
  	}
  
