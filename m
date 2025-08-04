@@ -1,46 +1,46 @@
-Return-Path: <linux-pwm+bounces-6935-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6936-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D9DAB1981F
-	for <lists+linux-pwm@lfdr.de>; Mon,  4 Aug 2025 02:33:25 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E4198B19876
+	for <lists+linux-pwm@lfdr.de>; Mon,  4 Aug 2025 02:36:00 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B1B2E1896590
-	for <lists+linux-pwm@lfdr.de>; Mon,  4 Aug 2025 00:33:38 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6FBA2166699
+	for <lists+linux-pwm@lfdr.de>; Mon,  4 Aug 2025 00:35:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 523BD12C544;
-	Mon,  4 Aug 2025 00:32:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EAD151DB92C;
+	Mon,  4 Aug 2025 00:35:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iYfeumTu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CnzxTNez"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A601175A5;
-	Mon,  4 Aug 2025 00:32:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAB492BD11;
+	Mon,  4 Aug 2025 00:35:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754267563; cv=none; b=DNxAuuaEMM0b3jMpVlBANvCXMqccGRlGkQvxGaKwSnHdO59VZcaM8vVCHWl0rnarQZmYRRSYL24XiFULeyesNIm2L9iuFCtdF5stHQ7q9amicqLod4x8B+QAflP7CJ7Iu3clMctH2THY/Ku+/RVDZKPlMDLxisns0yvzI8Y3IXs=
+	t=1754267722; cv=none; b=iKCAsyJajKmL4I9h+j2sOPTngb3uHDbZZgec+B+yda57QvDFRNB583GupVSR5DDJnxHZb5jBbh3dxPHeJ2J4xQxdIgJNSX72sZS0EsMCtMBsXWB3ot+pVo70w5gqYHVJrvzKVDc3G/9DEMS+eM4DTmFWXqOqRU+ydTascHLirkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754267563; c=relaxed/simple;
-	bh=Bs4/OINydRglnxEUwlgHZgeJZiSHvx3ERL02s0xacnY=;
+	s=arc-20240116; t=1754267722; c=relaxed/simple;
+	bh=fegMuF5UZ/Spn63p/x4of6NBHssIbAf2BJWJP0OC5JQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=F50MTCG3RLVg4ms3/t/1hUxNo184OJwBKhXyb6DLuX25N7DrZerSz4JJlb9h2F5wOckcc6un6kMO9xM0WKXRQ54YdHbWrXy0d6VdF4tMDINQFY5KQ1NIfnuxd3sJneqmKSypKUvyCaQagE7XfZgGadBMbpe3bkCLv7vcWWVo5Zk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iYfeumTu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A97DC4CEEB;
-	Mon,  4 Aug 2025 00:32:40 +0000 (UTC)
+	 MIME-Version:Content-Type; b=YWqQ5jIANS1ObF0mFpwRrnZee8yqNuE6xGhlPlSmGjjslQAwbbtZZk1fKEcVduhBt8vXlbG1G4SD5DoiMeAj585WyCZ+Ff++FdpI4ruhwkEKVk48Ubdh30umGTTsq92T+DDe+9EwxBWjzmp4LN+ERdUP91r4ILcLrNlYimInTkk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CnzxTNez; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7382C4CEEB;
+	Mon,  4 Aug 2025 00:35:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754267563;
-	bh=Bs4/OINydRglnxEUwlgHZgeJZiSHvx3ERL02s0xacnY=;
+	s=k20201202; t=1754267722;
+	bh=fegMuF5UZ/Spn63p/x4of6NBHssIbAf2BJWJP0OC5JQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=iYfeumTuxr0kDBT4LD8s1ht4yevttZSZ5ZAklTr659uVaWVMIvinVgLnAOdJryvH+
-	 Ey836D8ecWPfcJMa4fRzNrIz6yIjJ5DHTwSF2ztkO1USYAmqSF9ovbtBk/KQkaWSaC
-	 v2kqV8CjUclkV1vrVUvDOoSVAXCS7YRd0AJfCKV9GpyCxzhNx/ummU1yPCiQcjM5ZJ
-	 SE76vostJS7twleap4v5GN5Q1MaRj+XYxdVsDrfsOwkg5qRLiKaMCz9OBJO4HC0GZD
-	 oGwxkWqYHmsSeScLxNBsQcrMI/ZpXUG9PnwEDYyElnZlBTlEi3DusxbqamwioasotQ
-	 XtU5hAq33lkRg==
+	b=CnzxTNezJ8jkigDXPfiI/sR5uozqjSSGR8HXpcAQVDY8ZTWnKDQH17hy30JtBVMD4
+	 SR+rcKqwzkq4GWQdFTdTRNqWrjjdWqNhD60OifS/GTtN+qMVKETWcjHvBz8YlwFqZk
+	 zrndHQ63CHJ+dln1JDQnCou5G024tWQ5vhkrWv6r+F35N6vvi26arWpsh5wqKtLdru
+	 X90oAyBv7LPhhfuaFvTNXekZS/6pD/SycLbr/QBNwoHQMGdtVFuzyCNOI/Co0yi7M0
+	 k36FTxqrvwMJZAM0yuUfDVtvMfidW2scc7scNloM39bitVVywFNuLfcQzruQ9d/DSM
+	 qnifa/tplEWhA==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
@@ -53,12 +53,12 @@ Cc: Nylon Chen <nylon.chen@sifive.com>,
 	samuel.holland@sifive.com,
 	linux-pwm@vger.kernel.org,
 	linux-riscv@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.12 34/69] pwm: sifive: Fix PWM algorithm and clarify inverted compare behavior
-Date: Sun,  3 Aug 2025 20:30:44 -0400
-Message-Id: <20250804003119.3620476-34-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 28/59] pwm: sifive: Fix PWM algorithm and clarify inverted compare behavior
+Date: Sun,  3 Aug 2025 20:33:42 -0400
+Message-Id: <20250804003413.3622950-28-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250804003119.3620476-1-sashal@kernel.org>
-References: <20250804003119.3620476-1-sashal@kernel.org>
+In-Reply-To: <20250804003413.3622950-1-sashal@kernel.org>
+References: <20250804003413.3622950-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -68,7 +68,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.41
+X-stable-base: Linux 6.6.101
 Content-Transfer-Encoding: 8bit
 
 From: Nylon Chen <nylon.chen@sifive.com>
@@ -166,7 +166,7 @@ clear hardware/software mismatch that exists in production systems.
  1 file changed, 31 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-index d5b647e6be78..f3694801d3ee 100644
+index eabddb7c7820..2e6253c671df 100644
 --- a/drivers/pwm/pwm-sifive.c
 +++ b/drivers/pwm/pwm-sifive.c
 @@ -4,11 +4,28 @@
