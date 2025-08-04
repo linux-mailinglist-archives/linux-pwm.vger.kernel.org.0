@@ -1,46 +1,46 @@
-Return-Path: <linux-pwm+bounces-6933-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6934-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
-	by mail.lfdr.de (Postfix) with ESMTPS id 559CDB19732
-	for <lists+linux-pwm@lfdr.de>; Mon,  4 Aug 2025 02:25:52 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id ECD4CB197AA
+	for <lists+linux-pwm@lfdr.de>; Mon,  4 Aug 2025 02:29:56 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id C7C937AA5FF
-	for <lists+linux-pwm@lfdr.de>; Mon,  4 Aug 2025 00:24:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AD24A1895BBC
+	for <lists+linux-pwm@lfdr.de>; Mon,  4 Aug 2025 00:30:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F1F214A4F9;
-	Mon,  4 Aug 2025 00:25:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3CA21A2C06;
+	Mon,  4 Aug 2025 00:29:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="khaQpsmp"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GSlbZz6l"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7677E12FF69;
-	Mon,  4 Aug 2025 00:25:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B540184540;
+	Mon,  4 Aug 2025 00:29:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754267138; cv=none; b=U5Y9p9w39uOBjmwK8Vy6Vi840PbehjZB47oyTo4m/+++NjKuMVN6rPfOjS5oGbQNkm0eaIFgnPtJAkobgDW1bCs/x0Uro5uiPAhtU6b7PLC657sTp4CFegQ1mR0N3te96O89hn9MEKR/gUsHwti9t51/vJzX8uvtn4Z+3cK3MVk=
+	t=1754267371; cv=none; b=ElAbmJL7UBWX1RSsCZSxBB3dNhamcR6XAimfay/EV8KTUA6n6IjD3hMLmRUKMa+PWLFjAFQ3nKen4xVCEFkzcCIHPG4DUQN5RQnPDZyYG7MyMxad9YKGDpJCgKY75cxbL2nQmkdH4i2TjFIOpjXGzq3T3hAuGexYTCW8784/P9w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754267138; c=relaxed/simple;
+	s=arc-20240116; t=1754267371; c=relaxed/simple;
 	bh=Bs4/OINydRglnxEUwlgHZgeJZiSHvx3ERL02s0xacnY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=nxfv4OSucy8cSAdnAOel+8vs28vbVJZC+KxZt+rF/wDhNsv1UOZeS526f5rvl1oLUQY+qrRsH6/VbJSC0ucvR+DbI9r64CdUpcGdEz/VVmSxwSGNW9uWoJ2e2PR2sYsMN+V5L5qpM27+56w96E7OOBqnxUFcRtC8GjbE3VVs8mE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=khaQpsmp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 929EDC4CEEB;
-	Mon,  4 Aug 2025 00:25:36 +0000 (UTC)
+	 MIME-Version:Content-Type; b=eSC6U4rUyohoQ9xQjg0W1Ve3SZenJR+PxhC/fO0w1FNtc6f5UoWkZS5wc1WMrAv3KuXJKUeS9CsUJEkSPTScxBybS6b0DENpqfDHbevU+Wj6cP91OmlNCskmBoxOJdkLkcNPxArZ4iFPQXDIezk5+WrVqGoz903RDbo+4/thhIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GSlbZz6l; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C584C4CEF0;
+	Mon,  4 Aug 2025 00:29:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754267138;
+	s=k20201202; t=1754267371;
 	bh=Bs4/OINydRglnxEUwlgHZgeJZiSHvx3ERL02s0xacnY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=khaQpsmp1dDuYUyfGlX5elxwgofbwEx96gSHRdrK4jrndYL9vjLi3uu3GwZCBtdV8
-	 Qx7tkK4e6cvvplnC6Ksez5TkHzPF3b0MrBbtJJBPtizaYZvTGp9QEtLbYA/AnNYeS1
-	 8xPtZ/3L1BJRiWk7p24Lczi8mAcdcCOFqpEs+I6PtwJM7z/R67zZjWZLivg+AiR5bp
-	 Fg3UYP5u22VUmyqAy9jL4hLNYP6v6l2igRXjD7J/YX89EiCvSm19j+Ac6kwb9yWDr5
-	 wH1FbxaQJxeSVvNulCBPf11ROAuz+3YX0a8seAmmBtgDjewC/CwklqbM/rcqLNISRX
-	 VcFFQQE/4jg8w==
+	b=GSlbZz6laP6uI7ZfT7pxHLAhd+1BMcF47idq9mL4qw4ZeGAleplQJ94Iod047ImZt
+	 TFkYbAMtvGsZxtucB2YfJlCTXFl+1Xe17y9MHRPuzvACfX5Jqwkh3E8brQAqyXZ1s1
+	 oEDW7tNNmBoik+Lcj8V0QjeLFdSD8vGAkiAMJ9GEcvTJZLlSvYxHiGpe8GwuLviLGC
+	 pmCxWmALzT82TjrH452nRLo7e1KW0zS9R++YEV/FOBSXXBCtmMtUvYyv8krElj/K/K
+	 cWrL+cypeFqAFrB5zbrXB/kJBzRWdSyuemRa75giQEj1yXJyGovRoLH7VXY7pzdm+R
+	 qghl/g/gVHC3g==
 From: Sasha Levin <sashal@kernel.org>
 To: patches@lists.linux.dev,
 	stable@vger.kernel.org
@@ -53,12 +53,12 @@ Cc: Nylon Chen <nylon.chen@sifive.com>,
 	samuel.holland@sifive.com,
 	linux-pwm@vger.kernel.org,
 	linux-riscv@lists.infradead.org
-Subject: [PATCH AUTOSEL 6.16 41/85] pwm: sifive: Fix PWM algorithm and clarify inverted compare behavior
-Date: Sun,  3 Aug 2025 20:22:50 -0400
-Message-Id: <20250804002335.3613254-41-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.15 40/80] pwm: sifive: Fix PWM algorithm and clarify inverted compare behavior
+Date: Sun,  3 Aug 2025 20:27:07 -0400
+Message-Id: <20250804002747.3617039-40-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250804002335.3613254-1-sashal@kernel.org>
-References: <20250804002335.3613254-1-sashal@kernel.org>
+In-Reply-To: <20250804002747.3617039-1-sashal@kernel.org>
+References: <20250804002747.3617039-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -68,7 +68,7 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.16
+X-stable-base: Linux 6.15.9
 Content-Transfer-Encoding: 8bit
 
 From: Nylon Chen <nylon.chen@sifive.com>
