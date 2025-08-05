@@ -1,238 +1,241 @@
-Return-Path: <linux-pwm+bounces-6960-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6961-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 76F50B1B5EE
-	for <lists+linux-pwm@lfdr.de>; Tue,  5 Aug 2025 16:10:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B661DB1B64F
+	for <lists+linux-pwm@lfdr.de>; Tue,  5 Aug 2025 16:24:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7A7A9188D94F
-	for <lists+linux-pwm@lfdr.de>; Tue,  5 Aug 2025 14:06:14 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 5F519188C9E4
+	for <lists+linux-pwm@lfdr.de>; Tue,  5 Aug 2025 14:25:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B45B274B40;
-	Tue,  5 Aug 2025 14:01:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 457B8274FDB;
+	Tue,  5 Aug 2025 14:24:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b="NvuHngQ8"
+	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="ajjHN4Yp"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from AM0PR02CU008.outbound.protection.outlook.com (mail-westeuropeazon11013058.outbound.protection.outlook.com [52.101.72.58])
+Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazon11011010.outbound.protection.outlook.com [52.101.125.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C69C1448E0;
-	Tue,  5 Aug 2025 14:01:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.72.58
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAD9E2264A0;
+	Tue,  5 Aug 2025 14:24:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.125.10
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754402467; cv=fail; b=V2BT8LMbXVaO/JNFcu/ziF501hoS09B+h5H/IPHHtWt8pDPfzFkafNN8HBBNAxLif4QbZLmd9sa6Eizhu1GT4K04w7HpPMBfSU8/khqKeo4Oz3qMdQU5QbHuZNOzyKlUr0cqurK2aY3XWU3zVysGhPCp2csvLrv5J46xkWvZiGY=
+	t=1754403879; cv=fail; b=asvC0PLstPtGq771j1EgCmmT3mtGzsVyrrXhw57YN8YyYj8tvBDdK3rVVKU8XPyF3OFf519Kgi3m3uEXsq5K44oFn/9NOM5NcHldMi9HE+rOjChEEMnWIIPcfSqB3f7BLsheQTGxIC8oYKXY/Zah1V7axubu8IpOBNGZUipQS04=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754402467; c=relaxed/simple;
-	bh=MgddTAByWmhnXazF6iz0UtyVLTktWBPSVqif1bH6UYw=;
-	h=From:To:CC:Subject:In-Reply-To:References:Date:Message-ID:
-	 MIME-Version:Content-Type; b=pNZ1oC7KKmV5WxHs8MZsW1ceJZw4w+3EobE9eoojn48nDDCd2eCa71UXkQ8BQn9LJ5E7x/wpOz2h3e9wo1+k2HRjarvBVhhVGB0SyjJXJEvDEWKf8fVLyNnmj/L83bTu40Ue9DzBWu5m+w+woNLlsadEKrOo0XqkSV6CNGi4qY0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com; spf=pass smtp.mailfrom=axis.com; dkim=pass (1024-bit key) header.d=axis.com header.i=@axis.com header.b=NvuHngQ8; arc=fail smtp.client-ip=52.101.72.58
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=axis.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=axis.com
+	s=arc-20240116; t=1754403879; c=relaxed/simple;
+	bh=gokSUDDFpx9Nuop/DTS09EU5UpB2VtWkwOhTRsd2gKY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=a3tEUrCrBsg+Fl7xoh3a+kDZAmS4ECbsdiDKj4Bs56tWrEmRtRyA5F6CWqsJOpgcKwSqEn7Spv+fHAkGm20nm4VUvqlfn8qygCFbWvuMDbmv4X9unzic2akkTXBbYtgniePg0+pciGA650HSqyiTvocuQw/Vx9bpnVcM7HUdzNg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=ajjHN4Yp; arc=fail smtp.client-ip=52.101.125.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=gE/ldy0FDTt7IC49M5CbfUyy2b5R6vprrDYK+RoAW8E+2Av20tLRQYxSlFmEVVTNpa7z05sENLfK0pAuYn4A+sZAnK4SATyY89kWo4VwG7NgJyRS0Bxb2Dv86V6Lj/PN6y163jP2UEoNYcRru6CIFuWTxxQyPDOPJ71Z/cR9ABG3TgsKDu7ok4OkgU3nK2a0iHP4FZ5wT070/Gt0QpZa1lkUYcJGU7aEBx1HT2vWQhhJAdnEPPmW9ltJkFJTsHUfrFh5Ut7yy/4nZbvW4dkyQ0gvQIIRS9A2wBZECZ3EAPqG3c4Lql66lDavjyUeSdLjoHApV8t/V9x+Q0g8NXeV0A==
+ b=KYYmB7lEn9d38uYuTSrX8Stmlro5rQHLlBr5aqqo1EfN70Iaib6A82q8dC286jOV9W5wny/7QDZtViZ8gqnO2ZbCRS5fUsvORh+YlVCMBnScy5vfv5w56kUoVUI4ypcACtcgMDgQdU9MGzAhAl42MtiU9ZOH98QelF3jbmkZ9usva5cVIkTDOe2ItPfoArtmHxlZX0dt2CpC5lGGJ62PCdAbcfJ4OxdfY0mT5hWnktFiBHuFWb/W9hCB7oGzfZho2AUy9RoMPUJTWsJ5MlnbZoc/BCMcwSoykRTcCBR/S7evMoGhi30EuARe8WaPFWv+pGExzCaXa/d2R43ifAhxGw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OhrmX+VbZyfEClCyV8Hc7TX19PG0jza5H7iQ8Gy4srE=;
- b=sh3baCP+/AVdRKk3ca6LmgEeiDTvjJRnvtUn3DKHGKRC5c6nXo+Jt3bGY2LYhdKHqU6mzZKVKJzOcXss8Ios8lUMbM1Jo3yW8zeBskijE5aKu34pBu+0uZOhi8D9Ebu6I7XPqq5gOitoYeHP0vTwJS4zc4gNjVjRQR7ugLpFW2UCaTrVewrsmEInu9fv8ccics5zwOVr+O8BpdaYV3fCNYG0y6QRixzMLCpdI3gFZPBKKkRTtq2KdMtcStwpoANouqzhghGKbviaYVmbJ1ywJCc0EGHZ9noHprnDNe+oX71HtFEskaYaCnWSstZdXOZo83+d1z8C6VKNARPIfLRxpQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 195.60.68.100) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=axis.com;
- dmarc=pass (p=none sp=none pct=100) action=none header.from=axis.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=axis.com; s=selector1;
+ bh=UiSOExNiwvx3+YdOjp2HfxVjswtTKaQcHTg2fXNEyLM=;
+ b=Eq+hLG+HzCD7WNNfCM5r22oddVawMcaKH42s5HmD2C1xc1WeeX/HWDyRUGHvbA7BBh773ysIHocra4lMNdcLFGkH/uG/hanRl0A/iUEI8fFmQ7gP7sEH926d5xTvL13mtlP1YSjQA0yutav4PHuSTl3fXFh5vdj4Cw3KfJEDJAr+ZhFiTAA1o3mDX5j7i0lA8lJhAIy2qibQD+L/JgLAXLsSkZ1ckz7el14ioTppeUzJrKKDM+5GKpls6kDlFrDEYbr8hvtkIh5MRbiyY+5gOTyt3oFbLtqrWvfjjIMtah8S19aOaUgBsajJg6HwGjZ4rC5aeczU4I/IsK1VtBXGOw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OhrmX+VbZyfEClCyV8Hc7TX19PG0jza5H7iQ8Gy4srE=;
- b=NvuHngQ81Wju2d3/ohcEpW5o3aQ0028R3YIzUofm3v8XPYB42u1h/EvFclEcA4uDMPIpaKRnsFDWSRNLJhetTKjg65nNrIn99WoOR7Q/XHs/AtHLmV1kBphgRmo5CscwDr0YDwa1/PMOm3O+R3/dZZX/Z7OHv+f73wkSK3Jb61k=
-Received: from AM0PR01CA0118.eurprd01.prod.exchangelabs.com
- (2603:10a6:208:168::23) by AS4PR02MB8670.eurprd02.prod.outlook.com
- (2603:10a6:20b:58d::9) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9009.13; Tue, 5 Aug
- 2025 14:01:02 +0000
-Received: from AMS0EPF000001AF.eurprd05.prod.outlook.com
- (2603:10a6:208:168:cafe::d6) by AM0PR01CA0118.outlook.office365.com
- (2603:10a6:208:168::23) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.8989.20 via Frontend Transport; Tue,
- 5 Aug 2025 14:01:01 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 195.60.68.100)
- smtp.mailfrom=axis.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=axis.com;
-Received-SPF: Pass (protection.outlook.com: domain of axis.com designates
- 195.60.68.100 as permitted sender) receiver=protection.outlook.com;
- client-ip=195.60.68.100; helo=mail.axis.com; pr=C
-Received: from mail.axis.com (195.60.68.100) by
- AMS0EPF000001AF.mail.protection.outlook.com (10.167.16.155) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.9009.8 via Frontend Transport; Tue, 5 Aug 2025 14:01:01 +0000
-Received: from pc52311-2249 (10.4.0.13) by se-mail01w.axis.com (10.20.40.7)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.2507.44; Tue, 5 Aug
- 2025 16:00:48 +0200
-From: Waqar Hameed <waqar.hameed@axis.com>
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-CC: Neil Armstrong <neil.armstrong@linaro.org>, Kevin Hilman
-	<khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, "Martin
- Blumenstingl" <martin.blumenstingl@googlemail.com>, <kernel@axis.com>,
-	<linux-pwm@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
-	<linux-amlogic@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] pwm: meson: Remove error print for
- devm_add_action_or_reset()
-In-Reply-To: <sveurgnigarzdjreweoibcxkkl7rekcpufuwqr7bxcrdx7zdrd@kz4ohstmfyjh>
-	("Uwe =?utf-8?Q?Kleine-K=C3=B6nig=22's?= message of "Tue, 5 Aug 2025
- 15:23:12 +0200")
-References: <pndwm7ikt8v.a.out@axis.com>
-	<sveurgnigarzdjreweoibcxkkl7rekcpufuwqr7bxcrdx7zdrd@kz4ohstmfyjh>
-User-Agent: a.out
-Date: Tue, 5 Aug 2025 16:00:48 +0200
-Message-ID: <pndcy99lvfz.a.out@axis.com>
+ bh=UiSOExNiwvx3+YdOjp2HfxVjswtTKaQcHTg2fXNEyLM=;
+ b=ajjHN4YpvJH2QUm8LJUoc6crNoL9v/BqKdyzrswvWgq9BhDfaNfvpM2foYwCZ6CahbtGglCLvxVxd1zSaagNZiPNMBIf65d3kAxCl65gly58r2S0bkZDTYorxVSd/yhmWO/5XAtanmV1FZ0QLZ7pCQHJSZLkHHj0CBc1h+E3D9k=
+Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com (2603:1096:400:3d0::7)
+ by OS7PR01MB13795.jpnprd01.prod.outlook.com (2603:1096:604:36b::5) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8989.21; Tue, 5 Aug
+ 2025 14:24:30 +0000
+Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com
+ ([fe80::86ef:ca98:234d:60e1]) by TY3PR01MB11346.jpnprd01.prod.outlook.com
+ ([fe80::86ef:ca98:234d:60e1%7]) with mapi id 15.20.9009.013; Tue, 5 Aug 2025
+ 14:24:30 +0000
+From: Biju Das <biju.das.jz@bp.renesas.com>
+To: =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= <ukleinek@kernel.org>, biju.das.au
+	<biju.das.au@gmail.com>
+CC: "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert
+ Uytterhoeven <geert+renesas@glider.be>, Prabhakar Mahadev Lad
+	<prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH] pwm: rzg2l-gpt: Implementation of the waveform callbacks
+Thread-Topic: [PATCH] pwm: rzg2l-gpt: Implementation of the waveform callbacks
+Thread-Index: AQHcBdVEPg25KHxhx0iz4r3b3MOcILRUDcgAgAAOpCA=
+Date: Tue, 5 Aug 2025 14:24:30 +0000
+Message-ID:
+ <TY3PR01MB11346BFFE8362B9B5619AC0658622A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+References: <20250805065032.193766-1-biju.das.jz@bp.renesas.com>
+ <2knipwg44si6rajfcg7e2wxfcjxo625yswkh5v4tsbc4eyvp7r@lhfqj2ngb4rd>
+In-Reply-To: <2knipwg44si6rajfcg7e2wxfcjxo625yswkh5v4tsbc4eyvp7r@lhfqj2ngb4rd>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=bp.renesas.com;
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TY3PR01MB11346:EE_|OS7PR01MB13795:EE_
+x-ms-office365-filtering-correlation-id: 5dfff12d-d1a4-4470-a928-08ddd42bca73
+x-ld-processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|366016|376014|38070700018;
+x-microsoft-antispam-message-info:
+ =?iso-8859-1?Q?By4MbdE2I+LPRf8IJg3mXW2phYc4SqBRLcQ3GfIi2QyHUP+Litu/GzU8TW?=
+ =?iso-8859-1?Q?8QjS7PmD/q8xQNuIjqgjL/hlB1X+ktGdegFYEP9Y7CDUUQQh/4NI/e2+w8?=
+ =?iso-8859-1?Q?j2GrrMxVwxPwrh9B5NihDX508LSAg7oIOge9EAdVmBCKpscV3jTL63vcvx?=
+ =?iso-8859-1?Q?5Gzcv7twNT2bZ3UA9ZHFqW8wrQu6DpBfczP8rqPRoC3z0J+bueUwAODi0n?=
+ =?iso-8859-1?Q?LzeV4mbU3F8h8xQU+ZEGtD3pb9UEAi0EO58cufMer07XDY+qpn6LKuviAc?=
+ =?iso-8859-1?Q?25xlYDvIEQLuuiPr4EeHYO35ZP0BxGNy6NmiURO96rNqfKQ0lupnuCDWUb?=
+ =?iso-8859-1?Q?Jf63tRVNEnI1lX5xCYAlNoWTdBs37eOdytXdGdV+IQKFCI9W9rjFdsC8E1?=
+ =?iso-8859-1?Q?qbMTlOZ2ahZ3fUaV66QIcgSuDyCWFWRxBm1qC32GZiCmYJsHI8FRPzwjs9?=
+ =?iso-8859-1?Q?HAe+qmgKKyY0GSlmvot1/3MohqkbLW/wKCCJ5kBFB2lFcJgB/BBw6zwmwv?=
+ =?iso-8859-1?Q?7xhvv+rlyaEFQ+UxaZ+Nq94vKMQWVOCSKo62j9bbbT66l3wpUskNkujGKo?=
+ =?iso-8859-1?Q?TmXL0yOfzzaa0Z/zP9fQm2a1QeHY2rMaLBAjUMtZ5giPKyjC1+6WNds/hd?=
+ =?iso-8859-1?Q?NdFX3QcHiofsmk5G/pFe6h2k5bexquk6sA4sHUXZEt/bcqH4D/roC74Ow3?=
+ =?iso-8859-1?Q?Nk/oaPJL2F/tjL/Ao/aIDI86J7hiIIcK59UCHtQVceYEiDz48QNrplJxQW?=
+ =?iso-8859-1?Q?85YBEXmjbpw3SXR+3KYwr2mw0UjtyJsspFb473Uc4BZ2K/VBzciTVX99J3?=
+ =?iso-8859-1?Q?cHt4tsc57LxnCPzQdQuqwAboeVWPVK1PufnJwI96qEWPscK7Wn8+F9bXrG?=
+ =?iso-8859-1?Q?gAVPhTIqbfBna2vq3c58z5oI0Jx7+np1XiqtHSdZzZCGg0WmR7IFCq0Qx3?=
+ =?iso-8859-1?Q?bf89HMauKopkpYgxIUoKraSE/VRB0/8ZdGFIUAFJhPKJQJy6Ot6iWbWxkk?=
+ =?iso-8859-1?Q?bsevsbHCMaigtUi1XAcO0DBJsfinhujC9YHUMM6fuGsawykgmPQVQ8E0hD?=
+ =?iso-8859-1?Q?2k4+RlNL/PgthnhCzgxx2cb4YER9x1uc1rVPHofRaJY0VlwsUPW1hSWZ3m?=
+ =?iso-8859-1?Q?L7wQ104hztNldQr1PkZ2V1FznO1RDGgeNE976AtbDp2NgiW3YZc7Qgimtk?=
+ =?iso-8859-1?Q?71BQxqSU3dU2bGwpCZPtJe19ce1R5lBWQSqDBitk0ixmOGIDrRppUW5JHg?=
+ =?iso-8859-1?Q?A9oRCL4S9PWZ3UINqWIG8Kr346QG50j975UK6EBPEuqB8d3iJY/HCT3WFZ?=
+ =?iso-8859-1?Q?rJXp2YbPDU85ZDJ4sS9L0Q6F93PVbUYLu2q9w01kRzzSRaHp7tWTo5Lgcs?=
+ =?iso-8859-1?Q?VcalXgVwvs29W4rDn8wJFAxLZ2H8ItqP30l3pNjKgDpQEAnqrt3K6UJrA5?=
+ =?iso-8859-1?Q?+4Co/4wRvFvOM1eWHR+Ol1FnyOxpEQSn08K30SqNktbVs3w9xfUmDW5SgT?=
+ =?iso-8859-1?Q?fYECsWZmEfXYKKEv2bYY96J7nbUgVmcUiH0XNQmaEC3cjrpHlG/Bx49ag8?=
+ =?iso-8859-1?Q?X8d+h7M=3D?=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY3PR01MB11346.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(38070700018);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?DdAUDBP6NlIQN2Rnr2+5uJ/Aoz4KcvOBTzOgBQdzYdNfKVWCvAgZ/M/d4Z?=
+ =?iso-8859-1?Q?7COgSPc31WbeC0/bGzo26xRxFjq4t/0EJdv8tH1XR2MMpdaS/30NG0j7DR?=
+ =?iso-8859-1?Q?LNtJaRGqCokrYZznMr4PE/3FBDS0R2n7EjXDToJGTOh7hoSsnIu1+qe3JB?=
+ =?iso-8859-1?Q?O89qkk8xulY+HV1K/qZRjz2CbladdaK6j2RrzNrTkNLk8ohQTjeiiCfkx3?=
+ =?iso-8859-1?Q?sNnpFc3KQyse8sMWBGEhvaE9wMzChzwMjl6MonNZBls19lRvtIn8VQW+vH?=
+ =?iso-8859-1?Q?JKjtjZAM+HQnVCxzRkJqd2SfuEVmttB/ZvSjxcrDRyTrGVbzgzEGRHiEvZ?=
+ =?iso-8859-1?Q?Bm+49+J/WTwEaSs6/9ntNeltQL7ejfXd2XnI8XZYWLVIBeQrB4CTt5V3qs?=
+ =?iso-8859-1?Q?RuoDjlIJOrzhi11Op6LIfUQH7PYTyRrmRDqzWo42VHy0bCyqnqEVFkqxYs?=
+ =?iso-8859-1?Q?o1QMG62cnm0d5/PVTXgyGFeGKLDTm2xUSx3BZ966ce/5H9dn0BRxvO61lT?=
+ =?iso-8859-1?Q?ky1/Ipc3TywrDoAkGIfsrB/X5kcaC75qOgfHk9xYurP/0VtZaNHbqEtq/w?=
+ =?iso-8859-1?Q?TBgq2cVOH8k7AGbqBV1+/9S//56IekeRlVI5hmfpfF+gKvJ8ZFBhSv7nxc?=
+ =?iso-8859-1?Q?PrmWkgdNAYZXY6lthIVTx5TJZy6sB63fkXjAWI6WGiaLrt6WvjOZ8FHjGq?=
+ =?iso-8859-1?Q?xjXD6kajECk9oUIO6P/1yC0RfVxn8NpVGTa2pnGQa6nZrlXkAY8O0HE8Aj?=
+ =?iso-8859-1?Q?qDaEkCVtEIgQPjCwwpjiLPwST5tSCzVdSEQNp+5LWZNvWvOb1uNrpl63Cr?=
+ =?iso-8859-1?Q?ad1cd7f4G/5zmUVSpDqoi8LYvkc6BeQtCzldYJyT4F5v5E8LOPVy/spty6?=
+ =?iso-8859-1?Q?714Pp6knthJA0IG7FAZh7b6B+WCW82g3b5FBERw+e9whEoEV2Q8m80rwMt?=
+ =?iso-8859-1?Q?Guf8CDGCGX5VxMdzh9Rl+id7u69BaTqmK+N0tIv/OtLyBaDqB9MX8DB3QM?=
+ =?iso-8859-1?Q?5AGhwqwx5Vm1ikXpGMhQARdHRqbKtm22ofzWlFBi0uQELrIYoOL8O6HkZC?=
+ =?iso-8859-1?Q?CUi9xgSNp2g5/5DyeIOXuXVUW3+1qfCBXBxN3r9b/IgJq9DcIxOAcN143U?=
+ =?iso-8859-1?Q?0tpNAgeslJrrel7Xqm5eFhrwbGsJIgsVeUmWY0cJgo6wFFzJY/AMakQ1lb?=
+ =?iso-8859-1?Q?J6sGollNGEQuUWxHYBRzJXl6c7f9cO3II1YrA2WW0H1y585J35aIe8dGQ4?=
+ =?iso-8859-1?Q?+YZBV0OqTBJEYV3Syf5U2LX3lxU1/luQfNbjBVPiI316qCTApoyuykfNub?=
+ =?iso-8859-1?Q?1ewuQTpJ3lTholJwInAwcOPayHYSfY0zaXrqLKGG6Lz0QoAFrjmBr7/Dpx?=
+ =?iso-8859-1?Q?i60gWTRmLaJSj5QtmzdAFRxV4bhQ+2fCD8wcxEEAxKbmVgbuBzqcTYAF6I?=
+ =?iso-8859-1?Q?qI83O5JtTCvbhJPAMdUcr7s4cbT1lPklgaDXUIw/gsj3OANTkvLSUe8vb0?=
+ =?iso-8859-1?Q?mIeNb65wBwKitbEsfBaLbAWoJZh8tazYylDqXkJCxMdcLH+uo1TxJEeuaD?=
+ =?iso-8859-1?Q?t436UXPUKYsj2KSv625Cc5UzgsKkNlxSES9HEVoNo4FsbiyAH3XJZg0bdx?=
+ =?iso-8859-1?Q?JdTxUKLPEGGiO8Nw+dXm6TF0pjMYYqi2w9TAxrqt10WdIkyLdd5gcWpg?=
+ =?iso-8859-1?Q?=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-ClientProxiedBy: se-mail02w.axis.com (10.20.40.8) To se-mail01w.axis.com
- (10.20.40.7)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AMS0EPF000001AF:EE_|AS4PR02MB8670:EE_
-X-MS-Office365-Filtering-Correlation-Id: 459f408e-5f37-4d04-4919-08ddd428829e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|1800799024|376014|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?WFJmdXRmMEVKMDI5M2RLcVpYY09PUEFsMnlrRS9PV2VlMEp4UDk5cHFrUTl1?=
- =?utf-8?B?UHVyQ0JkTVRpSlBzRDV3QTR5alJ0S0ljK0pCWUFXYkJ3NTR3eUw1TXRWWjg5?=
- =?utf-8?B?U3RUbExhcGd0djZSSnNtVWJIa21kYnVJZmd4OU9oclZqdWNFTjdsRDVvNnVw?=
- =?utf-8?B?Z0dBTFJnam5JSnRIMjArSWdYWTBvdlRhS0p0enlHM1cxbGRpbnlOWTFnQzBY?=
- =?utf-8?B?WXUzRmp4ZUlyQ05VNlRBVTBzU1ZJNVVrZUF4U3ViZVIzNjNIMUpPRDl6dElu?=
- =?utf-8?B?dmh5RTUrQnJMclAwcDZDUzFKTlcwUmxCL1pBanhNV2RIOStUT1A3MlNvQkEy?=
- =?utf-8?B?SG9xZHFVY3Y0N0ttSmI4MnJBRXZKY2daOG5pQllVZ3lGNTA4WG5zTDAyMVps?=
- =?utf-8?B?SjZhOE5mb2h2cm04QnJEelJOeWFyVGo3UlFZejFpK040T3g3S1lZaEx3UytJ?=
- =?utf-8?B?SnFZZy9Wd0pQMW90SUVKQjVZZTYyeGxYVG95MFlqaUtHM0M1WkkzZVllRlhv?=
- =?utf-8?B?MkZuamE2b0JUVFlPUFhhekJ5MlRhaE9TS3k4WmhLTnB2L2xvRzQ4SGxOL3hj?=
- =?utf-8?B?M2RBL3ZRQUdKL0RnVGNBTUxNYXR2WS9XdDJnZ0xrdCtSMWVscE5wVkZabGpv?=
- =?utf-8?B?L2IreGkrRFFpU05GTG9jdUR3eHNPNmltcm9DVHhrajFiSmlqU2JWZ1d3eDdK?=
- =?utf-8?B?MXBDb2ZOdFBCWjJ6STl5dXZPK3BzbEhWY2VNMlB2TmljZTJHNFpaUmNrVHJZ?=
- =?utf-8?B?OFl5Rm1FdHVuaDFPaEUweVpqWTdJTlJMN0k0dGI3VXlJTGVhUC81T2gyNjhJ?=
- =?utf-8?B?cGVEb0tYZ2pPdDQ2LzhjMU1oaTYxUDYySnRnanV4THc3eTBCYVlqMi8rT0NQ?=
- =?utf-8?B?UmpqL1ZCWThLZXZQTjRrYWxVYzNZWmZ5ZWVxbENzS0tmbUxHd3h1MGorWEdK?=
- =?utf-8?B?MVhxdFZpTkVKMzJjS3NhMUN1NTlxRWlLQmlHWGthMk1PNGU1eXROVythRjhF?=
- =?utf-8?B?UDYvaTRhTGxDeTVVMXFzVHJOYzBkOENWQ2hGVkFqSW9KQytEeHhvWW4yNUtP?=
- =?utf-8?B?OWV5eFhDZUF3ZlR0U1VxNmNOT2xWUXY3MThIVGhDc0NwQnpOVFh1VXZXNGNi?=
- =?utf-8?B?bHAvYlpMTkVMOU9LcXpJR1VmdWJOcWIrZS9HTEdZY3NGeG5USjJ2ZXZrZXJH?=
- =?utf-8?B?VUxUWkZLVnh1ZEhsN2FhNnBGQ3J3eFM3Ni90R1czYkROck9nVzBHYkZ4SWk1?=
- =?utf-8?B?NW95a2NOYVMvTEJCNHMxUkVMblZoblZiTEF6TW15Sjltc3hOMkdOZGtmU0lU?=
- =?utf-8?B?OGZ5TlQxV0xKU1FyWUxPa2pab3NkbklTdXR6dmg1REpsV0JmU0VqU1V5UmNt?=
- =?utf-8?B?dkpzRmpFRnJlZ21FNGozLzFUYUZwRnUvOHFUSkVxRS9NbWxUOVJjR1B1QWlu?=
- =?utf-8?B?eGZxTm5QVENEdEtoeDBWYWZFUXlPTXlLYWR5YzNuUDNYK01OV2ZJaWIwNDR1?=
- =?utf-8?B?ODFDcE15cWFySVVnZVVBWFkvb0hydFRDek41VGF4UTZnUFhodXM4VnJlV1FP?=
- =?utf-8?B?ZnYxNFM4NDJwaUpkUFNvdUcwU2NjcTBiQXlRZlFiZEFJSTRDMDh1dSt0aWNp?=
- =?utf-8?B?S05nVnhtQXJ4S2MzOERERStncjBRMmtUZVpRSjdFbnJ6ZDRvbXdSYWRGYVZp?=
- =?utf-8?B?ZUFqUkpRRUFUTXdsUGh0dVROYU8vQ2NtOFFFajgzdkZZa042aXNpejFCVlNS?=
- =?utf-8?B?My9vaVdxVldmSGROdXhEYnJQM2MyaVRLU3d0RlVZY1VET0ZEaGdld1Zla3Rx?=
- =?utf-8?B?bFU2OVcrekVIR3JoZGRpTVVBQkNIWG5CbjJFTmlxTlVkVFVKeGthdENqRm05?=
- =?utf-8?B?QWZRN1A2QW1iakhPa0w1R0laYUxmMEtmSCtVMGQzWENDSVdkMkxJU1JVUmtu?=
- =?utf-8?B?NHZxcnoyVWhhQmVpbmE2UEN3N3UxWnR3YjV2N1NEY2pzOWR6dVBtZFhFdXl4?=
- =?utf-8?B?b2dvWUdtQUNBPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:195.60.68.100;CTRY:SE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.axis.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(1800799024)(376014)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: axis.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Aug 2025 14:01:01.1246
+X-OriginatorOrg: bp.renesas.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: TY3PR01MB11346.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5dfff12d-d1a4-4470-a928-08ddd42bca73
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Aug 2025 14:24:30.1599
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 459f408e-5f37-4d04-4919-08ddd428829e
-X-MS-Exchange-CrossTenant-Id: 78703d3c-b907-432f-b066-88f7af9ca3af
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=78703d3c-b907-432f-b066-88f7af9ca3af;Ip=[195.60.68.100];Helo=[mail.axis.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AMS0EPF000001AF.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AS4PR02MB8670
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +54bLPIbeBxZuxnB4Yy6b8CA3H4Oss+tV51yoPHmusrIfQ5XD9/Ygl1BzOHcN/BMED/JgaUAgcIC+r1mU5+Y1yrvF/8N9FRqSZp86URhOBY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OS7PR01MB13795
 
-On Tue, Aug 05, 2025 at 15:23 +0200 Uwe Kleine-K=C3=B6nig <ukleinek@kernel.=
-org> wrote:
+Hello Uwe,
 
-> Hello Waqar,
->
-> On Tue, Aug 05, 2025 at 11:33:36AM +0200, Waqar Hameed wrote:
->> When `devm_add_action_or_reset()` fails, it is due to a failed memory
->> allocation and will thus return `-ENOMEM`. `dev_err_probe()` doesn't do
->> anything when error is `-ENOMEM`. Therefore, remove the useless call to
->> `dev_err_probe()` when `devm_add_action_or_reset()` fails, and just
->> return the value instead.
->>=20
->> Signed-off-by: Waqar Hameed <waqar.hameed@axis.com>
->> ---
->> Changes in v2:
->>=20
->> * Split the patch to one seperate patch for each sub-system.
->>=20
->> Link to v1: https://lore.kernel.org/all/pnd7c0s6ji2.fsf@axis.com/
->>=20
->>  drivers/pwm/pwm-meson.c | 3 +--
->>  1 file changed, 1 insertion(+), 2 deletions(-)
->>=20
->> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
->> index 8c6bf3d49753..e90d37d4f956 100644
->> --- a/drivers/pwm/pwm-meson.c
->> +++ b/drivers/pwm/pwm-meson.c
->> @@ -520,8 +520,7 @@ static int meson_pwm_init_channels_s4(struct pwm_chi=
-p *chip)
->>  		ret =3D devm_add_action_or_reset(dev, meson_pwm_s4_put_clk,
->>  					       meson->channels[i].clk);
->>  		if (ret)
->> -			return dev_err_probe(dev, ret,
->> -					     "Failed to add clk_put action\n");
->> +			return ret;
->
-> On the other hand the call to dev_err_probe() also doesn't hurt, right?
-> And when we keep it, it is clear that this error path is correctly
-> handled without having to know that devm_add_action_or_reset() can only
-> return success or -ENOMEM and we don't have to watch
-> devm_add_action_or_reset() to not grow something like
->
-> diff --git a/include/linux/device/devres.h b/include/linux/device/devres.h
-> index ae696d10faff..0876cce68776 100644
-> --- a/include/linux/device/devres.h
-> +++ b/include/linux/device/devres.h
-> @@ -156,6 +156,9 @@ static inline int __devm_add_action_or_reset(struct d=
-evice *dev, void (*action)(
->  {
->  	int ret;
->=20=20
-> +	if (IS_ERR_OR_NULL(dev))
-> +		return -EINVAL;
-> +
->  	ret =3D __devm_add_action(dev, action, data, name);
->  	if (ret)
->  		action(data);
->
-> From a subsystem maintainer's POV it would be great if it was easy to
-> notice if a given function needs an error message or not. One excellent
-> way to cover functions that can only return -ENOMEM on failure is to
-> optimize out the small overhead of the devm_add_action_or_reset() call.
->
-> See
-> https://lore.kernel.org/all/ylr7cuxldwb24ccenen4khtyddzq3owgzzfblbohkdxb7=
-p7eeo@qpuddn6wrz3x/
-> for a prototype of what I imagine. Oh, you were the addressee of that
-> mail, so you already know.
->
-> To make my position here explicit: This is a nack.
+> -----Original Message-----
+> From: Uwe Kleine-K=F6nig <ukleinek@kernel.org>
+> Sent: 05 August 2025 14:28
+> Subject: Re: [PATCH] pwm: rzg2l-gpt: Implementation of the waveform callb=
+acks
+>=20
+> Hello Biju,
+>=20
+> On Tue, Aug 05, 2025 at 07:50:23AM +0100, Biju wrote:
+> > From: Biju Das <biju.das.jz@bp.renesas.com>
+> >
+> > Convert the rzg2l-gpt driver to use the new callbacks for hardware
+> > programming.
+>=20
+> You picked a great project!
 
-I fully understand your point and agree that there should not be a
-mental burden of knowing the exact return values from a function. That
-should be handled automatically, e.g. by the compiler or other tools.
+I started working on adding PWM support for new SoC RZ/G3E.
+Plan is to add new SoC with wf callback support.
 
-There was no real consensus in the previous thread (Jonathan Cameron
-even CC:ed some checkpatch-people to get some input for automatic
-detection from tools, but with no response). I hope that we can have
-some good way of solving these in the future, because this currently
-doesn't scale well and I'm fairly sure another driver in the future will
-hit this exact situation again...
+>=20
+> > +static int rzg2l_gpt_round_waveform_tohw(struct pwm_chip *chip,
+> > +					 struct pwm_device *pwm,
+> > +					 const struct pwm_waveform *wf,
+> > +					 void *_wfhw)
+> > +
+> >  {
+> >  	struct rzg2l_gpt_chip *rzg2l_gpt =3D to_rzg2l_gpt_chip(chip);
+> > -	u8 sub_ch =3D rzg2l_gpt_subchannel(pwm->hwpwm);
+> > +	struct rzg2l_gpt_waveform *wfhw =3D _wfhw;
+> >  	u8 ch =3D RZG2L_GET_CH(pwm->hwpwm);
+> >  	u64 period_ticks, duty_ticks;
+> >  	unsigned long pv, dc;
+> > -	u8 prescale;
+> > +
+> > +	guard(mutex)(&rzg2l_gpt->lock);
+> > +	if (wf->period_length_ns =3D=3D 0) {
+> > +		*wfhw =3D (struct rzg2l_gpt_waveform){
+> > +			.gtpr =3D 0,
+> > +			.gtccr =3D 0,
+> > +		};
+> > +
+> > +		if (rzg2l_gpt_is_ch_enabled(rzg2l_gpt, pwm->hwpwm))
+> > +			rzg2l_gpt_disable(rzg2l_gpt, pwm);
+>=20
+> This is wrong. the .round_waveform_tohw() callback isn't supposed to modi=
+fy hardware. It's only
+> supposed to tell the caller about the current possibilities of the corres=
+ponding device.
+
+OK, will move it to write_waveform().
+
+>=20
+> > +		return 0;
+> > +	}
+> >
+> >  	/* Limit period/duty cycle to max value supported by the HW */
+> > -	period_ticks =3D mul_u64_u64_div_u64(state->period, rzg2l_gpt->rate_k=
+hz, USEC_PER_SEC);
+> > +	period_ticks =3D mul_u64_u64_div_u64(wf->period_length_ns,
+> > +rzg2l_gpt->rate_khz, USEC_PER_SEC);
+> >  	if (period_ticks > RZG2L_MAX_TICKS)
+> >  		period_ticks =3D RZG2L_MAX_TICKS;
+> >  	/*
+>=20
+> Otherwise it looks good from a quick glance.
+
+Thanks for the quick feedback.
+
+Cheers,
+Biju
 
