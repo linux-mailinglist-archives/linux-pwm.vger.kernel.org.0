@@ -1,57 +1,55 @@
-Return-Path: <linux-pwm+bounces-6958-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6959-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3BBA8B1B4D2
-	for <lists+linux-pwm@lfdr.de>; Tue,  5 Aug 2025 15:23:19 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 01CD0B1B4E2
+	for <lists+linux-pwm@lfdr.de>; Tue,  5 Aug 2025 15:27:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 578FE182B2E
-	for <lists+linux-pwm@lfdr.de>; Tue,  5 Aug 2025 13:23:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C0A27189B7D2
+	for <lists+linux-pwm@lfdr.de>; Tue,  5 Aug 2025 13:28:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1080F2749DA;
-	Tue,  5 Aug 2025 13:23:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E970D274B40;
+	Tue,  5 Aug 2025 13:27:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MppPOKAE"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BH/jGQYw"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA35C2749C4;
-	Tue,  5 Aug 2025 13:23:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDDA41400C;
+	Tue,  5 Aug 2025 13:27:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754400196; cv=none; b=FGJDQhQ3w3F+X0GWRQ1SpD1nkScQJU/3lW4EH04QmpVmuzo34geMNM8xphjnJ7GgAVsyz2vVMHbhhGXo+Cdxj5m0BzDx1ur7Cy/7fo+ROSiHXNPvTYwJLIuk2nGXaMHIMtYXHI7j3+AcGXG1wUOUT5PID8Pinw8gkk3xUPUXeq8=
+	t=1754400467; cv=none; b=C9jczas1nirB2sLSCiXFzBykZdTiu3uLzJErAuFcSVnMev1Tp1WB/tIpqlF9KNLe7lQpsa2ffl4+hrWLgfblOaInpWH6wjfA5oehJGv5C8qAe31v4mzJr8LhAw9JJ7YhPy9EfWFAAMjX39go0xdxRfWT76bo8McpCBWHI45+xRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754400196; c=relaxed/simple;
-	bh=4XpKY+hrV//JqY5IB0jEGLiEF04z3a1ypjzN/Ip/ON0=;
+	s=arc-20240116; t=1754400467; c=relaxed/simple;
+	bh=8rLlAX3+dqUHfqBBIfUFx5jRN9zh7Gy3FuWRWSIWhIA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=SKONJF7B+hWiPVqNU9ZiF6K4yprxvP05kQUs4OleJbRXE9RPPUS52WdiP3Hd0JVvsf/OvtMtQMvTwUg5LM13VLPvP1n2lZOEnQ3X9og5f6NYToCQwgOtMSUNkUAVqjvTkqVbOVTBtl6z1ERVFD+G8csC1LjwNN1vUpXK/iPJTFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MppPOKAE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3BF7C4CEF0;
-	Tue,  5 Aug 2025 13:23:14 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=SNBe9eWaHifF3CAMyiSaVfooqiuwBoGXY+316NgQAxCZSGx21PJHhsTnpwBT4Kw2VecOjs4Ugte3QDIgK6aGH9/cXHN+wM45riIZZcDkC8oMUyhFcszPJ1eZlNcuWzlKpjpeEaUgmjOwGQyDJxtF3lGA+nJNAyDXHyfQcfVLLsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BH/jGQYw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C499DC4CEF0;
+	Tue,  5 Aug 2025 13:27:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754400195;
-	bh=4XpKY+hrV//JqY5IB0jEGLiEF04z3a1ypjzN/Ip/ON0=;
+	s=k20201202; t=1754400467;
+	bh=8rLlAX3+dqUHfqBBIfUFx5jRN9zh7Gy3FuWRWSIWhIA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MppPOKAETMD/BqZRdpVGHGh0jhnuJMh9KObQqr9IRR1G0wYcPe5YUe9bHfzOlG4po
-	 0SC44ly+aXPz/iMhRAM5yj4RkanAgvRO5IZ7sgNigcRJPM4OQ/ESdBLOs4DAbhmL4g
-	 nUVo8lRu4XRj+P19miwzQjWyepxUCuvk3y8h80yJz65ZWG8Mm7sZ+X1+hJV6gOgLWC
-	 XNLxrSVOcVAPGnQvDiAOOcB9UoLHf32eYEwBwriug0ierfD3VZolCZi3bwghbnfj6d
-	 fNdpad2Brd5jze6/lOtyc/y/7NyN+WXKvz1UzmkWGSOGIbB/Ay1LC9Krj1GH20Nq6d
-	 8udjMyFgWLOCw==
-Date: Tue, 5 Aug 2025 15:23:12 +0200
+	b=BH/jGQYwfVH1MhDTMAS/PFuRvDFrcAQQDxafjmkHd/y5RFK5AT+aNz/BT3b2RLtW1
+	 tHCAq4Gknck/q+5R4pdb7adeW5duDY4nak1zi4Pa93EvRqNt22K3feh/05hgN0u2bZ
+	 T4Z/UOnlrcwVUgBVkKFLEINlhSrzacX88wIBjYcJJoaP+z5btueIC/2xk1pwU4Fjzx
+	 N80fx+t7WuHOrpO8SlNsOG5T5SDCAIaw8YT/+yMc5CZqcponH2VdfY2/9i+owqm/o4
+	 5Cu+Wv/NfnrVRvPq3jo70g03rwDbvfIcy/s84eZN2mhXWnt96RemQhPkOyhC4PBkaL
+	 YL5aLTTIG5nFQ==
+Date: Tue, 5 Aug 2025 15:27:44 +0200
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Waqar Hameed <waqar.hameed@axis.com>
-Cc: Neil Armstrong <neil.armstrong@linaro.org>, 
-	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, kernel@axis.com, linux-pwm@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] pwm: meson: Remove error print for
- devm_add_action_or_reset()
-Message-ID: <sveurgnigarzdjreweoibcxkkl7rekcpufuwqr7bxcrdx7zdrd@kz4ohstmfyjh>
-References: <pndwm7ikt8v.a.out@axis.com>
+To: Biju <biju.das.au@gmail.com>
+Cc: Biju Das <biju.das.jz@bp.renesas.com>, linux-pwm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH] pwm: rzg2l-gpt: Implementation of the waveform callbacks
+Message-ID: <2knipwg44si6rajfcg7e2wxfcjxo625yswkh5v4tsbc4eyvp7r@lhfqj2ngb4rd>
+References: <20250805065032.193766-1-biju.das.jz@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -59,104 +57,87 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="qpe4lsz3c3n5r2b5"
+	protocol="application/pgp-signature"; boundary="mheqiwwcjq62v4lb"
 Content-Disposition: inline
-In-Reply-To: <pndwm7ikt8v.a.out@axis.com>
+In-Reply-To: <20250805065032.193766-1-biju.das.jz@bp.renesas.com>
 
 
---qpe4lsz3c3n5r2b5
+--mheqiwwcjq62v4lb
 Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2] pwm: meson: Remove error print for
- devm_add_action_or_reset()
+Subject: Re: [PATCH] pwm: rzg2l-gpt: Implementation of the waveform callbacks
 MIME-Version: 1.0
 
-Hello Waqar,
+Hello Biju,
 
-On Tue, Aug 05, 2025 at 11:33:36AM +0200, Waqar Hameed wrote:
-> When `devm_add_action_or_reset()` fails, it is due to a failed memory
-> allocation and will thus return `-ENOMEM`. `dev_err_probe()` doesn't do
-> anything when error is `-ENOMEM`. Therefore, remove the useless call to
-> `dev_err_probe()` when `devm_add_action_or_reset()` fails, and just
-> return the value instead.
+On Tue, Aug 05, 2025 at 07:50:23AM +0100, Biju wrote:
+> From: Biju Das <biju.das.jz@bp.renesas.com>
 >=20
-> Signed-off-by: Waqar Hameed <waqar.hameed@axis.com>
-> ---
-> Changes in v2:
->=20
-> * Split the patch to one seperate patch for each sub-system.
->=20
-> Link to v1: https://lore.kernel.org/all/pnd7c0s6ji2.fsf@axis.com/
->=20
->  drivers/pwm/pwm-meson.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->=20
-> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-> index 8c6bf3d49753..e90d37d4f956 100644
-> --- a/drivers/pwm/pwm-meson.c
-> +++ b/drivers/pwm/pwm-meson.c
-> @@ -520,8 +520,7 @@ static int meson_pwm_init_channels_s4(struct pwm_chip=
- *chip)
->  		ret =3D devm_add_action_or_reset(dev, meson_pwm_s4_put_clk,
->  					       meson->channels[i].clk);
->  		if (ret)
-> -			return dev_err_probe(dev, ret,
-> -					     "Failed to add clk_put action\n");
-> +			return ret;
+> Convert the rzg2l-gpt driver to use the new callbacks for hardware
+> programming.
 
-On the other hand the call to dev_err_probe() also doesn't hurt, right?
-And when we keep it, it is clear that this error path is correctly
-handled without having to know that devm_add_action_or_reset() can only
-return success or -ENOMEM and we don't have to watch
-devm_add_action_or_reset() to not grow something like
+You picked a great project!
 
-diff --git a/include/linux/device/devres.h b/include/linux/device/devres.h
-index ae696d10faff..0876cce68776 100644
---- a/include/linux/device/devres.h
-+++ b/include/linux/device/devres.h
-@@ -156,6 +156,9 @@ static inline int __devm_add_action_or_reset(struct dev=
-ice *dev, void (*action)(
- {
- 	int ret;
-=20
-+	if (IS_ERR_OR_NULL(dev))
-+		return -EINVAL;
-+
- 	ret =3D __devm_add_action(dev, action, data, name);
- 	if (ret)
- 		action(data);
+> +static int rzg2l_gpt_round_waveform_tohw(struct pwm_chip *chip,
+> +					 struct pwm_device *pwm,
+> +					 const struct pwm_waveform *wf,
+> +					 void *_wfhw)
+> +
+>  {
+>  	struct rzg2l_gpt_chip *rzg2l_gpt =3D to_rzg2l_gpt_chip(chip);
+> -	u8 sub_ch =3D rzg2l_gpt_subchannel(pwm->hwpwm);
+> +	struct rzg2l_gpt_waveform *wfhw =3D _wfhw;
+>  	u8 ch =3D RZG2L_GET_CH(pwm->hwpwm);
+>  	u64 period_ticks, duty_ticks;
+>  	unsigned long pv, dc;
+> -	u8 prescale;
+> +
+> +	guard(mutex)(&rzg2l_gpt->lock);
+> +	if (wf->period_length_ns =3D=3D 0) {
+> +		*wfhw =3D (struct rzg2l_gpt_waveform){
+> +			.gtpr =3D 0,
+> +			.gtccr =3D 0,
+> +		};
+> +
+> +		if (rzg2l_gpt_is_ch_enabled(rzg2l_gpt, pwm->hwpwm))
+> +			rzg2l_gpt_disable(rzg2l_gpt, pwm);
 
-=46rom a subsystem maintainer's POV it would be great if it was easy to
-notice if a given function needs an error message or not. One excellent
-way to cover functions that can only return -ENOMEM on failure is to
-optimize out the small overhead of the devm_add_action_or_reset() call.
+This is wrong. the .round_waveform_tohw() callback isn't supposed to
+modify hardware. It's only supposed to tell the caller about the
+current possibilities of the corresponding device.
 
-See
-https://lore.kernel.org/all/ylr7cuxldwb24ccenen4khtyddzq3owgzzfblbohkdxb7p7=
-eeo@qpuddn6wrz3x/
-for a prototype of what I imagine. Oh, you were the addressee of that
-mail, so you already know.
+> +		return 0;
+> +	}
+> =20
+>  	/* Limit period/duty cycle to max value supported by the HW */
+> -	period_ticks =3D mul_u64_u64_div_u64(state->period, rzg2l_gpt->rate_khz=
+, USEC_PER_SEC);
+> +	period_ticks =3D mul_u64_u64_div_u64(wf->period_length_ns, rzg2l_gpt->r=
+ate_khz, USEC_PER_SEC);
+>  	if (period_ticks > RZG2L_MAX_TICKS)
+>  		period_ticks =3D RZG2L_MAX_TICKS;
+>  	/*
 
-To make my position here explicit: This is a nack.
+Otherwise it looks good from a quick glance.
 
 Best regards
 Uwe
 
---qpe4lsz3c3n5r2b5
+--mheqiwwcjq62v4lb
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmiSBb0ACgkQj4D7WH0S
-/k7uTAf+IV4xlBSvJged2+TaatRIHPURN3SCK5I88TP02Cl5uM6b7hApBTqA8Ypd
-g3faAO9lFQSRxGgQ7s8VAOsXAMJbmYzc0yFsAANBo1Nx587Q9QA/sVHFNhWPF/hs
-v0wUECR915RNR3BgakctzGvtF4aS99tCgkVS8DszU4ngP9ZYtqqHi6vztBHrZgA4
-61kveQRsL2xsBv//xmoN5cDtmcns2Gr7nAC3G+8lgq/kkSWiJ6BKMhpi1Tvz/2T0
-XagBlQK6u66Aa6letKYpYuDGCAoBxre4ecvDcTHTOCiwLBaCO7/cQKBWDPMUpnYl
-lgExQoYJuwfH3aw6jq1LbSFplv2QYQ==
-=NaYJ
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmiSBs0ACgkQj4D7WH0S
+/k65Pwf+PyxwEQzqfZ4Q2g5Emh3KI9l1ja+YlGawQ14Xg99MDVzMjAgTnTJtl2Oi
+X0HtuDy89GOCsOHeNKZcA4rUOG9wKkd/VilwGdjWfDCf4B4f/JfjNgGpX28bJIkW
+yXOQ27WuXhc9ABW9dqy8554GksP7Y8Mt9tKTe32RtArrfuNooRf7F0xX2k8FFV4G
+LiADjMU+OzRBqEpOiGfHn9CYQneaMItzLYwE30mvKtmJaKQln/2NmiNJw/+492lq
+8UBGV9laxy87BCXAho+r7xip2QU6Fb6V+zrZME6ZHYPxGExdyF5uz9Jvp4YW0Am6
+dRl8ekUT0iPDQpbSATSQHbfS80FuCg==
+=D4pO
 -----END PGP SIGNATURE-----
 
---qpe4lsz3c3n5r2b5--
+--mheqiwwcjq62v4lb--
 
