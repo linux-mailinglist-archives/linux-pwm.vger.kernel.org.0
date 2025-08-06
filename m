@@ -1,131 +1,167 @@
-Return-Path: <linux-pwm+bounces-6973-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6974-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63F9CB1C7B6
-	for <lists+linux-pwm@lfdr.de>; Wed,  6 Aug 2025 16:36:44 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 131AFB1C7D0
+	for <lists+linux-pwm@lfdr.de>; Wed,  6 Aug 2025 16:43:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 59367622A09
-	for <lists+linux-pwm@lfdr.de>; Wed,  6 Aug 2025 14:36:42 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2E1E2161EE4
+	for <lists+linux-pwm@lfdr.de>; Wed,  6 Aug 2025 14:43:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B6AAE28D8EE;
-	Wed,  6 Aug 2025 14:36:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 003DD215F4A;
+	Wed,  6 Aug 2025 14:43:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="KY9Y+E59"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="07cmRkEc"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from relay2-d.mail.gandi.net (relay2-d.mail.gandi.net [217.70.183.194])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8D41823DD;
-	Wed,  6 Aug 2025 14:36:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC70C9463
+	for <linux-pwm@vger.kernel.org>; Wed,  6 Aug 2025 14:43:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754490998; cv=none; b=MNDvcLC5e0F/9hjOd3PGlNdfNMq8Hr4pR1G2nsw7u+dyLowsC1BsLO4WmujnxrGSlw9PnQ1oER+ofwqgzGfxO1U8i0AWgjhV4qln7sgtN1VCtFvs0K7Q6kz8zQK3EHfyLL8Lahra6tsUyS92pxCoF7uTeTH/GNKJOQwvci8Zclw=
+	t=1754491430; cv=none; b=rZXH1uzGf9jKqC2GqrxhEb9sIS4yX+LgN025umOoaCKGX4D6oT7dbwNO1wmcGfqhbAmBDXapqe2+n+a06Ppo8ANYMlp1ag4gwSipyu3pTaT8tXgq1aYuoUkFz09OvV3m/gi2FYeoGQ2liRRrDPUItFvqfP7oJbg6i8rBOo7dIkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754490998; c=relaxed/simple;
-	bh=3vnFjNfdaPh9SkFU3xP/Tt9Wl47FarfEWi3jrckk/M0=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=pDA/lL22ol9sgMpgd/u3r57mktipVA186dKnbaIHFllF1tGlF/M84tka3/YdYCCJ2hWFdG9UPjxccdLZvTaJdNglmI8rMnGvmPh2BfzUcdt3npwBu9/xeVVUwxaQWiMSn0DNo5lnE2KcXAlnIIyidSrF3sUhvC/r8rvzKX/yQhA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=KY9Y+E59; arc=none smtp.client-ip=217.70.183.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: by mail.gandi.net (Postfix) with ESMTPSA id C9683438ED;
-	Wed,  6 Aug 2025 14:36:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=gm1;
-	t=1754490994;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JTJr4tzpqtVoTjg53YR9Pm/8memoRI7DH2lY0xra0mI=;
-	b=KY9Y+E59AUQWeNFvBIpOIf7XAa1Bh8a0TQRAnd6eEEo4LNTOTd6g8n/G3ZOOa0Nwi3LnaT
-	zIl3QZEocK4LNBQlJiuLSpuv6F06Zq9cQM9GjIkZ/LHiwE94EGJL22bWAilud3HlOuujnu
-	Q9q9tSMlo42aQXmp6OJl3j9iapfgWM3QcloMvC/YEr2yjIXUd3d6K8DjweMkF7U67TsXW3
-	vhxizfgJJ+FyF5GNnkUfVNJVZdf30ksz7St7wKj0yFRx/6yPuVH+HReS0SeWrQS2LJDanu
-	4jblGZcX1JlBx2l1MYxE4d53DPqPG2KA0bDH/S/RDt89AV/ST/iAuE+v3nWk2A==
+	s=arc-20240116; t=1754491430; c=relaxed/simple;
+	bh=ZzKFJ4yHJ7DCQCvUFX2RLuuegQ3GKxIuAUtI+zl6XmI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HxiR8PlLY3S0agw9ze2RHUZlZj1OMjEhW9DaBDh7Ad2RaD3tFb6vhH0M8A2pEpvouEUxSy8X0GEGEg1cwXMKkjiYyP4FzxETBdf2syx+ytdAmKESKId5w4cygOEd7Tjk10OBdFsbcY8ZkArM7RC39+Uajk1cU1LyofGUpETAlbk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=07cmRkEc; arc=none smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3b783ea502eso706395f8f.1
+        for <linux-pwm@vger.kernel.org>; Wed, 06 Aug 2025 07:43:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1754491424; x=1755096224; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=VH/RNGwsGxAQ5onQ4CWDXuDU973vpIbBVYO78gN0lAk=;
+        b=07cmRkEcmyvJoQH4LclMQf1kcftA2QRmejvBg4pYjGE3exn+tykdPJDsvbVKfNwXYB
+         qAq4gpqMBGpEjvLEXjox8H/MqKU5TttoxCs8eQRDEbQ2pvkLJTytVOU/2aY6W2zB//1G
+         OgjQIU8waTaTtVXTB+OgvGO0RAvDsL+9OHmHGOpLbZgS+YplC030Wyu9WB3wneAuWhA2
+         FZOhrNrbdJKrKLmvJit6gaE+JShx8vuh0K/U7QFoP/pMSa9bw9KetCOe5gq6swBgmZAk
+         BWagpYhnuvcVrE7aq9xTypJ6gSpslT5T/u2QcSyRCoCF5Uqb6KolZSKHk5ItFmNMBF6F
+         m2OA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754491424; x=1755096224;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VH/RNGwsGxAQ5onQ4CWDXuDU973vpIbBVYO78gN0lAk=;
+        b=B2hMZrwy0UXf49mxfmUNyQcD4sXlGampSOy9uIH14TshmKNraYpNPxNiKHKeW2lhj1
+         NjB0TXeuChnAC5/mfjWQofzpLmqO6C3Ock68eE5dQcYA9tWAWifU01yXAeZa7xRdeiTV
+         x2EkNY4m6KGcv7pWPOmwdQUskw07Ahye8LUtq8E0uEGjekIxptFGD6CGMpElO1wM9heP
+         wy5Y07dAnA2luTVdW2oJ+Cw+bJ9SAKiI9kf8BFNx8myst9JGA55JwzoOHXPpdfkR24jb
+         p26pWvv14T+OOP/BMoo7NlmNhrQNIqmnq/7n1FdR/lxTdZ4z214g3nI9zYrMgjEB8o17
+         LBgQ==
+X-Gm-Message-State: AOJu0YzUTzErdDqOlgDWA4cCYE5KwxfEUUp9JaD+4tO3aAI3ZxfNMHdy
+	Kz+7bEcEb/QUrcjGTn7iy3AqgMxTHG9oVoY6VGlv3z23A9d7OA/83NV726RySvcizORXseStnGJ
+	VbYcVluU=
+X-Gm-Gg: ASbGncscD2AAAPUCOrvdhLidJVsidwa1kruSrw9ZyyGChtNLSCc+8XvV8R2+2BjwtEs
+	5hFvaWDT/V0u38SLeLtZPmeboJSSpTrohY5cC+bB1wl5yNNvzEBr7kGLcAX4QkyMs7r4mPfobjo
+	Vz0e8JFmAeQrhCuyJivc2ts1TL5bSLbgumWfUCT7EBoPKQ1csED/wrGttgtOzi4XDtiA4ztxhK4
+	ob6OBCQDGzgMbpfkuueBtNyEOBLdbtlhZwyDAosvf0/5qVXbK7StyIpO9DAJaWIzL+wKl4kxvGy
+	LJsyYBnj+4ARjeIrNNtjPhYwXmXRXm+ZlVCTB33tDtCL3WxLyI8OSqa9cV4bUQVT12UMyPngkXb
+	uUUu2hiSc3JN8GtZmNCq4vp4VBqbwMlLGF7sGlzGA8J7GrrvnCqVDMUDkrXFmt0gE
+X-Google-Smtp-Source: AGHT+IEjopSKCdy7U8FKkZXAjb3CuQDXRTKLcweLWBxM8N+4unfyWADRxJ/f8jD1TFxZal7semg4Og==
+X-Received: by 2002:a05:6000:2c11:b0:3b7:8f3b:1726 with SMTP id ffacd0b85a97d-3b8f430c2f7mr2812824f8f.7.1754491424474;
+        Wed, 06 Aug 2025 07:43:44 -0700 (PDT)
+Received: from localhost (p200300f65f06ab0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f06:ab04::1b9])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3b79c3ac093sm24451789f8f.9.2025.08.06.07.43.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Aug 2025 07:43:43 -0700 (PDT)
+Date: Wed, 6 Aug 2025 16:43:42 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v2 0/8] pwm: mediatek: Convert to waveform API
+Message-ID: <dwycjujhxtxgjyjpfsgm6xttrgcskdobtc7dw5sts2fuutcwxi@5v7ekobsjojv>
+References: <20250725154506.2610172-10-u.kleine-koenig@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="gdu3m3k3aua2dak5"
+Content-Disposition: inline
+In-Reply-To: <20250725154506.2610172-10-u.kleine-koenig@baylibre.com>
+
+
+--gdu3m3k3aua2dak5
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 06 Aug 2025 16:36:32 +0200
-Message-Id: <DBVF5EWK7WRF.3Q0CRECYQOER0@bootlin.com>
-Subject: Re: [PATCH v12 04/10] pwm: max7360: Add MAX7360 PWM support
-Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
- Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>, "Michael Walle"
- <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>, <andriy.shevchenko@intel.com>,
- =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Thomas
- Petazzoni" <thomas.petazzoni@bootlin.com>, "Andy Shevchenko"
- <andriy.shevchenko@linux.intel.com>
-From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-X-Mailer: aerc 0.19.0-0-gadd9e15e475d
-References: <20250722-mdb-max7360-support-v12-0-3747721a8d02@bootlin.com>
- <20250722-mdb-max7360-support-v12-4-3747721a8d02@bootlin.com>
- <2msg7e7q42ocjewv35rytdtxwrfqrndpm2y5ustqeaeodencsd@nfdufgtevxte>
- <DBVBZ48R7DNR.850O5X7MLMEF@bootlin.com>
- <praujgmc3c63j6brecp5kwn7tbdd7rcxmrxn67kxhxcr7rpyhw@pfbsgycx4aop>
-In-Reply-To: <praujgmc3c63j6brecp5kwn7tbdd7rcxmrxn67kxhxcr7rpyhw@pfbsgycx4aop>
-X-GND-State: clean
-X-GND-Score: -100
-X-GND-Cause: gggruggvucftvghtrhhoucdtuddrgeeffedrtdefgdduudekfedtucetufdoteggodetrfdotffvucfrrhhofhhilhgvmecuifetpfffkfdpucggtfgfnhhsuhgsshgtrhhisggvnecuuegrihhlohhuthemuceftddunecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenucfjughrpegggfgtfffkufevhffvofhfjgesthhqredtredtjeenucfhrhhomhepfdforghthhhivghuucffuhgsohhishdquehrihgrnhgufdcuoehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmqeenucggtffrrghtthgvrhhnpeekhfekieeftefhjeetveefudehuddvvdeuvddvudfgfffhveekffethfeuffdtudenucffohhmrghinhepsghoohhtlhhinhdrtghomhenucfkphepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeinecuvehluhhsthgvrhfuihiivgeptdenucfrrghrrghmpehinhgvthepvdgrtddumegtsgdugeemheehieemjegrtddtmeeffhgtfhemfhgstdgumeduvdeivdemvdgvjeeipdhhvghloheplhhotggrlhhhohhsthdpmhgrihhlfhhrohhmpehmrghthhhivghurdguuhgsohhishdqsghrihgrnhgusegsohhothhlihhnrdgtohhmpdhnsggprhgtphhtthhopedvfedprhgtphhtthhopehukhhlvghinhgvkheskhgvrhhnvghlrdhorhhgpdhrtghpthhtoheplhgvvgeskhgvrhhnvghlrdhorhhgpdhrtghpt
- hhtoheprhhosghhsehkvghrnhgvlhdrohhrghdprhgtphhtthhopehkrhiikhdoughtsehkvghrnhgvlhdrohhrghdprhgtphhtthhopegtohhnohhrodgutheskhgvrhhnvghlrdhorhhgpdhrtghpthhtohepkhgrmhgvlhdrsghouhhhrghrrgessghoohhtlhhinhdrtghomhdprhgtphhtthhopehlihhnuhhsrdifrghllhgvihhjsehlihhnrghrohdrohhrghdprhgtphhtthhopegsrhhglhessghguggvvhdrphhl
-X-GND-Sasl: mathieu.dubois-briand@bootlin.com
+Subject: Re: [PATCH v2 0/8] pwm: mediatek: Convert to waveform API
+MIME-Version: 1.0
 
-On Wed Aug 6, 2025 at 4:02 PM CEST, Uwe Kleine-K=C3=B6nig wrote:
-> On Wed, Aug 06, 2025 at 02:07:15PM +0200, Mathieu Dubois-Briand wrote:
->> > I think the right thing to do here is:
->> >
->> > 	if (wf->period_length_ns > MAX7360_PWM_PERIOD_NS)
->> > 		return 1;
->> > 	else
->> > 		return 0;
->>=20
->> I can definitely do that, but now I'm a bit confused by the meaning of
->> this return value: is it 0 on success, 1 if some rounding was made,
->> -errno on error? So I believe I should only return 0 if
->> wf->period_length_ns =3D=3D MAX7360_PWM_PERIOD_NS, no?
->>=20
->> Or reading this comment on pwm_round_waveform_might_sleep(), maybe we
->> only have to return 1 if some value is rounded UP. So I believe the test
->> should be (wf->period_length_ns < MAX7360_PWM_PERIOD_NS).
->
-> Right,
->
-> 	if (wf->period_length_ns < MAX7360_PWM_PERIOD_NS)
-> 		return 1;
-> 	else
-> 		return 0;
->
-> So 0 =3D request could be matched by only rounding down, 1 =3D request co=
-uld
-> be matched but rounding up was needed, negative value =3D error.
->
+Hello,
 
-Ok, thanks for the explanation.
+On Fri, Jul 25, 2025 at 05:45:04PM +0200, Uwe Kleine-K=F6nig wrote:
+> here comes v2 of my effort to convert the pwm-mediatek driver to the new
+> waveform API. Changes since (implicit) v1 (available at
+> https://lore.kernel.org/linux-pwm/cover.1751994509.git.u.kleine-koenig@ba=
+ylibre.com/):
+>=20
+>  - Rebase on top of the latest fix for period and duty setting
+>    (https://lore.kernel.org/linux-pwm/20250724210041.2513590-2-u.kleine-k=
+oenig@baylibre.com/)
+>=20
+>  - Don't report a disabled PWM when the PWM is disabled. Though that
+>    seems counter intuitive, this is the only way to allow the consumer
+>    to query the minimal period. This wasn't necessary in v1 because back
+>    then the driver claimed to provide a non-disabled setting for
+>    duty_cycle=3D0 .
+>=20
+> As before the patches in the middle don't serve a functional purpose
+> because the last patch removes the changes again. Still I consider it
+> useful because it reduces the last patch to what is needed in such a
+> conversion.
+>=20
+> Best regards
+> Uwe
+>=20
+> Uwe Kleine-K=F6nig (8):
+>   pwm: mediatek: Simplify representation of channel offsets
+>   pwm: mediatek: Introduce and use a few more register defines
+>   pwm: mediatek: Rework parameters for clk helper function
+>   pwm: mediatek: Initialize clks when the hardware is enabled at probe
+>     time
+>   pwm: mediatek: Implement .get_state() callback
+>   pwm: mediatek: Fix various issues in the .apply() callback
+>   pwm: mediatek: Lock and cache clock rate
+>   pwm: mediatek: Convert to waveform API
 
-I will fix the return value, and a new version should come soon.
+i pushed the first 7 patches to pwm/for-nexxt now. I found a twist in
+the conversion to the waveform APIs that I first want to think about a
+bit more. The problem is that a setting with a small duty cycle now
+reports the PWM as disabled. While this is technically correct,
+this isn't helpful to let the consumer find the smallest possible
+period.
 
-Best regards,
-Mathieu
+Will followup when I left the current rabbit hole.
 
+Best regards
+Uwe
 
---=20
-Mathieu Dubois-Briand, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+--gdu3m3k3aua2dak5
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmiTahsACgkQj4D7WH0S
+/k5qWQf9GMIt2sdEo77P7lLjheoo6iqKh+5H9p8KulcNmovIksZ/n06236dor+ch
+JNG9DV2LJVxV9XOTHD43lXGOS3BnovK0qAyCnF+iQgLd+6Bbx/WpQfhHn0PieqXy
+5jCWDAWc8L8TALhfqb7PssQlScPdTS+PHj0lhDiAMWTuXshENDmO6kKB/dHT5aln
+E/trUXgP9EScJZZWpcyYspwFSGcQqaoM5Z9h1IZZOA8J4+F/epjR7AQ9sdaCQz9a
++WJygPOPYCRydbojXrekRPA+6c3MphrSXKKR+HS8cOFbG9SlwMRc9DyXTagZ6ehR
+ZkCGiMh3Gfsr5CXjFuiI/Q+lmeKvug==
+=aEYh
+-----END PGP SIGNATURE-----
+
+--gdu3m3k3aua2dak5--
 
