@@ -1,167 +1,143 @@
-Return-Path: <linux-pwm+bounces-6974-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-6975-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 131AFB1C7D0
-	for <lists+linux-pwm@lfdr.de>; Wed,  6 Aug 2025 16:43:54 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id F3AE5B1D17A
+	for <lists+linux-pwm@lfdr.de>; Thu,  7 Aug 2025 06:33:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 2E1E2161EE4
-	for <lists+linux-pwm@lfdr.de>; Wed,  6 Aug 2025 14:43:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A9BAE725FA1
+	for <lists+linux-pwm@lfdr.de>; Thu,  7 Aug 2025 04:33:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 003DD215F4A;
-	Wed,  6 Aug 2025 14:43:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 707681D5CE0;
+	Thu,  7 Aug 2025 04:33:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="07cmRkEc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bMau9Pfm"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC70C9463
-	for <linux-pwm@vger.kernel.org>; Wed,  6 Aug 2025 14:43:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0777415624D;
+	Thu,  7 Aug 2025 04:33:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754491430; cv=none; b=rZXH1uzGf9jKqC2GqrxhEb9sIS4yX+LgN025umOoaCKGX4D6oT7dbwNO1wmcGfqhbAmBDXapqe2+n+a06Ppo8ANYMlp1ag4gwSipyu3pTaT8tXgq1aYuoUkFz09OvV3m/gi2FYeoGQ2liRRrDPUItFvqfP7oJbg6i8rBOo7dIkc=
+	t=1754541210; cv=none; b=Cnn1HNSCNuZ/mABtAvzpAE67uBcBrKzaFVBoVbrBxntyTxWL5BUJPfU5zgPlGpbWR378fWmvmYpRaRqTYTELnhqGUo5qMIPVcA/OfMt4ARyYZIvGQhAmV0Ra8kOyJdLuXcWZ1dUgyVBB3G9Gf5+aINsp9I9KmqzBdiWYZYAQzLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754491430; c=relaxed/simple;
-	bh=ZzKFJ4yHJ7DCQCvUFX2RLuuegQ3GKxIuAUtI+zl6XmI=;
+	s=arc-20240116; t=1754541210; c=relaxed/simple;
+	bh=cbiPNIRxJ0+TPk8XHjQGiCTC2gFsZ7Bja2SpJghvWS8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HxiR8PlLY3S0agw9ze2RHUZlZj1OMjEhW9DaBDh7Ad2RaD3tFb6vhH0M8A2pEpvouEUxSy8X0GEGEg1cwXMKkjiYyP4FzxETBdf2syx+ytdAmKESKId5w4cygOEd7Tjk10OBdFsbcY8ZkArM7RC39+Uajk1cU1LyofGUpETAlbk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=07cmRkEc; arc=none smtp.client-ip=209.85.221.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-3b783ea502eso706395f8f.1
-        for <linux-pwm@vger.kernel.org>; Wed, 06 Aug 2025 07:43:45 -0700 (PDT)
+	 Content-Type:Content-Disposition:In-Reply-To; b=b4CDqAKR87XrwI6cjuKymoLpXLACXaY6QzU8vFizVLnVHI78Wcs02pJzLAClvUTp5v+l9SLpXe2CZ9Xt1FR7tNXRchUqo95Lvsyi8H+xBCzGXsj/pp8sHJWUABGEsRCZmf3EYH73xFpdqxMQ2OoHWaEV36J1bdBB1iPP+dVE4EI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bMau9Pfm; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-76bc5e68d96so524199b3a.3;
+        Wed, 06 Aug 2025 21:33:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1754491424; x=1755096224; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=VH/RNGwsGxAQ5onQ4CWDXuDU973vpIbBVYO78gN0lAk=;
-        b=07cmRkEcmyvJoQH4LclMQf1kcftA2QRmejvBg4pYjGE3exn+tykdPJDsvbVKfNwXYB
-         qAq4gpqMBGpEjvLEXjox8H/MqKU5TttoxCs8eQRDEbQ2pvkLJTytVOU/2aY6W2zB//1G
-         OgjQIU8waTaTtVXTB+OgvGO0RAvDsL+9OHmHGOpLbZgS+YplC030Wyu9WB3wneAuWhA2
-         FZOhrNrbdJKrKLmvJit6gaE+JShx8vuh0K/U7QFoP/pMSa9bw9KetCOe5gq6swBgmZAk
-         BWagpYhnuvcVrE7aq9xTypJ6gSpslT5T/u2QcSyRCoCF5Uqb6KolZSKHk5ItFmNMBF6F
-         m2OA==
+        d=gmail.com; s=20230601; t=1754541208; x=1755146008; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=z9RPuX2Cey64XT1m8nGtJ8B2vs45y2EWTHKYflCfe/k=;
+        b=bMau9PfmXpV5bpGmJxIlTZvBndaoBgcntJfTbUyEQV7rVBdy77mtk8yzLuvOTpLYw5
+         JrZM09xTI8zxM5nmFWNEGJ6Fih2PZJOZMo8jNLHLSK4FVmyD1vRCGrzbPeFChO8AlV+c
+         Lb/92VZK8ELIOE0/bO8kV38fZ1deoLMv4YonxKfI2pQKUl7zYxABHokdRB6QyV+J5aol
+         Q60lUTMF1ycE/OWHR6rzQnT4tQI3LaZkTu1KtYq72Y0GbHAiZMjhBOY8hS009sgQU3zR
+         0bHQgFjp3EyoEZwmp1aA61uPEoTYe+dfM1G0/Pv0pibuD1p5BMdf3HcBPxTbnm/zPABt
+         tWiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754491424; x=1755096224;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=VH/RNGwsGxAQ5onQ4CWDXuDU973vpIbBVYO78gN0lAk=;
-        b=B2hMZrwy0UXf49mxfmUNyQcD4sXlGampSOy9uIH14TshmKNraYpNPxNiKHKeW2lhj1
-         NjB0TXeuChnAC5/mfjWQofzpLmqO6C3Ock68eE5dQcYA9tWAWifU01yXAeZa7xRdeiTV
-         x2EkNY4m6KGcv7pWPOmwdQUskw07Ahye8LUtq8E0uEGjekIxptFGD6CGMpElO1wM9heP
-         wy5Y07dAnA2luTVdW2oJ+Cw+bJ9SAKiI9kf8BFNx8myst9JGA55JwzoOHXPpdfkR24jb
-         p26pWvv14T+OOP/BMoo7NlmNhrQNIqmnq/7n1FdR/lxTdZ4z214g3nI9zYrMgjEB8o17
-         LBgQ==
-X-Gm-Message-State: AOJu0YzUTzErdDqOlgDWA4cCYE5KwxfEUUp9JaD+4tO3aAI3ZxfNMHdy
-	Kz+7bEcEb/QUrcjGTn7iy3AqgMxTHG9oVoY6VGlv3z23A9d7OA/83NV726RySvcizORXseStnGJ
-	VbYcVluU=
-X-Gm-Gg: ASbGncscD2AAAPUCOrvdhLidJVsidwa1kruSrw9ZyyGChtNLSCc+8XvV8R2+2BjwtEs
-	5hFvaWDT/V0u38SLeLtZPmeboJSSpTrohY5cC+bB1wl5yNNvzEBr7kGLcAX4QkyMs7r4mPfobjo
-	Vz0e8JFmAeQrhCuyJivc2ts1TL5bSLbgumWfUCT7EBoPKQ1csED/wrGttgtOzi4XDtiA4ztxhK4
-	ob6OBCQDGzgMbpfkuueBtNyEOBLdbtlhZwyDAosvf0/5qVXbK7StyIpO9DAJaWIzL+wKl4kxvGy
-	LJsyYBnj+4ARjeIrNNtjPhYwXmXRXm+ZlVCTB33tDtCL3WxLyI8OSqa9cV4bUQVT12UMyPngkXb
-	uUUu2hiSc3JN8GtZmNCq4vp4VBqbwMlLGF7sGlzGA8J7GrrvnCqVDMUDkrXFmt0gE
-X-Google-Smtp-Source: AGHT+IEjopSKCdy7U8FKkZXAjb3CuQDXRTKLcweLWBxM8N+4unfyWADRxJ/f8jD1TFxZal7semg4Og==
-X-Received: by 2002:a05:6000:2c11:b0:3b7:8f3b:1726 with SMTP id ffacd0b85a97d-3b8f430c2f7mr2812824f8f.7.1754491424474;
-        Wed, 06 Aug 2025 07:43:44 -0700 (PDT)
-Received: from localhost (p200300f65f06ab0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f06:ab04::1b9])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3b79c3ac093sm24451789f8f.9.2025.08.06.07.43.43
+        d=1e100.net; s=20230601; t=1754541208; x=1755146008;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=z9RPuX2Cey64XT1m8nGtJ8B2vs45y2EWTHKYflCfe/k=;
+        b=Pmbuv6iK8y4WPctVmg2kdE+qJaqFpQxgjJkXaCFTsXIUbMsB0Qj30McUhDwqxVfSXL
+         AEH6YqTpXEhpX77QNtUbZV0BNvTOBP3EIgS2EZU5zJe2p2oNI5Sql8ZXkWou4/Sry/Fd
+         ABQrRGjL/H7UQ3XpMF7H+fM3wapXWj6OKB7xcHzbapwJBgzcNHfhthJzNwz0I5tP5Bo9
+         XhL7c9jS6Xwt4ZVk24GFvgVxcYKYk7VFzaE4ezmYp82vw3gbVEa4uYvP5FTjIQAgkNzm
+         r/mHhoY8xUJE4vs0m4iv8So0LfckMxUBtE4hRNTj9p+6fOLa1LqTSvnQIO+w7v96FlDd
+         JUWQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUitVle5KdMtBe5qYWwSQQCuTt8iul1/PZpFP/I/9AIHqJG1wIGzYwQfMMRENjJaubocHpMdsLVeMVL@vger.kernel.org, AJvYcCXd+El9R+U+Fi/CNVjgDPq190oTpXXS6MrdydKMtd+BKKi4352KZQz/aKwm5Rv5WtuaAcfkq/KNIut4jA==@vger.kernel.org
+X-Gm-Message-State: AOJu0YwifSduo+UomWBYV+59D6ArLmVTc2qTwQSdmFBBXMyh1MICee4q
+	8TnA4S4t5m/fNa0LVQyxI3u8CdB6gNwu5KGpv7HvGrFDt3BMomhaI/QN
+X-Gm-Gg: ASbGncveFBSgwhGtEcOD2oWhGJfGkc8G1Alhvp8GGEm4OYZsx4nuuiJxfXWvELNAU87
+	ssSq7A88X+BP9zjeEk3vRDbvm32Qm1sqMnmeN1Hi+Zeh1Z+uinZv3bbfMb4PPpVW/mLPeJ9qXiS
+	cUPl90ZTFjuwPIRh4ziK+2iS63L4B99yEOKdB8OlGX0EBk02UwPtlVfMJSeurNv1PE9AQ3SZBXB
+	U0i8CG1VXx9NaTkozPs9ErK67JT+oCpbzTMBUC5k8XRKZMHxiyGailbWVwV3PR4aV+1YnzgpQ4r
+	cM2dhEpNVWGAt7w83u82u2o5Z1St1kfssOxpP6zIN7HOX2v/3B4NwjXpElq2ZKo15qtK4mF1A3x
+	8sElAeGdlA07o5IHCa43Tf77JipEoIe1MaA==
+X-Google-Smtp-Source: AGHT+IE9HgAvb08HTM/crqgnI+qCFrfYWX97YigV8hs+Qk95YqDkSXjYt97lMSarUud2kNrlpFoSew==
+X-Received: by 2002:a17:903:120b:b0:240:2efe:c384 with SMTP id d9443c01a7336-2429f2fe7d1mr72582435ad.19.1754541208143;
+        Wed, 06 Aug 2025 21:33:28 -0700 (PDT)
+Received: from google.com ([2620:15c:9d:2:1dc7:76a8:a227:b1c7])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-32161282ab6sm4340573a91.26.2025.08.06.21.33.27
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Aug 2025 07:43:43 -0700 (PDT)
-Date: Wed, 6 Aug 2025 16:43:42 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Cc: linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v2 0/8] pwm: mediatek: Convert to waveform API
-Message-ID: <dwycjujhxtxgjyjpfsgm6xttrgcskdobtc7dw5sts2fuutcwxi@5v7ekobsjojv>
-References: <20250725154506.2610172-10-u.kleine-koenig@baylibre.com>
+        Wed, 06 Aug 2025 21:33:27 -0700 (PDT)
+Date: Wed, 6 Aug 2025 21:33:25 -0700
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Dzmitry Sankouski <dsankouski@gmail.com>, 
+	Marek Szyprowski <m.szyprowski@samsung.com>, Krzysztof Kozlowski <krzk@kernel.org>, 
+	linux-input@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH] Input: max77693 - Convert to atomic pwm operation
+Message-ID: <wfdklejfruh4m54kmekyu2xssd6uss7es2nyvhqhki5zgbziwk@6bounno2zauu>
+References: <20250630103851.2069952-2-u.kleine-koenig@baylibre.com>
+ <w3tkxxkqr2kmri3bz5m34dzw3hfvkqou3zbww7kwjdg72o7kla@ty777ynf26qr>
+ <23ddfd32qebfzb4qftxih3mwpymghlezdv5u63qhxhqthpbxpz@u7f4tbihsfop>
+ <yafw6oi62ckqgz7ur4idua2r2sjyxnfomc7h2v5w6tthqwu334@5i6tdfumtj5b>
+ <sl3jqe36dfxfzblposdtkvlgalc4ydixpqkfmn7gc6hcjfwmqn@7bex3mxwjqyy>
+ <zxeva5asxre7oc6vakfoyiehegt5c4i7qwaeue5woxk4xir3di@thcg7lyadvn3>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="gdu3m3k3aua2dak5"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20250725154506.2610172-10-u.kleine-koenig@baylibre.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <zxeva5asxre7oc6vakfoyiehegt5c4i7qwaeue5woxk4xir3di@thcg7lyadvn3>
 
+Hi Uwe,
 
---gdu3m3k3aua2dak5
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 0/8] pwm: mediatek: Convert to waveform API
-MIME-Version: 1.0
+On Tue, Jul 29, 2025 at 10:04:06PM +0200, Uwe Kleine-König wrote:
+> Hello Dmitry,
+> 
+> On Wed, Jul 02, 2025 at 08:02:33AM +0200, Uwe Kleine-König wrote:
+> > On Tue, Jul 01, 2025 at 11:06:50AM -0700, Dmitry Torokhov wrote:
+> > > On Tue, Jul 01, 2025 at 07:49:22AM +0200, Uwe Kleine-König wrote:
+> > > > 
+> > > > I had something like that at first, but didn't like it. With that
+> > > > approach you have two places that have to know how to set the PWM's
+> > > > duty_cycle. Also I think the control flow is more complicated.
+> > > > 
+> > > > I considered renaming max77693_haptic_enable() to something that better
+> > > > matches what it does in my variant, but max77693_haptic_configure() was
+> > > > already taken.
+> > > > 
+> > > > But that might all be subjective? If you like your version better,
+> > > > that's fine, it still gets rid of pwm_config(), pwm_enable() and
+> > > > pwm_apply_args() which is my main objective.
+> > > 
+> > > Yes, I agree that it is subjective. I know that you do not quite like
+> > > the version I posted, still will you be OK if it is attributed to you?
+> > 
+> > Yes, feel free to apply it as you suggested.
+> 
+> As of today's next that didn't happen. Do you have this patch still on
+> your radar?
 
-Hello,
+My bad, I lost track of it when I reshuffled my queue. 
 
-On Fri, Jul 25, 2025 at 05:45:04PM +0200, Uwe Kleine-K=F6nig wrote:
-> here comes v2 of my effort to convert the pwm-mediatek driver to the new
-> waveform API. Changes since (implicit) v1 (available at
-> https://lore.kernel.org/linux-pwm/cover.1751994509.git.u.kleine-koenig@ba=
-ylibre.com/):
->=20
->  - Rebase on top of the latest fix for period and duty setting
->    (https://lore.kernel.org/linux-pwm/20250724210041.2513590-2-u.kleine-k=
-oenig@baylibre.com/)
->=20
->  - Don't report a disabled PWM when the PWM is disabled. Though that
->    seems counter intuitive, this is the only way to allow the consumer
->    to query the minimal period. This wasn't necessary in v1 because back
->    then the driver claimed to provide a non-disabled setting for
->    duty_cycle=3D0 .
->=20
-> As before the patches in the middle don't serve a functional purpose
-> because the last patch removes the changes again. Still I consider it
-> useful because it reduces the last patch to what is needed in such a
-> conversion.
->=20
-> Best regards
-> Uwe
->=20
-> Uwe Kleine-K=F6nig (8):
->   pwm: mediatek: Simplify representation of channel offsets
->   pwm: mediatek: Introduce and use a few more register defines
->   pwm: mediatek: Rework parameters for clk helper function
->   pwm: mediatek: Initialize clks when the hardware is enabled at probe
->     time
->   pwm: mediatek: Implement .get_state() callback
->   pwm: mediatek: Fix various issues in the .apply() callback
->   pwm: mediatek: Lock and cache clock rate
->   pwm: mediatek: Convert to waveform API
+> 
+> This is the last driver making use of pwm_config(), it would be great to
+> get rid of that.
 
-i pushed the first 7 patches to pwm/for-nexxt now. I found a twist in
-the conversion to the waveform APIs that I first want to think about a
-bit more. The problem is that a setting with a small duty cycle now
-reports the PWM as disabled. While this is technically correct,
-this isn't helpful to let the consumer find the smallest possible
-period.
+The patch is in the pull request I just sent to Linus, hope this
+unblocks you.
 
-Will followup when I left the current rabbit hole.
+Thanks.
 
-Best regards
-Uwe
-
---gdu3m3k3aua2dak5
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmiTahsACgkQj4D7WH0S
-/k5qWQf9GMIt2sdEo77P7lLjheoo6iqKh+5H9p8KulcNmovIksZ/n06236dor+ch
-JNG9DV2LJVxV9XOTHD43lXGOS3BnovK0qAyCnF+iQgLd+6Bbx/WpQfhHn0PieqXy
-5jCWDAWc8L8TALhfqb7PssQlScPdTS+PHj0lhDiAMWTuXshENDmO6kKB/dHT5aln
-E/trUXgP9EScJZZWpcyYspwFSGcQqaoM5Z9h1IZZOA8J4+F/epjR7AQ9sdaCQz9a
-+WJygPOPYCRydbojXrekRPA+6c3MphrSXKKR+HS8cOFbG9SlwMRc9DyXTagZ6ehR
-ZkCGiMh3Gfsr5CXjFuiI/Q+lmeKvug==
-=aEYh
------END PGP SIGNATURE-----
-
---gdu3m3k3aua2dak5--
+-- 
+Dmitry
 
