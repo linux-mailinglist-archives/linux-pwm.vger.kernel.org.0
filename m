@@ -1,78 +1,78 @@
-Return-Path: <linux-pwm+bounces-7009-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7010-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D4BB1B21896
-	for <lists+linux-pwm@lfdr.de>; Tue, 12 Aug 2025 00:48:59 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F5B2B218A5
+	for <lists+linux-pwm@lfdr.de>; Tue, 12 Aug 2025 00:49:33 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F1ED61904470
-	for <lists+linux-pwm@lfdr.de>; Mon, 11 Aug 2025 22:49:17 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 1DD167A8079
+	for <lists+linux-pwm@lfdr.de>; Mon, 11 Aug 2025 22:47:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7FB82E5419;
-	Mon, 11 Aug 2025 22:48:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BCCA2E54BC;
+	Mon, 11 Aug 2025 22:48:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bHDi/jMg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RSSsX6mz"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B53722E425E;
-	Mon, 11 Aug 2025 22:48:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C8152E54A0;
+	Mon, 11 Aug 2025 22:48:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754952490; cv=none; b=gQsNdugWjLx6NtOcBt97LYp3l5mNLFc/UfXUIH8a+faKyScF5nK4NQx9vLq++pYfXMnZKYXJQnvcCUVIpbBUe2Z2jSqyUfrtTOcogPxpCvWnGNbRVb0d7EJGm0EBjl81EHm/ajH+ES1LcSYiLgeIZgW9C2JcpJ563Arkg+XiuJw=
+	t=1754952493; cv=none; b=K9NWVR+ZYBUQ9ebULrpZz1B9OYD+m31JBoJmO1SXwEM0WM4QwCrYM+CFXi5cbjheloCqNUc8weACq479zkomLoSSuAqcx4kNOMGLvw6f9TOoPF8851KcCln1xJXkgk2YyfKhYv4v9lfAEP8P/5McO6jOfHoezQ2j8WN+J2wcwrs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754952490; c=relaxed/simple;
-	bh=5BR5cfe8t6koUL9Rqha0JKrh7QSZt0+zQ0ZeSTqPbyw=;
+	s=arc-20240116; t=1754952493; c=relaxed/simple;
+	bh=gY4ipD8wWPl1M6+6JrqYSWAvtJI6laAGzkb+xdQRfv8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=J9ji/gQRJxOcnPO9Id9VVMwFDVj7O31S4YbVZN4ca/lz6gKxZaIi9CUPxfJP7n3gR3vAr/S0k4DBaubasz9UxNWirSsqe/PWO1cPtyV6eI6GuK91NeVWJnr7kb5UbdaMrcdRx0Kj03U8tUnodgMoFz5OEAuP7wM9aCIyQMM09kE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bHDi/jMg; arc=none smtp.client-ip=209.85.128.47
+	 MIME-Version; b=uaAFl3uPyQoRolSodaOqz5FV5I1e5y/AOzPPRiwQC9UIFq2SgQ0K04Ji27y3/OtU/IslFSefNfzkoLjrnQdyXzsI1jJioLqB0g5YSJ9s7rx1lYrZYIMt7VwYHJJXn9OH/h+7FTsio5cWuAts4t/qp9uZ86tGwVQiLaR1gR2K6Og=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RSSsX6mz; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-458b885d6eeso31282895e9.3;
-        Mon, 11 Aug 2025 15:48:08 -0700 (PDT)
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-459ebb6bbdfso31180565e9.0;
+        Mon, 11 Aug 2025 15:48:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754952487; x=1755557287; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1754952489; x=1755557289; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Gsim7Mbp8csf32SO778GzsmLe7VF3Ywcdd8xmkgQYBk=;
-        b=bHDi/jMg2pNFpYhxGxnueWn5Q9cZWdm9KIMA9JYfp3V3g330XmLMxzvsGwEBr/zDpg
-         rbdPWNl9AF64vMSL+mZsI6zue8n0VPqXCIagx9iCjgbejns0lYRN/zVbBbUPZu+iLNDy
-         ljsBnqbO1aVa7eptSiEAMKKNtlVNfQzTfYIneCUuy3uC4Atl/jw2N7Xo2YrlEU2Hz6GJ
-         DmMlDuxNDXvw/u4P48suqhmvME6WknwHKBowE0R9jVahDrmEkfBSNaGcKHdwTuNSCv5D
-         6iatv0ryqxr80WqDyAfgjtqmqnShmbCwFW7cFjOrNrzBAbs460o8gtzCGKVCmnHF1rKI
-         NIcw==
+        bh=r3zYiSbWa/8gFr74O4y8591kMrUTTGd8r0VSLaU0hTQ=;
+        b=RSSsX6mzLmoiNgQcHBla4e+oteJ6f6CJbEpQyxZP3rJBedWYmK1NRdUh41ULv8K5vR
+         nWndm7AHk6bOrknQbkhK3DJmt/3yFlJQaquYgMRBeJXVYMl1JFVH6lNrkvSUSJxhhXlv
+         wa/tY2RsAycjhtZ2Nzp/e2KpXNJASkDziRCJrkZ9HG3CgwPQVPB3uif5NOXYyonWFtG+
+         3Ohg5YxtCWWW5eoD2fI5ZjBs0XHpwoEy6Ozb/loXlKZc92RAPWysKAY+urQAd45BzLkb
+         QzlMtz77VruOc4mqZMxfO/sOVg1IIGDZeq1k0oGOk1i12+4Kk347qgBK4hJaj/Q4TAhQ
+         +mVQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754952487; x=1755557287;
+        d=1e100.net; s=20230601; t=1754952489; x=1755557289;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=Gsim7Mbp8csf32SO778GzsmLe7VF3Ywcdd8xmkgQYBk=;
-        b=JMWSr43ABd/n0LcRU4Ykmwsje7QzB/K4iwPYQAfW1jRi3ve8THxs7aYdyc2H1ALiAg
-         Yba7Zw7/XIqNyzss9EQ/oznAh0MQmnWgLMOvHB9OkuB4Uo8ZSNeFMVqlFCZ06+1I3pok
-         UlWuRAXzdMwovduFm4fZrQWSIMYHVtqMPibU1GJd04nJkc0MEKUy4Lo+cS1BBEPrbwbc
-         N6B1WQVGGN6RwBTM1k14UojGRljd+fNrJADTKSXUNpnyomw6X2KfobQ9IncXb/5w+pzR
-         nBi1VhM3n4g8gaqbFFA2BP1W0GkfE1CJAMZDIAeF8S6XbFZyLyIVleI76mAJz+gIhQsq
-         4VQg==
-X-Forwarded-Encrypted: i=1; AJvYcCU6/8E9rsZ2Qcgwj21JmpEt3DsPsnAVn8udLIHExJdbYuEF0IPuY/QPYS2HphBNNm0VeTP8zAANPATLqSM=@vger.kernel.org, AJvYcCUZrmi8WwTxoIY97HiYsAwu8p3VCBwM4E8YdwJML+Zou5qMTeQRExR9ehOSUhI9WBxZdWvLsMm3rfMU@vger.kernel.org, AJvYcCUnSwJ7STrs8bVL+4+vlqTNjOFiJo0y3fXDvtpU2RwXcV1m3lFSuvDmo5pZ6bb3tqfnHXLOvq92eoSGeZo=@vger.kernel.org, AJvYcCXJA4kS1UU4wJuVE4NKwa0IRpVxkW1z4uJVxAQ9jV6BXcldI2jJshXVYpbyDxyU3sd/2GdaIDv6pYnb@vger.kernel.org, AJvYcCXO9WXmlaxJbv77pIJn7QHTBNP3wDhuNqoYhByRnUiScx6wL6LpP3zDMl/9Q6VYx+xcPeX5f5N4oQPA@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvT4R4XoCqw7fCET9Gah2+sWnFNU1qIqlWGWdZjxFhkC/bGn6v
-	g/lyMGNyYRiIvsKw1PcokdOTCJHPa+6KGOL75ciBT+hyG9i+rbTqotUb4osqHTU=
-X-Gm-Gg: ASbGncszXGcUzGXv3oGB12WgLyR047Y/oLtU1Jq7Tu0o6iMSq7vYH+VbKt3yphm62sk
-	4vprQdzHkIJq6sNebLGfzdF8c5W3uDaE9h0UCjWRqrkalnenfvCGjA1+kf09bcAfgHqrWxhehFG
-	rxAWMhh04rDS6PQsoDS1Vv/x3DimUMzyOCG1jCYo8tlMSquazh1QFtW1MDrMUpf3xseygRG5ba4
-	LkMRA0ptdlvamOlA9dPa8nCwWYedVKTHnNK1ko3X6EPOVF5/VCqg8yutRFvAdfer/m4d74wN0cS
-	4cdzunPojZ47rYMiiqjdV7ttvKtAuMBSBsK/deNS2I9VLGVyb5qc9noSrlvyX8hAXuAPu+TkgHr
-	vltifDecfPtLlIhcNmmVn9Q9ce2JGKNeo+UGwU7T6dYkpOQQ=
-X-Google-Smtp-Source: AGHT+IHtnAeMNoqTMmNPwYJahRNDxJzYsvSJkXHKGiu4Co27s+6YE/y6/imOhrVFG8UJ5Nfh4f645w==
-X-Received: by 2002:a05:600c:3503:b0:456:1a41:f932 with SMTP id 5b1f17b1804b1-45a10c01785mr10573605e9.22.1754952486429;
-        Mon, 11 Aug 2025 15:48:06 -0700 (PDT)
+        bh=r3zYiSbWa/8gFr74O4y8591kMrUTTGd8r0VSLaU0hTQ=;
+        b=CzFNaDMxP5iocmQ06JchD0xq8dzSG9R+nytFlIBGXT7+e/0a/1VWBlBhs0gSan1tuj
+         Q+bkQ0eirh9uyKLAPGTc4b3wmR6JHF8x3yhq3KsLB+K/J2ie3kLtVATFZNAEyDxE8BEw
+         OopFmUbhSOS6btTxYHGPfFc/ISac536d6n3IR/uiYMIgXhq+jJjBcU8bF5EHJ68Eh6Pv
+         Z5wpCoIqb9/NjPS7n5/yABo3es4XQjxT+1dxr7qZySKnh+YIeQYNIzZ3eZ5bokb1Uh5u
+         kdbCYbeEzwpgey9L6KbXXSlDL9yv5n1jbEnO+khJ8BzoL7PKeRmsVPFwKz2Wbtr6+Ibm
+         fwow==
+X-Forwarded-Encrypted: i=1; AJvYcCUOIB4k5zpWW0XbGT/cZssSYg3nGgSZJgtHRhuVYjyiMalUHo7MdPWz5TzJQYOs3gCBOmco2yAxi3NOefg=@vger.kernel.org, AJvYcCWaY1nha1ClRcwBv3+PC6Or26ur4nDWr5ko5uOCNyGfprPF2mT2FLx5lZ+1Xdce0cNVQK4oQDTCtirJ@vger.kernel.org, AJvYcCWfFuznBCQcsfJdjPMw8Z+Tnbr1grlnNkwAoXibLQK4t1FqYTZb6QAdzRwfc4gfJqoMux2EM+J+dZ68@vger.kernel.org, AJvYcCX7hmFro/QVXzGrH4YeVpF54CmE7AIS2SggZqn8d5MtQzS4BUhYwotdrShaVmcPyu1l6nagWmnXUD85e9o=@vger.kernel.org, AJvYcCXar0RCffpl3E6oLJNQs2adK6ZdZvhz+3OY5iyKOCFNE4QoCsDfx/2LnIDhJEezFuMuuHU7SNqa5HFY@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw6F+Kq1+xVvDiiCR69nzAplKKcm00jVKKC0RMMUk56rSbPpVdn
+	hciEx7lvQunniNu/5nA0cG8/XnesoRHM8n6X7sqkJURH+emAXZQt95GxZcK8u9w=
+X-Gm-Gg: ASbGncua6M0C79TE6aJlMpKpsw4QZ8UUTO61vfJQ+wWe9U6BhsP1om0Vq7jgJquOQYL
+	CLiD1a3TGb+lfLvgF6RbUtjFJ065o1nxAyUGsjGF6C/6+4A6SoAKW6JM1XeNEpXaPBrZsT8wsq3
+	orgSptp9XTHaR+RyRpJZe40vLBLII1vrwJs5znrbLzCKN/dRv9gCeNla7BY8W0wod8memYX72/C
+	biLyx0KsVV2MoZmv+z2fKpRAVTHtYcfGkt1qPRIKBkmWTVDyUbQlxJSfcDYZXMQaCAhpdrHK+VQ
+	iZj7JdaIUluYT+hy3ewSolY21BT7EFrb4+iBcqZ+0CRb3FP4eryD7e+ECT0OvLD3BI4G7aWfynV
+	CsSTHIl5WIvMlDiNFgWJi2irmGGZU+oqBT5KYX21W8ZwGNA4=
+X-Google-Smtp-Source: AGHT+IEbcxCUEiLSDqA+CHfoPnRRB51Rzie+AnI7Psr4l0HcGT08f8lk/aT0ytV8oyesZdQ1axi6Qg==
+X-Received: by 2002:a5d:64cd:0:b0:3a4:f70e:abda with SMTP id ffacd0b85a97d-3b910fce9a8mr1003465f8f.10.1754952489318;
+        Mon, 11 Aug 2025 15:48:09 -0700 (PDT)
 Received: from localhost.localdomain ([2a0d:e487:224f:9b35:8c56:5611:71e6:ca77])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-459dbba5210sm343678175e9.2.2025.08.11.15.48.05
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-459dbba5210sm343678175e9.2.2025.08.11.15.48.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Aug 2025 15:48:06 -0700 (PDT)
+        Mon, 11 Aug 2025 15:48:08 -0700 (PDT)
 From: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
 To: linux-kernel@vger.kernel.org
 Cc: peter.ujfalusi@gmail.com,
@@ -93,9 +93,9 @@ Cc: peter.ujfalusi@gmail.com,
 	linux-usb@vger.kernel.org,
 	shuah@kernel.org,
 	jihed.chaibi.dev@gmail.com
-Subject: [PATCH 4/8] mfd: dt-bindings: ti,twl4030-power: convert to DT schema
-Date: Tue, 12 Aug 2025 00:47:35 +0200
-Message-Id: <20250811224739.53869-5-jihed.chaibi.dev@gmail.com>
+Subject: [PATCH 5/8] pwm: dt-bindings: ti,twl-pwm: convert to DT schema
+Date: Tue, 12 Aug 2025 00:47:36 +0200
+Message-Id: <20250811224739.53869-6-jihed.chaibi.dev@gmail.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250811224739.53869-1-jihed.chaibi.dev@gmail.com>
 References: <20250811224739.53869-1-jihed.chaibi.dev@gmail.com>
@@ -107,147 +107,93 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert the legacy TXT binding for the TWL4030 power module
+Convert the legacy TXT binding for the TWL-family PWM controller
 to the modern YAML DT schema format. This adds formal validation
-and improves documentation.
+and improves documentation by inheriting from the base pwm schema.
 
 Signed-off-by: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
 ---
- .../bindings/mfd/ti,twl4030-power.yaml        | 69 +++++++++++++++++++
- .../devicetree/bindings/mfd/twl4030-power.txt | 48 -------------
- 2 files changed, 69 insertions(+), 48 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/ti,twl4030-power.yaml
- delete mode 100644 Documentation/devicetree/bindings/mfd/twl4030-power.txt
+ .../devicetree/bindings/pwm/ti,twl-pwm.txt    | 17 -------
+ .../devicetree/bindings/pwm/ti,twl-pwm.yaml   | 46 +++++++++++++++++++
+ 2 files changed, 46 insertions(+), 17 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/pwm/ti,twl-pwm.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/ti,twl-pwm.yaml
 
-diff --git a/Documentation/devicetree/bindings/mfd/ti,twl4030-power.yaml b/Documentation/devicetree/bindings/mfd/ti,twl4030-power.yaml
+diff --git a/Documentation/devicetree/bindings/pwm/ti,twl-pwm.txt b/Documentation/devicetree/bindings/pwm/ti,twl-pwm.txt
+deleted file mode 100644
+index d97ca1964..000000000
+--- a/Documentation/devicetree/bindings/pwm/ti,twl-pwm.txt
++++ /dev/null
+@@ -1,17 +0,0 @@
+-Texas Instruments TWL series PWM drivers
+-
+-Supported PWMs:
+-On TWL4030 series: PWM1 and PWM2
+-On TWL6030 series: PWM0 and PWM1
+-
+-Required properties:
+-- compatible: "ti,twl4030-pwm" or "ti,twl6030-pwm"
+-- #pwm-cells: should be 2. See pwm.yaml in this directory for a description of
+-  the cells format.
+-
+-Example:
+-
+-twl_pwm: pwm {
+-	compatible = "ti,twl6030-pwm";
+-	#pwm-cells = <2>;
+-};
+diff --git a/Documentation/devicetree/bindings/pwm/ti,twl-pwm.yaml b/Documentation/devicetree/bindings/pwm/ti,twl-pwm.yaml
 new file mode 100644
-index 000000000..c95b3f705
+index 000000000..5bbbdc13a
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/ti,twl4030-power.yaml
-@@ -0,0 +1,69 @@
++++ b/Documentation/devicetree/bindings/pwm/ti,twl-pwm.yaml
+@@ -0,0 +1,46 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/mfd/ti,twl4030-power.yaml#
++$id: http://devicetree.org/schemas/pwm/ti,twl-pwm.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Texas Instruments TWL4030-family Power Management Module
++title: Texas Instruments TWL4030/TWL6030 family PWM controller
 +
 +maintainers:
 +  - Peter Ujfalusi <peter.ujfalusi@gmail.com>
 +
 +description: |
-+  The power management module inside the TWL family provides several facilities
-+  to control the power resources, including power scripts. For now, the
-+  binding only supports the complete shutdown of the system after poweroff.
++  Bindings for the following PWM controllers :
++    TWL4030 series: PWMA and PWMB (connected to LEDA and LEDB terminals)
++    TWL6030 series: LED PWM (mainly used as charging indicator LED)
++
++allOf:
++  - $ref: /schemas/pwm/pwm.yaml#
 +
 +properties:
 +  compatible:
-+    description: |
-+      The compatible string determines the specific power configuration.
-+        "ti,twl4030-power": Standard power control.
-+        "ti,twl4030-power-reset": Recommended for OMAP3530 and similar SoCs
-+          that require a special configuration for warm reset to work correctly.
-+        "ti,twl4030-power-idle": Loads the TI-recommended configuration for
-+          idle modes into the PMIC.
-+        "ti,twl4030-power-idle-osc-off": Uses the recommended idle configuration
-+          but also shuts down the external oscillator. This may not work on all
-+          boards depending on the oscillator wiring.
-+
 +    enum:
-+      - ti,twl4030-power
-+      - ti,twl4030-power-reset
-+      - ti,twl4030-power-idle
-+      - ti,twl4030-power-idle-osc-off
++      - ti,twl4030-pwm
++      - ti,twl6030-pwm
 +
-+  ti,system-power-controller:
-+    type: boolean
-+    description:
-+      Indicates that the TWL4030 is the power supply master of the system,
-+      allowing it to initiate system power-off.
-+
-+  ti,use_poweroff:
-+    type: boolean
-+    description: Deprecated name for ti,system-power-controller.
-+    deprecated: true
++  '#pwm-cells':
++    const: 2
 +
 +required:
 +  - compatible
++  - '#pwm-cells'
 +
-+additionalProperties: false
++unevaluatedProperties: false
 +
 +examples:
 +  - |
-+    i2c {
-+      clock-frequency = <2600000>;
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      twl: twl@48 {
-+        reg = <0x48>;
-+        interrupts = <7>; /* SYS_NIRQ cascaded to intc */
-+        interrupt-parent = <&intc>;
-+
-+        twl_power: power {
-+          compatible = "ti,twl4030-power";
-+          ti,use_poweroff;
-+        };
-+      };
++    pwm {
++        compatible = "ti,twl4030-pwm";
++        #pwm-cells = <2>;
 +    };
-diff --git a/Documentation/devicetree/bindings/mfd/twl4030-power.txt b/Documentation/devicetree/bindings/mfd/twl4030-power.txt
-deleted file mode 100644
-index 3d1996331..000000000
---- a/Documentation/devicetree/bindings/mfd/twl4030-power.txt
-+++ /dev/null
-@@ -1,48 +0,0 @@
--Texas Instruments TWL family (twl4030) reset and power management module
--
--The power management module inside the TWL family provides several facilities
--to control the power resources, including power scripts. For now, the
--binding only supports the complete shutdown of the system after poweroff.
--
--Required properties:
--- compatible : must be one of the following
--	"ti,twl4030-power"
--	"ti,twl4030-power-reset"
--	"ti,twl4030-power-idle"
--	"ti,twl4030-power-idle-osc-off"
--
--The use of ti,twl4030-power-reset is recommended at least on
--3530 that needs a special configuration for warm reset to work.
--
--When using ti,twl4030-power-idle, the TI recommended configuration
--for idle modes is loaded to the tlw4030 PMIC.
--
--When using ti,twl4030-power-idle-osc-off, the TI recommended
--configuration is used with the external oscillator being shut
--down during off-idle. Note that this does not work on all boards
--depending on how the external oscillator is wired.
--
--Optional properties:
--
--- ti,system-power-controller: This indicates that TWL4030 is the
--  power supply master of the system. With this flag, the chip will
--  initiate an ACTIVE-to-OFF or SLEEP-to-OFF transition when the
--  system poweroffs.
--
--- ti,use_poweroff: Deprecated name for ti,system-power-controller
--
--Example:
--&i2c1 {
--	clock-frequency = <2600000>;
--
--	twl: twl@48 {
--		reg = <0x48>;
--		interrupts = <7>; /* SYS_NIRQ cascaded to intc */
--		interrupt-parent = <&intc>;
--
--		twl_power: power {
--			compatible = "ti,twl4030-power";
--			ti,use_poweroff;
--		};
--	};
--};
++
++  - |
++    pwm {
++        compatible = "ti,twl6030-pwm";
++        #pwm-cells = <2>;
++    };
 -- 
 2.39.5
 
