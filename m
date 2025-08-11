@@ -1,78 +1,78 @@
-Return-Path: <linux-pwm+bounces-7006-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7007-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id EF210B218A4
-	for <lists+linux-pwm@lfdr.de>; Tue, 12 Aug 2025 00:49:32 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F596B21893
+	for <lists+linux-pwm@lfdr.de>; Tue, 12 Aug 2025 00:48:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 8DD183B7A5A
-	for <lists+linux-pwm@lfdr.de>; Mon, 11 Aug 2025 22:48:12 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B07727A27D9
+	for <lists+linux-pwm@lfdr.de>; Mon, 11 Aug 2025 22:46:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60CC12D876B;
-	Mon, 11 Aug 2025 22:47:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C0E54227E83;
+	Mon, 11 Aug 2025 22:48:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hqx0mqsq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lXvqeIII"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f44.google.com (mail-wm1-f44.google.com [209.85.128.44])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69C641F948;
-	Mon, 11 Aug 2025 22:47:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF22421FF3C;
+	Mon, 11 Aug 2025 22:48:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754952476; cv=none; b=dLTg07Ojh7FYZ/rWr0R6txmXWGmnS2WQIPnfTVRdtAHw25h6IMtZfUdY16pe4hTtrJ04e5lEHUdYEml60MZ15rmMv/cmLuFNVdecTjgZ8Cwc+EKLjhvnqc68Pfbar6zPJNpwr6Sf3pZ46cl6Jr+I/QBx/UZGIoBT/LjF4GYVjmA=
+	t=1754952484; cv=none; b=hVBGD2m503JW4Au2M4Fwqbo+rk/uVUzQLzd9+jmkOhXPK+/hy5Hf9VoO7C7pcrqraBHJ5qdo9wtBelk9QOa5SxCFR+oqbRo+HCF+J0F5rjFJJFPNY3m5O7O14gcz5KfshRk/+8mkLmXL0BQsgGlqDsCdvWt1vrXqchmnGBGuhM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754952476; c=relaxed/simple;
-	bh=3fMs0gu71XBaEqJNnizVOUz+v+B6NVErPlhRL3FCrsE=;
+	s=arc-20240116; t=1754952484; c=relaxed/simple;
+	bh=jvjzZq0bkuqjMW0H8s8YCSoJvL3jWoXr90/T8GKdPCo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=kYT7g482r7qvEJyQuSM3A5wErVZdI9AE7msfUQZJsdJyLipUXlZTOoq4g1clX7ZB+a1GkmTiqxmvh/X3/OCYeS0lQNXRur59ozny+sRKVD8oCS2R7rq6OLp3I7eD3bEeJl7/jBHkVNNyTBhmCflXe0WwABVhYvzOboxqQ8oNA/Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hqx0mqsq; arc=none smtp.client-ip=209.85.128.44
+	 MIME-Version; b=fU3bD/5y0Pxu1xn9tyZiod6d1DAXq7sdJUWNjUJsE1K8j6BgxMC1GRjUM97sDKIZZ6gu2Q9Y8+seXQKdAyqnSIabQ63CQ4ykwYoxsjO6dWil6kO4Qwpy9Xa/LA9b/W/nzl9LIpbfL1U7pDmmCmGdgGGXpBy05MEN71z0wSiwyQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lXvqeIII; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f44.google.com with SMTP id 5b1f17b1804b1-459d7726ee6so24850135e9.2;
-        Mon, 11 Aug 2025 15:47:54 -0700 (PDT)
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-458ba079338so37743245e9.1;
+        Mon, 11 Aug 2025 15:48:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1754952472; x=1755557272; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1754952481; x=1755557281; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JzCqX2ZYKYTo3ekNGO+LJq6k9fCVha5OiU2+WPRizEY=;
-        b=hqx0mqsqqO+KJCvuAaTb4c/dk9YNaErvP2ZlHuTvhYZ+GuZGUfQAa0/a2WFYkw9wPP
-         cpyigmf4z3cx0YeeeklzAx8byPewZmRWialIAxMHXYnRr3lOJO1OS3F6jGs07N32ucif
-         w+oQn8dKSJaW1WuL4yja62Yn1rUFFsySW/gGtDo1l8JBEjxzqUEqA01mP5d9Ty63owlD
-         Z36y0Pbd+aJn9Uo4juwWcBAZhC9AwkJ/zp3wTI3lbOs0uwbHlNCRMEp++Hxd4STkaqJ5
-         BZRFLBps4aHCn+O5gfEY4Rw5tRrd+9Q2OH862D3NiadvyfAxEbMrmn3zNcguP01YuO7F
-         jOIg==
+        bh=zqI122usjZRSFS1Z3VRf+ltsntZcMEhFFJ/iSXUc8qI=;
+        b=lXvqeIII0tv7NNnmsb0xjMlhuBn8jbP0HJFLLGoEONM+2bwawqe5Ggb5OOaSJBVmoJ
+         nA4sJsuZpEUsTeVYD2Ygx6HRg47bL5VlzfijvaTtPcTlPukOYiPXnqVV+PW5DBzBNs46
+         pM9iYtiYXrcV6it/XIEKV3yk9h+biL9cCG1BrZqZAbWMzHwnQsRL7TqKIkWi9oqY5pda
+         QGBB3lPL3TfnLXhVcuXbc8sK1re8xrij4wmSmOCn3G6lDxH6N5/FPzhQ77hMTCPmJvW1
+         YGH46ILAcBWioqJzLWCBDpTNZdDDtK/KDsgWkObU1KeexVzxhEvR70Zk6SWjXGU7vv6W
+         I0TA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754952472; x=1755557272;
+        d=1e100.net; s=20230601; t=1754952481; x=1755557281;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=JzCqX2ZYKYTo3ekNGO+LJq6k9fCVha5OiU2+WPRizEY=;
-        b=UVuchHs0RaQwf5Y0H2r6jqN2n9AjEyROr7sj+fz19bWR/rOVsLHttIFZfwlpO+HvFw
-         oVZO0PkL7Naunh9m6EmDv5KHbCEV+agYU6kogHi5TXuO/C4G86mXGxmCMQH1ewjaFgw/
-         VfcoO1jvfewW1PRUnJwj3PC5tMcSq0iWnRY59x10PHX76tRuazOz52dfkw49cXo/3MRm
-         ZhKmCi1jfYNAJfUM/td5ly+KwbZipUfHkf35sGFGr8VBtzpmABG+Yxw3k28zfpuZb0K6
-         9EldpUFyfCQ2QbbJBeengvpgDNPE+/rtJmNZFs74YAcfGY/My24xiUmuikhotUEsYedQ
-         HjeQ==
-X-Forwarded-Encrypted: i=1; AJvYcCU6THN0mLU4glk/HshcbfPJRBfFQ0Hfuuywk5c+BnQX71DUbFZhKYqI/enxwDJDw3qPUKdYOxk73RsnCeM=@vger.kernel.org, AJvYcCVtDdqNpUWy/WBdVtpd+zpLktgL4Ciuu1uwtfCTmSwSoEkgLDH/PvC6kPmpcz7jAegzYAc4gAAsWV3r@vger.kernel.org, AJvYcCWSvbVSvdGmkgLArvRgIVMI65NP1TSznQYpKbzYfVFa3HoZD9qFdzsymVKUHwyIyv3f1ah2yIL0ZgUj@vger.kernel.org, AJvYcCWjgCFEFaNP+hpyPao/6joD+ByBzRfhbxl2rbizNW8W9eFnnbkxeHE4fDd9aN86mN70Er9y2bKIZbOYCn0=@vger.kernel.org, AJvYcCWxlAFg6Nju3nSVXlj6qId/s8pYOoXn9huRHGRsIO3mDHvoKPmwNVHbB4G3TytuULQj2QiLQwwRmDXq@vger.kernel.org
-X-Gm-Message-State: AOJu0YzYm86cFScY3RUWvMUpUbbiR8nzzntImm8zACg/DS21BAxzI9m5
-	Gye5L5pYZUxebliiGurSlejbMT9UK7dEo32o7BuT1DFVPzAacd/jttD0ac4uNx0=
-X-Gm-Gg: ASbGncsWcOa2K5Cs02uVHSpKmCgV+5kbu/saFEyvBu6Kz06M7sG+2h0yS42I/zQWAhZ
-	V9P7MxzE1VHpnMgXdDOvmdJI6anC+Zqqng/qmaIqCQ5iaxW6wO3NEjbPjQQyDqVFF71T2FYlXxb
-	Bv/ZqUnpc6fBaoTL5C2I3401ceKfOBBdjOPhyl+xRQJY37QUX+0Q4/2H8BcDU7EfURVaFlCFQtj
-	AFgmg0fftM5vF0J5Mjl9vROyzCgci3ovOZzXzxjoM46mdOypit+5jrZdmxuKdOEiV8AIUKJkUeX
-	bjv71GxIZYUjUFCjMJyVDPGfLPSgqHHCbRJHJPL00zziRUd75lKN58kmeoaRIutBnevDLmUkU6J
-	facxdMltZEmY7ysimGem/yJNLUsr6BIT0dbYmC4+L87gEutgzp5+gRUgILQ==
-X-Google-Smtp-Source: AGHT+IFWzxJ+g5eEcsxMCd0lwXo+vaBOu8AhH+amFT8iqogah3uVpug/+TvyZBOzuUBBVpCx/oayLQ==
-X-Received: by 2002:a05:600c:3b8d:b0:459:d494:faf9 with SMTP id 5b1f17b1804b1-45a1161825dmr4761515e9.10.1754952472284;
-        Mon, 11 Aug 2025 15:47:52 -0700 (PDT)
+        bh=zqI122usjZRSFS1Z3VRf+ltsntZcMEhFFJ/iSXUc8qI=;
+        b=RykCUBKDq5TezyXqyM7vh0wt761MgYVPxCSLDFG2nbEJaTw/sIHyNquAMChz23QpeS
+         PtGOv2XBCcxEDtM6V2qHlWTiRw6sdUt0uWJ2PFU2tEEGsR1FPe9PvT45bJeN9ADJy8AJ
+         ZUi/ACfizFBTr2Xk3uw2A/JUqY1AB6SxnkKBj3BAV2HZ7Uxau077GjfALxYxxmvCjKZI
+         mPd4upuxQiPxOLqEvFFbWONIr6v1qNOJynDipcgr6YOxcQe5AFwqzHq3n+cq36ngze7q
+         CKwYjbKKzY07fY2wostDHuHw4Z/8rogjJOwGAXRYm5J8tR39fJtMBbWLT5X72bw2w/pY
+         cKPw==
+X-Forwarded-Encrypted: i=1; AJvYcCUT3w44eEAdcLtF4MN2dmfvQxGVNMc7UPL8BKpPtzToliJOcOB6EsIi+jZMk5qPHfyy4pf7uU8gDYyd@vger.kernel.org, AJvYcCV+bKB2UMw0AMMEgH3oDbOU33K+l1WB7zK38VkgzHXDjLaqk1u9r7I//On4I9+Lq5mdnw7hKCOvwLPz6go=@vger.kernel.org, AJvYcCVteWsOxxXJqnGReemh9+sIibypaVfH8a1nwG7rbsoUAl7o+jxpjCueRh+64CmTGJ43avlWyn0rFXPJwN0=@vger.kernel.org, AJvYcCX9+i+dscKZBLu41/EYq4qA9TA5MlKjsJHShrr4fy3qWa0ySoA+A7DT3qxh+bWjF9QmSWn5t5F31+9f@vger.kernel.org, AJvYcCXvJVFlEBo0oC/rZnUuwnkCzrbJSEqsMvIDuNVFZSw5TwjIXwOeR29pqJMOzVpdqD9iounGlNkDqKkO@vger.kernel.org
+X-Gm-Message-State: AOJu0YxvL5XIqMVS5XDQr8lfv6Nq4lQiJaSWMgaKgMSfIqHYpqNUQWLA
+	HMkN5BTu8cQ54UK94+sIIKngsI3+C217I/szp0YfRszdPCpneeC3eka6h05xybk=
+X-Gm-Gg: ASbGncuyFdis/HBP8BdRJ8im4Tj2dsk0ljYx66XuFyGekRLOF6X0TnAeXSLVIrTKnyu
+	NWZMrE7qIoDsovbwU1nhgNY+ji+4gwo25daSyR4HOiExYGiGIX2qwWc0WenAVAoH3cZ6Ou8ImnY
+	ddN0xOBoo5vXtyWip+D6ovmERHdrC2DfYRDjMtlKv33vFmRJjoWp7s/tZHAQ19GMxAaWKe8bEbX
+	/oEN/0yOLp8pIGZ1F4szE0wRRuNtXBbq1zEW695+72m58NSUtR1SgdSpuRunDfQrCbhOZf78aQ0
+	EjOtbnJJ4kBP1D6VpsCt9x3ianMIykYqRLqtF8dh0l8Rletp8mZtzpBrSQ1tCUVeuwQquszJDN7
+	0zVmVlbR3AFVto3I3OFSyBmLK1CZLogkwsp8lxXfCSWL8C7Q=
+X-Google-Smtp-Source: AGHT+IGmrUmvkaTCi7+h+K3nrilFgGoEjlvUoTRaXe9AQnbTOgTVBgryhE8j99oYqnDVPzwHCU5fnw==
+X-Received: by 2002:a05:600c:47d4:b0:459:e002:8b1e with SMTP id 5b1f17b1804b1-45a10dd53ebmr6459555e9.13.1754952480633;
+        Mon, 11 Aug 2025 15:48:00 -0700 (PDT)
 Received: from localhost.localdomain ([2a0d:e487:224f:9b35:8c56:5611:71e6:ca77])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-459dbba5210sm343678175e9.2.2025.08.11.15.47.50
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-459dbba5210sm343678175e9.2.2025.08.11.15.47.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 11 Aug 2025 15:47:51 -0700 (PDT)
+        Mon, 11 Aug 2025 15:48:00 -0700 (PDT)
 From: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
 To: linux-kernel@vger.kernel.org
 Cc: peter.ujfalusi@gmail.com,
@@ -93,9 +93,9 @@ Cc: peter.ujfalusi@gmail.com,
 	linux-usb@vger.kernel.org,
 	shuah@kernel.org,
 	jihed.chaibi.dev@gmail.com
-Subject: [PATCH 1/8] mfd: dt-bindings: ti,twl4030-audio: convert to DT schema
-Date: Tue, 12 Aug 2025 00:47:32 +0200
-Message-Id: <20250811224739.53869-2-jihed.chaibi.dev@gmail.com>
+Subject: [PATCH 2/8] mfd: dt-bindings: ti,twl6040: convert to DT schema
+Date: Tue, 12 Aug 2025 00:47:33 +0200
+Message-Id: <20250811224739.53869-3-jihed.chaibi.dev@gmail.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250811224739.53869-1-jihed.chaibi.dev@gmail.com>
 References: <20250811224739.53869-1-jihed.chaibi.dev@gmail.com>
@@ -107,167 +107,252 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert the legacy TXT binding for the TWL4030 audio module
+Convert the legacy TXT binding for the TWL6040 MFD
 to the modern YAML DT schema format. This adds formal validation
 and improves documentation.
 
 Signed-off-by: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
 ---
- .../bindings/mfd/ti,twl4030-audio.yaml        | 91 +++++++++++++++++++
- .../devicetree/bindings/mfd/twl4030-audio.txt | 46 ----------
- 2 files changed, 91 insertions(+), 46 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/ti,twl4030-audio.yaml
- delete mode 100644 Documentation/devicetree/bindings/mfd/twl4030-audio.txt
+ .../devicetree/bindings/mfd/ti,twl6040.yaml   | 155 ++++++++++++++++++
+ .../devicetree/bindings/mfd/twl6040.txt       |  67 --------
+ 2 files changed, 155 insertions(+), 67 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/ti,twl6040.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mfd/twl6040.txt
 
-diff --git a/Documentation/devicetree/bindings/mfd/ti,twl4030-audio.yaml b/Documentation/devicetree/bindings/mfd/ti,twl4030-audio.yaml
+diff --git a/Documentation/devicetree/bindings/mfd/ti,twl6040.yaml b/Documentation/devicetree/bindings/mfd/ti,twl6040.yaml
 new file mode 100644
-index 000000000..16ddcf007
+index 000000000..305dc1676
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/ti,twl4030-audio.yaml
-@@ -0,0 +1,91 @@
++++ b/Documentation/devicetree/bindings/mfd/ti,twl6040.yaml
+@@ -0,0 +1,155 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/mfd/ti,twl4030-audio.yaml#
++$id: http://devicetree.org/schemas/mfd/ti,twl6040.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Texas Instruments TWL4030-family Audio Module
++title: Texas Instruments TWL6040/TWL6041 Audio Codec
 +
 +maintainers:
 +  - Peter Ujfalusi <peter.ujfalusi@gmail.com>
 +
 +description: |
-+  The audio module within the TWL4030-family of companion chips consists
-+  of an audio codec and a vibra driver. This binding describes the parent
-+  node for these functions.
++  The TWL6040s are 8-channel high quality low-power audio codecs providing audio,
++  vibra and GPO functionality on OMAP4+ platforms.
++  They are connected to the host processor via i2c for commands, McPDM for audio
++  data and commands.
 +
 +properties:
 +  compatible:
-+    const: ti,twl4030-audio
++    enum:
++      - ti,twl6040
++      - ti,twl6041
 +
-+  codec:
++  reg:
++    const: 0x4b
++
++  interrupts:
++    maxItems: 1
++
++  gpio-controller: true
++
++  '#gpio-cells':
++    const: 1
++
++  '#clock-cells':
++    description: TWL6040 is a provider of PDMCLK which is used by McPDM.
++    const: 0
++
++  twl6040,audpwron-gpio:
++    description: The GPIO specifier for the audio power-on line.
++    maxItems: 1
++
++  vio-supply:
++    description: Regulator for the VIO supply.
++
++  v2v1-supply:
++    description: Regulator for the V2V1 supply.
++
++  enable-active-high:
++    type: boolean
++    description: If present, powers on the device during boot.
++
++  clocks:
++    minItems: 1
++    maxItems: 2
++
++  clock-names:
++    minItems: 1
++    maxItems: 2
++    items:
++      enum: [clk32k, mclk]
++
++  # Vibra functionality :
++
++  vddvibl-supply:
++    description: Regulator for the left vibra motor supply.
++
++  vddvibr-supply:
++    description: Regulator for the right vibra motor supply.
++
++  vibra:
 +    type: object
-+    description: Node containing properties for the audio codec functionality.
++    description: Node for vibra motor configuration parameters.
 +    properties:
-+      ti,digimic_delay:
++      ti,vibldrv-res:
 +        $ref: /schemas/types.yaml#/definitions/uint32
-+        description:
-+          Delay in milliseconds after enabling digital microphones to reduce
-+          artifacts.
++        description: Resistance parameter for the left driver.
 +
-+      ti,ramp_delay_value:
++      ti,vibrdrv-res:
 +        $ref: /schemas/types.yaml#/definitions/uint32
-+        description:
-+          Headset ramp delay configuration to reduce pop noise.
++        description: Resistance parameter for the right driver.
 +
-+      ti,hs_extmute:
-+        type: boolean
-+        description:
-+          Enable the use of an external mute for headset pop reduction.
-+
-+      ti,hs_extmute_gpio:
-+        $ref: /schemas/types.yaml#/definitions/phandle-array
-+        description:
-+          The GPIO specifier for the external mute control.
-+        maxItems: 1
-+
-+      ti,offset_cncl_path:
++      ti,viblmotor-res:
 +        $ref: /schemas/types.yaml#/definitions/uint32
-+        description:
-+          Offset cancellation path selection. Refer to the Technical
-+          Reference Manual for valid values.
++        description: Resistance parameter for the left motor.
 +
-+    # The 'codec' node itself is optional, but if it exists, it can be empty.
-+    # We don't require any of its sub-properties.
++      ti,vibrmotor-res:
++        $ref: /schemas/types.yaml#/definitions/uint32
++        description: Resistance parameter for the right motor.
 +
-+  ti,enable-vibra:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: |
-+      Set to 1 to enable the vibra functionality, if missing
-+      or it is 0, the vibra functionality is disabled.
++      vddvibl_uV:
++        $ref: /schemas/types.yaml#/definitions/uint32
++        description: Optional override for the VDDVIBL default voltage in microvolts.
 +
-+additionalProperties: false
++      vddvibr_uV:
++        $ref: /schemas/types.yaml#/definitions/uint32
++        description: Optional override for the VDDVIBR default voltage in microvolts.
++    required:
++      - ti,vibldrv-res
++      - ti,vibrdrv-res
++      - ti,viblmotor-res
++      - ti,vibrmotor-res
++    additionalProperties: false
 +
 +required:
 +  - compatible
++  - reg
++  - interrupts
++  - gpio-controller
++  - '#gpio-cells'
++  - '#clock-cells'
++  - twl6040,audpwron-gpio
++  - vio-supply
++  - v2v1-supply
++  - vddvibl-supply
++  - vddvibr-supply
++  - vibra
++
++additionalProperties: false
 +
 +examples:
 +  - |
 +    i2c {
-+
-+      clock-frequency = <2600000>;
 +      #address-cells = <1>;
 +      #size-cells = <0>;
 +
-+      twl: twl@48 {
-+        reg = <0x48>;
-+        interrupts = <7>; /* SYS_NIRQ cascaded to intc */
-+        interrupt-parent = <&intc>;
++      twl6040: twl@4b {
++        compatible = "ti,twl6040";
++        reg = <0x4b>;
 +
-+        twl_audio: audio {
-+          compatible = "ti,twl4030-audio";
++        interrupts = <0 119 4>;
++        interrupt-parent = <&gic>;
 +
-+          ti,enable-vibra = <1>;
++        gpio-controller;
++        #gpio-cells = <1>;
++        #clock-cells = <0>;
++        twl6040,audpwron-gpio = <&gpio4 31 0>;
 +
-+          codec {
-+            ti,ramp_delay_value = <3>;
-+          };
++        vio-supply = <&v1v8>;
++        v2v1-supply = <&v2v1>;
++        enable-active-high;
 +
++        /* regulators for vibra motor */
++        vddvibl-supply = <&vbat>;
++        vddvibr-supply = <&vbat>;
++
++        vibra {
++          /* Vibra driver, motor resistance parameters */
++          ti,vibldrv-res = <8>;
++          ti,vibrdrv-res = <3>;
++          ti,viblmotor-res = <10>;
++          ti,vibrmotor-res = <10>;
 +        };
 +      };
 +    };
-diff --git a/Documentation/devicetree/bindings/mfd/twl4030-audio.txt b/Documentation/devicetree/bindings/mfd/twl4030-audio.txt
+diff --git a/Documentation/devicetree/bindings/mfd/twl6040.txt b/Documentation/devicetree/bindings/mfd/twl6040.txt
 deleted file mode 100644
-index 414d2ae0a..000000000
---- a/Documentation/devicetree/bindings/mfd/twl4030-audio.txt
+index dfd8683ed..000000000
+--- a/Documentation/devicetree/bindings/mfd/twl6040.txt
 +++ /dev/null
-@@ -1,46 +0,0 @@
--Texas Instruments TWL family (twl4030) audio module
+@@ -1,67 +0,0 @@
+-Texas Instruments TWL6040 family
 -
--The audio module inside the TWL family consist of an audio codec and a vibra
--driver.
+-The TWL6040s are 8-channel high quality low-power audio codecs providing audio,
+-vibra and GPO functionality on OMAP4+ platforms.
+-They are connected to the host processor via i2c for commands, McPDM for audio
+-data and commands.
 -
 -Required properties:
--- compatible : must be "ti,twl4030-audio"
+-- compatible : "ti,twl6040" for twl6040, "ti,twl6041" for twl6041
+-- reg: must be 0x4b for i2c address
+-- interrupts: twl6040 has one interrupt line connecteded to the main SoC
+-- gpio-controller:
+-- #gpio-cells = <1>: twl6040 provides GPO lines.
+-- #clock-cells = <0>; twl6040 is a provider of pdmclk which is used by McPDM
+-- twl6040,audpwron-gpio: Power on GPIO line for the twl6040
+-
+-- vio-supply: Regulator for the twl6040 VIO supply
+-- v2v1-supply: Regulator for the twl6040 V2V1 supply
 -
 -Optional properties, nodes:
--
--Audio functionality:
--- codec { }: Need to be present if the audio functionality is used. Within this
--	     section the following options can be used:
--- ti,digimic_delay: Delay need after enabling the digimic to reduce artifacts
--		    from the start of the recorded sample (in ms)
---ti,ramp_delay_value: HS ramp delay configuration to reduce pop noise
---ti,hs_extmute: Use external mute for HS pop reduction
---ti,hs_extmute_gpio: Use external GPIO to control the external mute
---ti,offset_cncl_path: Offset cancellation path selection, refer to TRM for the
--		      valid values.
+-- enable-active-high: To power on the twl6040 during boot.
+-- clocks: phandle to the clk32k and/or to mclk clock provider
+-- clock-names: Must be "clk32k" for the 32K clock and "mclk" for the MCLK.
 -
 -Vibra functionality
--- ti,enable-vibra: Need to be set to <1> if the vibra functionality is used. if
--		   missing or it is 0, the vibra functionality is disabled.
+-Required properties:
+-- vddvibl-supply: Regulator for the left vibra motor
+-- vddvibr-supply: Regulator for the right vibra motor
+-- vibra { }: Configuration section for vibra parameters containing the following
+-	     properties:
+-- ti,vibldrv-res: Resistance parameter for left driver
+-- ti,vibrdrv-res: Resistance parameter for right driver
+-- ti,viblmotor-res: Resistance parameter for left motor
+-- ti,viblmotor-res: Resistance parameter for right motor
+-
+-Optional properties within vibra { } section:
+-- vddvibl_uV: If the vddvibl default voltage need to be changed
+-- vddvibr_uV: If the vddvibr default voltage need to be changed
 -
 -Example:
 -&i2c1 {
--	clock-frequency = <2600000>;
+-	twl6040: twl@4b {
+-		compatible = "ti,twl6040";
 -
--	twl: twl@48 {
--		reg = <0x48>;
--		interrupts = <7>; /* SYS_NIRQ cascaded to intc */
--		interrupt-parent = <&intc>;
+-		interrupts = <0 119 4>;
+-		interrupt-parent = <&gic>;
+-		twl6040,audpwron-gpio = <&gpio4 31 0>;
 -
--		twl_audio: audio {
--			compatible = "ti,twl4030-audio";
+-		vio-supply = <&v1v8>;
+-		v2v1-supply = <&v2v1>;
+-		enable-active-high;
 -
--			ti,enable-vibra = <1>;
+-		/* regulators for vibra motor */
+-		vddvibl-supply = <&vbat>;
+-		vddvibr-supply = <&vbat>;
 -
--			codec {
--				ti,ramp_delay_value = <3>;
--			};
--
+-		vibra {
+-			/* Vibra driver, motor resistance parameters */
+-			ti,vibldrv-res = <8>;
+-			ti,vibrdrv-res = <3>;
+-			ti,viblmotor-res = <10>;
+-			ti,vibrmotor-res = <10>;
 -		};
 -	};
 -};
+-
+-/include/ "twl6040.dtsi"
 -- 
 2.39.5
 
