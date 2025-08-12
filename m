@@ -1,115 +1,125 @@
-Return-Path: <linux-pwm+bounces-7019-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7020-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 35B4BB22491
-	for <lists+linux-pwm@lfdr.de>; Tue, 12 Aug 2025 12:28:24 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 10651B224C7
+	for <lists+linux-pwm@lfdr.de>; Tue, 12 Aug 2025 12:44:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7A2F4189AC3E
-	for <lists+linux-pwm@lfdr.de>; Tue, 12 Aug 2025 10:28:43 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4AFD51B62473
+	for <lists+linux-pwm@lfdr.de>; Tue, 12 Aug 2025 10:44:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F5872EA472;
-	Tue, 12 Aug 2025 10:28:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 408EB2EA162;
+	Tue, 12 Aug 2025 10:44:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zi2mHvFO"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G1fAi/GY"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D08CB2E92A8
-	for <linux-pwm@vger.kernel.org>; Tue, 12 Aug 2025 10:28:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12DF619D8AC;
+	Tue, 12 Aug 2025 10:44:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754994499; cv=none; b=TbZRHLz9tDjgwkoFo931ibeueOFLJLQSQwf2CVyTZLPy66g0IHePDzCSjsHdiy8hvPs7tEDpAjPnWoWnZoknlfYiskTqQP8E96Qa1hezGraw8fU6D6E/Kx6qfxGaMFI13Ft/suYhS36CltzA32aVazhxq+hR/IkChVZHYKPbS88=
+	t=1754995454; cv=none; b=jskpRrOA4I2yNEWLD0MsfFXgw/5S2zPaHqR3njKjtSNEOBRH05BrW/q8hFwUcgNkmvtufUKx49F/5PZ/8GoGYMbVtId8mywvjuJB3L0ln7eUIpn1HTRqsBV89oTyDX06pZY7XMA25XNxspNzUu7hdB4lqZcLkpv+1DgCNYuRgQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754994499; c=relaxed/simple;
-	bh=B9Vrmcfl+8IVTDBQ/VpLV4BqgqKtRjIoSIkTrqYOTCs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KO5F9tjwWlSj6LKqLDWmZtKT34u5tf3nChDiIvuYGU2QIYKImK5LIDX6Hrgs9q4RyGmfcg6OiQOZpfet1NKXm7SV6qdNBuyY0R7AE80GaVEQU/9imHMJBspS5A0FR8s+ixF57z4gXQMzd/W17ytqJewF1cvzrmxuvtNpgtbKNy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=zi2mHvFO; arc=none smtp.client-ip=209.85.221.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3b783d851e6so4486185f8f.0
-        for <linux-pwm@vger.kernel.org>; Tue, 12 Aug 2025 03:28:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1754994496; x=1755599296; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Pm63ILDmwa7xNpo98Np+0qeN8z2wnjVlHzO2eRsHLP8=;
-        b=zi2mHvFOFQ0696LkV8C3hFZtIhBdaTDbS9RgFnPtvUZeTCCAqsoCubS38GfcJ7cUhM
-         ToxOOYi+rtpYZVBrWEIY1aE+tiQ29O0uV5ngDMpD4gYB1onlPVExDq3ikLMFkG+okD05
-         djwbVT7Hq/3w/wxpZ6ZU/4aS0aBp+3ghYv0GFVcqeIhTLAJFJSOE4ayK/7bBUX0K1LtF
-         wvD3gixqpEWRWkP+tuC2Q+qB9ah86Eetlkmym/z6YUEvyD+5ngaeAhqiwLvtnGZWhR+5
-         x17NmBLbunYEZzOawUR2vKQg0QEqUDFcfxJoyySFKCI2Ba1NR3PNImq8zLxjmJNTj4bt
-         fexg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754994496; x=1755599296;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Pm63ILDmwa7xNpo98Np+0qeN8z2wnjVlHzO2eRsHLP8=;
-        b=hI3cbSq8PnmbtSuoZrThu8+edtZHCY9pt0VOMmavN8SDjK4Y9Zj9s/EBaMwY31HOWq
-         7Mq+LvmDAhNQ3xB1rBUZCDmxfqGHU9bBXveiLlswC0HZIM9kxnXXAZCn3nouP79aj+T4
-         9JEhK5GpPdnjlHpObn18P2SeN3OmJUjYzLrDA1VsNp4sgtaBK0hSb+CBJ7qNyvEbf4Vl
-         ewzyFttJkDmO7V9YFx9cArW6wQNOI7ctGnQtsLEscOJHvfRKHmdaXWCRipaeWKl+X7yW
-         fMsmhJT2mi7++bJrgmUDSdAPPOcynUo9yU/Rshs9W3trex3uDJTtMN5WpPpIdQcVAryy
-         k37g==
-X-Gm-Message-State: AOJu0YyS34tRetDEsfYXfwcP5ZjyKkK/+0Hcm7XMjlBKL7E6HzbOFnqp
-	ls7GFDKSvGgXWMlGjwdp8WEviPBlR/okqjZUCYpsANi8QnvA6Wvj6sIbzubrzC18tWI=
-X-Gm-Gg: ASbGnctkL/uFms6n4T7cD5W1g0fhM0cCHZ5jQi9sXX2m4WUTAjrNPS3oTQs5vPzWchn
-	0vgI9vZpc3l9w4Zeo8/Qm/7odQ/YdlNNS5Enva0XaUMToPeGH2bJQ90kk94GwHmgWR8j+S7sYoc
-	tSRO8VHkXg2Pw1z3gt2JDvzBwoUlcRiMkFumbclyt+oU0jtJFFmtvo3AbL8e+Vz5LS8mp3jV6+L
-	k7p4EalapVootBluz1LsL6cBTUIbFFg5kEtIOL45SOq9xOHlCDA33UG+Gk5e7G4LD/AsLIKuUI2
-	FYZPqzlYqqfh2C94rOWGSrOqjOquM+r9AeoaZ6Lzco+ih1YUgX+4KPRYptlC4/1eY1P6CpuLYS8
-	G7cLHhW/Jqp5bkZY1f7Vbj+wRSDi38jR9TnDHLzdwICQz1FsPz0sO2fTjJcYvrg==
-X-Google-Smtp-Source: AGHT+IFcdKMW5nagxZx6H4FgaqbvprQU5gv49abZvdzjaniK3RNc9c2E5u7r/cWE1TXNI9GVsZSWQw==
-X-Received: by 2002:a05:6000:24c5:b0:3b7:8832:fdcc with SMTP id ffacd0b85a97d-3b900b751edmr12603011f8f.38.1754994495881;
-        Tue, 12 Aug 2025 03:28:15 -0700 (PDT)
-Received: from [192.168.10.46] (146725694.box.freepro.com. [130.180.211.218])
-        by smtp.googlemail.com with ESMTPSA id ffacd0b85a97d-3b915deec6bsm9208f8f.7.2025.08.12.03.28.15
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Aug 2025 03:28:15 -0700 (PDT)
-Message-ID: <b7a7f3fe-faa8-4143-a200-d91597d46124@linaro.org>
-Date: Tue, 12 Aug 2025 12:28:14 +0200
+	s=arc-20240116; t=1754995454; c=relaxed/simple;
+	bh=J8rVonJeLT9Z5TovIwI3US6OvTejPp0e0BDvn2/Z0BI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bf8KWqwpE8NLPAribus73rqJtCppVrPdlC7qQnIzFxfclHuCZJZvv7daTLCmx9ZkjQfKpRYutJuBeFKIrOoBTJMhM8yMZU4BkTFfqiwZLfTWAcabK6NAb+A9cpBbbuN/hSTJA/T9xjprGwAsUPgLmjz8OH3clniBOAuPf8kT+EY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G1fAi/GY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21CCDC4CEF0;
+	Tue, 12 Aug 2025 10:44:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1754995453;
+	bh=J8rVonJeLT9Z5TovIwI3US6OvTejPp0e0BDvn2/Z0BI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=G1fAi/GYOYfaq4gVx2LznWOiqtFzauqUfFP/8rYCiQlxtmuQQ3+NSR5kYCi+CHLdy
+	 WKjfsFvvL+BM0vZTRX1MsWOukh0RDYHzoC5mIu1ExSyC8ElY9K9HNDtw7zNl9zCugz
+	 n1j1u0/g0wR+IxzaOYruW0l6NVino0PqLRaJnw3/8AY1fkHXhoMVjmyFtG6bd68s/5
+	 gBDPSjjauCtj9tU4RUbjCgo+GxeqgOHChyi0wfn7wBoycu04x0FELQwLwZBuEObgcW
+	 LeNtsDlePGt2cobTUxgN6CKALA2cqWmJht0v7e9YAzQ3IXvSB1XRjXyTuzYOobPzex
+	 GTQUQazAzmpww==
+Date: Tue, 12 Aug 2025 12:44:10 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Linus Walleij <linus.walleij@linaro.org>, 
+	Bartosz Golaszewski <brgl@bgdev.pl>, Stephen Rothwell <sfr@canb.auug.org.au>, 
+	linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pwm: Rename GPIO set_rv callback back to its original
+ name
+Message-ID: <z7wqrfqvx5rtm6ztvwnb4po5dvabgb2lyse6nws6ojzjdr6k3e@qzpopioosaai>
+References: <5366fcd01c9f8b374914e6137f01d156033c8a9e.1754986373.git.geert+renesas@glider.be>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 1/2] dt: bindings: fsl,vf610-ftm-pwm: Add compatible
- for s32g2 and s32g3
-To: Krzysztof Kozlowski <krzk@kernel.org>, ukleinek@kernel.org,
- robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, Frank.Li@nxp.com
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Ghennadi.Procopciuc@nxp.com, s32@nxp.com
-References: <20250811223044.3087090-1-daniel.lezcano@linaro.org>
- <20250811223044.3087090-2-daniel.lezcano@linaro.org>
- <758fb1ce-bf7e-4dd8-aa24-3f89d9be5652@kernel.org>
-Content-Language: en-US
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-In-Reply-To: <758fb1ce-bf7e-4dd8-aa24-3f89d9be5652@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="qkl5xl6kf72ekdgo"
+Content-Disposition: inline
+In-Reply-To: <5366fcd01c9f8b374914e6137f01d156033c8a9e.1754986373.git.geert+renesas@glider.be>
 
-On 12/08/2025 11:03, Krzysztof Kozlowski wrote:
-> On 12/08/2025 00:30, Daniel Lezcano wrote:
->> The S32G2 and S32G3 have a FlexTimer (FTM) available which is the same
->> as the one found on the Vybrid Family and the i.MX8.
->>
->> Add the compatibles in the bindings
-> I already asked in previous patches - prefix is always dt-bindings.
 
-Yeah noted (again), thanks
+--qkl5xl6kf72ekdgo
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] pwm: Rename GPIO set_rv callback back to its original
+ name
+MIME-Version: 1.0
 
--- 
-<http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+On Tue, Aug 12, 2025 at 10:14:59AM +0200, Geert Uytterhoeven wrote:
+> As of commit d9d87d90cc0b10cd ("treewide: rename GPIO set callbacks back
+> to their original names"), the .set_rv() callback no longer exists:
+>=20
+>     drivers/pwm/core.c: In function =E2=80=98__pwmchip_add=E2=80=99:
+>     drivers/pwm/core.c:2514:26: error: =E2=80=98struct gpio_chip=E2=80=99=
+ has no member named =E2=80=98set_rv=E2=80=99
+>      2514 |                         .set_rv =3D pwm_gpio_set,
+> 	  |                          ^~~~~~
+>     drivers/pwm/core.c:2514:35: error: initialization of =E2=80=98int (*)=
+(struct gpio_chip *, unsigned int)=E2=80=99 from incompatible pointer type =
+=E2=80=98int (*)(struct gpio_chip *, unsigned int,  int)=E2=80=99 [-Werror=
+=3Dincompatible-pointer-types]
+>      2514 |                         .set_rv =3D pwm_gpio_set,
+> 	  |                                   ^~~~~~~~~~~~
+>     drivers/pwm/core.c:2514:35: note: (near initialization for =E2=80=98(=
+anonymous).direction_input=E2=80=99)
+>=20
+> Fixes: 1c84bb7fc0ad5841 ("pwm: Provide a gpio device for waveform drivers=
+")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> Probably to be folded into the original commit, when pwm/for-next is
+> rebased to v6.17-rc1.
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+That's what I did, before seeing your patch. Note that the Fixes line
+isn't accurate, because it only gets wrong when it's merged in a tree
+that contains d9d87d90cc0b ("treewide: rename GPIO set callbacks back to
+their original names"). I don't know in which tree you found the two
+commits together (I think Stephen fixed it for next?), but then
+technically the merge commit would be at fault.
+
+Best regards
+Uwe
+
+--qkl5xl6kf72ekdgo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmibGvgACgkQj4D7WH0S
+/k5C/gf/WX66APsZZs/lryauGaiDHdlVAx6RfmXwGLnHh5a8+RhoXXjQuJ1pjc9R
+1jg/IYkyDta95dl9lD15KIBfty1sLttQzCGhW+ik1ywOGy29GL9eyqrx3WT2gOSI
+hV+xiquvmZPR+a8GTC/6zBZOi3sgHotkCtMUdBC/R5SegdwHerD+kiXWUDwqMXqj
+MZRmDUVAv2fLJY+0MPPtI/A5ST7WvxyLqRj2sxKVrzOJz/3k2h7/oaHelNnt8gIJ
+gm97SeN+i/9jiUOU3ONXms+HmvAhQ2luEQZ5PfVHAKMgm3H5Z+9GG4C7/ErX0aAu
+0ZpTlWbR5C8K8Ma+c/aS7p73OX2yfQ==
+=cfou
+-----END PGP SIGNATURE-----
+
+--qkl5xl6kf72ekdgo--
 
