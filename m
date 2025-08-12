@@ -1,148 +1,119 @@
-Return-Path: <linux-pwm+bounces-7021-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7022-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id E9F67B22601
-	for <lists+linux-pwm@lfdr.de>; Tue, 12 Aug 2025 13:38:12 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4818CB22AD4
+	for <lists+linux-pwm@lfdr.de>; Tue, 12 Aug 2025 16:41:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ED0AA2A6560
-	for <lists+linux-pwm@lfdr.de>; Tue, 12 Aug 2025 11:38:12 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1B6B518837E1
+	for <lists+linux-pwm@lfdr.de>; Tue, 12 Aug 2025 14:36:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAD352EB5D5;
-	Tue, 12 Aug 2025 11:38:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10DEF2EB5D5;
+	Tue, 12 Aug 2025 14:35:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RSX2XH+P"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A72C2EB5C7;
-	Tue, 12 Aug 2025 11:38:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6AA82EB5A7;
+	Tue, 12 Aug 2025 14:35:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754998690; cv=none; b=tB3tSGeLydSmPtmAb5mzGsMfqVQyq5qJ0mRwYbsDMSqNifsFwmrzBTdgNI9F3llI57bykHEsLZCcssViTc+vUM7aTSWxLA3BkxfWpRF+W2zmN0NcyZ9JcQIfDkstlX2NK3XSEyehk0ZfP5AfukXE1M2/9Sm/ECeojYV8xgwI5ZQ=
+	t=1755009347; cv=none; b=EXho/2vcBSzIApZ2269TTptsW4vEscw0fvdtg7Y8bi5zfy0TGk767T8h1Xpw31UZO38+66+aCCdBwZi6ELJgqhJBg22N10CVPTR+TK6HVixPTXXWzBGT3NtOPtc/IPaer3ojtOy9mb5HxFungS36CCwpNMKZPWqmjX3uGYfZVE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754998690; c=relaxed/simple;
-	bh=w4Okp2vqbeOHnwzraNE9RYXZ4qgaoN/u3iuePL+3Ddc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=IcTwM5obyLDYFbeFtd819F71a3f8s38Cuaa+jLBgE6Ds2qbRjowU07Syr1tDfUEhFmYlu5vER7NrbwyRJErIJ2DeZvy6eQFuYWEoAsg+l5T1QBlCsUOV1JY9uqNxcdw/naJl/TsjM3ZeukoPUqhOulyRc9feYBv1VB3csM1GJJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-500006b3efdso4896603137.1;
-        Tue, 12 Aug 2025 04:38:08 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1754998687; x=1755603487;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Am/i9gJ56QhlGGBrTKvZRFDN8RKSA6du4RdJCjyJ/PU=;
-        b=ittW/yU9wrnbx/eJP7WX83vIORQsKIqY+xjJCLsol7yOJ/ZtGZQ2t4t0m/6aN43vdv
-         nULquJAIwuJJBGm24ZWWLHxTlvI2tPalUV3ZboNEkIgWThFZNKArw5ggYmnYmxkzI90f
-         LuXsyPFSktVRIfslykXZ5iiHzc5vJBrCv6B4P4JH3VXq4Tiu13ZjxRDCf7i32fDmZVPb
-         UepWlBir15l2D6dx7gzWhD2WreAwjluuf/SWNDiqspe2juC7AZt/7UuciQMz0lSAOk5o
-         ggXwSKHQlm8K+AQDslNZPJnisBWrnRcCYRdyjWSO0dMPFBHD0jfIEagIuKhcblO/209m
-         pH8w==
-X-Forwarded-Encrypted: i=1; AJvYcCUJoNNC0Ot551SeycOmaAkxYy/52UPU4telknGEup3OzIv+EGMhKeYbkIaMjil6FK2jUiKPa1oMSbQg@vger.kernel.org, AJvYcCUkH15ZvvKpPW3deg7whS8pqOZy4SXxRjwxzHrsfT5ijVTe8CNSQtD20FnpYTagDqY2nA+2irY6vJn3@vger.kernel.org, AJvYcCXpUBj5inIl0SKuG+ZXA3Dc9U5xKjgtiEW8t/ZNvdaYniPEXExB0DmcZU/miAyy0A4AYrbE5XU0thviC6xO@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5WSF+PmWHJ9hlGrJYc+hquw1qX4OmPOYXWBgbLrYvkjOuyzHr
-	9i8x985CAnMu2Y3aMWQvt7J6rymd59QwLpm+dlCmCRhCGhOAZz/rIJ9aX5CG4B9G
-X-Gm-Gg: ASbGncs4D+LHA6s39MYNL4xwqRmY+sTA5BHIMHjxKq4hJnEPOa040G37cwO4SDVQedI
-	7/HtfeJxa4kN727IAViQe8tQ5OlokKkmroHtuvj7+PDRjMoZDXWjjWw3v8LYBMG1O4K8hLvcL0N
-	g2kLoVRDQjf57cA6eW8eAWCq9hiBOV2dNuqH/jjhT4dU4GaE2JhFtv7XUZFCf1XxdfSoI+o1nfg
-	7xkxIjMcyCWc1jNEauVHPZd1OYJsY/EriESc160jtV8JI9XB9loSfkA17A4ZVQ9yT6gu0Hb4okQ
-	yKxlM4A53D9NEPagD1LDmacINTWMS27sBEL1NMqpVe2qmRTPOgtvPxjqePqf642B2ccSvCrEtnt
-	EdUStUPM64EkhStJ8v96cjbmglikoB268yu4r9YJjNl+fPoa6wqpT4MHq4/pW4fKDzAbPQlA=
-X-Google-Smtp-Source: AGHT+IFrA7DrI3lpPSPbAExAZt6D1APqqnXIG+OUjVGBFUBwYZajjfwv3kKRIJYUQBVCNTI8Eo3w+Q==
-X-Received: by 2002:a05:6102:3e1b:b0:4e6:443d:9b1a with SMTP id ada2fe7eead31-50cbee69bf7mr1507469137.24.1754998686894;
-        Tue, 12 Aug 2025 04:38:06 -0700 (PDT)
-Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com. [209.85.222.46])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-88e0268d452sm2194418241.5.2025.08.12.04.38.06
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Aug 2025 04:38:06 -0700 (PDT)
-Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-88bc87958d3so2516993241.0;
-        Tue, 12 Aug 2025 04:38:06 -0700 (PDT)
-X-Forwarded-Encrypted: i=1; AJvYcCV9rQfzyH+huo9EmlJnVCZkahHC2ZPN5qIXSM37Ge9bgfjfT2kwAlxa+mTUdA4TERsld3IM8eJ4GxqJ@vger.kernel.org, AJvYcCVui5v4bC2g+RfCDZdq7Skf2cqINI/tgoxL9WR+pPVPw4F9ht3SREreEgkjmO77Qr5HNM+R6yvn0eY9@vger.kernel.org, AJvYcCXrvDz3ZlmCSC1Ve0ntfYSX1DMmDhYscfPdC6I6V4mTgR7Djpa83AZeVJshw4VkXsypqNHBUCsL0r7D0Kn+@vger.kernel.org
-X-Received: by 2002:a05:6102:3594:b0:4c3:64bd:93ba with SMTP id
- ada2fe7eead31-50cbd1e1ee2mr1421381137.11.1754998685794; Tue, 12 Aug 2025
- 04:38:05 -0700 (PDT)
+	s=arc-20240116; t=1755009347; c=relaxed/simple;
+	bh=RUaz2F7M+J8suIFZqnO0eXnGJrhkRbwORESw+0/OzrA=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=apCcqDiyShzXufYGSe+x9i0m+6CEh4xXtT6/CbExYpMkRMndnhnEizJibwyhjDejUoD+JhLyXYE6IgYzZdWiu+k8drEjEmp+8HyzyqPC9U4RiDta++tiMGVoNVaylkjuOxEUiPLyPMM0axugmLartHm4TUyXXJicafkRTJefy1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RSX2XH+P; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0892C4CEF0;
+	Tue, 12 Aug 2025 14:35:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755009346;
+	bh=RUaz2F7M+J8suIFZqnO0eXnGJrhkRbwORESw+0/OzrA=;
+	h=Date:From:To:Cc:Subject:From;
+	b=RSX2XH+P10pKNs0r8n92lYyeDmpMNovIKyedzkNNNFy05oyRj/Ri1NTZyQv6V9SmI
+	 0fWwaDTNRwFdfTh3X9NdnmhTBwhhrzBF8fctIZ45I+hdiVcMB/oPTrLOiVIqBMRvbb
+	 0oIpVX5RgYPKjfEh0haxl9sgFRQVVQwWpcQUt5HD/tl5QTaNjuC3itOOf17yWWXkvK
+	 jGwqTV9FXj0/8Rg8Z4Q+PlfSnczIMnWP/kWIj2UhpDvd8T7SjLoug8PFdwyi6AXj0W
+	 f2QTEJj2YW/Z6AkByTNzszY+HsKDkn/K962FPFldePiAWprcyMxfv6e5XtydRoGlhN
+	 7Hwp8D+EdrxkQ==
+Date: Tue, 12 Aug 2025 23:35:41 +0900
+From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Benson Leung <bleung@chromium.org>,
+	Guenter Roeck <groeck@chromium.org>
+Cc: linux-pwm@vger.kernel.org, chrome-platform@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	"Gustavo A. R. Silva" <gustavoars@kernel.org>,
+	linux-hardening@vger.kernel.org
+Subject: [PATCH][next] pwm: cros-ec: Avoid -Wflex-array-member-not-at-end
+ warnings
+Message-ID: <aJtRPZpc-Lv-C6zD@kspp>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <5366fcd01c9f8b374914e6137f01d156033c8a9e.1754986373.git.geert+renesas@glider.be>
- <z7wqrfqvx5rtm6ztvwnb4po5dvabgb2lyse6nws6ojzjdr6k3e@qzpopioosaai>
-In-Reply-To: <z7wqrfqvx5rtm6ztvwnb4po5dvabgb2lyse6nws6ojzjdr6k3e@qzpopioosaai>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 12 Aug 2025 13:37:54 +0200
-X-Gmail-Original-Message-ID: <CAMuHMdUDy5ZtDBYkkVOWE4C=h3L85+R6HFzY1fYt51uDCG2-mg@mail.gmail.com>
-X-Gm-Features: Ac12FXwHP-2ivaSJEo1Z8tczA_UaeK9I-9xB-dON_4HXW7qtJ7lIzB5Od4FdiBA
-Message-ID: <CAMuHMdUDy5ZtDBYkkVOWE4C=h3L85+R6HFzY1fYt51uDCG2-mg@mail.gmail.com>
-Subject: Re: [PATCH] pwm: Rename GPIO set_rv callback back to its original name
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
-	Stephen Rothwell <sfr@canb.auug.org.au>, linux-pwm@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hi Uwe,
+-Wflex-array-member-not-at-end was introduced in GCC-14, and we are
+getting ready to enable it, globally.
 
-On Tue, 12 Aug 2025 at 12:44, Uwe Kleine-K=C3=B6nig <ukleinek@kernel.org> w=
-rote:
-> On Tue, Aug 12, 2025 at 10:14:59AM +0200, Geert Uytterhoeven wrote:
-> > As of commit d9d87d90cc0b10cd ("treewide: rename GPIO set callbacks bac=
-k
-> > to their original names"), the .set_rv() callback no longer exists:
-> >
-> >     drivers/pwm/core.c: In function =E2=80=98__pwmchip_add=E2=80=99:
-> >     drivers/pwm/core.c:2514:26: error: =E2=80=98struct gpio_chip=E2=80=
-=99 has no member named =E2=80=98set_rv=E2=80=99
-> >      2514 |                         .set_rv =3D pwm_gpio_set,
-> >         |                          ^~~~~~
-> >     drivers/pwm/core.c:2514:35: error: initialization of =E2=80=98int (=
-*)(struct gpio_chip *, unsigned int)=E2=80=99 from incompatible pointer typ=
-e =E2=80=98int (*)(struct gpio_chip *, unsigned int,  int)=E2=80=99 [-Werro=
-r=3Dincompatible-pointer-types]
-> >      2514 |                         .set_rv =3D pwm_gpio_set,
-> >         |                                   ^~~~~~~~~~~~
-> >     drivers/pwm/core.c:2514:35: note: (near initialization for =E2=80=
-=98(anonymous).direction_input=E2=80=99)
-> >
-> > Fixes: 1c84bb7fc0ad5841 ("pwm: Provide a gpio device for waveform drive=
-rs")
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> > Probably to be folded into the original commit, when pwm/for-next is
-> > rebased to v6.17-rc1.
->
-> That's what I did, before seeing your patch. Note that the Fixes line
-> isn't accurate, because it only gets wrong when it's merged in a tree
-> that contains d9d87d90cc0b ("treewide: rename GPIO set callbacks back to
-> their original names"). I don't know in which tree you found the two
-> commits together (I think Stephen fixed it for next?), but then
+Use the new TRAILING_OVERLAP() helper to fix the following warnings:
 
-I found it while preparing today's renesas-drivers release.
+drivers/pwm/pwm-cros-ec.c:53:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
+drivers/pwm/pwm-cros-ec.c:87:40: warning: structure containing a flexible array member is not at the end of another structure [-Wflex-array-member-not-at-end]
 
-> technically the merge commit would be at fault.
+This helper creates a union between a flexible-array member (FAM)
+and a set of members that would otherwise follow it. This overlays
+the trailing members onto the FAM while preserving the original
+memory layout.
 
-Stephen indeed fixed it in today's linux-next release (which happened
-after I encountered the issue), which is also the first linux-next release
-that contains both commits.
+Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
+---
+ drivers/pwm/pwm-cros-ec.c | 10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
 
-Gr{oetje,eeting}s,
+diff --git a/drivers/pwm/pwm-cros-ec.c b/drivers/pwm/pwm-cros-ec.c
+index 189301dc395e..67cfa17f58e0 100644
+--- a/drivers/pwm/pwm-cros-ec.c
++++ b/drivers/pwm/pwm-cros-ec.c
+@@ -49,10 +49,9 @@ static int cros_ec_pwm_set_duty(struct cros_ec_pwm_device *ec_pwm, u8 index,
+ 				u16 duty)
+ {
+ 	struct cros_ec_device *ec = ec_pwm->ec;
+-	struct {
+-		struct cros_ec_command msg;
++	TRAILING_OVERLAP(struct cros_ec_command, msg, data,
+ 		struct ec_params_pwm_set_duty params;
+-	} __packed buf;
++	) __packed buf;
+ 	struct ec_params_pwm_set_duty *params = &buf.params;
+ 	struct cros_ec_command *msg = &buf.msg;
+ 	int ret;
+@@ -83,13 +82,12 @@ static int cros_ec_pwm_set_duty(struct cros_ec_pwm_device *ec_pwm, u8 index,
+ 
+ static int cros_ec_pwm_get_duty(struct cros_ec_device *ec, bool use_pwm_type, u8 index)
+ {
+-	struct {
+-		struct cros_ec_command msg;
++	TRAILING_OVERLAP(struct cros_ec_command, msg, data,
+ 		union {
+ 			struct ec_params_pwm_get_duty params;
+ 			struct ec_response_pwm_get_duty resp;
+ 		};
+-	} __packed buf;
++	) __packed buf;
+ 	struct ec_params_pwm_get_duty *params = &buf.params;
+ 	struct ec_response_pwm_get_duty *resp = &buf.resp;
+ 	struct cros_ec_command *msg = &buf.msg;
+-- 
+2.43.0
 
-                        Geert
-
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
-.org
-
-In personal conversations with technical people, I call myself a hacker. Bu=
-t
-when I'm talking to journalists I just say "programmer" or something like t=
-hat.
-                                -- Linus Torvalds
 
