@@ -1,125 +1,148 @@
-Return-Path: <linux-pwm+bounces-7020-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7021-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10651B224C7
-	for <lists+linux-pwm@lfdr.de>; Tue, 12 Aug 2025 12:44:17 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9F67B22601
+	for <lists+linux-pwm@lfdr.de>; Tue, 12 Aug 2025 13:38:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 4AFD51B62473
-	for <lists+linux-pwm@lfdr.de>; Tue, 12 Aug 2025 10:44:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id ED0AA2A6560
+	for <lists+linux-pwm@lfdr.de>; Tue, 12 Aug 2025 11:38:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 408EB2EA162;
-	Tue, 12 Aug 2025 10:44:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G1fAi/GY"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AAD352EB5D5;
+	Tue, 12 Aug 2025 11:38:10 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12DF619D8AC;
-	Tue, 12 Aug 2025 10:44:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A72C2EB5C7;
+	Tue, 12 Aug 2025 11:38:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1754995454; cv=none; b=jskpRrOA4I2yNEWLD0MsfFXgw/5S2zPaHqR3njKjtSNEOBRH05BrW/q8hFwUcgNkmvtufUKx49F/5PZ/8GoGYMbVtId8mywvjuJB3L0ln7eUIpn1HTRqsBV89oTyDX06pZY7XMA25XNxspNzUu7hdB4lqZcLkpv+1DgCNYuRgQ0=
+	t=1754998690; cv=none; b=tB3tSGeLydSmPtmAb5mzGsMfqVQyq5qJ0mRwYbsDMSqNifsFwmrzBTdgNI9F3llI57bykHEsLZCcssViTc+vUM7aTSWxLA3BkxfWpRF+W2zmN0NcyZ9JcQIfDkstlX2NK3XSEyehk0ZfP5AfukXE1M2/9Sm/ECeojYV8xgwI5ZQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1754995454; c=relaxed/simple;
-	bh=J8rVonJeLT9Z5TovIwI3US6OvTejPp0e0BDvn2/Z0BI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bf8KWqwpE8NLPAribus73rqJtCppVrPdlC7qQnIzFxfclHuCZJZvv7daTLCmx9ZkjQfKpRYutJuBeFKIrOoBTJMhM8yMZU4BkTFfqiwZLfTWAcabK6NAb+A9cpBbbuN/hSTJA/T9xjprGwAsUPgLmjz8OH3clniBOAuPf8kT+EY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G1fAi/GY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21CCDC4CEF0;
-	Tue, 12 Aug 2025 10:44:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1754995453;
-	bh=J8rVonJeLT9Z5TovIwI3US6OvTejPp0e0BDvn2/Z0BI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=G1fAi/GYOYfaq4gVx2LznWOiqtFzauqUfFP/8rYCiQlxtmuQQ3+NSR5kYCi+CHLdy
-	 WKjfsFvvL+BM0vZTRX1MsWOukh0RDYHzoC5mIu1ExSyC8ElY9K9HNDtw7zNl9zCugz
-	 n1j1u0/g0wR+IxzaOYruW0l6NVino0PqLRaJnw3/8AY1fkHXhoMVjmyFtG6bd68s/5
-	 gBDPSjjauCtj9tU4RUbjCgo+GxeqgOHChyi0wfn7wBoycu04x0FELQwLwZBuEObgcW
-	 LeNtsDlePGt2cobTUxgN6CKALA2cqWmJht0v7e9YAzQ3IXvSB1XRjXyTuzYOobPzex
-	 GTQUQazAzmpww==
-Date: Tue, 12 Aug 2025 12:44:10 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Linus Walleij <linus.walleij@linaro.org>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Stephen Rothwell <sfr@canb.auug.org.au>, 
-	linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pwm: Rename GPIO set_rv callback back to its original
- name
-Message-ID: <z7wqrfqvx5rtm6ztvwnb4po5dvabgb2lyse6nws6ojzjdr6k3e@qzpopioosaai>
-References: <5366fcd01c9f8b374914e6137f01d156033c8a9e.1754986373.git.geert+renesas@glider.be>
+	s=arc-20240116; t=1754998690; c=relaxed/simple;
+	bh=w4Okp2vqbeOHnwzraNE9RYXZ4qgaoN/u3iuePL+3Ddc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=IcTwM5obyLDYFbeFtd819F71a3f8s38Cuaa+jLBgE6Ds2qbRjowU07Syr1tDfUEhFmYlu5vER7NrbwyRJErIJ2DeZvy6eQFuYWEoAsg+l5T1QBlCsUOV1JY9uqNxcdw/naJl/TsjM3ZeukoPUqhOulyRc9feYBv1VB3csM1GJJ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.217.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-vs1-f54.google.com with SMTP id ada2fe7eead31-500006b3efdso4896603137.1;
+        Tue, 12 Aug 2025 04:38:08 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1754998687; x=1755603487;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Am/i9gJ56QhlGGBrTKvZRFDN8RKSA6du4RdJCjyJ/PU=;
+        b=ittW/yU9wrnbx/eJP7WX83vIORQsKIqY+xjJCLsol7yOJ/ZtGZQ2t4t0m/6aN43vdv
+         nULquJAIwuJJBGm24ZWWLHxTlvI2tPalUV3ZboNEkIgWThFZNKArw5ggYmnYmxkzI90f
+         LuXsyPFSktVRIfslykXZ5iiHzc5vJBrCv6B4P4JH3VXq4Tiu13ZjxRDCf7i32fDmZVPb
+         UepWlBir15l2D6dx7gzWhD2WreAwjluuf/SWNDiqspe2juC7AZt/7UuciQMz0lSAOk5o
+         ggXwSKHQlm8K+AQDslNZPJnisBWrnRcCYRdyjWSO0dMPFBHD0jfIEagIuKhcblO/209m
+         pH8w==
+X-Forwarded-Encrypted: i=1; AJvYcCUJoNNC0Ot551SeycOmaAkxYy/52UPU4telknGEup3OzIv+EGMhKeYbkIaMjil6FK2jUiKPa1oMSbQg@vger.kernel.org, AJvYcCUkH15ZvvKpPW3deg7whS8pqOZy4SXxRjwxzHrsfT5ijVTe8CNSQtD20FnpYTagDqY2nA+2irY6vJn3@vger.kernel.org, AJvYcCXpUBj5inIl0SKuG+ZXA3Dc9U5xKjgtiEW8t/ZNvdaYniPEXExB0DmcZU/miAyy0A4AYrbE5XU0thviC6xO@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw5WSF+PmWHJ9hlGrJYc+hquw1qX4OmPOYXWBgbLrYvkjOuyzHr
+	9i8x985CAnMu2Y3aMWQvt7J6rymd59QwLpm+dlCmCRhCGhOAZz/rIJ9aX5CG4B9G
+X-Gm-Gg: ASbGncs4D+LHA6s39MYNL4xwqRmY+sTA5BHIMHjxKq4hJnEPOa040G37cwO4SDVQedI
+	7/HtfeJxa4kN727IAViQe8tQ5OlokKkmroHtuvj7+PDRjMoZDXWjjWw3v8LYBMG1O4K8hLvcL0N
+	g2kLoVRDQjf57cA6eW8eAWCq9hiBOV2dNuqH/jjhT4dU4GaE2JhFtv7XUZFCf1XxdfSoI+o1nfg
+	7xkxIjMcyCWc1jNEauVHPZd1OYJsY/EriESc160jtV8JI9XB9loSfkA17A4ZVQ9yT6gu0Hb4okQ
+	yKxlM4A53D9NEPagD1LDmacINTWMS27sBEL1NMqpVe2qmRTPOgtvPxjqePqf642B2ccSvCrEtnt
+	EdUStUPM64EkhStJ8v96cjbmglikoB268yu4r9YJjNl+fPoa6wqpT4MHq4/pW4fKDzAbPQlA=
+X-Google-Smtp-Source: AGHT+IFrA7DrI3lpPSPbAExAZt6D1APqqnXIG+OUjVGBFUBwYZajjfwv3kKRIJYUQBVCNTI8Eo3w+Q==
+X-Received: by 2002:a05:6102:3e1b:b0:4e6:443d:9b1a with SMTP id ada2fe7eead31-50cbee69bf7mr1507469137.24.1754998686894;
+        Tue, 12 Aug 2025 04:38:06 -0700 (PDT)
+Received: from mail-ua1-f46.google.com (mail-ua1-f46.google.com. [209.85.222.46])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-88e0268d452sm2194418241.5.2025.08.12.04.38.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 12 Aug 2025 04:38:06 -0700 (PDT)
+Received: by mail-ua1-f46.google.com with SMTP id a1e0cc1a2514c-88bc87958d3so2516993241.0;
+        Tue, 12 Aug 2025 04:38:06 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCV9rQfzyH+huo9EmlJnVCZkahHC2ZPN5qIXSM37Ge9bgfjfT2kwAlxa+mTUdA4TERsld3IM8eJ4GxqJ@vger.kernel.org, AJvYcCVui5v4bC2g+RfCDZdq7Skf2cqINI/tgoxL9WR+pPVPw4F9ht3SREreEgkjmO77Qr5HNM+R6yvn0eY9@vger.kernel.org, AJvYcCXrvDz3ZlmCSC1Ve0ntfYSX1DMmDhYscfPdC6I6V4mTgR7Djpa83AZeVJshw4VkXsypqNHBUCsL0r7D0Kn+@vger.kernel.org
+X-Received: by 2002:a05:6102:3594:b0:4c3:64bd:93ba with SMTP id
+ ada2fe7eead31-50cbd1e1ee2mr1421381137.11.1754998685794; Tue, 12 Aug 2025
+ 04:38:05 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="qkl5xl6kf72ekdgo"
-Content-Disposition: inline
-In-Reply-To: <5366fcd01c9f8b374914e6137f01d156033c8a9e.1754986373.git.geert+renesas@glider.be>
-
-
---qkl5xl6kf72ekdgo
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
+References: <5366fcd01c9f8b374914e6137f01d156033c8a9e.1754986373.git.geert+renesas@glider.be>
+ <z7wqrfqvx5rtm6ztvwnb4po5dvabgb2lyse6nws6ojzjdr6k3e@qzpopioosaai>
+In-Reply-To: <z7wqrfqvx5rtm6ztvwnb4po5dvabgb2lyse6nws6ojzjdr6k3e@qzpopioosaai>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 12 Aug 2025 13:37:54 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdUDy5ZtDBYkkVOWE4C=h3L85+R6HFzY1fYt51uDCG2-mg@mail.gmail.com>
+X-Gm-Features: Ac12FXwHP-2ivaSJEo1Z8tczA_UaeK9I-9xB-dON_4HXW7qtJ7lIzB5Od4FdiBA
+Message-ID: <CAMuHMdUDy5ZtDBYkkVOWE4C=h3L85+R6HFzY1fYt51uDCG2-mg@mail.gmail.com>
+Subject: Re: [PATCH] pwm: Rename GPIO set_rv callback back to its original name
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <brgl@bgdev.pl>, 
+	Stephen Rothwell <sfr@canb.auug.org.au>, linux-pwm@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] pwm: Rename GPIO set_rv callback back to its original
- name
-MIME-Version: 1.0
 
-On Tue, Aug 12, 2025 at 10:14:59AM +0200, Geert Uytterhoeven wrote:
-> As of commit d9d87d90cc0b10cd ("treewide: rename GPIO set callbacks back
-> to their original names"), the .set_rv() callback no longer exists:
->=20
->     drivers/pwm/core.c: In function =E2=80=98__pwmchip_add=E2=80=99:
->     drivers/pwm/core.c:2514:26: error: =E2=80=98struct gpio_chip=E2=80=99=
- has no member named =E2=80=98set_rv=E2=80=99
->      2514 |                         .set_rv =3D pwm_gpio_set,
-> 	  |                          ^~~~~~
->     drivers/pwm/core.c:2514:35: error: initialization of =E2=80=98int (*)=
-(struct gpio_chip *, unsigned int)=E2=80=99 from incompatible pointer type =
-=E2=80=98int (*)(struct gpio_chip *, unsigned int,  int)=E2=80=99 [-Werror=
-=3Dincompatible-pointer-types]
->      2514 |                         .set_rv =3D pwm_gpio_set,
-> 	  |                                   ^~~~~~~~~~~~
->     drivers/pwm/core.c:2514:35: note: (near initialization for =E2=80=98(=
-anonymous).direction_input=E2=80=99)
->=20
-> Fixes: 1c84bb7fc0ad5841 ("pwm: Provide a gpio device for waveform drivers=
-")
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> Probably to be folded into the original commit, when pwm/for-next is
-> rebased to v6.17-rc1.
+Hi Uwe,
 
-That's what I did, before seeing your patch. Note that the Fixes line
-isn't accurate, because it only gets wrong when it's merged in a tree
-that contains d9d87d90cc0b ("treewide: rename GPIO set callbacks back to
-their original names"). I don't know in which tree you found the two
-commits together (I think Stephen fixed it for next?), but then
-technically the merge commit would be at fault.
+On Tue, 12 Aug 2025 at 12:44, Uwe Kleine-K=C3=B6nig <ukleinek@kernel.org> w=
+rote:
+> On Tue, Aug 12, 2025 at 10:14:59AM +0200, Geert Uytterhoeven wrote:
+> > As of commit d9d87d90cc0b10cd ("treewide: rename GPIO set callbacks bac=
+k
+> > to their original names"), the .set_rv() callback no longer exists:
+> >
+> >     drivers/pwm/core.c: In function =E2=80=98__pwmchip_add=E2=80=99:
+> >     drivers/pwm/core.c:2514:26: error: =E2=80=98struct gpio_chip=E2=80=
+=99 has no member named =E2=80=98set_rv=E2=80=99
+> >      2514 |                         .set_rv =3D pwm_gpio_set,
+> >         |                          ^~~~~~
+> >     drivers/pwm/core.c:2514:35: error: initialization of =E2=80=98int (=
+*)(struct gpio_chip *, unsigned int)=E2=80=99 from incompatible pointer typ=
+e =E2=80=98int (*)(struct gpio_chip *, unsigned int,  int)=E2=80=99 [-Werro=
+r=3Dincompatible-pointer-types]
+> >      2514 |                         .set_rv =3D pwm_gpio_set,
+> >         |                                   ^~~~~~~~~~~~
+> >     drivers/pwm/core.c:2514:35: note: (near initialization for =E2=80=
+=98(anonymous).direction_input=E2=80=99)
+> >
+> > Fixes: 1c84bb7fc0ad5841 ("pwm: Provide a gpio device for waveform drive=
+rs")
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > ---
+> > Probably to be folded into the original commit, when pwm/for-next is
+> > rebased to v6.17-rc1.
+>
+> That's what I did, before seeing your patch. Note that the Fixes line
+> isn't accurate, because it only gets wrong when it's merged in a tree
+> that contains d9d87d90cc0b ("treewide: rename GPIO set callbacks back to
+> their original names"). I don't know in which tree you found the two
+> commits together (I think Stephen fixed it for next?), but then
 
-Best regards
-Uwe
+I found it while preparing today's renesas-drivers release.
 
---qkl5xl6kf72ekdgo
-Content-Type: application/pgp-signature; name="signature.asc"
+> technically the merge commit would be at fault.
 
------BEGIN PGP SIGNATURE-----
+Stephen indeed fixed it in today's linux-next release (which happened
+after I encountered the issue), which is also the first linux-next release
+that contains both commits.
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmibGvgACgkQj4D7WH0S
-/k5C/gf/WX66APsZZs/lryauGaiDHdlVAx6RfmXwGLnHh5a8+RhoXXjQuJ1pjc9R
-1jg/IYkyDta95dl9lD15KIBfty1sLttQzCGhW+ik1ywOGy29GL9eyqrx3WT2gOSI
-hV+xiquvmZPR+a8GTC/6zBZOi3sgHotkCtMUdBC/R5SegdwHerD+kiXWUDwqMXqj
-MZRmDUVAv2fLJY+0MPPtI/A5ST7WvxyLqRj2sxKVrzOJz/3k2h7/oaHelNnt8gIJ
-gm97SeN+i/9jiUOU3ONXms+HmvAhQ2luEQZ5PfVHAKMgm3H5Z+9GG4C7/ErX0aAu
-0ZpTlWbR5C8K8Ma+c/aS7p73OX2yfQ==
-=cfou
------END PGP SIGNATURE-----
+Gr{oetje,eeting}s,
 
---qkl5xl6kf72ekdgo--
+                        Geert
+
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
