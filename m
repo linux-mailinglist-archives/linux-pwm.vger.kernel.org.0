@@ -1,153 +1,172 @@
-Return-Path: <linux-pwm+bounces-7039-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7040-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 622ECB263DC
-	for <lists+linux-pwm@lfdr.de>; Thu, 14 Aug 2025 13:13:20 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [147.75.48.161])
+	by mail.lfdr.de (Postfix) with ESMTPS id 778DBB263EA
+	for <lists+linux-pwm@lfdr.de>; Thu, 14 Aug 2025 13:14:26 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id BBC703A7EEC
-	for <lists+linux-pwm@lfdr.de>; Thu, 14 Aug 2025 11:08:53 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 33D617B3944
+	for <lists+linux-pwm@lfdr.de>; Thu, 14 Aug 2025 11:12:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33A732EAB9F;
-	Thu, 14 Aug 2025 11:08:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 407FF2F90CA;
+	Thu, 14 Aug 2025 11:14:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NwIlOaYM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nNpjrfeQ"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01808145B3F;
-	Thu, 14 Aug 2025 11:08:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C1D472F39B2;
+	Thu, 14 Aug 2025 11:14:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755169732; cv=none; b=cmBF8WcUHGUlTKmW+S7fmplzNcKnAG3ml0lNwQIn9Olli43tOCpCboX+C7b2hRvOv1TRlvwHZyKGi9hWf4EYb/D60iEzBuH0kFaaTgMxKhKG+gxvsjO1cNz4E4PkdIXVEeWFyJwnsJSP/R9Aey2CA3fSxKcfNVLC8oxHbAlM9KM=
+	t=1755170054; cv=none; b=Ut15ndK9suyWTvlPi7DRjKmO94cmLLVDWMaRypWKxuWA8pHu+VadjJ6yv6l6yEZp82zCdcyPcg7J2QmL6NLM/Mn/GPL9gb4POPCN2yXj2gwqSWNVcr1EyFTdvAOID7POMYFRvLQ3eEjz5vah/gFkgjO6Bm6y49ViemAkEAi2Xws=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755169732; c=relaxed/simple;
-	bh=NcM/DeAVlXKmPkl7bBlwD0/QB2aiGZ25NX4zY8t3JZ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pRSvR+921/hb6pk3i8dKDolwZSdgVPXTcWCB65g5q8sOpskRyApaj+8re41Ae1sKSlU5SfXEcSWJPrFoofDjS5gKKUQTs3XupDbmk8rz3QBj3Xs0QPr8NMjOyXkciuaRXOE42XBvXlnTr8TxYYaP5lal5Do07WwTyHQeQkDgtAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NwIlOaYM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17270C4CEED;
-	Thu, 14 Aug 2025 11:08:50 +0000 (UTC)
+	s=arc-20240116; t=1755170054; c=relaxed/simple;
+	bh=tEQmYgzbbnDyqDEJWRtGvNd+F5EzBR/vQBdSyaJQhYo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=f8zoWRljDaUtkBEG9jh9Akue/JgQHMQF2UYUfm6gU4hT/joe+akAkfpcd0ZHLLYz2KzJli0+FGfjLaIpZN4Vt1/8xS3graQCyQD/V4f92xGOE0q/i4rZPBfKTyrijFZMf6hOgat7utoV3U51SBti+RH3jtwtejtHqLftwZnUyC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nNpjrfeQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBF02C4CEED;
+	Thu, 14 Aug 2025 11:13:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755169731;
-	bh=NcM/DeAVlXKmPkl7bBlwD0/QB2aiGZ25NX4zY8t3JZ0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=NwIlOaYMCnbeBsS0fBLSHuuDnB/pqFV4dluw0+qSzHzUhq+lYiZn73OHbU8mnOnFn
-	 hB/r5LcpDdMM3f58g9MJYgITW2nFGieiM9esO9Pd41l5NalsUBpoMbsD4WZqugaLiY
-	 mMYfxqLQhL4SM3xQs64YIYw3xr/5rjn4Z4x7asoxXuf1I9nqK4i7ZC2NwFMdBb8dLf
-	 TI/xIJtSN8Xc3Fpb3C4mmeddLZq+Q/R7S1JdP1R8pg8sP+9jveJzHb5uCAOVce0djK
-	 LbYNTxSpqTxSrcjay48DoGWF5HMxlLm8OPtupmsgRl3JjoSbgRI/Tq2pqXe6d33/dS
-	 P3yDSmUkVhUpg==
-Date: Thu, 14 Aug 2025 13:08:48 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Cc: Benson Leung <bleung@chromium.org>, 
-	Guenter Roeck <groeck@chromium.org>, linux-pwm@vger.kernel.org, chrome-platform@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
-Subject: Re: [PATCH][next] pwm: cros-ec: Avoid -Wflex-array-member-not-at-end
- warnings
-Message-ID: <2pgdxifg2zmyhvemm7a2qntprsz5nhh3ustrrlg2vvcqffwj6c@22enjpgycjbt>
-References: <aJtRPZpc-Lv-C6zD@kspp>
+	s=k20201202; t=1755170053;
+	bh=tEQmYgzbbnDyqDEJWRtGvNd+F5EzBR/vQBdSyaJQhYo=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=nNpjrfeQtIacQG0WEX7mhSYTd7hQlnB7xgoGgJ3v0sCDCZTw/gWywOLfqOYZY4LEw
+	 5E1vCRzlD1L7yPW24oE8hMcbLDvBgKF7UglcpNWQtk+d21igAN/jkLiw4vfw95mmaO
+	 Wy7Aqpr6pD43wwMPVYuuHLtW+Bl/6xetkfjwBZUQFNWFgaJ0eeIdJk6JAFWM+nmE53
+	 +kHohC9FP8zxW9RrnA7dkwqqcgSuN4MKh4R6jlzu+aBiOCgoS1PQtvycwFenFDAKSf
+	 8NGwtU+raJOCaLGmFHJD4RvJXWWS3gsAOxCpMzRtcOJrdMPkcN8DQ2NiQbSAuAjRLj
+	 ccmAEOd0wNzVg==
+From: Mark Brown <broonie@kernel.org>
+To: linux-kernel@vger.kernel.org, 
+ Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>, 
+ Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, 
+ Andrea della Porta <andrea.porta@suse.com>, 
+ =?utf-8?q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, 
+ Andrzej Hajda <andrzej.hajda@intel.com>, Andy Shevchenko <andy@kernel.org>, 
+ Andy Yan <andy.yan@rock-chips.com>, Avi Fishman <avifishman70@gmail.com>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Benjamin Fair <benjaminfair@google.com>, 
+ Bjorn Andersson <andersson@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, 
+ David Airlie <airlied@gmail.com>, David Lechner <dlechner@baylibre.com>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ Drew Fustini <fustini@kernel.org>, dri-devel@lists.freedesktop.org, 
+ Fabio Estevam <festevam@gmail.com>, 
+ Fabrice Gasnier <fabrice.gasnier@foss.st.com>, Fu Wei <wefu@redhat.com>, 
+ Guo Ren <guoren@kernel.org>, Hans Verkuil <hverkuil@kernel.org>, 
+ =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, imx@lists.linux.dev, 
+ Iwona Winiarska <iwona.winiarska@intel.com>, 
+ Jaroslav Kysela <perex@perex.cz>, Jassi Brar <jassisinghbrar@gmail.com>, 
+ Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Jerome Brunet <jbrunet@baylibre.com>, Jonas Karlman <jonas@kwiboo.se>, 
+ Jonathan Cameron <jic23@kernel.org>, Kevin Hilman <khilman@baylibre.com>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, 
+ Krzysztof Kozlowski <krzk@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Lee Jones <lee@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, linux-actions@lists.infradead.org, 
+ linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+ linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org, 
+ linux-input@vger.kernel.org, linux-media@vger.kernel.org, 
+ linux-mmc@vger.kernel.org, linux-phy@lists.infradead.org, 
+ linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+ linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-rtc@vger.kernel.org, 
+ linux-samsung-soc@vger.kernel.org, linux-sound@vger.kernel.org, 
+ linux-spi@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+ linux-sunxi@lists.linux.dev, Liu Ying <victor.liu@nxp.com>, 
+ Lukasz Luba <lukasz.luba@arm.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Manivannan Sadhasivam <mani@kernel.org>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Maxime Ripard <mripard@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Miquel Raynal <miquel.raynal@bootlin.com>, Nancy Yuen <yuenn@google.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Nicolin Chen <nicoleotsuka@gmail.com>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, openbmc@lists.ozlabs.org, 
+ Patrick Venture <venture@google.com>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, 
+ Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Robert Foss <rfoss@kernel.org>, 
+ Samuel Holland <samuel.holland@sifive.com>, 
+ Samuel Holland <samuel@sholland.org>, Sandy Huang <hjc@rock-chips.com>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, 
+ Shengjiu Wang <shengjiu.wang@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Stephen Boyd <sboyd@kernel.org>, Takashi Iwai <tiwai@suse.com>, 
+ Tali Perry <tali.perry1@gmail.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Tomer Maimon <tmaimon77@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Vasily Khoruzhick <anarsoul@gmail.com>, Vinod Koul <vkoul@kernel.org>, 
+ Vladimir Zapolskiy <vz@mleia.com>, Xiubo Li <Xiubo.Lee@gmail.com>, 
+ Yangtao Li <tiny.windzz@gmail.com>, Zhang Rui <rui.zhang@intel.com>
+In-Reply-To: <20250813161517.4746-1-wsa+renesas@sang-engineering.com>
+References: <20250813161517.4746-1-wsa+renesas@sang-engineering.com>
+Subject: Re: (subset) [PATCH 00/21] treewide: remove unneeded 'fast_io'
+ parameter in regmap_config
+Message-Id: <175517003454.17441.365944262533574232.b4-ty@kernel.org>
+Date: Thu, 14 Aug 2025 12:13:54 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="vfjd7sxzjdmqmwth"
-Content-Disposition: inline
-In-Reply-To: <aJtRPZpc-Lv-C6zD@kspp>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.15-dev-cff91
 
+On Wed, 13 Aug 2025 18:14:46 +0200, Wolfram Sang wrote:
+> While working on a driver using regmap with MMIO, I wondered if I need
+> to set 'fast_io' in the config. Turned out I don't need to, so I added
+> documentation for it with commit ffc72771ff6e ("regmap: Annotate that
+> MMIO implies fast IO").
+> 
+> This series fixes the existing users in the tree which needlessly set
+> the flag. They have been found using this coccinelle script:
+> 
+> [...]
 
---vfjd7sxzjdmqmwth
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH][next] pwm: cros-ec: Avoid -Wflex-array-member-not-at-end
- warnings
-MIME-Version: 1.0
+Applied to
 
-Hello,
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-next
 
-On Tue, Aug 12, 2025 at 11:35:41PM +0900, Gustavo A. R. Silva wrote:
-> -Wflex-array-member-not-at-end was introduced in GCC-14, and we are
-> getting ready to enable it, globally.
->=20
-> Use the new TRAILING_OVERLAP() helper to fix the following warnings:
->=20
-> drivers/pwm/pwm-cros-ec.c:53:40: warning: structure containing a flexible=
- array member is not at the end of another structure [-Wflex-array-member-n=
-ot-at-end]
-> drivers/pwm/pwm-cros-ec.c:87:40: warning: structure containing a flexible=
- array member is not at the end of another structure [-Wflex-array-member-n=
-ot-at-end]
->=20
-> This helper creates a union between a flexible-array member (FAM)
-> and a set of members that would otherwise follow it. This overlays
-> the trailing members onto the FAM while preserving the original
-> memory layout.
->=20
-> Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
-> ---
->  drivers/pwm/pwm-cros-ec.c | 10 ++++------
->  1 file changed, 4 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/pwm/pwm-cros-ec.c b/drivers/pwm/pwm-cros-ec.c
-> index 189301dc395e..67cfa17f58e0 100644
-> --- a/drivers/pwm/pwm-cros-ec.c
-> +++ b/drivers/pwm/pwm-cros-ec.c
-> @@ -49,10 +49,9 @@ static int cros_ec_pwm_set_duty(struct cros_ec_pwm_dev=
-ice *ec_pwm, u8 index,
->  				u16 duty)
->  {
->  	struct cros_ec_device *ec =3D ec_pwm->ec;
-> -	struct {
-> -		struct cros_ec_command msg;
-> +	TRAILING_OVERLAP(struct cros_ec_command, msg, data,
+Thanks!
 
-It's a bit ugly to have to pass the name of the flexible array member.
+[19/21] spi: remove unneeded 'fast_io' parameter in regmap_config
+        commit: 48124569bbc6bfda1df3e9ee17b19d559f4b1aa3
 
-I think the following would work:
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.
 
-diff --git a/include/linux/stddef.h b/include/linux/stddef.h
-index dab49e2ec8c0..8ca9df87a523 100644
---- a/include/linux/stddef.h
-+++ b/include/linux/stddef.h
-@@ -108,7 +108,7 @@ enum {
- 	union {									\
- 		TYPE NAME;							\
- 		struct {							\
--			unsigned char __offset_to_##FAM[offsetof(TYPE, FAM)];	\
-+			unsigned char __offset_to_##FAM[sizeof(TYPE)];		\
- 			MEMBERS							\
- 		};								\
- 	}
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-which only leaves one usage of FAM in the name of the padding struct
-member. I'm sure someone is able to come up with something nice here to
-get rid of FAM completely or point out what I'm missing.
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-Best regards
-Uwe
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
---vfjd7sxzjdmqmwth
-Content-Type: application/pgp-signature; name="signature.asc"
+Thanks,
+Mark
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmidw70ACgkQj4D7WH0S
-/k5ieAf/TUUo4o0zI26SLZTp8nM6qwiZ9GhAA1lOoSO1+aUR/7VkqYJ7yO/fsdMH
-eAjsyTZixz4uh7p0c+nGpPS4wjpGry7l579dXbYkt6gVU3np/kXR93OUJDdYNbkU
-pkAhBvgWCRLbhuytiwDm1OJjlbTqu1piDh1/r3wgdud+cnva7caeQCVqfeHtRPQz
-X+ww6vwxHzAR2pTzGdLrBIZYt5yZhqUdOXidMETxqGdO3Z17zeUt15fzVyN/6h80
-UZOl1VXw9+T2v1v8+Wp48YMBIblWoGKf/qNmDFzpQyzS1tIsXpy+GEaK6tjrODuG
-xmdLAxw+LR1V8wthsULHBwBasbgfHg==
-=hwjq
------END PGP SIGNATURE-----
-
---vfjd7sxzjdmqmwth--
 
