@@ -1,61 +1,58 @@
-Return-Path: <linux-pwm+bounces-7054-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7055-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id B34F8B267F2
-	for <lists+linux-pwm@lfdr.de>; Thu, 14 Aug 2025 15:48:33 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 44241B2692F
+	for <lists+linux-pwm@lfdr.de>; Thu, 14 Aug 2025 16:26:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id DAD511CE2C5F
-	for <lists+linux-pwm@lfdr.de>; Thu, 14 Aug 2025 13:38:05 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id F299A602C02
+	for <lists+linux-pwm@lfdr.de>; Thu, 14 Aug 2025 14:13:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C6442FD1B5;
-	Thu, 14 Aug 2025 13:33:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 547C8212B1E;
+	Thu, 14 Aug 2025 14:09:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z3TFREvM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Taw12qG1"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33AF21514E4;
-	Thu, 14 Aug 2025 13:33:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21DB3212546;
+	Thu, 14 Aug 2025 14:09:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755178429; cv=none; b=dUpTggMM4qq5R4lleY+gKe9vBHUvY8aWrXd6qFWB8QFTnBUmxZxbN95dNG7KTAu73qpHlERP/FbzIMn0B7eLE4+0vfVBOe7uIytP46leyuH9ptMfxEHNrr8UVwCwIs4FeqgQ6CuYMw8nQ99xJiZqj863nT813D5l9e6XFA52LZc=
+	t=1755180541; cv=none; b=XuRPFmjA6qFr8OGMzIBYewP390wIVnCEjdS20+QhtFixuO92BbPlC9slqPxJ6rBANcMNCCQcoJCjQgQQpBWqLk0fK/jGMLDnFHpJjy5kn1vBGpQ8i9pQgH5b/iiIwGcSqAPy4i7uuLc+0cgd7Dka5SojbSivuDl7kbRO3naxYRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755178429; c=relaxed/simple;
-	bh=qzHOrb660hNBXkxGw6DWMOMC3lLxUoz/yT/E1S7tZKI=;
+	s=arc-20240116; t=1755180541; c=relaxed/simple;
+	bh=KoWgzximSrrSXOKG05+Ln2RZTFfG6mhzQE07XNVMxr4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JmW4Ys8h5pnFaqpq+frJ4K4nAngN0V+2GyoD/vJoQZlO52BH2aWWRTUSHGnEoX5FjZB29zUTjpP9SFJx4OGHtWitt9MmpOeq1DmYT57s2KYd4XOUWx2vLxq/Fo66hTY+vUBehFBgY1khBjqdBoZwkxM445CzOBWTmoYYQEidB/k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z3TFREvM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24D9DC4CEED;
-	Thu, 14 Aug 2025 13:33:44 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=di1B6zQsccKFZ+zsY5qKl8Fwu2dYJ//OYNXT23ix573oDHw35r7O1wVOMINcwlVfhkwIgSIKVntpG3sBjsGzCV63sOFNSs71/W1e+xZMcKwjwUwBn7WIhl6KoU/rXDo4TQHYbYC4siSFyGqP6w0Le1NMSyzH0PwIAXODuwBP9l8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Taw12qG1; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 163A3C4CEED;
+	Thu, 14 Aug 2025 14:08:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755178428;
-	bh=qzHOrb660hNBXkxGw6DWMOMC3lLxUoz/yT/E1S7tZKI=;
+	s=k20201202; t=1755180540;
+	bh=KoWgzximSrrSXOKG05+Ln2RZTFfG6mhzQE07XNVMxr4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Z3TFREvMs1WoLOVL2tGaVT1AakYVA6W35J8m4vEyfQfAyM33dod6zbIvi5EZ1o4ab
-	 +wMY1hRryZmJya4eBLPwosoXvYCs7Hm8DP4mJqMxIjz+fK3bTqZyQyIajhMwZadJ3A
-	 VgKFpqwqWMz5XEiP87KZltrdbdpp7ekrl4gAU2w5KnSxbY9Tc79i75ZmxsSbc6noSa
-	 14Zr9EcpAfOR6dYy1EH27ORo6AzIYNG9OjyukxBmc9XHqR84SWyKav01vmYQ15nCYc
-	 kS4Zb/fu4eIRpPpxjviCrOuPbqL1PgkfEYx1n7Bl6BVDLraINW34jdIQrNZEM8PE8E
-	 hX7jkkQX4Kkqg==
-Date: Thu, 14 Aug 2025 14:33:42 +0100
-From: Mark Brown <broonie@kernel.org>
-To: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
-Cc: linux-kernel@vger.kernel.org, andreas@kemnade.info,
-	peter.ujfalusi@gmail.com, dmitry.torokhov@gmail.com,
-	robh@kernel.org, krzk+dt@kernel.org, lgirdwood@gmail.com,
-	tiwai@suse.com, conor+dt@kernel.org, lee@kernel.org,
-	ukleinek@kernel.org, gregkh@linuxfoundation.org,
-	linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-pwm@vger.kernel.org, linux-sound@vger.kernel.org,
-	linux-usb@vger.kernel.org, shuah@kernel.org
-Subject: Re: [PATCH v2 7/9] Documentation: omap-twl4030: convert to DT schema
-Message-ID: <8c9366a5-482e-4bf2-b8cc-79e789bf2ff0@sirena.org.uk>
-References: <20250814132129.138943-1-jihed.chaibi.dev@gmail.com>
- <20250814132129.138943-8-jihed.chaibi.dev@gmail.com>
+	b=Taw12qG1musZlOg9O2MJdjAn+r2utRcPjMH9lo2Gx4scEDioXCFvdglOn+buWsSPO
+	 TWP8z/lZXaJeXSLJC+lzFQTe36YJbtPkFHqcpH1VytyXBVTfSRwJPGvJI4hIPlG6rr
+	 NmRsu9HjlOgmYHNTVCVdIa5TIIorSHLjuGSyYZZRadR2B6XRYjd4KusYoiYLxLIdN0
+	 qxfTVIF5mWJFwebr0eKSbDWX2pTwnhPm5zadc8yZwF0HlCSs03x/fl6xnVEd/e8bBg
+	 BHTtd2DePzkEG2QRrZQZejExx/HxUBICpPqwMod3zylWJ2YBwevKDI+AeVqgeYnZcz
+	 O2fvFiAJfd12w==
+Date: Thu, 14 Aug 2025 16:08:57 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc: "Gustavo A. R. Silva" <gustavoars@kernel.org>, 
+	Benson Leung <bleung@chromium.org>, Guenter Roeck <groeck@chromium.org>, linux-pwm@vger.kernel.org, 
+	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, linux-hardening@vger.kernel.org
+Subject: Re: [PATCH][next] pwm: cros-ec: Avoid -Wflex-array-member-not-at-end
+ warnings
+Message-ID: <mlvple4tcnvu35a2liva5wxhafshc634fu46kwyrepn75wvuec@udshn3ja6lvc>
+References: <aJtRPZpc-Lv-C6zD@kspp>
+ <2pgdxifg2zmyhvemm7a2qntprsz5nhh3ustrrlg2vvcqffwj6c@22enjpgycjbt>
+ <4b9eea66-f004-4b5f-bf48-4c32205cc8ee@embeddedor.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -63,46 +60,113 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="4nUJ618zm+2DpXSV"
+	protocol="application/pgp-signature"; boundary="fuq2btbbfpvvuy3v"
 Content-Disposition: inline
-In-Reply-To: <20250814132129.138943-8-jihed.chaibi.dev@gmail.com>
-X-Cookie: This sentence no verb.
+In-Reply-To: <4b9eea66-f004-4b5f-bf48-4c32205cc8ee@embeddedor.com>
 
 
---4nUJ618zm+2DpXSV
-Content-Type: text/plain; charset=us-ascii
+--fuq2btbbfpvvuy3v
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH][next] pwm: cros-ec: Avoid -Wflex-array-member-not-at-end
+ warnings
+MIME-Version: 1.0
 
-On Thu, Aug 14, 2025 at 03:21:27PM +0200, Jihed Chaibi wrote:
-> Convert the legacy TXT binding for the OMAP TWL4030 sound card
-> to the modern YAML DT schema format. This adds formal validation
-> and improves documentation.
+On Thu, Aug 14, 2025 at 08:48:23PM +0900, Gustavo A. R. Silva wrote:
+>=20
+> > diff --git a/include/linux/stddef.h b/include/linux/stddef.h
+> > index dab49e2ec8c0..8ca9df87a523 100644
+> > --- a/include/linux/stddef.h
+> > +++ b/include/linux/stddef.h
+> > @@ -108,7 +108,7 @@ enum {
+> >   	union {									\
+> >   		TYPE NAME;							\
+> >   		struct {							\
+> > -			unsigned char __offset_to_##FAM[offsetof(TYPE, FAM)];	\
+> > +			unsigned char __offset_to_##FAM[sizeof(TYPE)];		\
+> >   			MEMBERS							\
+> >   		};								\
+> >   	}
+> >=20
+> > which only leaves one usage of FAM in the name of the padding struct
+> > member. I'm sure someone is able to come up with something nice here to
+> > get rid of FAM completely or point out what I'm missing.
+>=20
+> Flexible structures (structs that contain a FAM) may have trailing paddin=
+g.
+> Under that scenario sizeof(TYPE) causes the overlay between FAM and MEMBE=
+RS
+> to be misaligned.
 
-> Changes in v2:
+That sounds wrong to me; are you sure? In that case allocating space for
+such a struct using
 
-This should go after the ---, tools use this to remove the changelog
-when committing.
+	struct mystruct {
+		unsigned short len;
+		unsigned int array[];
+	};
 
-> - Fixed comment formatting (added spaces for better alignment).
-> - Updated commit subject to align with subsystem style.
+	s =3D malloc(sizeof(struct mystruct) + n * sizeof(unsigned int));
 
-Should be ASoC: dt-bindings:=20
+wouldn't do the right thing.=20
 
---4nUJ618zm+2DpXSV
+I found in the net (e.g.
+https://rgambord.github.io/c99-doc/sections/6/7/2/1/index.html):
+
+	In most situations, the flexible array member is ignored. In
+	particular, the size of the structure is as if the flexible
+	array member were omitted except that it may have more trailing
+	padding than the omission would imply.
+
+So I'd claim that sizeof does work here as intended.
+
+gcc here also behaves fine:
+
+	uwe@taurus:~$ cat test.c
+	#include <stdio.h>
+
+	struct mystruct {
+		unsigned short len;
+		unsigned int array[];
+	};
+
+	struct mystruct2 {
+		unsigned short len;
+	};
+
+	int main()
+	{
+		printf("sizeof(struct mystruct) =3D %zu\n", sizeof(struct mystruct));
+		printf("sizeof(struct mystruct2) =3D %zu\n", sizeof(struct mystruct2));
+		return 0;
+	}
+
+	uwe@taurus:~$ make test
+	cc    -c -o test.o test.c
+	cc   test.o   -o test
+
+	uwe@taurus:~$ ./test
+	sizeof(struct mystruct) =3D 4
+	sizeof(struct mystruct2) =3D 2
+
+Best regards
+Uwe
+
+--fuq2btbbfpvvuy3v
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAmid5bUACgkQJNaLcl1U
-h9A2/gf8DYx2qBWKgxDl5J/9xk1Tol23Uwe7rnV2+wSVddxlxcPYEO+lCQ+ktiYz
-EJi0x9SUpw/em43nQulrEBY7vvJH6jlOMpM7qehbhuCdkAqIN1Be8e7/bR3LfGCM
-27wWzx1+Hxoun9V4q7w0MuKhjztsmti5MouUB03NQbR13uGmV9kNxJWF9juqAujI
-xfcamPWNGGyPF6GRjiuuBhPmrjl8yFh8u2UyiI4E1IS/GL3kth1FjC8igDAMniou
-2Fgn4M+BQrHi94iGGe+T19uAue1VARcg2RkYU6WUkuiBSRr673eL1OJQVOIoiFn6
-dm6JtgM4fu3FxSdbGp+fonGTJEdUZA==
-=3+dF
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmid7fYACgkQj4D7WH0S
+/k5blAgAh5+IokY92+K/+9z3K4qgh2F2Qwfe9kLJkliHAtW0BjPXsSmvDfrl6liX
+GHh7M26217I9OMG75Bhpl8C+jpzN6EMtRsAD/zFcdDDl/JACrm7yO56/FcVN1rER
+vjf+3ExMbV/ZMhRKY+Rsp3LCAbkkuywX6g2Lr7lDWmu4L/RyEGi1lSXVYSgMGvpi
+npJhS+qEtbbHXT2eUQCR/e3aQHHA/PUSPvvXsJ7u5fVDCQzTz6gluHY0zrtXl5su
+jXZ4C0ux6veyfj7S7m0ayFZRRdavN2SOhBVcWSIwNewhGFjQZCAuFBZ6ht9TzwyF
+nL6IkD2TrBgj6T2mtyWwmt8eHuM4tg==
+=CpNn
 -----END PGP SIGNATURE-----
 
---4nUJ618zm+2DpXSV--
+--fuq2btbbfpvvuy3v--
 
