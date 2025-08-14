@@ -1,373 +1,190 @@
-Return-Path: <linux-pwm+bounces-7042-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7043-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6F4F6B264B5
-	for <lists+linux-pwm@lfdr.de>; Thu, 14 Aug 2025 13:52:30 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 40573B2670F
+	for <lists+linux-pwm@lfdr.de>; Thu, 14 Aug 2025 15:25:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 45CA3188B74E
-	for <lists+linux-pwm@lfdr.de>; Thu, 14 Aug 2025 11:50:51 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 37F3117D95D
+	for <lists+linux-pwm@lfdr.de>; Thu, 14 Aug 2025 13:21:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B465A2FABEB;
-	Thu, 14 Aug 2025 11:50:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 740E72FD1DD;
+	Thu, 14 Aug 2025 13:21:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RuxJwlw7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="htu5+Mgh"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f47.google.com (mail-wm1-f47.google.com [209.85.128.47])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2CE21474CC;
-	Thu, 14 Aug 2025 11:50:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A13B5191F92;
+	Thu, 14 Aug 2025 13:21:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755172228; cv=none; b=YwCyo0D6TJVVLn3/m3N3dYXaPhJJ+fpwDiE8bc36WyyIiarap2IRuD3lD3moCfK5ck7FKomkZXMT46ZoQ8mOUSXsK/gab0LMu4PcAYYdqaSRSjbWMRtxPhTwgX7OG1u1RFPHD8KwntOPWcTOSczJd7+MVC/iX3IaubDJqE6qJdk=
+	t=1755177707; cv=none; b=OOizPgKuLk3Q1WW87kzAFN3HjHchX6xDj+xrSpgQgmvX6iKRB35wOspqq0z+vsalmKGa5r7aKo/EWQJA0QqTl86JuNMgCN8B6CqIScXN3oHqGGlz3IDu9OES9Nimqa3Tvl/+ZgmTodIgA+CqrK7D3OT83SrKgU1KFBdur2Rj7TU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755172228; c=relaxed/simple;
-	bh=WPIgaEeWW+6oaq2UZm0lrOrqcZ5AeKCSiyIHj44SQjU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=JaJ/5NwhxzMnWFwC9ZKBt3vHur/PVI6HKkhZqviSSF2BIQuzbQnC3YYHM6ZwQSdQ+QJMB8Vw9TjdAMOf1OP1FLzZxzkoOMDPQr5qECWGPoe6fKrCj2xEVB9bpj+EQY9WDIPJaldUPWiMW21+qqyioYPbqnNMzuYjgEoiuYwJSjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RuxJwlw7; arc=none smtp.client-ip=209.85.128.47
+	s=arc-20240116; t=1755177707; c=relaxed/simple;
+	bh=0gNc8y0IxUkuy33DkYbXgIB1lUXVSIPD5J6S87Zz8uo=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=GercWxGBFgSkN93Ribzwo98tAzpmTZHUTmTw9LiTs8x8o4meEDfiyhgC8kXKO2TKquB/LdoCY2ajn47mKNlLy0iTq6kxDSHjzIbgcJUjr4MUYfHVK4MMdEjLbFnq0OuB5MFHtSOKmZAI43ZKX0yS4W9E+neZVYtF5oWXLBR6t10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=htu5+Mgh; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f47.google.com with SMTP id 5b1f17b1804b1-45a15fd04d9so13070195e9.1;
-        Thu, 14 Aug 2025 04:50:26 -0700 (PDT)
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-45a1b0c8867so6948125e9.3;
+        Thu, 14 Aug 2025 06:21:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755172225; x=1755777025; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1755177704; x=1755782504; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=ZjBMwTLbk2n8XSDykkMjED4XnxkTChi3RMpFjh0P9gI=;
-        b=RuxJwlw7WsT6gO+Se4oVEEW5AdfqvtDQncVga6wxYnt3oNIVDiK0A6gmlJWPTgTZkc
-         nLCnUV8UaL4Si1q25uP+krFpalYO5vKHjl2A2WliJT+ZSf22jo5iBNko+FCG0ykv+Ggs
-         V5g8pnm9a/i0T9mxkc5gWhYHztgiLhGLwVJoBNdIjM/G9juyz10LjefRwgbyAISnw/f/
-         jT/SfljWYTYjhbDflZtGRcO5YJok04O6m7PZz6o0mGZbaamHMixkgB8nOF8tIZiJSpBj
-         j8/ujlfL/i2eDBvYc79hFQFxRql7QbZbbc5tnjoCXqCBvfFDocVCz1UbqFMSGFDBQJzN
-         TGNg==
+        bh=7bMDJo186p2jEew+3Zrvp2fY8n4JWRnO1Ap6IS9F3qA=;
+        b=htu5+MghSTtEpIvCtptHhN7BReJOz4mTY0s09QMrZqyOZ/Hw/fx4xJpZLAGVIBz4d8
+         wWX/pKSgb6DPeoxiipf8pfVvV7CbjysSK94roSennAL65dzk7LuGA3Qu9UObqv7IU1bm
+         BRT6rDpIZpOWMp4QkDQBA8TkT4fpGYjDCzIsFMbTG3JqNv3Au9hlinrX33L/jWIqyB4Z
+         2d9fbgn4NIbepjCDapB2DP37bMczLOyU2DEmvAaTnC7cDpQ4HaU9ZCKKkhM3kwuSei1g
+         2OBzVO3cl/kA8Z7IZrIzW8iPLhSmZInR+O/DyCsTYzKCuoWfl8XDfg7QqC/UbmVb8a4K
+         Y2PA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755172225; x=1755777025;
+        d=1e100.net; s=20230601; t=1755177704; x=1755782504;
         h=content-transfer-encoding:mime-version:message-id:date:subject:cc
          :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ZjBMwTLbk2n8XSDykkMjED4XnxkTChi3RMpFjh0P9gI=;
-        b=qp0QzDh8FQ9p0w4g5gS9aF2jwkyWTcHHGJK0XldGbVMDPdZFAEXzQoAwrFB2BmDTcD
-         RL7bd/2Nz0CZMFmczMrRh44CD0aFf5n23zee8uwgymhZEEf0MV+oRIoGGEr82CW/wADj
-         1WrVmQK0JJlPrckP6rrppScPy2AHegu/95F7TDTVoDU942Q2YQVO0PEaomQpn5PPN1KU
-         NFhMEYAG7tGy1cSshR/JnTITs6eaUQqLMs9JXZuEuAqcLHjg688jsnG18sCdwue1JIw6
-         zkn0KYFjIL3Dv1GeeDXa3TOYW9tkOMnDnGPHzEOS/SdEngrpppnYIq6oqBYoRGbYIVQ3
-         kCRQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV1idetCs/hYl37dkaadT0+B/PJzqDMoDIH/uhXI1VDaQkcJXSnGV78i6Flhai1GfUpAtdPRG5ZsW0MEHSDqcUqf/Y=@vger.kernel.org, AJvYcCVfSyCc1kdWLfQJR4AcN6YraOs3QmlokItTjVyAFRwAbi078QcWZYohe/wGhUUfiHJ2voQToIvI/Sw3mgM=@vger.kernel.org, AJvYcCXyd1YwmjHFzteaHLAOInCO4X35uNZw0T+7OZdP0RzABChjgY0Rkg4NJCUwftaCkHj/Q+jcUuss48ob@vger.kernel.org
-X-Gm-Message-State: AOJu0YxQwi13NIbnzcbO/j27hD/J0zyWL6+bDJncULZ3najccYsjD/S1
-	7MqMoGkOjqJB8GF6y6HEhMGFyWQ4WjazV+wzUHSzxlBUtGWQwJtsj6jYhnRlOZw/Buk=
-X-Gm-Gg: ASbGncsWEAAW+tGHrEWm4yyl14ZXS2qJpbLaJMroNYXGNGfEF2jzLTbC/ipqf/XvAuu
-	GEnEd2NCmbk1tbN2yljgodqfOST3WALmAj119pITKnNvh05Fhm83pjRAIsZkZ/2tpdTTL0dwqwv
-	g7CysyDT0+NWhNY+ifb1zmbO4tmKI4DwNF28xRBJr0LDorKJAx/+IzKyD4QfSx4xlacwMaBAlRP
-	Fmmky3COJ30/oIKJgnk+MAAZpmwOdw7/waqJuD/nywtaC0NCUu7UBhm3QNljq7DQywOvBb7787M
-	U6bZuc/Oo+hkENaUWdBtyGuYC6pEwZaOw3vUQ9yXEYn3yx1ybBouHcT5l83F+hl/cHmMl9aN4Ii
-	LDNylGi6nAuw2PtPsMxCI9cAaObzaN3n9Ug7REJryYlC+MDTLtuXnQDCTBWbZ1eBhvMjhLcjvSg
-	==
-X-Google-Smtp-Source: AGHT+IFjW7j24IKwAbDEeuaifuS1g4pZEcs6fn2eZpwSjA1+MslRWQWk6ljnKRJpR5zJLR16Yp0C2A==
-X-Received: by 2002:a05:600c:8b2b:b0:456:1d06:f37d with SMTP id 5b1f17b1804b1-45a1b6e30c9mr24430965e9.16.1755172224721;
-        Thu, 14 Aug 2025 04:50:24 -0700 (PDT)
-Received: from biju.lan (host31-53-6-191.range31-53.btcentralplus.com. [31.53.6.191])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45a1c6cd169sm18244355e9.8.2025.08.14.04.50.24
+        bh=7bMDJo186p2jEew+3Zrvp2fY8n4JWRnO1Ap6IS9F3qA=;
+        b=gwS/vcPtvvKJ9z8GFTDrTWs/ipdsDH3E5A9sHjO9cCH0pyYkrqOjgIn+R80E5GBx0/
+         Zydv5x2zSmnYYrhMTMm4jswmWiyCRR5pmMl8YrB10sBvy8P65ScWXdPWGNiIlzI+isBY
+         Br8QyvUieZK7rRn0Wy9r4xfqd2oA0fMDjNmkhbU7dy/Ec5+3ObJOVm1QGZY8BR2ttPLK
+         TYemRWuiM6uwG5HhS7BPBJw3ITBsO15kAyoBqQ53yncWpybScHi28ZgrcdTKr8elXhlV
+         Cni9ynCiC3Hxqr1nTHkvTiXyv61q/pKC4vSZnat62/FlyZZuoaSdxPPFLSnFPOg/t3+p
+         iuMA==
+X-Forwarded-Encrypted: i=1; AJvYcCUBs0rH07hJLLnDNcyjFyz/jHPAXX25DjwTqv+qgZ3WiSdd2I0KXJkYqjfd03w0LZHrZtzGIS+eqe2U@vger.kernel.org, AJvYcCULeoNynuPt8uAjJGFxH8V1ytSYsX3mn3948FYwXRombIC3OWDBs8Q0ge+rWwP/69Bp4uUf+qp9vUAqADQ=@vger.kernel.org, AJvYcCWCZl+ms+q+rWOL4QnlsRktBVw6RYJ9O9FYUQY1B79dvkh4x4HNhrACLghxgBQqknBnDe+IEOMx2suv@vger.kernel.org, AJvYcCWVGalRs8yw9u1CKOViC9gtTco8wlIJQzWP6476MCJkLBdHi9lHNQ1kFeCq1D1aWoMt4iOjnMEXiEaHwic=@vger.kernel.org, AJvYcCXVXlrciv1OG8eZbelCGQRX1TxGNwV6uTbjHSpy8NoYoLhbl6z/8sif50WQKyq/2qW//GVLd4kAa7TP@vger.kernel.org
+X-Gm-Message-State: AOJu0YyfxrUlgBgJ/LejtZlyBPEFniEXUhMNteoxx8XFQ+E+IHQahU17
+	duoYXAENPVeFfGzsKJVzXWsv7Dbc1xGdLKwToiM50E44Bc+mXZKD/a/NmzWF
+X-Gm-Gg: ASbGncvWDpYzGBrcgyACL2XH4qX3KfZFs1Eqivx40MS2AEPEs9iKSdW8I02p1NsgB2d
+	2hvyzThaH3UAT8qlmtUogJUm84Kxt28ck74PWoDgfKZpdhGZeAQiVwuN3Yc5E4V1UpPaXXnkQKu
+	CKe+4D/bzpJk7kfxj4rIR4TaRSIuw6JWo/gkOIQW3HmTSmrJ7+w9lodZ/abjC78/SWZZCsbI/jB
+	KKpzWcgwZcvL+pR+5mwvimYn+661BWwAw5K6O1/qH3AfoivE8WrxMCd1PW9vkzSH4uD10l2eX7l
+	6U+kOIKpwD1ZjXLUv9KFAVpIU5Wa08/2RCEHrC2lzdw2vmByicEmwfmnGH0Ef5S6N5DGzezQR94
+	j+izdG86ObPC9mfSXWYJZr1dZ/fatBscP9dpZJoN1Kq8KAe8ymMF46qX0aqWH6RR0pgziNwzM2D
+	kRKXQl+RikRTS+Go8eifVMdGMft3Y70z18
+X-Google-Smtp-Source: AGHT+IGjryud1OAhsbQzG5opdza3J0arXvGMqqvPhb9Y/7Sf6esDDcwIpDPlr3q8nLe5TGjuWY/5zA==
+X-Received: by 2002:a5d:64e8:0:b0:3b7:7936:e7fb with SMTP id ffacd0b85a97d-3b9edf3897emr2394083f8f.30.1755177703292;
+        Thu, 14 Aug 2025 06:21:43 -0700 (PDT)
+Received: from localhost.localdomain (lmontsouris-658-1-96-160.w81-250.abo.wanadoo.fr. [81.250.250.160])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c3b9386sm50998831f8f.18.2025.08.14.06.21.42
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Aug 2025 04:50:24 -0700 (PDT)
-From: Biju <biju.das.au@gmail.com>
-X-Google-Original-From: Biju <biju.das.jz@bp.renesas.com>
-To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>,
+        Thu, 14 Aug 2025 06:21:42 -0700 (PDT)
+From: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: andreas@kemnade.info,
+	peter.ujfalusi@gmail.com,
+	dmitry.torokhov@gmail.com,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	lgirdwood@gmail.com,
+	tiwai@suse.com,
+	conor+dt@kernel.org,
+	lee@kernel.org,
+	ukleinek@kernel.org,
+	broonie@kernel.org,
+	gregkh@linuxfoundation.org,
+	linux-input@vger.kernel.org,
+	devicetree@vger.kernel.org,
 	linux-pwm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Biju Das <biju.das.au@gmail.com>,
-	linux-renesas-soc@vger.kernel.org
-Subject: [PATCH v2] pwm: rzg2l-gpt: Implementation of the waveform callbacks
-Date: Thu, 14 Aug 2025 12:50:20 +0100
-Message-ID: <20250814115022.73732-1-biju.das.jz@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
+	linux-sound@vger.kernel.org,
+	linux-usb@vger.kernel.org,
+	shuah@kernel.org,
+	jihed.chaibi.dev@gmail.com
+Subject: [PATCH v2 0/9] dt-bindings: Convert TWL4030/6040 family binding to DT schema
+Date: Thu, 14 Aug 2025 15:21:20 +0200
+Message-Id: <20250814132129.138943-1-jihed.chaibi.dev@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Biju Das <biju.das.jz@bp.renesas.com>
+Hi,
 
-Convert the rzg2l-gpt driver to use the new callbacks for hardware
-programming.
+This series modernizes the Device Tree bindings for the Texas
+Instruments TWL4030/TWL6040 family by converting all remaining
+legacy TXT bindings to the structured YAML DT schema format.
 
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
+This improves the bindings by adding formal type checking, clear property
+definitions, and machine-readable examples, which allows for automated
+validation and better documentation for developers.
+
+This v2 series addresses feedback from the initial submission, adds a new
+patch to fix validation errors that were uncovered by the stricter schemas,
+and includes several other minor improvements.
+
+Thank you,
+Jihed
 ---
-v1->v2:
- * Dropped modifing hardware from .round_waveform_tohw() callback.
----
- drivers/pwm/pwm-rzg2l-gpt.c | 175 +++++++++++++++++++++---------------
- 1 file changed, 102 insertions(+), 73 deletions(-)
 
-diff --git a/drivers/pwm/pwm-rzg2l-gpt.c b/drivers/pwm/pwm-rzg2l-gpt.c
-index 360c8bf3b190..f0a8531457ca 100644
---- a/drivers/pwm/pwm-rzg2l-gpt.c
-+++ b/drivers/pwm/pwm-rzg2l-gpt.c
-@@ -86,6 +86,13 @@ struct rzg2l_gpt_chip {
- 	u32 channel_enable_count[RZG2L_MAX_HW_CHANNELS];
- };
- 
-+/* This represents a hardware configuration for one channel */
-+struct rzg2l_gpt_waveform {
-+	u32 gtpr;
-+	u32 gtccr;
-+	u8 prescale;
-+};
-+
- static inline struct rzg2l_gpt_chip *to_rzg2l_gpt_chip(struct pwm_chip *chip)
- {
- 	return pwmchip_get_drvdata(chip);
-@@ -190,8 +197,10 @@ static void rzg2l_gpt_disable(struct rzg2l_gpt_chip *rzg2l_gpt,
- 	/* Stop count, Output low on GTIOCx pin when counting stops */
- 	rzg2l_gpt->channel_enable_count[ch]--;
- 
--	if (!rzg2l_gpt->channel_enable_count[ch])
-+	if (!rzg2l_gpt->channel_enable_count[ch]) {
- 		rzg2l_gpt_modify(rzg2l_gpt, RZG2L_GTCR(ch), RZG2L_GTCR_CST, 0);
-+		rzg2l_gpt->period_ticks[ch] = 0;
-+	}
- 
- 	/* Disable pin output */
- 	rzg2l_gpt_modify(rzg2l_gpt, RZG2L_GTIOR(ch), RZG2L_GTIOR_OxE(sub_ch), 0);
-@@ -215,54 +224,37 @@ static u64 rzg2l_gpt_calculate_period_or_duty(struct rzg2l_gpt_chip *rzg2l_gpt,
- 	return DIV64_U64_ROUND_UP(tmp, rzg2l_gpt->rate_khz);
- }
- 
--static int rzg2l_gpt_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
--			       struct pwm_state *state)
--{
--	struct rzg2l_gpt_chip *rzg2l_gpt = to_rzg2l_gpt_chip(chip);
--
--	state->enabled = rzg2l_gpt_is_ch_enabled(rzg2l_gpt, pwm->hwpwm);
--	if (state->enabled) {
--		u32 sub_ch = rzg2l_gpt_subchannel(pwm->hwpwm);
--		u32 ch = RZG2L_GET_CH(pwm->hwpwm);
--		u8 prescale;
--		u32 val;
--
--		val = rzg2l_gpt_read(rzg2l_gpt, RZG2L_GTCR(ch));
--		prescale = FIELD_GET(RZG2L_GTCR_TPCS, val);
--
--		val = rzg2l_gpt_read(rzg2l_gpt, RZG2L_GTPR(ch));
--		state->period = rzg2l_gpt_calculate_period_or_duty(rzg2l_gpt, val, prescale);
--
--		val = rzg2l_gpt_read(rzg2l_gpt, RZG2L_GTCCR(ch, sub_ch));
--		state->duty_cycle = rzg2l_gpt_calculate_period_or_duty(rzg2l_gpt, val, prescale);
--		if (state->duty_cycle > state->period)
--			state->duty_cycle = state->period;
--	}
--
--	state->polarity = PWM_POLARITY_NORMAL;
--
--	return 0;
--}
--
- static u32 rzg2l_gpt_calculate_pv_or_dc(u64 period_or_duty_cycle, u8 prescale)
- {
- 	return min_t(u64, DIV_ROUND_DOWN_ULL(period_or_duty_cycle, 1 << (2 * prescale)),
- 		     U32_MAX);
- }
- 
--/* Caller holds the lock while calling rzg2l_gpt_config() */
--static int rzg2l_gpt_config(struct pwm_chip *chip, struct pwm_device *pwm,
--			    const struct pwm_state *state)
-+static int rzg2l_gpt_round_waveform_tohw(struct pwm_chip *chip,
-+					 struct pwm_device *pwm,
-+					 const struct pwm_waveform *wf,
-+					 void *_wfhw)
-+
- {
- 	struct rzg2l_gpt_chip *rzg2l_gpt = to_rzg2l_gpt_chip(chip);
--	u8 sub_ch = rzg2l_gpt_subchannel(pwm->hwpwm);
-+	struct rzg2l_gpt_waveform *wfhw = _wfhw;
- 	u8 ch = RZG2L_GET_CH(pwm->hwpwm);
- 	u64 period_ticks, duty_ticks;
- 	unsigned long pv, dc;
--	u8 prescale;
-+
-+	guard(mutex)(&rzg2l_gpt->lock);
-+	if (wf->period_length_ns == 0) {
-+		*wfhw = (struct rzg2l_gpt_waveform){
-+			.gtpr = 0,
-+			.gtccr = 0,
-+			.prescale = 0,
-+		};
-+
-+		return 0;
-+	}
- 
- 	/* Limit period/duty cycle to max value supported by the HW */
--	period_ticks = mul_u64_u64_div_u64(state->period, rzg2l_gpt->rate_khz, USEC_PER_SEC);
-+	period_ticks = mul_u64_u64_div_u64(wf->period_length_ns, rzg2l_gpt->rate_khz, USEC_PER_SEC);
- 	if (period_ticks > RZG2L_MAX_TICKS)
- 		period_ticks = RZG2L_MAX_TICKS;
- 	/*
-@@ -277,13 +269,14 @@ static int rzg2l_gpt_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 			period_ticks = rzg2l_gpt->period_ticks[ch];
- 	}
- 
--	prescale = rzg2l_gpt_calculate_prescale(rzg2l_gpt, period_ticks);
--	pv = rzg2l_gpt_calculate_pv_or_dc(period_ticks, prescale);
--
--	duty_ticks = mul_u64_u64_div_u64(state->duty_cycle, rzg2l_gpt->rate_khz, USEC_PER_SEC);
-+	wfhw->prescale = rzg2l_gpt_calculate_prescale(rzg2l_gpt, period_ticks);
-+	pv = rzg2l_gpt_calculate_pv_or_dc(period_ticks, wfhw->prescale);
-+	wfhw->gtpr = pv;
-+	duty_ticks = mul_u64_u64_div_u64(wf->duty_length_ns, rzg2l_gpt->rate_khz, USEC_PER_SEC);
- 	if (duty_ticks > period_ticks)
- 		duty_ticks = period_ticks;
--	dc = rzg2l_gpt_calculate_pv_or_dc(duty_ticks, prescale);
-+	dc = rzg2l_gpt_calculate_pv_or_dc(duty_ticks, wfhw->prescale);
-+	wfhw->gtccr = dc;
- 
- 	/*
- 	 * GPT counter is shared by multiple channels, we cache the period ticks
-@@ -292,6 +285,58 @@ static int rzg2l_gpt_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	 */
- 	rzg2l_gpt->period_ticks[ch] = period_ticks;
- 
-+	return 0;
-+}
-+
-+static int rzg2l_gpt_round_waveform_fromhw(struct pwm_chip *chip,
-+					   struct pwm_device *pwm,
-+					   const void *_wfhw,
-+					   struct pwm_waveform *wf)
-+{
-+	struct rzg2l_gpt_chip *rzg2l_gpt = to_rzg2l_gpt_chip(chip);
-+	const struct rzg2l_gpt_waveform *wfhw = _wfhw;
-+
-+	wf->period_length_ns = rzg2l_gpt_calculate_period_or_duty(rzg2l_gpt, wfhw->gtpr,
-+								  wfhw->prescale);
-+	wf->duty_length_ns = rzg2l_gpt_calculate_period_or_duty(rzg2l_gpt, wfhw->gtccr,
-+								wfhw->prescale);
-+	wf->duty_offset_ns = 0;
-+
-+	return 0;
-+}
-+
-+static int rzg2l_gpt_read_waveform(struct pwm_chip *chip,
-+				   struct pwm_device *pwm,
-+				   void *_wfhw)
-+{
-+	struct rzg2l_gpt_chip *rzg2l_gpt = to_rzg2l_gpt_chip(chip);
-+	struct rzg2l_gpt_waveform *wfhw = _wfhw;
-+	u32 sub_ch = rzg2l_gpt_subchannel(pwm->hwpwm);
-+	u32 ch = RZG2L_GET_CH(pwm->hwpwm);
-+	u32 gtcr;
-+
-+	if (rzg2l_gpt_is_ch_enabled(rzg2l_gpt, pwm->hwpwm)) {
-+		gtcr = rzg2l_gpt_read(rzg2l_gpt, RZG2L_GTCR(ch));
-+		wfhw->prescale = FIELD_GET(RZG2L_GTCR_TPCS, gtcr);
-+		wfhw->gtpr = rzg2l_gpt_read(rzg2l_gpt, RZG2L_GTPR(ch));
-+		wfhw->gtccr = rzg2l_gpt_read(rzg2l_gpt, RZG2L_GTCCR(ch, sub_ch));
-+		if (wfhw->gtccr > wfhw->gtpr)
-+			wfhw->gtccr = wfhw->gtpr;
-+	}
-+
-+	return 0;
-+}
-+
-+static int rzg2l_gpt_write_waveform(struct pwm_chip *chip,
-+				    struct pwm_device *pwm,
-+				    const void *_wfhw)
-+{
-+	struct rzg2l_gpt_chip *rzg2l_gpt = to_rzg2l_gpt_chip(chip);
-+	const struct rzg2l_gpt_waveform *wfhw = _wfhw;
-+	u8 sub_ch = rzg2l_gpt_subchannel(pwm->hwpwm);
-+	u8 ch = RZG2L_GET_CH(pwm->hwpwm);
-+
-+	guard(mutex)(&rzg2l_gpt->lock);
- 	/*
- 	 * Counter must be stopped before modifying mode, prescaler, timer
- 	 * counter and buffer enable registers. These registers are shared
-@@ -310,14 +355,14 @@ static int rzg2l_gpt_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 
- 		/* Select count clock */
- 		rzg2l_gpt_modify(rzg2l_gpt, RZG2L_GTCR(ch), RZG2L_GTCR_TPCS,
--				 FIELD_PREP(RZG2L_GTCR_TPCS, prescale));
-+				 FIELD_PREP(RZG2L_GTCR_TPCS, wfhw->prescale));
- 
- 		/* Set period */
--		rzg2l_gpt_write(rzg2l_gpt, RZG2L_GTPR(ch), pv);
-+		rzg2l_gpt_write(rzg2l_gpt, RZG2L_GTPR(ch), wfhw->gtpr);
- 	}
- 
- 	/* Set duty cycle */
--	rzg2l_gpt_write(rzg2l_gpt, RZG2L_GTCCR(ch, sub_ch), dc);
-+	rzg2l_gpt_write(rzg2l_gpt, RZG2L_GTCCR(ch, sub_ch), wfhw->gtccr);
- 
- 	if (rzg2l_gpt->channel_enable_count[ch] <= 1) {
- 		/* Set initial value for counter */
-@@ -326,44 +371,28 @@ static int rzg2l_gpt_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 		/* Set no buffer operation */
- 		rzg2l_gpt_write(rzg2l_gpt, RZG2L_GTBER(ch), 0);
- 
--		/* Restart the counter after updating the registers */
--		rzg2l_gpt_modify(rzg2l_gpt, RZG2L_GTCR(ch),
--				 RZG2L_GTCR_CST, RZG2L_GTCR_CST);
--	}
--
--	return 0;
--}
--
--static int rzg2l_gpt_apply(struct pwm_chip *chip, struct pwm_device *pwm,
--			   const struct pwm_state *state)
--{
--	struct rzg2l_gpt_chip *rzg2l_gpt = to_rzg2l_gpt_chip(chip);
--	bool enabled = pwm->state.enabled;
--	int ret;
--
--	if (state->polarity != PWM_POLARITY_NORMAL)
--		return -EINVAL;
--
--	guard(mutex)(&rzg2l_gpt->lock);
--	if (!state->enabled) {
--		if (enabled)
--			rzg2l_gpt_disable(rzg2l_gpt, pwm);
--
--		return 0;
-+		if (wfhw->gtpr)
-+			/* Restart the counter after updating the registers */
-+			rzg2l_gpt_modify(rzg2l_gpt, RZG2L_GTCR(ch),
-+					 RZG2L_GTCR_CST, RZG2L_GTCR_CST);
- 	}
- 
--	ret = rzg2l_gpt_config(chip, pwm, state);
--	if (!ret && !enabled)
-+	if (wfhw->gtpr && !rzg2l_gpt_is_ch_enabled(rzg2l_gpt, pwm->hwpwm))
- 		rzg2l_gpt_enable(rzg2l_gpt, pwm);
-+	else if (!wfhw->gtpr && rzg2l_gpt_is_ch_enabled(rzg2l_gpt, pwm->hwpwm))
-+		rzg2l_gpt_disable(rzg2l_gpt, pwm);
- 
--	return ret;
-+	return 0;
- }
- 
- static const struct pwm_ops rzg2l_gpt_ops = {
- 	.request = rzg2l_gpt_request,
- 	.free = rzg2l_gpt_free,
--	.get_state = rzg2l_gpt_get_state,
--	.apply = rzg2l_gpt_apply,
-+	.sizeof_wfhw = sizeof(struct rzg2l_gpt_waveform),
-+	.round_waveform_tohw = rzg2l_gpt_round_waveform_tohw,
-+	.round_waveform_fromhw = rzg2l_gpt_round_waveform_fromhw,
-+	.read_waveform = rzg2l_gpt_read_waveform,
-+	.write_waveform = rzg2l_gpt_write_waveform,
- };
- 
- static int rzg2l_gpt_probe(struct platform_device *pdev)
+Changes from v2:
 
-base-commit: 48fbc945565ee8d7256eedd83e3c10df585aee6a
+  - Add new patch (9/9) to fix the parent ti,twl.yaml binding by adding
+    the missing sub-node definitions, resolving dtbs_check errors.
+  - (1/9) ti,twl4030-audio: Moved binding to sound/, added enum for
+    ti,enable-vibra, and simplified the example.
+  - (2/9) ti,twl6040: Renamed twl6040,audpwron-gpio to ti,audpwron-gpio
+    to fix a vendor prefix validation error.
+  - (8/9) ti,twlxxxx-usb: Added '#phy-cells' property to support the
+    standard PHY framework.
+  - (7/9) omap-twl4030: Minor cosmetic fixes, retaining Acked-by Mark Brown.
+  - Other patches: Minor description and formatting cleanups.
+
+The following nine patches are included in this series:
+Jihed Chaibi (9):
+  mfd: dt-bindings: ti,twl4030-audio: convert to DT schema
+  mfd: dt-bindings: ti,twl6040: convert to DT schema
+  input: dt-bindings: ti,twl4030-keypad: convert to DT schema
+  mfd: dt-bindings: ti,twl4030-power: convert to DT schema
+  pwm: dt-bindings: ti,twl-pwm: convert to DT schema
+  pwm: dt-bindings: ti,twl-pwmled: convert to DT schema
+  Documentation: omap-twl4030: convert to DT schema
+  usb: dt-bindings: ti,twlxxxx-usb: convert to DT schema
+  dt-bindings: mfd: twl: Add missing sub-nodes for TWL4030 & TWL603x
+
+ .../bindings/input/ti,twl4030-keypad.yaml     |  44 +++++
+ .../bindings/input/twl4030-keypad.txt         |  27 ---
+ .../devicetree/bindings/mfd/ti,twl.yaml       |  63 +++++++
+ .../bindings/mfd/ti,twl4030-power.yaml        |  69 ++++++++
+ .../devicetree/bindings/mfd/ti,twl6040.yaml   | 155 ++++++++++++++++++
+ .../devicetree/bindings/mfd/twl4030-audio.txt |  46 ------
+ .../devicetree/bindings/mfd/twl4030-power.txt |  48 ------
+ .../devicetree/bindings/mfd/twl6040.txt       |  67 --------
+ .../devicetree/bindings/pwm/ti,twl-pwm.txt    |  17 --
+ .../devicetree/bindings/pwm/ti,twl-pwm.yaml   |  46 ++++++
+ .../devicetree/bindings/pwm/ti,twl-pwmled.txt |  17 --
+ .../bindings/pwm/ti,twl-pwmled.yaml           |  46 ++++++
+ .../bindings/sound/omap-twl4030.txt           |  62 -------
+ .../bindings/sound/ti,omap-twl4030.yaml       | 102 ++++++++++++
+ .../bindings/sound/ti,twl4030-audio.yaml      |  90 ++++++++++
+ .../bindings/usb/ti,twlxxxx-usb.yaml          | 125 ++++++++++++++
+ .../devicetree/bindings/usb/twlxxxx-usb.txt   |  43 -----
+ 17 files changed, 740 insertions(+), 327 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/ti,twl4030-keypad.yaml
+ delete mode 100644 Documentation/devicetree/bindings/input/twl4030-keypad.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/ti,twl4030-power.yaml
+ create mode 100644 Documentation/devicetree/bindings/mfd/ti,twl6040.yaml
+ delete mode 100644 Documentation/devicetree/bindings/mfd/twl4030-audio.txt
+ delete mode 100644 Documentation/devicetree/bindings/mfd/twl4030-power.txt
+ delete mode 100644 Documentation/devicetree/bindings/mfd/twl6040.txt
+ delete mode 100644 Documentation/devicetree/bindings/pwm/ti,twl-pwm.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/ti,twl-pwm.yaml
+ delete mode 100644 Documentation/devicetree/bindings/pwm/ti,twl-pwmled.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/ti,twl-pwmled.yaml
+ delete mode 100644 Documentation/devicetree/bindings/sound/omap-twl4030.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/ti,omap-twl4030.yaml
+ create mode 100644 Documentation/devicetree/bindings/sound/ti,twl4030-audio.yaml
+ create mode 100644 Documentation/devicetree/bindings/usb/ti,twlxxxx-usb.yaml
+ delete mode 100644 Documentation/devicetree/bindings/usb/twlxxxx-usb.txt
+
 -- 
-2.43.0
+2.39.5
 
 
