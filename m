@@ -1,79 +1,79 @@
-Return-Path: <linux-pwm+bounces-7050-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7051-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8875B266F7
-	for <lists+linux-pwm@lfdr.de>; Thu, 14 Aug 2025 15:23:38 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9EBE1B2673A
+	for <lists+linux-pwm@lfdr.de>; Thu, 14 Aug 2025 15:28:01 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2AD921CC2160
-	for <lists+linux-pwm@lfdr.de>; Thu, 14 Aug 2025 13:23:58 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 78792564D0A
+	for <lists+linux-pwm@lfdr.de>; Thu, 14 Aug 2025 13:24:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A0FB302CC6;
-	Thu, 14 Aug 2025 13:22:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D06B303CB2;
+	Thu, 14 Aug 2025 13:22:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wj0AGD4l"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jJph/G7J"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DEBD302773;
-	Thu, 14 Aug 2025 13:22:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0CD302778;
+	Thu, 14 Aug 2025 13:22:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755177725; cv=none; b=m6RsQGn52jqdbVd3BCWwP4Owj3zmq86EOlxRld9RaFqtX8fz2wy7Nqg/MVKLN8GSzOzM01TF/5UU3VlblnsLB3YzhZiMcwKEwVIckxpdRn+Y7oiX4ClmkKMWlFOslL50bM8Zh5hAh5nPNCe5uIucWXY54ahFJVWQdTRO/ldqMpE=
+	t=1755177727; cv=none; b=qz8jK7TSn+GzmGQziTgf65n8qBF+5Nl8S87U+3+YohqWYfYmCSA0RM4mE5fTM/LVawDaLaF34JUIo+qlg7u5JEMQfe/bLhwgiMYZdP7oVeI5tNqnX/CIeNmnQJrBqzCWDr1o/y6NdK8M8LVMHVh/jWPAbCiJlSCrbW38AmrvMoU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755177725; c=relaxed/simple;
-	bh=jqnXnZp7RhpL1YMBGZScNoAkw+LmKGjT5H9FKCka2hw=;
+	s=arc-20240116; t=1755177727; c=relaxed/simple;
+	bh=ttF0rBMZYYb3PkLndM6PHBPM7PDCgmMp+SUcSU6Gcbg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ITqT8mwt/Jonk/HRFBtbHcGhbIpisiEy+RU+NnpkqbFCx8CztBJz3qyhLxhlDsz+cg6WK0zgKghYMbe9EFsWLfqvRLlT9dLE88RW1LdJ2QFTA/M3Eyqo87pxNCytdcikmJShJmTgIygj2wu0Gd9JyvTfiTUBDj+uowEwNkoQ5hA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wj0AGD4l; arc=none smtp.client-ip=209.85.128.53
+	 MIME-Version; b=ZVrKNT1aECcNPbDIY+bNGY6vTq8o4Mxi3LcpENS/A1CbZiTl+3ejOC1i54nNNjhe3ynffymv8t/w8lsc0iFYgDGmW5QrH/R8Ib9WFejxMEZiUHbk1ZLn1+wT1u8ytJ26ouuPP8YQdJCD6unVqY7FKc0Phtp4S2jFVI2mJdFtYYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jJph/G7J; arc=none smtp.client-ip=209.85.221.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-45a1b0d231eso5124035e9.3;
-        Thu, 14 Aug 2025 06:22:03 -0700 (PDT)
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-3b9edfba75bso412219f8f.3;
+        Thu, 14 Aug 2025 06:22:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755177721; x=1755782521; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1755177724; x=1755782524; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=FMz0z0NTwoZNKGW97tiHCixZ/UdB6VOtCFJYznUWSlI=;
-        b=Wj0AGD4lyKn45YgYVpTvrUK6/MrusNG8GvH+5BALBqtQEDFCWzfg1CX4f6fhH32q98
-         qeGAIWmtBrsynn1nT9NmGO0nRyJA9EOJVwEjmpxCLTZ27PIaCzzfS3NT3lCXuAPtNcwz
-         5Uohl5hojHTgrZO+XtGAqt6LlU5PdwI1EcF9asp40IiCbS8y/4mi/FYgfyDL75nuaCjM
-         y23hJypIaWdYWP1nxMpYD1WrLFcCjJCF2YD2/E9rQ8cUC6gmn05JyBJxr+wrjyKZT7qM
-         3Aa4cqSv5MBrFbXuhqVAm9c3fXjhQRHwdyrBvHx/tkfImiguegw/zMUsf6oG+NUPf8rh
-         hSoA==
+        bh=KPhvOj0vcqOs4hostSr3/eg4Eaucd/avEKAcPTcqmOw=;
+        b=jJph/G7JqcKhJa2DhTc94UwsbkhpeTWaAdMUHvjFFMzU7g3tmEBnGR/RjCvofRIKIH
+         6a4AAbu9ullpzwiOpAQCc1BM6Dp3dtsdhkd8k9E5MbWdhs09pY5rObhwHYsdJmdcBh3N
+         q9m9egiCVmpmqjhZ1JAj42TwelFgDaE9GciQSxxLS3JYThADzBM5v+UkhalTFC+PXA0f
+         FRJ32VnQa1tgTmLu1ArWz9pxF4AVUgYkhyVFsF4Olzx6Cp+pzu8Y5iqwIDO+VMbaBbC1
+         CrO24bKnFA9m/3tp//ctkx2e5He3+4u20QS+jeB89axi19ZcJbTgR7muUoOGV8avWMqr
+         L/vA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755177721; x=1755782521;
+        d=1e100.net; s=20230601; t=1755177724; x=1755782524;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=FMz0z0NTwoZNKGW97tiHCixZ/UdB6VOtCFJYznUWSlI=;
-        b=Aib/3GClHXYHQK2fRALxvOmJ+0I9OE1hM8r41pcYQzHMrM+GfLaUPd4dMi/MR4ex1m
-         Wr8EUFyZR+RUQaxyudxauaMGIBpISc5XXjq36xTsc5SAh9u6aYOsOXTRGOfiAkEqNdLh
-         mmH+h325irF7l0/95G0mo0HfwZ6CLipfOODgUE7EpKCP4eTEKasnMLrbfUMsKqB0lSDE
-         4EBC0/0PWTxsVZG89IAoyCIkiw+tyw/43yB15UxucnzE9xnDq294JOFPWx+kIQGwxw6+
-         yHQWgzjJuBaDG6cdDXEaduG0K/LvMtrlBpD+v3UhutDw4FA4pFWxtVmXmodsQvTQBSb8
-         FkdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVFupDUrXs5WsImSsDBmIIkXc6kuM7H6xHPjZzVQsSCrGKGLlMKrwqClFwLdNi8GGCGSYSnF7MVBgEFqUg=@vger.kernel.org, AJvYcCWT0dMcb0oPgQ4RKKyBGqYHkhNRzb/pElj2BUOBisGUwasBxt9GiyXhLpDYnewmoWatJuZt6i9ZScLJ@vger.kernel.org, AJvYcCXU4lwt1rvfn+1H8dvNLLUEd0wpDxXfrDjD2A4NTqh5ntsRyuuC9yezEb8MYIvdQ9dXvm6N4b6yJS2p@vger.kernel.org, AJvYcCXl3WGGjLszSBhXPMq8XwiVWkQZ7AYNOIz03jrfY0onB1Jl2Ww9vQgEd0dlA1G8/yDqhMTgpBUbavOVDyo=@vger.kernel.org, AJvYcCXlA4cV3yR4c87Y7z3DmFlQ8X4awuRmV/jllEpnYbrbqJxUAJ5rPMIcoXMUvIYIcU8qE2h+hNjDnttg@vger.kernel.org
-X-Gm-Message-State: AOJu0YzKjOsi8y993u+7e/AishprKgE0CKT6Uizh6aFh8ankmTwxppl3
-	ZryqMmJ7ylG/kHe8Oy224i5RDU9LN0HdkYu+Xe7xFV3kPxFcBsog6gf9dmHT
-X-Gm-Gg: ASbGncsVhYh0qjI6L8oOdR3wgMKhfO8WUg7JECAlf4q+cmI3l35lUfdLGo8pCZyk+Wa
-	nCLfKsAqkWSyr9tk9deWZj7/QJqknQ26YkWh1bRh0bjCCqk8fbeYI0hPEQbhzNjs4pioxgL5rK7
-	T7d/rQjE4Ov6MWSbsHbTmb9lkfFHB/Imt+ZF9zFiyeNtYLsbMQnhACKd/QuDL35q6yVO2kPqZjx
-	+aasxc4CzVBaa86b1r7gJ1PwWHDUdPnNlnXWSmMb8JJmDvEWet2daCDqkvR+YwUduKWHmoqWTtP
-	+1QyeX6XZdjpt85jW10ruh8P6uQTW2A5GywS785MFFym/L0qcgO959cgwyd9vbTomwMhrw6r6ed
-	jgDGKqY7hyd5LvbNQwrK+0758Hm1ehp+TEkmz8KWtLlvOVzPY6b6mmJkY/3c7D4sF0hceJ8F2Th
-	srRpSDHOhEDP5p/TxQdllvink995c4QkZP
-X-Google-Smtp-Source: AGHT+IEhoPp/GvoE0/G8qvem1zpvto20Ky61lY0ZUidud4Xnsxob/d04gPyLQTwmNSdaWYCSyuFzQg==
-X-Received: by 2002:a05:600c:8b62:b0:456:1560:7c5f with SMTP id 5b1f17b1804b1-45a1ce34c75mr19212705e9.14.1755177721062;
-        Thu, 14 Aug 2025 06:22:01 -0700 (PDT)
+        bh=KPhvOj0vcqOs4hostSr3/eg4Eaucd/avEKAcPTcqmOw=;
+        b=XLpBw2clfZWScEZgyqziGvjG8mukXQr5GAj1MpKXnus+eg3H+Yvqi4jEbsxHIKcx1w
+         VgLTARt+8HE5kTAWcX+7HdRf+vyNAZymZ2Ct2IZVYvmonXkfndKJNFS6yEKeqO+VbF09
+         ii8FxDRrxbIoYh5Q2a2gdcGbNa12RQtp6NIDVNvnGRs4e944Y0tvqnoQONHPBAitH1hB
+         ORqMX3IqIV7aa6F+iQWB0Sz2z+f1dTogxraOg6QLcJJBP9IJgH2+XHl7lRU7TC2bWGH9
+         C5q5qyvQTAzXwH4Ts/YngCQ/WrdBnudSfszbHF9c/JDX0IBZ3l5mNZwArGJJqbvjdDVD
+         311w==
+X-Forwarded-Encrypted: i=1; AJvYcCVOEbqbISQF5hmsCosrfPtCF64L75ibZhVuKueFjEa+4cDir3XY8ludFx7dAd/3z0Vwmz8hj6lcLMJu@vger.kernel.org, AJvYcCVlYIEjY1lX3rkQo7r8ibsGJrF4laeKBq96L9T9d7s9gKiPdMEw5eGFEL8MzdLdI7++f94ef6JQeeZP9Dg=@vger.kernel.org, AJvYcCWJiCv7zI9aN+ZTibBciYtxhUtVfbb6Gi1xhbw64FR67vO5GCdwqjTaxqk1r+2O4dOUv45QhH32yDFPl4c=@vger.kernel.org, AJvYcCX6QtwMC6B4USNmoKbTMjA/7vyEd+vpYJM4ckh98ZfaVV15pcT8+6IUGFEiA0xMXUslo/t2CWJZCGYY@vger.kernel.org, AJvYcCXE+LROq1yG5euv2iLOmxzVM/NJnpPmu4Ij3NO2xNe7tBqn3MU2bVZYcpiHK6xE6PSeioMJLrfIi8c0@vger.kernel.org
+X-Gm-Message-State: AOJu0YxJLzfFEz+VB9fOhtu4LtWsUSj2NBG5pK7hqG/EoFrurAIbAE4k
+	XyZuGgEwhdmKK6BbqUP/xnrzCDfhTjsBSisMWS8LR4OVb9ay8pWbovd0edX4
+X-Gm-Gg: ASbGncsGZ2W1N1Yk3WOXZmOkz+cnMxzm6eo7FXvYIosdkiUex+aaCmZSETRTvSZTyK9
+	S73qK43Ttj/uTezslhmpUc6JaPRmR4ikn0Sy0FeX0y5Q4wpuf0wXs5+oL9pguqNQEkCFf+CF+qX
+	qeIdExPhvwlNk5vSk2lSOUX1s+r9yjYCYPrnbP8B+r2HWwQsnCMX1Nf5A0QkRxBznWJd40LTxio
+	vZ8PsDDZNtIw46WkI2sxIhrObQ+IArPOUjBHm2UGdf6RywZm4JZEOt79xa/C/hNlHO2MAELN2VT
+	3I1XAd5odduVQ1r0zUDTHVvcAo1yq8OeVzy+jliXLv5i+93YIhDjmrbIGSK6IL5UBgQcZ+wg6Hk
+	a13Cot8SPwHLUyKM+5spgRGtGBkS2lglymrWI8HNMAKcEWnN1aJ4ZEZTWNfpJw6yyH15WQkku2i
+	zpJI3R4qjyg0YmEBstWtFx5e3HgPonKpsJ
+X-Google-Smtp-Source: AGHT+IEDiNwjwbKGhqrtPSNbm7ZvnFQK5iC/6/SqCP0SvFuwTlU0elXKRGvv48bAjGCVY6IX/E3vIQ==
+X-Received: by 2002:a05:6000:144f:b0:3b7:9ae1:eb9 with SMTP id ffacd0b85a97d-3ba50cc8e1emr2060796f8f.23.1755177723440;
+        Thu, 14 Aug 2025 06:22:03 -0700 (PDT)
 Received: from localhost.localdomain (lmontsouris-658-1-96-160.w81-250.abo.wanadoo.fr. [81.250.250.160])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c3b9386sm50998831f8f.18.2025.08.14.06.22.00
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c3b9386sm50998831f8f.18.2025.08.14.06.22.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Aug 2025 06:22:00 -0700 (PDT)
+        Thu, 14 Aug 2025 06:22:02 -0700 (PDT)
 From: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
 To: linux-kernel@vger.kernel.org
 Cc: andreas@kemnade.info,
@@ -95,9 +95,9 @@ Cc: andreas@kemnade.info,
 	linux-usb@vger.kernel.org,
 	shuah@kernel.org,
 	jihed.chaibi.dev@gmail.com
-Subject: [PATCH v2 7/9] Documentation: omap-twl4030: convert to DT schema
-Date: Thu, 14 Aug 2025 15:21:27 +0200
-Message-Id: <20250814132129.138943-8-jihed.chaibi.dev@gmail.com>
+Subject: [PATCH v2 8/9] usb: dt-bindings: ti,twlxxxx-usb: convert to DT schema
+Date: Thu, 14 Aug 2025 15:21:28 +0200
+Message-Id: <20250814132129.138943-9-jihed.chaibi.dev@gmail.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250814132129.138943-1-jihed.chaibi.dev@gmail.com>
 References: <20250814132129.138943-1-jihed.chaibi.dev@gmail.com>
@@ -109,201 +109,201 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert the legacy TXT binding for the OMAP TWL4030 sound card
+Convert the legacy TXT binding for the TWL4030/6030 USB module
 to the modern YAML DT schema format. This adds formal validation
-and improves documentation.
+and improves documentation using a conditional schema.
 
 Changes in v2:
-- Fixed comment formatting (added spaces for better alignment).
-- Updated commit subject to align with subsystem style.
-- Retained Acked-by from v1 as changes are cosmetic.
-
-Acked-by: Mark Brown <broonie@kernel.org>
+- Added '#phy-cells' property to support PHY framework integration.
 
 Signed-off-by: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
 ---
- .../bindings/sound/omap-twl4030.txt           |  62 -----------
- .../bindings/sound/ti,omap-twl4030.yaml       | 102 ++++++++++++++++++
- 2 files changed, 102 insertions(+), 62 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/sound/omap-twl4030.txt
- create mode 100644 Documentation/devicetree/bindings/sound/ti,omap-twl4030.yaml
+ .../bindings/usb/ti,twlxxxx-usb.yaml          | 125 ++++++++++++++++++
+ .../devicetree/bindings/usb/twlxxxx-usb.txt   |  43 ------
+ 2 files changed, 125 insertions(+), 43 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/ti,twlxxxx-usb.yaml
+ delete mode 100644 Documentation/devicetree/bindings/usb/twlxxxx-usb.txt
 
-diff --git a/Documentation/devicetree/bindings/sound/omap-twl4030.txt b/Documentation/devicetree/bindings/sound/omap-twl4030.txt
-deleted file mode 100644
-index f6a715e4e..000000000
---- a/Documentation/devicetree/bindings/sound/omap-twl4030.txt
-+++ /dev/null
-@@ -1,62 +0,0 @@
--* Texas Instruments SoC with twl4030 based audio setups
--
--Required properties:
--- compatible: "ti,omap-twl4030"
--- ti,model: Name of the sound card (for example "omap3beagle")
--- ti,mcbsp: phandle for the McBSP node
--
--Optional properties:
--- ti,codec: phandle for the twl4030 audio node
--- ti,mcbsp-voice: phandle for the McBSP node connected to the voice port of twl
--- ti, jack-det-gpio: Jack detect GPIO
--- ti,audio-routing: List of connections between audio components.
--  Each entry is a pair of strings, the first being the connection's sink,
--  the second being the connection's source.
--  If the routing is not provided all possible connection will be available
--
--Available audio endpoints for the audio-routing table:
--
--Board connectors:
-- * Headset Stereophone
-- * Earpiece Spk
-- * Handsfree Spk
-- * Ext Spk
-- * Main Mic
-- * Sub Mic
-- * Headset Mic
-- * Carkit Mic
-- * Digital0 Mic
-- * Digital1 Mic
-- * Line In
--
--twl4030 pins:
-- * HSOL
-- * HSOR
-- * EARPIECE
-- * HFL
-- * HFR
-- * PREDRIVEL
-- * PREDRIVER
-- * CARKITL
-- * CARKITR
-- * MAINMIC
-- * SUBMIC
-- * HSMIC
-- * DIGIMIC0
-- * DIGIMIC1
-- * CARKITMIC
-- * AUXL
-- * AUXR
--
-- * Headset Mic Bias
-- * Mic Bias 1 /* Used for Main Mic or Digimic0 */
-- * Mic Bias 2 /* Used for Sub Mic or Digimic1 */
--
--Example:
--
--sound {
--	compatible = "ti,omap-twl4030";
--	ti,model = "omap3beagle";
--
--	ti,mcbsp = <&mcbsp2>;
--};
-diff --git a/Documentation/devicetree/bindings/sound/ti,omap-twl4030.yaml b/Documentation/devicetree/bindings/sound/ti,omap-twl4030.yaml
+diff --git a/Documentation/devicetree/bindings/usb/ti,twlxxxx-usb.yaml b/Documentation/devicetree/bindings/usb/ti,twlxxxx-usb.yaml
 new file mode 100644
-index 000000000..7c9371860
+index 000000000..48ff5b732
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/ti,omap-twl4030.yaml
-@@ -0,0 +1,102 @@
-+# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
++++ b/Documentation/devicetree/bindings/usb/ti,twlxxxx-usb.yaml
+@@ -0,0 +1,125 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/sound/ti,omap-twl4030.yaml#
++$id: http://devicetree.org/schemas/usb/ti,twlxxxx-usb.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Texas Instruments SoC with twl4030 based audio setups
++title: Texas Instruments TWL4030/6030 USB PHY and Comparator
 +
 +maintainers:
 +  - Peter Ujfalusi <peter.ujfalusi@gmail.com>
 +
-+description:
-+  Bindings for audio setups on TI OMAP SoCs using TWL4030-family audio
-+  codec connected via a McBSP port.
++description: |
++  Bindings for the USB PHY and comparator module found within the
++  TWL4030 and TWL6030 family of companion chips.
++
++  TWL6030: USB COMPARATOR
++  TWL4030: USB COMPARATOR & PHY
++
++  If a sibling node is compatible with "ti,twl4030-bci", the driver for
++  that node will query this device for USB power status.
 +
 +properties:
 +  compatible:
-+    const: ti,omap-twl4030
++    enum:
++      - ti,twl4030-usb
++      - ti,twl6030-usb
 +
-+  ti,model:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description: Name of the sound card (for example "omap3beagle").
-+
-+  ti,mcbsp:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: phandle for the McBSP node.
-+
-+  ti,codec:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: phandle for the twl4030 audio node.
-+
-+  ti,mcbsp-voice:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: phandle to the McBSP node connected to the voice port.
-+
-+  ti,jack-det-gpio:
-+    description: GPIO specifier for jack detection.
-+    maxItems: 1
-+
-+  ti,audio-routing:
++  interrupts:
 +    description: |
-+      A list of audio routing connections. Each entry is a pair of strings,
-+      with the first being the connection's sink and the second being the
-+      source. If not provided, all possible connections are available.
++      Interrupts for ID and VBUS events.
++      For "ti,twl6030-usb", two interrupts must be specified:
++        - The first is the OTG interrupt for ID events (host mode).
++        - The second is the USB interrupt for VBUS events (device mode).
++      For "ti,twl4030-usb", one or two interrupts can be specified:
++        - The first is the OTG interrupt for both ID and VBUS events.
++        - The second is optional.
++    minItems: 1
++    maxItems: 2
 +
-+      Available TWL4030 Pins:  "HFL", "HFR",
-+        "PREDRIVEL", "PREDRIVER", "CARKITL", "CARKITR", "MAINMIC", "SUBMIC",
-+        "HSMIC", "DIGIMIC0", "DIGIMIC1", "CARKITMIC", "AUXL", "AUXR",
-+        "Headset Mic Bias", "Mic Bias 1", "Mic Bias 2"
-+    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
-+    items:
-+      enum:
-+        # Board Connectors
-+        - Headset Stereophone
-+        - Earpiece Spk
-+        - Handsfree Spk
-+        - Ext Spk
-+        - Main Mic
-+        - Sub Mic
-+        - Headset Mic
-+        - Carkit Mic
-+        - Digital0 Mic
-+        - Digital1 Mic
-+        - Line In
++  usb-supply:
++    description:
++      Phandle to the VUSB regulator. For TWL6030, this should be the 'vusb'
++      regulator. For TWL6032 subclass, it should be the 'ldousb' regulator.
 +
-+        # CODEC Pins
-+        - HSOL
-+        - HSOR
-+        - EARPIECE
-+        - HFL
-+        - HFR
-+        - PREDRIVEL
-+        - PREDRIVER
-+        - CARKITL
-+        - CARKITR
-+        - MAINMIC
-+        - SUBMIC
-+        - HSMIC
-+        - DIGIMIC0
-+        - DIGIMIC1
-+        - CARKITMIC
-+        - AUXL
-+        - AUXR
++  usb1v5-supply:
++    description: Phandle to the VUSB1V5 regulator (for TWL4030).
 +
-+        # Headset Mic Bias
-+        - Mic Bias 1   # Used for Main Mic or Digimic0
-+        - Mic Bias 2   # Used for Sub Mic or Digimic1
++  usb1v8-supply:
++    description: Phandle to the VUSB1V8 regulator (for TWL4030).
++
++  usb3v1-supply:
++    description: Phandle to the USB3V1 regulator (for TWL4030).
++
++  usb_mode:
++    description: |
++      The mode used by the PHY (TWL4030 ONLY) to connect to the controller:
++        1: ULPI mode
++        2: CEA2011_3PIN mode
++    $ref: /schemas/types.yaml#/definitions/uint32
++    enum: [1, 2]
++
++  '#phy-cells':
++    const: 0
 +
 +required:
 +  - compatible
-+  - ti,model
-+  - ti,mcbsp
++  - interrupts
 +
 +additionalProperties: false
 +
++if:
++  properties:
++    compatible:
++      contains:
++        const: ti,twl6030-usb
++then:
++  required:
++    - usb-supply
++  properties:
++    interrupts:
++      minItems: 2
++else:
++  required:
++    - usb1v5-supply
++    - usb1v8-supply
++    - usb3v1-supply
++    - usb_mode
++
 +examples:
 +  - |
-+    sound {
-+        compatible = "ti,omap-twl4030";
-+        ti,model = "omap3beagle";
-+        ti,mcbsp = <&mcbsp2>;
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        twl@48 {
++            reg = <0x48>;
++
++            usb_phy: twl4030-usb {
++                compatible = "ti,twl4030-usb";
++                interrupts = <10 4>;  // 1 interrupt: OTG (ID & VBUS events)
++                interrupt-parent = <&gic>;
++                usb1v5-supply = <&reg_vusb1v5>;
++                usb1v8-supply = <&reg_vusb1v8>;
++                usb3v1-supply  = <&reg_vusb3v1>;
++                usb_mode = <1>;
++                #phy-cells = <0>;
++            };
++        };
 +    };
++  - |
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        twl@48 {
++            reg = <0x48>;
++
++            usb_comp: twl6030-usb {
++                compatible = "ti,twl6030-usb";
++                interrupts = <4 4>, <10 4>;  // 2 interrupts: OTG & USB
++                interrupt-parent = <&gic>;
++                usb-supply = <&reg_vusb>;
++            };
++        };
++    };
+diff --git a/Documentation/devicetree/bindings/usb/twlxxxx-usb.txt b/Documentation/devicetree/bindings/usb/twlxxxx-usb.txt
+deleted file mode 100644
+index 17327a296..000000000
+--- a/Documentation/devicetree/bindings/usb/twlxxxx-usb.txt
++++ /dev/null
+@@ -1,43 +0,0 @@
+-USB COMPARATOR OF TWL CHIPS
+-
+-TWL6030 USB COMPARATOR
+- - compatible : Should be "ti,twl6030-usb"
+- - interrupts : Two interrupt numbers to the cpu should be specified. First
+-   interrupt number is the otg interrupt number that raises ID interrupts when
+-   the controller has to act as host and the second interrupt number is the
+-   usb interrupt number that raises VBUS interrupts when the controller has to
+-   act as device
+- - usb-supply : phandle to the regulator device tree node. It should be vusb
+-   if it is twl6030 or ldousb if it is twl6032 subclass.
+-
+-twl6030-usb {
+-	compatible = "ti,twl6030-usb";
+-	interrupts = < 4 10 >;
+-};
+-
+-Board specific device node entry
+-&twl6030-usb {
+-	usb-supply = <&vusb>;
+-};
+-
+-TWL4030 USB PHY AND COMPARATOR
+- - compatible : Should be "ti,twl4030-usb"
+- - interrupts : The interrupt numbers to the cpu should be specified. First
+-   interrupt number is the otg interrupt number that raises ID interrupts
+-   and VBUS interrupts. The second interrupt number is optional.
+- - <supply-name>-supply : phandle to the regulator device tree node.
+-   <supply-name> should be vusb1v5, vusb1v8 and vusb3v1
+- - usb_mode : The mode used by the phy to connect to the controller. "1"
+-   specifies "ULPI" mode and "2" specifies "CEA2011_3PIN" mode.
+-
+-If a sibling node is compatible "ti,twl4030-bci", then it will find
+-this device and query it for USB power status.
+-
+-twl4030-usb {
+-	compatible = "ti,twl4030-usb";
+-	interrupts = < 10 4 >;
+-	usb1v5-supply = <&vusb1v5>;
+-	usb1v8-supply = <&vusb1v8>;
+-	usb3v1-supply = <&vusb3v1>;
+-	usb_mode = <1>;
+-};
 -- 
 2.39.5
 
