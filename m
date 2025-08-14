@@ -1,79 +1,79 @@
-Return-Path: <linux-pwm+bounces-7049-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7050-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id DF8E9B266F2
-	for <lists+linux-pwm@lfdr.de>; Thu, 14 Aug 2025 15:23:20 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id D8875B266F7
+	for <lists+linux-pwm@lfdr.de>; Thu, 14 Aug 2025 15:23:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D31AC4E599C
-	for <lists+linux-pwm@lfdr.de>; Thu, 14 Aug 2025 13:23:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 2AD921CC2160
+	for <lists+linux-pwm@lfdr.de>; Thu, 14 Aug 2025 13:23:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2042D30275E;
-	Thu, 14 Aug 2025 13:22:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A0FB302CC6;
+	Thu, 14 Aug 2025 13:22:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZhvErttA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wj0AGD4l"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E0943019CE;
-	Thu, 14 Aug 2025 13:22:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DEBD302773;
+	Thu, 14 Aug 2025 13:22:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755177723; cv=none; b=oNeo16QrfsAgujZJPN1wk3qfUuG96EeE+Y6Q6lFK3YB7YF5ELJnkqsV9E93FSW4XXbkUcjOIoNcF9MtdoX9OD/cYsAGa9kjYrvwAT0YwGbTK/U6jLbQ8xcjEqIlzmfKRdfaF0q9egJ9IPn2o0miU54nwHSSeMt0z7GgEuRhg5i4=
+	t=1755177725; cv=none; b=m6RsQGn52jqdbVd3BCWwP4Owj3zmq86EOlxRld9RaFqtX8fz2wy7Nqg/MVKLN8GSzOzM01TF/5UU3VlblnsLB3YzhZiMcwKEwVIckxpdRn+Y7oiX4ClmkKMWlFOslL50bM8Zh5hAh5nPNCe5uIucWXY54ahFJVWQdTRO/ldqMpE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755177723; c=relaxed/simple;
-	bh=Rnl8w+SH/nw2JPdcQ0erKjjymCdj0uvkgeVYoBTMisA=;
+	s=arc-20240116; t=1755177725; c=relaxed/simple;
+	bh=jqnXnZp7RhpL1YMBGZScNoAkw+LmKGjT5H9FKCka2hw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=G7ahw0G4mLvbI1hbviK0He+/9VEFe0XPunyYYvZvcFzN9n2eMOslvWOjlaHMa1E0dqOFdp5aaGCxmFV4699E3CF9wPyWDPtx14atF7yhrrOS4Rby5Yz/J5Tzzm5InMbGrsVPjJWxDvTKf7UgW+jH4JlW6Yf65uKmSv6IvjS3slo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZhvErttA; arc=none smtp.client-ip=209.85.221.45
+	 MIME-Version; b=ITqT8mwt/Jonk/HRFBtbHcGhbIpisiEy+RU+NnpkqbFCx8CztBJz3qyhLxhlDsz+cg6WK0zgKghYMbe9EFsWLfqvRLlT9dLE88RW1LdJ2QFTA/M3Eyqo87pxNCytdcikmJShJmTgIygj2wu0Gd9JyvTfiTUBDj+uowEwNkoQ5hA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wj0AGD4l; arc=none smtp.client-ip=209.85.128.53
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-3b9dc52c430so469899f8f.0;
-        Thu, 14 Aug 2025 06:22:00 -0700 (PDT)
+Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-45a1b0d231eso5124035e9.3;
+        Thu, 14 Aug 2025 06:22:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755177719; x=1755782519; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1755177721; x=1755782521; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=BT6KB9uJF//5o0bC4Hfp3voC6koE6Q4zGOMWpbC4QzA=;
-        b=ZhvErttAPheMOkpjI9Uowq3OvyX97GMUZP1ZeTC0i2zYsUs+qsPlbhP+EemHElsjLz
-         5lWaZrSXMIo/7ETnm/8Tjm9+aeSBzBCzOMou7F+JTHQLZClVi4Asr/4T7zVLDP9KOP4g
-         ge7TBXjkuv3QUeVB2qKX5MnK5hXvB3uuTjiOmwYhakk9bT9K9f5GUppKynWDzlzitaBN
-         2h92vn/60tV7BLaXvn4LaAqJ1Nq05Mr90pydWUO4e+rj7dR8Bj4UHUmLdPPWWlseReRT
-         X8r6zfdIBsT+ZfNWQwlxf/QvzggMe4FIXPbVaGPVvDSejJJozxNpzjrGEVJpAaE0xQHE
-         4xJA==
+        bh=FMz0z0NTwoZNKGW97tiHCixZ/UdB6VOtCFJYznUWSlI=;
+        b=Wj0AGD4lyKn45YgYVpTvrUK6/MrusNG8GvH+5BALBqtQEDFCWzfg1CX4f6fhH32q98
+         qeGAIWmtBrsynn1nT9NmGO0nRyJA9EOJVwEjmpxCLTZ27PIaCzzfS3NT3lCXuAPtNcwz
+         5Uohl5hojHTgrZO+XtGAqt6LlU5PdwI1EcF9asp40IiCbS8y/4mi/FYgfyDL75nuaCjM
+         y23hJypIaWdYWP1nxMpYD1WrLFcCjJCF2YD2/E9rQ8cUC6gmn05JyBJxr+wrjyKZT7qM
+         3Aa4cqSv5MBrFbXuhqVAm9c3fXjhQRHwdyrBvHx/tkfImiguegw/zMUsf6oG+NUPf8rh
+         hSoA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755177719; x=1755782519;
+        d=1e100.net; s=20230601; t=1755177721; x=1755782521;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BT6KB9uJF//5o0bC4Hfp3voC6koE6Q4zGOMWpbC4QzA=;
-        b=FgoG1xyQXdF8GkdFa6g8/XlIVllSbQcF40F7w4wyiWWKPDgHtuNevHR759l4Lm2cJ/
-         HNn1AOuiePQqbBoz0oqhF/x9Nr2lgCzyonPxg5AaUpyjVNIb85pY5YT2xXdGCKFXxMs6
-         jxoDbzM+PB0AemAVLJKHcpBlDD1vC/Llz+zjFfTYHGMCTF3DGqP/NsB8ywW9f9HxpDxy
-         oTDPLMPABmVItlW9ei5GKIf/mZhRqI3AY+GNfbxJTS2GLILku/ZL4xYKkHRLTJpD6p6T
-         A7/YOeDb2upzGk4wVvYZGzLKOMnPdGRA0smHawR5jFst/6d/McL1Jk5AB1rFcCjwwHvj
-         oFtw==
-X-Forwarded-Encrypted: i=1; AJvYcCUWOJKcE+1+0SAg0YVKRagFvxahnY+Qoj1+7fmI0EyYWmeuvGi38+YvMQbb0ZJRWNh6KZFCtYlXuhNTk1Y=@vger.kernel.org, AJvYcCVWCBuyQrSQv4NyXwb+tXMA5qYii3aN2hNtFb3NcIlqIPcL0NTIxHYhbNGzzuBJ26vz1YEcZnk3zFtD@vger.kernel.org, AJvYcCWqifmulKsfGzlZ+2knAOoArRRp6luBIkZgLvCsNyUZlDhecDPiIYAfQNnwKx5SqdPdXml9YMLiZmBF@vger.kernel.org, AJvYcCX/8Us2mRD/VUUWs2D+KxSM7dFByYYDsx/+kC85th74+dREerd5cWJTsbBzUiS9A/BSQ+f66tk+t17n@vger.kernel.org, AJvYcCXzS/xHi+OfP9yA0ZTAL8mg5+SrTtry5O+9jmrownOJLamkmfe5bI/Yi73lDIDRip3eGWlos+/jUrgeW6M=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMuW1+JvwbrTpRtuBsXTaK4X/0tN+wi9wpc6rshwD0BOhH7cl+
-	pyd9X9QB1hD7eLgWCzELZwTnVFg1x6iKeHd9d9w0fECaMipUywiECyWeJyFj
-X-Gm-Gg: ASbGncsmwReiT2gk+JR30nJ+FAJX/JufzrRPhJKMANFjRQ0U2EuwqV5GiUGEsk7y21V
-	AEmedx5aS1WmezLMMZH4xlsQSfNmQcxXdAEkl2EXCu/uhU6bLm6jHXELx5FMpBly9MRWnkrphW2
-	o0AJQHPP6+mEFN/YRALqhEqC+YavZs58eOhapBKryqfMYaCO5fht2pwuigYBrTshol61cEilN7p
-	bg1HPIdMeI601vGa0u3ztJhbjM0Iiaqai7fl1QbuNs4+L0ZzvIw6eQf3A8MJwgEW+eqKZHwWQTz
-	5ngWKk3V0w5DmLKUUW/DQgt2YO0vViQoqx9Yny0n09LUdhALmzFfl27P/OGO6LvT2qPh7XdgIKz
-	NSPrnZ19ULoQsOAS6PRKXZNbNkF+VmeF2Ww1Aw6fseitSVwtyDPEIm7xMrRm8TR08NB0/S2ixLZ
-	qmvQmTYwiSnlhT+j57Mj9c4A==
-X-Google-Smtp-Source: AGHT+IG4bFMPBZfDJuCxmQMh7yt7kKJurWok08IzwpwnCbwB4739ifTjCd73R1fEe04W6bs6xOZ3bg==
-X-Received: by 2002:a05:6000:430b:b0:3b9:6e:5242 with SMTP id ffacd0b85a97d-3ba50c8ed1emr2223388f8f.4.1755177719127;
-        Thu, 14 Aug 2025 06:21:59 -0700 (PDT)
+        bh=FMz0z0NTwoZNKGW97tiHCixZ/UdB6VOtCFJYznUWSlI=;
+        b=Aib/3GClHXYHQK2fRALxvOmJ+0I9OE1hM8r41pcYQzHMrM+GfLaUPd4dMi/MR4ex1m
+         Wr8EUFyZR+RUQaxyudxauaMGIBpISc5XXjq36xTsc5SAh9u6aYOsOXTRGOfiAkEqNdLh
+         mmH+h325irF7l0/95G0mo0HfwZ6CLipfOODgUE7EpKCP4eTEKasnMLrbfUMsKqB0lSDE
+         4EBC0/0PWTxsVZG89IAoyCIkiw+tyw/43yB15UxucnzE9xnDq294JOFPWx+kIQGwxw6+
+         yHQWgzjJuBaDG6cdDXEaduG0K/LvMtrlBpD+v3UhutDw4FA4pFWxtVmXmodsQvTQBSb8
+         FkdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVFupDUrXs5WsImSsDBmIIkXc6kuM7H6xHPjZzVQsSCrGKGLlMKrwqClFwLdNi8GGCGSYSnF7MVBgEFqUg=@vger.kernel.org, AJvYcCWT0dMcb0oPgQ4RKKyBGqYHkhNRzb/pElj2BUOBisGUwasBxt9GiyXhLpDYnewmoWatJuZt6i9ZScLJ@vger.kernel.org, AJvYcCXU4lwt1rvfn+1H8dvNLLUEd0wpDxXfrDjD2A4NTqh5ntsRyuuC9yezEb8MYIvdQ9dXvm6N4b6yJS2p@vger.kernel.org, AJvYcCXl3WGGjLszSBhXPMq8XwiVWkQZ7AYNOIz03jrfY0onB1Jl2Ww9vQgEd0dlA1G8/yDqhMTgpBUbavOVDyo=@vger.kernel.org, AJvYcCXlA4cV3yR4c87Y7z3DmFlQ8X4awuRmV/jllEpnYbrbqJxUAJ5rPMIcoXMUvIYIcU8qE2h+hNjDnttg@vger.kernel.org
+X-Gm-Message-State: AOJu0YzKjOsi8y993u+7e/AishprKgE0CKT6Uizh6aFh8ankmTwxppl3
+	ZryqMmJ7ylG/kHe8Oy224i5RDU9LN0HdkYu+Xe7xFV3kPxFcBsog6gf9dmHT
+X-Gm-Gg: ASbGncsVhYh0qjI6L8oOdR3wgMKhfO8WUg7JECAlf4q+cmI3l35lUfdLGo8pCZyk+Wa
+	nCLfKsAqkWSyr9tk9deWZj7/QJqknQ26YkWh1bRh0bjCCqk8fbeYI0hPEQbhzNjs4pioxgL5rK7
+	T7d/rQjE4Ov6MWSbsHbTmb9lkfFHB/Imt+ZF9zFiyeNtYLsbMQnhACKd/QuDL35q6yVO2kPqZjx
+	+aasxc4CzVBaa86b1r7gJ1PwWHDUdPnNlnXWSmMb8JJmDvEWet2daCDqkvR+YwUduKWHmoqWTtP
+	+1QyeX6XZdjpt85jW10ruh8P6uQTW2A5GywS785MFFym/L0qcgO959cgwyd9vbTomwMhrw6r6ed
+	jgDGKqY7hyd5LvbNQwrK+0758Hm1ehp+TEkmz8KWtLlvOVzPY6b6mmJkY/3c7D4sF0hceJ8F2Th
+	srRpSDHOhEDP5p/TxQdllvink995c4QkZP
+X-Google-Smtp-Source: AGHT+IEhoPp/GvoE0/G8qvem1zpvto20Ky61lY0ZUidud4Xnsxob/d04gPyLQTwmNSdaWYCSyuFzQg==
+X-Received: by 2002:a05:600c:8b62:b0:456:1560:7c5f with SMTP id 5b1f17b1804b1-45a1ce34c75mr19212705e9.14.1755177721062;
+        Thu, 14 Aug 2025 06:22:01 -0700 (PDT)
 Received: from localhost.localdomain (lmontsouris-658-1-96-160.w81-250.abo.wanadoo.fr. [81.250.250.160])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c3b9386sm50998831f8f.18.2025.08.14.06.21.58
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b79c3b9386sm50998831f8f.18.2025.08.14.06.22.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Aug 2025 06:21:58 -0700 (PDT)
+        Thu, 14 Aug 2025 06:22:00 -0700 (PDT)
 From: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
 To: linux-kernel@vger.kernel.org
 Cc: andreas@kemnade.info,
@@ -95,9 +95,9 @@ Cc: andreas@kemnade.info,
 	linux-usb@vger.kernel.org,
 	shuah@kernel.org,
 	jihed.chaibi.dev@gmail.com
-Subject: [PATCH v2 6/9] pwm: dt-bindings: ti,twl-pwmled: convert to DT schema
-Date: Thu, 14 Aug 2025 15:21:26 +0200
-Message-Id: <20250814132129.138943-7-jihed.chaibi.dev@gmail.com>
+Subject: [PATCH v2 7/9] Documentation: omap-twl4030: convert to DT schema
+Date: Thu, 14 Aug 2025 15:21:27 +0200
+Message-Id: <20250814132129.138943-8-jihed.chaibi.dev@gmail.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250814132129.138943-1-jihed.chaibi.dev@gmail.com>
 References: <20250814132129.138943-1-jihed.chaibi.dev@gmail.com>
@@ -109,92 +109,200 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert the legacy TXT binding for the TWL-family PWMLED controller
+Convert the legacy TXT binding for the OMAP TWL4030 sound card
 to the modern YAML DT schema format. This adds formal validation
-and improves documentation by inheriting from the base pwm schema.
+and improves documentation.
+
+Changes in v2:
+- Fixed comment formatting (added spaces for better alignment).
+- Updated commit subject to align with subsystem style.
+- Retained Acked-by from v1 as changes are cosmetic.
+
+Acked-by: Mark Brown <broonie@kernel.org>
 
 Signed-off-by: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
 ---
- .../devicetree/bindings/pwm/ti,twl-pwmled.txt | 17 -------
- .../bindings/pwm/ti,twl-pwmled.yaml           | 46 +++++++++++++++++++
- 2 files changed, 46 insertions(+), 17 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pwm/ti,twl-pwmled.txt
- create mode 100644 Documentation/devicetree/bindings/pwm/ti,twl-pwmled.yaml
+ .../bindings/sound/omap-twl4030.txt           |  62 -----------
+ .../bindings/sound/ti,omap-twl4030.yaml       | 102 ++++++++++++++++++
+ 2 files changed, 102 insertions(+), 62 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/omap-twl4030.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/ti,omap-twl4030.yaml
 
-diff --git a/Documentation/devicetree/bindings/pwm/ti,twl-pwmled.txt b/Documentation/devicetree/bindings/pwm/ti,twl-pwmled.txt
+diff --git a/Documentation/devicetree/bindings/sound/omap-twl4030.txt b/Documentation/devicetree/bindings/sound/omap-twl4030.txt
 deleted file mode 100644
-index 31ca1b032..000000000
---- a/Documentation/devicetree/bindings/pwm/ti,twl-pwmled.txt
+index f6a715e4e..000000000
+--- a/Documentation/devicetree/bindings/sound/omap-twl4030.txt
 +++ /dev/null
-@@ -1,17 +0,0 @@
--Texas Instruments TWL series PWM drivers connected to LED terminals
--
--Supported PWMs:
--On TWL4030 series: PWMA and PWMB (connected to LEDA and LEDB terminals)
--On TWL6030 series: LED PWM (mainly used as charging indicator LED)
+@@ -1,62 +0,0 @@
+-* Texas Instruments SoC with twl4030 based audio setups
 -
 -Required properties:
--- compatible: "ti,twl4030-pwmled" or "ti,twl6030-pwmled"
--- #pwm-cells: should be 2. See pwm.yaml in this directory for a description of
--  the cells format.
+-- compatible: "ti,omap-twl4030"
+-- ti,model: Name of the sound card (for example "omap3beagle")
+-- ti,mcbsp: phandle for the McBSP node
+-
+-Optional properties:
+-- ti,codec: phandle for the twl4030 audio node
+-- ti,mcbsp-voice: phandle for the McBSP node connected to the voice port of twl
+-- ti, jack-det-gpio: Jack detect GPIO
+-- ti,audio-routing: List of connections between audio components.
+-  Each entry is a pair of strings, the first being the connection's sink,
+-  the second being the connection's source.
+-  If the routing is not provided all possible connection will be available
+-
+-Available audio endpoints for the audio-routing table:
+-
+-Board connectors:
+- * Headset Stereophone
+- * Earpiece Spk
+- * Handsfree Spk
+- * Ext Spk
+- * Main Mic
+- * Sub Mic
+- * Headset Mic
+- * Carkit Mic
+- * Digital0 Mic
+- * Digital1 Mic
+- * Line In
+-
+-twl4030 pins:
+- * HSOL
+- * HSOR
+- * EARPIECE
+- * HFL
+- * HFR
+- * PREDRIVEL
+- * PREDRIVER
+- * CARKITL
+- * CARKITR
+- * MAINMIC
+- * SUBMIC
+- * HSMIC
+- * DIGIMIC0
+- * DIGIMIC1
+- * CARKITMIC
+- * AUXL
+- * AUXR
+-
+- * Headset Mic Bias
+- * Mic Bias 1 /* Used for Main Mic or Digimic0 */
+- * Mic Bias 2 /* Used for Sub Mic or Digimic1 */
 -
 -Example:
 -
--twl_pwmled: pwmled {
--	compatible = "ti,twl6030-pwmled";
--	#pwm-cells = <2>;
+-sound {
+-	compatible = "ti,omap-twl4030";
+-	ti,model = "omap3beagle";
+-
+-	ti,mcbsp = <&mcbsp2>;
 -};
-diff --git a/Documentation/devicetree/bindings/pwm/ti,twl-pwmled.yaml b/Documentation/devicetree/bindings/pwm/ti,twl-pwmled.yaml
+diff --git a/Documentation/devicetree/bindings/sound/ti,omap-twl4030.yaml b/Documentation/devicetree/bindings/sound/ti,omap-twl4030.yaml
 new file mode 100644
-index 000000000..411cc4c8c
+index 000000000..7c9371860
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/ti,twl-pwmled.yaml
-@@ -0,0 +1,46 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++++ b/Documentation/devicetree/bindings/sound/ti,omap-twl4030.yaml
+@@ -0,0 +1,102 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/pwm/ti,twl-pwmled.yaml#
++$id: http://devicetree.org/schemas/sound/ti,omap-twl4030.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Texas Instruments TWL4030/TWL6030 family PWM LED controller
++title: Texas Instruments SoC with twl4030 based audio setups
 +
 +maintainers:
 +  - Peter Ujfalusi <peter.ujfalusi@gmail.com>
 +
-+description: |
-+  Bindings for the following PWM controllers :
-+    TWL4030 series: PWMA and PWMB (connected to LEDA and LEDB terminals)
-+    TWL6030 series: LED PWM (mainly used as charging indicator LED)
-+
-+allOf:
-+  - $ref: /schemas/pwm/pwm.yaml#
++description:
++  Bindings for audio setups on TI OMAP SoCs using TWL4030-family audio
++  codec connected via a McBSP port.
 +
 +properties:
 +  compatible:
-+    enum:
-+      - ti,twl4030-pwmled
-+      - ti,twl6030-pwmled
++    const: ti,omap-twl4030
 +
-+  '#pwm-cells':
-+    const: 2
++  ti,model:
++    $ref: /schemas/types.yaml#/definitions/string
++    description: Name of the sound card (for example "omap3beagle").
++
++  ti,mcbsp:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: phandle for the McBSP node.
++
++  ti,codec:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: phandle for the twl4030 audio node.
++
++  ti,mcbsp-voice:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: phandle to the McBSP node connected to the voice port.
++
++  ti,jack-det-gpio:
++    description: GPIO specifier for jack detection.
++    maxItems: 1
++
++  ti,audio-routing:
++    description: |
++      A list of audio routing connections. Each entry is a pair of strings,
++      with the first being the connection's sink and the second being the
++      source. If not provided, all possible connections are available.
++
++      Available TWL4030 Pins:  "HFL", "HFR",
++        "PREDRIVEL", "PREDRIVER", "CARKITL", "CARKITR", "MAINMIC", "SUBMIC",
++        "HSMIC", "DIGIMIC0", "DIGIMIC1", "CARKITMIC", "AUXL", "AUXR",
++        "Headset Mic Bias", "Mic Bias 1", "Mic Bias 2"
++    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
++    items:
++      enum:
++        # Board Connectors
++        - Headset Stereophone
++        - Earpiece Spk
++        - Handsfree Spk
++        - Ext Spk
++        - Main Mic
++        - Sub Mic
++        - Headset Mic
++        - Carkit Mic
++        - Digital0 Mic
++        - Digital1 Mic
++        - Line In
++
++        # CODEC Pins
++        - HSOL
++        - HSOR
++        - EARPIECE
++        - HFL
++        - HFR
++        - PREDRIVEL
++        - PREDRIVER
++        - CARKITL
++        - CARKITR
++        - MAINMIC
++        - SUBMIC
++        - HSMIC
++        - DIGIMIC0
++        - DIGIMIC1
++        - CARKITMIC
++        - AUXL
++        - AUXR
++
++        # Headset Mic Bias
++        - Mic Bias 1   # Used for Main Mic or Digimic0
++        - Mic Bias 2   # Used for Sub Mic or Digimic1
 +
 +required:
 +  - compatible
-+  - '#pwm-cells'
++  - ti,model
++  - ti,mcbsp
 +
-+unevaluatedProperties: false
++additionalProperties: false
 +
 +examples:
 +  - |
-+    pwm {
-+        compatible = "ti,twl4030-pwmled";
-+        #pwm-cells = <2>;
-+    };
-+
-+  - |
-+    pwm {
-+        compatible = "ti,twl6030-pwmled";
-+        #pwm-cells = <2>;
++    sound {
++        compatible = "ti,omap-twl4030";
++        ti,model = "omap3beagle";
++        ti,mcbsp = <&mcbsp2>;
 +    };
 -- 
 2.39.5
