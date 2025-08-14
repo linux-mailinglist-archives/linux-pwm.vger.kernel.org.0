@@ -1,111 +1,145 @@
-Return-Path: <linux-pwm+bounces-7037-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7038-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 10C9AB25D03
-	for <lists+linux-pwm@lfdr.de>; Thu, 14 Aug 2025 09:22:13 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id ADB41B2639C
+	for <lists+linux-pwm@lfdr.de>; Thu, 14 Aug 2025 12:58:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9530D9E5BDC
-	for <lists+linux-pwm@lfdr.de>; Thu, 14 Aug 2025 07:20:19 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1EE261CC549B
+	for <lists+linux-pwm@lfdr.de>; Thu, 14 Aug 2025 10:56:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C7D7265630;
-	Thu, 14 Aug 2025 07:20:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BAACB2FC889;
+	Thu, 14 Aug 2025 10:54:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="0yL54c7u"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K09pQZu+"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lj1-f174.google.com (mail-lj1-f174.google.com [209.85.208.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4281625C80F
-	for <linux-pwm@vger.kernel.org>; Thu, 14 Aug 2025 07:20:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A7A02EA472;
+	Thu, 14 Aug 2025 10:54:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755156018; cv=none; b=Qzq812ZwPez8AtRLG+gcKxwm6iIFwyC2WmoebSJMQSKRx0c7kNmfbU9/66t9Uq3rbA6URZO/XylEv7Zr94i2auhEPlq7mYGhHpB3eR+KuoWi/b2nROuMYESXd7GLKnt9aIaW4LGoJJoecsk3LxAHpvRxo6iDGMwXQ3GaPdyC1kk=
+	t=1755168843; cv=none; b=urOegwunxysrKG6ftjWfXA1WlmgRgel+3MANMbJEb9CEQ+/1Sh8Qv3tRV1z8Poor/Ip+D/xVFEq+qYbr6FRfNUSXMCjgRsbZcq4eW+BCS++O/aS42Vl7w2yAyc4KfU52WEOcQNvQaltn7znNsLh2Ten52TNbQXsJoINjt1qRLmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755156018; c=relaxed/simple;
-	bh=vs1MFcYsgr4i84q3dtW1Ra43PylyG/Hny4f25xaRtQo=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=f4JyCLJ/n9lMqfH+xFLYMJAaUMYuZCgpwx+PzRpPFJ1xudTP1GDhsk+tfdRpozLXVRBaPs5FuUn4reX0lToDL+l0zgUd51lcZ+SdGfZ1rl+nXyRrV1dLlh/3F40eDu80ipLH+TD0cipkVuNzEV+K9ahWLbeP1oi7on855vNGXMg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=0yL54c7u; arc=none smtp.client-ip=209.85.208.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-lj1-f174.google.com with SMTP id 38308e7fff4ca-333f82a3a9eso6220631fa.1
-        for <linux-pwm@vger.kernel.org>; Thu, 14 Aug 2025 00:20:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1755156014; x=1755760814; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vs1MFcYsgr4i84q3dtW1Ra43PylyG/Hny4f25xaRtQo=;
-        b=0yL54c7uT9hzpzyfLl8S///EdFEdiDE13qqph9wtGFhfp5g9ph7NRnL0kHKDXUjytY
-         +roKSzrpu/Fk7K8vIieDx9wdEUe8aW4+tgk+OH0MHERAnNvpaLVAvRRI1TxAl2Unx0q0
-         whXjosAYzIQMPKPnWH29ID9FHYYKZjgKOOaZ3h9WMW0PrlnYBj4PsvPKFk3Cxn+obW2E
-         ZUU5yIb+ijbRjrmTnhAS2/UYspf1MzX+5DxWv+5Eja8uXG9HHFKsvECkDjvWo0gbv3Vv
-         fVRtjdyaS73UIDTRK6La9B4arCZpAxjex1jchogSg2M41c33XNKwVPDSevyeJ//gH3iR
-         4nfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755156014; x=1755760814;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vs1MFcYsgr4i84q3dtW1Ra43PylyG/Hny4f25xaRtQo=;
-        b=FHlkPI74GidweGOAaZxxvmdQdbcbGXL1pYJ4OYCp7wa4DsEm63yvK6kUfkEKb088d/
-         RW7x8Zomifxb7rdU4CwhUDXcWTx7JwKF0pVPBDBm0QVjyHezXk4JUyGWNIGnJ8nb52Wf
-         a5hzQbI6GppFgDbA/vnyy/QvAt3JD9S+uVdebmtfJ7HfhK47JiNh7uJQfNtAVE0FCMYA
-         Q4Pe57ToUV2+2ldJLL0Ackb8YAdIo+k8HX8y537ESxrFTMh5HLwuIHrS2UyxmPpMFeMA
-         6i9sON6mfss4yoOPTUjxHREZdzkLLaycw/oTD/I8g0vPHpqNJD/J0EZNu+s67Yh4l/+x
-         gXCA==
-X-Forwarded-Encrypted: i=1; AJvYcCUVe2F4YpyW+Rf0sJs1xBaEOFvt4/iWe37e7xgqnjbAYm/hBh44kYXkoE2inTfXpIqmoyyPR1uDsro=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLaSewvQwWqUYTTfXyfkg3GneRgCD2anutnL1QXJ2ALe4xhgcW
-	c/Wmfej3auAXs2yBH70zWhVnfGlUI0Ehlr0PX06FsiMsr1mNBvgDRwXNEPBcp87zv/a8bIxd/o6
-	VK6Jpwd2uB9h55WRHfYXytua4fD0VYuEcYyAQwrkgng==
-X-Gm-Gg: ASbGncvNEqDhl5kZciXNksfDaGOCSxwr7IFc7aKQzxtDIltbHvJBvnGBrHzo854svds
-	zIPSoGjhAyFhDPZ+FPNrUYtK/ixcBM3EA4+alhvf/qn320xRpCUWFe9F+F8CqsRbHOrBKVw+DB8
-	CZXZObaai9N37m/d6hH7RbjaFb5XTHGtI7npbnfnydSuWyIYFRsS7pwGm4Ki8vV5/JLOkudxHxq
-	kF/G4x47okqQP623aUxFEVE/BEqw6VEmx8ut6t+qYtMqlB4fg==
-X-Google-Smtp-Source: AGHT+IFTBlbhCsC67N1cmh3Rx642cXrDuTiu4TqWoZO5/6AVKV2k5/0U1k8rriHZOcjPel5pdqkogtlQ5ztMZk+8OUs=
-X-Received: by 2002:a2e:94cc:0:b0:333:f53f:1bbe with SMTP id
- 38308e7fff4ca-333fac83beamr3948621fa.7.1755156014062; Thu, 14 Aug 2025
- 00:20:14 -0700 (PDT)
+	s=arc-20240116; t=1755168843; c=relaxed/simple;
+	bh=ziANNSCP7w5PAQy8kOB8wkVCq4nc196swfrWsB7bTGE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=fop+n3Bgu1fWKojD4r80V/nFcYk3EO9Db+XaJEa93Tft2XtYEOh8WaPLLlV3gyCsWITO0bAsp1kKIxD0oSHbBWPobcrQmZoVbga+24+sO6uYiOdoMIBIDg+3b/Rgg7BAX1gNQ4R2d+hvKt23MoiExok3fa2r0jxOBg8Dz+DhHyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K09pQZu+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E220C4CEED;
+	Thu, 14 Aug 2025 10:54:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755168843;
+	bh=ziANNSCP7w5PAQy8kOB8wkVCq4nc196swfrWsB7bTGE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=K09pQZu+HKLg3pe91+ILUUnSSCf9V5lv5hpw/25AC4fQbw/nUmJ7RgITAg5gIcgYg
+	 q16cR5Lf/k5uJ9a5q4MtkNLae+U6HvI0/N+I8hvwbweaXlDDY0WefaE5ivyzRLu3c5
+	 A8kkRZh+243uOoQhBbZmO9Tl9oyvSqw1u+H3S5ejCO+pD+AYG0onw1asQluRG0boaU
+	 mjIkBXM/PB3xtLOXdjVGtLyZail+FuJZ3hTp+6yLjgQiY3oW51014lMdCpVghteK8t
+	 VmaEC+K6Crc9JaMUXy0aloTaXjitdZR8HnOWQNJbkzxE9Mghw6RpdXlN6oat/tJXlo
+	 TJj3Zl9xptE0g==
+Date: Thu, 14 Aug 2025 12:54:00 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Daniel Lezcano <daniel.lezcano@linaro.org>
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, 
+	Frank.Li@nxp.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Ghennadi.Procopciuc@nxp.com, s32@nxp.com
+Subject: Re: [PATCH v3 0/2] Add the s32g2 and s32g3 FTM PWM support
+Message-ID: <jmhzng2ezrrqhy52y7eru2ik6uburn4rnilfwreqmvkeirqbnm@b5ksjlufwuwf>
+References: <20250812200036.3432917-1-daniel.lezcano@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250813161517.4746-1-wsa+renesas@sang-engineering.com> <20250813161517.4746-4-wsa+renesas@sang-engineering.com>
-In-Reply-To: <20250813161517.4746-4-wsa+renesas@sang-engineering.com>
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Date: Thu, 14 Aug 2025 09:20:03 +0200
-X-Gm-Features: Ac12FXymdFzWV3g_JZazK_vzgETVMckCMj8Na0v79R7sG6_qTW0BLLb2z8dkgs0
-Message-ID: <CAMRc=MepR_e8jkzOyRs6RwP6BTKDW8RAB7-Z2GF0KcAr4VmZ7A@mail.gmail.com>
-Subject: Re: [PATCH 03/21] gpio: remove unneeded 'fast_io' parameter in regmap_config
-To: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Linus Walleij <linus.walleij@linaro.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Samuel Holland <samuel.holland@sifive.com>, linux-pwm@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-riscv@lists.infradead.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="7nq7dujoidxx352a"
+Content-Disposition: inline
+In-Reply-To: <20250812200036.3432917-1-daniel.lezcano@linaro.org>
+
+
+--7nq7dujoidxx352a
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v3 0/2] Add the s32g2 and s32g3 FTM PWM support
+MIME-Version: 1.0
 
-On Wed, Aug 13, 2025 at 6:16=E2=80=AFPM Wolfram Sang
-<wsa+renesas@sang-engineering.com> wrote:
->
-> When using MMIO with regmap, fast_io is implied. No need to set it
-> again.
->
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
-> No dependencies, can be applied directly to the subsystem tree. Buildbot =
-is
-> happy, too.
+Hello Daniel,
 
-Applied. b4 generates a super long list of recipients even if I only
-apply this one patch and I can't send the automatic reply due to
-gmail's limits. :(
+On Tue, Aug 12, 2025 at 10:00:34PM +0200, Daniel Lezcano wrote:
+> The NXP Automotive platform s32g2 and s32g3 have on their board a
+> FlexTimer (FTM) dedicated for the PWM. The same IP is found on the
+> Freescale Vybrid Family and the i.MX8 SoCs. However, there is a small
+> difference with some registers not available on the s32g2/3 and 6
+> channels instead of 8.
+>=20
+> These two patches provide the DT bindings for the s32g2/3 compatible
+> strings and the code to deal with the FTM difference.
+>=20
+> Changelog:
+>         v3:
+> 	 - Fixed dt-bindings subject prefix
+>         v2:
+> 	 - Merged the two booleans for the regmap holes check
+> 	 - Clarified why this is needed in the changelog
+> 	v1:
+> 	 - Initial post
+>=20
+> Daniel Lezcano (1):
+>   dt-bindings: pwm: fsl,vf610-ftm-pwm: Add compatible for s32g2 and
+>     s32g3
+>=20
+> Ghennadi Procopciuc (1):
+>   pwm: Add the S32G support in the Freescale FTM driver
 
-Bart
+Applied to
+https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
+next
+
+with this merge conflict resolution:
+
+diff --cc drivers/pwm/pwm-fsl-ftm.c
+index 6683931872fc,e0069dbdb02d..000000000000
+--- a/drivers/pwm/pwm-fsl-ftm.c
++++ b/drivers/pwm/pwm-fsl-ftm.c
+@@@ -396,7 -428,9 +416,7 @@@ static int fsl_pwm_probe(struct platfor
+  		return PTR_ERR(chip);
+  	fpc =3D to_fsl_chip(chip);
+ =20
+ -	mutex_init(&fpc->lock);
+ -
+- 	fpc->soc =3D of_device_get_match_data(&pdev->dev);
++ 	fpc->soc =3D soc;
+ =20
+  	base =3D devm_platform_ioremap_resource(pdev, 0);
+  	if (IS_ERR(base))
+
+The pro tip here to make your upstream maintainer lucky is to work on
+their tree or next or at least the latest development release and make
+use of `git format-patch --base`.
+
+Best regards
+Uwe
+
+--7nq7dujoidxx352a
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmidwEUACgkQj4D7WH0S
+/k6hAQf+JIneL5db7exA59/VygPd9FRzBydkVt90GrolvsX9nDiE+4iWGWE+slLC
+OWUMcZ/zG03Evfgo11QGKFvXPjxiOddA6kkjdPMT9VToITh0Yfw9jQ1s4eGqnzJc
+oIA942VfrfwY6hcQcmxW/IGnbjk309Vu5XLd0+6srcOIhAm59UZ9UjRq1NTIwP/+
+7yDm0nXzMAMJ4T0pPZJQFd6+9fIa0FpkSf3GGkhW7HQ6sAeYkeXQZw9iNcggwsph
+skcEdxqb6MqzIlG7Ec4ZKJI4/QNDJzoUgNBbmcH+CL8Lc8mmaVR9oLRCC7B3n8P4
+6SV5zT1ZRaH/JMwJ3R6Web+1Y0gLNA==
+=XzQx
+-----END PGP SIGNATURE-----
+
+--7nq7dujoidxx352a--
 
