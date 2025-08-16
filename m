@@ -1,78 +1,78 @@
-Return-Path: <linux-pwm+bounces-7075-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7076-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 28E73B289E7
-	for <lists+linux-pwm@lfdr.de>; Sat, 16 Aug 2025 04:19:22 +0200 (CEST)
+Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4BD5FB289FD
+	for <lists+linux-pwm@lfdr.de>; Sat, 16 Aug 2025 04:21:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7E2D11B68469
-	for <lists+linux-pwm@lfdr.de>; Sat, 16 Aug 2025 02:19:41 +0000 (UTC)
+	by sy.mirrors.kernel.org (Postfix) with ESMTPS id 04664B6440D
+	for <lists+linux-pwm@lfdr.de>; Sat, 16 Aug 2025 02:18:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2AC71E0E1F;
-	Sat, 16 Aug 2025 02:18:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 80E6A1EA7E9;
+	Sat, 16 Aug 2025 02:18:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H4CVDg1H"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PzAbd55k"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0DF81CAA65;
-	Sat, 16 Aug 2025 02:18:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BA921DE4C9;
+	Sat, 16 Aug 2025 02:18:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755310705; cv=none; b=rqWoETP5shXyMuNbQQKpzBBiOlEDy1MHHZwTSx45sGZSVcyuT8V624Tgll2BEvlBOIhlCf01n2OeZstQJqmcs8FQ4LRQ05STXCQjBz8r9b4ZJiwByLQDEaqfol1v9DqYfFInWGWcjdCBPvFxuvoNCp1TGhor94OdZzeUgekLKT0=
+	t=1755310707; cv=none; b=DoR9fp066p4tBe+DxKdu3U270O8VGegng1oNnBIqHu3GhipNC52e78zY0epvMbKqEQveeH2Evzdo/zsEOJbo4z/W3kTkw5BlPNKg8kvLraPQASmitueYlIcz/gvf6yQ2KFyidne2UWmsB9+CYhP5E7uqGGGEremMYY77Em9/+Zc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755310705; c=relaxed/simple;
-	bh=tzbURwJlE4sv3qsrae+WruTMwS+zOGlsmhWYYQO/3dE=;
+	s=arc-20240116; t=1755310707; c=relaxed/simple;
+	bh=jkO8p+3zOrzC2yaGP5yQflX4JgF012QEpQkuYa/TkzI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=s1d5TRBLq/TNCbw9oTmwyX9RyhkQkjoqcED5KLUmM49STluqfvzPCOfm0OOb5V0UtA8/JNgYqCHWCfV4uT2gISF1MKBkDWfLmKN258Oe5WTFXnPo/6SLofDtBZpEJ426AQ31skGSseO3zXg9y/tBUxvJJMcam+XfZdqmhuYka8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H4CVDg1H; arc=none smtp.client-ip=209.85.128.45
+	 MIME-Version; b=soUWdYcN6bvdOtjHyleQdqw141o0BCrkNTugTPLl7IcehBoQkN6LvX2uBCw1KrLRQpAHlp8vZCAQxyIQcgsz1rTgSGyxVERLigWxLVixGFX5RrvetLTQaCBmRiUDALSQ921bScb9Yktewquu+WvLNMjiIDxZpPqoC7BsDlVx42A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PzAbd55k; arc=none smtp.client-ip=209.85.128.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-45a1b05a59fso16452775e9.1;
-        Fri, 15 Aug 2025 19:18:23 -0700 (PDT)
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-45a1b0c82eeso17984535e9.3;
+        Fri, 15 Aug 2025 19:18:25 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755310702; x=1755915502; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1755310703; x=1755915503; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=uGIyJ0TCKzvsKaDMmUW3Wdsvfi8CtjWi28UHZHisKpg=;
-        b=H4CVDg1H8elpcQMuHfn2ZHdfjQ+yE3m/zRB8tfIWtJuKTrOBI+6DqGDMzYeMIvnOZ9
-         5LLp25XrLxHDlHqCNPjrHWDeSpMycz1GqPLOC5jkp1zARr6yA6bM8ARE8S3MqHjxnNvN
-         YbtXOg9XndWsh4mlpzC7ERb3ZdJtPys7APAyP75PmzFyyLOG0pI6Se64mEmTdktYsZl8
-         O2PPdbfJtHXziqhNaXcEAENoiqfxw9oIVc3DmcK9IWBQP3rIN9vQTQ73JLxgZOqsj1Zg
-         BK3w73oDDSNrhjJQjOMqES7bfGvT8tOqpBnxNudqNgfJM9fKOaD0FwTW+7Xwkwqwo9vN
-         bHOQ==
+        bh=gjtdgClxqAryqHymCU6m/Gc+SPOzF3E/t04HFbVAGPs=;
+        b=PzAbd55kOJhQmSIsWMHRvVYq+Zsk2RAvGL8+GgVEOK8uEiFnAns4ceVnE3W2jumMH8
+         LlKxqmBJkjgZb0mgRoXwHaHFUQ1HIr/hP+72FAl7HIYU4LXIheIRla3MLB8Om8IacCA+
+         zZI5kpqChI+UTV3hoem/0l/k6kC4HwRpIy3W2jTVK/AtohvUbH8Gr0wVGVnN7uuUkCJJ
+         cO26a/QXHlOcXyJpP/LNnpwSLbb08jaInsEt6xx9WhqKHk/xXS19zcuFYpPLuEm1VGm4
+         wokXm99qHD3BSEfDLr8a9Kpbuek+aWeEf0c9OiYmbQy0fP1e/TjARPC+Xix1/qK1Q9xk
+         xolg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755310702; x=1755915502;
+        d=1e100.net; s=20230601; t=1755310703; x=1755915503;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=uGIyJ0TCKzvsKaDMmUW3Wdsvfi8CtjWi28UHZHisKpg=;
-        b=lFCrHWOZ0ZiT+pZQ/Uso1SToCo20iQd3lNae0oTzgN6QnQ6LbgeXzZlXVPNVkMTxNb
-         Bpyvb3MSlhEBJTlkbCteVrgIPwjNrBVMjNBU9tVsHrjbuGN6bFq24Xd9M9Ran/ArKHYp
-         bld8d6tvr3Zqa2yRLRXtbFYnIdbTiDg2+Dx67Gk9MgNcD0xGIZeUNvMMjeEwqeh5HYd3
-         wpUDN4GVEcYFRPr70ENlFIavR7eDAK+0QCFOhB+mBRqcjJEsXlZL5I6+EuDbbkkzVt2w
-         c7tRGr85HMu6lLRmRP5QIRkOzrTTOos1cKbmphnvDeR/IpOl26irDx5Qmq++8PRuhEBl
-         9cpA==
-X-Forwarded-Encrypted: i=1; AJvYcCUOLcbP5gl1Aj1H4y6wD1WTRxr8FaTV2nxLFiFia8+MG3vWSgtGA6WaHWf7ZG9UX9rxhBLwOFsMh5mdPA==@vger.kernel.org, AJvYcCUW32tx/EfXneAntT10ddSS797LUku4LgWaJxgaJD8NO6DLUmTcUQQHS4dBK6HEh7AcaVV+Y0k4fMa9@vger.kernel.org, AJvYcCUslA+7/tCHO2aIHZNxyqtcg2p2fcrySzBZn8gaj8r20d1ZH6Zz4RkkJMjxHSaewWV3RvxBwUrIlRzi@vger.kernel.org, AJvYcCVeq5QJgAg3YtvgaN65thVDn4CsC6PIVRzKZ7xiEEcXPAPveU+3HgIU3l/FBS9Kjhedafq+an0feP89U1M=@vger.kernel.org, AJvYcCWLXrIIjs2M/GaHXDwujdB6xpqlPS4u5h3+/UdekJFn9UVYDGw8HtvnkThPQgEGGyYiuMf+XajVGY7ljg==@vger.kernel.org, AJvYcCWuAPWlwQdo+bQdLWcqZ+Qw/Y4jDM8iUKARhzAF/ajjMNepvq4SH/IEsJvSU+N7nI78clH3eAZ3t63T5tk=@vger.kernel.org, AJvYcCXiZh+s7dGHFgxupIbPtJNVFuhzqHa0ic7EH/T4un7zbIIALEnkZZL8o0ATGgcIiBc2U91fKJlSBPQQ@vger.kernel.org
-X-Gm-Message-State: AOJu0YzWXKBZZAghTcuStyvftoohqKoeFa1NZwA8OJwF3ezxmmDD3p/a
-	0uyZSgqfNY2M3hpp59IRaAfFmKqcEENFPdghfipR2WAK9YY9MGTdVw3k/gw7Ars=
-X-Gm-Gg: ASbGnctgxnZhsha8bPLGs3IHUzFplivjPX4MWNPYe9f87nsX10PyraQUyd6ETlZj+lF
-	tH2cj/zngPIoC7KFkNwBFKgGrFm7ilQVBeanzmnc1AiHunxFHt5Kt7iDFBZ4H3rmOyfvCS+g7Ig
-	u2JzH20OqNZpeIzjqrXm4p0YBbFnEh+9s817SvBtkNC6Ny4vBqmxL/SOQb5O/LaZ3iYtI6TpurU
-	9RtFQv83hdEBUy+/V9OaBsyRO2uvIDATtI1c6PZYFEyC6Jxu3vmKNw0qMRtexGM77DZzM7NbdyR
-	CrwX108jwMNLe6iJyaRLuK1Fb9C4X6xXSPz1OMteHAP7OOMVHfzk0OKRhY5dlGQMeFHOuO6KjRM
-	lN7PHOor+RfBCOprdaS2Z4DS2TxH0kBt5em7vxqhcGgBaUHw=
-X-Google-Smtp-Source: AGHT+IEne0jj9qlJaGNIVJ3iI9oeGSARVy+s4LjvS+VakdEpY2SsAdktmDdjFPHvfEFebR7AOFYRAA==
-X-Received: by 2002:a05:600c:4f4c:b0:458:a992:6f1e with SMTP id 5b1f17b1804b1-45a27151275mr4507915e9.5.1755310701636;
-        Fri, 15 Aug 2025 19:18:21 -0700 (PDT)
+        bh=gjtdgClxqAryqHymCU6m/Gc+SPOzF3E/t04HFbVAGPs=;
+        b=X3aVEck6jNsrXh4/wO7B7ug0DZq7oxsUzMJKAmDlnUy+1Bc9amuc2HpE6kz8xIK7gK
+         E4eK7M5eic/sYP83z045QqUO+VNp7MFIp5vFFCf8P+QchDCMx72r3w4TPnymYT5lMrS1
+         brkBRfX7p6Tf/U0j1afW9dQ05zhaz0JsKb3gVBVfEh4l3Gt3Pcvq42hnik7SoamZbWE8
+         Upihj9SMA8Pi9mKonyljsTjM4L1xIMyALWbSDXEPP97wXjpPRtNT+oiMg4EzuzDUuMaj
+         T8Zlrvi8qmhgzSOxS2VvcC+u4mp8/XzFN8vZc6d/Yk30AvfbIhvTkOjUto0KtotlebwD
+         3dzw==
+X-Forwarded-Encrypted: i=1; AJvYcCUL3xmvUrwiTZ6sC5RC9+hBYbC/webW/taew6ciT8qSVcULKwwVnX2NHYwT8eCsYmeIbKJ7/Hn6bXrHYg==@vger.kernel.org, AJvYcCUWXdryezWKWuomn/Pt2MyXWIiOoc6uTSQIF6XPjTNB44w3K17agmNMpYhBQY+FfQc94sLC91p2tF6g@vger.kernel.org, AJvYcCW/Sbp74B4crCsKgPwwwfphcoY49Y3yo07rYyH9cvdRZQ8Tor0JtJJzCNGD4+hP/rQNrBzUN/P41umWUg==@vger.kernel.org, AJvYcCXNF+rh3HD7ktLmFk41uPKwB2L70IiYBXv/CFcwtLERHCL8qqI3zmPBC57Rn+w9TPsOYtHMPlHT4Hf2@vger.kernel.org, AJvYcCXQDG7jFFVr3ssjZiH08PFZPgdzsE1ipc/VMPPOYp+vAe83cl6t791JmrSSGHE6x5FzAwY9Jfq7EnoX@vger.kernel.org, AJvYcCXjsWxQm9jgPawZaG0hhAXiQVhyN/kJBmlI9br0qH5IrLGi6kdsJFYxz4Iu2HBHmBo/fbfRRZOy28YGBbU=@vger.kernel.org, AJvYcCXyQNyZhxbAf/Nw0r5R58jeLjhaUHxjvLM4vWLkHE8uL0Kc5GKzgVU2kpJAPoniMIE3IbfVJiekN2hLPTY=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwSRFyjehEhx69WpgUjlT72dHnqwIkDNPgZCGOzKZjUxDfhxJob
+	MxoGs6z1jxjNOJ1ie76ZVPJs40+U4ub7g3vDlB9ubJ+TTuEfzqmFuw2HR3piGGs=
+X-Gm-Gg: ASbGnctpHH9mMsaV8k5x0mSKnzjQm+/WNvvliBTnrqeTG4H1/4Zd3eXgRFcwSUj6b0N
+	GJxNNX2Jo6OsGPL5CU9+LNvKlbNtlf9wH9se6hM5HQkPROZTxFYfeyb5PcWRUvcTpGmyFZ8Qt39
+	4U4tXoJF8OxtTlxVfcyyDIYvrXJfVjmflIxwCm+o5n+SgzKGfwI9lhGXiPLHCRtfeI/Hdvnw5DG
+	juIvp9t79/7Z41zMvfDS2Ev9bXSxaqCxHDbWFzqyueUxHSY1yBvhWwFsucs6WVHrtADbfNF6Znd
+	94+HkPAkd/dhu+6tvX7PW+KcLGUQHbry0jA8IRYrP6WYTBp+m0dyEmuCtOC47GbYcAAwnYU33bO
+	tBmG1UCdoJV7xOfhzTNF7UuPtYXUMj6mKyemr0wqVup9jdLQ=
+X-Google-Smtp-Source: AGHT+IEDpwyX1ziaBMwO3Ayd4p94N1AgBI3i3qn7uRV2GGOlAxLv2zqLhXSoifjqb3glF8hmwrsfLg==
+X-Received: by 2002:a05:600c:19d1:b0:459:d709:e5d4 with SMTP id 5b1f17b1804b1-45a26e1f0cemr6380985e9.0.1755310703376;
+        Fri, 15 Aug 2025 19:18:23 -0700 (PDT)
 Received: from localhost.localdomain ([2a0d:e487:212f:1af8:ee74:5774:2fc2:70a1])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45a1fe2c019sm58712535e9.17.2025.08.15.19.18.20
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45a1fe2c019sm58712535e9.17.2025.08.15.19.18.21
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Aug 2025 19:18:21 -0700 (PDT)
+        Fri, 15 Aug 2025 19:18:22 -0700 (PDT)
 From: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
 To: linux-kernel@vger.kernel.org
 Cc: andreas@kemnade.info,
@@ -102,9 +102,9 @@ Cc: andreas@kemnade.info,
 	linux-omap@vger.kernel.org,
 	shuah@kernel.org,
 	jihed.chaibi.dev@gmail.com
-Subject: [PATCH v3 3/6] input: dt-bindings: ti,twl4030-keypad: convert to DT schema
-Date: Sat, 16 Aug 2025 04:15:20 +0200
-Message-Id: <20250816021523.167049-4-jihed.chaibi.dev@gmail.com>
+Subject: [PATCH v3 4/6] ASoC: dt-bindings: omap-twl4030: convert to DT schema
+Date: Sat, 16 Aug 2025 04:15:21 +0200
+Message-Id: <20250816021523.167049-5-jihed.chaibi.dev@gmail.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250816021523.167049-1-jihed.chaibi.dev@gmail.com>
 References: <20250816021523.167049-1-jihed.chaibi.dev@gmail.com>
@@ -116,123 +116,204 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert the legacy TXT binding for the TWL4030 keypad module
+Convert the legacy TXT binding for the OMAP TWL4030 sound card
 to the modern YAML DT schema format. This adds formal validation
-and improves documentation by inheriting from the matrix-keymap schema.
+and improves documentation.
 
+Acked-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
+
 ---
 Changes in v3:
- - Made 'linux,keymap' a required property as suggested by the reviewer.
+ - No change to binding content, only updating commit message format.
 
 Changes in v2:
- - Simplified the description field by removing redundant '|'
- as it does not affect formatting in this context.
+ - Fixed comment formatting (added spaces for better alignment).
+ - Updated commit subject to align with subsystem style.
+ - Retained Acked-by from v1 as changes are cosmetic.
 ---
- .../bindings/input/ti,twl4030-keypad.yaml     | 59 +++++++++++++++++++
- .../bindings/input/twl4030-keypad.txt         | 27 ---------
- 2 files changed, 59 insertions(+), 27 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/input/ti,twl4030-keypad.yaml
- delete mode 100644 Documentation/devicetree/bindings/input/twl4030-keypad.txt
+ .../bindings/sound/omap-twl4030.txt           |  62 -----------
+ .../bindings/sound/ti,omap-twl4030.yaml       | 102 ++++++++++++++++++
+ 2 files changed, 102 insertions(+), 62 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/sound/omap-twl4030.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/ti,omap-twl4030.yaml
 
-diff --git a/Documentation/devicetree/bindings/input/ti,twl4030-keypad.yaml b/Documentation/devicetree/bindings/input/ti,twl4030-keypad.yaml
+diff --git a/Documentation/devicetree/bindings/sound/omap-twl4030.txt b/Documentation/devicetree/bindings/sound/omap-twl4030.txt
+deleted file mode 100644
+index f6a715e4e..000000000
+--- a/Documentation/devicetree/bindings/sound/omap-twl4030.txt
++++ /dev/null
+@@ -1,62 +0,0 @@
+-* Texas Instruments SoC with twl4030 based audio setups
+-
+-Required properties:
+-- compatible: "ti,omap-twl4030"
+-- ti,model: Name of the sound card (for example "omap3beagle")
+-- ti,mcbsp: phandle for the McBSP node
+-
+-Optional properties:
+-- ti,codec: phandle for the twl4030 audio node
+-- ti,mcbsp-voice: phandle for the McBSP node connected to the voice port of twl
+-- ti, jack-det-gpio: Jack detect GPIO
+-- ti,audio-routing: List of connections between audio components.
+-  Each entry is a pair of strings, the first being the connection's sink,
+-  the second being the connection's source.
+-  If the routing is not provided all possible connection will be available
+-
+-Available audio endpoints for the audio-routing table:
+-
+-Board connectors:
+- * Headset Stereophone
+- * Earpiece Spk
+- * Handsfree Spk
+- * Ext Spk
+- * Main Mic
+- * Sub Mic
+- * Headset Mic
+- * Carkit Mic
+- * Digital0 Mic
+- * Digital1 Mic
+- * Line In
+-
+-twl4030 pins:
+- * HSOL
+- * HSOR
+- * EARPIECE
+- * HFL
+- * HFR
+- * PREDRIVEL
+- * PREDRIVER
+- * CARKITL
+- * CARKITR
+- * MAINMIC
+- * SUBMIC
+- * HSMIC
+- * DIGIMIC0
+- * DIGIMIC1
+- * CARKITMIC
+- * AUXL
+- * AUXR
+-
+- * Headset Mic Bias
+- * Mic Bias 1 /* Used for Main Mic or Digimic0 */
+- * Mic Bias 2 /* Used for Sub Mic or Digimic1 */
+-
+-Example:
+-
+-sound {
+-	compatible = "ti,omap-twl4030";
+-	ti,model = "omap3beagle";
+-
+-	ti,mcbsp = <&mcbsp2>;
+-};
+diff --git a/Documentation/devicetree/bindings/sound/ti,omap-twl4030.yaml b/Documentation/devicetree/bindings/sound/ti,omap-twl4030.yaml
 new file mode 100644
-index 000000000..c69aa7f5c
+index 000000000..7c9371860
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/input/ti,twl4030-keypad.yaml
-@@ -0,0 +1,59 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++++ b/Documentation/devicetree/bindings/sound/ti,omap-twl4030.yaml
+@@ -0,0 +1,102 @@
++# SPDX-License-Identifier: GPL-2.0-only OR BSD-2-Clause
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/input/ti,twl4030-keypad.yaml#
++$id: http://devicetree.org/schemas/sound/ti,omap-twl4030.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Texas Instruments TWL4030-family Keypad Controller
++title: Texas Instruments SoC with twl4030 based audio setups
 +
 +maintainers:
 +  - Peter Ujfalusi <peter.ujfalusi@gmail.com>
 +
 +description:
-+  TWL4030's Keypad controller is used to interface a SoC with a matrix-type
-+  keypad device. The keypad controller supports multiple row and column lines.
-+  A key can be placed at each intersection of a unique row and a unique column.
-+  The keypad controller can sense a key-press and key-release and report the
-+  event using a interrupt to the cpu.
-+
-+allOf:
-+  - $ref: matrix-keymap.yaml#
++  Bindings for audio setups on TI OMAP SoCs using TWL4030-family audio
++  codec connected via a McBSP port.
 +
 +properties:
 +  compatible:
-+    const: ti,twl4030-keypad
++    const: ti,omap-twl4030
 +
-+  interrupts:
++  ti,model:
++    $ref: /schemas/types.yaml#/definitions/string
++    description: Name of the sound card (for example "omap3beagle").
++
++  ti,mcbsp:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: phandle for the McBSP node.
++
++  ti,codec:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: phandle for the twl4030 audio node.
++
++  ti,mcbsp-voice:
++    $ref: /schemas/types.yaml#/definitions/phandle
++    description: phandle to the McBSP node connected to the voice port.
++
++  ti,jack-det-gpio:
++    description: GPIO specifier for jack detection.
 +    maxItems: 1
++
++  ti,audio-routing:
++    description: |
++      A list of audio routing connections. Each entry is a pair of strings,
++      with the first being the connection's sink and the second being the
++      source. If not provided, all possible connections are available.
++
++      Available TWL4030 Pins:  "HFL", "HFR",
++        "PREDRIVEL", "PREDRIVER", "CARKITL", "CARKITR", "MAINMIC", "SUBMIC",
++        "HSMIC", "DIGIMIC0", "DIGIMIC1", "CARKITMIC", "AUXL", "AUXR",
++        "Headset Mic Bias", "Mic Bias 1", "Mic Bias 2"
++    $ref: /schemas/types.yaml#/definitions/non-unique-string-array
++    items:
++      enum:
++        # Board Connectors
++        - Headset Stereophone
++        - Earpiece Spk
++        - Handsfree Spk
++        - Ext Spk
++        - Main Mic
++        - Sub Mic
++        - Headset Mic
++        - Carkit Mic
++        - Digital0 Mic
++        - Digital1 Mic
++        - Line In
++
++        # CODEC Pins
++        - HSOL
++        - HSOR
++        - EARPIECE
++        - HFL
++        - HFR
++        - PREDRIVEL
++        - PREDRIVER
++        - CARKITL
++        - CARKITR
++        - MAINMIC
++        - SUBMIC
++        - HSMIC
++        - DIGIMIC0
++        - DIGIMIC1
++        - CARKITMIC
++        - AUXL
++        - AUXR
++
++        # Headset Mic Bias
++        - Mic Bias 1   # Used for Main Mic or Digimic0
++        - Mic Bias 2   # Used for Sub Mic or Digimic1
 +
 +required:
 +  - compatible
-+  - interrupts
-+  - keypad,num-rows
-+  - keypad,num-columns
-+  - linux,keymap
++  - ti,model
++  - ti,mcbsp
 +
-+unevaluatedProperties: false
++additionalProperties: false
 +
 +examples:
 +  - |
-+    #include <dt-bindings/input/input.h>
-+
-+    keypad {
-+        compatible = "ti,twl4030-keypad";
-+        interrupts = <1>;
-+        keypad,num-rows = <8>;
-+        keypad,num-columns = <8>;
-+        linux,keymap = <
-+            /* row 0 */
-+            MATRIX_KEY(0, 0, KEY_1)
-+            MATRIX_KEY(0, 1, KEY_2)
-+            MATRIX_KEY(0, 2, KEY_3)
-+
-+            /* ...and so on for a full 8x8 matrix... */
-+
-+            /* row 7 */
-+            MATRIX_KEY(7, 6, KEY_Y)
-+            MATRIX_KEY(7, 7, KEY_Z)
-+        >;
++    sound {
++        compatible = "ti,omap-twl4030";
++        ti,model = "omap3beagle";
++        ti,mcbsp = <&mcbsp2>;
 +    };
-diff --git a/Documentation/devicetree/bindings/input/twl4030-keypad.txt b/Documentation/devicetree/bindings/input/twl4030-keypad.txt
-deleted file mode 100644
-index e4be2f76a..000000000
---- a/Documentation/devicetree/bindings/input/twl4030-keypad.txt
-+++ /dev/null
-@@ -1,27 +0,0 @@
--* TWL4030's Keypad Controller device tree bindings
--
--TWL4030's Keypad controller is used to interface a SoC with a matrix-type
--keypad device. The keypad controller supports multiple row and column lines.
--A key can be placed at each intersection of a unique row and a unique column.
--The keypad controller can sense a key-press and key-release and report the
--event using a interrupt to the cpu.
--
--This binding is based on the matrix-keymap binding with the following
--changes:
--
-- * keypad,num-rows and keypad,num-columns are required.
--
--Required SoC Specific Properties:
--- compatible: should be one of the following
--   - "ti,twl4030-keypad": For controllers compatible with twl4030 keypad
--      controller.
--- interrupt: should be one of the following
--   - <1>: For controllers compatible with twl4030 keypad controller.
--
--Example:
--	twl_keypad: keypad {
--		compatible = "ti,twl4030-keypad";
--		interrupts = <1>;
--		keypad,num-rows = <8>;
--		keypad,num-columns = <8>;
--	};
 -- 
 2.39.5
 
