@@ -1,78 +1,78 @@
-Return-Path: <linux-pwm+bounces-7074-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7075-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id C6175B289E5
-	for <lists+linux-pwm@lfdr.de>; Sat, 16 Aug 2025 04:19:20 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 28E73B289E7
+	for <lists+linux-pwm@lfdr.de>; Sat, 16 Aug 2025 04:19:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id A2A0EB63613
-	for <lists+linux-pwm@lfdr.de>; Sat, 16 Aug 2025 02:17:32 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7E2D11B68469
+	for <lists+linux-pwm@lfdr.de>; Sat, 16 Aug 2025 02:19:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36D0B1D63DF;
-	Sat, 16 Aug 2025 02:18:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2AC71E0E1F;
+	Sat, 16 Aug 2025 02:18:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i/JR2mJg"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H4CVDg1H"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 209CB1A76BB;
-	Sat, 16 Aug 2025 02:18:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0DF81CAA65;
+	Sat, 16 Aug 2025 02:18:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755310704; cv=none; b=BCdlxtAzY1zfXzTZ33OJK2/jiZML/c1fvPLpoRN30ghGbAyc3zS/rkoxOQ2MrSgH9xRRgMgZLqHep4ljuOr0azT7Fo3KRmDJhV8N+GySPRRyZLDZ1VP7WSxLyFJHaJzVxQenyx13ppyHlWqZul6HzfdtUuJ+vMftgh9n21OXgFE=
+	t=1755310705; cv=none; b=rqWoETP5shXyMuNbQQKpzBBiOlEDy1MHHZwTSx45sGZSVcyuT8V624Tgll2BEvlBOIhlCf01n2OeZstQJqmcs8FQ4LRQ05STXCQjBz8r9b4ZJiwByLQDEaqfol1v9DqYfFInWGWcjdCBPvFxuvoNCp1TGhor94OdZzeUgekLKT0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755310704; c=relaxed/simple;
-	bh=jbZCunKxRmzW54eRdGFMx1EPI04q2ckQbFHtdWw4rVI=;
+	s=arc-20240116; t=1755310705; c=relaxed/simple;
+	bh=tzbURwJlE4sv3qsrae+WruTMwS+zOGlsmhWYYQO/3dE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Gartge+ReCqe/A1LB8rnQP97qIourNkS3ZWOv2cXn2PprNuhDrXKhWV85FZ41uzwe+Ly2K1NMyLQ55aO6BdXMcx2iqAksX7n/KlwwD/BNsd+YNQMiu3IStN0gSuPBbfdtMZIz6sp2J5WTEbkXqatJ4h7eFcdtoSK/X89b2wKd14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=i/JR2mJg; arc=none smtp.client-ip=209.85.221.43
+	 MIME-Version; b=s1d5TRBLq/TNCbw9oTmwyX9RyhkQkjoqcED5KLUmM49STluqfvzPCOfm0OOb5V0UtA8/JNgYqCHWCfV4uT2gISF1MKBkDWfLmKN258Oe5WTFXnPo/6SLofDtBZpEJ426AQ31skGSseO3zXg9y/tBUxvJJMcam+XfZdqmhuYka8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H4CVDg1H; arc=none smtp.client-ip=209.85.128.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-3b9e418ba08so1357653f8f.3;
-        Fri, 15 Aug 2025 19:18:21 -0700 (PDT)
+Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-45a1b05a59fso16452775e9.1;
+        Fri, 15 Aug 2025 19:18:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755310700; x=1755915500; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1755310702; x=1755915502; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=nZN9bP9H+qPp8fpqZRzlhEjRrMc4Qa6tjW94WuAua4I=;
-        b=i/JR2mJgQAXhOqttvwsxQrqkbIORWlTYov+byemXw+DQnPcfadWv+020C8BND8xVqW
-         QEopCYAHoL3ifvHRgNndGc+jlaFky0bYw9al4+4J6xCDEmDvQ5K1w3Le2XXNZEKQh+vd
-         g+jo9s17boyPpOZKhorRPRdZqOJYIz6r9qGJ5tmvfjzC9GtoFWGUqlQqqQwXLChU6p7N
-         weiFoO002xXIta4JU/HhIUPeCXducIuaSJPHH0fDeK09SthW4mW2pmtJmwtmMe6a9RJL
-         ttDsU0dXSpKIQGwYT5LcnbS279M4zP6zvKD1PCJg5ezvgjyE0yi7ubLV2I81PwLHBlqt
-         AesA==
+        bh=uGIyJ0TCKzvsKaDMmUW3Wdsvfi8CtjWi28UHZHisKpg=;
+        b=H4CVDg1H8elpcQMuHfn2ZHdfjQ+yE3m/zRB8tfIWtJuKTrOBI+6DqGDMzYeMIvnOZ9
+         5LLp25XrLxHDlHqCNPjrHWDeSpMycz1GqPLOC5jkp1zARr6yA6bM8ARE8S3MqHjxnNvN
+         YbtXOg9XndWsh4mlpzC7ERb3ZdJtPys7APAyP75PmzFyyLOG0pI6Se64mEmTdktYsZl8
+         O2PPdbfJtHXziqhNaXcEAENoiqfxw9oIVc3DmcK9IWBQP3rIN9vQTQ73JLxgZOqsj1Zg
+         BK3w73oDDSNrhjJQjOMqES7bfGvT8tOqpBnxNudqNgfJM9fKOaD0FwTW+7Xwkwqwo9vN
+         bHOQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755310700; x=1755915500;
+        d=1e100.net; s=20230601; t=1755310702; x=1755915502;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=nZN9bP9H+qPp8fpqZRzlhEjRrMc4Qa6tjW94WuAua4I=;
-        b=qT8Eqp3gIUAhRDd/QWi5ynFIFYcjGdvI3uev1Pm5pl8gzrOQiTwLaPRaqNOah1ZMkE
-         +D8gF2DEAhI0CU3fOeLwduBlVuyCqqVlBhuAvh7ltTsQsPTOD4evix/ReHTIN925Ok14
-         4upICifHMmZ5UG2BDnNpsUBpNE2b1XImD/dWQxuOhyPEIFtMWAKz3vcoHVLQoZ7E6XBb
-         fjgBQV8D6X4zIclE+BwJ5WknZP00gVxEJvEctuZCJvzcknOCO59EHphv3eEEOJbtVmOv
-         mYP70jLmVauTf2USU1hH6zn3zcKRVwJDbbDcn8hIFleGu7BapRivtwnFGgbQ/0dgeX44
-         igHg==
-X-Forwarded-Encrypted: i=1; AJvYcCUjyuCSRWlqWpVY+aVlhCZ+RRtn1JZPuwTu8g+og8Pl4Xqq0N6YHh+in6CEX4hvH+8G2uZR8dKPXucx@vger.kernel.org, AJvYcCV1gvVy7/hoCN3c0zjtJQ4a5xkNNUJCKug+D+yq7DzLhXuOFxhnoLkxayOOsJtD670KLF3rrJQGXgZDpw==@vger.kernel.org, AJvYcCVoVvnaHX/K+Th29Id+xXHExtjBLz5Rn23c98c14p5BPkrjk3MKmTOC3FfY0Kl/8DrD3O2O/Y2YCuK+Ij8=@vger.kernel.org, AJvYcCVscW10qr07NKHGoMpk3A5NWaKbItOnbPJQY8mHaJwAOPHIWFBBrA/cDO7+BP0PuqVLlI9cxQM58hkQrL8=@vger.kernel.org, AJvYcCWK+NGqwfEO63eL/2rh5Mxt54RmpluFQCHeGgrOafLZQ6/ER2nPp4VaIuhdt0vKjXBinZ2eBead6DsJ@vger.kernel.org, AJvYcCWRIixgm4MKG9VpFWa6nSMgfWQa/YNiT4M6SWGzsoT3jQE2giTGYs01cr10j/APnHN/1bE4i3FhGzRkWQ==@vger.kernel.org, AJvYcCWw/+f2GlSPuG2SYRu3oBZ24UBJaUWBysKLREIbCnzcgnlgjW8If6ozWtH/pwnr1DIXsYB6lkkTT6D5@vger.kernel.org
-X-Gm-Message-State: AOJu0YwnWnhFcEaYqhqNwGnJv3HTLxwI6Xjv4OMgZNfY38N5n6p5+Cxe
-	Y+dUVbhm0wnsOzXyFLhVqUuNjdlvcWneAB5LOzPv4Q7xLnT7wRKcIi/fk75DJ+I=
-X-Gm-Gg: ASbGncu+fFl+GScBhkv6NNtzBa4JjDL+WDZEJrEmlJtGtEphMNP2cxqjZOrguDs5R1R
-	Q9LVkc9p10QiPe9ubwS7ws5knCh8sg61KGooiEJ1wsXqYzFSytqTQPTTJrrWzMD7EfqSKrwQLVx
-	43woznWDxGlbz8743A9NQpgm7doRItj/a/sO5xT06PzxJUN2SMcND1O4gG9fQ9kvk0O4SEvlmkb
-	ERPpk98mgJn0eL3y8NVugDidxGr46f5NbqfeoAwWDqPfwie3fsvdVb3G299P+tMMmUogyjWEKTV
-	Tdtt+2ee8ja+4BzYZunaNksCI2N0oC9VMAMIpC5fh4G9Ow3L71di+H06eA74iuvz20DGx/Eo2nC
-	lLGNvgnV3kdGtwTKdQw9qA3rZlrj33ACDknlWRf1FAOv2EOw=
-X-Google-Smtp-Source: AGHT+IGxzqOGpcA9bTZa5RCXTgePA7Ph/aSndBF/AC3QQ3qQ11Ft14TPMYaSW2ATNY28F3G1XC+30A==
-X-Received: by 2002:a05:600c:c8f:b0:458:c045:ee99 with SMTP id 5b1f17b1804b1-45a26794ce2mr5618795e9.28.1755310699964;
-        Fri, 15 Aug 2025 19:18:19 -0700 (PDT)
+        bh=uGIyJ0TCKzvsKaDMmUW3Wdsvfi8CtjWi28UHZHisKpg=;
+        b=lFCrHWOZ0ZiT+pZQ/Uso1SToCo20iQd3lNae0oTzgN6QnQ6LbgeXzZlXVPNVkMTxNb
+         Bpyvb3MSlhEBJTlkbCteVrgIPwjNrBVMjNBU9tVsHrjbuGN6bFq24Xd9M9Ran/ArKHYp
+         bld8d6tvr3Zqa2yRLRXtbFYnIdbTiDg2+Dx67Gk9MgNcD0xGIZeUNvMMjeEwqeh5HYd3
+         wpUDN4GVEcYFRPr70ENlFIavR7eDAK+0QCFOhB+mBRqcjJEsXlZL5I6+EuDbbkkzVt2w
+         c7tRGr85HMu6lLRmRP5QIRkOzrTTOos1cKbmphnvDeR/IpOl26irDx5Qmq++8PRuhEBl
+         9cpA==
+X-Forwarded-Encrypted: i=1; AJvYcCUOLcbP5gl1Aj1H4y6wD1WTRxr8FaTV2nxLFiFia8+MG3vWSgtGA6WaHWf7ZG9UX9rxhBLwOFsMh5mdPA==@vger.kernel.org, AJvYcCUW32tx/EfXneAntT10ddSS797LUku4LgWaJxgaJD8NO6DLUmTcUQQHS4dBK6HEh7AcaVV+Y0k4fMa9@vger.kernel.org, AJvYcCUslA+7/tCHO2aIHZNxyqtcg2p2fcrySzBZn8gaj8r20d1ZH6Zz4RkkJMjxHSaewWV3RvxBwUrIlRzi@vger.kernel.org, AJvYcCVeq5QJgAg3YtvgaN65thVDn4CsC6PIVRzKZ7xiEEcXPAPveU+3HgIU3l/FBS9Kjhedafq+an0feP89U1M=@vger.kernel.org, AJvYcCWLXrIIjs2M/GaHXDwujdB6xpqlPS4u5h3+/UdekJFn9UVYDGw8HtvnkThPQgEGGyYiuMf+XajVGY7ljg==@vger.kernel.org, AJvYcCWuAPWlwQdo+bQdLWcqZ+Qw/Y4jDM8iUKARhzAF/ajjMNepvq4SH/IEsJvSU+N7nI78clH3eAZ3t63T5tk=@vger.kernel.org, AJvYcCXiZh+s7dGHFgxupIbPtJNVFuhzqHa0ic7EH/T4un7zbIIALEnkZZL8o0ATGgcIiBc2U91fKJlSBPQQ@vger.kernel.org
+X-Gm-Message-State: AOJu0YzWXKBZZAghTcuStyvftoohqKoeFa1NZwA8OJwF3ezxmmDD3p/a
+	0uyZSgqfNY2M3hpp59IRaAfFmKqcEENFPdghfipR2WAK9YY9MGTdVw3k/gw7Ars=
+X-Gm-Gg: ASbGnctgxnZhsha8bPLGs3IHUzFplivjPX4MWNPYe9f87nsX10PyraQUyd6ETlZj+lF
+	tH2cj/zngPIoC7KFkNwBFKgGrFm7ilQVBeanzmnc1AiHunxFHt5Kt7iDFBZ4H3rmOyfvCS+g7Ig
+	u2JzH20OqNZpeIzjqrXm4p0YBbFnEh+9s817SvBtkNC6Ny4vBqmxL/SOQb5O/LaZ3iYtI6TpurU
+	9RtFQv83hdEBUy+/V9OaBsyRO2uvIDATtI1c6PZYFEyC6Jxu3vmKNw0qMRtexGM77DZzM7NbdyR
+	CrwX108jwMNLe6iJyaRLuK1Fb9C4X6xXSPz1OMteHAP7OOMVHfzk0OKRhY5dlGQMeFHOuO6KjRM
+	lN7PHOor+RfBCOprdaS2Z4DS2TxH0kBt5em7vxqhcGgBaUHw=
+X-Google-Smtp-Source: AGHT+IEne0jj9qlJaGNIVJ3iI9oeGSARVy+s4LjvS+VakdEpY2SsAdktmDdjFPHvfEFebR7AOFYRAA==
+X-Received: by 2002:a05:600c:4f4c:b0:458:a992:6f1e with SMTP id 5b1f17b1804b1-45a27151275mr4507915e9.5.1755310701636;
+        Fri, 15 Aug 2025 19:18:21 -0700 (PDT)
 Received: from localhost.localdomain ([2a0d:e487:212f:1af8:ee74:5774:2fc2:70a1])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45a1fe2c019sm58712535e9.17.2025.08.15.19.18.18
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45a1fe2c019sm58712535e9.17.2025.08.15.19.18.20
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 15 Aug 2025 19:18:19 -0700 (PDT)
+        Fri, 15 Aug 2025 19:18:21 -0700 (PDT)
 From: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
 To: linux-kernel@vger.kernel.org
 Cc: andreas@kemnade.info,
@@ -102,9 +102,9 @@ Cc: andreas@kemnade.info,
 	linux-omap@vger.kernel.org,
 	shuah@kernel.org,
 	jihed.chaibi.dev@gmail.com
-Subject: [PATCH v3 2/6] mfd: dt-bindings: ti,twl4030-audio: convert to DT schema
-Date: Sat, 16 Aug 2025 04:15:19 +0200
-Message-Id: <20250816021523.167049-3-jihed.chaibi.dev@gmail.com>
+Subject: [PATCH v3 3/6] input: dt-bindings: ti,twl4030-keypad: convert to DT schema
+Date: Sat, 16 Aug 2025 04:15:20 +0200
+Message-Id: <20250816021523.167049-4-jihed.chaibi.dev@gmail.com>
 X-Mailer: git-send-email 2.39.5
 In-Reply-To: <20250816021523.167049-1-jihed.chaibi.dev@gmail.com>
 References: <20250816021523.167049-1-jihed.chaibi.dev@gmail.com>
@@ -114,180 +114,125 @@ List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Convert the TWL4030 audio module bindings from txt to YAML format and
-move them to the sound subsystem bindings directory. This patch also
-refines the schema by adding an enum constraint for ti,enable-vibra and
-updates the example to remove irrelevant I2C clock-frequency property.
+Convert the legacy TXT binding for the TWL4030 keypad module
+to the modern YAML DT schema format. This adds formal validation
+and improves documentation by inheriting from the matrix-keymap schema.
 
 Signed-off-by: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
-
 ---
 Changes in v3:
- - No changes.
+ - Made 'linux,keymap' a required property as suggested by the reviewer.
 
 Changes in v2:
- - Moved binding from mfd to sound directory.
- - Added enum: [0, 1] to ti,enable-vibra for stricter validation.
- - Removed clock-frequency from the example as it’s not relevant to the binding.
- - Simplified example by removing unnecessary I2C node properties.
+ - Simplified the description field by removing redundant '|'
+ as it does not affect formatting in this context.
 ---
- .../devicetree/bindings/mfd/twl4030-audio.txt | 46 ----------
- .../bindings/sound/ti,twl4030-audio.yaml      | 90 +++++++++++++++++++
- 2 files changed, 90 insertions(+), 46 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/mfd/twl4030-audio.txt
- create mode 100644 Documentation/devicetree/bindings/sound/ti,twl4030-audio.yaml
+ .../bindings/input/ti,twl4030-keypad.yaml     | 59 +++++++++++++++++++
+ .../bindings/input/twl4030-keypad.txt         | 27 ---------
+ 2 files changed, 59 insertions(+), 27 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/ti,twl4030-keypad.yaml
+ delete mode 100644 Documentation/devicetree/bindings/input/twl4030-keypad.txt
 
-diff --git a/Documentation/devicetree/bindings/mfd/twl4030-audio.txt b/Documentation/devicetree/bindings/mfd/twl4030-audio.txt
-deleted file mode 100644
-index 414d2ae0a..000000000
---- a/Documentation/devicetree/bindings/mfd/twl4030-audio.txt
-+++ /dev/null
-@@ -1,46 +0,0 @@
--Texas Instruments TWL family (twl4030) audio module
--
--The audio module inside the TWL family consist of an audio codec and a vibra
--driver.
--
--Required properties:
--- compatible : must be "ti,twl4030-audio"
--
--Optional properties, nodes:
--
--Audio functionality:
--- codec { }: Need to be present if the audio functionality is used. Within this
--	     section the following options can be used:
--- ti,digimic_delay: Delay need after enabling the digimic to reduce artifacts
--		    from the start of the recorded sample (in ms)
---ti,ramp_delay_value: HS ramp delay configuration to reduce pop noise
---ti,hs_extmute: Use external mute for HS pop reduction
---ti,hs_extmute_gpio: Use external GPIO to control the external mute
---ti,offset_cncl_path: Offset cancellation path selection, refer to TRM for the
--		      valid values.
--
--Vibra functionality
--- ti,enable-vibra: Need to be set to <1> if the vibra functionality is used. if
--		   missing or it is 0, the vibra functionality is disabled.
--
--Example:
--&i2c1 {
--	clock-frequency = <2600000>;
--
--	twl: twl@48 {
--		reg = <0x48>;
--		interrupts = <7>; /* SYS_NIRQ cascaded to intc */
--		interrupt-parent = <&intc>;
--
--		twl_audio: audio {
--			compatible = "ti,twl4030-audio";
--
--			ti,enable-vibra = <1>;
--
--			codec {
--				ti,ramp_delay_value = <3>;
--			};
--
--		};
--	};
--};
-diff --git a/Documentation/devicetree/bindings/sound/ti,twl4030-audio.yaml b/Documentation/devicetree/bindings/sound/ti,twl4030-audio.yaml
+diff --git a/Documentation/devicetree/bindings/input/ti,twl4030-keypad.yaml b/Documentation/devicetree/bindings/input/ti,twl4030-keypad.yaml
 new file mode 100644
-index 000000000..c9c3f7513
+index 000000000..c69aa7f5c
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/ti,twl4030-audio.yaml
-@@ -0,0 +1,90 @@
++++ b/Documentation/devicetree/bindings/input/ti,twl4030-keypad.yaml
+@@ -0,0 +1,59 @@
 +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/sound/ti,twl4030-audio.yaml#
++$id: http://devicetree.org/schemas/input/ti,twl4030-keypad.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: Texas Instruments TWL4030-family Audio Module
++title: Texas Instruments TWL4030-family Keypad Controller
 +
 +maintainers:
 +  - Peter Ujfalusi <peter.ujfalusi@gmail.com>
 +
 +description:
-+  The audio module within the TWL4030-family of companion chips consists
-+  of an audio codec and a vibra driver. This binding describes the parent
-+  node for these functions.
++  TWL4030's Keypad controller is used to interface a SoC with a matrix-type
++  keypad device. The keypad controller supports multiple row and column lines.
++  A key can be placed at each intersection of a unique row and a unique column.
++  The keypad controller can sense a key-press and key-release and report the
++  event using a interrupt to the cpu.
++
++allOf:
++  - $ref: matrix-keymap.yaml#
 +
 +properties:
 +  compatible:
-+    const: ti,twl4030-audio
++    const: ti,twl4030-keypad
 +
-+  codec:
-+    type: object
-+    description: Node containing properties for the audio codec functionality.
-+
-+    properties:
-+      ti,digimic_delay:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description:
-+          Delay in milliseconds after enabling digital microphones to reduce
-+          artifacts.
-+
-+      ti,ramp_delay_value:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description:
-+          Headset ramp delay configuration to reduce pop noise.
-+
-+      ti,hs_extmute:
-+        type: boolean
-+        description:
-+          Enable the use of an external mute for headset pop reduction.
-+
-+      ti,hs_extmute_gpio:
-+        $ref: /schemas/types.yaml#/definitions/phandle-array
-+        description:
-+          The GPIO specifier for the external mute control.
-+        maxItems: 1
-+
-+      ti,offset_cncl_path:
-+        $ref: /schemas/types.yaml#/definitions/uint32
-+        description:
-+          Offset cancellation path selection. Refer to the Technical
-+          Reference Manual for valid values.
-+
-+  # The 'codec' node itself is optional, but if it exists, it can be empty.
-+  # We don't require any of its sub-properties.
-+
-+  ti,enable-vibra:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    enum: [0, 1]
-+    description:
-+      Enable or disable the vibra functionality.
-+
-+additionalProperties: false
++  interrupts:
++    maxItems: 1
 +
 +required:
 +  - compatible
++  - interrupts
++  - keypad,num-rows
++  - keypad,num-columns
++  - linux,keymap
++
++unevaluatedProperties: false
 +
 +examples:
 +  - |
-+    i2c {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
++    #include <dt-bindings/input/input.h>
 +
-+      twl: twl@48 {
-+        reg = <0x48>;
-+        interrupts = <7>; /* SYS_NIRQ cascaded to intc */
-+        interrupt-parent = <&intc>;
++    keypad {
++        compatible = "ti,twl4030-keypad";
++        interrupts = <1>;
++        keypad,num-rows = <8>;
++        keypad,num-columns = <8>;
++        linux,keymap = <
++            /* row 0 */
++            MATRIX_KEY(0, 0, KEY_1)
++            MATRIX_KEY(0, 1, KEY_2)
++            MATRIX_KEY(0, 2, KEY_3)
 +
-+        twl_audio: audio {
-+          compatible = "ti,twl4030-audio";
++            /* ...and so on for a full 8x8 matrix... */
 +
-+          ti,enable-vibra = <1>;
-+
-+          codec {
-+            ti,ramp_delay_value = <3>;
-+          };
-+
-+        };
-+      };
++            /* row 7 */
++            MATRIX_KEY(7, 6, KEY_Y)
++            MATRIX_KEY(7, 7, KEY_Z)
++        >;
 +    };
+diff --git a/Documentation/devicetree/bindings/input/twl4030-keypad.txt b/Documentation/devicetree/bindings/input/twl4030-keypad.txt
+deleted file mode 100644
+index e4be2f76a..000000000
+--- a/Documentation/devicetree/bindings/input/twl4030-keypad.txt
++++ /dev/null
+@@ -1,27 +0,0 @@
+-* TWL4030's Keypad Controller device tree bindings
+-
+-TWL4030's Keypad controller is used to interface a SoC with a matrix-type
+-keypad device. The keypad controller supports multiple row and column lines.
+-A key can be placed at each intersection of a unique row and a unique column.
+-The keypad controller can sense a key-press and key-release and report the
+-event using a interrupt to the cpu.
+-
+-This binding is based on the matrix-keymap binding with the following
+-changes:
+-
+- * keypad,num-rows and keypad,num-columns are required.
+-
+-Required SoC Specific Properties:
+-- compatible: should be one of the following
+-   - "ti,twl4030-keypad": For controllers compatible with twl4030 keypad
+-      controller.
+-- interrupt: should be one of the following
+-   - <1>: For controllers compatible with twl4030 keypad controller.
+-
+-Example:
+-	twl_keypad: keypad {
+-		compatible = "ti,twl4030-keypad";
+-		interrupts = <1>;
+-		keypad,num-rows = <8>;
+-		keypad,num-columns = <8>;
+-	};
 -- 
 2.39.5
 
