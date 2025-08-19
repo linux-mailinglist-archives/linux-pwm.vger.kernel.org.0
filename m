@@ -1,98 +1,123 @@
-Return-Path: <linux-pwm+bounces-7098-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7099-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id EFA47B2C290
-	for <lists+linux-pwm@lfdr.de>; Tue, 19 Aug 2025 14:03:29 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8E85BB2C584
+	for <lists+linux-pwm@lfdr.de>; Tue, 19 Aug 2025 15:27:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 23B53A01A33
-	for <lists+linux-pwm@lfdr.de>; Tue, 19 Aug 2025 12:00:29 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id B9823189DAF4
+	for <lists+linux-pwm@lfdr.de>; Tue, 19 Aug 2025 13:22:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 713E032C304;
-	Tue, 19 Aug 2025 11:59:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0BA6D341AA0;
+	Tue, 19 Aug 2025 13:19:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e2XdRGUK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G6jwNhRW"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47CD3212B2B;
-	Tue, 19 Aug 2025 11:59:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85453322741;
+	Tue, 19 Aug 2025 13:19:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755604778; cv=none; b=g0XpWA7JMQMdANle+O1ZyqYG1RCi5Usof3I6bXmuJX1KAQOBRdXZt1XEfoFCQEvNY7lniaJmx4mQt+huxJYI/UTXlEmCYjOc5RhdraW+AB+Bwx9ZDWnCHI5ZYfWWPK38a9T4comkwZmbE/ySJvfQD+f+zCFYXGzPKBEPuV9H4c0=
+	t=1755609571; cv=none; b=WOAKETY8XWfx6yGiEaw/4dQgbEW4KTC3YgXlTyFfxD0jKQPfgmHB+ztC9bC70gX2jq8NrTft3WDk/5QKCNzYtftSB2RNBJCJKEEGOnv/YnH1jxtWhNXyWWMC7m4s4Egjvv2xdvLWmNyskTWQYfXaqffTNjbLx9JYrcgGDCoBEFI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755604778; c=relaxed/simple;
-	bh=0v9lG0844Hqm5JldEE8GkjmMjZaUc7QoWpGSORsbXCI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=ciJO3PovEsEde4zn/h6uhRT63SLBkqtYiJ0FSkkb54dT/+8HNbZ7PeuKB+tHq4yb8BXyxhphX19EOu5UltMKCsQo1OF+991CFR/uO8YHWz/XyQ2aVEtlAFKITji6MH3eyCuNhpnB+hdonNxWXGq6vSLGgNuWntkcv8hikt/gn5U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e2XdRGUK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C52C8C4CEF1;
-	Tue, 19 Aug 2025 11:59:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1755604776;
-	bh=0v9lG0844Hqm5JldEE8GkjmMjZaUc7QoWpGSORsbXCI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=e2XdRGUK/NKN3Qt47/MnnaYiLHtu089s13F9av5LZMJbPZ0JGeuquoodZEIEfL2Se
-	 KPgrfcvozNdjDkOwgbYdRoskmkMBY9g0PRkki1SLdf2Q6V/w1PfOhrANdzp1aIP3kA
-	 RmyRxvkN1fFs6UMxcuPEIfnTE1cLZnuyjTHpWHPzPvQ5Xd7a52765auzi6lFM31SYn
-	 HP6eN86QA1eN5FpixXJS5s8KLFqx/k0NG0aYH1vJVmk2vDBvN1kZW8uo0y5aaxYhjB
-	 d6NTb7DUg4KIdCO0AIzFgmVZ1MKgdwMsoQMQob61iSukMjqZ8XFMynrNS7Wl8HSiJ1
-	 3kaw3TAbMvksA==
-From: Jisheng Zhang <jszhang@kernel.org>
-To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: linux-pwm@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] pwm: berlin: Fix wrong register in suspend/resume
-Date: Tue, 19 Aug 2025 19:42:24 +0800
-Message-ID: <20250819114224.31825-1-jszhang@kernel.org>
-X-Mailer: git-send-email 2.50.0
+	s=arc-20240116; t=1755609571; c=relaxed/simple;
+	bh=r23hmMjYeFnmQbtG3d+3ohTMfPdmfJrL7/bunmfRuaM=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=fVgB2dyYvXLu3BhgjRmiK4LZ9r7IlBfl5xNyo0UbtnhfC5qcZjIEFajd6FQolilyeGamphBYSFmXx4OsAaZBt+r0hAtmgewVlJZFVEGAmgCnyDRWCpVMMaHO3VdUNPWz7rsSYImz0xLWcg7dwFL+simGzp9Etj4bowmRdRtML74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=G6jwNhRW; arc=none smtp.client-ip=209.85.216.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-323267bc2eeso3759195a91.1;
+        Tue, 19 Aug 2025 06:19:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1755609570; x=1756214370; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=r23hmMjYeFnmQbtG3d+3ohTMfPdmfJrL7/bunmfRuaM=;
+        b=G6jwNhRWzP7TnO5eRjxZTd4eUsxnVKXSCOmr4Y559//KHQ069d85tUZhkneio7Bm16
+         fBp37/P5E9835T7uB88VMbK5MJ+z1lZe1wOVzOY3YzUzg5EbA1JanESAoFzMN30LYKVz
+         oRAXZmWARqD7hzQGjrvOY7EQh4FMxz6cM3m8opY9UwxUqgfV8mBpwNId4EUhsVf1/WEc
+         FAgZZwfO9U98n7s7FGmHcNVkoU7YpOjMDWOeQK2Rk49NT8wRga0Pahzl7kIrB/IGuU4q
+         jVVteHQSbaPIIa9ucdbd9f1qg191ufas394P6z+6JgoRx07c+co+1MwDLf1VgJDYrlGh
+         s/5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1755609570; x=1756214370;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=r23hmMjYeFnmQbtG3d+3ohTMfPdmfJrL7/bunmfRuaM=;
+        b=gHvVNjZ6w+kHN5vJc/iegUM5uYlmsEAKn8PMV1KIbr+ttHBK62spP2QumJXQpea6JE
+         cZosAnR0iJiiKwMqr8J40H/VarjXPKD303uxBkNhbsa+EbjCxEDojGlnajhydvB4XIXr
+         Gl2aZZemsfxiR9g6H8Yj/rJrD0/qVymkYw86f4eJOPFzKhXSGlLENdYnGZCgOMgHZ/e/
+         gnRpbwEkrtGafPYw51QK1siH2YGgkCE/AbyAWP6DWnwBzmVTxHU1fyNw8mNRiqOqBRoV
+         QS8rl8UCzmDTOW9McN9JEDdDxPSe4ZLOP64uR3uK63G777SE/ejRRHk9P9ylMxf4qh0d
+         mVjw==
+X-Forwarded-Encrypted: i=1; AJvYcCU8wg0oQHZcCYMRsqOc09jF9Q+tnuhlbg/KvmBL6uInY3tHmK0/w3Z/itZryRqU7b/GLS1u8rvi6twJ@vger.kernel.org, AJvYcCUQAAxjC1St7mtpnssd6bdnU6+7MqRD83XjrPxJE0rlInzL4pb6PjmAg8AXSkdMcygbxEmLCHcmvjt4ahE=@vger.kernel.org, AJvYcCWuJILw2JEGpZynnrvt6ckPTuqHbKeQmew1mglrkBhs1dJvdBxTPA7/QEAYyj8CMvN+piqAOmwfR05+RZU=@vger.kernel.org, AJvYcCWxWAC8SE7RP91Kzjw1xnYBc52EXoWpSaZo/8wPYW3DUF7rx3o8MLkN9udeDX4KyG6Pyn+BHlXLO4Mq@vger.kernel.org, AJvYcCXSkim3lErXp0t/B8PlqGVG3XImGHsCN6jo7Xmnfnwz3G5IFF3eAFLORHtZtE2hALbgekIJ4LZjU4df@vger.kernel.org
+X-Gm-Message-State: AOJu0YxVXa3jCwAFI2Nb6/q+WGGTaPRTx3PIAMi31J8lD4Dh2X2ZuNwY
+	VYVpgnaAkPSi6aHLyMRJhwMw13kJuIfq64/sQjKQqb17dxwPFJ+qiChJmM9DKyn0AMMj5SqNJAl
+	Hel7WPYeaMKStziIEvxtSIO9YgRh79A==
+X-Gm-Gg: ASbGncs33BXRR6dF3WJtdVtLGok4Zsj2HaGAHP+zmzQ7ve4osmOsjL93TdkvGAKdcaL
+	VTT904g7JRbeepHeo4h5zKF/DSW8IC3so955j3lRwMBJtapHYFNlq1jnCAahgfblSITREKMYqZf
+	Q6/xoLuRXNk7AhViUSaBreYatwBSvRL9zYJQKa6H+dvVe5laNhh4aLGZ7sxuLpQp/arMBCDxWvc
+	iPc3jw=
+X-Google-Smtp-Source: AGHT+IEhhIygA1bnMp5OmuLfxqFMwh/55vlg61V7P62U8jCxjgB67lK8mBtooTUSQ4tyZ+w3P2ukeu2oqxwqtea8dJY=
+X-Received: by 2002:a17:90b:5103:b0:313:f6fa:5bca with SMTP id
+ 98e67ed59e1d1-32476afbfbfmr3312885a91.22.1755609569563; Tue, 19 Aug 2025
+ 06:19:29 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20250811224739.53869-1-jihed.chaibi.dev@gmail.com> <564lqfhskoiivxziptyhrkajpblrrnk7nmfe73fzsd6ov2vwlh@n6ydqbrxh2my>
+In-Reply-To: <564lqfhskoiivxziptyhrkajpblrrnk7nmfe73fzsd6ov2vwlh@n6ydqbrxh2my>
+From: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
+Date: Tue, 19 Aug 2025 15:19:17 +0200
+X-Gm-Features: Ac12FXyaAV_fr68gP_yU1FNDg6itu2IlLFaD6Hyb0iuATvPfS4x6a8BXCW6M9uY
+Message-ID: <CANBuOYoJv5F=4H71fPoWx3MmzSQuKt_p5SPMJx1P=PGwDrEmPA@mail.gmail.com>
+Subject: Re: [PATCH 0/8] dt-bindings: Convert TWL4030/6040 family binding to
+ DT schema
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	peter.ujfalusi@gmail.com
+Cc: linux-kernel@vger.kernel.org, dmitry.torokhov@gmail.com, robh@kernel.org, 
+	krzk+dt@kernel.org, lgirdwood@gmail.com, tiwai@suse.com, conor+dt@kernel.org, 
+	lee@kernel.org, broonie@kernel.org, gregkh@linuxfoundation.org, 
+	linux-input@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, linux-sound@vger.kernel.org, 
+	linux-usb@vger.kernel.org, shuah@kernel.org
+Content-Type: text/plain; charset="UTF-8"
 
-The 'enable' register should be BERLIN_PWM_EN rather than
-BERLIN_PWM_ENABLE, otherwise, the driver accesses wrong address, there
-will be cpu exception then kernel panic during suspend/resume.
+> > The following eight patches are included in this series, covering the
+> > audio, keypad, power, PWM, and USB sub-modules.
+>
+> Thanks for doing that.
+>
+> I think the patches are all orthogonal and can/should be applied by the
+> respective subsystem maintainers once they are considered ready?
+>
 
-Fixes: bbf0722c1c66 ("pwm: berlin: Add suspend/resume support")
-Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
----
-since v1:
- - update commit log to mention cpu exception then kernel panic w/o
-   the patch
+Hello Uwe, Peter, and everyone,
 
- drivers/pwm/pwm-berlin.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Thank you for the feedback, I am now working on a new v4 patch series
+for each subsystem with few improvements and will make sure of their
+orthogonality.
 
-diff --git a/drivers/pwm/pwm-berlin.c b/drivers/pwm/pwm-berlin.c
-index 831aed228caf..858d36991374 100644
---- a/drivers/pwm/pwm-berlin.c
-+++ b/drivers/pwm/pwm-berlin.c
-@@ -234,7 +234,7 @@ static int berlin_pwm_suspend(struct device *dev)
- 	for (i = 0; i < chip->npwm; i++) {
- 		struct berlin_pwm_channel *channel = &bpc->channel[i];
- 
--		channel->enable = berlin_pwm_readl(bpc, i, BERLIN_PWM_ENABLE);
-+		channel->enable = berlin_pwm_readl(bpc, i, BERLIN_PWM_EN);
- 		channel->ctrl = berlin_pwm_readl(bpc, i, BERLIN_PWM_CONTROL);
- 		channel->duty = berlin_pwm_readl(bpc, i, BERLIN_PWM_DUTY);
- 		channel->tcnt = berlin_pwm_readl(bpc, i, BERLIN_PWM_TCNT);
-@@ -262,7 +262,7 @@ static int berlin_pwm_resume(struct device *dev)
- 		berlin_pwm_writel(bpc, i, channel->ctrl, BERLIN_PWM_CONTROL);
- 		berlin_pwm_writel(bpc, i, channel->duty, BERLIN_PWM_DUTY);
- 		berlin_pwm_writel(bpc, i, channel->tcnt, BERLIN_PWM_TCNT);
--		berlin_pwm_writel(bpc, i, channel->enable, BERLIN_PWM_ENABLE);
-+		berlin_pwm_writel(bpc, i, channel->enable, BERLIN_PWM_EN);
- 	}
- 
- 	return 0;
--- 
-2.50.0
+While working on this, I had a question about the 'maintainers:' property for
+the new YAML bindings. I see from the MAINTAINERS file that Peter Ujfalusi
+is the maintainer for the TWL4030 codec driver. I initially marked him as
+maintainer for every new twl4030 related binding.
 
+For those new YAML binding files I am creating, should I list only the driver
+maintainer (Peter, once he confirms this), or should I add myself as
+a co-maintainer since I am authoring these new binding files?
+
+Pinging Peter for his thoughts on this as well.
+
+Thanks again for your guidance.
+Jihed
 
