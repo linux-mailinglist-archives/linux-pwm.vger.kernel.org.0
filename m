@@ -1,156 +1,156 @@
-Return-Path: <linux-pwm+bounces-7120-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7121-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55358B2DD82
-	for <lists+linux-pwm@lfdr.de>; Wed, 20 Aug 2025 15:16:51 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 97A9CB2E2D2
+	for <lists+linux-pwm@lfdr.de>; Wed, 20 Aug 2025 19:03:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 495B13A5BF1
-	for <lists+linux-pwm@lfdr.de>; Wed, 20 Aug 2025 13:15:48 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 0C0D01894876
+	for <lists+linux-pwm@lfdr.de>; Wed, 20 Aug 2025 17:03:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B76E9304BCE;
-	Wed, 20 Aug 2025 13:15:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4766D334398;
+	Wed, 20 Aug 2025 17:03:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fSJ4EbNb"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dr1d03/z"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A73C2E2294;
-	Wed, 20 Aug 2025 13:15:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D41FF221F2F;
+	Wed, 20 Aug 2025 17:02:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755695745; cv=none; b=avhMr3UpyxdUibjAg1600Z/oheMNWuK0SExGqOWTsoz5OFk2nPAISLl+F14LKib9k2e5RWWQfmNrnI0o3u0ULh9/hJG1ySL3fqAJ/nwwukQFlIQ86BBXOdn8BjeUywthCQ2SSLJ0Q94RN6uHZHilJf91U5goVB7ettaT/WYhMzI=
+	t=1755709380; cv=none; b=I76Kx4ye36sfgAxHK6r4H42NVC0LQIRlQbOnTawxGVEsh713QYk8nj2vkEGoz16tOtOvVIRjyjViunSklbRJryLfRjTXExhTAgvpGLUyuGSh7yUlmdLtKxhdgjtE0PE1mifwp/cO/wXiTuroQzQ04ohSdL5B1kQqFAz9SR5vGN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755695745; c=relaxed/simple;
-	bh=MR95KeLBXnAjoONlEEmciqveTZvYSEB/+NGwOV3m1HA=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tqjnxWk/nYLjkyGDaNoI/YY68gODU8D7utqq52pKN1dHdjmidzEc2FFda8HH0ZH/nOYz3NcDKGBrzFOatJvkOho+TCHRTV/TAouZuFUhdg2bGumkoRhpZ6qba7RHgzgSrm6axN0klkqZ+e8bAOigL3O38+x+U3lAVT3XfG0eM24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fSJ4EbNb; arc=none smtp.client-ip=209.85.216.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-323266cdf64so5085910a91.0;
-        Wed, 20 Aug 2025 06:15:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755695743; x=1756300543; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZhA+TycHOu2hS6f7GrjCAcmbAsgcqmJx9pZ/zTGM90U=;
-        b=fSJ4EbNbRxF9JfiPxCGUiw5Yug76WE4hb5GY7vCicY9JC2rJsDRBwk4Fupqg2AfjuO
-         2hSNvkFUymYmd1Gu31DvUGyHvdHYzIIvslIuhQEfRO/Lfm4W0Xw2L+h80xiV9rbYY/rl
-         EsNZnxcBwJPydHHJfX4KGoM5a57X/vBozkst5kLnmDWcoxf3f/QWEd6slVaB7THk0e3X
-         LUuT0xlqB2ilTmAGHIC6SHMiN4DggfpfVwe6wTv5xCjruJi9te4+6Wfv07XIFxD/n1Gm
-         ic2QOD7GPj1MOTZxTDKy3BSYTNKFdwtE7sKrorMmiugCkcP4N5pBlfASRygngE1NUeF/
-         LGQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755695743; x=1756300543;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=ZhA+TycHOu2hS6f7GrjCAcmbAsgcqmJx9pZ/zTGM90U=;
-        b=cBgbfmvNKIPUTLFi68aMzyVS1PspDWf434XewrNunxL/mavbssKC77imUNzW8zx5+l
-         kJlHH9WorqyDEVU58Ktb9m3frnTVIY5PdiT59B7Lcpv3XfhST90X6cA+3UaURjR1HwiJ
-         sdaihbf7lB/YpZ2CHMFxPnWO2UcQlsLEhyF1nG8gYW43dVszPF0onTZDnR+U4KRfli3k
-         8b6xqtqghaP37Moptg3mlOYWY/u/PFo26xqrjRS8Qv54Z7vww9ceCP43JrvGoxhIR/oF
-         sakglJiLHYo1EVTJP3AF5FTwZlWe0ndYGuHob2l22fioEoiQdWLOr3GlS4KXFsXvY7rx
-         Q7Vw==
-X-Forwarded-Encrypted: i=1; AJvYcCUEUi6GJtPGoBY6yZbuucsIPGO18q1bi3cR0f6CITPOzbGn8T0GMjLS1fnhDQYi86CxkvnmSI3dCsSn@vger.kernel.org, AJvYcCVvcqtIajYfSXu/uYQL5tvOJQ/qDL98hYsepRGwn6hS9ykwm1nGx2W0hacSFm188FftZedwedNW5H4OL6bR@vger.kernel.org, AJvYcCWD+7Metaagg4l/CBABPShjTr/pUuQ7yDpG687xZ9P2vorz8QuDs7ne8D9chrVCpXwx0IbVj+YonrV9pA==@vger.kernel.org, AJvYcCWG3EuAiWR0qa3R0kmhYDu1GU6rZliisUl5I59/JhJH0iRFOKE+bUolsAg4ZQnjP7SoRVz7FJCp3gyP@vger.kernel.org, AJvYcCWO02inTkf8tqn7MPPTggvB6KE8BWGeZNFewXVK9+wbNlVELXpcvky9m58oDDPrdPwCuu3LluVdZH+zS/c=@vger.kernel.org, AJvYcCWn10s8h0QiQIV6qfiUipqPXYW3jdVqcAO09Ja8qT9QRRjls1kLY5jDLOUtB9CEC9sjadv2Y3/WVVorolw=@vger.kernel.org, AJvYcCXGB+46/ZJykt/5GgVig39qT0qOybai4T8tRMrwoP/nWEETDIwtFmc7FvZvdP70MjKYdlKpyWxYyk4p@vger.kernel.org, AJvYcCXqHfMJO/inzDejhbRjwnloGIPxyrp1kBd/F1ejCjivtaviaPf8qXw/c4FfnhEU/jk9FwhcOycchmhlfw==@vger.kernel.org
-X-Gm-Message-State: AOJu0YxaQTOpca+hiYbaZqxP0U1jgTTXJriFqp0gC2st0TlIiPO5u7IM
-	/oxMB/z4+frzdsFn4dB6sshNLZyuKM2O2zH1uPvDyekL3dtKSMqQqMq32/qcUGkQTmdsRSFRJwU
-	+JkspIRUqYsyRcWzFrIB5eZIY1T0+TWTahrI=
-X-Gm-Gg: ASbGncsaqmNMnKv28wH5JSMYjPqZAGJqSl4ad0E873XkJe1xz+kGBwpLYPUPoxTtx0d
-	g6z2pumTmaEr2kXgsO3tFSOB7wq0VR83uQ2Q7Prr4mdC8TWYY8Y1fl/PN7oPlxw1zIGXpmljopd
-	jeKqAMl2UCLGFaFFOocblBZP33z9uqqEi3mh2QlDGhMpglo97uxe5qZY22FD9xXJtL9Mh+uoMYZ
-	anRR7V3C+FxSE+S/FpmcECIdtmnuzkb7TtCkFhH
-X-Google-Smtp-Source: AGHT+IEQh0IA7hBcK+vbOCeiQ1tRGJH5G+7OtgvpKYYK6HmLASozA+JsGJ6hRWUdJWiR1ke/zCt0aQqhwBmm2t+61Ek=
-X-Received: by 2002:a17:90b:384d:b0:320:fda8:fabe with SMTP id
- 98e67ed59e1d1-324e143edbemr3404966a91.22.1755695743221; Wed, 20 Aug 2025
- 06:15:43 -0700 (PDT)
+	s=arc-20240116; t=1755709380; c=relaxed/simple;
+	bh=Zv4ujPO3KQCQ/S/zZ+87yMEeTHGtDtwjmsw35eFBLPg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=GJeKu3gn/6repjJ2Tilsx8ObkFzt3ZlNB8lv0AdCbKsv3nJDGWP6bkp8t5bVVAacMd/DPFGlnZEQgz9CoeLBGJ3w+qUhW+e4gwleM8BlFaSX4VU+tc4tQS1wiR7PRw4YAqwHkYNsp3abWm86rAQt+Q3szir5y4AiBa5c8JjHUW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dr1d03/z; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A73AC113CF;
+	Wed, 20 Aug 2025 17:02:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1755709379;
+	bh=Zv4ujPO3KQCQ/S/zZ+87yMEeTHGtDtwjmsw35eFBLPg=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=Dr1d03/ztQZzehnuA3pVpw7eG2apfzSIzXWZn4V8PSF/oxOnzaMyj6VZxDgQ3XY0C
+	 nca+A2IJDoLbxKo30R/YmbItPPf92i6LVVRW7LTdmYn+yLP3bLCTrV977h9BaHEtKx
+	 NXa2PCl2PJ+9sKMlIBp1C0l2xmBSHRNp1Ot+Slf6644+zsAzHmD5BYUvfwKZ1SqBPg
+	 b3bNilTK6GPtQRkA2c0x0ltTwqwessPnwFUwQuinpUV1sWYrBj8/SGJJQ8Wlda48Mw
+	 vcZIdxxAkqbQkwlZ9DlQZ/Zs8lvh3SMTfcqlJlRdXT5KDCZbCRFgNoX/rafdY4my5h
+	 Ujim+Xbb9lOhA==
+From: Vinod Koul <vkoul@kernel.org>
+To: linux-kernel@vger.kernel.org, 
+ Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Mark Brown <broonie@kernel.org>, 
+ Adrian Hunter <adrian.hunter@intel.com>, 
+ Alexandre Belloni <alexandre.belloni@bootlin.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+ Alim Akhtar <alim.akhtar@samsung.com>, 
+ Andrea della Porta <andrea.porta@suse.com>, 
+ =?utf-8?q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, 
+ Andrzej Hajda <andrzej.hajda@intel.com>, Andy Shevchenko <andy@kernel.org>, 
+ Andy Yan <andy.yan@rock-chips.com>, Avi Fishman <avifishman70@gmail.com>, 
+ Bartosz Golaszewski <brgl@bgdev.pl>, 
+ Benjamin Fair <benjaminfair@google.com>, 
+ Bjorn Andersson <andersson@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
+ Daniel Lezcano <daniel.lezcano@linaro.org>, 
+ David Airlie <airlied@gmail.com>, David Lechner <dlechner@baylibre.com>, 
+ Dmitry Torokhov <dmitry.torokhov@gmail.com>, 
+ Drew Fustini <fustini@kernel.org>, dri-devel@lists.freedesktop.org, 
+ Fabio Estevam <festevam@gmail.com>, 
+ Fabrice Gasnier <fabrice.gasnier@foss.st.com>, Fu Wei <wefu@redhat.com>, 
+ Guo Ren <guoren@kernel.org>, Hans Verkuil <hverkuil@kernel.org>, 
+ =?utf-8?q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, imx@lists.linux.dev, 
+ Iwona Winiarska <iwona.winiarska@intel.com>, 
+ Jaroslav Kysela <perex@perex.cz>, Jassi Brar <jassisinghbrar@gmail.com>, 
+ Jernej Skrabec <jernej.skrabec@gmail.com>, 
+ Jerome Brunet <jbrunet@baylibre.com>, Jonas Karlman <jonas@kwiboo.se>, 
+ Jonathan Cameron <jic23@kernel.org>, Kevin Hilman <khilman@baylibre.com>, 
+ Kishon Vijay Abraham I <kishon@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>, 
+ Krzysztof Kozlowski <krzk@kernel.org>, 
+ Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, 
+ Lee Jones <lee@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, linux-actions@lists.infradead.org, 
+ linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, 
+ linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-iio@vger.kernel.org, 
+ linux-input@vger.kernel.org, linux-media@vger.kernel.org, 
+ linux-mmc@vger.kernel.org, linux-phy@lists.infradead.org, 
+ linux-pm@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, 
+ linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, 
+ linux-rockchip@lists.infradead.org, linux-rtc@vger.kernel.org, 
+ linux-samsung-soc@vger.kernel.org, linux-sound@vger.kernel.org, 
+ linux-spi@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+ linux-sunxi@lists.linux.dev, Liu Ying <victor.liu@nxp.com>, 
+ Lukasz Luba <lukasz.luba@arm.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Manivannan Sadhasivam <mani@kernel.org>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>, 
+ Mauro Carvalho Chehab <mchehab@kernel.org>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Maxime Ripard <mripard@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Miquel Raynal <miquel.raynal@bootlin.com>, Nancy Yuen <yuenn@google.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Nicolin Chen <nicoleotsuka@gmail.com>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, openbmc@lists.ozlabs.org, 
+ Patrick Venture <venture@google.com>, 
+ Paul Walmsley <paul.walmsley@sifive.com>, 
+ Pengutronix Kernel Team <kernel@pengutronix.de>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, 
+ Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, Robert Foss <rfoss@kernel.org>, 
+ Samuel Holland <samuel.holland@sifive.com>, 
+ Samuel Holland <samuel@sholland.org>, Sandy Huang <hjc@rock-chips.com>, 
+ Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawnguo@kernel.org>, 
+ Shengjiu Wang <shengjiu.wang@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Stephen Boyd <sboyd@kernel.org>, Takashi Iwai <tiwai@suse.com>, 
+ Tali Perry <tali.perry1@gmail.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ Tomer Maimon <tmaimon77@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Vasily Khoruzhick <anarsoul@gmail.com>, Vladimir Zapolskiy <vz@mleia.com>, 
+ Xiubo Li <Xiubo.Lee@gmail.com>, Yangtao Li <tiny.windzz@gmail.com>, 
+ Zhang Rui <rui.zhang@intel.com>
+In-Reply-To: <20250813161517.4746-1-wsa+renesas@sang-engineering.com>
+References: <20250813161517.4746-1-wsa+renesas@sang-engineering.com>
+Subject: Re: (subset) [PATCH 00/21] treewide: remove unneeded 'fast_io'
+ parameter in regmap_config
+Message-Id: <175570934550.66459.15951444863822303407.b4-ty@kernel.org>
+Date: Wed, 20 Aug 2025 22:32:25 +0530
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20250816021523.167049-1-jihed.chaibi.dev@gmail.com>
- <20250816021523.167049-2-jihed.chaibi.dev@gmail.com> <20250819-humongous-muscular-curassow-5accd5@kuoka>
- <20250819223157.0b271c74@akair> <e0bec141-6aef-475f-b997-60fdf8234b82@kernel.org>
-In-Reply-To: <e0bec141-6aef-475f-b997-60fdf8234b82@kernel.org>
-From: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
-Date: Wed, 20 Aug 2025 15:15:32 +0200
-X-Gm-Features: Ac12FXwJjTEuvAdX2Wnbu9Wcm5-vo-L0VsLLi4HcMA86Hx-OXfvGEyfpUyCJh3Y
-Message-ID: <CANBuOYrs2QNRXd6Qc28tBDSySrbh+vJ83+-+2XxB3jY2fH9qtg@mail.gmail.com>
-Subject: Re: [PATCH v3 1/6] dt-bindings: mfd: twl: Add missing sub-nodes for
- TWL4030 & TWL603x
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Andreas Kemnade <andreas@kemnade.info>, linux-kernel@vger.kernel.org, 
-	peter.ujfalusi@gmail.com, dmitry.torokhov@gmail.com, robh@kernel.org, 
-	krzk+dt@kernel.org, lgirdwood@gmail.com, tiwai@suse.com, conor+dt@kernel.org, 
-	lee@kernel.org, ukleinek@kernel.org, broonie@kernel.org, 
-	gregkh@linuxfoundation.org, linus.walleij@linaro.org, brgl@bgdev.pl, 
-	aaro.koskinen@iki.fi, khilman@baylibre.com, rogerq@kernel.org, 
-	tony@atomide.com, linux-gpio@vger.kernel.org, linux-input@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	linux-sound@vger.kernel.org, linux-usb@vger.kernel.org, 
-	linux-omap@vger.kernel.org, shuah@kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Mailer: b4 0.13.0
 
-On Wed, Aug 20, 2025 at 7:57=E2=80=AFAM Krzysztof Kozlowski <krzk@kernel.or=
-g> wrote:
->
-> On 19/08/2025 22:31, Andreas Kemnade wrote:
-> >>
-> >>> +          type: object
-> >>> +          $ref: /schemas/usb/ti,twlxxxx-usb.yaml#
-> >>
-> >> Are you sure your patchset is bsiectable? Apply this patch and test. Y=
-ou
-> >> will see errors and you must fix these. Even after fixing you have
-> >> strict dependencies so your cover letter must explain these (or mergin=
-g
-> >> constraints)...
-> >>
-> > what are the rules here regarding bisectability? non-existing files
->
-> dt_binding_check.
->
->
-> Best regards,
-> Krzysztof
 
-Hello Krzysztof and Andreas,
+On Wed, 13 Aug 2025 18:14:46 +0200, Wolfram Sang wrote:
+> While working on a driver using regmap with MMIO, I wondered if I need
+> to set 'fast_io' in the config. Turned out I don't need to, so I added
+> documentation for it with commit ffc72771ff6e ("regmap: Annotate that
+> MMIO implies fast IO").
+> 
+> This series fixes the existing users in the tree which needlessly set
+> the flag. They have been found using this coccinelle script:
+> 
+> [...]
 
-Thanks again for your feedback,
+Applied, thanks!
 
-You were right that my series had strict dependencies. Testing again I
-found that a
-local 'dt_binding_check' -only including this patch- passed, but the
-dependencies
-(non-existent yaml files in $ref) caused errors during a full 'dtbs_check'.
+[12/21] phy: remove unneeded 'fast_io' parameter in regmap_config
+        commit: e1e1e77f7df7cbee959ba024e5475907fe561c98
 
-I managed to fix those dtbs_check warnings/errors thanks to
-'additionalProperties: true'
-to break the hard dependencies on the other new YAML files, and by
-adding optional
-definitions for the 'clocks' and 'clock-names' properties, which I
-found are used by several
-OMAP dts files.
-
-Please let me know what you think of this, and whether I should send the ne=
-w,
-corrected v4 of this MFD (single) patch.
-
-I have already sent the independent v4 patches for the other
-subsystems (ASoC, USB, etc.).
-in order to reach a much better orthogonality and independence between
-the patches.
-
-Thanks again for your guidance.
 Best regards,
+-- 
+~Vinod
 
-Jihed
+
 
