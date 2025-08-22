@@ -1,137 +1,159 @@
-Return-Path: <linux-pwm+bounces-7142-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7143-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id E799AB312EB
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 Aug 2025 11:25:48 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E5F56B31851
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 Aug 2025 14:50:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id EF2D23B5C1D
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 Aug 2025 09:23:07 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 72BEF624C2B
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 Aug 2025 12:50:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0937229E10F;
-	Fri, 22 Aug 2025 09:23:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1D402FD1C8;
+	Fri, 22 Aug 2025 12:49:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="yramlMjx"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="SDESnmyJ"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lj1-f178.google.com (mail-lj1-f178.google.com [209.85.208.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDF972E3AE5
-	for <linux-pwm@vger.kernel.org>; Fri, 22 Aug 2025 09:23:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE65F2FD1C0;
+	Fri, 22 Aug 2025 12:49:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755854584; cv=none; b=UZ1pKR+PgvZlXWtbpJkRcRtQRtee/KYUyfQAvZdhx1qplzs8wAniO9JiXeYkuo3kNCPcirUkEcfAWU2HRsrGZjs0PLGwgsIuU0rMDEq3vUjA7Q9P+92qVO0U1JYPaj+pXevdRidtxF2lvA4QElHi1FliZGFHOxOqYjw3mdMgOko=
+	t=1755866971; cv=none; b=pzgYlaxmPv2qaI5EsoZ+sLYYeg5RhdFTTGp2BK/LQf1dvAGI1XeiHGtGl1sSOV//uF+3npzep10YHfd2TvGVhhqYC3//v6q7RLxOzUtEOpK2C9dbdkD8o6B6IkxepJ4OnDqb3RXdchI9LlSVQgpWqfZx+bSVODZzORIhpSQvemQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755854584; c=relaxed/simple;
-	bh=A81kBoegl40q6quwOX0WX4yiOUHqnmUUvR3iJOA0a2w=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=esCvzaObCqEH1/pQeqk/cBbHhyscHG8319BUaGE+O5Dd3ncs7HwzCJEROneyD/dMz9V9NEr94PoBZjICHYBiHfWi9SQAjpxTrHsV09WxM6u9IZf35ptNER3oM1Z893AR2D3PkJS8Ff/MMLA5LsFBE/kOseRGAuesf302EcDkduA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=yramlMjx; arc=none smtp.client-ip=209.85.208.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
-Received: by mail-lj1-f178.google.com with SMTP id 38308e7fff4ca-333f8f0dd71so15070421fa.1
-        for <linux-pwm@vger.kernel.org>; Fri, 22 Aug 2025 02:23:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1755854581; x=1756459381; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=8rvb5BTFOBJCsAqheRi5OrrkHsnM2r6jQ+WuONy16iw=;
-        b=yramlMjxo2HVLHr77caITJqmao78DQi+W03uRRGABVDoijpNsUeuSCdK1TmpiJ0hXi
-         GdZ4vJX75/t4Q+Q9Da1aUSKfT/UUVQNzpkZVqBZd7/uWx4WotQs1xPHzUoD63hJlWajX
-         VAj/Pdcsg4mCr3WWO+WVte+c9XTUg0bzLml3DfEek7dleo4tySjsDb9Wpf0pDxppHiIX
-         cqiFdOvgyAqqOqrmV9U0qKwyk7iEiojvSM0EvAc8MvwykNTPCwxI3uYvlKRc6SgiCz4s
-         AnguQxajQDLQ1IS+mXISkUlGcJXvmR9W+RpSLjxoi6fb6rmdb9bnmctZozyEhIt65U28
-         HiGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755854581; x=1756459381;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=8rvb5BTFOBJCsAqheRi5OrrkHsnM2r6jQ+WuONy16iw=;
-        b=KfKzdh4cWuO/nle1icwyAlx7X21qCbqb0gz4sHc1px2MGVAhhB9C19JN69D2zUJySX
-         l4C6y+iYBxgQJcyBK7/7iWGrLfBg2qsOC1qfguKpBISyYMl8LpI9lPAV+rwCOtJfU0YE
-         BbWjjbRc3vmIKKPopziO2gCporNrg0osVVBwVj1O0NCaRzAud+R3aVKXeiJjxoSRipBz
-         T6UVfdYNV/yeJvCROmj8BfU3TDB+SqWe9KEIVPerMuDDl64iRr/t9ppbWsCrbMVo636Q
-         HOw9CGyVcXagT1u/xrlf3qgqXlDTY1XPwTble90ckoN/O0aOjuIGtd/ubgwoNuEIydii
-         4z5A==
-X-Forwarded-Encrypted: i=1; AJvYcCXl9ycBE9OYXB//mIDjaJjkeRulfF2Cek8NLCObtIbRCP/Aeykt2g8Hkg9TZu9DmBzlAJjNLhIQKwo=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxxkaqldXGizMBj/dYS/1EyTKPdfYPPY5pz83X/pN15PlMiOtKa
-	PjxnNXGZIvT8Q4ClCZjWvVzjD59nXPcOwofjc5sKHbMip9MnIQkFMkQtDBZE52vWuGxtQZzM0Fx
-	Svsh9n4dg8SkC7UJqMn3WsNerFrpDN/u/Q0f6XacEyg==
-X-Gm-Gg: ASbGncumsi3hBEffaS5xjXHoHlFrcwlQNmW76sYsCf3SfLYprjqWhtztojr0yRpzaBK
-	1GA5ykt7BE/aDfuCSmNJK7Q4h1iITSsXDQGJHPtnParYBcmMzObnNkh8RTeavYuj93vVKu4nEC/
-	7NtseNsC2cKQmB8nMM0KdVlC8cJl0c/IavKAVdCEKXDQJm+/SEdkCYj7KlfZrDu4Z5Q4TDA05uL
-	uliwogZbChcF/zloA==
-X-Google-Smtp-Source: AGHT+IGmS+5jZRiY3M87jYqtd1N1nFCNBKn5R2TEdrmd3+xxfd4PG/kXNNSVVgmhRVuloDKPRDouFdqjsq+r/vvoIgA=
-X-Received: by 2002:a2e:8a86:0:b0:32b:5272:38eb with SMTP id
- 38308e7fff4ca-33651002d61mr7071001fa.40.1755854580887; Fri, 22 Aug 2025
- 02:23:00 -0700 (PDT)
+	s=arc-20240116; t=1755866971; c=relaxed/simple;
+	bh=hqPSW8gjRuHQDQ+i6kbMnBBBnlr60fdu7FJ683wtg9E=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
+	 References:In-Reply-To; b=EdzVhyfLOVGIusZdccc1mmyqc4UkkvTgCeh3InmdCoaO66JUzFYzkbjUd01QgTby4P9krZGgqKxsQyQjaNSqPDWR+vwKjbi30ND3cRIk8cLeYh3+IAkgTDYNjqx3q5cC2AdO7BYL6KoLm6KJ81wMRvhSo8gtAoPgTGaMYwhDPl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=SDESnmyJ; arc=none smtp.client-ip=185.246.84.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-02.galae.net (Postfix) with ESMTPS id 774161A0D48;
+	Fri, 22 Aug 2025 12:49:22 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 45D03604AD;
+	Fri, 22 Aug 2025 12:49:22 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 58D961C22DAC7;
+	Fri, 22 Aug 2025 14:49:15 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1755866961; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:in-reply-to:references;
+	bh=Ua42caSIreMTSgZq76zsnJuAIzw5ug7AfcH2QBcncRU=;
+	b=SDESnmyJ/kgcZDMS117RQSYG6rtBD/JCv3cYBZOa9cHLPlLtCFuEa5ocMI/hx9RFSDNbG7
+	L2Sewj3/uIebW3MjKm87ZtSWD0uuJ9wy8pyVSDDdmKN2ZOGdHqmEk6CVZbYXeqqGvOXaz3
+	VU2ejhHOYZUxXIj2xWhYJOt9atBG7jK/AgR0LKXDK+s1YqGhLKGbb1MojYTW3wmMzNpvGD
+	U3I9ZAbTNFdzR6nu9DKlol+72VaLaT5Q5yrJN8plgt7jpNOrZd9DtH4QtId4+zMdz630LJ
+	yL3mgzLzGsLAhOKUkLYGGxNtx89sBeu+Mho/QbCpLdG0PBEA/zUVHgA9DRP/xg==
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20250822075712.27314-2-krzysztof.kozlowski@linaro.org>
-In-Reply-To: <20250822075712.27314-2-krzysztof.kozlowski@linaro.org>
-From: Linus Walleij <linus.walleij@linaro.org>
-Date: Fri, 22 Aug 2025 11:22:49 +0200
-X-Gm-Features: Ac12FXwu_A2fq6cbJB5U4ofkj6w0TKETQ4RpzZE3LHHotvIJu8LJQDJ8_-1dTpA
-Message-ID: <CACRpkdbLKXx7GEOPemFGSTFy8oDG99TUFwC7sH7xkaoqe-cY8A@mail.gmail.com>
-Subject: Re: [PATCH v2] dt-bindings: mfd: Move embedded controllers to own directory
-To: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Benson Leung <bleung@chromium.org>, 
-	Guenter Roeck <groeck@chromium.org>, Tim Harvey <tharvey@gateworks.com>, 
-	Michael Walle <mwalle@kernel.org>, Bartosz Golaszewski <brgl@bgdev.pl>, Jean Delvare <jdelvare@suse.com>, 
-	Thomas Gleixner <tglx@linutronix.de>, Lee Jones <lee@kernel.org>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Bjorn Andersson <andersson@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, 
-	Matthias Brugger <matthias.bgg@gmail.com>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
-	Cheng-Yi Chiang <cychiang@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>, 
-	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
-	Wim Van Sebroeck <wim@linux-watchdog.org>, Thierry Reding <thierry.reding@gmail.com>, 
-	Tinghan Shen <tinghan.shen@mediatek.com>, devicetree@vger.kernel.org, 
-	chrome-platform@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-pwm@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
-	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
-	linux-sound@vger.kernel.org, linux-watchdog@vger.kernel.org, 
-	Mathew McBride <matt@traverse.com.au>
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Fri, 22 Aug 2025 14:49:10 +0200
+Message-Id: <DC8YVXKCZAE4.5QJM9MP4HJZ5@bootlin.com>
+Subject: Re: [PATCH v13 04/10] pwm: max7360: Add MAX7360 PWM support
+Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
+ "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
+ <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
+ Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
+ "Dmitry Torokhov" <dmitry.torokhov@gmail.com>, "Michael Walle"
+ <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
+ Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
+ <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, <andriy.shevchenko@intel.com>,
+ =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Thomas
+ Petazzoni" <thomas.petazzoni@bootlin.com>, "Andy Shevchenko"
+ <andriy.shevchenko@linux.intel.com>
+From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+X-Mailer: aerc 0.19.0-0-gadd9e15e475d
+References: <20250811-mdb-max7360-support-v13-0-e79fcabff386@bootlin.com>
+ <20250811-mdb-max7360-support-v13-4-e79fcabff386@bootlin.com>
+ <l5crrk3ugpo2ggjtykcy5eretclgntebyq52xuouekoimbrsvh@u4koyu5z2wwi>
+In-Reply-To: <l5crrk3ugpo2ggjtykcy5eretclgntebyq52xuouekoimbrsvh@u4koyu5z2wwi>
+X-Last-TLS-Session-Version: TLSv1.3
 
-On Fri, Aug 22, 2025 at 9:57=E2=80=AFAM Krzysztof Kozlowski
-<krzysztof.kozlowski@linaro.org> wrote:
-
-> Move ChromeOS Embedded Controller, Gateworks System Controller and
-> Kontron sl28cpld Board Management Controller to new subdirectory
-> "embedded-controller" matching their purpose.  MFD is coming from Linux
-> and does not really fit the actual purpose of this hardware.
+On Mon Aug 18, 2025 at 11:05 AM CEST, Uwe Kleine-K=C3=B6nig wrote:
+> Hello,
 >
-> Rename Gateworks GSC filename to match compatible, as preferred for
-> bindings.
+> On Mon, Aug 11, 2025 at 12:46:22PM +0200, Mathieu Dubois-Briand wrote:
+>> From: Kamel Bouhara <kamel.bouhara@bootlin.com>
+>>=20
+>> Add driver for Maxim Integrated MAX7360 PWM controller, supporting up to
+>> 8 independent PWM outputs.
+>>=20
+>> Signed-off-by: Kamel Bouhara <kamel.bouhara@bootlin.com>
+>> Co-developed-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.co=
+m>
+>> Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
+>> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>> ---
+>> ...
+>> +static int max7360_pwm_round_waveform_tohw(struct pwm_chip *chip,
+>> +					   struct pwm_device *pwm,
+>> +					   const struct pwm_waveform *wf,
+>> +					   void *_wfhw)
+>> +{
+>> +	struct max7360_pwm_waveform *wfhw =3D _wfhw;
+>> +	u64 duty_steps;
+>> +
+>> +	/*
+>> +	 * Ignore user provided values for period_length_ns and duty_offset_ns=
+:
+>> +	 * we only support fixed period of MAX7360_PWM_PERIOD_NS and offset of=
+ 0.
+>> +	 * Values from 0 to 254 as duty_steps will provide duty cycles of 0/25=
+6
+>> +	 * to 254/256, while value 255 will provide a duty cycle of 100%.
+>> +	 */
+>> +	if (wf->duty_length_ns >=3D MAX7360_PWM_PERIOD_NS) {
+>> +		duty_steps =3D MAX7360_PWM_MAX;
+>> +	} else {
+>> +		duty_steps =3D (u32)wf->duty_length_ns * MAX7360_PWM_STEPS / MAX7360_=
+PWM_PERIOD_NS;
+>> +		if (duty_steps =3D=3D MAX7360_PWM_MAX)
+>> +			duty_steps =3D MAX7360_PWM_MAX - 1;
+>> +	}
+>> +
+>> +	wfhw->duty_steps =3D min(MAX7360_PWM_MAX, duty_steps);
+>> +	wfhw->enabled =3D !!wf->period_length_ns;
+>> +
+>> +	if (wf->period_length_ns < MAX7360_PWM_PERIOD_NS)
+>
+> I know this code was suggested as is by me, but I think we need:
+>
+> 	if (wf->period_length_ns && wf->period_length_ns < MAX7360_PWM_PERIOD_NS=
+)
+>
+> here to prevent to trigger a PWM_DEBUG warning. Sorry to spot this only
+> now.
+>
 
-Maybe add some definition of what we mean with "embedded controller"?
+Right, this does make sense. I will send a new version shortly.
 
-Something like:
+>> +		return 1;
+>> +	else
+>> +		return 0;
+>> +}
+>
+> Best regards
+> Uwe
 
-"An embedded controller is a discrete component that contains a
-microcontroller (i.e. a small CPU running a small firmware without
-operating system) mounted into a larger computer system running
-a fully fledged operating system that needs to utilize the embedded
-controller as part of its operation."
+Best regards,
+Mathieu
 
-> Acked-by: Michael Walle <mwalle@kernel.org> # for sl28cpld
-> Signed-off-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+--=20
+Mathieu Dubois-Briand, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-Overall this looks reasonable:
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
-
-Yours,
-Linus Walleij
 
