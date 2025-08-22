@@ -1,89 +1,89 @@
-Return-Path: <linux-pwm+bounces-7138-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7139-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5DDC0B30DAE
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 Aug 2025 06:49:01 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E83AB30DB6
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 Aug 2025 06:50:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 1097C1CC79BC
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 Aug 2025 04:49:21 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 314DA5E32A8
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 Aug 2025 04:50:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D02DF2566E2;
-	Fri, 22 Aug 2025 04:48:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA6D921CC43;
+	Fri, 22 Aug 2025 04:50:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NmK+a0dW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L/4xclFI"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pg1-f177.google.com (mail-pg1-f177.google.com [209.85.215.177])
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48284322A;
-	Fri, 22 Aug 2025 04:48:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51BF5393DE4;
+	Fri, 22 Aug 2025 04:50:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1755838137; cv=none; b=o62Oeo88LnnyVrLtRYBG1xfNcuwbm885n3wQKcGwSY3+m+4AuLFx+80jLE/pFb1XFr6ZtyvaU23hs1JWB2qtRkOy3Ic1pSNFsTpkaVJjgg63OCSnDmxZCijxMfLxudZxhbNLSbPaP+0ascR9ddf1mlCdh1W9s9s33xwMwnUwE34=
+	t=1755838252; cv=none; b=ciIzSH6tnwQ/LPoMz93ONYhCyrAhsg7UBZCIf5mIZbzekGjuPfXGkFW2NDIA92wMA9Wpcpopp3nutLiE3yJ36c9CY9toqM6ap+w2PTlpASMWWjUQfQz29PNZ+vjhMTxgajpAhd8fQXXglHruVEgqgM3ApTx9fB4d4coCh1GaSos=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1755838137; c=relaxed/simple;
-	bh=3xSnzVR9ye7nvzGlEH6U7XGu6tORQwGuV7EfKcVnbpE=;
+	s=arc-20240116; t=1755838252; c=relaxed/simple;
+	bh=zR0oPRgCcgTcsPlwpyKevv31Rp/4hbCPNx1k7iMrywY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=CY5efffh7AzsU5FhBHtvBosMnm1JYeAMXfStbKEpCNLhsWTEl2R2Vooe9LK/plNt8O2p+G23PnOpNA2iN5c3zMepScKDUT9/e97IKtF9PHCoKGpypsBIswYSa9p2X/Z3l8wz3HE3632K6xcgRsszV8FwgwFe2GH8+6bTZpNM9Xs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NmK+a0dW; arc=none smtp.client-ip=209.85.215.177
+	 MIME-Version; b=Pliq+avkARi2OE0H64o1Hmktzz2koyKxqNibkZMVKSYyLCb7Sqdgdtul4USJwVBtbllOveZDaC2EgTckhPLACjFhHYNPWTz/rNx1hVXl/FOADKT+/v/+8M5fCl2X/iyLESoBfX/tauu7zD027X74iDjYIBePxH25MjJT6T+zSEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L/4xclFI; arc=none smtp.client-ip=209.85.214.170
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pg1-f177.google.com with SMTP id 41be03b00d2f7-b47174c3b3fso996129a12.2;
-        Thu, 21 Aug 2025 21:48:56 -0700 (PDT)
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-24633f57e0bso3009805ad.0;
+        Thu, 21 Aug 2025 21:50:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1755838135; x=1756442935; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1755838250; x=1756443050; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XKlE+Ww5Y80VoOt4lttVv8oB7FM3MLtESOSrWfKC/2M=;
-        b=NmK+a0dW6fAI4crIoiHfab3mvUIoZ9v4fRmEu5mouoQ4MXUkIowAUAz1uG7W0s8r7r
-         a5X84PWcu5zzA7widzdDG20h1h3PXmjbkMetsch/pq0TU7YYkKPlTIrKkc803xlCtUCt
-         sCZeRbNvoSQPS00ug5HvNhKlIB5OQBq3O6ugnGaFLdU5sCFCGtpVFtPjM1yBysQvq8Sf
-         wexFY1fXEpWX2A5Mqx6TgjfbNwMj1XicLWsLXbaAxO9PtKjN3k/kL+5e55wCW6Tbkcq2
-         z8uTrhi3RcFZSjcjJ4sYVNLu/jma+A90h5y77f4rbZ7cFtSZtcEH9dvXf66vnNpNSiNq
-         PARw==
+        bh=Xh4ZbXwoDi6AidXi+OCVuKBbmmBo2hC/qqNlSDjrfRM=;
+        b=L/4xclFI6X6L5KAle3EJ7k7MD4yF0ZbEz4FY3Co6zFFJFCek9yisk3u/Oh7PWyztxU
+         Bxoae+eV+1W+N2DhSCCfj71I3m09LICLg963qT9ioThgQZbJDRtkzjuxs2CTTLC3u2Ar
+         cTlzxLhSfy2cBkLiPS7fAL4ikM8boHh5vX1jTUyqkQS4HrSZ65TGOatQZH7K0KK1ofVL
+         kpqEAgH0jSb5gaPDWPeJVjJML6hlk4gqTKnfDEajQfqejIXguU6ZDeyBzk2kP1jl1Mwo
+         6+gI7JjYs8Wyjmga6kLM2SDwARvNBCeie8U6SOiQ+OBm+sZo+OS3tHiqWVz2Kkc1PENU
+         S1xQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1755838135; x=1756442935;
+        d=1e100.net; s=20230601; t=1755838250; x=1756443050;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XKlE+Ww5Y80VoOt4lttVv8oB7FM3MLtESOSrWfKC/2M=;
-        b=i8WAcQsEvt5LCW3gcSLBIixPrciYpR0l10MPth1aIQiTIsOX4ehLWN2Mnag3fBHz0n
-         cBoTJv37Dhmb3/X2bIquj6TrMQ3xLktl82q2h5YBdBu4hEjtglnylVnaiX5gUA0ya+Jy
-         yBOU2mqf6vbKK/k5od2H4g7N4LIXE2s6juFRsFYauyTFCOAz/yyX84UR4makE3dDOQUR
-         cZcmo+4KyqyzOQvhZ19YEae4Em+PlvzKzk93uytDs7HhDGMLC1tKlDukM6Y9Wt6Y1+ep
-         uk7h2eFiPb3Zb94mso2I0+TlzXJ7vVqu5oCJTMjQngDC05zPLAul7a1xJ7IM5S4MEqmc
-         9Cxg==
-X-Forwarded-Encrypted: i=1; AJvYcCVVDtuk5x/mQgfOC6jRB1OZ0VCuG5BquK8cAK6xWhNhYtgnQoNHpFrTrhrk+TIAvYn4wi+wMeuET3c=@vger.kernel.org
-X-Gm-Message-State: AOJu0YztR3gl1LVq4vKRFHugXz8J5oP7W9P3PRDO1PW03Yh6abiQRm03
-	1jat02iFM7GvwDvPfSwHzYm7CZADTePoN26JWjRRQL06iPHuwRQ6Y+Q3
-X-Gm-Gg: ASbGncu4+Gysx9HUwJdRskiDNydd0YsO+mHFHdbvq0P7syuSiVgNGQKYwINXFUiB265
-	C3YiqORcTrwpfMQj/OmOrzVpsyWn3xwKd7moyOEDX9XZD7gB8tm4grH6KOyUxn7sC4B0+Jo4RZY
-	ypp9qD+b/OPhacL3wwBCuOpaLM9FvFFrMQIgLLjnGBUGgeOHrwYLHO4Y/iK0XlUnLSCzzHK3lEI
-	WnLwBC4i4GdxC/ghRSmQJTw3TBXuup7m9XudRQN0lo/Ip/XVdBGLSpl81UBhQM8DtYPUybbwcTQ
-	cfrajswfZnqwxnb47zqeeD6jFVbzRbL01i+HO5iG3GDC435JIf/eiWsfvTPgsRdHdjT0aLp7evO
-	JH8mExQ3QOc0oS/ESDUiiEIIhMFSdWdc5gSjHa34wt6owpOTNYteyDMKk7w==
-X-Google-Smtp-Source: AGHT+IEEZhC4QdMCMK498g/wBcJCUWrWdRaXv1ijZ/cmiZT5LYe3jZ3y1FvLcu/GT401zJUiGzH7LQ==
-X-Received: by 2002:a17:903:2105:b0:240:8fa2:15d2 with SMTP id d9443c01a7336-2462ef440eemr15305685ad.33.1755838135525;
-        Thu, 21 Aug 2025 21:48:55 -0700 (PDT)
+        bh=Xh4ZbXwoDi6AidXi+OCVuKBbmmBo2hC/qqNlSDjrfRM=;
+        b=VMHEMN4Z3bkkM0wHLB91d26n/2RqRp8Xay7+LlxmaulsZzQgCkaNlTe4Wb1Wk/Nqfw
+         tht13+ZP2h4U9VGNBg0ThEe7q6DFli2giBRXC5ZmbkyU4XTJErU5iw58XQAP0EhcY1VL
+         GWQd0zIzM/HV3+FUBVnRl6Lb9TPyYO4IGaVpHTM+GP9IMyMRVavFiYaPUGQwxBvITw2z
+         ONDVsdG03AbzlYZ1sH0BcMzU2cckYtwZi+bai9Zp/c+6jhezSAhrbQiekobtQa1vm6eA
+         Ydp/C/TmGfvA9YAR2Ym3PvWP3C1QV5EJibhJSnLLjJfnbhfhLTpeCTix+aQ5AeqzizBA
+         rqEQ==
+X-Forwarded-Encrypted: i=1; AJvYcCV3mGku+P+6k4+2f8LEYlMjxbGGKpqRpHvyGyTRZ+6GRqdfPfHl32UvAsqwh7czxrWCR06ft7pgKxw=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyAl7cV8Z3JjltgQLOPIQoq3DLGzvsUrXhQrPR5E3I9MYrQUlxz
+	X7Li0TzYY6nZmyxXQH0ThgGuTMbJK4gc/P52q+uw8lfM2qg715+eqOkPbs/klHI2
+X-Gm-Gg: ASbGncs/kWDyq2n1HVq6poRuDAumTNMp8iSvMm84BHH6ShaU0uORSMxCle+X2a9RMaC
+	TMGlgdEoil5fH4gFYH2J9r755JMo/9i6QwuGiYQTMyjCdVu6aHabYARLLtyQkcnL5je8ommPIoy
+	43uoM4K6JDOr7G8PCy6bzEiUgok49jJf5KlrnuMR/v7oc0pBRUBRiJk9B+QOLNJ5dej66Qpq9Tc
+	kezFRXwyEzeHSxt013yHxJZ4IYZdyah2xfDAl4TFH59zerriG64HCaCNPvyJiS9dOBFdAGa6rmX
+	NabUVy9IT2XcIpHty8HPjZz4LdkLt7NlY/XFcQ3KVtweG+loiMuPckgXz1VDio6ccSD2ICKGwUi
+	f74Lv/e76vrEVNEpF/inFUtMtqPLAS+TPDauQDMzBK4C84fs=
+X-Google-Smtp-Source: AGHT+IGO9T3Eu5a206tFjYcWqu0e7gMccekYDC3igNpgVFidxxbk3q5wXv7fXJKXKL8iUalL3t+ZhQ==
+X-Received: by 2002:a17:902:f547:b0:245:f536:b454 with SMTP id d9443c01a7336-2462ee80ed1mr29780525ad.26.1755838250457;
+        Thu, 21 Aug 2025 21:50:50 -0700 (PDT)
 Received: from paradiselost.local (lohr.com.br. [187.58.145.178])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-245f0d86c05sm64305745ad.93.2025.08.21.21.48.53
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-245f0d86c05sm64350575ad.93.2025.08.21.21.50.48
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 21 Aug 2025 21:48:55 -0700 (PDT)
+        Thu, 21 Aug 2025 21:50:49 -0700 (PDT)
 From: "Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
 To: rafael.v.volkmer@gmail.com
 Cc: linux-kernel@vger.kernel.org,
 	linux-pwm@vger.kernel.org,
 	ukleinek@kernel.org
-Subject: [PATCH v5 4/6] pwm: tiehrpwm: implement .get_state
-Date: Fri, 22 Aug 2025 01:48:06 -0300
-Message-ID: <20250822044806.4103-1-rafael.v.volkmer@gmail.com>
+Subject: [PATCH v5 5/6] pwm: tiehrpwm: account for active channels at probe
+Date: Fri, 22 Aug 2025 01:50:05 -0300
+Message-ID: <20250822045005.4127-1-rafael.v.volkmer@gmail.com>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20250822044545.4080-1-rafael.v.volkmer@gmail.com>
-References: <20250822044545.4080-1-rafael.v.volkmer@gmail.com>
+In-Reply-To: <20250822044806.4103-1-rafael.v.volkmer@gmail.com>
+References: <20250822044806.4103-1-rafael.v.volkmer@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -92,135 +92,123 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Implement ehrpwm_get_state() to report enable, period, duty cycle and
-polarity. Read AQCSFRC and AQCTL(A/B) to determine whether a channel is
-software-forced (treated as disabled) and expose current timing and
-polarity through the pwm_state.
+Handle already-running eHRPWM channels at probe. Detect active A/B from
+AQCTL(A/B) when not software-forced in AQCSFRC, take one
+pm_runtime_get_sync() per active channel, and enable tbclk only if at
+least one is active. Keep PM refcounts and clocks consistent with the
+hardware state.
 
-This lets consumers query the current hardware state reliably.
+Before: active hardware could miss runtime PM gets and clk enable.
+After: PM/clk state matches active channels observed at probe.
 
 Signed-off-by: Rafael V. Volkmer <rafael.v.volkmer@gmail.com>
 ---
- drivers/pwm/pwm-tiehrpwm.c | 103 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 103 insertions(+)
+ drivers/pwm/pwm-tiehrpwm.c | 55 +++++++++++++++++++++++++++++++++-----
+ 1 file changed, 49 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
-index b2a55e59b..1dae3b8b5 100644
+index 1dae3b8b5..a801912be 100644
 --- a/drivers/pwm/pwm-tiehrpwm.c
 +++ b/drivers/pwm/pwm-tiehrpwm.c
-@@ -461,9 +461,112 @@ static int ehrpwm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	return err;
- }
+@@ -121,6 +121,9 @@
  
-+static int ehrpwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
-+			    struct pwm_state *state)
-+{
-+	int ret = 0;
-+
-+	struct ehrpwm_pwm_chip *pc = NULL;
-+
-+	/* Registers */
-+	u16 aqcsfrc_reg, aqctl_reg, tbprd_reg, tbctl_reg;
-+
-+	/* Bits */
-+	u8 csf_bits, clkdiv_bits, hspclkdiv_bits;
-+
-+	/* Values */
-+	u64 period_ticks, duty_ticks, ps_div;
-+
-+	/* Actions */
-+	u8 up_action, down_action;
-+
-+	pc = to_ehrpwm_pwm_chip(chip);
-+
-+	/*
-+	 * The 'hwpwm' field identifies which hardware output channel (e.g.,
-+	 * 0 for channel A and 1 for channel B) of the eHRPWM module is in use.
-+	 */
-+	if (pwm->hwpwm == 0) {
-+		aqcsfrc_reg = readw(pc->mmio_base + AQCSFRC);
-+		csf_bits = FIELD_GET(AQCSFRC_CSFA_MASK, aqcsfrc_reg);
-+		aqctl_reg = readw(pc->mmio_base + AQCTLA);
-+	} else {
-+		aqcsfrc_reg = readw(pc->mmio_base + AQCSFRC);
-+		csf_bits = FIELD_GET(AQCSFRC_CSFB_MASK, aqcsfrc_reg);
-+		aqctl_reg = readw(pc->mmio_base + AQCTLB);
-+	}
-+
-+	if (csf_bits || !aqctl_reg) {
-+		state->enabled = false;
-+		return 0;
-+	}
-+
-+	state->enabled = true;
-+
-+	tbprd_reg = readw(pc->mmio_base + TBPRD);
-+	period_ticks = (u64)tbprd_reg + 1u;
-+
-+	tbctl_reg = readw(pc->mmio_base + TBCTL);
-+	hspclkdiv_bits = FIELD_GET(TBCTL_HSPCLKDIV_MASK, tbctl_reg);
-+	clkdiv_bits = FIELD_GET(TBCTL_CLKDIV_MASK, tbctl_reg);
-+
-+	ps_div = (1 << clkdiv_bits) * (hspclkdiv_bits ? (hspclkdiv_bits * 2) : 1);
-+
-+	/*
-+	 * period (in ns) = (period_ticks * preescaler * 1e9) / clk_rate
-+	 * Using DIV_ROUND_UP_ULL to avoid floating-point operations.
-+	 */
-+	state->period = DIV_ROUND_UP_ULL(period_ticks * ps_div * NSEC_PER_SEC, pc->clk_rate);
-+
-+	if (pwm->hwpwm == 0)
-+		duty_ticks = readw(pc->mmio_base + CMPA);
-+	else
-+		duty_ticks = readw(pc->mmio_base + CMPB);
-+
-+	/*
-+	 * duty_cycle (in ns) = (duty_ticks * preescaler * 1e9) / clk_rate
-+	 * Using DIV_ROUND_UP_ULL to avoid floating-point operations.
-+	 */
-+	state->duty_cycle = DIV_ROUND_UP_ULL(duty_ticks * ps_div * NSEC_PER_SEC, pc->clk_rate);
-+
-+	/*
-+	 * The 'hwpwm' field identifies which hardware output channel (e.g.,
-+	 * 0 for channel A and 1 for channel B) of the eHRPWM module is in use.
-+	 */
-+	if (pwm->hwpwm == 0) {
-+		aqctl_reg = readw(pc->mmio_base + AQCTLA);
-+		up_action = FIELD_GET(AQCTL_CAU_MASK, aqctl_reg);
-+		down_action = FIELD_GET(AQCTL_CAD_MASK, aqctl_reg);
-+	} else {
-+		aqctl_reg = readw(pc->mmio_base + AQCTLB);
-+		up_action = FIELD_GET(AQCTL_CBU_MASK, aqctl_reg);
-+		down_action = FIELD_GET(AQCTL_CBD_MASK, aqctl_reg);
-+	}
-+
-+	/*
-+	 * Evaluate the actions to determine the PWM polarity:
-+	 *  - If an up-count event sets the output (AQCTL_FRCHIGH) and a down-count
-+	 *    event clears it (AQ_CLEAR), then polarity is NORMAL.
-+	 *  - If an up-count event clears the output (AQ_CLEAR) and a down-count
-+	 *    event sets it (AQCTL_FRCLOW), then polarity is INVERSED.
-+	 */
-+	if (up_action == AQCTL_FRCHIGH && down_action == AQCTL_FRCLOW) {
-+		state->polarity = PWM_POLARITY_NORMAL;
-+	} else if (up_action == AQCTL_FRCLOW && down_action == AQCTL_FRCHIGH) {
-+		state->polarity = PWM_POLARITY_INVERSED;
-+	} else {
-+		state->polarity = PWM_POLARITY_NORMAL;
-+		dev_dbg(&chip->dev, "ehrpwm: unknown polarity bits (0x%x/0x%x), defaulting to NORMAL\n",
-+			up_action, down_action);
-+	}
-+
-+	return ret;
-+}
-+
- static const struct pwm_ops ehrpwm_pwm_ops = {
- 	.free = ehrpwm_pwm_free,
- 	.apply = ehrpwm_pwm_apply,
-+	.get_state = ehrpwm_get_state,
- };
+ #define NUM_PWM_CHANNEL		2	/* EHRPWM channels */
  
- static const struct of_device_id ehrpwm_of_match[] = {
++#define PWM_CHA			0
++#define PWM_CHB			1
++
+ struct ehrpwm_context {
+ 	u16 tbctl;
+ 	u16 tbprd;
+@@ -582,13 +585,31 @@ static int ehrpwm_pwm_probe(struct platform_device *pdev)
+ 	struct ehrpwm_pwm_chip *pc;
+ 	struct pwm_chip *chip;
+ 	struct clk *clk;
+-	int ret;
++	int ret, ch_idx, ch_disable;
++
++	u16 aqcsfrc_reg, aqctla_reg, aqctlb_reg;
++
++	bool enabled_ch[NUM_PWM_CHANNEL] = { false, false };
+ 
+ 	chip = devm_pwmchip_alloc(&pdev->dev, NUM_PWM_CHANNEL, sizeof(*pc));
+ 	if (IS_ERR(chip))
+ 		return PTR_ERR(chip);
+ 	pc = to_ehrpwm_pwm_chip(chip);
+ 
++	pc->mmio_base = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(pc->mmio_base))
++		return PTR_ERR(pc->mmio_base);
++
++	aqcsfrc_reg = readw(pc->mmio_base + AQCSFRC);
++	aqctla_reg = readw(pc->mmio_base + AQCTLA);
++	aqctlb_reg = readw(pc->mmio_base + AQCTLB);
++
++	if (aqctla_reg != 0 && !FIELD_GET(AQCSFRC_CSFA_MASK, aqcsfrc_reg))
++		enabled_ch[PWM_CHA] = true;
++
++	if (aqctlb_reg != 0 && !FIELD_GET(AQCSFRC_CSFB_MASK, aqcsfrc_reg))
++		enabled_ch[PWM_CHB] = true;
++
+ 	clk = devm_clk_get(&pdev->dev, "fck");
+ 	if (IS_ERR(clk)) {
+ 		if (of_device_is_compatible(np, "ti,am33xx-ecap")) {
+@@ -608,10 +629,6 @@ static int ehrpwm_pwm_probe(struct platform_device *pdev)
+ 
+ 	chip->ops = &ehrpwm_pwm_ops;
+ 
+-	pc->mmio_base = devm_platform_ioremap_resource(pdev, 0);
+-	if (IS_ERR(pc->mmio_base))
+-		return PTR_ERR(pc->mmio_base);
+-
+ 	/* Acquire tbclk for Time Base EHRPWM submodule */
+ 	pc->tbclk = devm_clk_get(&pdev->dev, "tbclk");
+ 	if (IS_ERR(pc->tbclk))
+@@ -623,17 +640,43 @@ static int ehrpwm_pwm_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	if (enabled_ch[PWM_CHA] || enabled_ch[PWM_CHB]) {
++		ret = clk_enable(pc->tbclk);
++		if (ret) {
++			dev_err_probe(&pdev->dev, ret, "clk_enable(tbclk) failed\n");
++			goto err_clk_unprepare;
++		}
++	}
++
+ 	ret = pwmchip_add(chip);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "pwmchip_add() failed: %d\n", ret);
+-		goto err_clk_unprepare;
++		goto err_disable_tbclk;
+ 	}
+ 
+ 	platform_set_drvdata(pdev, chip);
+ 	pm_runtime_enable(&pdev->dev);
++	for (ch_idx = 0; ch_idx < NUM_PWM_CHANNEL; ch_idx++) {
++		if (enabled_ch[ch_idx]) {
++			ret = pm_runtime_get_sync(&pdev->dev);
++			if (ret < 0) {
++				for (ch_disable = 0; ch_disable <= ch_idx; ch_disable++) {
++					if (enabled_ch[ch_disable])
++						pm_runtime_put_noidle(&pdev->dev);
++				}
++
++				pwmchip_remove(chip);
++				pm_runtime_disable(&pdev->dev);
++				return ret;
++			}
++		}
++	}
+ 
+ 	return 0;
+ 
++err_disable_tbclk:
++	if (enabled_ch[PWM_CHA] || enabled_ch[PWM_CHB])
++		clk_disable(pc->tbclk);
+ err_clk_unprepare:
+ 	clk_unprepare(pc->tbclk);
+ 
 -- 
 2.43.0
 
