@@ -1,57 +1,57 @@
-Return-Path: <linux-pwm+bounces-7156-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7157-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id B9673B32FC1
-	for <lists+linux-pwm@lfdr.de>; Sun, 24 Aug 2025 13:59:22 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1AEE6B32FCE
+	for <lists+linux-pwm@lfdr.de>; Sun, 24 Aug 2025 13:59:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id DD9F2447F44
-	for <lists+linux-pwm@lfdr.de>; Sun, 24 Aug 2025 11:59:03 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id A8CB4200B46
+	for <lists+linux-pwm@lfdr.de>; Sun, 24 Aug 2025 11:59:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A4E72DA74A;
-	Sun, 24 Aug 2025 11:58:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 67A8F2D7DF1;
+	Sun, 24 Aug 2025 11:58:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="Um4AWP+l"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="iFFu4LxO"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3900A2D9EDB;
-	Sun, 24 Aug 2025 11:58:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 962E42D7385;
+	Sun, 24 Aug 2025 11:58:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756036693; cv=none; b=h+mdt/8isbPyKbYyN8poNaluYj8mgGTVp9QZH8FQTSF97Nsy5AGKmexy9xYZg21gpT8AovvMkvlyZC4t3XjcWbpGS1XiMHoHaNN4iRzml4y5zSeLuKcEp6mtWToOdKr+uYC+MSSfCgFoJqgWUS6OZaFMqddXEDY2wLWSpexb088=
+	t=1756036698; cv=none; b=AwXOd+qXM3yTYWz4Hb1g9tpciBP+z4E2Js7JR1zOvYYf+Qk8osmfizyac7IFOMcq0lM7nNCNSB3dL6CW1TEbPelZCh4JH5QkEnHSY7qCKbgoR5DH4cA7VSWxV22vhBizakl5paJKX5lH3D+qFXag/QCtytrCoeLqwoKo/oy3ZdI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756036693; c=relaxed/simple;
-	bh=GI6EEwiaCxoQ0CfeJpmOMrDgX7dL9Npnw2htYukp1Qg=;
+	s=arc-20240116; t=1756036698; c=relaxed/simple;
+	bh=q1airdugxwHpSHZaquYOnigvKVWeL4MThI2AcUjshfs=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=He3BNjcz8okv5neh3yJdmYXUKujJEcviBP8/miiiBexFy8AaglREZRXSVvCobzNX7OgVa2WOEvVfz4thX3mtls0BL0qwaq6NadJtBrShV+6AKeClLZoZF+GL5RbVtxmcFOnhAx8c7v9Wg/xxHi4+avZIl789SWZvSKy7fS8jUpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=Um4AWP+l; arc=none smtp.client-ip=185.246.85.4
+	 In-Reply-To:To:Cc; b=VZJ247f5c0U7LFAaafOUAIosMQ6ocnz089urPbbv324kYRxjIXfmDTOCXs7d3UkdrbBXIkqeYFos1RLVL2sq7adqUIcNyul9y0FkM8X+gQyKzVtHVDBO7fIofMAXXKir+HaAZrZNEJJvnWNAM1PVGU81jUcC2g3hh81J8ZglB7A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=iFFu4LxO; arc=none smtp.client-ip=185.246.84.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id 970CE4E40C35;
-	Sun, 24 Aug 2025 11:58:10 +0000 (UTC)
+	by smtpout-02.galae.net (Postfix) with ESMTPS id 62C7C1A0DA2;
+	Sun, 24 Aug 2025 11:58:15 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 707D1605F1;
-	Sun, 24 Aug 2025 11:58:10 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id B39791C22D16F;
-	Sun, 24 Aug 2025 13:58:05 +0200 (CEST)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 3BB25605F1;
+	Sun, 24 Aug 2025 11:58:15 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id CE0AF1C22D26C;
+	Sun, 24 Aug 2025 13:58:09 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1756036689; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	t=1756036693; h=from:subject:date:message-id:to:cc:mime-version:content-type:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=c8ATT8p3q1I3R9dnhjH56Ixk6yh3ilCPWov9z+gTEbs=;
-	b=Um4AWP+lgF1jcf01TYP7IQGw4SFjyD5DFqJ3yi3msEK2DPVN0Xo5H5lP8blWBzN9vLgW8R
-	h8kgqMn/Oq53LW3maLeZCY3XGp57xtQJE+hPoz6nwvZ7JRCBOcGR59dcqdnellNKAJGl5l
-	9tKTiQukejluZyP07MFC+/3fqMPFv2AjhDXpXnZl9da6U0YFWPubtyejc+gkySlj/Sxvee
-	RWOVkvIBjk2OpqpOm2aNsCO8qlICxmUg0H5bNDcdL5vJc6acXGbt+2mr0/ebpa3Zd6cuyg
-	M8ChpbUnnfqAhGZZjECGaxd/BsL2AyQE6NZnb1A0MExBpYi5EkF02AwkzoCZEw==
+	bh=qI7mJ5hYt2a9bdMcNUlHFLpCQX0FFw4F2X/vURBNFY8=;
+	b=iFFu4LxObGgeJDS2wLViuRQSfFtDlUygOXNpcVt+L/gq0ExITANSz7MlTyAA2vGFtV08Oa
+	htkZKhM595R/utOg5JE2RRGIYHIqINYQroPLOMmYedAWLORCmyabraQr7B2e2TvIPZw6s1
+	clSpapvKNUhjK+YCGnuLfk9n+BqLeGINE+5K+orAggc6/g//IK//rclXcbHhS9rAyZHGIN
+	8pjVuip/IrbCL+uoXyfkFr4oXwmlBKaC0OU3Kcq3s6CsaUIPehgcohyBJJcHOWrIvFGcae
+	Y4kNQGF5EdWrlcBiYUUZBvznjzd2H61MCp/tzyGbmwLuneSp4SuOae5KnX45iQ==
 From: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
-Date: Sun, 24 Aug 2025 13:57:24 +0200
-Subject: [PATCH v14 05/10] gpio: regmap: Allow to allocate regmap-irq
- device
+Date: Sun, 24 Aug 2025 13:57:25 +0200
+Subject: [PATCH v14 06/10] gpio: regmap: Allow to provide init_valid_mask
+ callback
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -60,7 +60,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250824-mdb-max7360-support-v14-5-435cfda2b1ea@bootlin.com>
+Message-Id: <20250824-mdb-max7360-support-v14-6-435cfda2b1ea@bootlin.com>
 References: <20250824-mdb-max7360-support-v14-0-435cfda2b1ea@bootlin.com>
 In-Reply-To: <20250824-mdb-max7360-support-v14-0-435cfda2b1ea@bootlin.com>
 To: Lee Jones <lee@kernel.org>, Rob Herring <robh@kernel.org>, 
@@ -83,116 +83,72 @@ Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  Andy Shevchenko <andriy.shevchenko@linux.intel.com>, 
  Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1756036647; l=3757;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1756036647; l=2233;
  i=mathieu.dubois-briand@bootlin.com; s=20241219; h=from:subject:message-id;
- bh=GI6EEwiaCxoQ0CfeJpmOMrDgX7dL9Npnw2htYukp1Qg=;
- b=eHDE4omwUZBMrONS/MUtmHeFrT2CrXf9rliSGF6Wk8MrhqWLK4Xlh+l8sJDd0gchvJ64cy1ND
- /N6ZsNrQJDgAMfWXHqi5LchhlPUmQac3G61fpQP8uQu7JcjZ7g3Nwro
+ bh=q1airdugxwHpSHZaquYOnigvKVWeL4MThI2AcUjshfs=;
+ b=WqkzbUAN1dGCG9kc5w2kg9ayeK2ntKAoX0WXnpajrhuKoY4uuxmv441KKhpZM0qsT5tyqSnqs
+ LFgvOvkgnM+AlFmD7zvFu7n2CPyb4FXbpy3ppH45NePDiHkUVrLOUUQ
 X-Developer-Key: i=mathieu.dubois-briand@bootlin.com; a=ed25519;
  pk=1PVTmzPXfKvDwcPUzG0aqdGoKZJA3b9s+3DqRlm0Lww=
 X-Last-TLS-Session-Version: TLSv1.3
 
-GPIO controller often have support for IRQ: allow to easily allocate
-both gpio-regmap and regmap-irq in one operation.
+Allows to populate the gpio_regmap_config structure with
+init_valid_mask() callback to set on the final gpio_chip structure.
 
+Reviewed-by: Michael Walle <mwalle@kernel.org>
 Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Acked-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 Signed-off-by: Mathieu Dubois-Briand <mathieu.dubois-briand@bootlin.com>
 ---
- drivers/gpio/gpio-regmap.c  | 29 +++++++++++++++++++++++++++--
- include/linux/gpio/regmap.h | 11 +++++++++++
- 2 files changed, 38 insertions(+), 2 deletions(-)
+ drivers/gpio/gpio-regmap.c  | 1 +
+ include/linux/gpio/regmap.h | 7 +++++++
+ 2 files changed, 8 insertions(+)
 
 diff --git a/drivers/gpio/gpio-regmap.c b/drivers/gpio/gpio-regmap.c
-index e8a32dfebdcb..e1944931ee7c 100644
+index e1944931ee7c..d9d23853e032 100644
 --- a/drivers/gpio/gpio-regmap.c
 +++ b/drivers/gpio/gpio-regmap.c
-@@ -32,6 +32,11 @@ struct gpio_regmap {
- 	unsigned int reg_dir_in_base;
- 	unsigned int reg_dir_out_base;
+@@ -261,6 +261,7 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
+ 	chip->names = config->names;
+ 	chip->label = config->label ?: dev_name(config->parent);
+ 	chip->can_sleep = regmap_might_sleep(config->regmap);
++	chip->init_valid_mask = config->init_valid_mask;
  
-+#ifdef CONFIG_REGMAP_IRQ
-+	int regmap_irq_line;
-+	struct regmap_irq_chip_data *irq_chip_data;
-+#endif
-+
- 	int (*reg_mask_xlate)(struct gpio_regmap *gpio, unsigned int base,
- 			      unsigned int offset, unsigned int *reg,
- 			      unsigned int *mask);
-@@ -215,6 +220,7 @@ EXPORT_SYMBOL_GPL(gpio_regmap_get_drvdata);
-  */
- struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config)
- {
-+	struct irq_domain *irq_domain;
- 	struct gpio_regmap *gpio;
- 	struct gpio_chip *chip;
- 	int ret;
-@@ -295,8 +301,22 @@ struct gpio_regmap *gpio_regmap_register(const struct gpio_regmap_config *config
- 	if (ret < 0)
- 		goto err_free_gpio;
- 
--	if (config->irq_domain) {
--		ret = gpiochip_irqchip_add_domain(chip, config->irq_domain);
-+#ifdef CONFIG_REGMAP_IRQ
-+	if (config->regmap_irq_chip) {
-+		gpio->regmap_irq_line = config->regmap_irq_line;
-+		ret = regmap_add_irq_chip_fwnode(dev_fwnode(config->parent), config->regmap,
-+						 config->regmap_irq_line, config->regmap_irq_flags,
-+						 0, config->regmap_irq_chip, &gpio->irq_chip_data);
-+		if (ret)
-+			goto err_free_gpio;
-+
-+		irq_domain = regmap_irq_get_domain(gpio->irq_chip_data);
-+	} else
-+#endif
-+	irq_domain = config->irq_domain;
-+
-+	if (irq_domain) {
-+		ret = gpiochip_irqchip_add_domain(chip, irq_domain);
- 		if (ret)
- 			goto err_remove_gpiochip;
- 	}
-@@ -317,6 +337,11 @@ EXPORT_SYMBOL_GPL(gpio_regmap_register);
-  */
- void gpio_regmap_unregister(struct gpio_regmap *gpio)
- {
-+#ifdef CONFIG_REGMAP_IRQ
-+	if (gpio->irq_chip_data)
-+		regmap_del_irq_chip(gpio->regmap_irq_line, gpio->irq_chip_data);
-+#endif
-+
- 	gpiochip_remove(&gpio->gpio_chip);
- 	kfree(gpio);
- }
+ 	chip->request = gpiochip_generic_request;
+ 	chip->free = gpiochip_generic_free;
 diff --git a/include/linux/gpio/regmap.h b/include/linux/gpio/regmap.h
-index c722c67668c6..19b52ac03a5d 100644
+index 19b52ac03a5d..622a2939ebe0 100644
 --- a/include/linux/gpio/regmap.h
 +++ b/include/linux/gpio/regmap.h
-@@ -40,6 +40,11 @@ struct regmap;
+@@ -6,6 +6,7 @@
+ struct device;
+ struct fwnode_handle;
+ struct gpio_regmap;
++struct gpio_chip;
+ struct irq_domain;
+ struct regmap;
+ 
+@@ -40,6 +41,8 @@ struct regmap;
   * @drvdata:		(Optional) Pointer to driver specific data which is
   *			not used by gpio-remap but is provided "as is" to the
   *			driver callback(s).
-+ * @regmap_irq_chip:	(Optional) Pointer on an regmap_irq_chip structure. If
-+ *			set, a regmap-irq device will be created and the IRQ
-+ *			domain will be set accordingly.
-+ * @regmap_irq_line	(Optional) The IRQ the device uses to signal interrupts.
-+ * @regmap_irq_flags	(Optional) The IRQF_ flags to use for the interrupt.
-  *
-  * The ->reg_mask_xlate translates a given base address and GPIO offset to
-  * register and mask pair. The base address is one of the given register
-@@ -78,6 +83,12 @@ struct gpio_regmap_config {
- 	int ngpio_per_reg;
- 	struct irq_domain *irq_domain;
- 
-+#ifdef CONFIG_REGMAP_IRQ
-+	struct regmap_irq_chip *regmap_irq_chip;
-+	int regmap_irq_line;
-+	unsigned long regmap_irq_flags;
-+#endif
-+
- 	int (*reg_mask_xlate)(struct gpio_regmap *gpio, unsigned int base,
++ * @init_valid_mask:	(Optional) Routine to initialize @valid_mask, to be used
++ *			if not all GPIOs are valid.
+  * @regmap_irq_chip:	(Optional) Pointer on an regmap_irq_chip structure. If
+  *			set, a regmap-irq device will be created and the IRQ
+  *			domain will be set accordingly.
+@@ -93,6 +96,10 @@ struct gpio_regmap_config {
  			      unsigned int offset, unsigned int *reg,
  			      unsigned int *mask);
+ 
++	int (*init_valid_mask)(struct gpio_chip *gc,
++			       unsigned long *valid_mask,
++			       unsigned int ngpios);
++
+ 	void *drvdata;
+ };
+ 
 
 -- 
 2.39.5
