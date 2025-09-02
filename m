@@ -1,201 +1,463 @@
-Return-Path: <linux-pwm+bounces-7242-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7243-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B0A6B40E29
-	for <lists+linux-pwm@lfdr.de>; Tue,  2 Sep 2025 21:54:44 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 46F07B40F5E
+	for <lists+linux-pwm@lfdr.de>; Tue,  2 Sep 2025 23:29:34 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 317735E2003
-	for <lists+linux-pwm@lfdr.de>; Tue,  2 Sep 2025 19:54:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E98463A45AD
+	for <lists+linux-pwm@lfdr.de>; Tue,  2 Sep 2025 21:29:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5FFA935084E;
-	Tue,  2 Sep 2025 19:54:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9EF3D350844;
+	Tue,  2 Sep 2025 21:29:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZrJeisJC"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WBR7ss7n"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF0E326C3A5;
-	Tue,  2 Sep 2025 19:54:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84A7784039;
+	Tue,  2 Sep 2025 21:29:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756842876; cv=none; b=sxRAoAAyEtZFev17KptWrqIyb3VrWDDAQbtK8iU9j7bSroojv9MyRUn/3J5RbjZBCkIAYNBDmAE1yYKK5Sbl2dK54YM2FVurwbYDzVjF49M3FHYbzgHi52CaHQ9e5uqCfk5vhV6CKe8t931QZgpauCB97yTeCkSY8Myt3wCoO4Y=
+	t=1756848570; cv=none; b=ju2MAd+vvTVz74PA9cpj/WOmKzMuwFZb3+xNoIuiyznt9YNxuleI36gAvFI0YjOi9eXjyfeJtL6t71eovpc7ZmA0x3zrGgGqb3JNJwHixbtY5nUj6WTphyytU9Uk/1zNlgfrBqk+uM8zketp5vt4ZMZ5xzqEdZ+3HcuMIobyVhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756842876; c=relaxed/simple;
-	bh=oJOLNYG2Y3DXMCSgbwODVJA8SAuDYi5Dbvsh+hG6M4Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pTeAwe3H0ZfTbDJRRZWdM2xfd7eeEpnNtL9F+QPxdolsSSKSGVg2KssdqxuJvRFGlI5KGDCu5vrRtsKYB7eKris3kTBG9bP51RP8Q3AaoEHEOpuKMIM8oWx/tcTVmXEbAotzkNR8T4NOFEuVAdNms1mXBJiFmjXY3v5zT96bZJ8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZrJeisJC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D07CC4CEED;
-	Tue,  2 Sep 2025 19:54:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756842875;
-	bh=oJOLNYG2Y3DXMCSgbwODVJA8SAuDYi5Dbvsh+hG6M4Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ZrJeisJCeZBLdRd9piYISWxH6ectOKfLkCBAI45oB9yskyvBJx+HrHbj0QupA23QY
-	 HMwYW+4SpxkS1Px4DFX1y0PnsLKuIvMupIqIiKRi5+/yisqqzHEEZpEI+OC+GPQMt+
-	 Ih9UPZZxLrikazCJPDm6WovmTyFRm0ulZKF/oPzplGj21mx5CKCfRPvb9oo4xKL1nz
-	 Qojwko0xFxCfGWgdvCBAYT8/hAuaZcNeMu33YO6xDjk/8M8E6xVx4H6De8eZjysot9
-	 apZ9PSugbHYcTWyIOnwbJIoCz8GthLjCfl1K6nrT8bke0E+1MO5eocgkH5TUTef2/d
-	 X7vBDpLUcS7MA==
-Date: Tue, 2 Sep 2025 14:54:34 -0500
-From: Rob Herring <robh@kernel.org>
-To: Janne Grunau <j@jannau.net>
-Cc: Sven Peter <sven@kernel.org>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-	Neal Gompa <neal@gompa.dev>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Hector Martin <marcan@marcan.st>,
-	"Rafael J. Wysocki" <rafael@kernel.org>,
-	Viresh Kumar <viresh.kumar@linaro.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-	Robin Murphy <robin.murphy@arm.com>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Mark Kettenis <kettenis@openbsd.org>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Maxime Ripard <mripard@kernel.org>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Sasha Finkelstein <fnkl.kernel@gmail.com>,
-	Marcel Holtmann <marcel@holtmann.org>,
-	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	van Spriel <arend@broadcom.com>, Lee Jones <lee@kernel.org>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Stephen Boyd <sboyd@kernel.org>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Michael Turquette <mturquette@baylibre.com>,
-	Martin =?utf-8?Q?Povi=C5=A1er?= <povik+lin@cutebit.org>,
-	Vinod Koul <vkoul@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>, Marc Zyngier <maz@kernel.org>,
-	Ulf Hansson <ulf.hansson@linaro.org>,
-	Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-pm@vger.kernel.org, iommu@lists.linux.dev,
-	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
-	dri-devel@lists.freedesktop.org, linux-bluetooth@vger.kernel.org,
-	linux-wireless@vger.kernel.org, linux-pwm@vger.kernel.org,
-	linux-watchdog@vger.kernel.org, linux-clk@vger.kernel.org,
-	dmaengine@vger.kernel.org, linux-sound@vger.kernel.org,
-	linux-spi@vger.kernel.org, linux-nvme@lists.infradead.org
-Subject: Re: [PATCH 00/37] arm64: Add initial device trees for Apple M2
- Pro/Max/Ultra devices
-Message-ID: <20250902194528.GA1014943-robh@kernel.org>
-References: <20250828-dt-apple-t6020-v1-0-507ba4c4b98e@jannau.net>
- <20250829195119.GA1206685-robh@kernel.org>
- <20250830071620.GD204299@robin.jannau.net>
+	s=arc-20240116; t=1756848570; c=relaxed/simple;
+	bh=EZxlGKTX0H5kessk/Ht2RwHDcD9Badc1OzG0bs1xumA=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=FQJiCq8s/v7TjC+MWmxvVtrxA2FQEINMCnwmbbQOTbLVdaHtVXZi61fyRFzIQdop1kfD1f6N4SDrqR09HntAxOuYtJyxKlvmLrhOHMdpS3KYFokHEaGV7Nv6r08Li6xiSw+MHcA/TuMvfAsyGVCu28h7TZGkAd8RFkvJm5FK+7s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WBR7ss7n; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-45b8b7ac427so16956155e9.2;
+        Tue, 02 Sep 2025 14:29:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1756848567; x=1757453367; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=zO4HjeCrOISXZJlWiM9FBrdzfDeCFxXx2k4+Z/Wy3RM=;
+        b=WBR7ss7nhYMl1zks75dGBDQViN6lS4viADkmki+GjuSWCRX8tW6O/E7AVaVRLP08k5
+         7Q0hWWfpkoh1DSXLVuppctrYBRoDoZ/qafJgJ5LuimU6utCpCdjadscTMUI4sid2j4n0
+         +6M0c6aEW7pV85Ul707lqFWP06TGbRRTG6lNUBkyILgDl5oQ6o9Lw2e/r1s86MHP1x7X
+         jWgQEAh64Ja+UmHhqkA96tWNt0WTmH6gohqt/crry3b2cbNBqNLstXap/rhAwMKDLgA2
+         uHoebMO8KMgVFEq+EANQfd950FmVR5Mt9xPaWqatgB6a1BfYuB+xz60PBaYdaA+mA2rO
+         +7gA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756848567; x=1757453367;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=zO4HjeCrOISXZJlWiM9FBrdzfDeCFxXx2k4+Z/Wy3RM=;
+        b=MVZMBu/ibgH8Ib7GHJvR/RR5hfHlZboijMb1qsZsSPLYfSf36+n8JBIkXKFyuPqlfu
+         k/2fNt+EenA6/APd4y3JlZwcPDRUwZnUuilh6ovEo0nu1eKd7OGSQp6AMmCfcyigYPkH
+         6DUnu9QaC/s8VMKPWpJXfp98zCvcga3oyHmEE5adayJorb4BgGCMeeE/DAkAVoBiBp27
+         CgEoQnQrljm4H4d2+rq5oR/1YMsOQoyTGVffU9i9FDl08WGVcq5YxUDsugXrWNz8KNX2
+         efEffrnoIaAxUQyTqJavcc+cN1lzit6DFyxqpUhBm8fdfd9jVJHggeIQLhPjdarIExn1
+         XBvw==
+X-Forwarded-Encrypted: i=1; AJvYcCVHxboSJzDSunwUzaLXGHr3W8HSkyzXQfZorQkYiZ1AifqCKatVY5vKc2/FVtHgoi1OQqTrWpBxsRXGBC0t@vger.kernel.org, AJvYcCVi6Gn3qH8/xoZdUSBYjDwawC2cPfP9zMgZ9PvTbeHrP86nZCdujjMHCd8WHaXwEKWbZgR8qDic+GKC@vger.kernel.org, AJvYcCWeBPph9bDS1X75mjqw+jveGwoMMS064hSLU0BH8k2pQJ/DapS1JY2EKezkJTYr235XzA0M9ltN3CaY@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz66x0O6tFG0eJBatHtmHL6tasIEA4JK8f4ecRYmH6DsHuG+Sk6
+	Fo5CN96e3NKEfE9lB6F0omPEB1WBTe7GYZNDzi/cEoFu/E4u0V92wUY=
+X-Gm-Gg: ASbGncuIfUl/OaCVs9uA1xCeALeX7Wlk6jndWLUvgfMPSQDKzgNo2enaoBH2xU2QTES
+	p8Cahs34ma0rDz47jdShSxlSDm8aEv/4QXali0oDuSKglrmb9j5EVsE9x5DQSTURq9JJ6tycvr+
+	/sHt62rQ8w9DhjKFy/tnSSlV7n+kWh3993aiKCrWKpKmZwit0WiKi65ocad06DXtDdppdrfpyaC
+	Sd7xRZKIgCNTl4h8X0F0Tx0EYDbzUuijeWc4HzlTqZPb1NtXvNZ0J9MaZjXv02HRRH9jl7iwUHR
+	H2Odv6mLduvcyB+hxOU+7IALweCtsQzqIXMueZjx9WSXkWmU8VAaVb5/53R92usqYrx6s4qaSV1
+	N3H3HxPXdMjwz9XaPnj2ja1Da+eLdqUkwOyZonQOqUGqEMm0x00w=
+X-Google-Smtp-Source: AGHT+IG0deGv61kh0jZMa+aYBded7+4j0TmirKkWGpEYzZqrbh/39kOqDtc9WiBQh75zVmPKyspdYw==
+X-Received: by 2002:a05:600c:4fcd:b0:45b:7185:9e5 with SMTP id 5b1f17b1804b1-45b85525cddmr117491975e9.5.1756848566551;
+        Tue, 02 Sep 2025 14:29:26 -0700 (PDT)
+Received: from localhost.localdomain ([2a0d:e487:224f:7287:75b3:5214:63cf:2c39])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45b7e898b99sm211255195e9.19.2025.09.02.14.29.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 02 Sep 2025 14:29:26 -0700 (PDT)
+From: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
+To: lee@kernel.org,
+	krzk+dt@kernel.org,
+	robh@kernel.org,
+	andreas@kemnade.info
+Cc: conor+dt@kernel.org,
+	ukleinek@kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	shuah@kernel.org,
+	jihed.chaibi.dev@gmail.com
+Subject: [PATCH v5] dt-bindings: mfd: twl: Add missing sub-nodes for TWL4030 & TWL603x
+Date: Tue,  2 Sep 2025 23:29:21 +0200
+Message-Id: <20250902212921.89759-1-jihed.chaibi.dev@gmail.com>
+X-Mailer: git-send-email 2.39.5
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250830071620.GD204299@robin.jannau.net>
+Content-Transfer-Encoding: 8bit
 
-On Sat, Aug 30, 2025 at 09:16:20AM +0200, Janne Grunau wrote:
-> On Fri, Aug 29, 2025 at 02:51:19PM -0500, Rob Herring wrote:
-> > On Thu, Aug 28, 2025 at 04:01:19PM +0200, Janne Grunau wrote:
-> > > This series adds device trees for Apple's M2 Pro, Max and Ultra based
-> > > devices. The M2 Pro (t6020), M2 Max (t6021) and M2 Ultra (t6022) SoCs
-> > > follow design of the t600x family so copy the structure of SoC *.dtsi
-> > > files.
-> > > 
-> > > t6020 is a cut-down version of t6021, so the former just includes the
-> > > latter and disables the missing bits.
-> > > 
-> > > t6022 is two connected t6021 dies. The implementation seems to use
-> > > t6021 and disables blocks based on whether it is useful to carry
-> > > multiple instances. The disabled blocks are mostly on the second die.
-> > > MMIO addresses on the second die have a constant offset. The interrupt
-> > > controller is multi-die aware. This setup can be represented in the
-> > > device tree with two top level "soc" nodes. The MMIO offset is applied
-> > > via "ranges" and devices are included with preprocessor macros to make
-> > > the node labels unique and to specify the die number for the interrupt
-> > > definition.
-> > > 
-> > > The devices itself are very similar to their M1 Pro, M1 Max and M1 Ultra
-> > > counterparts. The existing device templates are SoC agnostic so the new
-> > > devices can reuse them and include their t602{0,1,2}.dtsi file. The
-> > > minor differences in pinctrl and gpio numbers can be easily adjusted.
-> > > 
-> > > With the t602x SoC family Apple introduced two new devices:
-> > > 
-> > > The M2 Pro Mac mini is similar to the larger M1 and M2 Max Mac Studio. The
-> > > missing SDHCI card reader and two front USB3.1 type-c ports and their
-> > > internal USB hub can be easily deleted.
-> > > 
-> > > The M2 Ultra Mac Pro (tower and rack-mount cases) differs from all other
-> > > devices but may share some bits with the M2 Ultra Mac Studio. The PCIe
-> > > implementation on the M2 Ultra in the Mac Pro differs slightly. Apple
-> > > calls the PCIe controller "apcie-ge" in their device tree. The
-> > > implementation seems to be mostly compatible with the base t6020 PCIe
-> > > controller. The main difference is that there is only a single port with
-> > > with 8 or 16 PCIe Gen4 lanes. These ports connect to a Microchip
-> > > Switchtec PCIe switch with 100 lanes to which all internal PCIe devices
-> > > and PCIe slots connect too.
-> > > 
-> > > This series does not include PCIe support for the Mac Pro for two
-> > > reasons:
-> > > - the linux switchtec driver fails to probe and the downstream PCIe
-> > >   connections come up as PCIe Gen1
-> > > - some of the internal devices require PERST# and power control to come
-> > >   up. Since the device are connected via the PCIe switch the PCIe
-> > >   controller can not do this. The PCI slot pwrctrl can be utilized for
-> > >   power control but misses integration with PERST# as proposed in [1].
-> > > 
-> > > This series depends on "[PATCH v2 0/5] Apple device tree sync from
-> > > downstream kernel" [2] due to the reuse of the t600x device templates
-> > > (patch dependencies and DT compilation) and 4 page table level support
-> > > in apple-dart and io-pgtable-dart [3] since the dart instances report
-> > > 42-bit IAS (IOMMU device attach fails without the series).
-> > > 
-> > > After discussion with the devicetree maintainers we agreed to not extend
-> > > lists with the generic compatibles anymore [1]. Instead either the first
-> > > compatible SoC or t8103 is used as fallback compatible supported by the
-> > > drivers. t8103 is used as default since most drivers and bindings were
-> > > initially written for M1 based devices.
-> > 
-> > An issue here is any OS without the compatibles added to the drivers 
-> > won't work. Does that matter here? Soon as you need any new drivers or 
-> > significant driver changes it won't. The compatible additions could be 
-> > backported to stable. They aren't really any different than new PCI IDs 
-> > which get backported.
-> 
-> I don't think backporting the driver compatible additions to stable
-> linux is very useful. It is only relevant for t602x devices and the only
-> way to interact with them is the serial console. The T602x PCIe support
-> added in v6.16 requires dart changes (the posted 4th level io page table
-> support) to be useful. After that PCIe ethernet works so there is a
-> practical way to interact with t602x systems. So there are probably zero
-> user of upstream linux on those devices 
-> I'm more concerned about other projects already supporting t602x
-> devices. At least u-boot and OpenBSD will be affected by this. As short
-> term solution m1n1 will add the generic compatibles [1] temporarily.
-> I think keeping this roughly for a year should allow to add the
-> compatibles and wait for "fixed" releases of those projects.
-> I'll send fixes for u-boot once the binding changes are reviewed.
+Update the main TI TWL-family binding to be self-contained and to fix
+pre-existing validation errors.
 
-Honestly, at least in the cases where the generic compatible works for 
-every chip so far, I'd just stick with it. The issue with generic 
-compatibles is more that you don't really know if things are going to be 
-the same or not. And most of the time, the h/w ends up changing.
+Following maintainer feedback, the simple power and PWM bindings are
+now defined directly within this file, and their legacy .txt files
+are removed.
 
-If you want to keep it like this since you've already done it, then for 
-all the binding patches:
+To ensure future patches are bisectable, child nodes whose bindings
+are in other patches (audio, keypad, usb, etc.) are now defined using
+a flexible 'additionalProperties: true' pattern. This removes hard
+dependencies between the MFD and subsystem bindings.
 
-Acked-by: Rob Herring (Arm) <robh@kernel.org>
+The complete dtbs_check for this binding is clean except for two
+warnings originating from pre-existing bugs in the OMAP DTS files,
+for which fixes have already been submitted separately [1][2].
 
-Rob
+Signed-off-by: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
+
+---
+Changes in v5:
+  - Restructured the entire binding to define properties at the top
+    level instead of if/then blocks, per maintainer feedback.
+  - Added specific compatible enums for new child nodes instead of a
+    generic 'compatible: true'.
+  - Set 'unevaluatedProperties: false' for 'pwm' and 'pwmled' nodes to
+    enforce strict validation.
+  - Expanded 'power' node compatible enum to include all board-specific
+    compatible strings (used in existing device trees, e.g. OMAP3-based
+    boards) for more complete coverage.
+  - Corrected the schema for the 'power' node compatible to properly
+    handle single and fallback entries.
+
+Changes in v4:
+  - Reworked binding to be independent and bisectable per maintainer
+    feedback by using 'additionalProperties: true' for child nodes.
+  - Added board-specific compatibles to the 'power' node enum.
+  - Added definitions for 'clocks' and 'clock-names' properties.
+  - Renamed 'twl6030-usb' child node to 'usb-comparator' to match
+    existing Device Tree usage (twl6030.dtsi).
+  - Fixed some spelling/grammar erros in the description.
+
+Changes in v3:
+  - New patch to consolidate simple bindings (power, pwm) and add
+    definitions for all child nodes to fix dtbs_check validation
+    errors found in v2.
+
+Changes in v2:
+  - This patch is split from larger series [3] per maintainer feedback.
+  - Added missing sub-node definitions, resolving dtbs_check errors.
+
+[1] https://lore.kernel.org/all/20250822222530.113520-1-jihed.chaibi.dev@gmail.com/
+[2] https://lore.kernel.org/all/20250822225052.136919-1-jihed.chaibi.dev@gmail.com/
+[3] https://lore.kernel.org/all/20250816021523.167049-1-jihed.chaibi.dev@gmail.com/
+---
+ .../devicetree/bindings/mfd/ti,twl.yaml       | 159 +++++++++++++++++-
+ .../devicetree/bindings/mfd/twl4030-power.txt |  48 ------
+ .../devicetree/bindings/pwm/ti,twl-pwm.txt    |  17 --
+ .../devicetree/bindings/pwm/ti,twl-pwmled.txt |  17 --
+ 4 files changed, 157 insertions(+), 84 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mfd/twl4030-power.txt
+ delete mode 100644 Documentation/devicetree/bindings/pwm/ti,twl-pwm.txt
+ delete mode 100644 Documentation/devicetree/bindings/pwm/ti,twl-pwmled.txt
+
+diff --git a/Documentation/devicetree/bindings/mfd/ti,twl.yaml b/Documentation/devicetree/bindings/mfd/ti,twl.yaml
+index f162ab60c09..397eed9b628 100644
+--- a/Documentation/devicetree/bindings/mfd/ti,twl.yaml
++++ b/Documentation/devicetree/bindings/mfd/ti,twl.yaml
+@@ -11,9 +11,9 @@ maintainers:
+ 
+ description: |
+   The TWLs are Integrated Power Management Chips.
+-  Some version might contain much more analog function like
++  Some versions might contain much more analog functionality like
+   USB transceiver or Audio amplifier.
+-  These chips are connected to an i2c bus.
++  These chips are connected to an I2C bus.
+ 
+ allOf:
+   - if:
+@@ -181,6 +181,12 @@ properties:
+   "#clock-cells":
+     const: 1
+ 
++  clocks:
++    maxItems: 1
++
++  clock-names:
++    const: fck
++
+   charger:
+     type: object
+     additionalProperties: true
+@@ -198,6 +204,131 @@ properties:
+       interrupts:
+         maxItems: 1
+ 
++  audio:
++    type: object
++    additionalProperties: true
++    properties:
++      compatible:
++        const: ti,twl4030-audio
++
++  keypad:
++    type: object
++    additionalProperties: true
++    properties:
++      compatible:
++        const: ti,twl4030-keypad
++
++  pwm:
++    type: object
++    $ref: /schemas/pwm/pwm.yaml#
++    unevaluatedProperties: false
++    description:
++      PWM controllers (PWM1 and PWM2 on TWL4030, PWM0 and PWM1 on TWL6030/32).
++    properties:
++      compatible:
++        enum:
++          - ti,twl4030-pwm
++          - ti,twl6030-pwm
++      '#pwm-cells':
++        const: 2
++    required:
++      - compatible
++      - '#pwm-cells'
++
++  pwmled:
++    type: object
++    $ref: /schemas/pwm/pwm.yaml#
++    unevaluatedProperties: false
++    description:
++      PWM controllers connected to LED terminals (PWMA and PWMB on TWL4030,
++      LED PWM on TWL6030/32, mainly used as charging indicator LED).
++    properties:
++      compatible:
++        enum:
++          - ti,twl4030-pwmled
++          - ti,twl6030-pwmled
++      '#pwm-cells':
++        const: 2
++    required:
++      - compatible
++      - '#pwm-cells'
++
++  twl4030-usb:
++    type: object
++    additionalProperties: true
++    properties:
++      compatible:
++        const: ti,twl4030-usb
++
++  usb-comparator:
++    type: object
++    additionalProperties: true
++    properties:
++      compatible:
++        const: ti,twl6030-usb
++
++  gpio:
++    type: object
++    additionalProperties: true
++    properties:
++      compatible:
++        const: ti,twl4030-gpio
++
++  power:
++    type: object
++    description:
++      The power management module inside the TWL4030 provides several
++      facilities to control the power resources, including power scripts.
++      For now, the binding only supports the complete shutdown of the
++      system after poweroff.
++      Board-specific compatible strings may be used for platform-specific
++      power configurations.
++      A board-specific compatible string (e.g., ti,twl4030-power-n900) may
++      be paired with a generic fallback (generally for power saving mode).
++    additionalProperties: false
++    properties:
++      compatible:
++        oneOf:
++          - enum:
++              - ti,twl4030-power
++              - ti,twl4030-power-reset
++              - ti,twl4030-power-idle
++              - ti,twl4030-power-idle-osc-off
++              # Add all board-specific compatibles for completeness
++              - ti,twl4030-power-omap3-sdp
++              - ti,twl4030-power-omap3-ldp
++              - ti,twl4030-power-omap3-evm
++              - ti,twl4030-power-beagleboard-xm
++              - ti,twl4030-power-n900
++          - items:
++              - enum:
++                  - ti,twl4030-power
++                  - ti,twl4030-power-reset
++                  - ti,twl4030-power-idle
++                  - ti,twl4030-power-idle-osc-off
++                  # Add all board-specific compatibles for completeness
++                  - ti,twl4030-power-omap3-sdp
++                  - ti,twl4030-power-omap3-ldp
++                  - ti,twl4030-power-omap3-evm
++                  - ti,twl4030-power-beagleboard-xm
++                  - ti,twl4030-power-n900
++              - enum:
++                  # Fallback (for power saving mode)
++                  - ti,twl4030-power-idle
++                  - ti,twl4030-power-idle-osc-off
++      ti,system-power-controller:
++        type: boolean
++        deprecated: true
++        description:
++          DEPRECATED. The standard 'system-power-controller'
++          property on the parent node should be used instead.
++      ti,use_poweroff:
++        type: boolean
++        deprecated: true
++        description: DEPRECATED, to be removed.
++    required:
++      - compatible
++
+ patternProperties:
+   "^regulator-":
+     type: object
+@@ -271,6 +402,16 @@ examples:
+           compatible = "ti,twl6030-vmmc";
+           ti,retain-on-reset;
+         };
++
++        pwm {
++          compatible = "ti,twl6030-pwm";
++          #pwm-cells = <2>;
++        };
++
++        pwmled {
++          compatible = "ti,twl6030-pwmled";
++          #pwm-cells = <2>;
++        };
+       };
+     };
+ 
+@@ -325,6 +466,20 @@ examples:
+         watchdog {
+           compatible = "ti,twl4030-wdt";
+         };
++
++        power {
++          compatible = "ti,twl4030-power";
++        };
++
++        pwm {
++          compatible = "ti,twl4030-pwm";
++          #pwm-cells = <2>;
++        };
++
++        pwmled {
++          compatible = "ti,twl4030-pwmled";
++          #pwm-cells = <2>;
++        };
+       };
+     };
+ ...
+diff --git a/Documentation/devicetree/bindings/mfd/twl4030-power.txt b/Documentation/devicetree/bindings/mfd/twl4030-power.txt
+deleted file mode 100644
+index 3d19963312c..00000000000
+--- a/Documentation/devicetree/bindings/mfd/twl4030-power.txt
++++ /dev/null
+@@ -1,48 +0,0 @@
+-Texas Instruments TWL family (twl4030) reset and power management module
+-
+-The power management module inside the TWL family provides several facilities
+-to control the power resources, including power scripts. For now, the
+-binding only supports the complete shutdown of the system after poweroff.
+-
+-Required properties:
+-- compatible : must be one of the following
+-	"ti,twl4030-power"
+-	"ti,twl4030-power-reset"
+-	"ti,twl4030-power-idle"
+-	"ti,twl4030-power-idle-osc-off"
+-
+-The use of ti,twl4030-power-reset is recommended at least on
+-3530 that needs a special configuration for warm reset to work.
+-
+-When using ti,twl4030-power-idle, the TI recommended configuration
+-for idle modes is loaded to the tlw4030 PMIC.
+-
+-When using ti,twl4030-power-idle-osc-off, the TI recommended
+-configuration is used with the external oscillator being shut
+-down during off-idle. Note that this does not work on all boards
+-depending on how the external oscillator is wired.
+-
+-Optional properties:
+-
+-- ti,system-power-controller: This indicates that TWL4030 is the
+-  power supply master of the system. With this flag, the chip will
+-  initiate an ACTIVE-to-OFF or SLEEP-to-OFF transition when the
+-  system poweroffs.
+-
+-- ti,use_poweroff: Deprecated name for ti,system-power-controller
+-
+-Example:
+-&i2c1 {
+-	clock-frequency = <2600000>;
+-
+-	twl: twl@48 {
+-		reg = <0x48>;
+-		interrupts = <7>; /* SYS_NIRQ cascaded to intc */
+-		interrupt-parent = <&intc>;
+-
+-		twl_power: power {
+-			compatible = "ti,twl4030-power";
+-			ti,use_poweroff;
+-		};
+-	};
+-};
+diff --git a/Documentation/devicetree/bindings/pwm/ti,twl-pwm.txt b/Documentation/devicetree/bindings/pwm/ti,twl-pwm.txt
+deleted file mode 100644
+index d97ca1964e9..00000000000
+--- a/Documentation/devicetree/bindings/pwm/ti,twl-pwm.txt
++++ /dev/null
+@@ -1,17 +0,0 @@
+-Texas Instruments TWL series PWM drivers
+-
+-Supported PWMs:
+-On TWL4030 series: PWM1 and PWM2
+-On TWL6030 series: PWM0 and PWM1
+-
+-Required properties:
+-- compatible: "ti,twl4030-pwm" or "ti,twl6030-pwm"
+-- #pwm-cells: should be 2. See pwm.yaml in this directory for a description of
+-  the cells format.
+-
+-Example:
+-
+-twl_pwm: pwm {
+-	compatible = "ti,twl6030-pwm";
+-	#pwm-cells = <2>;
+-};
+diff --git a/Documentation/devicetree/bindings/pwm/ti,twl-pwmled.txt b/Documentation/devicetree/bindings/pwm/ti,twl-pwmled.txt
+deleted file mode 100644
+index 31ca1b032ef..00000000000
+--- a/Documentation/devicetree/bindings/pwm/ti,twl-pwmled.txt
++++ /dev/null
+@@ -1,17 +0,0 @@
+-Texas Instruments TWL series PWM drivers connected to LED terminals
+-
+-Supported PWMs:
+-On TWL4030 series: PWMA and PWMB (connected to LEDA and LEDB terminals)
+-On TWL6030 series: LED PWM (mainly used as charging indicator LED)
+-
+-Required properties:
+-- compatible: "ti,twl4030-pwmled" or "ti,twl6030-pwmled"
+-- #pwm-cells: should be 2. See pwm.yaml in this directory for a description of
+-  the cells format.
+-
+-Example:
+-
+-twl_pwmled: pwmled {
+-	compatible = "ti,twl6030-pwmled";
+-	#pwm-cells = <2>;
+-};
+-- 
+2.39.5
+
 
