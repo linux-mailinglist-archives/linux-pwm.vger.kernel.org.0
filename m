@@ -1,114 +1,118 @@
-Return-Path: <linux-pwm+bounces-7248-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7249-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D9AAB416EC
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Sep 2025 09:39:45 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 30B42B421B8
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Sep 2025 15:33:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 3288B564E7C
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Sep 2025 07:39:40 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 99E5C188C7BD
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Sep 2025 13:33:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3D0352DEA71;
-	Wed,  3 Sep 2025 07:39:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59EF3308F36;
+	Wed,  3 Sep 2025 13:33:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qoDk0nl6"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nqEESknj"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFD362D73B2;
-	Wed,  3 Sep 2025 07:39:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A7071F4701;
+	Wed,  3 Sep 2025 13:33:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756885170; cv=none; b=WfBtjbpphX0IgXY4WYkGl8JBprfRVpTz0rk3tdbMhqeAHXezWuoXt48ccBwm0VgBboaX9Q5ypA5f/6o8fSABXReiGW7GOQ6I3/1xJeIz2xCkzYY/XygLEsIezY6q2COduw9SOIcxZJoyukTzO6wwkHF/7nLQpyLaq/DPunEECic=
+	t=1756906408; cv=none; b=DtDC744BbIvRDlpI82zSS4r5EGDY4qsRzy93HanBXWG6Wx8xCSLuHpCxCbwQgNvaddWtFmbTmjAw18OinaUuh3A7U25/CFPfmztP29N7yN0CG5WeHk+/fKv9AEVaqY+8GPSJcTNkgkxYIKBwXKmq6+bpOlIPCJ/PGDL04xDs4M0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756885170; c=relaxed/simple;
-	bh=nabVaKDp95bXX1pjLpK4nzWf1nseMWBruv5tgZaJBoA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=RgLSo4t9RnL2L+JF4an+eVqMdPBh1rtIXER+V/S9sbvnXb+k1NqL6WRuwPspTYV66mcMM27zLuIVDaADulwlmU+XNeZ082KD0yNliA72zJEDa0JPCqzX+D7j1m+BwbkhG+dRWUiFHhPdtE1qwVi9IFNUgxlLzyB3pJr/ahGExq4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qoDk0nl6; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EA52C4CEF0;
-	Wed,  3 Sep 2025 07:39:23 +0000 (UTC)
+	s=arc-20240116; t=1756906408; c=relaxed/simple;
+	bh=APA+IKhQAivDdhc8vaL3FsIWLj0FCAXAMDhHWsCuKXQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
+	 MIME-Version:Content-Type; b=d8KTlxDE06rlcFqYjfah5n86MVNiBodWTFZxPn+mDftPeX46W6QL3rAoVtmCI9J6XfGnRuFwdEh59qrIg1gdUmanWxr3kvEm/KS9W+ID6RSOu3deVvINK/WhXQQQ6Z4h2qB92pqLvtc6VFIpilpxy8NvMxDKIqHoQenXSn4d9TQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nqEESknj; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5133DC4CEF0;
+	Wed,  3 Sep 2025 13:33:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756885169;
-	bh=nabVaKDp95bXX1pjLpK4nzWf1nseMWBruv5tgZaJBoA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qoDk0nl6DGMhrsb9Zero2GRf3mxlO2Zkmtca2Z/KeKD/A+oBDZ96dYcBPT94dwlkU
-	 f0DLzIj/ZwhCrb5B4tPNd/VVQsfYxVSV2/QOOMs9cLSO9APl7W8P7vIBAVhCCtvHGN
-	 Wtzw48LeMkWre+8zpgwv+Li+KmKBA5Y9dXQUwTFoIo9DK79zaqWKJYA9eeL0JZADFS
-	 qD9EiS0+jbqaNpPL+mO71C0U1WpdfN7z2meHxEAo+95mgjgwwldX3TLfUrljS59Nku
-	 X8Zz7gNiYLjBFpa/8drEj34cjLfh0bA/7FZxXieklmnEs9cQou/+e+pY9sOk2PlsS3
-	 SwaRwN9OWsD2w==
-Date: Wed, 3 Sep 2025 08:39:20 +0100
+	s=k20201202; t=1756906407;
+	bh=APA+IKhQAivDdhc8vaL3FsIWLj0FCAXAMDhHWsCuKXQ=;
+	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
+	b=nqEESknjcE7bjyogwRRHk5Ac1+O6YIAgKS9ID41Agw+gj1ML6szAioiAxoEwVPU1l
+	 Rs4O3IWVEyPaLUfn3ucjNCBdEM0jZ7qVEQOqFRZgHMl73bkop1oNdOjcBypQy/KDmY
+	 +yYrKUeVnGvPHEmSDq3dlNGyxs3TiB55gqVP0Mkh3wHUhGzZrb8jzq1r/kzrzrgaSe
+	 Sx8RFcBj5RwoYNnz8acrzmuqdg8YFFUkSOr1mbHeeboFs0QxqjRfdAq0hN2uLw03U3
+	 gSabtOra4+cRiKIRuFdWa7WbmJf9NW9/jT2Hdq21Hbk8moSetyHxC9xSA2qgIufyi6
+	 n4Ha+QYUx/PNg==
 From: Lee Jones <lee@kernel.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Benson Leung <bleung@chromium.org>,
-	Guenter Roeck <groeck@chromium.org>,
-	Tim Harvey <tharvey@gateworks.com>,
-	Michael Walle <mwalle@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Jean Delvare <jdelvare@suse.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Bjorn Andersson <andersson@kernel.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Matthias Brugger <matthias.bgg@gmail.com>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Cheng-Yi Chiang <cychiang@chromium.org>,
-	Tzung-Bi Shih <tzungbi@kernel.org>,
-	Liam Girdwood <lgirdwood@gmail.com>,
-	Mark Brown <broonie@kernel.org>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Tinghan Shen <tinghan.shen@mediatek.com>,
-	devicetree@vger.kernel.org, chrome-platform@lists.linux.dev,
-	linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-hwmon@vger.kernel.org, linux-pwm@vger.kernel.org,
-	linux-remoteproc@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-sound@vger.kernel.org,
-	linux-watchdog@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-	Mathew McBride <matt@traverse.com.au>
-Subject: Re: (subset) [PATCH v2] dt-bindings: mfd: Move embedded controllers
- to own directory
-Message-ID: <20250903073920.GA2163762@google.com>
-References: <20250822075712.27314-2-krzysztof.kozlowski@linaro.org>
- <175682479961.2401991.17056649550187344851.b4-ty@kernel.org>
- <63e43445-ef5f-49b2-85c1-f85d95426d5d@kernel.org>
+To: Sven Peter <sven@kernel.org>, Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
+ Neal Gompa <neal@gompa.dev>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Hector Martin <marcan@marcan.st>, 
+ "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Viresh Kumar <viresh.kumar@linaro.org>, 
+ Thomas Gleixner <tglx@linutronix.de>, Joerg Roedel <joro@8bytes.org>, 
+ Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
+ Linus Walleij <linus.walleij@linaro.org>, 
+ Mark Kettenis <kettenis@openbsd.org>, Andi Shyti <andi.shyti@kernel.org>, 
+ Jassi Brar <jassisinghbrar@gmail.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Sasha Finkelstein <fnkl.kernel@gmail.com>, 
+ Marcel Holtmann <marcel@holtmann.org>, 
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
+ Johannes Berg <johannes@sipsolutions.net>, van Spriel <arend@broadcom.com>, 
+ Lee Jones <lee@kernel.org>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Stephen Boyd <sboyd@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, 
+ Guenter Roeck <linux@roeck-us.net>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ =?utf-8?q?Martin_Povi=C5=A1er?= <povik+lin@cutebit.org>, 
+ Vinod Koul <vkoul@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
+ Mark Brown <broonie@kernel.org>, Marc Zyngier <maz@kernel.org>, 
+ Ulf Hansson <ulf.hansson@linaro.org>, Keith Busch <kbusch@kernel.org>, 
+ Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, 
+ Sagi Grimberg <sagi@grimberg.me>, Jaroslav Kysela <perex@perex.cz>, 
+ Takashi Iwai <tiwai@suse.com>, Janne Grunau <j@jannau.net>
+Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-pm@vger.kernel.org, iommu@lists.linux.dev, linux-gpio@vger.kernel.org, 
+ linux-i2c@vger.kernel.org, dri-devel@lists.freedesktop.org, 
+ linux-bluetooth@vger.kernel.org, linux-wireless@vger.kernel.org, 
+ linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org, 
+ linux-clk@vger.kernel.org, dmaengine@vger.kernel.org, 
+ linux-sound@vger.kernel.org, linux-spi@vger.kernel.org, 
+ linux-nvme@lists.infradead.org
+In-Reply-To: <20250828-dt-apple-t6020-v1-18-507ba4c4b98e@jannau.net>
+References: <20250828-dt-apple-t6020-v1-18-507ba4c4b98e@jannau.net>
+Subject: Re: (subset) [PATCH 18/37] mfd: macsmc: Add "apple,t8103-smc"
+ compatible
+Message-Id: <175690639604.2768491.7365862081844880171.b4-ty@kernel.org>
+Date: Wed, 03 Sep 2025 14:33:16 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <63e43445-ef5f-49b2-85c1-f85d95426d5d@kernel.org>
+X-Mailer: b4 0.15-dev-c81fc
 
-On Tue, 02 Sep 2025, Krzysztof Kozlowski wrote:
-
-> On 02/09/2025 16:53, Lee Jones wrote:
-> >> [...]
-> > 
-> > Applied, thanks!
-> > 
-> > [1/1] dt-bindings: mfd: Move embedded controllers to own directory
-> >       commit: 152afab28f7659a4292c9f7d3324eaeb49a55b8b
+On Thu, 28 Aug 2025 16:01:37 +0200, Janne Grunau wrote:
+> After discussion with the devicetree maintainers we agreed to not extend
+> lists with the generic compatible "apple,smc" anymore [1]. Use
+> "apple,t8103-smc" as base compatible as it is the SoC the driver and
+> bindings were written for.
 > 
+> [1]: https://lore.kernel.org/asahi/12ab93b7-1fc2-4ce0-926e-c8141cfe81bf@kernel.org/
 > 
-> There was a v3 here:
-> 
-> https://lore.kernel.org/r/20250825081201.9775-2-krzysztof.kozlowski@linaro.org/
+> [...]
 
-Drop this, applied that!
+Applied, thanks!
 
--- 
+[18/37] mfd: macsmc: Add "apple,t8103-smc" compatible
+        commit: 667ec87a2cfa50a528aaece758271794a1932141
+
+--
 Lee Jones [李琼斯]
+
 
