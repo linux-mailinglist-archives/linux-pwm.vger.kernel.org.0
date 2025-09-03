@@ -1,78 +1,97 @@
-Return-Path: <linux-pwm+bounces-7246-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7247-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC347B416C0
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Sep 2025 09:35:26 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 218C8B416E6
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Sep 2025 09:39:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 151AD1BA2B12
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Sep 2025 07:35:45 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0A71D5638B5
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Sep 2025 07:39:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B9302DC329;
-	Wed,  3 Sep 2025 07:35:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4B82D2DE710;
+	Wed,  3 Sep 2025 07:39:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M73gP3w1"
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="X5nmqeCa"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f46.google.com (mail-wm1-f46.google.com [209.85.128.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9C4E2D1F5E;
-	Wed,  3 Sep 2025 07:35:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E8B2DE6F2
+	for <linux-pwm@vger.kernel.org>; Wed,  3 Sep 2025 07:38:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756884912; cv=none; b=EQr0+zlVTpwtPp3hCr1FpiPtKzh3WhdEBHi7Ivl+BJIaQaPZUtMMhVj7cJKOLNWKXn5axSgPwhp7dZ2pDf2/A7lVo+G4nEewdERr7G8Wz9LTePeAxwibvvTsyVUKEmWZrJ0FwGIZMwb8oXZvG2WdXklxTLB6u/TYy+DAZTUce0c=
+	t=1756885141; cv=none; b=lfH1Cz+HXneAaZJmL+Vhc3kcl0iIGvyEQH7Wkxem73IFyVFbCookj+U+2Oi7Wx3/MYVvBCuMsZ9L9xQvzWFqwu6s+vRIOF8p21EpBUMLYBtLKKnppqVV304Sea8Remg8atutlQ6atxpGC03/+zE+K9EkwjV0zYlnMjCID8YJEx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756884912; c=relaxed/simple;
-	bh=8C3xjebS5A1uXK6PAJoBtn+sEHJWk+k90S1IcWEwjIA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=Sta/TAg2uHOFatbp/dOwx29n2sQ6MRF//OFA17n/Mnz0MlapieCq21GSL33bkwzFEUIM4ktebNiJh7MyOp2K7VA41PKDec1Mb+a11Kc69BJw7afiUWxqN7ilS77OzqdQGYS7991rtCp4QivFGlu/W9kpqFIaOvdCil27+Son2CA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M73gP3w1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AC3CC4CEF1;
-	Wed,  3 Sep 2025 07:35:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756884911;
-	bh=8C3xjebS5A1uXK6PAJoBtn+sEHJWk+k90S1IcWEwjIA=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=M73gP3w1W942MyxGPW01eX6vsT8OmQh3y23c5PTiaE+RaIv38yilqSRlEaMYQKisS
-	 YPdKyJmmD9bnCNvETJSIsXUAZGH52h91XwQkJJQrcgFxmDXzLKckKLQXZALgPEo+OQ
-	 nAng21hE2oG2216hOXxbcdI0y9pEaDwXOqhWlNC+GD4JrOm2eFbNv3iSS+QTkv040m
-	 6SASxWlOltZNjIwKIOuxAXYvVYg430sLqYlXJ7OFX2KySajblgm3sxfhB/wkncPO9z
-	 hdDQmpHAQ0ivmz2DeRoTJuEBxcWr8c0knan/GO3i1Xm5opx5zj19pjPkra2g4EnXYv
-	 N0/Naf28FshuA==
-From: Lee Jones <lee@kernel.org>
-To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Benson Leung <bleung@chromium.org>, 
- Guenter Roeck <groeck@chromium.org>, Tim Harvey <tharvey@gateworks.com>, 
- Pengyu Luo <mitltlatltl@gmail.com>, Michael Walle <mwalle@kernel.org>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Bartosz Golaszewski <brgl@bgdev.pl>, Jean Delvare <jdelvare@suse.com>, 
- Thomas Gleixner <tglx@linutronix.de>, Lee Jones <lee@kernel.org>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Mathieu Poirier <mathieu.poirier@linaro.org>, 
- Matthias Brugger <matthias.bgg@gmail.com>, 
- AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, 
- Cheng-Yi Chiang <cychiang@chromium.org>, Tzung-Bi Shih <tzungbi@kernel.org>, 
- Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
- Wim Van Sebroeck <wim@linux-watchdog.org>, Nikita Travkin <nikita@trvn.ru>, 
- Konrad Dybcio <konradybcio@kernel.org>, 
- Thierry Reding <thierry.reding@gmail.com>, 
- Tinghan Shen <tinghan.shen@mediatek.com>, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, chrome-platform@lists.linux.dev, 
- linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, 
- linux-pwm@vger.kernel.org, linux-remoteproc@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, 
- linux-sound@vger.kernel.org, linux-watchdog@vger.kernel.org, 
- Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Cc: Mathew McBride <matt@traverse.com.au>
-In-Reply-To: <20250825081201.9775-2-krzysztof.kozlowski@linaro.org>
-References: <20250825081201.9775-2-krzysztof.kozlowski@linaro.org>
-Subject: Re: (subset) [PATCH v3] dt-bindings: mfd: Move embedded
- controllers to own directory
-Message-Id: <175688490483.2489808.1034690962892116559.b4-ty@kernel.org>
-Date: Wed, 03 Sep 2025 08:35:04 +0100
+	s=arc-20240116; t=1756885141; c=relaxed/simple;
+	bh=ZMq+/DLAY/G0cbCuJHDGH9PS4rmeWgA649rs001QIRY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=dW3qx+XRkIAbZrBviBueUVYq0e3bQcWjp0yDEC0NZwRsYioT2h8VQkS/m7lfMITMoaI9zYUVskn9QHXYKsQN52qiQ1bSRcB6HE/W6V0LHNQ/a8WBAxgN4ezT4QOuSNjsXN6rYL5qjLXL/+42ta+JRyyptZzTNsRK5hQOci0VRPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=X5nmqeCa; arc=none smtp.client-ip=209.85.128.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
+Received: by mail-wm1-f46.google.com with SMTP id 5b1f17b1804b1-45b627ea685so52080055e9.1
+        for <linux-pwm@vger.kernel.org>; Wed, 03 Sep 2025 00:38:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1756885137; x=1757489937; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=QzDrLtK3tVYXpgajpgV5xkfeNF5cniPAFxRcbhLkKq4=;
+        b=X5nmqeCa6G3jNoRzJVGcTJgsq+jjaefzCJhNRwlv4WQgt+oxk+4e74BtDTrFe8Mwl0
+         n0NwXGwV56+TtFkYXsuRndj1GNG9uZ39LzO3l3kjbS/ZPBPUyWzIgdLAt0mI9FuFnmIH
+         T4ZkZIV8wyEsJyzKAG6CSEwYxSD05Mr2GNOyoXRYWPYATxbTHvEGZPgzRqWFItPFQLn/
+         jyJ0ImPhA3hmqBp8K0SDJiApbfPZhqqly7nItjxGeUFUWqkpxofVD3HHQxt642SUpLL8
+         cOI79bpx4JZRnoAs9uZNSIZL6aT+A0HLZAdRUGI8/zOmUfP4V/VCyxhT5I+9ZnQAJGeC
+         RFew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1756885137; x=1757489937;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=QzDrLtK3tVYXpgajpgV5xkfeNF5cniPAFxRcbhLkKq4=;
+        b=Q/gLY3+1nC977OXqpQz4tG5ZqpI7F7efjMxhkR/XY0fd8IDy+bjlFJ5N5KzfR2hrcy
+         bTNWaTxAZlvoZwcw301rTw9F3xupMVTPQ/hj3Gblck1eqnts4Xf+rgecJbwGeu+NYf2l
+         nIto/dq2gDMYRX4QzeCn5pHAGA8I2qmldrNuoSL6mLb025NSGuMbxcqvtpy6E8isrUQ0
+         OMN0nZWwmcieSJHYiWCQxW4Ah4T4Qxb214xdlTmNdH0sMNOTyyEWjh6C6RlnFAhDz7ZE
+         zXeAta94uPUY2hm5EpmfSKD7E3HULuLRgpW4GnWDXkeDavh4fe6qR5o0xkyOFuZDqLVS
+         2+vw==
+X-Forwarded-Encrypted: i=1; AJvYcCUNVfAU8+IJclN4okxOlp6lL739K5v+p1w2zapll5hreQ+r/L6rhfqxvcQoXa8BA3m9arZ0CizjJq8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxLGEBOigeZRMEzwCfQ6MOGRA+tkoc16KDI7fub/Sj7TlaRVVg/
+	RCUusB0qe1xFjxL1mAasy5oViwZ9ed62zUAOxXe8GSoipc75x/1FNOW0cqSYzQVOHgE=
+X-Gm-Gg: ASbGncvTCg6vJnXJmW28pKxbJehfXH0L4MYw12/Xp2TzEb5OwFsiSKRJYIS+gSu3ZKD
+	20G3c0t46in2o7HZMtyiogoDbTvFRAgSWC5FPAewA8Z1WuiBi0c9AGE0F2mOWLlXiwBoaU+085n
+	V4LN4rhwQcAABeKXZ/fW8bxlH9Bkg11CznwSwv0gvQzydQnNfVUCvS33RPCspbor3JVp66QKwIm
+	8ajK/ysmVHXx6C0pHhRdBp09KWjrwBKRbYCrWikNCsgxJnMZQJ9FcSF9dnftsVJbvgWVr/zMBA5
+	1NG4lmBfxH7cgRtIWB90/NzJ7wtUOh50oM9Bj0iC57r6g6K/wt2K0wXKiR7ytYbHhkVUXfYu3+5
+	lSNOfJSYVDkCmZqy9SC/l37+TobspYBTBeQ==
+X-Google-Smtp-Source: AGHT+IGzMNTEASi0Qi6RgPFb9XAbV8YDnYAnOHuJi0TADIjDiS29XexXLdCQiRjZjgcY+IsF0TsvRA==
+X-Received: by 2002:a05:600c:3b29:b0:45b:6269:d257 with SMTP id 5b1f17b1804b1-45b855c428fmr121644965e9.35.1756885137007;
+        Wed, 03 Sep 2025 00:38:57 -0700 (PDT)
+Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:2f8b:4799:6bd6:35df])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3d53fda847dsm13417216f8f.0.2025.09.03.00.38.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Sep 2025 00:38:56 -0700 (PDT)
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+To: Linus Walleij <linus.walleij@linaro.org>,
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+	Alexandre Torgue <alexandre.torgue@foss.st.com>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
+	linux-gpio@vger.kernel.org,
+	linux-stm32@st-md-mailman.stormreply.com,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	patches@opensource.cirrus.com,
+	linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 0/6] gpio: remove references to gpio_chip::base from debugfs callbacks
+Date: Wed,  3 Sep 2025 09:38:52 +0200
+Message-ID: <175688512869.10115.2172054090244481140.b4-ty@linaro.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <20250826-gpio-dbg-show-base-v1-0-7f27cd7f2256@linaro.org>
+References: <20250826-gpio-dbg-show-base-v1-0-7f27cd7f2256@linaro.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -81,27 +100,32 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.15-dev-c81fc
 
-On Mon, 25 Aug 2025 10:12:02 +0200, Krzysztof Kozlowski wrote:
-> Move several embedded controller bindings (like ChromeOS EC, Gateworks
-> System Controller and Kontron sl28cpld Board Management) to new
-> subdirectory "embedded-controller" matching their purpose.
+From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+
+
+On Tue, 26 Aug 2025 11:54:34 +0200, Bartosz Golaszewski wrote:
+> We've stopped displaying the global GPIO numbers from core GPIOLIB
+> debugfs callbacks. Start dropping it from drivers too.
 > 
-> An embedded controller (EC) is a discrete component that contains a
-> microcontroller (i.e. a small CPU running a small firmware without
-> operating system) mounted into a larger computer system running
-> a fully fledged operating system that needs to utilize the embedded
-> controller as part of its operation.
 > 
-> [...]
 
 Applied, thanks!
 
-[1/1] dt-bindings: mfd: Move embedded controllers to own directory
-      commit: e19df0d928a7d4a6dda919bb486e1ac2251f384f
+[1/6] gpio: stmpe: don't print out global GPIO numbers in debugfs callbacks
+      https://git.kernel.org/brgl/linux/c/246b889c704e3209050eb0aa5a3733564aee1b38
+[2/6] gpio: nomadik: don't print out global GPIO numbers in debugfs callbacks
+      https://git.kernel.org/brgl/linux/c/ddeb66d2cb10f03a43d97a0ff2c3869d1951c87d
+[3/6] gpio: wm831x: don't print out global GPIO numbers in debugfs callbacks
+      https://git.kernel.org/brgl/linux/c/3767426b234f0d7b82ccfa05e53c47c83e0a12c2
+[4/6] gpio: wm8994: don't print out global GPIO numbers in debugfs callbacks
+      https://git.kernel.org/brgl/linux/c/aaa1279b8b5b46cc42b6175c2bcd83d8ac5fd2b3
+[5/6] gpio: mvebu: don't print out global GPIO numbers in debugfs callbacks
+      https://git.kernel.org/brgl/linux/c/2d71156cfea8391625ea146eff32b3d2ef059345
+[6/6] gpio: xra1403: don't print out global GPIO numbers in debugfs callbacks
+      https://git.kernel.org/brgl/linux/c/3be2d43534aab7291b59c4e66526f911854aa3a7
 
---
-Lee Jones [李琼斯]
-
+Best regards,
+-- 
+Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
