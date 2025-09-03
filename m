@@ -1,118 +1,123 @@
-Return-Path: <linux-pwm+bounces-7249-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7250-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 30B42B421B8
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Sep 2025 15:33:36 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC10DB423F8
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Sep 2025 16:46:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 99E5C188C7BD
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Sep 2025 13:33:56 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 407AC3BA9A3
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Sep 2025 14:46:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59EF3308F36;
-	Wed,  3 Sep 2025 13:33:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2486B23D7DF;
+	Wed,  3 Sep 2025 14:46:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nqEESknj"
+	dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="3d9aSZPs"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.andi.de1.cc (mail.andi.de1.cc [178.238.236.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A7071F4701;
-	Wed,  3 Sep 2025 13:33:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AC6A1EA7E4;
+	Wed,  3 Sep 2025 14:46:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.238.236.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1756906408; cv=none; b=DtDC744BbIvRDlpI82zSS4r5EGDY4qsRzy93HanBXWG6Wx8xCSLuHpCxCbwQgNvaddWtFmbTmjAw18OinaUuh3A7U25/CFPfmztP29N7yN0CG5WeHk+/fKv9AEVaqY+8GPSJcTNkgkxYIKBwXKmq6+bpOlIPCJ/PGDL04xDs4M0=
+	t=1756910810; cv=none; b=rRFQ1jg503QpJTivRqVLzPbfuAuvJO067hhXLZUnWx+rgTksAqpLmAuE+i5G7M9lN+sNgZbylKgmsZeCyfcHQTqPMf04mx3ixaF/uFuQKr4ZM09dyE9GfzhSrtn6pflXAH6X/qDFzq4bMOYfW+Qz2TUDSvrp4hro1YFISs03tDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1756906408; c=relaxed/simple;
-	bh=APA+IKhQAivDdhc8vaL3FsIWLj0FCAXAMDhHWsCuKXQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Message-Id:Date:
-	 MIME-Version:Content-Type; b=d8KTlxDE06rlcFqYjfah5n86MVNiBodWTFZxPn+mDftPeX46W6QL3rAoVtmCI9J6XfGnRuFwdEh59qrIg1gdUmanWxr3kvEm/KS9W+ID6RSOu3deVvINK/WhXQQQ6Z4h2qB92pqLvtc6VFIpilpxy8NvMxDKIqHoQenXSn4d9TQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nqEESknj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5133DC4CEF0;
-	Wed,  3 Sep 2025 13:33:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1756906407;
-	bh=APA+IKhQAivDdhc8vaL3FsIWLj0FCAXAMDhHWsCuKXQ=;
-	h=From:To:Cc:In-Reply-To:References:Subject:Date:From;
-	b=nqEESknjcE7bjyogwRRHk5Ac1+O6YIAgKS9ID41Agw+gj1ML6szAioiAxoEwVPU1l
-	 Rs4O3IWVEyPaLUfn3ucjNCBdEM0jZ7qVEQOqFRZgHMl73bkop1oNdOjcBypQy/KDmY
-	 +yYrKUeVnGvPHEmSDq3dlNGyxs3TiB55gqVP0Mkh3wHUhGzZrb8jzq1r/kzrzrgaSe
-	 Sx8RFcBj5RwoYNnz8acrzmuqdg8YFFUkSOr1mbHeeboFs0QxqjRfdAq0hN2uLw03U3
-	 gSabtOra4+cRiKIRuFdWa7WbmJf9NW9/jT2Hdq21Hbk8moSetyHxC9xSA2qgIufyi6
-	 n4Ha+QYUx/PNg==
-From: Lee Jones <lee@kernel.org>
-To: Sven Peter <sven@kernel.org>, Alyssa Rosenzweig <alyssa@rosenzweig.io>, 
- Neal Gompa <neal@gompa.dev>, Rob Herring <robh@kernel.org>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Hector Martin <marcan@marcan.st>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, 
- Viresh Kumar <viresh.kumar@linaro.org>, 
- Thomas Gleixner <tglx@linutronix.de>, Joerg Roedel <joro@8bytes.org>, 
- Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>, 
- Linus Walleij <linus.walleij@linaro.org>, 
- Mark Kettenis <kettenis@openbsd.org>, Andi Shyti <andi.shyti@kernel.org>, 
- Jassi Brar <jassisinghbrar@gmail.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Sasha Finkelstein <fnkl.kernel@gmail.com>, 
- Marcel Holtmann <marcel@holtmann.org>, 
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>, 
- Johannes Berg <johannes@sipsolutions.net>, van Spriel <arend@broadcom.com>, 
- Lee Jones <lee@kernel.org>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Stephen Boyd <sboyd@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, 
- Guenter Roeck <linux@roeck-us.net>, 
- Michael Turquette <mturquette@baylibre.com>, 
- =?utf-8?q?Martin_Povi=C5=A1er?= <povik+lin@cutebit.org>, 
- Vinod Koul <vkoul@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, 
- Mark Brown <broonie@kernel.org>, Marc Zyngier <maz@kernel.org>, 
- Ulf Hansson <ulf.hansson@linaro.org>, Keith Busch <kbusch@kernel.org>, 
- Jens Axboe <axboe@kernel.dk>, Christoph Hellwig <hch@lst.de>, 
- Sagi Grimberg <sagi@grimberg.me>, Jaroslav Kysela <perex@perex.cz>, 
- Takashi Iwai <tiwai@suse.com>, Janne Grunau <j@jannau.net>
-Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-pm@vger.kernel.org, iommu@lists.linux.dev, linux-gpio@vger.kernel.org, 
- linux-i2c@vger.kernel.org, dri-devel@lists.freedesktop.org, 
- linux-bluetooth@vger.kernel.org, linux-wireless@vger.kernel.org, 
- linux-pwm@vger.kernel.org, linux-watchdog@vger.kernel.org, 
- linux-clk@vger.kernel.org, dmaengine@vger.kernel.org, 
- linux-sound@vger.kernel.org, linux-spi@vger.kernel.org, 
- linux-nvme@lists.infradead.org
-In-Reply-To: <20250828-dt-apple-t6020-v1-18-507ba4c4b98e@jannau.net>
-References: <20250828-dt-apple-t6020-v1-18-507ba4c4b98e@jannau.net>
-Subject: Re: (subset) [PATCH 18/37] mfd: macsmc: Add "apple,t8103-smc"
- compatible
-Message-Id: <175690639604.2768491.7365862081844880171.b4-ty@kernel.org>
-Date: Wed, 03 Sep 2025 14:33:16 +0100
+	s=arc-20240116; t=1756910810; c=relaxed/simple;
+	bh=J1PKNIgZOCKgEUdO8M5JDkq4fiPls0L34C3HgSWF9pI=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Ex2MxdLN3/dbjpmX/lo+cxTCA+r1ujPSqNZhOp8uvme7hwvAo8YV76GTH5eKdp+WH4UdjvmRZXSHBiaP/2FdAsLlED75twshAe0PI+REIbfyP/TMDYXAMpUYjOmBujOdQ3NUWlRfqfO0ESN4tHZMGv+EzW09UnqaygyDL6pJv1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info; spf=pass smtp.mailfrom=kemnade.info; dkim=pass (2048-bit key) header.d=kemnade.info header.i=@kemnade.info header.b=3d9aSZPs; arc=none smtp.client-ip=178.238.236.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=kemnade.info
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kemnade.info
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=kemnade.info; s=20220719; h=References:In-Reply-To:Cc:From:Sender:Reply-To:
+	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+	Resent-To:Resent-Cc:Resent-Message-ID;
+	bh=fj3F4CR220kgIik6Toc/cmZCKNEv2XOOqIQqcF1ImAs=; b=3d9aSZPs3YmAbFASAiHJJcRzGD
+	fl2yMQ8DmjfTp6BbqLH7rIT2d77qfEB5Z+Y3/TvVDjT6wUAtXu/ENwN6EG2X//C4oeWM/kjAdgfxL
+	A694dMtmMqBNIb8h0atjUe70ar36QSdcZGS2V7lVdWAhrq/ScnBLUi3G/rdz/Vs4Ojj/3MbHG320S
+	ZRrjHpfBqZtlgfWGJBUaKIHpb6URoYypOkt4AYTv/24i82Ubg9uaXxpMpVw/4TTofxGQ15mggaxe0
+	BuFsZMXnY/HvCX/NBQPB2UnAzG31UmQZCKP7YdTXyJCqScWP+DXLeNLysRPnEhCaCLpypNh/VCOzx
+	J06xky9g==;
+Date: Wed, 3 Sep 2025 16:46:43 +0200
+From: Andreas Kemnade <andreas@kemnade.info>
+To: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
+Cc: lee@kernel.org, krzk+dt@kernel.org, robh@kernel.org,
+ conor+dt@kernel.org, ukleinek@kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, shuah@kernel.org
+Subject: Re: [PATCH v5] dt-bindings: mfd: twl: Add missing sub-nodes for
+ TWL4030 & TWL603x
+Message-ID: <20250903164643.0d0d2144@akair>
+In-Reply-To: <CANBuOYrcdzDytx0f=ZbpMujcNGn8RLGZwOJBE8FzPsGtt1y9iQ@mail.gmail.com>
+References: <20250902212921.89759-1-jihed.chaibi.dev@gmail.com>
+	<20250903000804.689a0a06@akair>
+	<CANBuOYrcdzDytx0f=ZbpMujcNGn8RLGZwOJBE8FzPsGtt1y9iQ@mail.gmail.com>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Mailer: b4 0.15-dev-c81fc
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Thu, 28 Aug 2025 16:01:37 +0200, Janne Grunau wrote:
-> After discussion with the devicetree maintainers we agreed to not extend
-> lists with the generic compatible "apple,smc" anymore [1]. Use
-> "apple,t8103-smc" as base compatible as it is the SoC the driver and
-> bindings were written for.
+Am Wed, 3 Sep 2025 00:55:25 +0200
+schrieb Jihed Chaibi <jihed.chaibi.dev@gmail.com>:
+
+> > > +                  - ti,twl4030-power-idle-osc-off  
+> >
+> > this allows quite weird combinations like
+> >  "ti,twl4030-power-idle", "ti,twl4030-power-idle".
+> > I would propose to rather clean this up to things used in
+> > twl4030-power.c and at the same time available in dts, also
+> > taking the brush in the dts. I do not expect that these specific
+> > compatibles are in use anywhere. I looked around earlier.
+> >
+> > Regards,
+> > Andreas  
 > 
-> [1]: https://lore.kernel.org/asahi/12ab93b7-1fc2-4ce0-926e-c8141cfe81bf@kernel.org/
+> Hi Andreas,
 > 
-> [...]
+> Thank you for the feedback. I've done a deeper investigation into
+> the 'power:compatible' strings to see if the schema could be made
+> stricter.
+> 
+> While cleaning up the list, I found an existing DTSI file
+> (logicpd-torpedo-som.dtsi) that uses the combination:
+> 'compatible = "ti,twl4030-power-idle-osc-off", "ti,twl4030-power-idle";'
+> 
+> Since this "idle, idle" combination is already in use, it seems we
+> cannot make the schema stricter without breaking this existing
+> board.
+> 
+well the only maybe fallback line  I see here is
+ti,twl4030-power-idle-osc-off -> ti,twl4030-power-idle ->
+ti,twl4030-power.
+But you allow "twl,twl4030-power-idle", "ti,twl4030-power-idle"
+That absolutely makes no sense.
 
-Applied, thanks!
+Then the question is whether there is the need for fallback compatibles.
+They are needed if there is one piece of software which does only know
+the fallback and can use the hardware in some limited mode, e.g.
+u-boot using some mmc controller only without some high speed mode.
+Looking around, I do not find anything in u-boot or barebox for the
+twl4030-power compatibles.
 
-[18/37] mfd: macsmc: Add "apple,t8103-smc" compatible
-        commit: 667ec87a2cfa50a528aaece758271794a1932141
+And if we define "ti,twl4030-power-idle" as a fallback for
+"ti,twl4030-power-idle-osc-off", then it is a fallback for everyone
+using "ti,twl4030-power-idle-osc-off", so then the dts would need to be
+corrected.
 
---
-Lee Jones [李琼斯]
+There is one exception: "ti,twl4030-power-omap3-evm" is still used but
+not everybody knows it (e.g. pm34xx.c), so there is a reason for a
+fallback compatible:"ti,twl4030-power-idle"
 
+And the rest, time for the brush and lets not totally mess up
+ti,twl.yaml.
+
+Regards,
+Andreas
 
