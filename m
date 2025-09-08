@@ -1,138 +1,204 @@
-Return-Path: <linux-pwm+bounces-7260-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7261-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
-	by mail.lfdr.de (Postfix) with ESMTPS id F3456B471A8
-	for <lists+linux-pwm@lfdr.de>; Sat,  6 Sep 2025 17:00:28 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id E9946B498B3
+	for <lists+linux-pwm@lfdr.de>; Mon,  8 Sep 2025 20:49:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 6C4C7581625
-	for <lists+linux-pwm@lfdr.de>; Sat,  6 Sep 2025 15:00:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 9C4BA4E2CD8
+	for <lists+linux-pwm@lfdr.de>; Mon,  8 Sep 2025 18:49:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 100312C11F0;
-	Sat,  6 Sep 2025 15:00:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2890631C594;
+	Mon,  8 Sep 2025 18:48:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WOo1/vM/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V89bI/C+"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428B2277C90;
-	Sat,  6 Sep 2025 15:00:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E18731C57D;
+	Mon,  8 Sep 2025 18:48:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757170804; cv=none; b=S9rqOhntYfWh7Ig3b97QqRDgnRbOX3vg6ekxRGCbJ+mL+Q0i74ToyNcbXKVsAglrdDZEttc2Ax4O1wbI8Kv59EiL6PH6q+FEr9Y37HJ8ZNj8i+4c5aqw2iu8FUN663bwjbKLM/g9l0JbNgmAjF7OiTvT63DFIgggDtXRFPQtWHw=
+	t=1757357326; cv=none; b=Dqe9mId4ytreE0mdIUh4GWxtzDs2d96C6OI4ClO3dos0HiM9lnnGsY3bR2X8WchFbr6iWox9YTzoh8LJ0gvAksxHezRBXe89BstIezgoVzWz9ogMYJFH8m7S+QKVDVlRnsMKqdwGmisVxQFyfzuIyVV7lUFqzqIyYQwONE4Oh0k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757170804; c=relaxed/simple;
-	bh=PtR1bvFj895j2XEu618br+oRUVaTipfK6VlIJI11CJ8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OHjm4cedC2fggwHk3jVcUDeXBBXPwQXjvmIVw08iK0JJWgcOS7JHChTz7v2BGyaLPahwMBOcFBq4aDyO/5SSvoecxpKe5q99fa/p53ycuH3xuB10QMBqHr6T2Yl98kaN90Fd8b+IMtfH7Zkrzr4oh+OYzZD+PKRWdZOkhcTKQsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WOo1/vM/; arc=none smtp.client-ip=209.85.221.48
+	s=arc-20240116; t=1757357326; c=relaxed/simple;
+	bh=jZJKtwe4+fsS6RKHrvj+/VjDOrfQq4Wswh5Qzv8OmAw=;
+	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=FXf8TadPD7bLHS8MkZdXDTRk0omvvf4tOXb8XIhz6SbFnzrXVm1J2JOwO/jwYKaR7pVJWKYkn+dwn0BLwdHRzkDirPzvT2vg68iuaBRsTCM3bhqs4WT66N0xnk5KyxpuiL6TBukJC3LzAYm4lRNy9iDze+xktBmNkszsxtohoqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V89bI/C+; arc=none smtp.client-ip=209.85.128.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-3dae49b117bso2518331f8f.1;
-        Sat, 06 Sep 2025 08:00:03 -0700 (PDT)
+Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-45de2b517a3so16492645e9.3;
+        Mon, 08 Sep 2025 11:48:43 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757170802; x=1757775602; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Y5exdFFeMfs6pXJOU4JQGRUGWMk+GuCzkezUi2o0S8o=;
-        b=WOo1/vM/3jDtv4mJMMIFxY2QefEsg9v6yw4Um9dB5H5Z97IdDLlKOc5nadOr+YnswI
-         vu52axDcIU8MOjQn276g1yeGD+F3N4KBJtQRm//7KSph3mGxA06kmG7raJ8a1SAP/ate
-         9XW5nN9ps9Zs/hqYNFYjg9quyFMAByjbrWxLQTOQDjlEzZkAy1Aa53Lm+i4EkvR1B5+n
-         4AVyxT2hjYUN9dIfu0mQMKVRjztG2sxs2Lh0+I4MdRoqR8IJxq7tTS4O0CnEZvhIF2+W
-         u+gasDOEhkCFcSltndsWqjLTngfcpi6Xv12OpFOOqKOkITdKc2Vdu6tHds7EGo8YIYh4
-         h3Sw==
+        d=gmail.com; s=20230601; t=1757357322; x=1757962122; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:message-id:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=Dvz+5Xz8/A2Bwbne1Kgam2pwwdqdS2QtFpy2XB/cFFU=;
+        b=V89bI/C+Lx7knPtjBvJCH0A6gLmFVvITY8fpZtTJDSeV2XOvFO0KQKHaO0t3/4EPFL
+         1BrJtbfJeuYx73wx9uyIGNpHk/qCzM8faAi5oBWiaP+7Z2ykxYGg84AzGldg9LPjhlq3
+         YDq79gqWEJVIL7SxqX3PYHj+4JzKTTAsFoCY52bn0FC7b/8VzFaZeSbXEcqPU3fdIqfa
+         rrgkkqR+XguEkIC40b6xEoGEGkRVaKOZxxCtp4OYCfvi0Np4D4bRDiBTd62F2M5B94o/
+         G3UavmUDZ/3jVfyC0crlDUn68IH9PS8RBUj4Z/HwCjkrPHqNngXgkRQzcV1QJI4H98sG
+         I3VQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757170802; x=1757775602;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Y5exdFFeMfs6pXJOU4JQGRUGWMk+GuCzkezUi2o0S8o=;
-        b=PEmAqkHjfQfsOEeuKyD2LhPqKDH6jLFCTDgKNttT+x1KDO0SAWnnPIMN7mC1Io9HkK
-         4z6wHenmc5YK62qvMuvnmHXiGz0lg3RwRJ4W6U/rc2AF9Tc+nIFUJQwwnBjyB+v668E1
-         W9ym4SQzMNaEsP/hjEyAZB0dOUIl7+1AcDSyN/0u8V2jYSnb7pmedT5529YY7FaYcFhG
-         n6ITOt+39gO9n21sSxd1zyEyCQinIP3YkM2ZCDXlD46uP9GmhjE9HoRekKVeob5yz0Uq
-         cZ+hYTc5T5fkD8X8x5jDLbYm3czMtWyFZ09pJsl6Ly0dBbjsz/Wcq/0LuFxPd9+NC8G9
-         dPsg==
-X-Forwarded-Encrypted: i=1; AJvYcCURA4tVTTps27ogEqNmWSqFLGBnHgQqIAdF/As8yUVpmjilPXWWB2AqADXqO+bFBCyDLxWky0u+yKhj@vger.kernel.org, AJvYcCVOqtbqDzyDg5FNVxw68S1pIt0w2Iv4ekFXr6TwEi2suY7fW1RCMPHXquSUurLy0FXSM+2wejNYqjSO@vger.kernel.org, AJvYcCWtZv63MLgEwe5QcsUVj3lgqyYeejjL1Rv/ffUypEkgRe/4kUu1F3WxR0/nTID0Tr1zbo7vyYkn8dUgfw==@vger.kernel.org, AJvYcCXmVzHVF83sMpvlaThXm5dlD8rdwek1299ewACrdbTKBfpG9buOW5CKjj/gAyDo5aGOX4lAhe8+MmJeW3AS@vger.kernel.org
-X-Gm-Message-State: AOJu0YwVqaIajXWnaNjLDo/ZKpQFvvUkHYnk304qnjU0RuLhnIhbCrJ1
-	HEVWMf9zX/hrX1n3/GaC3Jz8b5+oI4ctPwa6mE9j8c4JiQ+RyZtj6A8=
-X-Gm-Gg: ASbGncvczgx8XvZNTv3CgWco5OChIHrKN5zG+NfJAFMDsP+5yyYWD+ry0dw+S+IstHM
-	t5vwFqdaOTTS8mHfEgp+epjz9k0MvwDJGVv6GxObXAwpn+9LMZBAeWStzZTL7JM6GhJRbROnpVL
-	Ac1OLlLbMa4lfF0mkx6GsVb4j5Tb0fpBv5uEjM7LuybgIFwcTSOKZhpGdHjBUDM9BSxdmG2NrwO
-	WoBl4NhUC12nH0oJ6Iw+p/ZsDkSCB4DkHORYF1Y34XELYBZB9F5B+/XtXaZZmwYOBwPBvcI6g1G
-	zhyKckhlZSUfNFCcUHg60YJlfDv9HAQ9brJJ4+aWrYtCYWCaXyfqtl2lAG+bKJXgVxlr9Au7eGm
-	dGQpwVrQ8l57NkCewROukt11KgNfO0mn3uT1EfTagzFoBmwbZMHqj3tvi5A==
-X-Google-Smtp-Source: AGHT+IHkfCr/GUbB7Zg0ZVNuXkqzZKgkN3YIlt8oR9MJWtco+KeawFHG3DBPAGLJ8R/YPYvxkX0eYQ==
-X-Received: by 2002:a05:6000:184d:b0:3e7:4265:66de with SMTP id ffacd0b85a97d-3e742656b0emr369915f8f.8.1757170801463;
-        Sat, 06 Sep 2025 08:00:01 -0700 (PDT)
-Received: from localhost.localdomain ([2a0d:e487:143f:cf9:d8da:f38a:fb6d:ea])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3cf33fba9fbsm35106544f8f.50.2025.09.06.08.00.00
+        d=1e100.net; s=20230601; t=1757357322; x=1757962122;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:subject:cc:to:from:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=Dvz+5Xz8/A2Bwbne1Kgam2pwwdqdS2QtFpy2XB/cFFU=;
+        b=CgoYUuo7LI2w0XzyZqzdRG4+5lEn5y+dSkVB0amyZKqY0QLtpDQYkdZKtmxiNSu847
+         QP9eddRPL9ienZ5xFvCmxFuHi7sjfg6oXBoTfOYNKXObHMlkRqKiYnwK13vhKidvyaxf
+         R20biZLb2tm03Rqx6jec1q5+Yn4kwcw544wylpRPJsihkKWukLHhFXhnREkf+5FaRSbV
+         subbHLA8ww7t5qjAsJRB0JIoi+sainGy6gf9o4gRLMVQPftrrI4ztxBJNeuwHQ4FaO5P
+         0ajBofs2R4N/oukfi1UOhXGxuS2+9TzuirDJT+UFn00QFAllTqeH+SXnY6RXhVl9H8Qc
+         zdHw==
+X-Forwarded-Encrypted: i=1; AJvYcCVLF+FkgUPQv2fIBmTLtqCXJUNG7Bq1Sqd1VdiZIzszL2nOsl3TSnQpB5afKtu49b0ziZfY8cjjZwc=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx+GtYstbg40ETrbbD93xwvPxOizpM3v+uxh/Ys96+9gw6eD6vX
+	or7h6OpoXrqZPVBq8vSJHKSow/5huODMEoC5H3E0rbSwYRhZOZ6kXB8HPvhiAg==
+X-Gm-Gg: ASbGncvbvEQtVnrx+FxK8h0YpDZaG2DwJrcBluMJ4YQrK9qX3JmzAqWsiK4yp3g9Y9C
+	SAAQAB0WeS+WfepOc8TFKgq4WBD9lzAQ28EgsPFbRRPt7g2K3RZpOlw4pJYBWi9Qq2/1wL18cKA
+	s1UJTKVuZ70Y1voMuYeTzgpsjJ+Zb4xcfxD+hJwFyYw54BOjxdoDD4hQahLz1DRwcDIeaYuy9q4
+	9exXlI9NWaJrmb+TLxRjtV+ae+XgDSE69IuRMXb0HmtldFnpFaqo9hOh9C4HvXT2hGvH3yrtv60
+	OrBT0Aar1j/ukBNteWj+L8GIN9VTMiyxtqZkEgNK0N8vJsr4yGPftzI31LrK026OMsn52+n7Y34
+	R1G/obf7SWxP0y/iKVdDuuBLOHL4BHuzAL3NeutrzPVSEW2ihRSNoDlEHn6/dJE+ukbiEDw==
+X-Google-Smtp-Source: AGHT+IFGy+QF4H2ZqGG74UzGkELPe9Oad43keJ6NxZmsbTC+VMGiv2FCEGjXUHnb2DO2+wHxe6DoIA==
+X-Received: by 2002:a05:600c:c1c8:10b0:45d:ec9d:5fc3 with SMTP id 5b1f17b1804b1-45dec9d6013mr5588595e9.18.1757357322389;
+        Mon, 08 Sep 2025 11:48:42 -0700 (PDT)
+Received: from Ansuel-XPS. (host-95-249-236-54.retail.telecomitalia.it. [95.249.236.54])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45cb61377a7sm249864735e9.13.2025.09.08.11.48.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 06 Sep 2025 08:00:00 -0700 (PDT)
-From: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
-To: robh@kernel.org,
-	andreas@kemnade.info
-Cc: lee@kernel.org,
-	krzk+dt@kernel.org,
-	tony@atomide.com,
-	conor+dt@kernel.org,
-	ukleinek@kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	linux-omap@vger.kernel.org,
-	jihed.chaibi.dev@gmail.com
-Subject: [PATCH v6 3/3] ARM: dts: omap3: n900: Correct obsolete TWL4030 power compatible
-Date: Sat,  6 Sep 2025 16:59:05 +0200
-Message-Id: <20250906145905.93845-4-jihed.chaibi.dev@gmail.com>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250906145905.93845-1-jihed.chaibi.dev@gmail.com>
-References: <20250906145905.93845-1-jihed.chaibi.dev@gmail.com>
+        Mon, 08 Sep 2025 11:48:41 -0700 (PDT)
+Message-ID: <68bf2509.050a0220.702b3.c003@mx.google.com>
+X-Google-Original-Message-ID: <aL8lBqn0easEvKPS@Ansuel-XPS.>
+Date: Mon, 8 Sep 2025 20:48:38 +0200
+From: Christian Marangi <ansuelsmth@gmail.com>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>
+Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	Benjamin Larsson <benjamin.larsson@genexis.eu>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
+	Lorenzo Bianconi <lorenzo@kernel.org>,
+	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v23] pwm: airoha: Add support for EN7581 SoC
+References: <20250708145053.798-1-ansuelsmth@gmail.com>
+ <xsblhw36y3corxx3pxe6223auirrsqr3efovfnrm5lbo4xy3lf@wf3ytlivzv6g>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <xsblhw36y3corxx3pxe6223auirrsqr3efovfnrm5lbo4xy3lf@wf3ytlivzv6g>
 
-The "ti,twl4030-power-n900" compatible string is obsolete and is not
-supported by any in-kernel driver. Currently, the kernel falls back to
-the second entry, "ti,twl4030-power-idle-osc-off", to bind a driver to
-this node.
+On Fri, Aug 01, 2025 at 11:15:41AM +0200, Uwe Kleine-König wrote:
+> Hello Christian,
+> 
+> On Tue, Jul 08, 2025 at 04:50:52PM +0200, Christian Marangi wrote:
+> > +static u32 airoha_pwm_get_period_ticks_from_ns(u32 period_ns)
+> > +{
+> > +	return period_ns / AIROHA_PWM_PERIOD_TICK_NS;
+> > +}
+> > +
+> > +static u32 airoha_pwm_get_duty_ticks_from_ns(u32 period_ns, u32 duty_ns)
+> > +{
+> > +	return mul_u64_u32_div(duty_ns, AIROHA_PWM_DUTY_FULL, period_ns);
+> > +}
+> > +
+> > [...]
+> > +static int airoha_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> > +			    const struct pwm_state *state)
+> > +{
+> > [...]
+> > +	/*
+> > +	 * Period goes at 4ns step, normalize it to check if we can
+> 
+> 4 ms or 4 ns?
+>
 
-Make this fallback explicit by removing the obsolete board-specific
-compatible. This preserves the existing functionality while making the
-DTS compliant with the new, stricter 'ti,twl.yaml' binding.
+4ms you are right
 
-Fixes: daebabd578647 ("mfd: twl4030-power: Fix PM idle pin configuration to not conflict with regulators")
-Signed-off-by: Jihed Chaibi <jihed.chaibi.dev@gmail.com>
+> > +	 * share a generator.
+> > +	 */
+> > +	period_ns = rounddown(period_ns, AIROHA_PWM_PERIOD_TICK_NS);
+> > +
+> > +	/* Convert ns to ticks */
+> > +	period_ticks = airoha_pwm_get_period_ticks_from_ns(period_ns);
+> 
+> Rounding down to the next multiple of 4ns isn't needed for
+> airoha_pwm_get_period_ticks_from_ns() which is just a division by
+> AIROHA_PWM_PERIOD_TICK_NS.
+> 
 
----
-Changes in v6:
- - This patch was added in this version
----
- arch/arm/boot/dts/ti/omap/omap3-n900.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Ok will drop.
 
-diff --git a/arch/arm/boot/dts/ti/omap/omap3-n900.dts b/arch/arm/boot/dts/ti/omap/omap3-n900.dts
-index c50ca572d1b..7db73d9bed9 100644
---- a/arch/arm/boot/dts/ti/omap/omap3-n900.dts
-+++ b/arch/arm/boot/dts/ti/omap/omap3-n900.dts
-@@ -508,7 +508,7 @@ twl_audio: audio {
- 	};
- 
- 	twl_power: power {
--		compatible = "ti,twl4030-power-n900", "ti,twl4030-power-idle-osc-off";
-+		compatible = "ti,twl4030-power-idle-osc-off";
- 		ti,use_poweroff;
- 	};
- };
+> > +	duty_ticks = airoha_pwm_get_duty_ticks_from_ns(period_ns, duty_ns);
+> 
+> As duty_ticks depends on the selected period_ticks, I think the bucket
+> selection algorithm is still wrong.
+> 
+> Consider a request to implement
+> 
+> 	period_ns = 256 ms
+> 	duty_ns = 128 ms
+> 
+> which at first correctly results in
+> 
+> 	period_ticks = 64
+> 	duty_ticks = 127
+> 
+> If however all buckets are used and we only find one with say 62 period
+> ticks we get period_ns = 248 and with that duty_ticks should better be
+> 131 and not 127.
+> 
+
+Hi Uwe,
+
+sorry for checking this only now and maybe we need to catch this again.
+
+Maybe we are getting confused here but itsn't this already handled by
+the upper condition?
+
+		/* Ignore bucket with invalid configs */
+		if (bucket_period_ticks > period_ticks ||
+		    bucket_duty_ticks > duty_ticks)
+			continue;
+
+		/*
+		 * Search for a bucket closer to the requested period/duty
+		 * that has the maximal possible period that isn't bigger
+		 * than the requested period. For that period pick the maximal
+		 * duty cycle that isn't bigger than the requested duty_cycle.
+		 */
+		if (bucket_period_ticks > best_period_ticks ||
+		    (bucket_period_ticks == best_period_ticks &&
+		     bucket_duty_ticks > best_duty_ticks)) {
+			best_period_ticks = bucket_period_ticks;
+			best_duty_ticks = bucket_duty_ticks;
+			best = i;
+		}
+
+We first limit for a bucket that doesn't got over both period and duty
+and then we search for period and best duty. This should account for
+never exceeding a duty since both period and duty are precalculated for
+the current bucket and even if duty depends on period, again it's
+precalculated. Am I missing something?
+
+> > +
+> > +	return airoha_pwm_config(pc, pwm, period_ticks, duty_ticks);
+> > +}
+> 
+> Best regards
+> Uwe
+
+
+
 -- 
-2.39.5
-
+	Ansuel
 
