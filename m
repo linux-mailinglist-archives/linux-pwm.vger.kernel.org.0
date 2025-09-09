@@ -1,124 +1,159 @@
-Return-Path: <linux-pwm+bounces-7275-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7276-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id A11AEB4FC32
-	for <lists+linux-pwm@lfdr.de>; Tue,  9 Sep 2025 15:17:07 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5D535B4FC34
+	for <lists+linux-pwm@lfdr.de>; Tue,  9 Sep 2025 15:17:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id C61FD1BC18FB
-	for <lists+linux-pwm@lfdr.de>; Tue,  9 Sep 2025 13:17:28 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 202253A2185
+	for <lists+linux-pwm@lfdr.de>; Tue,  9 Sep 2025 13:17:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5782F2857DE;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2A1831C571;
 	Tue,  9 Sep 2025 13:17:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="msWbR3ZB"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="IQ1d6tuK"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0B2E221269;
-	Tue,  9 Sep 2025 13:17:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C2721B9F6
+	for <linux-pwm@vger.kernel.org>; Tue,  9 Sep 2025 13:17:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757423822; cv=none; b=kTTga7n8KVadIdVlIjjXv2+fzIudbWfi87IYHEkn2KGKkRZ6qfDGNi2GHf74J04wuzocaA7J2OOKUOe0+uuxCiCsOA/Pt1/Z0zJ33i4pV34SN9u1Znu4CPp69EVN+f8BNxZhrfJDf4zarYHXRrtFp1NLGxk2/s+55th76sCa+Vo=
+	t=1757423822; cv=none; b=AOjtVdvltpt1L1RhAI2ZPGpn0O4YYYjhYzcTdFmbYb6azjzV5juZcSoDeJmRs5/imLL1F45SKOhIiBsRDt2mfhPqcJiGi6hoWiTKlrZUOYF2FiG1NokuzMtiVe+TIXL4PO/O6Bw1r61lsdIaBYobEmw0QxVldvaiZYRgOt1nWLI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1757423822; c=relaxed/simple;
-	bh=3ZJFnHXZcIVMtVs6RNmDeWVt7jxFEYHMJYJemwgLC1g=;
+	bh=njG3LFyIk9lOK/0Fwe0ao7xj9bNzObnhRx5BUKhzFJ0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=r9BUs1DSvOETnYJevCMW6r317uwVvcmaJS+i3Yel2VYRhpJHbWt6+ibebwZPJYPbU7R79b6kTL73OoxmIjT9MR5regzqwD0E1UAJbhaBocsGpQEJAvJs7+gw2nYY3tnkeAgmgwTaRjfPJyOeSCFfVsbSLp2NLTeH2jMXpgZj7jM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=msWbR3ZB; arc=none smtp.client-ip=192.198.163.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1757423820; x=1788959820;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=3ZJFnHXZcIVMtVs6RNmDeWVt7jxFEYHMJYJemwgLC1g=;
-  b=msWbR3ZBgPA1YD5M1TP/vdMIJ7uThftXaVIIDY4cs3zF68IRp7kC1cDu
-   N8dcpGYVfkkKmhDP+1+OTQd6HGHzWD18fGtHA2Sw0FVEgk4JE96aBCcAJ
-   grQBsSxj/+jwBo8MvT4DxAjD2QEwCKYawsskNkrVY4Hd81Zxtxnqnv7DQ
-   QMqLmnciT7qVKKG2HTipj9jLivBxq8JiwyRPc4Rzjvs4rzEj3x4ivmi9z
-   ovGPyNhdX2O97pd5s9DShAMLJpt7h29AAUS2nrKNyrQvz4gmHQIICvq9k
-   mnx6juJCO6V/L1A4UgA0nxONlU79jHKsBWgPuAPiHYDrh2iOae8dB3qMF
-   w==;
-X-CSE-ConnectionGUID: otFSjtjxRDGGmD6KU8PAtg==
-X-CSE-MsgGUID: ZuaFE647QEuDHsbHP/92Xg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11548"; a="58922404"
-X-IronPort-AV: E=Sophos;i="6.18,251,1751266800"; 
-   d="scan'208";a="58922404"
-Received: from fmviesa009.fm.intel.com ([10.60.135.149])
-  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2025 06:17:00 -0700
-X-CSE-ConnectionGUID: 7bCaey0GSeGG6SYUQ59UiQ==
-X-CSE-MsgGUID: wkAd4Ci2Tom13opdMAHmfw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.18,251,1751266800"; 
-   d="scan'208";a="173547347"
-Received: from smile.fi.intel.com ([10.237.72.51])
-  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2025 06:16:58 -0700
-Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
-	(envelope-from <andriy.shevchenko@linux.intel.com>)
-	id 1uvyDP-00000001Ro4-2kZy;
-	Tue, 09 Sep 2025 16:16:55 +0300
-Date: Tue, 9 Sep 2025 16:16:55 +0300
-From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	Benjamin Larsson <benjamin.larsson@genexis.eu>,
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
-	Lorenzo Bianconi <lorenzo@kernel.org>
-Subject: Re: [PATCH v23] pwm: airoha: Add support for EN7581 SoC
-Message-ID: <aMAoxyG__5HoEcyv@smile.fi.intel.com>
-References: <20250708145053.798-1-ansuelsmth@gmail.com>
- <xsblhw36y3corxx3pxe6223auirrsqr3efovfnrm5lbo4xy3lf@wf3ytlivzv6g>
- <68bf2509.050a0220.702b3.c003@mx.google.com>
- <aMANiyqxneM1QxQ-@smile.fi.intel.com>
- <68c014b1.050a0220.1de3c.3050@mx.google.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=MzunhqYDt/8DCdcvy48pP2aBJgtNQFzLC0kwSFexBXtnOZcdypBbZsRGZ7guNuWvarYxreJXi2SLay8vZ/748jErUSio80qBjY9Fdh/47d8X4KWAAmxd+gbpDl5/L6mZUDNkwJZrpD/JHRnUCC+Y9gZZ9PwY5EoYEgVkaM/82BQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=IQ1d6tuK; arc=none smtp.client-ip=209.85.221.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3e5190bca95so2004219f8f.0
+        for <linux-pwm@vger.kernel.org>; Tue, 09 Sep 2025 06:17:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1757423819; x=1758028619; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=fdo9zUh3cC7JZ4YMFIK1It9t13duwlrpE1xo6oVXcCI=;
+        b=IQ1d6tuKESQPX32N+lZB9IPpoBqJopYTlu7RisNoZJXDPI+bOfH/l79xp4gROYbPE/
+         fyCGSUcozm9UXtyXvd55yp5BJfFeL6OftpYQphXlXQQw4/Jm0CpMxCirHNhfFldAvlrR
+         ibWERWhMUkCHMX20ENHGi7WCanMvZMq+rhMb/Sv/uuYQyBwSK81mHg/V6u9DNWjyKIAQ
+         I78G8efJKAIFU7BV17wZgDtMG/7m8A/Ep2t8lu3TRtOqq31CO7DmiF7lPXWuALlrSYE0
+         +Gzn1WMGwJc3EkzqqOFUUkqRAudafP1AWqXGnl4ipQNSojCZTquYJgh9GOBeFELdzdlO
+         U5Qg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1757423819; x=1758028619;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=fdo9zUh3cC7JZ4YMFIK1It9t13duwlrpE1xo6oVXcCI=;
+        b=bja6dXW9QBydLyKT8siT02BQJZyBUEUh2lg9VQpNoULRNQLNduEmr8/CA6yRO4rARN
+         XLvnPBCJK0L7ZjFHRXo8EvvUDLM0IZn77PrSsAjibqZ16HWMPxqPjHxVStzyWL4ONYue
+         WTbgraL3k+Ix8nd57ndmR2kQCBouYLNrMOnUNQmfq4TH4NRYI1yhNMYyJ/arM0fynsbA
+         EsK/rXy9SaTWDS2Xg2l+KZIOHPKd1rZk7Ac4AJIHmQgeY4WG5E63ouJX1q3Kyn51RHwF
+         +8QI8zjws5ugQ7HCpF2/KA+Ub+yKluLStjB5cZ/VgdMAaHwVaGSd4Uu7HT3r9XChoO0T
+         kp+w==
+X-Forwarded-Encrypted: i=1; AJvYcCVZCxuQOz1uE6bbm1zevVVAB9gU4lcpfzUlVQo/aoFlulUy6ZNcuoXOqia0jF24erS1NypkGLuNy+8=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz0MwhPspNB/DyrDFJMKi7agJ7+oVQiIn+2yq3nlrsVDRrARrul
+	qjADjeiWi8jmuK2okq7wUihjralOANV2vj0SWdacsk9wS1gfnWCJ+4+uFMlf2crSh5c=
+X-Gm-Gg: ASbGncs837KnNu3y+smxh1JhBwWOFUasbR1a7gBuU40H/wu9n2vsAJu5BqViKUW7JnR
+	FGsvqX8NeTOCSFlspp2pA9yA+enH+bV6ZCELGjWuiW+lTv8gSRCcZ+TWiKia/YA29nCogwDiCKr
+	TnEjmDfVewBwHFmpA3OoV3gya2IEIR5ridv2ChWwto7I2Ux2XiCYkMvkob3WgnsHnE4DY9RnNfc
+	0sDWKStITd4O004e4GbNZEh2ELObVLpE0BqrwrlHzEUzAZyU1RpOExr3rjzMeUjogihYTM/6XjN
+	16RnaprUT1HmoTFWChB1oHsceV9nH+wwDZpBBsWdIgeJl4rGJ488nEbHcBC8CDSVG+y/1SN+4hU
+	v5+am6Vu9QEXdBFUPUPD43ne2E/NKkDAXW7d6mPIOqGfpeASePqIqt9UfQclTq+cI
+X-Google-Smtp-Source: AGHT+IFhCowW9gu1/w93obIiBVf6Vuc4ShjzL0HEHZ6PJqdOO6o5Jz7iReA+oY0Aa+n+lLDZfcOsfA==
+X-Received: by 2002:a05:6000:4211:b0:3e5:d2f1:403d with SMTP id ffacd0b85a97d-3e6440ef05fmr11560309f8f.36.1757423818701;
+        Tue, 09 Sep 2025 06:16:58 -0700 (PDT)
+Received: from localhost (p200300f65f06ab0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f06:ab04::1b9])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3e7532f90e6sm2066036f8f.6.2025.09.09.06.16.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Sep 2025 06:16:57 -0700 (PDT)
+Date: Tue, 9 Sep 2025 15:16:56 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Lee Jones <lee@kernel.org>
+Cc: Daniel Thompson <daniel@riscstar.com>, 
+	Flavio Suligoi <f.suligoi@asem.it>, Daniel Thompson <danielt@kernel.org>, 
+	Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>, dri-devel@lists.freedesktop.org, 
+	linux-fbdev@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 2/2] backlight: mp3309c: Initialize backlight properties
+ without memset
+Message-ID: <d3mnxjbtek2q4465xgje2orjbzmbrkcicapal4apiqk3hc3hbq@3jp4yytvtmfc>
+References: <cover.1751361465.git.u.kleine-koenig@baylibre.com>
+ <14514a1b0d3df6438aa10bb74f1c4fc2367d9987.1751361465.git.u.kleine-koenig@baylibre.com>
+ <aKLvaP55PIVhyFSc@aspen.lan>
+ <20250902103632.GH2163762@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="dbmzc4rcf7ixa6l5"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <68c014b1.050a0220.1de3c.3050@mx.google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
- krs, Bertel Jungin Aukio 5, 02600 Espoo
-
-On Tue, Sep 09, 2025 at 01:51:11PM +0200, Christian Marangi wrote:
-> On Tue, Sep 09, 2025 at 02:20:43PM +0300, Andy Shevchenko wrote:
-> > On Mon, Sep 08, 2025 at 08:48:38PM +0200, Christian Marangi wrote:
-> > > On Fri, Aug 01, 2025 at 11:15:41AM +0200, Uwe Kleine-König wrote:
-> > > > On Tue, Jul 08, 2025 at 04:50:52PM +0200, Christian Marangi wrote:
-
-> > > > > +	 * Period goes at 4ns step, normalize it to check if we can
-> > > > 
-> > > > 4 ms or 4 ns?
-> > > 
-> > > 4ms you are right
-> > 
-> > One small but important side note (to Uwe as well, however he seems
-> > follows what I am about to say). Recently I discovered a nice wrap-up [1]
-> > on the writing values with units. And I think we should try to follow it
-> > (at bare minimum to be consistent with chosen — Journalism vs. Scientific —
-> >  style).
-> > 
-> > [1]: https://poynton.ca/notes/units/
-> 
-> Just to be more precise, on comments we should use NUMBER SPACE UNIT? I
-> think for variables it's problematic.
-
-Of course the note only about documentation and comments, not about the code :-)
-And yes, $NUMBER space $UNIT (personally I prefer the Scientific way).
-
--- 
-With Best Regards,
-Andy Shevchenko
+In-Reply-To: <20250902103632.GH2163762@google.com>
 
 
+--dbmzc4rcf7ixa6l5
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 2/2] backlight: mp3309c: Initialize backlight properties
+ without memset
+MIME-Version: 1.0
+
+On Tue, Sep 02, 2025 at 11:36:32AM +0100, Lee Jones wrote:
+> On Mon, 18 Aug 2025, Daniel Thompson wrote:
+>=20
+> > On Tue, Jul 01, 2025 at 11:22:37AM +0200, Uwe Kleine-K=F6nig wrote:
+> > > Assigning values to a struct using a compound literal (since C99) also
+> > > guarantees that all unspecified struct members are empty-initialized,=
+ so
+> > > it properly replaces the memset to zero.
+> > >
+> > > The code looks a bit nicer and more idiomatic (though that might be
+> > > subjective?). The resulting binary is a bit smaller. On ARCH=3Darm wi=
+th
+> > > an allnoconfig + minimal changes to enable the mp3309c driver the
+> > > difference is 12 bytes.
+> > >
+> > > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
+> >=20
+> > Reviewed-by: Daniel Thompson (RISCstar) <danielt@kernel.org>
+>=20
+> Looks like you cannot send tags from non-related email accounts:
+>=20
+> NOTE: some trailers ignored due to from/email mismatches:
+>     ! Trailer: Reviewed-by: "Daniel Thompson (RISCstar)" <danielt@kernel.=
+org>
+>      Msg From: Daniel Thompson <daniel@riscstar.com>
+>=20
+> I'll add the tags manually this time.
+
+FTR: The email address *or* the real name has to match the From: line to
+make b4 happy.
+
+Best regards
+Uwe
+
+--dbmzc4rcf7ixa6l5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmjAKL4ACgkQj4D7WH0S
+/k5BrQf+JX3ho13wgiKmkcJ0Tjb0+y2mxhAU2VHfSxu0jGL6GsKb00SZXQ7/bQ0y
+FpqkmXr91kb5uhg5pOQL0D6W3OxwLRFLf4XfOL84TaAHintXN8gMBOsJA+Pn9iIA
+5rqGHhO7dT4zJt9SmdGVn7f9VBu2qdvo4wpf/tvzlIcYTYFGD8W/giikgRQcJcI3
+Hb3zRDIrRZWcNfHoN7yGFYC13iL2PyRFns/eyw+YqzCud+fHvfHbWV89l8LEzNod
+iwlF/fHCaSa7fqG154A0PgXPyF3ltgNwwi0RUNiwAtX/i0WcZrWYMavCTToq+SgE
+KrERYvE7oOdpFcIJNmXdRWQYyeDDZQ==
+=qQ6Z
+-----END PGP SIGNATURE-----
+
+--dbmzc4rcf7ixa6l5--
 
