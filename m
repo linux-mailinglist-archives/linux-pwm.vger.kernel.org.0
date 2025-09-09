@@ -1,93 +1,82 @@
-Return-Path: <linux-pwm+bounces-7274-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7275-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id D7D69B4ACCF
-	for <lists+linux-pwm@lfdr.de>; Tue,  9 Sep 2025 13:51:21 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id A11AEB4FC32
+	for <lists+linux-pwm@lfdr.de>; Tue,  9 Sep 2025 15:17:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 78B2C4E2B79
-	for <lists+linux-pwm@lfdr.de>; Tue,  9 Sep 2025 11:51:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id C61FD1BC18FB
+	for <lists+linux-pwm@lfdr.de>; Tue,  9 Sep 2025 13:17:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 716E82DA753;
-	Tue,  9 Sep 2025 11:51:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5782F2857DE;
+	Tue,  9 Sep 2025 13:17:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j6XLhSD1"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="msWbR3ZB"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE9672FF679;
-	Tue,  9 Sep 2025 11:51:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0B2E221269;
+	Tue,  9 Sep 2025 13:17:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757418678; cv=none; b=VZuRNdo9AEKbd20zB2vhQm26hhpXJQ0awv0fuBjOGK0eIalJbfyCvAEHgl2UTZm8S1BuwtbQ55x+I9jNc0ZGQLgh+bTUKnfOPa/48VGs0UqhXTivzLyeg2Yu++UHSPD8urYYnDHMwAKftIyE8Dcs7bJvgQZYRbri78EJwVr853k=
+	t=1757423822; cv=none; b=kTTga7n8KVadIdVlIjjXv2+fzIudbWfi87IYHEkn2KGKkRZ6qfDGNi2GHf74J04wuzocaA7J2OOKUOe0+uuxCiCsOA/Pt1/Z0zJ33i4pV34SN9u1Znu4CPp69EVN+f8BNxZhrfJDf4zarYHXRrtFp1NLGxk2/s+55th76sCa+Vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757418678; c=relaxed/simple;
-	bh=CQ2kvUrg6Xjd4oVzfUNj3+9j/ESLXxfsuhnrta3/iZw=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XN3dyIbbandUbCvUu8hVKC1nAz4CXUZs7PZgacRk6xMyJXpV0fPGH0VzUSjNSXpSKxsR4waSokDD502FpAChDf3ULqcOhstX5fUkN6iGg4VEgEY/vhSm+sOAqUZN0vvN8Sc2/eJzh7Cb0OUHZRHvvIDtngULjn5zmin6AR40CY4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j6XLhSD1; arc=none smtp.client-ip=209.85.128.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-45dec601cd3so10182585e9.2;
-        Tue, 09 Sep 2025 04:51:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1757418675; x=1758023475; darn=vger.kernel.org;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:message-id:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=1NZefnU/TEFBNRXWXEE9bc33fov8eD6d4SSSVTMX6fQ=;
-        b=j6XLhSD13Cd1C78O0EK0fk5ORz3UU5dH5B8PAEH3G6hP/sxlkkm6j8pK+0p5ooFZjI
-         k1Xdyhxal3RrimEppYRTPJzqBQ+ZsDZcXnsqEseNrIp/P6NocTd6Cenfbe2t9N4Tx5jc
-         76ae8bTVolUiuUvcj8zHOVYUVS4/cxJkiteKb8diAPrhGdJgVcGDUWXG0T96Uwd78i25
-         lXRVQCuz+G8zb7EDDccIPby69+GX8wAtl+YtPSUpoMNZQ8aVZw+V9bVJ7tSCN7OzIkGr
-         xTFogBJpWhdb4kQ6DNz2R2e2RQWeteqHPSXsG5xtiSCKHq4CPOo9Yluv+h8pdI0y+vG4
-         0qWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757418675; x=1758023475;
-        h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:subject:cc:to:from:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=1NZefnU/TEFBNRXWXEE9bc33fov8eD6d4SSSVTMX6fQ=;
-        b=ht3EPP6kUdzV95VEst9KAynUSz2xdU+jAeSUqxe8yzm+sAzrKt30/6e1VnvGKgQvOP
-         7Z7jxA3wc51jTJsS1RkEWkOvLMLW8KgPVSEPtqAJHceltbZNzINQWt5Kz3bj0pENLQSu
-         iiQ6MzxrIVxpD8M24iboOxThMh3CS8XlMW3kxuBUUgishsq+mDEDiCHj9qpdYocbNT7t
-         RfCkMeQP1L9f2p8nTvofim9xCK5lsGOENu4H6Zk3tn5MzQf1WUH1lIiPlwPEnir+xncN
-         O/RXI8Qz72LZO2xCmJCZYxDKZWX8AauvHIfZ8ccVa9ChK/b7yBhVsJa3ASQhDAINpN1Z
-         6K2A==
-X-Forwarded-Encrypted: i=1; AJvYcCV9D6PeS7c/tbbCLdQy3+mJXETROV3encVRyPhCqMRr05X4uUVt890m1Dr2Zccf16HE9yYfVGbwSTegws0=@vger.kernel.org, AJvYcCVD8Q1XeZC0TatmWEmqjJyk1FmXKyRmxHNrXddNnM6b7lKyVlb5H2qKUe+7h/nA2XwXsJ+6JTLiD+hN@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1mLPsQsG15dV0p4RjHfa47gPHx2nW9glFLh2RasOlnOCy2g0U
-	x7+n9RKcohKmXhRW99ecroxBb8XS1aD4Kx/OLW/qskKvDqFDNHNzgXm1s9MhLw==
-X-Gm-Gg: ASbGncsUQJ2U7MGvuglwjvZepftK6WQcJ0Wmgo/8zotk48MnZB0cQAKnyak4GZmt/Bg
-	2JkXI+ITQ+mvVwETB780DvWrEkbeoADQaJ5sSo5DQv9aNRwRiY4LxYOmNqMBfkh4DgW9JMd608m
-	xDrXTGeR3/KCUW+jMqk2TH5YUTODTPfC9TgBZmDXsZxr4SpTAUjEG9k0W+IOxAepQWw4ixGMoui
-	Dh7GMz4CXI49NpZyy5aynBXu03S/fKItc3sWTtFuQRCcvOLBJoXpQHhzHHwNhakf4keJgHFFvra
-	CpBtNra+CRmV80XEMEObMXuVGFp+N4Zf91oFfxGPH3RND36VentIuN6yiUYb/203i0qyKY47lL6
-	tzfVqtfbcTGvR04MNNFzNhPTwfb5+KlVtgPWP+VKxCkUAHmdAZKLOz6vQXVT1UyPpGAE4dg==
-X-Google-Smtp-Source: AGHT+IHTWH8ommu1eqeJFqp/ipl2TcaTWoGb6nKtp3f3NpV93jfnIvywQBe/XfNRedQFhyUhQFBdIw==
-X-Received: by 2002:a05:600c:1ca0:b0:45b:8352:4475 with SMTP id 5b1f17b1804b1-45dddf02148mr111281745e9.36.1757418674241;
-        Tue, 09 Sep 2025 04:51:14 -0700 (PDT)
-Received: from Ansuel-XPS. (host-95-249-236-54.retail.telecomitalia.it. [95.249.236.54])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-45df16070bdsm8432555e9.3.2025.09.09.04.51.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Sep 2025 04:51:13 -0700 (PDT)
-Message-ID: <68c014b1.050a0220.1de3c.3050@mx.google.com>
-X-Google-Original-Message-ID: <aMAUr6y8dHTzFrU7@Ansuel-XPS.>
-Date: Tue, 9 Sep 2025 13:51:11 +0200
-From: Christian Marangi <ansuelsmth@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+	s=arc-20240116; t=1757423822; c=relaxed/simple;
+	bh=3ZJFnHXZcIVMtVs6RNmDeWVt7jxFEYHMJYJemwgLC1g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=r9BUs1DSvOETnYJevCMW6r317uwVvcmaJS+i3Yel2VYRhpJHbWt6+ibebwZPJYPbU7R79b6kTL73OoxmIjT9MR5regzqwD0E1UAJbhaBocsGpQEJAvJs7+gw2nYY3tnkeAgmgwTaRjfPJyOeSCFfVsbSLp2NLTeH2jMXpgZj7jM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=none smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=msWbR3ZB; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1757423820; x=1788959820;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=3ZJFnHXZcIVMtVs6RNmDeWVt7jxFEYHMJYJemwgLC1g=;
+  b=msWbR3ZBgPA1YD5M1TP/vdMIJ7uThftXaVIIDY4cs3zF68IRp7kC1cDu
+   N8dcpGYVfkkKmhDP+1+OTQd6HGHzWD18fGtHA2Sw0FVEgk4JE96aBCcAJ
+   grQBsSxj/+jwBo8MvT4DxAjD2QEwCKYawsskNkrVY4Hd81Zxtxnqnv7DQ
+   QMqLmnciT7qVKKG2HTipj9jLivBxq8JiwyRPc4Rzjvs4rzEj3x4ivmi9z
+   ovGPyNhdX2O97pd5s9DShAMLJpt7h29AAUS2nrKNyrQvz4gmHQIICvq9k
+   mnx6juJCO6V/L1A4UgA0nxONlU79jHKsBWgPuAPiHYDrh2iOae8dB3qMF
+   w==;
+X-CSE-ConnectionGUID: otFSjtjxRDGGmD6KU8PAtg==
+X-CSE-MsgGUID: ZuaFE647QEuDHsbHP/92Xg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11548"; a="58922404"
+X-IronPort-AV: E=Sophos;i="6.18,251,1751266800"; 
+   d="scan'208";a="58922404"
+Received: from fmviesa009.fm.intel.com ([10.60.135.149])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2025 06:17:00 -0700
+X-CSE-ConnectionGUID: 7bCaey0GSeGG6SYUQ59UiQ==
+X-CSE-MsgGUID: wkAd4Ci2Tom13opdMAHmfw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.18,251,1751266800"; 
+   d="scan'208";a="173547347"
+Received: from smile.fi.intel.com ([10.237.72.51])
+  by fmviesa009.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 09 Sep 2025 06:16:58 -0700
+Received: from andy by smile.fi.intel.com with local (Exim 4.98.2)
+	(envelope-from <andriy.shevchenko@linux.intel.com>)
+	id 1uvyDP-00000001Ro4-2kZy;
+	Tue, 09 Sep 2025 16:16:55 +0300
+Date: Tue, 9 Sep 2025 16:16:55 +0300
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Christian Marangi <ansuelsmth@gmail.com>
 Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
 	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
 	Benjamin Larsson <benjamin.larsson@genexis.eu>,
 	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>,
 	Lorenzo Bianconi <lorenzo@kernel.org>
 Subject: Re: [PATCH v23] pwm: airoha: Add support for EN7581 SoC
+Message-ID: <aMAoxyG__5HoEcyv@smile.fi.intel.com>
 References: <20250708145053.798-1-ansuelsmth@gmail.com>
  <xsblhw36y3corxx3pxe6223auirrsqr3efovfnrm5lbo4xy3lf@wf3ytlivzv6g>
  <68bf2509.050a0220.702b3.c003@mx.google.com>
  <aMANiyqxneM1QxQ-@smile.fi.intel.com>
+ <68c014b1.050a0220.1de3c.3050@mx.google.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -97,31 +86,39 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aMANiyqxneM1QxQ-@smile.fi.intel.com>
+In-Reply-To: <68c014b1.050a0220.1de3c.3050@mx.google.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-On Tue, Sep 09, 2025 at 02:20:43PM +0300, Andy Shevchenko wrote:
-> On Mon, Sep 08, 2025 at 08:48:38PM +0200, Christian Marangi wrote:
-> > On Fri, Aug 01, 2025 at 11:15:41AM +0200, Uwe Kleine-König wrote:
-> > > On Tue, Jul 08, 2025 at 04:50:52PM +0200, Christian Marangi wrote:
-> 
-> > > > +	 * Period goes at 4ns step, normalize it to check if we can
+On Tue, Sep 09, 2025 at 01:51:11PM +0200, Christian Marangi wrote:
+> On Tue, Sep 09, 2025 at 02:20:43PM +0300, Andy Shevchenko wrote:
+> > On Mon, Sep 08, 2025 at 08:48:38PM +0200, Christian Marangi wrote:
+> > > On Fri, Aug 01, 2025 at 11:15:41AM +0200, Uwe Kleine-König wrote:
+> > > > On Tue, Jul 08, 2025 at 04:50:52PM +0200, Christian Marangi wrote:
+
+> > > > > +	 * Period goes at 4ns step, normalize it to check if we can
+> > > > 
+> > > > 4 ms or 4 ns?
 > > > 
-> > > 4 ms or 4 ns?
+> > > 4ms you are right
 > > 
-> > 4ms you are right
+> > One small but important side note (to Uwe as well, however he seems
+> > follows what I am about to say). Recently I discovered a nice wrap-up [1]
+> > on the writing values with units. And I think we should try to follow it
+> > (at bare minimum to be consistent with chosen — Journalism vs. Scientific —
+> >  style).
+> > 
+> > [1]: https://poynton.ca/notes/units/
 > 
-> One small but important side note (to Uwe as well, however he seems
-> follows what I am about to say). Recently I discovered a nice wrap-up [1]
-> on the writing values with units. And I think we should try to follow it
-> (at bare minimum to be consistent with chosen — Journalism vs. Scientific —
->  style).
-> 
-> [1]: https://poynton.ca/notes/units/
-> 
+> Just to be more precise, on comments we should use NUMBER SPACE UNIT? I
+> think for variables it's problematic.
 
-Just to be more precise, on comments we should use NUMBER SPACE UNIT? I
-think for variables it's problematic.
+Of course the note only about documentation and comments, not about the code :-)
+And yes, $NUMBER space $UNIT (personally I prefer the Scientific way).
 
 -- 
-	Ansuel
+With Best Regards,
+Andy Shevchenko
+
+
 
