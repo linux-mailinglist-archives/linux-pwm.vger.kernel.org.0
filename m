@@ -1,91 +1,89 @@
-Return-Path: <linux-pwm+bounces-7276-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7277-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5D535B4FC34
-	for <lists+linux-pwm@lfdr.de>; Tue,  9 Sep 2025 15:17:09 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id 142FCB4FE0E
+	for <lists+linux-pwm@lfdr.de>; Tue,  9 Sep 2025 15:50:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 202253A2185
-	for <lists+linux-pwm@lfdr.de>; Tue,  9 Sep 2025 13:17:08 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 0C9084E09B7
+	for <lists+linux-pwm@lfdr.de>; Tue,  9 Sep 2025 13:45:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2A1831C571;
-	Tue,  9 Sep 2025 13:17:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9037C21B196;
+	Tue,  9 Sep 2025 13:43:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="IQ1d6tuK"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="FTybITak"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f49.google.com (mail-wr1-f49.google.com [209.85.221.49])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C2721B9F6
-	for <linux-pwm@vger.kernel.org>; Tue,  9 Sep 2025 13:17:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3930E218580
+	for <linux-pwm@vger.kernel.org>; Tue,  9 Sep 2025 13:43:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757423822; cv=none; b=AOjtVdvltpt1L1RhAI2ZPGpn0O4YYYjhYzcTdFmbYb6azjzV5juZcSoDeJmRs5/imLL1F45SKOhIiBsRDt2mfhPqcJiGi6hoWiTKlrZUOYF2FiG1NokuzMtiVe+TIXL4PO/O6Bw1r61lsdIaBYobEmw0QxVldvaiZYRgOt1nWLI=
+	t=1757425425; cv=none; b=ZCkbw/fB5W6vsYOgZo4yqlVKtfEI9E3qauIb1k0s679X8Dp9/3WSEoDu+qo6FOTl8wmDjeNZFdTxm1WkCbgODUbNtZ9oMG6s6e26umVQspOYh98yqTXFAg6pBXMw/2lN9hep/JK007lIf/bUArRdHb0qqt4hQPBNHSZaXw79Vz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757423822; c=relaxed/simple;
-	bh=njG3LFyIk9lOK/0Fwe0ao7xj9bNzObnhRx5BUKhzFJ0=;
+	s=arc-20240116; t=1757425425; c=relaxed/simple;
+	bh=7OCQkXlPaWzKYuwAdJ0JcKihA/NTCTMSGtBM/2sxxKY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=MzunhqYDt/8DCdcvy48pP2aBJgtNQFzLC0kwSFexBXtnOZcdypBbZsRGZ7guNuWvarYxreJXi2SLay8vZ/748jErUSio80qBjY9Fdh/47d8X4KWAAmxd+gbpDl5/L6mZUDNkwJZrpD/JHRnUCC+Y9gZZ9PwY5EoYEgVkaM/82BQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=IQ1d6tuK; arc=none smtp.client-ip=209.85.221.49
+	 Content-Type:Content-Disposition:In-Reply-To; b=LL9T6Dm11RbPwReL6FFvlZjOLqs2AT9GdB9IjFQUXFyoUJgx3ZrkgsyJWRP7gFEFwzWntx3y8f2lP2YB0a+llMCEwwJCjlO0YRbquvYV5/jzA4STw0ghwUZ3bZ3QsAOxrYenzzWe/FeutL1SZhJbkBDUH02vEXTgqUL7i7Ki7pc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=FTybITak; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wr1-f49.google.com with SMTP id ffacd0b85a97d-3e5190bca95so2004219f8f.0
-        for <linux-pwm@vger.kernel.org>; Tue, 09 Sep 2025 06:17:00 -0700 (PDT)
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-45decc9e83eso9137675e9.3
+        for <linux-pwm@vger.kernel.org>; Tue, 09 Sep 2025 06:43:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1757423819; x=1758028619; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1757425421; x=1758030221; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=fdo9zUh3cC7JZ4YMFIK1It9t13duwlrpE1xo6oVXcCI=;
-        b=IQ1d6tuKESQPX32N+lZB9IPpoBqJopYTlu7RisNoZJXDPI+bOfH/l79xp4gROYbPE/
-         fyCGSUcozm9UXtyXvd55yp5BJfFeL6OftpYQphXlXQQw4/Jm0CpMxCirHNhfFldAvlrR
-         ibWERWhMUkCHMX20ENHGi7WCanMvZMq+rhMb/Sv/uuYQyBwSK81mHg/V6u9DNWjyKIAQ
-         I78G8efJKAIFU7BV17wZgDtMG/7m8A/Ep2t8lu3TRtOqq31CO7DmiF7lPXWuALlrSYE0
-         +Gzn1WMGwJc3EkzqqOFUUkqRAudafP1AWqXGnl4ipQNSojCZTquYJgh9GOBeFELdzdlO
-         U5Qg==
+        bh=+nWLB9y4BzdWZAFh61duSVbe7oQYF/G0igBbtFxPdK4=;
+        b=FTybITakJzkHeX5Bas1/mdTY1Eh5ZEroN23Nt2fAK5p79Q+sJ+xMRGsCE03wS3Tqsq
+         49XkoMVEUp0CCx1lJ1S9epQXyzaMVDTtlyzPZ8PXm5iLfxpTQNHzy1qmlGAxykmn8z9z
+         ok2WYCe5SV2daKdi3WNUe7bJ8t9oqeQX3fU+UL9jlb6i5tIEXCgoLqzWNZ1IMHvPzpFC
+         CVhKJ2HqJd5Sjmg3ovGzXS5RW55w9U18CAAf+2Bx3qjgm+9KQqP25MudA7hjCDl93EEM
+         /nJguUwZGYmTGapd1MKpAgOlpb34eF0yLbQ2EdyrMUQnMxwjBOuxDY1cGg+xh/lHYXjD
+         MJwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1757423819; x=1758028619;
+        d=1e100.net; s=20230601; t=1757425421; x=1758030221;
         h=in-reply-to:content-disposition:mime-version:references:message-id
          :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=fdo9zUh3cC7JZ4YMFIK1It9t13duwlrpE1xo6oVXcCI=;
-        b=bja6dXW9QBydLyKT8siT02BQJZyBUEUh2lg9VQpNoULRNQLNduEmr8/CA6yRO4rARN
-         XLvnPBCJK0L7ZjFHRXo8EvvUDLM0IZn77PrSsAjibqZ16HWMPxqPjHxVStzyWL4ONYue
-         WTbgraL3k+Ix8nd57ndmR2kQCBouYLNrMOnUNQmfq4TH4NRYI1yhNMYyJ/arM0fynsbA
-         EsK/rXy9SaTWDS2Xg2l+KZIOHPKd1rZk7Ac4AJIHmQgeY4WG5E63ouJX1q3Kyn51RHwF
-         +8QI8zjws5ugQ7HCpF2/KA+Ub+yKluLStjB5cZ/VgdMAaHwVaGSd4Uu7HT3r9XChoO0T
-         kp+w==
-X-Forwarded-Encrypted: i=1; AJvYcCVZCxuQOz1uE6bbm1zevVVAB9gU4lcpfzUlVQo/aoFlulUy6ZNcuoXOqia0jF24erS1NypkGLuNy+8=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz0MwhPspNB/DyrDFJMKi7agJ7+oVQiIn+2yq3nlrsVDRrARrul
-	qjADjeiWi8jmuK2okq7wUihjralOANV2vj0SWdacsk9wS1gfnWCJ+4+uFMlf2crSh5c=
-X-Gm-Gg: ASbGncs837KnNu3y+smxh1JhBwWOFUasbR1a7gBuU40H/wu9n2vsAJu5BqViKUW7JnR
-	FGsvqX8NeTOCSFlspp2pA9yA+enH+bV6ZCELGjWuiW+lTv8gSRCcZ+TWiKia/YA29nCogwDiCKr
-	TnEjmDfVewBwHFmpA3OoV3gya2IEIR5ridv2ChWwto7I2Ux2XiCYkMvkob3WgnsHnE4DY9RnNfc
-	0sDWKStITd4O004e4GbNZEh2ELObVLpE0BqrwrlHzEUzAZyU1RpOExr3rjzMeUjogihYTM/6XjN
-	16RnaprUT1HmoTFWChB1oHsceV9nH+wwDZpBBsWdIgeJl4rGJ488nEbHcBC8CDSVG+y/1SN+4hU
-	v5+am6Vu9QEXdBFUPUPD43ne2E/NKkDAXW7d6mPIOqGfpeASePqIqt9UfQclTq+cI
-X-Google-Smtp-Source: AGHT+IFhCowW9gu1/w93obIiBVf6Vuc4ShjzL0HEHZ6PJqdOO6o5Jz7iReA+oY0Aa+n+lLDZfcOsfA==
-X-Received: by 2002:a05:6000:4211:b0:3e5:d2f1:403d with SMTP id ffacd0b85a97d-3e6440ef05fmr11560309f8f.36.1757423818701;
-        Tue, 09 Sep 2025 06:16:58 -0700 (PDT)
+        bh=+nWLB9y4BzdWZAFh61duSVbe7oQYF/G0igBbtFxPdK4=;
+        b=YdtblzJz8+jTzdYRGTKgExcKU5BzhpiG+SxNhpxihOuGYzPkFrNSXIAzv/DQH8erg2
+         L9VniBHwerKgZTKpYxxi/JGwJbCzJfYc7ndC8tWoSrmIpNRmVkCDJ+l8rztteihSNJU4
+         k60hw6CJ5btFOxm/eLyIJeexEjEuwz8OJpk8cIatCSLXm4KixU3Ulg3ISChBVb0ZKwJX
+         XQw0ynHrKxkHK1Ds2cqtBaVCoaO1f9YX7PpDlQJKNYAMZ6hRAkdkN7buV6OK5z1DbB9o
+         zME7C5CHA0C8b7ERBjTusf2nKWAJRf7sasjyP9YSIUtu8jlNNnw4SkNkBk6ak0UZ7HOe
+         Z1RQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU8s4KgdXP0f0ndbudPZSm+z368MYVBeQRXvrabHyB9r6pOitAikq0jujZM06n/CakmLKhZmx7AqnM=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz6A2MXRTMbl3W/T9acINVMadEsL34RrJyPA2NiyT53B9hLBXAv
+	/3LwTNx6P55lrswiTSmQWzgr3eVwvcYIGmhVYNneD7mc1cY7zUSLMagolqFDNKCA/ET+vOtxwEU
+	4ZU3t
+X-Gm-Gg: ASbGnctjOXvJmuICsHIoi/ux7XMzzXiCj9x62MK9RcjR5xUwLFAd/Qdvlx2XcrpIPyD
+	b2ZPXC2tY0I8Kt3hc6Rl1WLC1FzlHt8pbvhKbozHj9OoBhjwglMjXs0+dXAbz8uh5YS/wm/VKcu
+	ojdn5pIslQDfJpy0e3tS9garIyitfgRsEgD1SHkHZHaGtoU3IbLJ/hUyokx0S4Q/SO12vAVbfLz
+	9qGWnuIa0R+/zc6knlmRytyN8mHoy67pKerenPfEvLLWY7hLSFAA4o4mmRQEv5nB2bpGGgrimqj
+	SSeFlJ+QLM2KVxPCHNO2QPBpzIIQgKx7ctf+2FzPI0812B3AFIEOrHwm4mMm+W6Xc655mLY8WGl
+	XEGTP6a2YoJ3wTZ+3Kf6X3BEyvD9V5xl6jEbz28p+sP/rd5gH2KFXy4TiOP0FIo+7zzp3jxxUft
+	M=
+X-Google-Smtp-Source: AGHT+IExZonjFWWehqLYtueahKiysRYM0WBg9S+ifayg52A4BJxC/bn3wEJPtkVa1EA4aEoE0OkwQA==
+X-Received: by 2002:a05:600c:4585:b0:45b:8ac2:9759 with SMTP id 5b1f17b1804b1-45dddecf557mr111182145e9.23.1757425421489;
+        Tue, 09 Sep 2025 06:43:41 -0700 (PDT)
 Received: from localhost (p200300f65f06ab0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f06:ab04::1b9])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3e7532f90e6sm2066036f8f.6.2025.09.09.06.16.57
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-3e75223897dsm2886401f8f.30.2025.09.09.06.43.40
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Sep 2025 06:16:57 -0700 (PDT)
-Date: Tue, 9 Sep 2025 15:16:56 +0200
+        Tue, 09 Sep 2025 06:43:40 -0700 (PDT)
+Date: Tue, 9 Sep 2025 15:43:39 +0200
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
 To: Lee Jones <lee@kernel.org>
-Cc: Daniel Thompson <daniel@riscstar.com>, 
-	Flavio Suligoi <f.suligoi@asem.it>, Daniel Thompson <danielt@kernel.org>, 
-	Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>, dri-devel@lists.freedesktop.org, 
-	linux-fbdev@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 2/2] backlight: mp3309c: Initialize backlight properties
- without memset
-Message-ID: <d3mnxjbtek2q4465xgje2orjbzmbrkcicapal4apiqk3hc3hbq@3jp4yytvtmfc>
+Cc: Flavio Suligoi <f.suligoi@asem.it>, 
+	Daniel Thompson <danielt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, Helge Deller <deller@gmx.de>, 
+	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 0/2] backlight: mp3309c: Drop pwm_apply_args()
+Message-ID: <zkqqw2jxtx7mhwbck5jr5kgdg5ze5bk65aqarpdzl2ieh2hdj5@fnm5lybd227v>
 References: <cover.1751361465.git.u.kleine-koenig@baylibre.com>
- <14514a1b0d3df6438aa10bb74f1c4fc2367d9987.1751361465.git.u.kleine-koenig@baylibre.com>
- <aKLvaP55PIVhyFSc@aspen.lan>
- <20250902103632.GH2163762@google.com>
+ <175680932706.2261091.9987211835426797993.b4-ty@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -93,67 +91,64 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="dbmzc4rcf7ixa6l5"
+	protocol="application/pgp-signature"; boundary="kug3zs2e2qoaurrt"
 Content-Disposition: inline
-In-Reply-To: <20250902103632.GH2163762@google.com>
+In-Reply-To: <175680932706.2261091.9987211835426797993.b4-ty@kernel.org>
 
 
---dbmzc4rcf7ixa6l5
+--kug3zs2e2qoaurrt
 Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 2/2] backlight: mp3309c: Initialize backlight properties
- without memset
+Subject: Re: [PATCH 0/2] backlight: mp3309c: Drop pwm_apply_args()
 MIME-Version: 1.0
 
-On Tue, Sep 02, 2025 at 11:36:32AM +0100, Lee Jones wrote:
-> On Mon, 18 Aug 2025, Daniel Thompson wrote:
->=20
-> > On Tue, Jul 01, 2025 at 11:22:37AM +0200, Uwe Kleine-K=F6nig wrote:
-> > > Assigning values to a struct using a compound literal (since C99) also
-> > > guarantees that all unspecified struct members are empty-initialized,=
- so
-> > > it properly replaces the memset to zero.
-> > >
-> > > The code looks a bit nicer and more idiomatic (though that might be
-> > > subjective?). The resulting binary is a bit smaller. On ARCH=3Darm wi=
-th
-> > > an allnoconfig + minimal changes to enable the mp3309c driver the
-> > > difference is 12 bytes.
-> > >
-> > > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
-> >=20
-> > Reviewed-by: Daniel Thompson (RISCstar) <danielt@kernel.org>
->=20
-> Looks like you cannot send tags from non-related email accounts:
->=20
-> NOTE: some trailers ignored due to from/email mismatches:
->     ! Trailer: Reviewed-by: "Daniel Thompson (RISCstar)" <danielt@kernel.=
-org>
->      Msg From: Daniel Thompson <daniel@riscstar.com>
->=20
-> I'll add the tags manually this time.
+Hello Lee,
 
-FTR: The email address *or* the real name has to match the From: line to
-make b4 happy.
+On Tue, Sep 02, 2025 at 11:35:27AM +0100, Lee Jones wrote:
+> On Tue, 01 Jul 2025 11:22:35 +0200, Uwe Kleine-K=F6nig wrote:
+> > the first patch of this series is what I really care about: There are
+> > hardly any drivers left that use pwm_apply_args(). When all of them are
+> > converted to not use it any more, I intend to drop that function.
+> >=20
+> > The 2nd patch is just a change that I noticed while editing the driver
+> > that is IMHO nice. If you don't agree and only apply the first patch, I
+> > won't argue. It's an alternative approach to what Daniel Thompson did in
+> > commit 7ee6478d5aa9 ("backlight: mp3309c: Fully initialize
+> > backlight_properties during probe").
+> >=20
+> > [...]
+>=20
+> Applied, thanks!
+>=20
+> [1/2] backlight: mp3309c: Drop pwm_apply_args()
+>       commit: d22caa15de3a11b503157aec079cad4bf305ff47
+> [2/2] backlight: mp3309c: Initialize backlight properties without memset
+>       commit: 71ca0594c11b4030c6dece9ba9b080d652a82473
+
+I would expect to see these commits in your repo at
+https://git.kernel.org/pub/scm/linux/kernel/git/lee/backlight.git, but
+the exact commits don't exist there and if the patches are included
+under a different commit-id it's not obvious to me in which branch. Did
+you forget to push?
 
 Best regards
 Uwe
 
---dbmzc4rcf7ixa6l5
+--kug3zs2e2qoaurrt
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmjAKL4ACgkQj4D7WH0S
-/k5BrQf+JX3ho13wgiKmkcJ0Tjb0+y2mxhAU2VHfSxu0jGL6GsKb00SZXQ7/bQ0y
-FpqkmXr91kb5uhg5pOQL0D6W3OxwLRFLf4XfOL84TaAHintXN8gMBOsJA+Pn9iIA
-5rqGHhO7dT4zJt9SmdGVn7f9VBu2qdvo4wpf/tvzlIcYTYFGD8W/giikgRQcJcI3
-Hb3zRDIrRZWcNfHoN7yGFYC13iL2PyRFns/eyw+YqzCud+fHvfHbWV89l8LEzNod
-iwlF/fHCaSa7fqG154A0PgXPyF3ltgNwwi0RUNiwAtX/i0WcZrWYMavCTToq+SgE
-KrERYvE7oOdpFcIJNmXdRWQYyeDDZQ==
-=qQ6Z
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmjALwgACgkQj4D7WH0S
+/k68WAf+J5wpvAmD9PQ9ddCpeNb3UNH+0Vei7XvjmZIMHOe1A9WCJYVk8SaQ0xtk
+4nFVbHWjAJUPCxxNqeMD9hR/ENXo2yUgAxD9r2ifDde8PMid35w9o6VJkgDvRTmn
+APYswRylywm9RWDTqxO3TzrTvbUXOwUebUofJzrW9wzZIMDbh2TP8m8VS+x7+L59
+NzwCKKIUSxvRMH1PzqkMmk9VNGlCksWpKSDa+KZn1QkY0nSgUXqmBzDe9E97rNF/
+tRCRy8SRHmKAAuCWW5CwDGhhQExU2iooq3eW5lHa/oFEzfLwni6b+EZsZjzoSBWU
+fX5AUmn3Vk2diZgaKg/m8Sc1h2D+9A==
+=m9sa
 -----END PGP SIGNATURE-----
 
---dbmzc4rcf7ixa6l5--
+--kug3zs2e2qoaurrt--
 
