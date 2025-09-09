@@ -1,58 +1,54 @@
-Return-Path: <linux-pwm+bounces-7270-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7271-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0201BB4AA97
-	for <lists+linux-pwm@lfdr.de>; Tue,  9 Sep 2025 12:27:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id AF91AB4AAEA
+	for <lists+linux-pwm@lfdr.de>; Tue,  9 Sep 2025 12:52:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7620B189DC3A
-	for <lists+linux-pwm@lfdr.de>; Tue,  9 Sep 2025 10:27:31 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id BCFC71BC353C
+	for <lists+linux-pwm@lfdr.de>; Tue,  9 Sep 2025 10:53:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8DE302D0C63;
-	Tue,  9 Sep 2025 10:26:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD15131770E;
+	Tue,  9 Sep 2025 10:52:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dvPYCV8r"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GMJGue0l"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64F54246BB2;
-	Tue,  9 Sep 2025 10:26:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF14B2882C5;
+	Tue,  9 Sep 2025 10:52:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757413611; cv=none; b=slIfc6mPHxZnbxHa+7MshJ7/RO6ohGRIDY3UvOROgQW8S3jJtoy98k6LdW18M5flsQptU9MarrP4069nd32SlpeP4g6/DSWoxMGS7NaBtJqxkGmCClg++HVAJIpuB67cH3ZNuIFqbiCaBNErHNZPRK7vftYmdqEMI1I6FM4KHcA=
+	t=1757415168; cv=none; b=DJQyaJ+JCdeYl2uLIHLTXDRKTuU8FTunPozV6G8d77sJl+TnMsFkvh2OtkRa6ysMWA7A3ExLfrcqwHBqjRbMRROjuJ0DaxYujPbg5sGuJ6XLiZ8wHvsnh7vv5UXiLmZhsM9X0VxRZBvprJFMxZgFbJC230gySAlEi318PnRvKNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757413611; c=relaxed/simple;
-	bh=R8rJgzV0GkpvyeVk/7ra3rtAhpfBKmMB2QE4UL6QAwI=;
+	s=arc-20240116; t=1757415168; c=relaxed/simple;
+	bh=RuzkZqY9TDl0xwHTbArVdSoYhdyCPv5S5kmfGZYTMNc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oUCilY7bhXRDUk2eFKFxfL+ioueuAylUBAk6GBde5E0zMy9398XbRVkYrDwm+nIxHWt8q7yJ9Kr1weED3YhqWj2cLMdltLlBvEnQ5ll/PvAOXss/IstA7cMIoiEKkHvY0FThb6xuRXBe2VHPvH+/7gQofCoEMDfUxrnXqsNr8zk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dvPYCV8r; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81DE5C4CEF4;
-	Tue,  9 Sep 2025 10:26:50 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=cW26f1pJRNQY9b3J8K0Fd3YSP6BgvRlK6b6Zku7/L37ZLPCEsoqfhMR2QlUdcO1DB9eGZ8KTUHu1pa9WDKjKHcOCs1VSS6lzDrbBDJQDuTS2cANLYobSjfai3OyjlTXCQhSR8GrRoIF7Ka53c6Neh1l3Y0fGNfc1p4o7cAdidBA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GMJGue0l; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7B2BC4CEF4;
+	Tue,  9 Sep 2025 10:52:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757413610;
-	bh=R8rJgzV0GkpvyeVk/7ra3rtAhpfBKmMB2QE4UL6QAwI=;
+	s=k20201202; t=1757415168;
+	bh=RuzkZqY9TDl0xwHTbArVdSoYhdyCPv5S5kmfGZYTMNc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dvPYCV8rqkQ4ndd3rt4Qz4bwz6NdSDJRtaw71f/axAsG5SK4HBqVrtXHoBoHQ+R0+
-	 wfoWxJUih9JfGY8rTsOXQ+KSe/lt8X9O2hf82gV6DYvv/2WqFmfGeOFVoB9Cv1XryX
-	 8S1Ijq+f6aO/jC8Dl4LC05KuAs0T4lz990FPCJJrCcncw88S5xAAEMzUrReniT2nQV
-	 gzWSYjr1S+vNYbUv+g2aDoc3g/ll5f/StpCrrTrrCsU7HZ5k/ZmulqaY2jpES6nEO8
-	 3hRyXnLI7pkBzIw5UtnErkehvwNSfXOc4y3jjpYnCXSmfjVhkkU3OAKGwsqHpm1O+u
-	 bLbSbbeYH1bRA==
-Date: Tue, 9 Sep 2025 12:26:48 +0200
+	b=GMJGue0lghRR8rLcysCM9hOWVYraYSuvfzRxx82TRj2STvIqqKIGrupZcQDbdAHBJ
+	 f0tlYGW9+I8IZz/Aeq0r0sEM3CC49FVHlwdo/yjnjAB4doBDQqcb9hD0AR9WxEXIgp
+	 odcl+ElIn8G3HXwzbXfF0B4P33mQKNpBwmGc5k1vIDxYOP3KoZH1ZFALysHvdHGiOl
+	 6hRsCUyjl6WHpHoTJLlZB11/wmhHqH2QpkOJAIJv4+XVq/EPCB00ATyeX8rT4cNQ4O
+	 pzroQK5WuZcywWR9TXbC5D4nhn6Aaos3BRHpfsRnTajnb7St6PMgJwgh8ratA4aA58
+	 oe/6g40OtmiIw==
+Date: Tue, 9 Sep 2025 12:52:45 +0200
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Christian Marangi <ansuelsmth@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	Benjamin Larsson <benjamin.larsson@genexis.eu>, 
-	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>, Lorenzo Bianconi <lorenzo@kernel.org>, 
-	Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH v23] pwm: airoha: Add support for EN7581 SoC
-Message-ID: <o32quqohph6xq73f65izjocjdhv2ri4dld4tcmmmtisa632ucq@lpz4ewja3xtd>
-References: <20250708145053.798-1-ansuelsmth@gmail.com>
- <xsblhw36y3corxx3pxe6223auirrsqr3efovfnrm5lbo4xy3lf@wf3ytlivzv6g>
- <68bf2509.050a0220.702b3.c003@mx.google.com>
+To: Colin Ian King <colin.i.king@gmail.com>
+Cc: linux-pwm@vger.kernel.org, kernel-janitors@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH][next] pwm: Fix incorrect variable used in error message
+Message-ID: <52u2odvlsut2efemijiewh5gzfkvq6dj347fojrvytrjpxq76z@5isb6opneofo>
+References: <20250902130348.2630053-1-colin.i.king@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -60,123 +56,70 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="dynu75es6kbw6gat"
+	protocol="application/pgp-signature"; boundary="t4hwofridi3bqaue"
 Content-Disposition: inline
-In-Reply-To: <68bf2509.050a0220.702b3.c003@mx.google.com>
+In-Reply-To: <20250902130348.2630053-1-colin.i.king@gmail.com>
 
 
---dynu75es6kbw6gat
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+--t4hwofridi3bqaue
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v23] pwm: airoha: Add support for EN7581 SoC
+Subject: Re: [PATCH][next] pwm: Fix incorrect variable used in error message
 MIME-Version: 1.0
 
-Hello Christian,
-
-On Mon, Sep 08, 2025 at 08:48:38PM +0200, Christian Marangi wrote:
-> On Fri, Aug 01, 2025 at 11:15:41AM +0200, Uwe Kleine-K=F6nig wrote:
-> > On Tue, Jul 08, 2025 at 04:50:52PM +0200, Christian Marangi wrote:
-> > > +	duty_ticks =3D airoha_pwm_get_duty_ticks_from_ns(period_ns, duty_ns=
-);
-> >=20
-> > As duty_ticks depends on the selected period_ticks, I think the bucket
-> > selection algorithm is still wrong.
-> >=20
-> > Consider a request to implement
-> >=20
-> > 	period_ns =3D 256 ms
-> > 	duty_ns =3D 128 ms
-> >=20
-> > which at first correctly results in
-> >=20
-> > 	period_ticks =3D 64
-> > 	duty_ticks =3D 127
-> >=20
-> > If however all buckets are used and we only find one with say 62 period
-> > ticks we get period_ns =3D 248 and with that duty_ticks should better be
-> > 131 and not 127.
->
-> sorry for checking this only now and maybe we need to catch this again.
-
-no need to be sorry here. Taking time for replies is fine for me.
-
-> Maybe we are getting confused here but itsn't this already handled by
-> the upper condition?
+On Tue, Sep 02, 2025 at 02:03:48PM +0100, Colin Ian King wrote:
+> The dev_err message is reporting the incorrect return value ret_tohw,
+> it should be reporting the value in ret_fromhw. Fix this by using
+> ret_fromhw instead of ret_tohw.
 >=20
-> 		/* Ignore bucket with invalid configs */
-> 		if (bucket_period_ticks > period_ticks ||
-> 		    bucket_duty_ticks > duty_ticks)
-> 			continue;
+> Fixes: 6c5126c6406d ("pwm: Provide new consumer API functions for wavefor=
+ms")
+> Signed-off-by: Colin Ian King <colin.i.king@gmail.com>
+> ---
+>  drivers/pwm/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >=20
-> 		/*
-> 		 * Search for a bucket closer to the requested period/duty
-> 		 * that has the maximal possible period that isn't bigger
-> 		 * than the requested period. For that period pick the maximal
-> 		 * duty cycle that isn't bigger than the requested duty_cycle.
-> 		 */
-> 		if (bucket_period_ticks > best_period_ticks ||
-> 		    (bucket_period_ticks =3D=3D best_period_ticks &&
-> 		     bucket_duty_ticks > best_duty_ticks)) {
-> 			best_period_ticks =3D bucket_period_ticks;
-> 			best_duty_ticks =3D bucket_duty_ticks;
-> 			best =3D i;
-> 		}
->=20
-> We first limit for a bucket that doesn't got over both period and duty
-> and then we search for period and best duty. This should account for
-> never exceeding a duty since both period and duty are precalculated for
-> the current bucket and even if duty depends on period, again it's
-> precalculated. Am I missing something?
+> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+> index ec4112e6209a..ea2ccf42e814 100644
+> --- a/drivers/pwm/core.c
+> +++ b/drivers/pwm/core.c
+> @@ -276,7 +276,7 @@ int pwm_round_waveform_might_sleep(struct pwm_device =
+*pwm, struct pwm_waveform *
+> =20
+>  	if (IS_ENABLED(CONFIG_PWM_DEBUG) && ret_fromhw > 0)
+>  		dev_err(&chip->dev, "Unexpected return value from __pwm_round_waveform=
+_fromhw: requested %llu/%llu [+%llu], return value %d\n",
+> -			wf_req.duty_length_ns, wf_req.period_length_ns, wf_req.duty_offset_ns=
+, ret_tohw);
+> +			wf_req.duty_length_ns, wf_req.period_length_ns, wf_req.duty_offset_ns=
+, ret_fromhw);
+> =20
+>  	if (IS_ENABLED(CONFIG_PWM_DEBUG) &&
+>  	    (ret_tohw =3D=3D 0) !=3D pwm_check_rounding(&wf_req, wf))
 
-Let me describe the issue in more detail:
-
-The period length is configured in the AIROHA_PWM_WAVE_GEN_CYCLE
-register in multiples of 4 ms. The duty length is configured in the
-AIROHA_PWM_GPIO_FLASH_PRD_HIGH register in multiples of
-$period_length/255.
-
-So if you calcultate the number of multiples you need for duty_ns =3D 128
-ms based on the assumption that period_ns =3D 256 ms the result becomes
-wrong when you are forced to switch to period_ns =3D 248.
-
-So to implement a request for period =3D 256 ms (64 ticks) and duty_cycle
-=3D 128 ms (127.5 duty ticks) having the choice between the two buckets:
-
- a) period_ticks =3D 62; duty_ticks =3D 127
-    (period =3D 248 ms, duty_cycle =3D 123.51372549019608 ms)
- b) period_ticks =3D 62; duty_ticks =3D 131
-    (period =3D 248 ms, duty_cycle =3D 127.40392156862744 ms)
-
-b) is the better one despite 127 duty_ticks would be an exact match for
-period_ticks =3D 64. So the issue is that the "Ignore bucket with invalid
-configs" kicks out b). That's wrong because
-
-	bucket_duty_ticks > duty_ticks
-
-doesn't imply
-
-	bucket_duty > duty
-
-=2E
+Indeed, thanks for the fix. I added it to my pwm/fixes branch at
+https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git. I
+didn't made my mind up yet if the patches contained in there are
+relevant enough to send it to Linus before 6.17.
 
 Best regards
 Uwe
 
---dynu75es6kbw6gat
+--t4hwofridi3bqaue
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmjAAOUACgkQj4D7WH0S
-/k7CSAgAki22lN1bHPIS6kecihLK/yOOxggSBjdqFNeyYEv8GZX56Pbz9JR9V9jM
-VQhUuWGJA7rgwqYukKLoS9uW8pe+rCSbUusWO26NFviBYzpZlCzF3xfIH/TKt84t
-CdooGAsqb9qwlptN5IRozedy/SNL83OWrvt0OJlSAlBjJhTR2mSMlJU75nQ/nPUl
-x4Q+Ar2XlgVt1+ttsVSER6pM5H8yAaG1sXG/ZJa3na6/M4UXYTZlz4GGZ7a7OB4C
-bl5enb88ZD7MRZ4zgmCUzLWzLEsc8efdrAuWSJktMotEMrLSoAEnT914F3Y+dO4S
-gj32PnUAonZuLjQBEPg1xNJGIi7g7g==
-=gvPL
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmjABvoACgkQj4D7WH0S
+/k6Diwf7BfuMcnZqdITnmfwsZKNhVwHOt65eKj51sa7TnUxPF/aTl/H4dL2LBEZr
+elekmMbX+XmzCwfGNF9MsGFA/4HTzySLLv2Gmmdb1DZEZsVvcn54B+qQIXzF/lsC
+U25y6UQcDSypUPfxnSPzqQ/wOALtH3BTDr8Q/SVmz7Rwb8d8DSssb08dvZXuSHuM
+NDXCohKypnhJ12RDfcsoX6ormIt4QTrKihhOyVB01VshJ6WVcxtCkllFM00t8TrZ
+2B5KO3asVkzaBe4uOK0TRfgiiu/w0nVcEtSg9zmtvUjOO21GvaN65H0QOfiTolNg
+qG4XQMY83UT8aYJ+lV5LOA40Ep3oZw==
+=sm8Q
 -----END PGP SIGNATURE-----
 
---dynu75es6kbw6gat--
+--t4hwofridi3bqaue--
 
