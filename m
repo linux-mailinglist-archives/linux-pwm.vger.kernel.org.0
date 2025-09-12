@@ -1,53 +1,53 @@
-Return-Path: <linux-pwm+bounces-7302-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7303-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BF79BB54D0F
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Sep 2025 14:17:39 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9876DB54D13
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Sep 2025 14:18:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id E18725A33DA
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Sep 2025 12:12:58 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id 15A381D62678
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Sep 2025 12:14:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12BD4313E3B;
-	Fri, 12 Sep 2025 12:05:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A7BB3090EB;
+	Fri, 12 Sep 2025 12:07:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="OE3gEZ6X"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="HqXaT7jo"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51AF3312838;
-	Fri, 12 Sep 2025 12:05:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76F22302CB2;
+	Fri, 12 Sep 2025 12:07:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757678740; cv=none; b=OsALTQv8L1rNdVy0QLNfp+9lzKZUiB/gsEj/LQBfXZ3Jed/CInkiuJ8tCFlZIwVCwZn/8qykc0hoqj7emUWb5nE5m46xoTxi9WnNMcZXTOYYluy4gJrOJMb7/MCe+T1nPa+rFAK+Jyw9JuTIAb7KJqvg8tvf3T44akBduW8Arqs=
+	t=1757678873; cv=none; b=uT1/LbqUlgLsMfIlcfQznTlwCrJYhc1z3ZCCrUTQebYKHzUFyV+xqBE4QMJDLeHorlR5fQxiMVWxuue4LjgLNiAHAEROtTzYGaJsMZyyWnxe07Buvd62cAP0kSAY+R+7mei7Dx5MdVEM88UKb/1XjFErhfiGrLboXJxXTcbDLwQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757678740; c=relaxed/simple;
-	bh=6kXTvgsEt4hrAQkTdQrB5UQT/65SaHckvtwi0km/o5Q=;
+	s=arc-20240116; t=1757678873; c=relaxed/simple;
+	bh=V5L2Cqd1TLvPKhROh6gN8nsEJByTgaGs5MeM2XqfYTY=;
 	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:From:To:
-	 References:In-Reply-To; b=NzevxnkIrMXSPvRzcqLh8U+FexRBhtLXPmOwuK84yof6/tVia2zQDdt9fOMGyCZV4R4rUjAT8CzuUEFRy4J1rtnb01R+KSVqtweIzn8i9fQrOx1fc+Ue7OtcQwpC+Kxb1IcK6VROQSMUVJxPAqcZeToXiJT2WxGJeGx3EefAnjU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=OE3gEZ6X; arc=none smtp.client-ip=185.246.84.56
+	 References:In-Reply-To; b=HvXXRMg3DxQRg2n8yLbN6SgZTK8+5GZOsYXJn10GQYjCALI1t7Mo1vCBILx1BAO1ApIhU1j7lWJpFgknsWVgOvgcanlFtI38fzj4dyWtCpm9wBxdK5LSzyrH45C0sL30tLal9Z3ZvbFD8sIAOIoTDaJ+uO8VAUFwuWVlTJlraRI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=HqXaT7jo; arc=none smtp.client-ip=185.246.84.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id 6282E1A0DCD;
-	Fri, 12 Sep 2025 12:05:35 +0000 (UTC)
+	by smtpout-02.galae.net (Postfix) with ESMTPS id B85751A0DCF;
+	Fri, 12 Sep 2025 12:07:49 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 28A6160638;
-	Fri, 12 Sep 2025 12:05:35 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 8F324102F2999;
-	Fri, 12 Sep 2025 14:05:24 +0200 (CEST)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 84F4860638;
+	Fri, 12 Sep 2025 12:07:49 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id D49D3102F2956;
+	Fri, 12 Sep 2025 14:07:39 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1757678734; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	t=1757678868; h=from:subject:date:message-id:to:cc:mime-version:content-type:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=Os+OidjTl+c1dT3HL1cuaSdhlkiI53JVGWAi5cjuG5g=;
-	b=OE3gEZ6X44PjnQgyrjxBYK80kz9SpzxFU5P6SwdMm81+KP5hIFW7PNtGVIDrgqmh5Cex8C
-	INo3PxGEWtzFW/10tnhbx+Eo0zQKV/+KXZ6zVxN5eHDVaHYkno9fatGG4GcYDlt6kf7OkL
-	/GdcTD6y8s6vhEcjeBrVkUI1zVI6gjwotmc4itWYm3MIoPm0TtO34qMmP350zAF59XnhYA
-	cJfCNZaMvrMaWqJTpyXsPaj8D1Rx7zLJFGqp5VVaxcjH4YqdLYUtK8LNCFCLUIU2iNdoMW
-	eEj7/g6Y47SUTvkRFrQTlFODlOP4c7iItOnrjsMUPlgWokcnxM+locoSf1pMrA==
+	bh=V5L2Cqd1TLvPKhROh6gN8nsEJByTgaGs5MeM2XqfYTY=;
+	b=HqXaT7joeZNpMcZaGgBB/2RbMv3VGyfWofHaIFcKukWp3jwIoYLWM8+390IbocOjZDLFH9
+	SJ3g3uk3Zsf/rwPx2g1dYG8oTcV3InBrOJ7rWO+248cVpFd0oWZYe3IKuJ1Rv2g8rtIrcu
+	25LYnUNhRp8yqeysD3ZUzC/pBnZBgVigifFN2PiMcF68qUwbbmhnTWyRwJeajJgy7Aszqu
+	sUUsS0Lijb/fEVcj/Wgh9LyC4fKBHgyqH2s/vWGXX43JMntN9dSMvYMr29yo28pvvAJlSH
+	mG5B7O1mxpXzmW22QkJ22oSVACTbUE8pKuyy0fW5tAW/JPZuQlmrYdsZ4DC6bw==
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -56,80 +56,55 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Fri, 12 Sep 2025 14:05:24 +0200
-Message-Id: <DCQT3UNG2Y41.2V411GFLLDVEP@bootlin.com>
-Subject: Re: [PATCH v14 04/10] pwm: max7360: Add MAX7360 PWM support
-Cc: "Lee Jones" <lee@kernel.org>, "Rob Herring" <robh@kernel.org>,
- "Krzysztof Kozlowski" <krzk+dt@kernel.org>, "Conor Dooley"
- <conor+dt@kernel.org>, "Kamel Bouhara" <kamel.bouhara@bootlin.com>, "Linus
- Walleij" <linus.walleij@linaro.org>, "Bartosz Golaszewski" <brgl@bgdev.pl>,
- "Dmitry Torokhov" <dmitry.torokhov@gmail.com>, "Michael Walle"
- <mwalle@kernel.org>, "Mark Brown" <broonie@kernel.org>, "Greg
- Kroah-Hartman" <gregkh@linuxfoundation.org>, "Rafael J. Wysocki"
- <rafael@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
- <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-gpio@vger.kernel.org>, <linux-input@vger.kernel.org>,
- <linux-pwm@vger.kernel.org>, <andriy.shevchenko@intel.com>,
- =?utf-8?q?Gr=C3=A9gory_Clement?= <gregory.clement@bootlin.com>, "Thomas
- Petazzoni" <thomas.petazzoni@bootlin.com>, "Andy Shevchenko"
- <andriy.shevchenko@linux.intel.com>
+Date: Fri, 12 Sep 2025 14:07:39 +0200
+Message-Id: <DCQT5KSSRURJ.1OMQGZG4XHMNP@bootlin.com>
+Subject: Re: [PATCH v14 00/10] Add support for MAX7360
+Cc: "Rob Herring" <robh@kernel.org>, "Krzysztof Kozlowski"
+ <krzk+dt@kernel.org>, "Conor Dooley" <conor+dt@kernel.org>, "Kamel Bouhara"
+ <kamel.bouhara@bootlin.com>, "Linus Walleij" <linus.walleij@linaro.org>,
+ "Bartosz Golaszewski" <brgl@bgdev.pl>, "Dmitry Torokhov"
+ <dmitry.torokhov@gmail.com>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
+ <ukleinek@kernel.org>, "Michael Walle" <mwalle@kernel.org>, "Mark Brown"
+ <broonie@kernel.org>, "Greg Kroah-Hartman" <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, "Danilo Krummrich"
+ <dakr@kernel.org>, <devicetree@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+ <linux-input@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+ <andriy.shevchenko@intel.com>, =?utf-8?q?Gr=C3=A9gory_Clement?=
+ <gregory.clement@bootlin.com>, "Thomas Petazzoni"
+ <thomas.petazzoni@bootlin.com>, "Krzysztof Kozlowski"
+ <krzysztof.kozlowski@linaro.org>, "Andy Shevchenko"
+ <andriy.shevchenko@linux.intel.com>, "Bartosz Golaszewski"
+ <bartosz.golaszewski@linaro.org>
 From: "Mathieu Dubois-Briand" <mathieu.dubois-briand@bootlin.com>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: "Lee Jones" <lee@kernel.org>
 X-Mailer: aerc 0.19.0-0-gadd9e15e475d
 References: <20250824-mdb-max7360-support-v14-0-435cfda2b1ea@bootlin.com>
- <20250824-mdb-max7360-support-v14-4-435cfda2b1ea@bootlin.com>
- <7jytyub4v7tn6vbwh4drusaagnskl2dsfg2xr6eqp4leqpfq3y@a7g3de5echs4>
-In-Reply-To: <7jytyub4v7tn6vbwh4drusaagnskl2dsfg2xr6eqp4leqpfq3y@a7g3de5echs4>
+ <20250902152306.GV2163762@google.com>
+In-Reply-To: <20250902152306.GV2163762@google.com>
 X-Last-TLS-Session-Version: TLSv1.3
 
-On Fri Sep 12, 2025 at 10:57 AM CEST, Uwe Kleine-K=C3=B6nig wrote:
-> On Sun, Aug 24, 2025 at 01:57:23PM +0200, Mathieu Dubois-Briand wrote:
->> +static int max7360_pwm_round_waveform_tohw(struct pwm_chip *chip,
->> +					   struct pwm_device *pwm,
->> +					   const struct pwm_waveform *wf,
->> +					   void *_wfhw)
->> +{
->> +	struct max7360_pwm_waveform *wfhw =3D _wfhw;
->> +	u64 duty_steps;
->> +
->> +	/*
->> +	 * Ignore user provided values for period_length_ns and duty_offset_ns=
-:
->> +	 * we only support fixed period of MAX7360_PWM_PERIOD_NS and offset of=
- 0.
->> +	 * Values from 0 to 254 as duty_steps will provide duty cycles of 0/25=
-6
->> +	 * to 254/256, while value 255 will provide a duty cycle of 100%.
->> +	 */
->> +	if (wf->duty_length_ns >=3D MAX7360_PWM_PERIOD_NS) {
->> +		duty_steps =3D MAX7360_PWM_MAX;
->> +	} else {
->> +		duty_steps =3D (u32)wf->duty_length_ns * MAX7360_PWM_STEPS / MAX7360_=
-PWM_PERIOD_NS;
->> +		if (duty_steps =3D=3D MAX7360_PWM_MAX)
->> +			duty_steps =3D MAX7360_PWM_MAX - 1;
->> +	}
->> +
->> +	wfhw->duty_steps =3D min(MAX7360_PWM_MAX, duty_steps);
+On Tue Sep 2, 2025 at 5:23 PM CEST, Lee Jones wrote:
+> On Sun, 24 Aug 2025, Mathieu Dubois-Briand wrote:
 >
-> duty_steps is never bigger than MAX7360_PWM_MAX, isn't it? Then this can
-> be simplified to just
+>> This series implements a set of drivers allowing to support the Maxim
+>> Integrated MAX7360 device.
+>>=20
+>> The MAX7360 is an I2C key-switch and led controller, with following
+>> functionalities:
+>> - Keypad controller for a key matrix of up to 8 rows and 8 columns.
+>> - Rotary encoder support, for a single rotary encoder.
+>> - Up to 8 PWM outputs.
+>> - Up to 8 GPIOs with support for interrupts and 6 GPOs.
 >
-> 	wfhw->duty_steps =3D duty_steps;
->
+> MFD looks okay now, let me know when you have all Acks and I'll merge the=
+ set.
 
-Ok, I reviewed this section and I do agree with you. I will prepare a
-new patch to fix this line and will send it separately.
+Hi Lee,
 
-> Otherwise looks fine to me.
->
-> To get this series forward, it's OK for me to apply the series as is via
-> Lee's MFD tree and cope for this minor optimisation later. So:
->
-> Acked-by: Uwe Kleine-K=C3=B6nig <ukleinek@kernel.org>
->
-> Best regards
-> Uwe
+The PWM driver just got Acked, so I believe we are good to go.
+
+Please tell me if there is anything else I need to do.
 
 Thanks,
 Mathieu
