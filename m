@@ -1,168 +1,125 @@
-Return-Path: <linux-pwm+bounces-7305-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7306-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39445B54E16
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Sep 2025 14:37:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A8166B558DA
+	for <lists+linux-pwm@lfdr.de>; Sat, 13 Sep 2025 00:08:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 181F41651CA
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Sep 2025 12:33:43 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 37A10567965
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Sep 2025 22:08:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6974C307481;
-	Fri, 12 Sep 2025 12:32:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5205C2E718F;
+	Fri, 12 Sep 2025 22:07:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IU55n742"
+	dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b="U/TSqtgk"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.zeus03.de (zeus03.de [194.117.254.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BB64305E09;
-	Fri, 12 Sep 2025 12:32:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4464A27A47C
+	for <linux-pwm@vger.kernel.org>; Fri, 12 Sep 2025 22:07:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=194.117.254.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757680348; cv=none; b=UsBqz8zv0230Dol8/Kbh+38VNns7hGnkIqpcZiPFXjev5xQweWVEvm9lyAdsaI6Ms18YoyloWoca/whelk/ZMmCZ6X9P3rzx5D0sOtT/gcPCagcSNh3mtdMczRUCHFF1WEtulX9WmZJUqvIvX6nCkLMc/AR1rVMg/a9cNPJyB1M=
+	t=1757714876; cv=none; b=FeOxopxuX74E4cajxG7XbJ4mKD6jKENJI/Q2GEBnM5Utw9xDlY9ns6Hms1nCbX8xOgl1zeI3YDkDJhbN5Tx1L6uSYjW0NzKKUmy2cMG+0u+6Mip3ZzfL8T59MWqoKVM6XwxYVkvQDRtmys6lMs035gRSMNdt9L/7gJ3+iLqfRzU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757680348; c=relaxed/simple;
-	bh=FcB/j8jpTTeuUgVYhkcDadPRSSv9aTjPsQanKoFiqeY=;
+	s=arc-20240116; t=1757714876; c=relaxed/simple;
+	bh=+yph0vA7hH7D2dOH8dcz8OTQ5zI8ZyZYi0J1x57wbuc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LDp5XO/7ZpvYLT+tQHXkiZdpAK/Bg5Ve0fXDnSrbA1dXjOxsx8GcZN2pruAjJzmrU1frK2cRqBF7cW4PQ95IlwyzujWDTIQfFoTzXn2qYwBXJeP8tfJwhezkoOr1U3gVOY6wDGOtXSq3G146LqcNZUk5nK+vrWfJEpyOvk5V4YY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IU55n742; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6500C4CEF1;
-	Fri, 12 Sep 2025 12:32:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757680347;
-	bh=FcB/j8jpTTeuUgVYhkcDadPRSSv9aTjPsQanKoFiqeY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=IU55n7424YFkl7R89fO1ro6rbYLpxDoWNnQ5RDwzGZWkFpFRaYy8xKAyncIsgmwFs
-	 kWBrthguK+Q5SPbSQhIUOQuMGZs2CTi99sKx6wWvPO59ZWte07N8oZ8ZpqutdTCrVN
-	 a5anbr6R+aR9xvPhr+Mbuw+xreZXEmvSPvD+h/54KYPbjc+cNs58BnOWFLTFC7iQd6
-	 mTu7HzR3N0ASRwQWStFHRMTFgnACZD/UG+bcpITx9z6Pv4gI3zTwmeai//yb+YifXM
-	 L4Mb1vchumZCk4NBZ7l45o9JleaftTyPT7v4JtMGzBBH19TCfIAX4TlwEBKk5Q/MfI
-	 HfN37v8XYCwsQ==
-Date: Fri, 12 Sep 2025 14:32:24 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: "biju.das.au" <biju.das.au@gmail.com>, 
-	"linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH v2] pwm: rzg2l-gpt: Implementation of the waveform
- callbacks
-Message-ID: <6gvpdndagee54h7gr3uqm37rfu4yk2owffxwtszyjvnic2vqvl@pbp3jqcfrzox>
-References: <20250814115022.73732-1-biju.das.jz@bp.renesas.com>
- <jb6vcdv3553kbvuzuxdmx7tyxcpmnkaqszks3n4apmt43an6d2@mr4lyezd5a7s>
- <TY3PR01MB1134600B9DF5AA79AE121CD148609A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=ZO8tTspiy8eOpOC9zCfgqy71avppcDdsFvex1xLOvzoWVNmjMMhXKQl2D0uTqk9cwbNBXJQbnEtgRX/E/+PEkok50rKeE/nKt0PECAtSHntXvM/TJjfimtgU39O36FEzVif0KYAgVAtZnMnXdI3N7FBmRnLTiohwRLr46afk3BY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com; spf=pass smtp.mailfrom=sang-engineering.com; dkim=pass (2048-bit key) header.d=sang-engineering.com header.i=@sang-engineering.com header.b=U/TSqtgk; arc=none smtp.client-ip=194.117.254.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sang-engineering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sang-engineering.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	sang-engineering.com; h=date:from:to:cc:subject:message-id
+	:references:mime-version:content-type:in-reply-to; s=k1; bh=XtZM
+	38dcKGfPDowHADfBNhN+yZMd/DBKAr/Q56lBQhU=; b=U/TSqtgky9mRHKpLYuTy
+	UfXd7XedJP9Hk+5/2IqTWU+ncNGhELZK0Vc0RXbSYaIz7Hw6VMZAT5JoyMYY6z4g
+	WzMES95KXJxGoQ7e6ctjM2JN/2k4u/gVXKL/EPXHHKnINEvdgPhLK+f+fB3cHt9L
+	BpsliJIKV+ndVoI8YPP2/7JNqgTQ5aLQNm6R5gAL99+5MFMbIChu6laV+I2f8W3m
+	RpmupwmKLyH5mtQ8NSf2xEebzmoGbDEbi8by9Z1l1UyIN+iGY8UbAOXQISM6qt8c
+	5VvYJPYCkQGivyZtg4DnvEdmEwmxNTAeKfuH6DGfDaXfeL6rCKUkNLis+l/AE6hJ
+	Eg==
+Received: (qmail 1499859 invoked from network); 13 Sep 2025 00:07:43 +0200
+Received: by mail.zeus03.de with UTF8SMTPSA (TLS_AES_256_GCM_SHA384 encrypted, authenticated); 13 Sep 2025 00:07:43 +0200
+X-UD-Smtp-Session: l3s3148p1@dRQG4qE+rtYgAQnoAHJ8AC93OVDMgFWg
+Date: Sat, 13 Sep 2025 00:07:42 +0200
+From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+To: Janne Grunau <j@jannau.net>
+Cc: Sven Peter <sven@kernel.org>, Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+	Neal Gompa <neal@gompa.dev>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Hector Martin <marcan@marcan.st>,
+	"Rafael J. Wysocki" <rafael@kernel.org>,
+	Viresh Kumar <viresh.kumar@linaro.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Linus Walleij <linus.walleij@linaro.org>,
+	Mark Kettenis <kettenis@openbsd.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Jassi Brar <jassisinghbrar@gmail.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
+	Sasha Finkelstein <fnkl.kernel@gmail.com>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Johannes Berg <johannes@sipsolutions.net>,
+	van Spriel <arend@broadcom.com>, Lee Jones <lee@kernel.org>,
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Stephen Boyd <sboyd@kernel.org>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Guenter Roeck <linux@roeck-us.net>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Martin =?utf-8?Q?Povi=C5=A1er?= <povik+lin@cutebit.org>,
+	Vinod Koul <vkoul@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Marc Zyngier <maz@kernel.org>,
+	Ulf Hansson <ulf.hansson@linaro.org>,
+	Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>,
+	Christoph Hellwig <hch@lst.de>, Sagi Grimberg <sagi@grimberg.me>,
+	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+	asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pm@vger.kernel.org, iommu@lists.linux.dev,
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+	dri-devel@lists.freedesktop.org, linux-bluetooth@vger.kernel.org,
+	linux-wireless@vger.kernel.org, linux-pwm@vger.kernel.org,
+	linux-watchdog@vger.kernel.org, linux-clk@vger.kernel.org,
+	dmaengine@vger.kernel.org, linux-sound@vger.kernel.org,
+	linux-spi@vger.kernel.org, linux-nvme@lists.infradead.org
+Subject: Re: [PATCH 10/37] dt-bindings: i2c: apple,i2c: Add apple,t6020-i2c
+ compatible
+Message-ID: <aMSZrp3pbS2CeBOE@shikoro>
+References: <20250828-dt-apple-t6020-v1-0-507ba4c4b98e@jannau.net>
+ <20250828-dt-apple-t6020-v1-10-507ba4c4b98e@jannau.net>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="sgmdvzmvjcipahsk"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <TY3PR01MB1134600B9DF5AA79AE121CD148609A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+In-Reply-To: <20250828-dt-apple-t6020-v1-10-507ba4c4b98e@jannau.net>
 
+On Thu, Aug 28, 2025 at 04:01:29PM +0200, Janne Grunau wrote:
+> After discussion with the devicetree maintainers we agreed to not extend
+> lists with the generic compatible "apple,i2c" anymore [1]. Use
+> "apple,t8103-i2c" as fallback compatible as it is the SoC the driver
+> and bindings were written for.
+> 
+> This block is compatible with t8103, so just add the new per-SoC
+> compatible using apple,t8103-i2c as base.
+> 
+> [1]: https://lore.kernel.org/asahi/12ab93b7-1fc2-4ce0-926e-c8141cfe81bf@kernel.org/
+> 
+> Signed-off-by: Janne Grunau <j@jannau.net>
+> Acked-by: Andi Shyti <andi.shyti@kernel.org>
 
---sgmdvzmvjcipahsk
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2] pwm: rzg2l-gpt: Implementation of the waveform
- callbacks
-MIME-Version: 1.0
+Applied to for-next, thanks!
 
-Hello Biju,
-
-On Thu, Sep 11, 2025 at 09:46:38AM +0000, Biju Das wrote:
-> > -----Original Message-----
-> > From: Uwe Kleine-K=F6nig <ukleinek@kernel.org>
-> > Sent: 09 September 2025 16:19
-> > On Thu, Aug 14, 2025 at 12:50:20PM +0100, Biju wrote:
-> > > -/* Caller holds the lock while calling rzg2l_gpt_config() */ -static
-> > > int rzg2l_gpt_config(struct pwm_chip *chip, struct pwm_device *pwm,
-> > > -			    const struct pwm_state *state)
-> > > +static int rzg2l_gpt_round_waveform_tohw(struct pwm_chip *chip,
-> > > +					 struct pwm_device *pwm,
-> > > +					 const struct pwm_waveform *wf,
-> > > +					 void *_wfhw)
-> > > +
-> > >  {
-> > >  	struct rzg2l_gpt_chip *rzg2l_gpt =3D to_rzg2l_gpt_chip(chip);
-> > > -	u8 sub_ch =3D rzg2l_gpt_subchannel(pwm->hwpwm);
-> > > +	struct rzg2l_gpt_waveform *wfhw =3D _wfhw;
-> > >  	u8 ch =3D RZG2L_GET_CH(pwm->hwpwm);
-> > >  	u64 period_ticks, duty_ticks;
-> > >  	unsigned long pv, dc;
-> > > -	u8 prescale;
-> > > +
-> > > +	guard(mutex)(&rzg2l_gpt->lock);
-> > > +	if (wf->period_length_ns =3D=3D 0) {
-> > > +		*wfhw =3D (struct rzg2l_gpt_waveform){
-> > > +			.gtpr =3D 0,
-> > > +			.gtccr =3D 0,
-> > > +			.prescale =3D 0,
-> > > +		};
-> > > +
-> > > +		return 0;
-> > > +	}
-> > >
-> > >  	/* Limit period/duty cycle to max value supported by the HW */
-> > > -	period_ticks =3D mul_u64_u64_div_u64(state->period, rzg2l_gpt->rate=
-_khz, USEC_PER_SEC);
-> > > +	period_ticks =3D mul_u64_u64_div_u64(wf->period_length_ns,
-> > > +rzg2l_gpt->rate_khz, USEC_PER_SEC);
-> > >  	if (period_ticks > RZG2L_MAX_TICKS)
-> > >  		period_ticks =3D RZG2L_MAX_TICKS;
-> > >  	/*
-> >=20
-> > The code that follows here needs adaption. Other than .apply(),
-> > .round_waveform_tohw() is supposed to not fail if the requested period =
-is too small but use the
-> > smallest possible value then (and return 1).
->=20
->=20
-> You mean something like below
->=20
->         if (rzg2l_gpt->channel_request_count[ch] > 1) {
->                 if (period_ticks < rzg2l_gpt->period_ticks[ch])
-> -                       return -EBUSY;
-> +                       is_small_second_period =3D true;
->                 else
->                         period_ticks =3D rzg2l_gpt->period_ticks[ch];
->         }
-> @@ -272,6 +276,9 @@ static int rzg2l_gpt_round_waveform_tohw(struct pwm_c=
-hip *chip,
->         wfhw->prescale =3D rzg2l_gpt_calculate_prescale(rzg2l_gpt, period=
-_ticks);
->         pv =3D rzg2l_gpt_calculate_pv_or_dc(period_ticks, wfhw->prescale);
->         wfhw->gtpr =3D pv;
-> +       if (is_small_second_period)
-> +               return 1;
-
-Just locking at the diff: Yes, that looks about right. I guess you also
-need `period_ticks =3D rzg2l_gpt->period_ticks[ch]` in the
-is_small_second_period=3D=3Dtrue case.
-
-Best regards
-Uwe
-
---sgmdvzmvjcipahsk
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmjEEtQACgkQj4D7WH0S
-/k4mgQf/YqaB99nCURNqmLX97YX5q/F71+F4Alf4Z9rlAXZp1XgbqQTbSJseZD7C
-8v+bAiYTi0PAYWrOgOwjoulGqZWyBmdnvk4gmz9Vz/TO6LZfWS0rI2irQihBkvPh
-ILfdAkVLBQdCz2nDHgVEbYMxSMa92fb++ME/1JyK9GbLkowESioKi3hzaj/uB1UJ
-OD5bidc7+wBPXa9ULO4DclTTVz5rWx6h5alJD8GW/nZokHZK408s3iSRbo3mudia
-qQs3Z96ch0F5mXjI+wOfQy7WWNxRu4aFuMvapKjtlOaU+reOJZY7meaIcWOo7tgZ
-PlQJFIFIGjDzlGZ4vvTJulGCtCAOhg==
-=UeFn
------END PGP SIGNATURE-----
-
---sgmdvzmvjcipahsk--
 
