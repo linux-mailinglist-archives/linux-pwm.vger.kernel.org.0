@@ -1,47 +1,47 @@
-Return-Path: <linux-pwm+bounces-7318-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7319-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sy.mirrors.kernel.org (sy.mirrors.kernel.org [IPv6:2604:1380:40f1:3f00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 62CF5B57565
-	for <lists+linux-pwm@lfdr.de>; Mon, 15 Sep 2025 12:00:20 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [147.75.199.223])
+	by mail.lfdr.de (Postfix) with ESMTPS id E07F3B575CE
+	for <lists+linux-pwm@lfdr.de>; Mon, 15 Sep 2025 12:13:18 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sy.mirrors.kernel.org (Postfix) with ESMTPS id B53FC7A7BE6
-	for <lists+linux-pwm@lfdr.de>; Mon, 15 Sep 2025 09:58:40 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 61F63200010
+	for <lists+linux-pwm@lfdr.de>; Mon, 15 Sep 2025 10:13:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C58CA2FAC04;
-	Mon, 15 Sep 2025 10:00:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BFE92FB62B;
+	Mon, 15 Sep 2025 10:13:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="isaI4Le1"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MOwoYI0p"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94F1B2F39B7;
-	Mon, 15 Sep 2025 10:00:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE9E42FB627;
+	Mon, 15 Sep 2025 10:13:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1757930416; cv=none; b=S+eRf3kmCEzs0GnF+X4C61fiUy97I26jz3rypy9ShCcsb7L/dbBGdBV1eDfkZb4kyfcOwkwc0ezDMxlEWwcrFxknlnA/5Du0eKoQ4suIU+Z3JG/2mIwoUPA4MdMEQNLb1+aaTGhn8AmXHYJNA3DYzes+QmxDDdA3Uk8ydL6V5ZM=
+	t=1757931185; cv=none; b=PWxpu+NHoUlqvGtLgwG5WTVKK1+ZJx04kU9Mj8jrjhafwwua+guKpyCTOqixia7nexpcX3F+qnOJYHkSROMiShqljzeNmSoO/OOqeJzwWfYpclpRh3bFaczcI/SJ8Mj2DS9O/qQeuW+04XdzLnJTXqd6SHMfABYMmz/BM6WnxPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1757930416; c=relaxed/simple;
-	bh=Pcd9ZToXPQQxmubV3rR5Zi6CoH4Kg5mSLyV/LY5hX/8=;
+	s=arc-20240116; t=1757931185; c=relaxed/simple;
+	bh=bb9Mg/D/jEHiaHsLAgrg6OSUxGwRv1ubjnV9xw/kiW0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pUtBxLazMXgaMnb2WfTfI4+TpKzifUseIRUKrMxStFRVO5qZJaVkLNAEMSkKyB+ED9mf6nPqTGUG763KLMCW7yk7mZkYxLLTKbsn3LbId0m54s5hg1t0HdcgNKREmchsYqlVEf7MKWpwl99/+cxuunM+nOq4mRSUqE0lmZYNxHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=isaI4Le1; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2424C4CEF1;
-	Mon, 15 Sep 2025 10:00:15 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=eZBz5YQgCfQfZNU0qaaXuR6rpSDQMfXqjN/HtaFDGesqI3+coM+ji0yRnqXNPLDecdwt8HM3LCyclLrTe4RN3juJufoh3b8Bh1T/lB8E/lRuZIqZ8St/9nmABUP99W7UJVYktfNol237Nqj9kCkiJMnfHLMK8D/dHRf7UslPLbw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MOwoYI0p; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDD41C4CEF7;
+	Mon, 15 Sep 2025 10:13:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1757930416;
-	bh=Pcd9ZToXPQQxmubV3rR5Zi6CoH4Kg5mSLyV/LY5hX/8=;
+	s=k20201202; t=1757931184;
+	bh=bb9Mg/D/jEHiaHsLAgrg6OSUxGwRv1ubjnV9xw/kiW0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=isaI4Le1IUPm5WO/FkjugGY5TihhnnOPPWBqXZATkJqCFu8K+uagSHjhYXaYdBJVO
-	 pYj6cFzEwtrwxAkVKFerFQexukNRw9y3ZypQUnHgd14TkKkjUXhKvKhl5pOiCDXE/C
-	 //8cMCshz8VQP2Btbaa2ZCG8IX/xMZ5RGNglwqHa4qDfgOFNww4g5zb3zUfsP8m8r+
-	 /sRQBTMnpLAtOI52ZR96b0Hu5xrIvRTyXKf3bGrUuDQH5vLvtrFQD5FkhxEK0JCzvP
-	 UxJCRydMKaMLvXso4KD37LJgVE2f1+Jy7+fwWUlHR+yofF0VS8dJqXl6YkCDTi/8HB
-	 orORk55ceYQQQ==
-Date: Mon, 15 Sep 2025 12:00:14 +0200
+	b=MOwoYI0pzlw7L57/NjzW0kWEOhTeYrPAPpgYGQ+Sb3S7oWReSYYhzrBAzW3yCFmVw
+	 LkIGEggrjiW//byAc4Lh9OmKKssKd0v1WGASy9HhwnxwDB5net5ZNWuNGdx5zoZZeA
+	 lozqdOKVq/gKDD2zfdHOzTI8oRZzwkA6kHqAGpqHPFzFaJf11ITrsE3SksLByb4KTV
+	 UxRvvTVEjyjaeZMTpAWKqWH2CG12frOfhQCJye9XpSxfRpDOIiBKEwiRDVRwwVfpWS
+	 tRQfQsGQm032z0j7fhruWg7hFL4rQApVCUicVG9YGIUy7PoHjnJH6v8sz9X6WsR49M
+	 hkbTjspEj/ZLw==
+Date: Mon, 15 Sep 2025 12:13:02 +0200
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
 To: Michal Wilczynski <m.wilczynski@samsung.com>
 Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
@@ -57,11 +57,11 @@ Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
 	Drew Fustini <fustini@kernel.org>, Daniel Almeida <daniel.almeida@collabora.com>, 
 	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org, 
 	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH v14 1/7] pwm: Export `pwmchip_release` for external use
-Message-ID: <3jxl6gpxwv376ooyny7qkeokeh7nzafttbyoehmwqzrccn5oip@747v6zdnogso>
+Subject: Re: [PATCH v14 2/7] rust: pwm: Add Kconfig and basic data structures
+Message-ID: <upgthwp3cyohhe2gkzsramzshmvz3icjbhro6hgk2drbbqczi4@ygaanetydgjv>
 References: <20250820-rust-next-pwm-working-fan-for-sending-v14-0-df2191621429@samsung.com>
- <CGME20250820083541eucas1p2ad7d78418576b8bc8cbddd8efe83bbe9@eucas1p2.samsung.com>
- <20250820-rust-next-pwm-working-fan-for-sending-v14-1-df2191621429@samsung.com>
+ <CGME20250820083542eucas1p221dacb3b69524b0dd6f7abf870adbe04@eucas1p2.samsung.com>
+ <20250820-rust-next-pwm-working-fan-for-sending-v14-2-df2191621429@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -69,60 +69,60 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ieqpilfwwfgxf4dc"
+	protocol="application/pgp-signature"; boundary="zryfvf6d45dfcezd"
 Content-Disposition: inline
-In-Reply-To: <20250820-rust-next-pwm-working-fan-for-sending-v14-1-df2191621429@samsung.com>
+In-Reply-To: <20250820-rust-next-pwm-working-fan-for-sending-v14-2-df2191621429@samsung.com>
 
 
---ieqpilfwwfgxf4dc
+--zryfvf6d45dfcezd
 Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v14 1/7] pwm: Export `pwmchip_release` for external use
+Subject: Re: [PATCH v14 2/7] rust: pwm: Add Kconfig and basic data structures
 MIME-Version: 1.0
 
-Hello,
+Hello Michal,
 
-On Wed, Aug 20, 2025 at 10:35:36AM +0200, Michal Wilczynski wrote:
-> The upcoming Rust abstraction layer for the PWM subsystem uses a custom
-> `dev->release` handler to safely manage the lifetime of its driver
-> data.
+On Wed, Aug 20, 2025 at 10:35:37AM +0200, Michal Wilczynski wrote:
+> Introduce the foundational support for PWM abstractions in Rust.
 >=20
-> To prevent leaking the memory of the `struct pwm_chip` (allocated by
-> `pwmchip_alloc`), this custom handler must also call the original
-> `pwmchip_release` function to complete the cleanup.
+> This commit adds the `RUST_PWM_ABSTRACTIONS` Kconfig option to enable
+> the feature, along with the necessary build-system support and C
+> helpers.
 >=20
-> Make `pwmchip_release` a global, exported function so that it can be
-> called from the Rust FFI bridge. This involves removing the `static`
-> keyword, adding a prototype to the public header, and exporting the
-> symbol.
->=20
-> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+> It also introduces the first set of safe wrappers for the PWM
+> subsystem, covering the basic data carrying C structs and enums:
+> - `Polarity`: A safe wrapper for `enum pwm_polarity`.
+> - `Waveform`: A wrapper for `struct pwm_waveform`.
+> - `Args`: A wrapper for `struct pwm_args`.
+> - `State`: A wrapper for `struct pwm_state`.
 
-I still somewhat dislike this patch. Isn't it possible to make the rust
-abstraction use the pointer that .release is set to when it calls
-pwmchip_alloc()?
+Args, State and Polarity are only needed for the consumer side of the
+PWM API in Rust, right?
 
-(I wouldn't further delay this series for this discussion, this can be
-handled just fine at a later point in time.)
+I don't particularily like like pwm_args and wonder if this really has
+to be exposed to Rust.
+
+I think for State (and thus Polarity) we have to have it for the
+forseeable future.
 
 Best regards
 Uwe
 
---ieqpilfwwfgxf4dc
+--zryfvf6d45dfcezd
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmjH46sACgkQj4D7WH0S
-/k5CPgf/d9VpIxfV66LPQ8LcyKGHr/z6WLe8e0mXCQBgmb+2uCpwZuAcfd87eAge
-Gj0+iGdFuUvqg9fRbzhyd91BvVk/yCcPrg4kWxrECTxVq3ZqoMivnw7cngrXg1k5
-gFdHV1Hd294DQHqM8cw4m2CpbS3Uo+2i17f2+hlQcIbGfrChb5Ge3HlZKsaMvd2k
-QRw8M4TQVIzt/CUSPAwDgjB22tASqGcyOSczpasXB7XdPI2T8IdUF795FzZrvNvg
-VKdgOVk2s82h9mVAImKZOCHPwE/N9Qbe25AaJAFDMkBLjebGEI2hkwFFjt406aNo
-edMadB5H+bBdQwPhBaDbH4qsWO1paw==
-=yBiS
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmjH5qsACgkQj4D7WH0S
+/k4H1QgApRy8liAOZrzb3w50HXnIjFUP1zT9oN5uSbu1nwLFcoyPu1JvjbpxW7g1
+aMBxeARi3PXREgQ6tZSbrWcb9+PiqySUS8tXIEawBr6Kskazxjtiz1LPYt0sLsuF
+z+IRMCWg4pPm8g3t47tYvNOFaBnd49AjzrbPJrrlsDV13eisMsbVfYdr+7ZdPQPC
+Evo9Pjzeg6jpKVWmp3OgFN6Mf83dFDB2XJKiZsDYRWuBjM6uJb3roiinPQfzKOAF
+zAF32eplMf+6CcGLoBgdVJlkG2hVh/5xBgjYw7Zk9I2zcwuDJ13wvM2umgbtBCVI
+aCZYiiFaLX1WA4w+SH6oQNi+C2WebQ==
+=pc6O
 -----END PGP SIGNATURE-----
 
---ieqpilfwwfgxf4dc--
+--zryfvf6d45dfcezd--
 
