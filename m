@@ -1,57 +1,57 @@
-Return-Path: <linux-pwm+bounces-7349-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7350-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B7A1B9BB59
-	for <lists+linux-pwm@lfdr.de>; Wed, 24 Sep 2025 21:30:49 +0200 (CEST)
+Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21354B9BD15
+	for <lists+linux-pwm@lfdr.de>; Wed, 24 Sep 2025 22:11:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 19E001BC231B
-	for <lists+linux-pwm@lfdr.de>; Wed, 24 Sep 2025 19:31:11 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id C3B6D38090F
+	for <lists+linux-pwm@lfdr.de>; Wed, 24 Sep 2025 20:11:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CA66261B8F;
-	Wed, 24 Sep 2025 19:30:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F15F3322DC2;
+	Wed, 24 Sep 2025 20:11:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="feWL4jvy"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="GZJFO8Cm"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A039226B2C8
-	for <linux-pwm@vger.kernel.org>; Wed, 24 Sep 2025 19:30:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ABCF270EA3
+	for <linux-pwm@vger.kernel.org>; Wed, 24 Sep 2025 20:11:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1758742240; cv=none; b=Ckchk5R0qrqXj4M/xMEXookd8NH1PfZG1AVy4nQnqLwagjBahHkjEmObYHusqstmRX8gzRF4V52swFEu3ywwZxvmfCPxd1WRW0l+zpat9AxFtu0axM4XbPkupr1TGsETjiFPkDvAM6R2QfX3SF4y9mlQsZ7iRqNb+fz47RXo9y8=
+	t=1758744663; cv=none; b=FWCDMBZ98DH/4DsfLWS1HVWV1mGw7nyAcsaJIsz+yCb5Dauzo+kL2b+W/8KGnBXYo4l1vEZxUSupYWg+19twLKQUt8MQu/BF16V33gQe86/+CVzqF2I54Sjw0/X8uUIzyQ6pc8LZqQy/6R3YtUiZDTsxyIAouyI0fciNj6S0R4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1758742240; c=relaxed/simple;
-	bh=HBlBtjJuiSJREEKCRDFE2CMgGB0Q+lfxBms6vvoiQs8=;
+	s=arc-20240116; t=1758744663; c=relaxed/simple;
+	bh=qroifid5E0JwSNY9T4DkdPNSWtVvxDZkd0VXckpiAIU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=YsZUG+PsNeF6wf00EFLjfwkBSQMMBx/k07ayTFLxXahuyMltKgNtgpqzOA8y+fB3Vbyn/iswCFZN7CazrD9nmGTdhcHK093sR75u+SFpQ6n81xA1a4nL2CMuYhxcmkKSTmfjNiOyRUuCts82sbYmNXAv/cHmrAsDEVEXu+4dM3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=feWL4jvy; arc=none smtp.client-ip=210.118.77.11
+	 Content-Type:References; b=A6aFXT6jGOAjjqVOsNWoBl367tIXOuSjiNIROeoCCAOJJSUpVdclxPA6D5hLblMw2eKSQYR77+iygxkGfQaqmGM9tW8dGWyTV+kbeqiOUGdZHNUEas6b0TTpY6jJz0TQqJds+mwqsZy6QTy2dzdY9cOb9vl6pOI+Xb7HMaTSArA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=GZJFO8Cm; arc=none smtp.client-ip=210.118.77.11
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250924193036euoutp01e4c450f962e4a1f837114d3e32017b71~oTr79qjAE1361513615euoutp018
-	for <linux-pwm@vger.kernel.org>; Wed, 24 Sep 2025 19:30:36 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250924193036euoutp01e4c450f962e4a1f837114d3e32017b71~oTr79qjAE1361513615euoutp018
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20250924201059euoutp01fd74d3ab902086d72b7c6428a44b323b~oUPMrzLRz1591615916euoutp01Y
+	for <linux-pwm@vger.kernel.org>; Wed, 24 Sep 2025 20:10:59 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20250924201059euoutp01fd74d3ab902086d72b7c6428a44b323b~oUPMrzLRz1591615916euoutp01Y
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1758742236;
-	bh=/Gk+JQ7pocHBfcq36N6Notv0uvwakh9CVF4aSzWJ8hw=;
+	s=mail20170921; t=1758744659;
+	bh=yBKtwjJbPQtED8z7fycvzGQLEUnEMfBKiPR2MumIREw=;
 	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=feWL4jvyddS/Rk6tUEFJ/d1jrrrJBbbtVkvIx0lREBNp6qbVJJBagYq/pHWTX/7dr
-	 Jy9Tqwk2nl7h4GTXgG+Z5lJ71I7YLU/Y/bXia+wqA6iDqDIw88WMHgAFG45hB+WETa
-	 Wk+fRSdNiGjlGnD1BkNB5oZ0FjK2jZZC5VzY2ZzI=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20250924193035eucas1p18bc9f48e524c3824662031da8261758e~oTr7TWTQq1522115221eucas1p1B;
-	Wed, 24 Sep 2025 19:30:35 +0000 (GMT)
+	b=GZJFO8CmRhsefzb4ZNLdzaYTF6Q/ntMXChwbvLFW41SUpZKQrVaJ2QmhBsuDG4DhM
+	 RkZoK2LxmmmoyNNH4TqD8+luA4tXD1CqHfJDf3s0RNtj8s4o2otF4PnLYWOq8Kmz5B
+	 4Mg/IE/l5VtD4mMQNfJDT6kYj7gaqLqjOZoeVKvU=
+Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20250924201058eucas1p2d73ba09b4daf4e1779f658dfb3d99722~oUPLmwszc0365803658eucas1p2d;
+	Wed, 24 Sep 2025 20:10:58 +0000 (GMT)
 Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20250924193034eusmtip2cbf8bf03a89dc1fb923f25bee047d0da~oTr6PXOuQ0163201632eusmtip2W;
-	Wed, 24 Sep 2025 19:30:34 +0000 (GMT)
-Message-ID: <67e3a691-0ba8-4c21-97e1-4471f2a1a87c@samsung.com>
-Date: Wed, 24 Sep 2025 21:30:34 +0200
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20250924201057eusmtip1dcd4c37a079be0694d2881ebcaa5a599~oUPKi7Zsq1997819978eusmtip10;
+	Wed, 24 Sep 2025 20:10:57 +0000 (GMT)
+Message-ID: <0bbdb7d1-5d07-4997-955e-497134a4aa30@samsung.com>
+Date: Wed, 24 Sep 2025 22:10:57 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -59,7 +59,8 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v14 1/7] pwm: Export `pwmchip_release` for external use
+Subject: Re: [PATCH v14 2/7] rust: pwm: Add Kconfig and basic data
+ structures
 To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
 Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
 	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
@@ -78,61 +79,58 @@ Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>,
 	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org
 Content-Language: en-US
 From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <3jxl6gpxwv376ooyny7qkeokeh7nzafttbyoehmwqzrccn5oip@747v6zdnogso>
+In-Reply-To: <upgthwp3cyohhe2gkzsramzshmvz3icjbhro6hgk2drbbqczi4@ygaanetydgjv>
 Content-Transfer-Encoding: 8bit
-X-CMS-MailID: 20250924193035eucas1p18bc9f48e524c3824662031da8261758e
+X-CMS-MailID: 20250924201058eucas1p2d73ba09b4daf4e1779f658dfb3d99722
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20250820083541eucas1p2ad7d78418576b8bc8cbddd8efe83bbe9
+X-RootMTR: 20250820083542eucas1p221dacb3b69524b0dd6f7abf870adbe04
 X-EPHeader: CA
-X-CMS-RootMailID: 20250820083541eucas1p2ad7d78418576b8bc8cbddd8efe83bbe9
+X-CMS-RootMailID: 20250820083542eucas1p221dacb3b69524b0dd6f7abf870adbe04
 References: <20250820-rust-next-pwm-working-fan-for-sending-v14-0-df2191621429@samsung.com>
-	<CGME20250820083541eucas1p2ad7d78418576b8bc8cbddd8efe83bbe9@eucas1p2.samsung.com>
-	<20250820-rust-next-pwm-working-fan-for-sending-v14-1-df2191621429@samsung.com>
-	<3jxl6gpxwv376ooyny7qkeokeh7nzafttbyoehmwqzrccn5oip@747v6zdnogso>
+	<CGME20250820083542eucas1p221dacb3b69524b0dd6f7abf870adbe04@eucas1p2.samsung.com>
+	<20250820-rust-next-pwm-working-fan-for-sending-v14-2-df2191621429@samsung.com>
+	<upgthwp3cyohhe2gkzsramzshmvz3icjbhro6hgk2drbbqczi4@ygaanetydgjv>
 
 
 
-On 9/15/25 12:00, Uwe Kleine-König wrote:
-> Hello,
+On 9/15/25 12:13, Uwe Kleine-König wrote:
+> Hello Michal,
 > 
-> On Wed, Aug 20, 2025 at 10:35:36AM +0200, Michal Wilczynski wrote:
->> The upcoming Rust abstraction layer for the PWM subsystem uses a custom
->> `dev->release` handler to safely manage the lifetime of its driver
->> data.
+> On Wed, Aug 20, 2025 at 10:35:37AM +0200, Michal Wilczynski wrote:
+>> Introduce the foundational support for PWM abstractions in Rust.
 >>
->> To prevent leaking the memory of the `struct pwm_chip` (allocated by
->> `pwmchip_alloc`), this custom handler must also call the original
->> `pwmchip_release` function to complete the cleanup.
+>> This commit adds the `RUST_PWM_ABSTRACTIONS` Kconfig option to enable
+>> the feature, along with the necessary build-system support and C
+>> helpers.
 >>
->> Make `pwmchip_release` a global, exported function so that it can be
->> called from the Rust FFI bridge. This involves removing the `static`
->> keyword, adding a prototype to the public header, and exporting the
->> symbol.
->>
->> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+>> It also introduces the first set of safe wrappers for the PWM
+>> subsystem, covering the basic data carrying C structs and enums:
+>> - `Polarity`: A safe wrapper for `enum pwm_polarity`.
+>> - `Waveform`: A wrapper for `struct pwm_waveform`.
+>> - `Args`: A wrapper for `struct pwm_args`.
+>> - `State`: A wrapper for `struct pwm_state`.
 > 
-> I still somewhat dislike this patch. Isn't it possible to make the rust
-> abstraction use the pointer that .release is set to when it calls
-> pwmchip_alloc()?
+> Args, State and Polarity are only needed for the consumer side of the
+> PWM API in Rust, right?
+> 
+> I don't particularily like like pwm_args and wonder if this really has
+> to be exposed to Rust.
 
-Hi Uwe,
+You're right that Args is primarily for the consumer side, and our
+provider driver doesn't use it at all. I only included it for
+completeness, so I'm happy to remove it from the abstractions.
 
-Sorry for the delay - I was on vacation and I hope you received my
-out of office message.
-
-I agree your suggestion is technically feasible. My concern was that it
-would make the abstraction less readable and more complex, as it would
-require the FFI wrapper to read the C function pointer and store it as
-state within the driver's private data.
-
-The current approach of calling a known, exported function felt more
-direct. However, I absolutely agree with your point on C API purity and,
-as you suggested, this can be revisited later if needed.
+I did use State on the provider side, however, to check if a channel is
+enabled before writing new hardware values - I've seen your comment
+about it that it's better to use the HW registers instead, I remember I
+tried doing something like this back in May when started working on
+this, but haven't succeeded - will refresh my memory and respond to the
+driver comments.
 
 > 
-> (I wouldn't further delay this series for this discussion, this can be
-> handled just fine at a later point in time.)
+> I think for State (and thus Polarity) we have to have it for the
+> forseeable future.
 > 
 > Best regards
 > Uwe
