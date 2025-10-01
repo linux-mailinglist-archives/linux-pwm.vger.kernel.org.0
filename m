@@ -1,51 +1,51 @@
-Return-Path: <linux-pwm+bounces-7380-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7381-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 98D62BB1B9C
-	for <lists+linux-pwm@lfdr.de>; Wed, 01 Oct 2025 22:59:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CE81BB1BA5
+	for <lists+linux-pwm@lfdr.de>; Wed, 01 Oct 2025 23:00:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 33EAC19C386F
-	for <lists+linux-pwm@lfdr.de>; Wed,  1 Oct 2025 20:59:59 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id AB6F319C3853
+	for <lists+linux-pwm@lfdr.de>; Wed,  1 Oct 2025 21:00:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E2F933019BD;
-	Wed,  1 Oct 2025 20:59:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 57D4E309DA4;
+	Wed,  1 Oct 2025 21:00:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=weathered-steel.dev header.i=@weathered-steel.dev header.b="VLHTImUa"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=weathered-steel.dev header.i=@weathered-steel.dev header.b="YldTa0CJ"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx-out2.startmail.com (mx-out2.startmail.com [145.131.90.155])
+Received: from mx-out1.startmail.com (mx-out1.startmail.com [145.131.90.139])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 081F52D640E;
-	Wed,  1 Oct 2025 20:59:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=145.131.90.155
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CE1E3093BD;
+	Wed,  1 Oct 2025 21:00:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=145.131.90.139
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759352374; cv=none; b=O43wHHhALY6r+jqESHqXfUV4KjeyaT1eF8WOvtpuuHl3gqMnayfq7zJ8WM4TwrKm8K+WnB4CQNVWrBq+FBPL461IEdkQqQVVRGyEOD2e1sq9Dbo5gYq+ojNOVtaGvnTQPQFNnLc83WwQQKhujfsvCcbi61tWiY4AZ9tzKu7aBO4=
+	t=1759352425; cv=none; b=gK+1TfZ8CkWsCzLMgRb7GEO7vy0SiqEyqmHhJG4VOsyPe39hpIqPGVpjLS0bGAMyjqiDZhPiVZuxlJ8Bei+iOgUaCXB8zbjBhcQwYzC4VoLsngOvqZ8+zG5PCHttCI0gB4gxzMpJjMY70HSztZcEsH+HWLDTqXEmY0an3btMuSE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759352374; c=relaxed/simple;
-	bh=rKWwFvpGkQcQFbnTJ7qLkEj7CYELicnQdbLhOSbXlsE=;
+	s=arc-20240116; t=1759352425; c=relaxed/simple;
+	bh=yk+mN31wNVhjALTh/hyQr0hUeTRsG/yDmF37onFFrvg=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=JarU02t8dwv9wwY46CQ0OaugtOgdOyZQS98GtQsxLlrKCnZ7BavSXqtc9Yeyx3hMoJGFnAAEjdeWSAk/X9b3iHpVPXUbdpEK+TKVpIaDW5GpQtqL4pS75PKguJ8NwXW7sOmulmYubM3XGIeB5mQMg9J7+HydyuPZCl/LtGo49p0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weathered-steel.dev; spf=pass smtp.mailfrom=weathered-steel.dev; dkim=pass (2048-bit key) header.d=weathered-steel.dev header.i=@weathered-steel.dev header.b=VLHTImUa; arc=none smtp.client-ip=145.131.90.155
+	 Content-Type:Content-Disposition:In-Reply-To; b=o5BSONVqd9CH5VPsf+u9bRFZBfRKxQOm1GxnxePhLCoo9Gv2DiTWXV1zvOvvesOjh3+HWGG09BrMUsrlbOPyCdWI8lxIKhDQbv0jZj22mVuqoAcVFjmemSqOcE8fshd6V+JeT5ZrOQNe6y3KUuXPX7uXdIrFUurEsKpdYCxaaBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weathered-steel.dev; spf=pass smtp.mailfrom=weathered-steel.dev; dkim=pass (2048-bit key) header.d=weathered-steel.dev header.i=@weathered-steel.dev header.b=YldTa0CJ; arc=none smtp.client-ip=145.131.90.139
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weathered-steel.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weathered-steel.dev
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=weathered-steel.dev;
-	s=startmail1; t=1759352369;
-	bh=8dfCwcgkSDoAftKvUS9KyrBMUlCrd2D7DWmwBmaRRbU=;
+	s=startmail1; t=1759352421;
+	bh=omvTbOOO6blAUUDT41IFfrpds2YN8KtJB4Y6/99fD5w=;
 	h=Date:From:To:Subject:Message-ID:References:Mime-Version:
 	 Content-Type:Content-Disposition:In-Reply-To:From:Subject:To:Date:
 	 Sender:Content-Type:Content-Transfer-Encoding:Content-Disposition:
 	 Mime-Version:Reply-To:In-Reply-To:References:Message-Id:
 	 List-Unsubscribe:List-Unsubscribe-Post:Autocrypt;
-	b=VLHTImUaYmGsqK6+nUVqXxljt6D0gCXGdthsOzZkJf1d1FZ6lAdejKxrGy//fMxnp
-	 AUa1isgj6G05rsLrRfxvBF0AAHdg1MYBTQrxgeMTsNEHqglmdkMYLnhoH64WLXAGN8
-	 fJ3zQG+fRc78/Xs8WAfNAeggjnUkFhSMsjsCjvvB80WAh07+fBpi1Bq/RZCLDdSz0B
-	 Bcr7g56tFMcIgz496CPwxw/f3WbPGPotmGh5BHZpxKurH83JaJ3EYb75TklzkQd61u
-	 WHpuaJH7NywGWRqRjT0DbKyNrNuo9DCg90CDe9FzHo1l1fXVpCa4J1ghNXDD4to+lm
-	 NaLONDU3z4n3A==
-Date: Wed, 1 Oct 2025 20:59:26 +0000
+	b=YldTa0CJfdILoG1R5UcB0m6FtP3D4DDAlJ73Y1Xuinh+ita5kCpIMX4EchAJB9aEH
+	 lAuc0FXIc54G0gW/3bKtk8k6nMbPB+bZ3qvNumahjoD0OmJ9ZJE36VCNb9cKr5kmpN
+	 GpLL4EzyVi2dflE0SOHMN8/aEVVWD5QZVKjqV5Jhqttw+bccaX7YP8jAP4HD389D5q
+	 ULlps7z09UAXJ51SOOfwrgE2RRu0lZLfroaZVOp8Pn9SjBCdLfxjKFZl+O3WrP51D6
+	 /63Sbrlh71hKJZ4REUum7ZXVOZO0mCmEFE3keiYw+CNAD0qo2jhIP9sqwUt4k3SJQN
+	 DZsXzwQuDjGug==
+Date: Wed, 1 Oct 2025 21:00:18 +0000
 From: Elle Rhumsaa <elle@weathered-steel.dev>
 To: Michal Wilczynski <m.wilczynski@samsung.com>
 Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
@@ -69,14 +69,13 @@ Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
 	Daniel Almeida <daniel.almeida@collabora.com>,
 	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
 	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org,
-	devicetree@vger.kernel.org,
-	Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v15 5/7] dt-bindings: pwm: thead: Add T-HEAD TH1520 PWM
- controller
-Message-ID: <aN2WLimu68NyqxJG@archiso>
+	devicetree@vger.kernel.org
+Subject: Re: [PATCH v15 7/7] riscv: dts: thead: Add PWM fan and thermal
+ control
+Message-ID: <aN2WYmcYHHZSccPm@archiso>
 References: <20250930-rust-next-pwm-working-fan-for-sending-v15-0-5661c3090877@samsung.com>
- <CGME20250930122735eucas1p1c49ed11a4a48155c123ead6aec4b64a2@eucas1p1.samsung.com>
- <20250930-rust-next-pwm-working-fan-for-sending-v15-5-5661c3090877@samsung.com>
+ <CGME20250930122738eucas1p2ee9244532b39860f982fd7daa4cf788e@eucas1p2.samsung.com>
+ <20250930-rust-next-pwm-working-fan-for-sending-v15-7-5661c3090877@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -85,90 +84,108 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250930-rust-next-pwm-working-fan-for-sending-v15-5-5661c3090877@samsung.com>
+In-Reply-To: <20250930-rust-next-pwm-working-fan-for-sending-v15-7-5661c3090877@samsung.com>
 
-On Tue, Sep 30, 2025 at 02:20:36PM +0200, Michal Wilczynski wrote:
-> Add the Device Tree binding documentation for the T-HEAD
-> TH1520 SoC PWM controller.
+On Tue, Sep 30, 2025 at 02:20:38PM +0200, Michal Wilczynski wrote:
+> Add Device Tree nodes to enable a PWM controlled fan and it's associated
+> thermal management for the Lichee Pi 4A board.
 > 
-> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> This enables temperature-controlled active cooling for the Lichee Pi 4A
+> board based on SoC temperature.
+> 
+> Reviewed-by: Drew Fustini <fustini@kernel.org>
 > Tested-by: Drew Fustini <fustini@kernel.org>
 > Reviewed-by: Elle Rhumsaa <elle@weathered-steel.dev>
 > Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
 > ---
->  .../devicetree/bindings/pwm/thead,th1520-pwm.yaml  | 48 ++++++++++++++++++++++
->  MAINTAINERS                                        |  1 +
->  2 files changed, 49 insertions(+)
+>  arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts | 67 +++++++++++++++++++++++
+>  1 file changed, 67 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/pwm/thead,th1520-pwm.yaml b/Documentation/devicetree/bindings/pwm/thead,th1520-pwm.yaml
-> new file mode 100644
-> index 0000000000000000000000000000000000000000..855aec59ac53c430adc849271235686e87b10e6c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/thead,th1520-pwm.yaml
-> @@ -0,0 +1,48 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pwm/thead,th1520-pwm.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> diff --git a/arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts b/arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts
+> index 4020c727f09e8e2286fdc7fecd79dbd8eba69556..c58c2085ca92a3234f1350500cedae4157f0c35f 100644
+> --- a/arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts
+> +++ b/arch/riscv/boot/dts/thead/th1520-lichee-pi-4a.dts
+> @@ -28,9 +28,76 @@ aliases {
+>  	chosen {
+>  		stdout-path = "serial0:115200n8";
+>  	};
 > +
-> +title: T-HEAD TH1520 PWM controller
+> +	thermal-zones {
+> +		cpu-thermal {
+> +			polling-delay = <1000>;
+> +			polling-delay-passive = <1000>;
+> +			thermal-sensors = <&pvt 0>;
 > +
-> +maintainers:
-> +  - Michal Wilczynski <m.wilczynski@samsung.com>
+> +			trips {
+> +				fan_config0: fan-trip0 {
+> +					temperature = <39000>;
+> +					hysteresis = <5000>;
+> +					type = "active";
+> +				};
 > +
-> +allOf:
-> +  - $ref: pwm.yaml#
+> +				fan_config1: fan-trip1 {
+> +					temperature = <50000>;
+> +					hysteresis = <5000>;
+> +					type = "active";
+> +				};
 > +
-> +properties:
-> +  compatible:
-> +    const: thead,th1520-pwm
+> +				fan_config2: fan-trip2 {
+> +					temperature = <60000>;
+> +					hysteresis = <5000>;
+> +					type = "active";
+> +				};
+> +			};
 > +
-> +  reg:
-> +    maxItems: 1
+> +			cooling-maps {
+> +				map-active-0 {
+> +					cooling-device = <&fan 1 1>;
+> +					trip = <&fan_config0>;
+> +				};
 > +
-> +  clocks:
-> +    items:
-> +      - description: SoC PWM clock
+> +				map-active-1 {
+> +					cooling-device = <&fan 2 2>;
+> +					trip = <&fan_config1>;
+> +				};
 > +
-> +  "#pwm-cells":
-> +    const: 3
+> +				map-active-2 {
+> +					cooling-device = <&fan 3 3>;
+> +					trip = <&fan_config2>;
+> +				};
+> +			};
+> +		};
+> +	};
 > +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
+> +	fan: pwm-fan {
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&fan_pins>;
+> +		compatible = "pwm-fan";
+> +		#cooling-cells = <2>;
+> +		pwms = <&pwm 1 10000000 0>;
+> +		cooling-levels = <0 66 196 255>;
+> +	};
 > +
-> +unevaluatedProperties: false
+>  };
+>  
+>  &padctrl0_apsys {
+> +	fan_pins: fan-0 {
+> +		pwm1-pins {
+> +			pins = "GPIO3_3"; /* PWM1 */
+> +			function = "pwm";
+> +			bias-disable;
+> +			drive-strength = <25>;
+> +			input-disable;
+> +			input-schmitt-disable;
+> +			slew-rate = <0>;
+> +		};
+> +	};
 > +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/clock/thead,th1520-clk-ap.h>
-> +    soc {
-> +      #address-cells = <2>;
-> +      #size-cells = <2>;
-> +      pwm@ffec01c000 {
-> +          compatible = "thead,th1520-pwm";
-> +          reg = <0xff 0xec01c000 0x0 0x4000>;
-> +          clocks = <&clk CLK_PWM>;
-> +          #pwm-cells = <3>;
-> +      };
-> +    };
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index d79dc21f22d143ca8cde6a06194545fbc640e695..a64027f441e8e23c579b469b2451b514e5d2802c 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -21732,6 +21732,7 @@ F:	Documentation/devicetree/bindings/firmware/thead,th1520-aon.yaml
->  F:	Documentation/devicetree/bindings/mailbox/thead,th1520-mbox.yaml
->  F:	Documentation/devicetree/bindings/net/thead,th1520-gmac.yaml
->  F:	Documentation/devicetree/bindings/pinctrl/thead,th1520-pinctrl.yaml
-> +F:	Documentation/devicetree/bindings/pwm/thead,th1520-pwm.yaml
->  F:	Documentation/devicetree/bindings/reset/thead,th1520-reset.yaml
->  F:	arch/riscv/boot/dts/thead/
->  F:	drivers/clk/thead/clk-th1520-ap.c
+>  	uart0_pins: uart0-0 {
+>  		tx-pins {
+>  			pins = "UART0_TXD";
 > 
 > -- 
 > 2.34.1
 > 
+
 Reviewed-by: Elle Rhumsaa <elle@weathered-steel.dev>
 
