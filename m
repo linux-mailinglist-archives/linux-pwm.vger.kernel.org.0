@@ -1,51 +1,52 @@
-Return-Path: <linux-pwm+bounces-7377-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7382-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ny.mirrors.kernel.org (ny.mirrors.kernel.org [IPv6:2604:1380:45d1:ec00::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 747AABB1B57
-	for <lists+linux-pwm@lfdr.de>; Wed, 01 Oct 2025 22:51:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E1CACBB1BAE
+	for <lists+linux-pwm@lfdr.de>; Wed, 01 Oct 2025 23:01:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 039012A63E4
-	for <lists+linux-pwm@lfdr.de>; Wed,  1 Oct 2025 20:51:36 +0000 (UTC)
+	by ny.mirrors.kernel.org (Postfix) with ESMTPS id 8E4A42A4509
+	for <lists+linux-pwm@lfdr.de>; Wed,  1 Oct 2025 21:01:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B3582D5A01;
-	Wed,  1 Oct 2025 20:51:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C41930EF7A;
+	Wed,  1 Oct 2025 21:01:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=weathered-steel.dev header.i=@weathered-steel.dev header.b="ImUQ+auC"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=weathered-steel.dev header.i=@weathered-steel.dev header.b="Q3rH9e6Q"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx-out1.startmail.com (mx-out1.startmail.com [145.131.90.139])
+Received: from mx-out2.startmail.com (mx-out2.startmail.com [145.131.90.155])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9776E1946AA;
-	Wed,  1 Oct 2025 20:51:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=145.131.90.139
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9226A2727FA;
+	Wed,  1 Oct 2025 21:01:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=145.131.90.155
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759351892; cv=none; b=j66Z7VWqmu2KBsSFFNvXdxO7qNGQQS2/sByXtMPwJr3yIzXyZXMF1+AV6asRI6Kv6Gm6oYu9f2WOUJPQ3CJIgnmGJ6hZKJuh0IJgtwAcYSvBPAjBTcQ3LawZ11fXhrBmZ0lfcES1cwcuHxKzw5hwKb29P0sYre/QeJrkeEl/pE0=
+	t=1759352498; cv=none; b=WntjaugkW/PENiNk8x2MJ/IRwJ1wJjmAaAar7OdS2m4TyKOBVyS7kCrlUfILQ522k1bb05w1S8RPVRy/OhGEcGazSR6dLg+SK05t8ne7dai80CMtIjyBtEO+jOXrIHParTRHbp/TgExgf/NYAr2y4GVM3qX1DmK123mIpTY/ESM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759351892; c=relaxed/simple;
-	bh=VPaXP4qHSspQ17XY5CPQB+lhfh+9TEuQQnadpD+XA7s=;
+	s=arc-20240116; t=1759352498; c=relaxed/simple;
+	bh=h0SDlqzubMyx2T3IEnyVrEp7j/ci3ZmMZB1Oq8kB3UY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:Mime-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=KJ6JA/VhrdqQHadV0EYCrzA9Iwuqwp30mUzsqq0sIuIXqhoyyfG5zRYASwCYL9zRrPFzGJD/wiDv1T/6AunVdt/8Mva7GYhBf1iucJ771/ZuhBl2dd1PQafHprH+LGnqz6sxfsrR79CVGMEaIHtZQAZOnEjWrob1/u4XTyCjqK0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weathered-steel.dev; spf=pass smtp.mailfrom=weathered-steel.dev; dkim=pass (2048-bit key) header.d=weathered-steel.dev header.i=@weathered-steel.dev header.b=ImUQ+auC; arc=none smtp.client-ip=145.131.90.139
+	 Content-Type:Content-Disposition:In-Reply-To; b=ohIw8GbPAAC7aNqFmv0K3KrLncHrKhGzyaEM4ypajNDfRQACfWdTLWZ6Yu9OVlbnstDqwEy7LImGCeKfx0y+U0FWFUC5lH2AMskXuRRJmMZn1oJ/k675NJ+np7J5kCTptgqf7ES38Byax+6BD1Za9JHK8F7albeD1LWwh596Z/c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weathered-steel.dev; spf=pass smtp.mailfrom=weathered-steel.dev; dkim=pass (2048-bit key) header.d=weathered-steel.dev header.i=@weathered-steel.dev header.b=Q3rH9e6Q; arc=none smtp.client-ip=145.131.90.155
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weathered-steel.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weathered-steel.dev
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=weathered-steel.dev;
-	s=startmail1; t=1759351881;
-	bh=QbcGgb5EQSRVJLoUkXO4xyhEsG9J13OKh/OXOofe7G8=;
+	s=startmail1; t=1759351963;
+	bh=UoLolgZjobGjS/KiQaI7MTlo0BgUiakv4CVrspm+7+k=;
 	h=Date:From:To:Subject:Message-ID:References:Mime-Version:
-	 Content-Type:Content-Disposition:In-Reply-To:From:Subject:To:Date:
-	 Sender:Content-Type:Content-Transfer-Encoding:Content-Disposition:
-	 Mime-Version:Reply-To:In-Reply-To:References:Message-Id:
-	 List-Unsubscribe:List-Unsubscribe-Post:Autocrypt;
-	b=ImUQ+auCIzrbzgelzjZy/hT/6tYbxImGUQmh64wCOdKDUl20Co1kP7cTJ9lhFDrbR
-	 qQ4QZlSxRPKLJxwjRAbiuePe78ERBtTjj3yUHwpj56F9g4Lcw7rD1f4TPANFVG6jzA
-	 F8rvWj2+w96g7boCQZFbxZUGtuIibAjiT8peB42+PcniofccflsEr6bINEsaBUNBqe
-	 +VCQyDAPoOkVF6bO0L4BKQEtA7NcZZXU1+GXhmBxJrgTAIP/l2WYOWAw2drtpyeLBx
-	 ZsINN8ZnA3JZrn9ueU0l92T0EVFjY1yF5FNaIT+VMSk6FtfjKRBYPfKM8y5CggJ8Dg
-	 fI1MewDrYAc9w==
-Date: Wed, 1 Oct 2025 20:51:16 +0000
+	 Content-Type:Content-Disposition:Content-Transfer-Encoding:
+	 In-Reply-To:From:Subject:To:Date:Sender:Content-Type:
+	 Content-Transfer-Encoding:Content-Disposition:Mime-Version:
+	 Reply-To:In-Reply-To:References:Message-Id:List-Unsubscribe:
+	 List-Unsubscribe-Post:Autocrypt;
+	b=Q3rH9e6Q0Ei+/evpcdwzIcU4DnfCsJbXD/3fzLRk3weIh8Jbn85D2yBOaiHlOy1Ij
+	 70EoEjE/a0a5mG74BJZ0kB9hohYooyTxdzwL4tRvWSQOrc0LZp1hvO7o5g2Orq7cAD
+	 581zSHYD7PdTKvzV9Iqt9uMyml4z0nqhIzCjqZ5hDsi+HNAx80SJkMZ6NIHS5raroT
+	 9RMbpSSwYEkniT4heI6UGS640jLv0gMSrUTJpPUjPv2AYV1NreZxBjHknWQLgYzaQZ
+	 wnFcksso4yoBF3nEC+ea83im1nG0tqdJ/MGoz4ypPQYmh8iNUON9jmEh5ag4oz91dA
+	 1g9XW9XIIKfyA==
+Date: Wed, 1 Oct 2025 20:52:39 +0000
 From: Elle Rhumsaa <elle@weathered-steel.dev>
 To: Michal Wilczynski <m.wilczynski@samsung.com>
 Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
@@ -70,78 +71,265 @@ Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
 	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
 	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org,
 	devicetree@vger.kernel.org
-Subject: Re: [PATCH v15 1/7] pwm: Export `pwmchip_release` for external use
-Message-ID: <aN2T-IZKQfqcd7I4@archiso>
+Subject: Re: [PATCH v15 2/7] rust: pwm: Add Kconfig and basic data structures
+Message-ID: <aN2Ul7nHCg6M4uez@archiso>
 References: <20250930-rust-next-pwm-working-fan-for-sending-v15-0-5661c3090877@samsung.com>
- <CGME20250930122730eucas1p11afe23eee92daac1023a826768b1f92d@eucas1p1.samsung.com>
- <20250930-rust-next-pwm-working-fan-for-sending-v15-1-5661c3090877@samsung.com>
+ <CGME20250930122732eucas1p2fbf9c050934b356165377776a8aef247@eucas1p2.samsung.com>
+ <20250930-rust-next-pwm-working-fan-for-sending-v15-2-5661c3090877@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20250930-rust-next-pwm-working-fan-for-sending-v15-1-5661c3090877@samsung.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20250930-rust-next-pwm-working-fan-for-sending-v15-2-5661c3090877@samsung.com>
 
-On Tue, Sep 30, 2025 at 02:20:32PM +0200, Michal Wilczynski wrote:
-> The upcoming Rust abstraction layer for the PWM subsystem uses a custom
-> `dev->release` handler to safely manage the lifetime of its driver
-> data.
+On Tue, Sep 30, 2025 at 02:20:33PM +0200, Michal Wilczynski wrote:
+> Introduce the foundational support for PWM abstractions in Rust.
 > 
-> To prevent leaking the memory of the `struct pwm_chip` (allocated by
-> `pwmchip_alloc`), this custom handler must also call the original
-> `pwmchip_release` function to complete the cleanup.
+> This commit adds the `RUST_PWM_ABSTRACTIONS` Kconfig option to enable
+> the feature, along with the necessary build-system support and C
+> helpers.
 > 
-> Make `pwmchip_release` a global, exported function so that it can be
-> called from the Rust FFI bridge. This involves removing the `static`
-> keyword, adding a prototype to the public header, and exporting the
-> symbol.
+> It also introduces the first set of safe wrappers for the PWM
+> subsystem, covering the basic data carrying C structs and enums:
+> - `Polarity`: A safe wrapper for `enum pwm_polarity`.
+> - `Waveform`: A wrapper for `struct pwm_waveform`.
+> - `State`: A wrapper for `struct pwm_state`.
 > 
+> These types provide memory safe, idiomatic Rust representations of the
+> core PWM data structures and form the building blocks for the
+> abstractions that will follow.
+> 
+> Tested-by: Drew Fustini <fustini@kernel.org>
+> Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
 > Reviewed-by: Elle Rhumsaa <elle@weathered-steel.dev>
 > Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
 > ---
->  drivers/pwm/core.c  | 3 ++-
->  include/linux/pwm.h | 6 ++++++
->  2 files changed, 8 insertions(+), 1 deletion(-)
+>  MAINTAINERS                     |   8 ++++
+>  drivers/pwm/Kconfig             |  13 +++++
+>  rust/bindings/bindings_helper.h |   1 +
+>  rust/helpers/helpers.c          |   1 +
+>  rust/helpers/pwm.c              |  20 ++++++++
+>  rust/kernel/lib.rs              |   2 +
+>  rust/kernel/pwm.rs              | 102 ++++++++++++++++++++++++++++++++++++++++
+>  7 files changed, 147 insertions(+)
 > 
-> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-> index 0d66376a83ec350e0c3718959f4d794efd71595a..a33da3dff608fdff91251e5fd07b0dbd295be022 100644
-> --- a/drivers/pwm/core.c
-> +++ b/drivers/pwm/core.c
-> @@ -1600,12 +1600,13 @@ void pwmchip_put(struct pwm_chip *chip)
->  }
->  EXPORT_SYMBOL_GPL(pwmchip_put);
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index fe168477caa45799dfe07de2f54de6d6a1ce0615..5d7c0676c1d00a02b3d7db2de88b039c08c99c6e 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -20387,6 +20387,14 @@ F:	include/linux/pwm.h
+>  F:	include/linux/pwm_backlight.h
+>  K:	pwm_(config|apply_might_sleep|apply_atomic|ops)
 >  
-> -static void pwmchip_release(struct device *pwmchip_dev)
-> +void pwmchip_release(struct device *pwmchip_dev)
->  {
->  	struct pwm_chip *chip = pwmchip_from_dev(pwmchip_dev);
->  
->  	kfree(chip);
->  }
-> +EXPORT_SYMBOL_GPL(pwmchip_release);
->  
->  struct pwm_chip *pwmchip_alloc(struct device *parent, unsigned int npwm, size_t sizeof_priv)
->  {
-> diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-> index 8cafc483db53addf95591d1ac74287532c0fa0ee..d86061024b52172edf3845bf9252a966f120e365 100644
-> --- a/include/linux/pwm.h
-> +++ b/include/linux/pwm.h
-> @@ -485,6 +485,12 @@ int __pwmchip_add(struct pwm_chip *chip, struct module *owner);
->  #define pwmchip_add(chip) __pwmchip_add(chip, THIS_MODULE)
->  void pwmchip_remove(struct pwm_chip *chip);
->  
-> +/*
-> + * For FFI wrapper use only:
-> + * The Rust PWM abstraction needs this to properly free the pwm_chip.
-> + */
-> +void pwmchip_release(struct device *dev);
+> +PWM SUBSYSTEM BINDINGS [RUST]
+> +M:	Michal Wilczynski <m.wilczynski@samsung.com>
+> +L:	linux-pwm@vger.kernel.org
+> +L:	rust-for-linux@vger.kernel.org
+> +S:	Maintained
+> +F:	rust/helpers/pwm.c
+> +F:	rust/kernel/pwm.rs
 > +
->  int __devm_pwmchip_add(struct device *dev, struct pwm_chip *chip, struct module *owner);
->  #define devm_pwmchip_add(dev, chip) __devm_pwmchip_add(dev, chip, THIS_MODULE)
+>  PXA GPIO DRIVER
+>  M:	Robert Jarzmik <robert.jarzmik@free.fr>
+>  L:	linux-gpio@vger.kernel.org
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index f00ce973dddf651287168b44228574f4d5c28dc0..2b608f4378138775ee3ba4d53f682952e1914118 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -800,4 +800,17 @@ config PWM_XILINX
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called pwm-xilinx.
 >  
+> + config RUST_PWM_ABSTRACTIONS
+> +	bool "Rust PWM abstractions support"
+> +	depends on RUST
+> +	depends on PWM=y
+> +	help
+> +	  This option enables the safe Rust abstraction layer for the PWM
+> +	  subsystem. It provides idiomatic wrappers and traits necessary for
+> +	  writing PWM controller drivers in Rust.
+> +
+> +	  The abstractions handle resource management (like memory and reference
+> +	  counting) and provide safe interfaces to the underlying C core,
+> +	  allowing driver logic to be written in safe Rust.
+> +
+>  endif
+> diff --git a/rust/bindings/bindings_helper.h b/rust/bindings/bindings_helper.h
+> index 84d60635e8a9baef1f1a1b2752dc0fa044f8542f..7a06ee5781eadc9f21ccd456b574a9cb152cd58c 100644
+> --- a/rust/bindings/bindings_helper.h
+> +++ b/rust/bindings/bindings_helper.h
+> @@ -66,6 +66,7 @@
+>  #include <linux/pm_opp.h>
+>  #include <linux/poll.h>
+>  #include <linux/property.h>
+> +#include <linux/pwm.h>
+>  #include <linux/refcount.h>
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/sched.h>
+> diff --git a/rust/helpers/helpers.c b/rust/helpers/helpers.c
+> index 7cf7fe95e41dd51717050648d6160bebebdf4b26..861052ffffaff60e9c2e8109e55f3b6158ff2281 100644
+> --- a/rust/helpers/helpers.c
+> +++ b/rust/helpers/helpers.c
+> @@ -35,6 +35,7 @@
+>  #include "platform.c"
+>  #include "poll.c"
+>  #include "property.c"
+> +#include "pwm.c"
+>  #include "rbtree.c"
+>  #include "rcu.c"
+>  #include "refcount.c"
+> diff --git a/rust/helpers/pwm.c b/rust/helpers/pwm.c
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..d75c588863685d3990b525bb1b84aa4bc35ac397
+> --- /dev/null
+> +++ b/rust/helpers/pwm.c
+> @@ -0,0 +1,20 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (c) 2025 Samsung Electronics Co., Ltd.
+> +// Author: Michal Wilczynski <m.wilczynski@samsung.com>
+> +
+> +#include <linux/pwm.h>
+> +
+> +struct device *rust_helper_pwmchip_parent(const struct pwm_chip *chip)
+> +{
+> +	return pwmchip_parent(chip);
+> +}
+> +
+> +void *rust_helper_pwmchip_get_drvdata(struct pwm_chip *chip)
+> +{
+> +	return pwmchip_get_drvdata(chip);
+> +}
+> +
+> +void rust_helper_pwmchip_set_drvdata(struct pwm_chip *chip, void *data)
+> +{
+> +	pwmchip_set_drvdata(chip, data);
+> +}
+> diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
+> index ed53169e795c0badf548025a57f946fa18bc73e3..e339b552f9650803b1efa1eb8ecc6fe9d2c56563 100644
+> --- a/rust/kernel/lib.rs
+> +++ b/rust/kernel/lib.rs
+> @@ -117,6 +117,8 @@
+>  pub mod seq_file;
+>  pub mod sizes;
+>  mod static_assert;
+> +#[cfg(CONFIG_RUST_PWM_ABSTRACTIONS)]
+> +pub mod pwm;
+>  #[doc(hidden)]
+>  pub mod std_vendor;
+>  pub mod str;
+> diff --git a/rust/kernel/pwm.rs b/rust/kernel/pwm.rs
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..beabf0086a2f1beea01e0b0a9f6540c601f77a49
+> --- /dev/null
+> +++ b/rust/kernel/pwm.rs
+> @@ -0,0 +1,102 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (c) 2025 Samsung Electronics Co., Ltd.
+> +// Author: Michal Wilczynski <m.wilczynski@samsung.com>
+> +
+> +//! PWM subsystem abstractions.
+> +//!
+> +//! C header: [`include/linux/pwm.h`](srctree/include/linux/pwm.h).
+> +
+> +use crate::{
+> +    bindings,
+> +    prelude::*,
+> +    types::Opaque,
+> +};
+> +use core::convert::TryFrom;
+> +
+> +/// PWM polarity. Mirrors [`enum pwm_polarity`](srctree/include/linux/pwm.h).
+> +#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+> +pub enum Polarity {
+> +    /// Normal polarity (duty cycle defines the high period of the signal).
+> +    Normal,
+> +
+> +    /// Inversed polarity (duty cycle defines the low period of the signal).
+> +    Inversed,
+> +}
+> +
+> +impl TryFrom<bindings::pwm_polarity> for Polarity {
+> +    type Error = Error;
+> +
+> +    fn try_from(polarity: bindings::pwm_polarity) -> Result<Self, Error> {
+> +        match polarity {
+> +            bindings::pwm_polarity_PWM_POLARITY_NORMAL => Ok(Polarity::Normal),
+> +            bindings::pwm_polarity_PWM_POLARITY_INVERSED => Ok(Polarity::Inversed),
+> +            _ => Err(EINVAL),
+> +        }
+> +    }
+> +}
+> +
+> +impl From<Polarity> for bindings::pwm_polarity {
+> +    fn from(polarity: Polarity) -> Self {
+> +        match polarity {
+> +            Polarity::Normal => bindings::pwm_polarity_PWM_POLARITY_NORMAL,
+> +            Polarity::Inversed => bindings::pwm_polarity_PWM_POLARITY_INVERSED,
+> +        }
+> +    }
+> +}
+> +
+> +/// Represents a PWM waveform configuration.
+> +/// Mirrors struct [`struct pwm_waveform`](srctree/include/linux/pwm.h).
+> +#[derive(Copy, Clone, Debug, Default, PartialEq, Eq)]
+> +pub struct Waveform {
+> +    /// Total duration of one complete PWM cycle, in nanoseconds.
+> +    pub period_length_ns: u64,
+> +
+> +    /// Duty-cycle active time, in nanoseconds.
+> +    ///
+> +    /// For a typical normal polarity configuration (active-high) this is the
+> +    /// high time of the signal.
+> +    pub duty_length_ns: u64,
+> +
+> +    /// Duty-cycle start offset, in nanoseconds.
+> +    ///
+> +    /// Delay from the beginning of the period to the first active edge.
+> +    /// In most simple PWM setups this is `0`, so the duty cycle starts
+> +    /// immediately at each period’s start.
+> +    pub duty_offset_ns: u64,
+> +}
+> +
+> +impl From<bindings::pwm_waveform> for Waveform {
+> +    fn from(wf: bindings::pwm_waveform) -> Self {
+> +        Waveform {
+> +            period_length_ns: wf.period_length_ns,
+> +            duty_length_ns: wf.duty_length_ns,
+> +            duty_offset_ns: wf.duty_offset_ns,
+> +        }
+> +    }
+> +}
+> +
+> +impl From<Waveform> for bindings::pwm_waveform {
+> +    fn from(wf: Waveform) -> Self {
+> +        bindings::pwm_waveform {
+> +            period_length_ns: wf.period_length_ns,
+> +            duty_length_ns: wf.duty_length_ns,
+> +            duty_offset_ns: wf.duty_offset_ns,
+> +        }
+> +    }
+> +}
+> +
+> +/// Wrapper for PWM state [`struct pwm_state`](srctree/include/linux/pwm.h).
+> +#[repr(transparent)]
+> +pub struct State(bindings::pwm_state);
+> +
+> +impl State {
+> +    /// Creates a `State` wrapper by taking ownership of a C `pwm_state` value.
+> +    pub(crate) fn from_c(c_state: bindings::pwm_state) -> Self {
+> +        State(c_state)
+> +    }
+> +
+> +    /// Returns `true` if the PWM signal is enabled.
+> +    pub fn enabled(&self) -> bool {
+> +        self.0.enabled
+> +    }
+> +}
 > 
 > -- 
 > 2.34.1
