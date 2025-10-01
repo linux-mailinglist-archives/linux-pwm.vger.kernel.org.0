@@ -1,53 +1,52 @@
-Return-Path: <linux-pwm+bounces-7373-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7372-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id C4B5DBB0A33
-	for <lists+linux-pwm@lfdr.de>; Wed, 01 Oct 2025 16:05:34 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 24CACBB09F7
+	for <lists+linux-pwm@lfdr.de>; Wed, 01 Oct 2025 16:04:48 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 9653B1944C0D
-	for <lists+linux-pwm@lfdr.de>; Wed,  1 Oct 2025 14:05:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 07EED3BCD3E
+	for <lists+linux-pwm@lfdr.de>; Wed,  1 Oct 2025 14:04:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA809303A31;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA472303A2C;
 	Wed,  1 Oct 2025 14:04:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rMuusYAH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W1ENreQJ"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A78C0302175;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A58EE30216C;
 	Wed,  1 Oct 2025 14:04:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759327463; cv=none; b=VX27Uvgrt7W7OuZpjQvrt+IgeuBq1Toavl2GTKymh3zPGRrmj6cnab2Uo7l+xRG0ReqcodKIDMVQhtycRPemb3YHegQJGFP6Eo+DinwziokL7EhSiTI9Ga681ajAjfOBNll4gLQWRB200HRuMr9ytyFTtT/WjRQzmodQnjd6ORE=
+	t=1759327463; cv=none; b=d1lFE4TB7kMAl86YDUpKq9Nq4OoCdxaFqgw4Iu1uJ9nAD+GPbc3a3Py9xC0GDMd3S1JxG67LuvBu5K19Fq1iSt7raR7Myhmlb6/WMNse1wbkhPxzmDnPNx2Jkf2gnW5oLIUoiABR+ZQpxyOoHu/BqJyw1wmgfpOcZZZVEq4sk4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1759327463; c=relaxed/simple;
-	bh=WYgoggOlSv1+Tj61N1rXTFai3T7w6ajbAxxFTUFbrE8=;
+	bh=1jW/pw93M9ZTt2+XfXJpx1QIagE29diOB2yA8Z6Eh38=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=lIFqNmh5a6YV43+pCfRoVP8Tdt1iFHqgA9NaeeF4niFqK3fYrM+Cpflsz+g+J9ilU8k5gNkml9luacMCELd152SFctPvJFwC0Yju5rjJYsomfGRKDSz4AuYfcfFv1prrJWMIrUGoZa0NO2kk4RrDRIs3dzDQvT3eabiH6ovszoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rMuusYAH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3EAB0C4AF12;
+	 In-Reply-To:To:Cc; b=QkClrZPnI4y2KpAPB+KB3SxswyqaWgRD3G4c9a6gIr7hhYBkM236d/Qelxfl5IDoyBt+b8GUUQGo0QDRK2mo5NxtN2Z+RR+MTIV0cO6Cw3lBmlISuCY4lz8GWuAkMUdQyWTKIU/LntGZwSjH+32dfzFc4QAFmebsytaFVz+shAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W1ENreQJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 4BF4DC4CEFC;
 	Wed,  1 Oct 2025 14:04:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1759327463;
-	bh=WYgoggOlSv1+Tj61N1rXTFai3T7w6ajbAxxFTUFbrE8=;
+	bh=1jW/pw93M9ZTt2+XfXJpx1QIagE29diOB2yA8Z6Eh38=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=rMuusYAH5Wkw8RJMA7+367vFKAr6mm5yYacp3Gjekn4l7bP0/EQvraZZ+4vVaRpPu
-	 +5xfPb8ohVh3Avpbbocm+D8miOUyzYUzmDVeq9rUVuQbQEJE8cjacK0RV/3VN0zlfP
-	 P/0wYOo19bn98+6SzH7qIsUBlFRxIUuCq1ic1gHQO7nACcOMHAPDoL4cwsQPIZ4LF2
-	 L0v9QgnAVlPHTwlCvfQmgt9uTxREgtvgEy+a4hgyL/yPmVPRq4hGyqjwNQyMGSEw85
-	 bD6g3S9N9ze1xHSObO/KQGg0yZ0ZWm+qEe79U39QIzXBQry6B4h2FZUH3IOS2rqxBe
-	 LDMXgzkg2Up0g==
+	b=W1ENreQJE4iMsM0CPpOW4SnG4delAs6r9cuhlrUewNvglbGon8aHtQNcMTaW1eVUc
+	 s8/Soiupj2199EEOYXjowNvaDUCoBsJEA4+cjvNfmSIgLgUXPVOkjQ9uVSLjtkNlrO
+	 D987fCne/MpZmtlbUzcOtmQTGvBArb3bBjW5ax3AxtMx8wRuP9T4FBvAa7rqTdiie4
+	 XdTx3N+K8HzLnAaTyAE6KWfjtigzk86ZU3H6GzABUo4ShttVjXwMxGh9lsmfbnOz2L
+	 CXTyrrrl7LQMY7PMbe3AzO0mxL67B5lwdPhANZHSP/u4tifYA2B/plrRMcg/tI1MpU
+	 jYBswvgaCi30A==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 304D4CCA472;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F417CCA470;
 	Wed,  1 Oct 2025 14:04:23 +0000 (UTC)
 From: George Moussalem via B4 Relay <devnull+george.moussalem.outlook.com@kernel.org>
-Date: Wed, 01 Oct 2025 18:04:21 +0400
-Subject: [PATCH v16 5/9] dt-bindings: pwm: qcom,ipq6018-pwm: Add compatible
- for ipq9574
+Date: Wed, 01 Oct 2025 18:04:22 +0400
+Subject: [PATCH v16 6/9] arm64: dts: qcom: ipq6018: add pwm node
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -56,7 +55,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251001-ipq-pwm-v16-5-300f237e0e68@outlook.com>
+Message-Id: <20251001-ipq-pwm-v16-6-300f237e0e68@outlook.com>
 References: <20251001-ipq-pwm-v16-0-300f237e0e68@outlook.com>
 In-Reply-To: <20251001-ipq-pwm-v16-0-300f237e0e68@outlook.com>
 To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
@@ -66,13 +65,16 @@ To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
  Konrad Dybcio <konradybcio@kernel.org>
 Cc: linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org, 
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Devi Priya <quic_devipriy@quicinc.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+ Baruch Siach <baruch.siach@siklu.com>, 
  George Moussalem <george.moussalem@outlook.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1759327459; l=953;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1759327459; l=1383;
  i=george.moussalem@outlook.com; s=20250321; h=from:subject:message-id;
- bh=3YfcxJTNETA/GabL2m0Fbhu/ciUPosZ3L8BYDjaDExc=;
- b=yRSyQmclC8ef01qnB1fsqiaASk9xknsxKLAvZvJFodLDJbw1+ywGxqe6NbRuxd1QGwLqeAaki
- Cru/GuNHjuXDdT64OFhKonSTVOgWc87NLsqVFBnrvey4ecdpu/DOCxH
+ bh=aXkvbG/7UnHwE6F120GhEEEi6SRmzhki3XGP6tCrgxM=;
+ b=t8ayXSkiFsad3nxWe+r+nFkcDK7Nya2k4tZf9kbAnUAB7mNCwX2Io9rjCv9pDcvDb5ImcEatG
+ pkxa5VPkC+WD0dlk/PHqpg9Jsp5vtaGrJw+0oY8TPEeSHoMvFW40vXv
 X-Developer-Key: i=george.moussalem@outlook.com; a=ed25519;
  pk=/PuRTSI9iYiHwcc6Nrde8qF4ZDhJBlUgpHdhsIjnqIk=
 X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
@@ -80,29 +82,44 @@ X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
 X-Original-From: George Moussalem <george.moussalem@outlook.com>
 Reply-To: george.moussalem@outlook.com
 
-From: George Moussalem <george.moussalem@outlook.com>
+From: Devi Priya <quic_devipriy@quicinc.com>
 
-The IPQ9574 SoC contains a PWM block which is exactly the same as the
-one found in IPQ6018. So let's add a compatible for IPQ9574 and use
-IPQ6018 as the fallback.
+Describe the PWM block on IPQ6018.
 
+Although PWM is in the TCSR area, make pwm its own node as simple-mfd
+has been removed from the bindings and as such hardware components
+should have its own node.
+
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Co-developed-by: Baruch Siach <baruch.siach@siklu.com>
+Signed-off-by: Baruch Siach <baruch.siach@siklu.com>
+Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
 Signed-off-by: George Moussalem <george.moussalem@outlook.com>
 ---
- Documentation/devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/qcom/ipq6018.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml b/Documentation/devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml
-index e00b9e01f4f89dd0d08610772c984a0e2725d154..48dd7d1b8f511b0dd2cbebc07f33cafc3655ce50 100644
---- a/Documentation/devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml
-+++ b/Documentation/devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml
-@@ -16,6 +16,7 @@ properties:
-           - enum:
-               - qcom,ipq5018-pwm
-               - qcom,ipq5332-pwm
-+              - qcom,ipq9574-pwm
-           - const: qcom,ipq6018-pwm
-       - const: qcom,ipq6018-pwm
+diff --git a/arch/arm64/boot/dts/qcom/ipq6018.dtsi b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+index 40f1c262126eff3761430a47472b52d27f961040..84bc2dec2b22f9634d4ec926daeebb9b40cb112f 100644
+--- a/arch/arm64/boot/dts/qcom/ipq6018.dtsi
++++ b/arch/arm64/boot/dts/qcom/ipq6018.dtsi
+@@ -413,6 +413,16 @@ tcsr: syscon@1937000 {
+ 			reg = <0x0 0x01937000 0x0 0x21000>;
+ 		};
  
++		pwm: pwm@1941010 {
++			compatible = "qcom,ipq6018-pwm";
++			reg = <0x01941010 0x20>;
++			clocks = <&gcc GCC_ADSS_PWM_CLK>;
++			assigned-clocks = <&gcc GCC_ADSS_PWM_CLK>;
++			assigned-clock-rates = <100000000>;
++			#pwm-cells = <2>;
++			status = "disabled";
++		};
++
+ 		usb2: usb@70f8800 {
+ 			compatible = "qcom,ipq6018-dwc3", "qcom,dwc3";
+ 			reg = <0x0 0x070f8800 0x0 0x400>;
 
 -- 
 2.51.0
