@@ -1,149 +1,131 @@
-Return-Path: <linux-pwm+bounces-7393-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7394-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id BC754BBDF64
-	for <lists+linux-pwm@lfdr.de>; Mon, 06 Oct 2025 14:07:18 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1CF68BBE325
+	for <lists+linux-pwm@lfdr.de>; Mon, 06 Oct 2025 15:35:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 098A23BEA91
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 Oct 2025 12:06:54 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id F2C3418947A2
+	for <lists+linux-pwm@lfdr.de>; Mon,  6 Oct 2025 13:36:03 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADCE927A903;
-	Mon,  6 Oct 2025 12:06:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6612220A5EB;
+	Mon,  6 Oct 2025 13:35:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="J5+5RvO9"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="DjqzsfrU"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 388A127874F
-	for <linux-pwm@vger.kernel.org>; Mon,  6 Oct 2025 12:06:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3328B244661
+	for <linux-pwm@vger.kernel.org>; Mon,  6 Oct 2025 13:35:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759752398; cv=none; b=WEVqy1iszdMsclfS8tCYiUwddZM2jx4LePwq2qho20VegMamLn/a6In/10X8khuB2KUyP7a7xe5ryTSYLxQD1OSzR2j7PhYdHon8vUv3gT7FlFxBH6hJHIqFGQrS7/pnU0/XlcNRyTymwkUUCd2qCjm8xrUsA6skHDhwqBTnBr4=
+	t=1759757737; cv=none; b=M9YqPiAs0D6gUGfKm8RKhwRIOmGtSAXbEWQ7Sx+get3Hjo905fyf10+EIgCz9uiLNaTL4CHMNm4wUIK32yqv+ZXpHLKs9ERydIoHZWCZKf4n5DDYkzlnzTRxgTts8aIPj9d+/m76z8sAoVT7TPs9CjVah9z7YguLtyU+lpPu51k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759752398; c=relaxed/simple;
-	bh=HLxEdvzR/XmxUl/mla4qo4fEhWeRdHcVAsmMcuzaVAE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bP2tQuieuZZYRwmJSj0CDz3k6IefFU5DTG74rXJGusByF+HRc24NiOtwJUm3EaBkI1HJw50irke2Yhw5bdqS3mezZFJklMdWSACvGg2eiWU8OAUzEVPv7yAM4V+8bx6BrS2O3uyKsOrFE+gShFeb+EVzFUg92/me0DbCyOQCcTs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=J5+5RvO9; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 5960d3vP001346
-	for <linux-pwm@vger.kernel.org>; Mon, 6 Oct 2025 12:06:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	HLxEdvzR/XmxUl/mla4qo4fEhWeRdHcVAsmMcuzaVAE=; b=J5+5RvO9h6kgmyJq
-	3s4aN+jSgg7ZlgIi39SDGq/U8iWM99LpVnT6S6sRBhLTewpejXsIAnSyOMqk9Qf1
-	NilNGFPs/FRLZNUHq+pCPse4wR8eEQqJtYyYEcdZ7lB4/s/ZCokSXUHWZsjZIM7w
-	q1YBM4taYNT5aAn6YS248KlL+n9gAfNl64iQ8s5Js+e1ssgzBWRplkIBK+0/luNn
-	PMAliVQzD349+IOaXSlCt27FCUYfinhylaMjZVQcWlgpawTrGAa8BcBMo2OlF+wI
-	6UrF7eUgGVj76U6Vm8VlrdQ00B/VZVW+wUP4GMjOhX+D2JQb3J5W36L056uZ4SLW
-	USF6Dw==
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com [209.85.160.198])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 49jut1kqhr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-	for <linux-pwm@vger.kernel.org>; Mon, 06 Oct 2025 12:06:36 +0000 (GMT)
-Received: by mail-qt1-f198.google.com with SMTP id d75a77b69052e-4dee3f74920so8312881cf.3
-        for <linux-pwm@vger.kernel.org>; Mon, 06 Oct 2025 05:06:36 -0700 (PDT)
+	s=arc-20240116; t=1759757737; c=relaxed/simple;
+	bh=1vmAJo2C8bbZ1UL4iTtwuIFWMgw0C+x9M9sN9mrgUO8=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QUlXTDVFMUko9slKNf/wIBss27g+Hlhqe6J04y3X/4E0RG7Ic0xGGRs5b2B7Z25Wu43CFO16dQX8lwzoHKdIyOkrKLqnCZ1nsgflH7e2j0naDp0VB4+0WLEOQ1vGIQXb6TPwBYmyhuvdwXxYBMEjbX3czg6fxcQkSXTRxaQoJ8Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=DjqzsfrU; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-637ef0137f7so7946562a12.1
+        for <linux-pwm@vger.kernel.org>; Mon, 06 Oct 2025 06:35:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1759757732; x=1760362532; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=PWdBev9qcKa9CTz1IaLJDf8+XBsVfLIP5yVin+8s2Mk=;
+        b=DjqzsfrUg8BKUisTXlZ0PhnAXcoPxgfM7LGlPBcTrAkLAojjQ7jghUShkxLNDGd3T/
+         S3w+eJCF0iyPOhyGCJ+PdKbx4rjU4YZ7ph8JVWgsgGCa0W0xYN9xEpfIqDEU5r9M8q+9
+         eY2YaLt3zERWyDx42ts49A5B0eFqbqaQMuS5aGmmw5lgINmPWWetgikKHr6dWfzFG9xk
+         jdAmO1CX6Pv1xreRcrNOVIVjz3tUTe+kAzvqyGVxF0tA6eZZtDpfC8OVLC0DgHMBmiOx
+         2lI3a14BGPw7OgJS1IVH/aAfY+1ZTpu23+titBzPDfDXql9TQ7Bonq3/fNaJGL3ZKwky
+         +OsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759752395; x=1760357195;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=HLxEdvzR/XmxUl/mla4qo4fEhWeRdHcVAsmMcuzaVAE=;
-        b=ZPorqKD7Zvm9bSqAJPhElvLxb5yQkZKXhjkAm7mMqouf4IRLSElH/Dy5Ts1cj7U6k/
-         Tks7aCyn4GxaQ6P1FLxM80RTgEuDbjM8N+aI6dDa6sMPWRFWnHbTPflviQPcqcbrI3Jr
-         dFP92/ctx+NDe0SRpkSupwv2y5fL6cpu0APkjTI0BPk55W3F2Ivp6AOESPNF0QpDIefe
-         Pyzid6g5WdcWXU3kUtUpaUkB54uMtP48m2/7i4xBG5aqvrkPFjDmdHqGm9/+kEkUBXkF
-         +IQCzZU3OTVOxkYxL/equ7r1rCU9/zBoY76JEcjgC4eonJISrMDDotaOAgqD+qZt/iC9
-         mgag==
-X-Forwarded-Encrypted: i=1; AJvYcCWSqTumJNQJc8DqtdkdDFvdplGIFZs2qiTe460XaeZibLJg1T7XpPvfe4nWsy4RNPQ+wS2e4ZPIntI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwlePb5lpOKMRTMkUUW4m9sx2rAcxPARfzLKd1UH/jnGjTT9eYo
-	V6BVWFsVjb4RJRUnfGz38U9sBvUGyCZl5lRDqXdcL+ugTN+wWFWjYZQUQkItkGZXFcYC6RotS8+
-	kBt7QyneritTK2f1iuSoz6ui8Dz46hhT6qMPzcLAqIdnUOTuefGjLNa309D/Lp2INbahIi4I=
-X-Gm-Gg: ASbGncudnArSwDmUr1hi5hv+K9YIeKEzR4GsaRSMt+rljxeKul/WaUr0VqlSq1ZJJqS
-	Ng78dRwWyVNpSCbT/VjOMD2S3K5cdNx82SlgBeYHBKypCBV6TQTGSubZfVzWfUlJZOiamZouqU6
-	O/OnTY7IpOmribWCnPODSjCdi6AAso1Zfq4KKqJozuw+CK1hj6CmwNZVD6KieV6HVplBMAAMLjf
-	7jDlQPCC3qfPRxidagyfTyrSg/BmWO9bbW8+Pl0liDxCg8/myWUVXtCeuM3jo6RqHH4GIqM9OHZ
-	YitMQ+DsWXXelj5wzQdxQCwqToFzhHCEvMuh0nD9gpuNV7yHeoiRvAAva+5PAMkYolcjlqDHC5q
-	mRDrJym1JIpp2qk9ws5ke6UD8iwM=
-X-Received: by 2002:ac8:7f41:0:b0:4d7:6c8a:4792 with SMTP id d75a77b69052e-4e57695639emr101645521cf.0.1759752394854;
-        Mon, 06 Oct 2025 05:06:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IGL5Iaw44FNavlmz+iujGEn4Rtr8EjnBdm2ElAhoWxAuwKxOPHJ8yJ2UwPQnRwz4KKHIwtvMQ==
-X-Received: by 2002:ac8:7f41:0:b0:4d7:6c8a:4792 with SMTP id d75a77b69052e-4e57695639emr101645031cf.0.1759752394248;
-        Mon, 06 Oct 2025 05:06:34 -0700 (PDT)
-Received: from [192.168.149.223] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6376b3b6927sm10231021a12.14.2025.10.06.05.06.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 06 Oct 2025 05:06:33 -0700 (PDT)
-Message-ID: <2ce295a2-586c-4fb7-ad10-3c7734e1f590@oss.qualcomm.com>
-Date: Mon, 6 Oct 2025 14:06:29 +0200
+        d=1e100.net; s=20230601; t=1759757732; x=1760362532;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=PWdBev9qcKa9CTz1IaLJDf8+XBsVfLIP5yVin+8s2Mk=;
+        b=h/TlFc0URrFO9PFMt8vnmyn5zlpfppD4PKXopgw8eq3kqG8v0MNSUKA4Pjqho8r1R8
+         sOALZaqrkMOIEmAcUFg773liExUXG5uhLRnOc8SuZ0Mezcc/9hccJKzKbxNS0KmQZGGd
+         x0L+CaQ3q8rg9u+WgcLlYYaS5l3MLaFvTqBdXoLrA1NuZUJAOUtm5s1LrWRTv9ZL2qv4
+         fg26323EYN331se7ER5n3rOZcYUv48hI0mMj0nrIO5LRjOozwNV2ab81diTksOqsEkOT
+         fVcza1/xZK1F3707nIPoxQiOJ56jiXM9f1K1FT/L5or84DSwIODDc2o7BRDJTHlkCyE+
+         fYLA==
+X-Gm-Message-State: AOJu0YzTJg7R/jlSx+SxoD424fP27PWbVeRymWbf7lWr9vA09pbljHSD
+	PwOp6COCH/DpxVIj+NZuILRrdc1S0NdBS0MESMSVK/Bi4e9PKw1RJ4bNkuGzuPsOf6NE33kCLV0
+	RSr4U
+X-Gm-Gg: ASbGncvQPwxoaJ2MVOWqQntXWCG4LLOyZf50ZVwK0iKM/TRBd1e2UFSyXmo6GZB5SLI
+	Rm1BmQyH0GqWVoo0ignxJQU2sDX6B911asmf3oq+awXS2QxSWvr+OGubxSDMEzL/CYRtpo/lJwf
+	4Q7ef3/LKIPpG0zuB0cnBzzBIgOhNLQw4+5rqvrlOJSyhOf1fz5esD40nLW6DhSE92ig1Fkh0q3
+	41XWdfQO5FHvgbE3OeiV+HA2lMVOr2JpUyVAnPKcg4A0iReSWw3LEXAEysY/mQji5MojquxQGrl
+	Mb2S9ypw/vco3pIhST90b1GfwtMIld2KJMJwXU1okKxHOz+K/jYzN5OpWjkhInd5l2OW4VPsSG1
+	FltuLOEFtyFQyc0L65jfymXB1gDSMMXT29odBPNz6jaqRrahswzHRMabSNWKvTA86mbU5voPNbY
+	i+pLe355PcGvAXVNWu1LFND90=
+X-Google-Smtp-Source: AGHT+IFWHZac20cWx3y4yqWy6lPqHqxEV48fkNwW/6pWdtYwElsFMJW9N4tRp09xJUb6K1+RrmKhsA==
+X-Received: by 2002:a05:6402:27d4:b0:636:21b3:25a4 with SMTP id 4fb4d7f45d1cf-639348ddf20mr14769215a12.10.1759757732447;
+        Mon, 06 Oct 2025 06:35:32 -0700 (PDT)
+Received: from localhost (p200300f65f06ab0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f06:ab04::1b9])
+        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-63788110224sm10134885a12.39.2025.10.06.06.35.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Oct 2025 06:35:32 -0700 (PDT)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: linux-pwm@vger.kernel.org
+Subject: [PATCH] pwm: Use %u to printf unsigned int pwm_chip::npwm and pwm_chip::id
+Date: Mon,  6 Oct 2025 15:35:26 +0200
+Message-ID: <20251006133525.2457171-2-u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v16 0/9] Add PWM support for IPQ chipsets
-To: George Moussalem <george.moussalem@outlook.com>,
-        "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>, linux-pwm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Baruch Siach <baruch.siach@siklu.com>,
-        Baruch Siach <baruch@tkos.co.il>,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>,
-        Devi Priya <quic_devipriy@quicinc.com>
-References: <20251001-ipq-pwm-v16-0-300f237e0e68@outlook.com>
- <175936202881.2426650.1624694657690403545.robh@kernel.org>
- <DS7PR19MB8883CF5D3DA8ED32B6A919449DE4A@DS7PR19MB8883.namprd19.prod.outlook.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <DS7PR19MB8883CF5D3DA8ED32B6A919449DE4A@DS7PR19MB8883.namprd19.prod.outlook.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-GUID: Pz0UZhk7BJczRAhXV81dUqvUc3nbjxPH
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDA0MDAyNyBTYWx0ZWRfXzQT719DwWRzk
- v9f2o3rqebTeDs9Qj4sje61QqGeZzFJVhW9rVtse98X7x2r+5t/dQ4G1vYLp4B6QqBLZVj9zb3X
- WVpvNZeb4FnwUZ1vQaAurH/XaRA7lNd0xMsnaUjN+o/paUu4GYAVZKnF5AAnnaRO4XBSYAlMHDY
- QLeOH5R6lgFHT8prZl/a3zeqLRmTXLGL8lmYUN7mqnrzxgnHpz3jTPk7uz7h9QsMWejPg2lOWfe
- XYY0zQfmdua4Qjll0Qk/TeBy6ontsYnWRALLr9ysn7NIPE3zn0XuAMiQ80puFK6cx20rh5095w3
- qVYsdOkbia5GtXABDOqTjcKdw04Rpsw9yWxkGGbDu/YlWdlk7BnwwBDsyaMfo/XLBkFjiBQejgq
- oBRxNBNQOXTz/BxzT6l9EaIA0YF7BQ==
-X-Authority-Analysis: v=2.4 cv=Vqcuwu2n c=1 sm=1 tr=0 ts=68e3b0cc cx=c_pps
- a=mPf7EqFMSY9/WdsSgAYMbA==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=x6icFKpwvdMA:10 a=VwQbUJbxAAAA:8 a=2C6YHBdLAAAA:8
- a=v4cj00jlyj8MMA1A80cA:9 a=QEXdDO2ut3YA:10 a=dawVfQjAaf238kedN5IG:22
- a=yxGMNg53M24zlVSZdvMH:22
-X-Proofpoint-ORIG-GUID: Pz0UZhk7BJczRAhXV81dUqvUc3nbjxPH
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
- definitions=2025-10-06_04,2025-10-02_03,2025-03-28_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- lowpriorityscore=0 adultscore=0 malwarescore=0 spamscore=0 priorityscore=1501
- suspectscore=0 bulkscore=0 clxscore=1011 impostorscore=0 phishscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.19.0-2509150000 definitions=main-2510040027
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1223; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=1vmAJo2C8bbZ1UL4iTtwuIFWMgw0C+x9M9sN9mrgUO8=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBo48Wee+u5t5tHMFgCnZd5Y0QR04cUmsqgEVhJ3 NL4WVY0Y7aJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCaOPFngAKCRCPgPtYfRL+ TgT3CACwB0KKpt82ANviG6ltOoJTFFsyxpWpJSXWyGJ+a4Wl+8VKJ39Mplx9myAlgyuciONGQ29 YXhoyVCcbV3TZp5mCCjsPUaLfMQXxIlwiHMOSx2jLM4IzFveUJZalMhSD0LuvXqxW/C40rdTsQD HFkyVM7O82WnnaKkWEdFasD/wSejIeg4DI9mhz+EwMVbn5umvV+oSirB6nMQKjB0GuGbiOs9yLo 6PAogFz8JqatrsfZui8TLUJWdhEhof+MS/IJFgISc6gOL3J8SprkKEeyFY93zdYoFkdtRAYs8AU 0by/KV6fO/ddBet/lTy4Wee9zlCmHoktxgbGOja6Bx4/494h
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 
-On 10/3/25 9:06 AM, George Moussalem wrote:
-> yeah, my bad. c/p error as I moved it out from the TCSR node.
-> Ran dt_binding_check on the yaml, did dtbs_check on ipq5018 so missed it
-> for ipq6018. Will be fixed in next version. Waiting for feedback on the
-> driver (Uwe's?) and on the dt bindings (Krzysztof's?) for adding
-> additional compatibles. Will then send out the next version..
+%u is the right conversion specifier to emit an unsigned int value.
 
-Please see Greg's note on top-posting:
+Fixes: 62099abf67a2 ("pwm: Add debugfs interface")
+Fixes: 0360a4873372 ("pwm: Mention PWM chip ID in /sys/kernel/debug/pwm")
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+---
+Hello,
 
-https://lore.kernel.org/all/20170823231800.GE5193@kroah.com/
+please tell me if this patch make a difference for one of your machines
+:-)
 
-Konrad
+The patch this depends on is
+https://lore.kernel.org/r/20250926165702.321514-2-u.kleine-koenig@baylibre.com
+.
+
+Best regards
+Uwe
+
+ drivers/pwm/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+index 5b75f4a08496..7dd1cf2ba402 100644
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -2696,7 +2696,7 @@ static int pwm_seq_show(struct seq_file *s, void *v)
+ {
+ 	struct pwm_chip *chip = v;
+ 
+-	seq_printf(s, "%s%d: %s/%s, npwm: %d\n",
++	seq_printf(s, "%s%u: %s/%s, npwm: %u\n",
+ 		   (char *)s->private, chip->id,
+ 		   pwmchip_parent(chip)->bus ? pwmchip_parent(chip)->bus->name : "no-bus",
+ 		   dev_name(pwmchip_parent(chip)), chip->npwm);
+
+base-commit: 8f2689f194b8d1bff41150ae316abdfccf191309
+prerequisite-patch-id: 569104417dd341baa45f7c1ff09c5a73062a2fb4
+-- 
+2.51.0
+
 
