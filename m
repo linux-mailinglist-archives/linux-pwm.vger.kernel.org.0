@@ -1,131 +1,167 @@
-Return-Path: <linux-pwm+bounces-7394-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7395-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1CF68BBE325
-	for <lists+linux-pwm@lfdr.de>; Mon, 06 Oct 2025 15:35:41 +0200 (CEST)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DC01ABC2DAD
+	for <lists+linux-pwm@lfdr.de>; Wed, 08 Oct 2025 00:20:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id F2C3418947A2
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 Oct 2025 13:36:03 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id DCD7219A2DA1
+	for <lists+linux-pwm@lfdr.de>; Tue,  7 Oct 2025 22:20:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6612220A5EB;
-	Mon,  6 Oct 2025 13:35:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 35A4F2080C8;
+	Tue,  7 Oct 2025 22:20:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="DjqzsfrU"
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="hSqn9pR+"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3328B244661
-	for <linux-pwm@vger.kernel.org>; Mon,  6 Oct 2025 13:35:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82F721F63FF;
+	Tue,  7 Oct 2025 22:20:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.135.77
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1759757737; cv=none; b=M9YqPiAs0D6gUGfKm8RKhwRIOmGtSAXbEWQ7Sx+get3Hjo905fyf10+EIgCz9uiLNaTL4CHMNm4wUIK32yqv+ZXpHLKs9ERydIoHZWCZKf4n5DDYkzlnzTRxgTts8aIPj9d+/m76z8sAoVT7TPs9CjVah9z7YguLtyU+lpPu51k=
+	t=1759875607; cv=none; b=c8J8yqH0R/K7xwErnUdn6iZ5TgVKlQCfs45vlRp6XXMWAf4FwXbV432kHEhAgRUV5qypz5MZ6FXYMre8LWJ2DZ0RLmOBAFo6Tpeb90QficN7n1UeqCbYvfqzKdTLGwLmls10s9l0EdbarazwwRIASlWcZ8g3E49vOzW2F8M4PiM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1759757737; c=relaxed/simple;
-	bh=1vmAJo2C8bbZ1UL4iTtwuIFWMgw0C+x9M9sN9mrgUO8=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=QUlXTDVFMUko9slKNf/wIBss27g+Hlhqe6J04y3X/4E0RG7Ic0xGGRs5b2B7Z25Wu43CFO16dQX8lwzoHKdIyOkrKLqnCZ1nsgflH7e2j0naDp0VB4+0WLEOQ1vGIQXb6TPwBYmyhuvdwXxYBMEjbX3czg6fxcQkSXTRxaQoJ8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=DjqzsfrU; arc=none smtp.client-ip=209.85.208.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-637ef0137f7so7946562a12.1
-        for <linux-pwm@vger.kernel.org>; Mon, 06 Oct 2025 06:35:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1759757732; x=1760362532; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=PWdBev9qcKa9CTz1IaLJDf8+XBsVfLIP5yVin+8s2Mk=;
-        b=DjqzsfrUg8BKUisTXlZ0PhnAXcoPxgfM7LGlPBcTrAkLAojjQ7jghUShkxLNDGd3T/
-         S3w+eJCF0iyPOhyGCJ+PdKbx4rjU4YZ7ph8JVWgsgGCa0W0xYN9xEpfIqDEU5r9M8q+9
-         eY2YaLt3zERWyDx42ts49A5B0eFqbqaQMuS5aGmmw5lgINmPWWetgikKHr6dWfzFG9xk
-         jdAmO1CX6Pv1xreRcrNOVIVjz3tUTe+kAzvqyGVxF0tA6eZZtDpfC8OVLC0DgHMBmiOx
-         2lI3a14BGPw7OgJS1IVH/aAfY+1ZTpu23+titBzPDfDXql9TQ7Bonq3/fNaJGL3ZKwky
-         +OsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1759757732; x=1760362532;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PWdBev9qcKa9CTz1IaLJDf8+XBsVfLIP5yVin+8s2Mk=;
-        b=h/TlFc0URrFO9PFMt8vnmyn5zlpfppD4PKXopgw8eq3kqG8v0MNSUKA4Pjqho8r1R8
-         sOALZaqrkMOIEmAcUFg773liExUXG5uhLRnOc8SuZ0Mezcc/9hccJKzKbxNS0KmQZGGd
-         x0L+CaQ3q8rg9u+WgcLlYYaS5l3MLaFvTqBdXoLrA1NuZUJAOUtm5s1LrWRTv9ZL2qv4
-         fg26323EYN331se7ER5n3rOZcYUv48hI0mMj0nrIO5LRjOozwNV2ab81diTksOqsEkOT
-         fVcza1/xZK1F3707nIPoxQiOJ56jiXM9f1K1FT/L5or84DSwIODDc2o7BRDJTHlkCyE+
-         fYLA==
-X-Gm-Message-State: AOJu0YzTJg7R/jlSx+SxoD424fP27PWbVeRymWbf7lWr9vA09pbljHSD
-	PwOp6COCH/DpxVIj+NZuILRrdc1S0NdBS0MESMSVK/Bi4e9PKw1RJ4bNkuGzuPsOf6NE33kCLV0
-	RSr4U
-X-Gm-Gg: ASbGncvQPwxoaJ2MVOWqQntXWCG4LLOyZf50ZVwK0iKM/TRBd1e2UFSyXmo6GZB5SLI
-	Rm1BmQyH0GqWVoo0ignxJQU2sDX6B911asmf3oq+awXS2QxSWvr+OGubxSDMEzL/CYRtpo/lJwf
-	4Q7ef3/LKIPpG0zuB0cnBzzBIgOhNLQw4+5rqvrlOJSyhOf1fz5esD40nLW6DhSE92ig1Fkh0q3
-	41XWdfQO5FHvgbE3OeiV+HA2lMVOr2JpUyVAnPKcg4A0iReSWw3LEXAEysY/mQji5MojquxQGrl
-	Mb2S9ypw/vco3pIhST90b1GfwtMIld2KJMJwXU1okKxHOz+K/jYzN5OpWjkhInd5l2OW4VPsSG1
-	FltuLOEFtyFQyc0L65jfymXB1gDSMMXT29odBPNz6jaqRrahswzHRMabSNWKvTA86mbU5voPNbY
-	i+pLe355PcGvAXVNWu1LFND90=
-X-Google-Smtp-Source: AGHT+IFWHZac20cWx3y4yqWy6lPqHqxEV48fkNwW/6pWdtYwElsFMJW9N4tRp09xJUb6K1+RrmKhsA==
-X-Received: by 2002:a05:6402:27d4:b0:636:21b3:25a4 with SMTP id 4fb4d7f45d1cf-639348ddf20mr14769215a12.10.1759757732447;
-        Mon, 06 Oct 2025 06:35:32 -0700 (PDT)
-Received: from localhost (p200300f65f06ab0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f06:ab04::1b9])
-        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-63788110224sm10134885a12.39.2025.10.06.06.35.31
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 Oct 2025 06:35:32 -0700 (PDT)
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: linux-pwm@vger.kernel.org
-Subject: [PATCH] pwm: Use %u to printf unsigned int pwm_chip::npwm and pwm_chip::id
-Date: Mon,  6 Oct 2025 15:35:26 +0200
-Message-ID: <20251006133525.2457171-2-u.kleine-koenig@baylibre.com>
-X-Mailer: git-send-email 2.51.0
+	s=arc-20240116; t=1759875607; c=relaxed/simple;
+	bh=1RtDq0A1RZWwZjHU/cddoxGAZzdiIWeIfbGDh4YzFq4=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=ON+F4qXtF075dVlFOnXznWSyajCXDJ43VNCtrqmWeEdEBTW8Cttcur4Jkw7luo++fOCftTDU/LZPY8S5Zwr8tzi5bL3+tMxUZaKl6tJ1h0YdTDrqF0xRQ11fveIfrye+2pPtWRzRzTZZ/3FMepcgeUwymADIo9l7U4T9p48kGwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=hSqn9pR+; arc=none smtp.client-ip=148.163.135.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+	by mx0a-00128a01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 597IUbpj010572;
+	Tue, 7 Oct 2025 18:19:50 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:message-id
+	:mime-version:subject:to; s=DKIM; bh=5bylmLC2D9Sq8ZZnNilvP3JpPRe
+	J0dKy7HvUGEtpDsI=; b=hSqn9pR+WMbsm3D8tGlsSOBHtBSO2jtYM2msplrP0ud
+	arv0Vyk9JlWvK2TVh/wC4El5nvcLWWRLPBDqAXpt1kQ/NC/1MaYZJNVcLy0ufzUm
+	JYdAqMxIXy4pbjpNxJI2ejaF9wQApxXHYztXQsxxIACM4aLXtrBZVBXxEeh3F+PW
+	CTLdwPp6lbhKzG6PAhThLHl/AKNb48vcgnjKmZ60T/JSpx1Es6MOHAX4827fC5PM
+	dYJQpAN8PZUSi+NcR4hQBXv5Bjrmz2h2s3OE0aIexe4VIPInRfWKxmXL/UKGsVPQ
+	nzRT/2Rp+jaKyBLf1CY2Q8dBwuHLmQr2Xuv4tQqX7vQ==
+Received: from nwd2mta4.analog.com ([137.71.173.58])
+	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 49jwe22pcj-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Tue, 07 Oct 2025 18:19:50 -0400 (EDT)
+Received: from ASHBMBX9.ad.analog.com (ASHBMBX9.ad.analog.com [10.64.17.10])
+	by nwd2mta4.analog.com (8.14.7/8.14.7) with ESMTP id 597MJmH5049657
+	(version=TLSv1/SSLv3 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=FAIL);
+	Tue, 7 Oct 2025 18:19:48 -0400
+Received: from ASHBMBX8.ad.analog.com (10.64.17.5) by ASHBMBX9.ad.analog.com
+ (10.64.17.10) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1748.37; Tue, 7 Oct
+ 2025 18:19:48 -0400
+Received: from zeus.spd.analog.com (10.66.68.11) by ashbmbx8.ad.analog.com
+ (10.64.17.5) with Microsoft SMTP Server id 15.2.1748.37 via Frontend
+ Transport; Tue, 7 Oct 2025 18:19:48 -0400
+Received: from work.ad.analog.com (HYB-hERzalRezfV.ad.analog.com [10.65.205.9])
+	by zeus.spd.analog.com (8.15.1/8.15.1) with ESMTP id 597MJcTP020093;
+	Tue, 7 Oct 2025 18:19:41 -0400
+From: Marcelo Schmitt <marcelo.schmitt@analog.com>
+To: <linux-pwm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+CC: <ukleinek@kernel.org>, <jic23@kernel.org>, <marcelo.schmitt1@gmail.com>,
+        kernel test robot <lkp@intel.com>
+Subject: [PATCH] pwm: Declare waveform stubs for when PWM is not reachable
+Date: Tue, 7 Oct 2025 19:19:38 -0300
+Message-ID: <1ac0fc529e02744aacfcb9140ed597ff60886f39.1759873890.git.marcelo.schmitt@analog.com>
+X-Mailer: git-send-email 2.39.2
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1223; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=1vmAJo2C8bbZ1UL4iTtwuIFWMgw0C+x9M9sN9mrgUO8=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBo48Wee+u5t5tHMFgCnZd5Y0QR04cUmsqgEVhJ3 NL4WVY0Y7aJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCaOPFngAKCRCPgPtYfRL+ TgT3CACwB0KKpt82ANviG6ltOoJTFFsyxpWpJSXWyGJ+a4Wl+8VKJ39Mplx9myAlgyuciONGQ29 YXhoyVCcbV3TZp5mCCjsPUaLfMQXxIlwiHMOSx2jLM4IzFveUJZalMhSD0LuvXqxW/C40rdTsQD HFkyVM7O82WnnaKkWEdFasD/wSejIeg4DI9mhz+EwMVbn5umvV+oSirB6nMQKjB0GuGbiOs9yLo 6PAogFz8JqatrsfZui8TLUJWdhEhof+MS/IJFgISc6gOL3J8SprkKEeyFY93zdYoFkdtRAYs8AU 0by/KV6fO/ddBet/lTy4Wee9zlCmHoktxgbGOja6Bx4/494h
-X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ADIRuleOP-NewSCL: Rule Triggered
+X-Authority-Analysis: v=2.4 cv=Y7n1cxeN c=1 sm=1 tr=0 ts=68e59206 cx=c_pps
+ a=3WNzaoukacrqR9RwcOSAdA==:117 a=3WNzaoukacrqR9RwcOSAdA==:17
+ a=x6icFKpwvdMA:10 a=VwQbUJbxAAAA:8 a=QyXUC8HyAAAA:8 a=gAnH3GRIAAAA:8
+ a=umOawDddDieID1hGUK0A:9 a=cPQSjfK2_nFv0Q5t_7PE:22
+X-Proofpoint-GUID: Nw-7FBRIa7Sn_OZS7Y_NPGODW2hMG3pr
+X-Proofpoint-ORIG-GUID: Nw-7FBRIa7Sn_OZS7Y_NPGODW2hMG3pr
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMDA0MDA0MyBTYWx0ZWRfX+M8Z4c3DG243
+ 35MMGlQGbYldZTx26B3epmnZVa2KoLPWdsXwhzza8/NeRUO/zYlecf0PebG51faJRwqgKrNub0K
+ bPN3QYkNICiF4JmSZ927+JNd55SN/JhyTZPX8Ivd5iJLwhI6WM2TW011z9fAMRiwe9n4ZueK9IZ
+ YRtYmb3Nm2x+sjigc6O+Tqb39gzVoPp8fBsB5R2rEo8MBSTNbOUDcLyoupoxCbC0zoFUtOYuqEg
+ OquKQJkutlrRYtBJjOp9EYQ09cJ9dnkj0T0jp1XZlr+ZAa5Fa5GjZD12MJbFEczV7slbPK70soJ
+ SRooWLlOaF3VHlJ0YDmoL18JsYVm31mv6oCerBdDYkd6QhgnuOW/kU2f4586CvlR8I61c0MoIJ/
+ bSL3ZV1yWPgbPAFi0mMXEgi7DCpgtg==
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1117,Hydra:6.1.9,FMLib:17.12.80.40
+ definitions=2025-10-07_02,2025-10-06_01,2025-03-28_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1011 adultscore=0 spamscore=0 bulkscore=0 lowpriorityscore=0
+ phishscore=0 impostorscore=0 malwarescore=0 priorityscore=1501 suspectscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.19.0-2509150000 definitions=main-2510040043
 
-%u is the right conversion specifier to emit an unsigned int value.
+Previously, the PWM waveform consumer API would not be declared if
+CONFIG_PWM was not reachable. That caused kernel builds to fail if a
+consumer driver was enabled but PWM disabled. Add stubs for PWM waveform
+functions so client drivers that use, but don't depend on PWM, can build if
+PWM is disabled.
 
-Fixes: 62099abf67a2 ("pwm: Add debugfs interface")
-Fixes: 0360a4873372 ("pwm: Mention PWM chip ID in /sys/kernel/debug/pwm")
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+Fixes: 6c5126c6406d ("pwm: Provide new consumer API functions for waveforms")
+Reported-by: kernel test robot <lkp@intel.com>
+Closes: https://lore.kernel.org/oe-kbuild-all/202509272028.0zLNiR5w-lkp@intel.com/
+Signed-off-by: Marcelo Schmitt <marcelo.schmitt@analog.com>
 ---
-Hello,
+Cc: Jonathan Cameron <jic23@kernel.org>
+Hi Uwe,
 
-please tell me if this patch make a difference for one of your machines
-:-)
+This is a fix based on a report from 0-day bot [1].
+We need this for a sophisticated IIO device that makes direct use of a PWM
+waveform (in addition to indirect use of PWM through SPI_OFFLOAD_TRIGGER_PWM). 
+I'm not very familiar with the details of how it works for series of
+patches that update multiple subsystems. Documentation says such sets may go
+through the -mm tree. Though, this is a small change and the consumer driver set
+depends on it. Would it be okay if this gets picked up through Jonathan's IIO tree?
 
-The patch this depends on is
-https://lore.kernel.org/r/20250926165702.321514-2-u.kleine-koenig@baylibre.com
-.
+[1]: https://lore.kernel.org/linux-iio/202509272028.0zLNiR5w-lkp@intel.com/
 
-Best regards
-Uwe
+Thanks,
+Marcelo
 
- drivers/pwm/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/pwm.h | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index 5b75f4a08496..7dd1cf2ba402 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -2696,7 +2696,7 @@ static int pwm_seq_show(struct seq_file *s, void *v)
+diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+index 549ac4aaad59..a20ddc40a32a 100644
+--- a/include/linux/pwm.h
++++ b/include/linux/pwm.h
+@@ -504,6 +504,25 @@ struct pwm_device *devm_fwnode_pwm_get(struct device *dev,
+ 				       struct fwnode_handle *fwnode,
+ 				       const char *con_id);
+ #else
++static inline int pwm_round_waveform_might_sleep(struct pwm_device *pwm, struct pwm_waveform *wf)
++{
++	might_sleep();
++	return -EOPNOTSUPP;
++}
++
++static inline int pwm_get_waveform_might_sleep(struct pwm_device *pwm, struct pwm_waveform *wf)
++{
++	might_sleep();
++	return -EOPNOTSUPP;
++}
++
++static inline int pwm_set_waveform_might_sleep(struct pwm_device *pwm,
++					       const struct pwm_waveform *wf, bool exact)
++{
++	might_sleep();
++	return -EOPNOTSUPP;
++}
++
+ static inline bool pwm_might_sleep(struct pwm_device *pwm)
  {
- 	struct pwm_chip *chip = v;
- 
--	seq_printf(s, "%s%d: %s/%s, npwm: %d\n",
-+	seq_printf(s, "%s%u: %s/%s, npwm: %u\n",
- 		   (char *)s->private, chip->id,
- 		   pwmchip_parent(chip)->bus ? pwmchip_parent(chip)->bus->name : "no-bus",
- 		   dev_name(pwmchip_parent(chip)), chip->npwm);
+ 	return true;
 
 base-commit: 8f2689f194b8d1bff41150ae316abdfccf191309
-prerequisite-patch-id: 569104417dd341baa45f7c1ff09c5a73062a2fb4
 -- 
-2.51.0
+2.39.2
 
 
