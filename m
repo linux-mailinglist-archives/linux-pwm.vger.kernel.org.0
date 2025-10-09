@@ -1,86 +1,85 @@
-Return-Path: <linux-pwm+bounces-7425-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7426-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA926BCA336
-	for <lists+linux-pwm@lfdr.de>; Thu, 09 Oct 2025 18:35:27 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id A4CCFBCA339
+	for <lists+linux-pwm@lfdr.de>; Thu, 09 Oct 2025 18:36:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 4B9C2348EF1
-	for <lists+linux-pwm@lfdr.de>; Thu,  9 Oct 2025 16:35:27 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 8D7EC4E05BD
+	for <lists+linux-pwm@lfdr.de>; Thu,  9 Oct 2025 16:36:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BFE451C3306;
-	Thu,  9 Oct 2025 16:35:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 07C4B1C3306;
+	Thu,  9 Oct 2025 16:36:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="RWnqYxPo"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="eZXI3GSU"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A33BB1A9FA4
-	for <linux-pwm@vger.kernel.org>; Thu,  9 Oct 2025 16:35:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65E7E1A9FA4
+	for <linux-pwm@vger.kernel.org>; Thu,  9 Oct 2025 16:36:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760027724; cv=none; b=VL/QjZ/JKBm5Rgj1xNF5p2nI+1RMzdNwKKKY8l2BQbxnaqyvF4SaazBLA0LJv8dzCDpzOFlYn2JCpo4c9fwwvRjxg16G6Ykhf6w83qhfTxaBw6fZl9JVMr18i3vkG9L1Hvg9mdrzJS9ByoabpvmPhHucqQ74NAinynEL5OLZOgs=
+	t=1760027808; cv=none; b=n1d15vEci1gZ78pIb09ClO3fSHTicAqNs+UQ78Ku+kTEE0no6T6R68k7WeY0pfdObYplVrO5Eq8E0rCPRpx0hUknBoVyXU8V/eJfJh4MovZoj9lb3vOzPvDTHJBZqxQei9JvOEFeLa+Zs15LjllSllyCf9plaNBuDCsyFPXIw+c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760027724; c=relaxed/simple;
-	bh=JjPyAYqDRwpHdfyWXPXV+qh/sFgnnN8PAWRHEeVC2I4=;
-	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qFUv1EoDQXbBXY9gyNCubzgu/D2vtSoeWXMgFGywiohSR1tzf8twt/oQKBU8CSGiOorSPQ02UdUhYrHb3ItjbPtUopkvxbiL+ykQyKOPeJst6l1/YxQOCCVLDfdG5/jwM+tz+TK6TjYZ1Grcj4h+iHVrhBeW5k6QleFoxrsIWUs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=RWnqYxPo; arc=none smtp.client-ip=209.85.221.46
+	s=arc-20240116; t=1760027808; c=relaxed/simple;
+	bh=C5iraH8VHY2F+UDhGG7XxgCiV0gjj5Rx3ve6QLjUL3g=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XC0vw/ABWjFCoae4cpDaTwbuzXl4HKK7AiboPutUPYd2QPKtfbSlatE+gTjoW0IK5A1DgK7DxAq/K+qHocqeGORi1BBWSF+rgPOC6YkpLCnvEg5gpOzSc6o+GXQV2/Osg3aKrtDTFvh4oItNnEF8ZV0kLgU19Flk79gBM5+gzj4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=eZXI3GSU; arc=none smtp.client-ip=209.85.221.47
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-3ece0e4c5faso1303883f8f.1
-        for <linux-pwm@vger.kernel.org>; Thu, 09 Oct 2025 09:35:21 -0700 (PDT)
+Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-3ee15b5435bso728262f8f.0
+        for <linux-pwm@vger.kernel.org>; Thu, 09 Oct 2025 09:36:46 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1760027720; x=1760632520; darn=vger.kernel.org;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1760027805; x=1760632605; darn=vger.kernel.org;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=JjPyAYqDRwpHdfyWXPXV+qh/sFgnnN8PAWRHEeVC2I4=;
-        b=RWnqYxPo6ta7c37LfcsR+7T4QxQ4h6WMny4g7h4SENbDJHJTgCXVkvJGovYkYVFBxz
-         uCF4mdYeFZosfhkR25+6d6lw4VKwBgR51USL0WkN7/rpaPJimbA/Qc7q5JKY/4ZtJRPn
-         U79PNvbbm+AY+DEz0WRjzPCN+8CXmXg7JKl2RG1kn5P+OK0cXOJozzvmxHTW1xORLkwm
-         r56ci31WdLnexR62kuVqQ2ahj5wEwFLlTsETOsAI/6Zh5Fkl/CMY2JQT+jybmIPIiBJp
-         MT0Cdm7+VPxo8YeGrVNVWx0jgFfjx4g3pPkqxSru8OPu5nqYETnZw1qeLV9Lro3P6G5O
-         KbBQ==
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=pM0xsZeNADKlqNSbccGk7i8pI5/s940oeB9cZiu3dyU=;
+        b=eZXI3GSUvFVnMCbmO5wQykgqqLVVkTeBoLKMM6U3L0rrAvIyQcDuT31im/kQcJNApQ
+         b4+R6EiQktQ2k6MNDsW7SONhplQhXEANIaqruLCATZ580XhQ/jTfaxiCfenD5ydnH5wn
+         NMkCpiNXYa5uh3rLzdIalUgLwGlaoltIve86UjQgur/g9RV4lBjnIan4PUcoCbheKbKm
+         yfpMYpfmahlGDBkiume2fr2bsoC/fyUO1Bb1t6Xx8oALRH8dvM8PSAT4C7aLoYJZp8lJ
+         WUu3wSheieSnZj6DvA8Dzb8MVbAwW/H16dx4oT9HkUDfUm6PgEt1a8Y3HuXSXLgPK3LT
+         yoBA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760027720; x=1760632520;
+        d=1e100.net; s=20230601; t=1760027805; x=1760632605;
         h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=JjPyAYqDRwpHdfyWXPXV+qh/sFgnnN8PAWRHEeVC2I4=;
-        b=s70LmyPftY5BJZnfcnSFMcjCUgNlMB39cmPWvs6p0bSTMkLTK3h0/9NHzPCDe3b67t
-         Qv1HfomJlrGCAqf/ePpk5wPHhegMbwFiVbGQ7SxwuF41OJ9gExkVwXkl13/CH1iLZiZM
-         OzQlMjbt47pRid7E4aQ2DU3SKsi06yk/wTt//nytkUyIfySOyMocbB6BEqM8x25cBKux
-         1KdfszUd3NM5DfpZCLTan3hl1z9qIMjHBlF+wUtsOhkKU/GhI+ZoQqXG9jzFhHXONUhC
-         HHctv5MlGrSaCnr9E1oTgQsJKejqtTeQWP0cNZ4uHSafcKkkBjj4jCUzC4q8AM6BMooy
-         05bg==
-X-Gm-Message-State: AOJu0YzYXgiP+nfJwyFfPelwbBhqUhnAr7R4t05DgvvTRRWENrugBetA
-	TI4hQlzPxi/wM1LvWHKCDfAqvyl+zsNmQGZ7lOrHMGdtyJid8PdfVyCrE6iW7Z844UUvoZZHcWm
-	X7+iq
-X-Gm-Gg: ASbGncuBE86F/rkqugn06Gw6VWZD2HQ/mAhyn70t1hiJHrB9xX1LGu/ezAZvgXHEZPn
-	jzN0RI4xXirCzT+ZRXZBXOLvCVOm4hcFNfnwwrQ9Z3FPUv5GjsyxpN9wotteAANEYw5zRjDnaO0
-	aUxNnYvd2luCPSeGymZl08Km1ZT0ZzDjhTUL5Y2AkguOSR+9ltKLTe1VJUZivJTYtmzReRZ+DqE
-	pBfwgBjf09+ihnJdi5OqmXCW954ClUEK2Y+Q5VyiCq15SSku5vCaKN5lUQ7Ml4Z33kHTrrvqAch
-	MmsK8iNoYLiVLRf2uiVQMI/80dCt3qWradnBedAVFwurDyhLe6Lv4dqIbBSwLuUg2gRWUT6V5vf
-	HtSHhkkuOAxD5T4FQMtEyCHUtvhvEk7dfOsJ37UolTy+1kdvxxcQGSGmFDjnPvtXuz8a25F0vGA
-	92gvMEqYkHLi+uDmcf+/sqzrI=
-X-Google-Smtp-Source: AGHT+IH8vkqd19onTy8R1rR/BT9+wKHytQn0Wu/GUICcOmFSkDXVxd7iIfBOUh+O9qdNmnWpnOyGZw==
-X-Received: by 2002:a05:6000:2209:b0:3e9:a1cb:ea93 with SMTP id ffacd0b85a97d-4266726c546mr5002387f8f.21.1760027719682;
-        Thu, 09 Oct 2025 09:35:19 -0700 (PDT)
+        bh=pM0xsZeNADKlqNSbccGk7i8pI5/s940oeB9cZiu3dyU=;
+        b=wYohoCdaA5Zro69DqE6gA+Co+MsaPoty/MNpx88iKmXoo3TRfwk/XjwOnDgUB0gBhs
+         7TQfe/BIItAcLWeUxAsC1A5zbKRO/mSRl7lkI5fDM0bpmsiBAJ4sxTlTKVomAdZohaMR
+         08D4itHiN5gsg48Stq9M4zhoj011YXqmPWDswuZl7W6p0xSPxcACH8rQvTP7Qy2zGZiB
+         nUj/TJhQ9S6VJPQqwhjPVN+Ikdat5Wz3CEtIzwe3YqeSYuqhKb7+H3569nfYErrDK0Q1
+         0Kq5zQKrTS7pujPNuTyVD7zueo+v/wwTqKLPCyKt+hKk5yFOLAMV2TUn5fx7iJAxr/8A
+         z6Xw==
+X-Gm-Message-State: AOJu0YydXTKvkm8M5iusNZEi2NIXQ3ILDmvckKaetwfHcrTZxtwdkEss
+	0bx6nZtpya5b1FpxBf9ZtYlAGDmKyymU1mcyLr1vGFKnVHhqXQd6biUS9D8mfYVEJhawO0objAq
+	5MJ3S
+X-Gm-Gg: ASbGncu3NLRhyW7lTxRkzRGc6NQ1MWDzDvYK9Xnf5fKR7RyxlpxbNNi4dNuYPOl/TJw
+	yZhgYvvKgBitCytnqpXzR07j70GnYsFmMMEOPIcun6K+8QKLdjf5NoShGHaTkgNpWHgXsV8/ClC
+	eURkC5Vh+ewnb9vk4BPMT7sASWYzwA0DUK66tlzjktKHSIlN4k2R506drv1JjFvUhhKip2iWGo6
+	jrmI/W9dlTPTmadAQQa4VHvbnhyPG7SV5GKdq2+6Hrl26WUwlXNfYoVscTo7yZqjFy/Qt0J886A
+	TAvPrkQsgYSxoynx9HXhmk4dh/lyQhNxCN4V+8BKs1kF0a5G38Z2ebd8rzWOhjJJZxsfm8bCiDr
+	3vLQ29WgQswpQBd8QILGncv4X7+Gov8pfZ/uN1+fww8gmR4T2dwk34CrdxY3oa8782F+SY7mgwR
+	Byn/V1Mm04Onlj
+X-Google-Smtp-Source: AGHT+IGzrXwP/1qoDAA/VS5vFbmEWrrF+6Y/kREmqtgme4xUKuaZJd2hb1/4UjLbaVWkIQ/vxuTMBQ==
+X-Received: by 2002:a05:6000:2285:b0:407:23f7:51 with SMTP id ffacd0b85a97d-42666abb54emr4984137f8f.1.1760027804745;
+        Thu, 09 Oct 2025 09:36:44 -0700 (PDT)
 Received: from localhost (p200300f65f06ab0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f06:ab04::1b9])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-426cd9431bdsm174178f8f.15.2025.10.09.09.35.18
-        for <linux-pwm@vger.kernel.org>
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-426cdb8a0fasm130794f8f.47.2025.10.09.09.36.44
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Oct 2025 09:35:19 -0700 (PDT)
-Date: Thu, 9 Oct 2025 18:35:17 +0200
+        Thu, 09 Oct 2025 09:36:44 -0700 (PDT)
+Date: Thu, 9 Oct 2025 18:36:43 +0200
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
 To: linux-pwm@vger.kernel.org
-Subject: Re: [PATCH] pwm: Use %u to printf unsigned int pwm_chip::npwm and
- pwm_chip::id
-Message-ID: <ooi2dlhkhkll5mqci76wc2day4duug6o4u3csx5pib5nrmn3on@5xnhbq235cjv>
-References: <20251006133525.2457171-2-u.kleine-koenig@baylibre.com>
+Cc: Xichao Zhao <zhao.xichao@vivo.com>
+Subject: Re: [PATCH] pwm: Simplify printf to emit chip->npwm in $debugfs/pwm
+Message-ID: <4i5qkxt4fad36bktz7njjkqmdrsckpad2pglp6vhvuf5nhpueb@5yuv5x3fdnru>
+References: <20250926165702.321514-2-u.kleine-koenig@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -88,62 +87,63 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="yjvwmijgbdwsy2qb"
+	protocol="application/pgp-signature"; boundary="uzm65jr6ardzvjwg"
 Content-Disposition: inline
-In-Reply-To: <20251006133525.2457171-2-u.kleine-koenig@baylibre.com>
+In-Reply-To: <20250926165702.321514-2-u.kleine-koenig@baylibre.com>
 
 
---yjvwmijgbdwsy2qb
+--uzm65jr6ardzvjwg
 Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] pwm: Use %u to printf unsigned int pwm_chip::npwm and
- pwm_chip::id
+Subject: Re: [PATCH] pwm: Simplify printf to emit chip->npwm in $debugfs/pwm
 MIME-Version: 1.0
 
-On Mon, Oct 06, 2025 at 03:35:26PM +0200, Uwe Kleine-K=F6nig wrote:
-> %u is the right conversion specifier to emit an unsigned int value.
+Hello,
+
+On Fri, Sep 26, 2025 at 06:57:03PM +0200, Uwe Kleine-K=F6nig wrote:
+> Instead of caring to correctly pluralize "PWM device(s)" using
 >=20
-> Fixes: 62099abf67a2 ("pwm: Add debugfs interface")
-> Fixes: 0360a4873372 ("pwm: Mention PWM chip ID in /sys/kernel/debug/pwm")
+> 	(chip->npwm !=3D 1) ? "s" : ""
+>=20
+> or
+>=20
+> 	str_plural(chip->npwm)
+>=20
+> just simplify the format to not need a plural-s.
+>=20
 > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
 > ---
 > Hello,
 >=20
-> please tell me if this patch make a difference for one of your machines
-> :-)
->=20
-> The patch this depends on is
-> https://lore.kernel.org/r/20250926165702.321514-2-u.kleine-koenig@baylibr=
-e.com
-> .
+> this implements the patch I mused about in
+> https://lore.kernel.org/linux-pwm/fol4hemfnbh7km5dfdkbrfxx3txc4wtv7jvdn4h=
+2xlzxlcoyht@ax7ml3rq53zs/
 
 I applied this patch to
 
 https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
 nexxt
 
-as material for the next merge window. It will migrate to my
-pwm/for-next branch that is pulled into next after the merge window
-closes.
+as v6.19-rc1 material.
 
 Best regards
 Uwe
 
---yjvwmijgbdwsy2qb
+--uzm65jr6ardzvjwg
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmjn5D8ACgkQj4D7WH0S
-/k6Kbwf+P4sd8FjtKu7EYknSvTLxmX9kyrM790FujbudCnK5FhyUTKxgJ+/gSH5q
-HPhge0LAyBQyFDEX5q0/Tr3SYEWPI3wzwiqQjL8+40xFROJt42T2utTUAVVG1j9a
-bYAVZUygKFUpjCVPY5D9BEhDGKJTzxMO+i4iC9qMdou0yNrQ7oIdiTTmTsymArx2
-jPbjwz3LcBtq60vsFF/8MY3cyNKeV9dxzUmz3i+QY9W/ayygIveGgrwr1Zetpyhv
-3lesA+lNuQWvqzZ5Vfi26/ZloliRtyW3325sTCzc2KsjDZneZsfG3D7G1RyaqjmQ
-wyB1Ae4NgXnnt764e0X6zFk+G0h7RQ==
-=8exo
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmjn5JgACgkQj4D7WH0S
+/k4Wvwf/ZGWcmM+xrFu2G+khHJ7rtgPXl2Rap/u3Xen9r1/0V/rRtP2FW0HNf3jx
+5wCD/wOO8Agst5Z/smDPE8uv7wMpODAZsDdlFF3USENEBq9riI2HvsLVgkvovKdf
+FGLB3y7bbL/JIl+gEKw4sSaoCjLVff+wREc55XN/x7vGI97tp2WAZz/955MwDMZG
+TJgs/fRVyJVLr243DN0MDOYQjyWFPEE7ARRCjkZ69adzzFurQXk0pourO313tEzQ
+z3t0HJa+D2OHhtV0jS8O+zvzu50ujVi5axkFiAmf5l85NGSyaeTsO7FkA0fggSaN
+lmaPtfnhLAlKLtFIIPrVvfVx0j+2dA==
+=zRJj
 -----END PGP SIGNATURE-----
 
---yjvwmijgbdwsy2qb--
+--uzm65jr6ardzvjwg--
 
