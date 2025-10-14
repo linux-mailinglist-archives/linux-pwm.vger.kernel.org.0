@@ -1,199 +1,236 @@
-Return-Path: <linux-pwm+bounces-7451-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7452-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3261BBD575C
-	for <lists+linux-pwm@lfdr.de>; Mon, 13 Oct 2025 19:22:38 +0200 (CEST)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 58BEABDA7FA
+	for <lists+linux-pwm@lfdr.de>; Tue, 14 Oct 2025 17:54:06 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id AD80F4C0906
-	for <lists+linux-pwm@lfdr.de>; Mon, 13 Oct 2025 16:48:22 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 1BCD94F551B
+	for <lists+linux-pwm@lfdr.de>; Tue, 14 Oct 2025 15:45:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D6B428727C;
-	Mon, 13 Oct 2025 16:48:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E1C242FF166;
+	Tue, 14 Oct 2025 15:45:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u0ik8Aj+"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e4KQI2kf"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DED7283CA3;
-	Mon, 13 Oct 2025 16:48:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E6A6221FCB
+	for <linux-pwm@vger.kernel.org>; Tue, 14 Oct 2025 15:45:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760374101; cv=none; b=H72mj2PVLDyf6v66qW+OkDLjOZW6fhs09wVKSmbzDVjK77hlNt2E0GZ5uh63Kg4dQP1iQooqWXXTWseGIUW4uSySG1UfI+GExXefxWtjQkmZlZx3RbwlNDiNlPQsJ2Iifg8sPo6/7GWgPuGs076Iic62WNqx6W6W9wPzundpkyc=
+	t=1760456747; cv=none; b=LQO2/j5itAnpGNKGnHDqvXiAa6W/TvI96+q4v1kxXXsbeJFKDpXSEUckxS3ZFrp7X51c2iVZncNsphuuLXHSakTyqeittZT2iUJAq1oL5RLkM6PiaUHi9NL3SLr06jrr2X9haj95IrIr5mhAhWiOgeUCo9WFJ0TbMdxgrLOsGWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760374101; c=relaxed/simple;
-	bh=elwGg7bAxs37xxGUqiUArj6P97nHlNxZfgLS3Wd1CyQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NE9mAN/ulYxkITFXtAy+l1gahrcB2KXB2lD173ERrFc6xFT/mjcZegGXfENccV8K0410boy3td2yxB9yh+3gs3Z9G9W24zDX54xEFs/4VMtojfNP8FNTts2hABZElff7Vjkps1z/ONzaShu6DcLCecCFWl05PQXN3k3MdQZahXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u0ik8Aj+; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88D31C4CEFE;
-	Mon, 13 Oct 2025 16:48:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1760374101;
-	bh=elwGg7bAxs37xxGUqiUArj6P97nHlNxZfgLS3Wd1CyQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=u0ik8Aj+3Zh2hpmVrK05uKhSNXSQFg5mKOv+1ewCFmP5D3O4Yc5gnx/5rZdpHsUpa
-	 dWAx1WMi4mEu+Y4n9qsIi5IFrDql7U3b/ztL3E20N93kp3O+8o2vxlJiU/lYg5Zo6o
-	 a90s4pErWdUT8xZ/M0L3b6us4lXWRobDbyp3DV0OXNCNSEc/QqU69m9y7K/VnrScdn
-	 SZhQRZ82zsyBv08zwajcNUgzIONvqyPiMiY0qk6f/DM7crPcettPkvZhB0kuljToT3
-	 JW5pvDr92ge+VIYxzr0L2tgo5UJ5C/80RUoTG8vYMUhz+93KkFlNBh2UVV0MqYlNql
-	 1+x+kvSxfmowg==
-Date: Mon, 13 Oct 2025 18:48:18 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Michal Wilczynski <m.wilczynski@samsung.com>
-Cc: Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
-	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Alexandre Ghiti <alex@ghiti.fr>, Marek Szyprowski <m.szyprowski@samsung.com>, 
-	Benno Lossin <lossin@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Drew Fustini <fustini@kernel.org>, Daniel Almeida <daniel.almeida@collabora.com>, 
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-riscv@lists.infradead.org, devicetree@vger.kernel.org, 
-	Elle Rhumsaa <elle@weathered-steel.dev>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
-Subject: Re: [PATCH v15 0/7] Rust Abstractions for PWM subsystem with TH1520
- PWM driver
-Message-ID: <ayuqnx7fjfe3zwicvdbdr3qsgb4w6s2gwjt7r3m5ikzrylmium@hsrxazwelnvp>
-References: <CGME20250930122729eucas1p2c4f1c07a4a504a59ba691b407a39420d@eucas1p2.samsung.com>
- <20250930-rust-next-pwm-working-fan-for-sending-v15-0-5661c3090877@samsung.com>
+	s=arc-20240116; t=1760456747; c=relaxed/simple;
+	bh=OPz3JuKsyfEcF7SC28N8BYvQpMOG9+ol+aHvjOGIupM=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=hPsBd+p/SFvlfzJ4/nj/JoQlna615BqYqMzmuK5pm/Mpzpa6/UL/ghplNen8R6NYj/vqhROxqt1p1DtbCzQH36L5c5Llzn6CPSvxuCObjyNcoQM5OmcfsGCEZJQkYUCeJbtqdNOYlEtmHhxRUbVFsk5QibzBgAtjQCPj6uC/T2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=e4KQI2kf; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3ecde0be34eso1142f8f.1
+        for <linux-pwm@vger.kernel.org>; Tue, 14 Oct 2025 08:45:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1760456744; x=1761061544; darn=vger.kernel.org;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=EuF1h8YvamKDXiEUG/ydx08kAUyXwsN7QyehT348oZQ=;
+        b=e4KQI2kfRTFKK2gbKkqkfd2oV/6shil0yLFLNenJOMxMOupKifG9x8qDOYSVEDgs16
+         COdLDfVzvXugntASKg1lambfzpmb9GL7KtdHpa7bIinzBFuO1Xb1NwV5gfyYHXS0C+0G
+         Bd+h3mqQJRv69JwJcalxQNgRtYlxo06QeiySLvShb2nQ6uSfjGd++oZCiAqWv2c6YH9j
+         J6FUP5mfxa1i86WKwUtnQ5wZu/80P1/Ydo+petAAT0WGagwAi/crhGkfYekuZeQdXAK4
+         BDzUJkX4kwOkue4iEwuTNvKcKsayp+P4169VprDBVNya2PyMzz6jo5uvG45nVu2ftw7i
+         NeNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1760456744; x=1761061544;
+        h=mime-version:user-agent:content-transfer-encoding:references
+         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=EuF1h8YvamKDXiEUG/ydx08kAUyXwsN7QyehT348oZQ=;
+        b=LoxxWu/ykVDebBSuuJAqQPGlQFsGKvzTGW4kq9NICWPAa5Kyaa6xbaRroDqM8/kNgy
+         xH1mW6B8RJnWV/97hafvWD2aCDLQkcp7oxXkPWcKQ56hGpJMGUNGnHdPjDzL28AWd71v
+         qSwnlVYHa01GfRrVbsM5nvm63J3eJvWTh9VT0DpPuD/Jn9F1cNrVfIjRIcxQstZLTXJZ
+         75dreeAxqP/qvjXn1o7XD1qT5E9zYtGUuy86DLpxJgvjx9na9pJig6eT7Ixvvjyztklb
+         0e12su0T8qTZeseZ8gxwhdQ5jbTPqis+CDIN43LdtCo28lpHRa40XZ8dsqB9Ap7V4C+L
+         198A==
+X-Forwarded-Encrypted: i=1; AJvYcCX1NMODIjBRmtB5V8sxxgLcYvJ+zgYOonB/Dp844ketcTiV7+Q6KrGrjmIYIlgxMYwPo852mPiKyzQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx9jW8SrWahWdoQkvWIlEVA5d+xw9AgXocA+XuQHfEz6Qhn7n9b
+	WHsrm5+pqvf0Mjcqdroxhr9Pj6lyzOh0J2ehoFhAI03eoP8H5/wnBLlH
+X-Gm-Gg: ASbGnctvqgs60G5mFQgpsQxH3pGkXQUebcF0/k9qxR6kEyRpH26fiNMVK08Gq/4G04q
+	a8DKj4OoXauvSkaBEdRUThm8H+FM17ymrgLsoYyFMpxZ8MBnY1CJDTz5MSqeEHTOPKrpH23IBeV
+	xd8F19yHUqfsBdJ/PIbjj+w/dT+mSaJ7Hj0FB+oPriNAnu2aFT8LXnl6T04mLnt9u4GDJSa6Krf
+	A2l+Xx3HbmSssuWeaus+wn1mz7k0XaypphGsIcH4c7ieBMKcL0akdnkvFipXqLk7MBFjbkNe1yy
+	IfewedzDF7tVa0QyIZ1Fz6/LHLCsSg4VZfWuglyMueXDDqFNCzMcvW4NeSGpIHJrl5Rv7UtLssR
+	0P3iON6UkvFZQMiHSFQWqktGl35h72Nagdp7fu6TnjBMxnUMJ7puICe8LZnY2
+X-Google-Smtp-Source: AGHT+IGge3yzZz+zKCw2B+VbIVIqsMB8NMcC/S2UhLzXj3IfB0k9KNiL94NqaGNP36Y5hV6zVPOKPA==
+X-Received: by 2002:a05:6000:4028:b0:414:c2e8:a739 with SMTP id ffacd0b85a97d-4266e7d64a6mr18739753f8f.31.1760456744191;
+        Tue, 14 Oct 2025 08:45:44 -0700 (PDT)
+Received: from [192.168.1.187] ([161.230.67.253])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-426ce57d3desm24341014f8f.7.2025.10.14.08.45.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Oct 2025 08:45:43 -0700 (PDT)
+Message-ID: <51dab5dee00b95018c8bc6b7ef56b9b722d618f3.camel@gmail.com>
+Subject: Re: [PATCH] pwm: Declare waveform stubs for when PWM is not
+ reachable
+From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+To: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+Cc: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>, Marcelo
+ Schmitt <marcelo.schmitt@analog.com>, linux-pwm@vger.kernel.org,
+ linux-kernel@vger.kernel.org, 	jic23@kernel.org, kernel test robot
+ <lkp@intel.com>, Trevor Gamblin	 <tgamblin@baylibre.com>, Axel Haslam
+ <ahaslam@baylibre.com>, 	dlechner@baylibre.com
+Date: Tue, 14 Oct 2025 16:46:16 +0100
+In-Reply-To: <aOluoP01oaDzaseV@debian-BULLSEYE-live-builder-AMD64>
+References: 
+	<1ac0fc529e02744aacfcb9140ed597ff60886f39.1759873890.git.marcelo.schmitt@analog.com>
+	 <6v4hny7hxjsdf6zvinhpagtbhluxbd6psq7wpx5ls6zdbnjtym@lnygnkav4ewk>
+	 <2e82eaf275b5c8df768c8b842167c3562991e50c.camel@gmail.com>
+	 <aOlYDyLzVGbCh5mE@debian-BULLSEYE-live-builder-AMD64>
+	 <04eb5b1ccc0268ff7e9b88835203771886c5ee25.camel@gmail.com>
+	 <aOluoP01oaDzaseV@debian-BULLSEYE-live-builder-AMD64>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.58.0 
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ixctn32fehw7zduh"
-Content-Disposition: inline
-In-Reply-To: <20250930-rust-next-pwm-working-fan-for-sending-v15-0-5661c3090877@samsung.com>
 
+On Fri, 2025-10-10 at 17:37 -0300, Marcelo Schmitt wrote:
+> ...
+> > > >=20
+> > > > I did not tested but I also wonder if 'imply SPI_OFFLOAD_TRIGGER_PW=
+M' is
+> > > > not
+> > > > similar to the above.
+> > >=20
+> > > It works, and I'll update the IIO patch to have
+> > > 	select SPI_OFFLOAD
+> > > 	imply PWM
+> > > 	imply SPI_OFFLOAD_TRIGGER_PWM
+> > > in Kconfig. The PWM imply is because I think SPI offload support meet=
+s the
+> > > "highly desirable feature" criterion mentioned by kbuild doc [1].
+> >=20
+> > With imply we then need to take care either using stubs (which seems no=
+t to
+> > be an
+> > option) or with preprocessor conditions in your driver. As discussed in=
+ the
+> > other
+> > thread I would just select SPI_OFFLOAD. Basically I would:
+> >=20
+> > 	select SPI_OFFLOAD
+> > 	select SPI_OFFLOAD_TRIGGER_PWM
+> > 	depends on PWM
+>=20
+> Yeah, depending on PWM is what I was trying to avoid because the ADC can =
+be
+> used
+> without PWM. Doing the above is the easiest solution - depend on everythi=
+ng,
+> select everything. Though, I guess I'm technically not keeping backwards
+> compatibility if I add a new dependency to the driver.
+>=20
+> IIO_BUFFER_DMA and IIO_BUFFER_DMAENGINE are part of IIO subsystem so okay=
+ to
+> select them? Otherwise, yeah, they should be optional too (would either i=
+mply
+> them or select if SPI_OFFLOAD).
+>=20
+> I'm currently leaning towards
+> =C2=A0	imply PWM
+> =C2=A0	imply SPI_OFFLOAD_TRIGGER_PWM //(SPI_OFFLOAD_TRIGGER_PWM depends o=
+n
+> SPI_OFFLOAD)
+> but not really sure.
+>=20
+> It's sort of a feature bundle we want to enable to provide SPI offloading=
+.
+>=20
+> if SPI_OFFLOAD && PWM
+> 	select SPI_OFFLOAD_TRIGGER_PWM
+> 	select IIO_BUFFER_DMA
+> 	select IIO_BUFFER_DMAENGINE
+>=20
+> we can have
+> 	imply IIO_BUFFER_DMA
+> 	imply IIO_BUFFER_DMAENGINE
+> =C2=A0	imply PWM
+> =C2=A0	imply SPI_OFFLOAD_TRIGGER_PWM
+>=20
+> but we could then have IIO_BUFFER_DMA=3Dy and PWM=3Dn and still be unable=
+ to SPI
+> offload?
+>=20
+> Maybe
+> 	imply IIO_BUFFER_DMA if (SPI_OFFLOAD && PWM)
+> 	imply IIO_BUFFER_DMAENGINE if (SPI_OFFLOAD && PWM)
+> =C2=A0	imply PWM
+> =C2=A0	imply SPI_OFFLOAD_TRIGGER_PWM if (SPI_OFFLOAD && PWM)
+> ?
+>=20
 
---ixctn32fehw7zduh
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v15 0/7] Rust Abstractions for PWM subsystem with TH1520
- PWM driver
-MIME-Version: 1.0
+With imply I don't think you need those if (...). However, the key point is=
+ that
+with it, I believe you'll need the stubs (so you need some convincing) beca=
+use
+those configs can be disabled which means your driver should not compile. W=
+hile
+I feel sympathetic with that "depend on optional code", the above does not =
+look
+pretty :). For the IIO_BUFFER* stuff I would likely not care about it and f=
+or
+PWM and SPI_OFFLOAD either depend on we need the stubs.
 
-Hello,
+But if you really feel strong about this, one possible solution would be to=
+ try
+and factor out all of the spi_offload related code into an extra source fil=
+e
+like ad4030-offload.c (that would have it's own kconfig knob) and that woul=
+d
+need to depend on PWM and then you would also be "free" to have the ad4030-=
+*
+stubs in your header file so that it does not fail to compile in case PWM=
+=3Dn.
 
-my diff on top of your changes looks as follows:
+- Nuno S=C3=A1
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index dd6db01832ee..e7f770ecfe84 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -812,9 +812,8 @@ config PWM_XILINX
- 	  will be called pwm-xilinx.
-=20
-  config RUST_PWM_ABSTRACTIONS
--	bool "Rust PWM abstractions support"
-+	bool
- 	depends on RUST
--	depends on PWM=3Dy
- 	help
- 	  This option enables the safe Rust abstraction layer for the PWM
- 	  subsystem. It provides idiomatic wrappers and traits necessary for
-
-i.e. make RUST_PWM_ABSTRACTIONS invisible, it is only supposed to be
-selected and there is little (or even no?) use to enable it without a
-selector.
-
-diff --git a/drivers/pwm/pwm_th1520.rs b/drivers/pwm/pwm_th1520.rs
-index c9fd1d8d17bc..a5666052b7ce 100644
---- a/drivers/pwm/pwm_th1520.rs
-+++ b/drivers/pwm/pwm_th1520.rs
-@@ -121,6 +121,7 @@ fn round_waveform_tohw(
-         wf: &pwm::Waveform,
-     ) -> Result<pwm::RoundedWaveform<Self::WfHw>> {
-         let data =3D chip.drvdata();
-+        let status =3D 0;
-=20
-         if wf.period_length_ns =3D=3D 0 {
-             dev_dbg!(chip.device(), "Requested period is 0, disabling PWM.=
-\n");
-@@ -141,18 +142,13 @@ fn round_waveform_tohw(
-         if period_cycles =3D=3D 0 {
-             dev_dbg!(
-                 chip.device(),
--                "Requested period {} ns is too small for clock rate {} Hz,=
- disabling PWM.\n",
-+                "Requested period {} ns is too small for clock rate {} Hz,=
- rounding up.\n",
-                 wf.period_length_ns,
-                 rate_hz
-             );
-=20
--            return Ok(pwm::RoundedWaveform {
--                status: 0,
--                hardware_waveform: Th1520WfHw {
--                    enabled: false,
--                    ..Default::default()
--                },
--            });
-+            period_cycles =3D 1;
-+            status =3D 1;
-         }
-=20
-         let mut duty_cycles =3D ns_to_cycles(wf.duty_length_ns, rate_hz).m=
-in(u64::from(u32::MAX));
-
-i.e. round up for too small period requests ...
-
-@@ -189,7 +185,7 @@ fn round_waveform_tohw(
-         );
-=20
-         Ok(pwm::RoundedWaveform {
--            status: 0,
-+            status: status,
-             hardware_waveform: wfhw,
-         })
-     }
-
-=2E.. and return 1 then
-
-@@ -355,7 +351,7 @@ fn probe(
-                 "Clock rate {} Hz is too high, not supported.\n",
-                 rate_hz
-             );
--            return Err(ERANGE);
-+            return Err(EINVAL);
-         }
-=20
-         let chip =3D pwm::Chip::new(
-
-at least pwm-stm32 uses EINVAL. Having said that, I wonder if this check
-is sensible here at all. pwm-stm32 does it to ensure that
-mul_u64_u64_div_u64() does the right thing, but this exact issue doesn't
-exist here.
-
-Otherwise looks fine I think.
-
-Best regards
-Uwe
-
---ixctn32fehw7zduh
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmjtLU8ACgkQj4D7WH0S
-/k4oaggAhdfagEFpKozser/0n1q4mr04hh5Zneh1XD8FkXH3oRpDUZVb8r4ePsFA
-8VTDCq/Es7HpPe5XowvaKMybERSkXoV2ixoJFwtZx381Tdc6uqptStUKGMfzltsN
-u8j6b213lzwtg9WgBM6hk+rUUzm9rzJ/Iz0VrEgGF+iIt0l7MBSInjZ+I0JDmbMu
-bL6/wiWdHBVvcq+QAX4Edf3RHMX/a9s1htv/+uxWRbFf4/xRn+1gOuDBjJbTqA0j
-44JY4XEZiBlBTvxMR+CiI/pq/K5ttn9kpOttYIgVfYiru6YPMLyozSLAL4zpxQDP
-TRJOj1WQexbASB2Smr3Z4MgE60NYlw==
-=gshz
------END PGP SIGNATURE-----
-
---ixctn32fehw7zduh--
+> Forgot to add David to CC list on previous reply so doing it now.
+>=20
+> >=20
+> > - Nuno S=C3=A1
+> > =09
+> > >=20
+> > > [1]:
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tr=
+ee/Documentation/kbuild/kconfig-language.rst?h=3Dv6.17#n197
+> > >=20
+> > > One alternative to this patch is to have `#if IS_REACHABLE(CONFIG_PWM=
+)` in
+> > > the
+> > > ADC driver as David suggested in the other thread. I'll probably do t=
+hat
+> > > and
+> > > drop the changes to PWM.
+> > >=20
+> > > I first thought of using `#ifdef CONFIG_PWM`, but couldn't convince m=
+yself
+> > > about
+> > > that from the relatively small number of ifdef use-cases in IIO.
+> > >=20
+> > > Thanks,
+> > > Marcelo
+> > >=20
+> > > >=20
+> > > > - Nuno S=C3=A1
+> > > >=20
+> > > > > Best regards
+> > > > > Uwe
 
