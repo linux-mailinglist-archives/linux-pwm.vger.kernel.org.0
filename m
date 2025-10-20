@@ -1,123 +1,146 @@
-Return-Path: <linux-pwm+bounces-7465-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7466-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3908CBEFE83
-	for <lists+linux-pwm@lfdr.de>; Mon, 20 Oct 2025 10:24:58 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 63F56BF01B8
+	for <lists+linux-pwm@lfdr.de>; Mon, 20 Oct 2025 11:12:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id B5E1D189D86D
-	for <lists+linux-pwm@lfdr.de>; Mon, 20 Oct 2025 08:25:21 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D4A7A3E73AE
+	for <lists+linux-pwm@lfdr.de>; Mon, 20 Oct 2025 09:11:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6F012EBB80;
-	Mon, 20 Oct 2025 08:24:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D7812E9ECE;
+	Mon, 20 Oct 2025 09:10:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b="Y15tKSXK"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Zd05K4JF"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f42.google.com (mail-wm1-f42.google.com [209.85.128.42])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB50E2EB862
-	for <linux-pwm@vger.kernel.org>; Mon, 20 Oct 2025 08:24:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 005CE29ACC3
+	for <linux-pwm@vger.kernel.org>; Mon, 20 Oct 2025 09:10:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1760948691; cv=none; b=q/Wv686f2LlZGnrRoA9RpGJu8NMkaVD4xwES0KZ97Xyeq3KLnPW6pndLDaIzY3xjYKMjXLXqxy75iwdP+qIguKWb+aYBc/35ucZWJk1kduGgO/Tj0Fwu6rMQhgEIH1LlNA7m9RyYkdtkMtpYH9Qozmd5oIAdE55wcEjL1ihW3X8=
+	t=1760951452; cv=none; b=kPRwfdwSaYlxxrXHjRPfRVaRjq/+oZInAoaafJMmdK/Q7ueXEhtHedJ+T7qAzyjP2Pg+Ccdutsdl/pNF/8KJ6wlXB0NrXW31kfbQyodQswHikGWs0xMOcWmZDWoa3AoUnoMIcw1sZ1w+xP9x9F+m6hnry82j5a6X38MX5nAOLrc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1760948691; c=relaxed/simple;
-	bh=9zlHdu1C0OX3LQKq/csViY4KOIK1A0RLur/kX4QaQsQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=e7iR3uaxLMtPvUOdS/OcPUzEk0PxuAolEhYdCWakIUHwFGjGxPVxSJA6T++GU/67gB+uq/ucXy7F1riatzryGWgg5EY20Gp5dQW8aXciSAlwiX0M/F5ZSWyjZgpzMCmcKp8I8skMJ+N7FqwpHW3LA4ehYFgyaVk27k0yxqW2WN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl; spf=none smtp.mailfrom=bgdev.pl; dkim=pass (2048-bit key) header.d=bgdev-pl.20230601.gappssmtp.com header.i=@bgdev-pl.20230601.gappssmtp.com header.b=Y15tKSXK; arc=none smtp.client-ip=209.85.128.42
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=bgdev.pl
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=bgdev.pl
-Received: by mail-wm1-f42.google.com with SMTP id 5b1f17b1804b1-4712c6d9495so12562155e9.2
-        for <linux-pwm@vger.kernel.org>; Mon, 20 Oct 2025 01:24:48 -0700 (PDT)
+	s=arc-20240116; t=1760951452; c=relaxed/simple;
+	bh=JN4hv9R2L9jFNo/jgt/CUThZTtFLosT7JAkI2qBkxMo=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=XNfUva426NyZdVzokroK3feOMjE2hBf1I5eMCxk8IwjkQ41K6Xc7jkpYbbNqRRtVJgWj5YCh3CTdx5cwtlqcm4XHY/lIYkQGLZJ4Nh3eUsItdi2XtAsoyynRrDo+6PrMVez5ME2BGMOhv5dSxNYldZsj9EILbYXkmLWpWBtTAhE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Zd05K4JF; arc=none smtp.client-ip=209.85.208.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-63c4c346bd9so3588882a12.0
+        for <linux-pwm@vger.kernel.org>; Mon, 20 Oct 2025 02:10:47 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20230601.gappssmtp.com; s=20230601; t=1760948687; x=1761553487; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=vW/AkTk8WlPjo3na4ACa1EYleQcJKdyDIWqp1NdXgKU=;
-        b=Y15tKSXKDmQyX3VZJFUu8f1iVTx6lnd0y0zmsso2ucoAZu6OMaP2ixqT/IZC8e1Kpn
-         tTOSdqS0l797ygAn6hUa9/VO27AXNTYZE+dH8458B5QOvykC8OYtE/FCPhKOP9qcyeLC
-         ZUrhI/fkVY04tErNeJ1+bk/XomgWvE+HY2+4UBPrAVHNdbrYxSjLhEk7KAQYaWuSpoH5
-         7v44T9vXbs+RRQqVMwH0qc8J+aJ3lXVSEuMOkCW1LN5Z+5PvPxNmrvAuVDLM2sQVBoIn
-         UiyyP0cCYmYkciyOLx1jL6QlJuoS8+8KyyzGDkamE7aV7H2MFwcoty+2r8miH+CrRb0u
-         xFxg==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1760951446; x=1761556246; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=JN4hv9R2L9jFNo/jgt/CUThZTtFLosT7JAkI2qBkxMo=;
+        b=Zd05K4JF95XRsHAzF5+zCh6jyLcFtdjFbKzZlaqg/n2xGQ9MmfZ51UeBrTdtZ/NQ/g
+         WRtzcgM6fNDd4wwRe3hyovGh+V48v+id2wXhNWn3iVv3hI2vzt20ftxPxysW0uL01p8S
+         trdSjueq2I2310HA04vH7Lz/XO2YDE+qPxPmzNhkbHzD+J9ksNYMz+VJkEz2/dK0LKzc
+         zCyZU9bBLrtmdO8K1mgqp4rYes3kKlwHLo2tYQhA1vx+/IgXD5/ScyxYia3UPqE5pLtC
+         6K4o7HZ1aw0D5OlpNI6BfqWgBQR9OAz5ltNgTCCs6+92f7Wtk/8oK//E5lNBbI14E1CA
+         qRIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1760948687; x=1761553487;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=vW/AkTk8WlPjo3na4ACa1EYleQcJKdyDIWqp1NdXgKU=;
-        b=jS9NIBZOoiE5COTl8Vytke0wYWfX/HxE09t9NJOVOm45URHtcbv3/yPVc9RE2DDD/Z
-         bgXYrwdQ55bTgFVWQRHouYycvyuvtY+U+7YhNyL0jlLwpuee2ANMjlhb+DRv0fTVfEC2
-         BJut6Tq17G8ATlzMMuvZ50ZbsEwVb5RknSVZfmGXRTucp7CzN6uUuOznKIWAYZpRAE5U
-         BFZAOuwlcr1W8Fba8k1Is8mcVe0LLRdgjPiFHiw+BU2a9cCMRxEX6j4Md6DF8YHFCSn0
-         D9bEqLlUJ0zkxMLVDIpOO2MUGGKSVxcHixU281o2L0/bLPlreHZNfnTB8FT8lhRlEMSU
-         EyiQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXGZoYuCVPFl3fquzkMsPeJIRlloIh20jKcwbSYOf/8DSeUsfv5aas9mOfM4WKcNNK9Vw9AMbjvLzI=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw7jpNXMMUpKe9TRuqSLcUJhqjnRzxDeKSseP4FgwoU+A7sHtSu
-	K7CLHfI/dPb+Fa95FOBj7md8ZxycSrg9WIOgAgeF1pHc5SvXJviM7qB5r5UFiyau1qQ=
-X-Gm-Gg: ASbGnctnlnc50cK5kJSgPYuHZ59+AUHy/2VxeCi9iFv0JVXeYcdEZpp+zon0kimH9qP
-	ryUYhC/9G9yfO/4fDa8nMWXrvQrb7XzAPAj4BEQY7TU+GSYXmivEhE5kUXTAq8Si1ZD8ssL3pN6
-	aGXg++QXrCnKa/gn7qvGewylROAcABtnXxkG56tIp4uTjfdVICQWNDtmTgFWkbqvUb88Qegs0zp
-	7WnSFncpilHgdwD8fN8VzyAHoI4b/uRSYKKSO2WDS8Qf0BikvwiktP23BjkgT4S+xIIzA6Wspq1
-	NXxndUI+KcEBeTgbhwap1H5wImonRs8xgMN0u2PusmblnEUFvoY5qQARMoJxik2r5KWAmRbLOrR
-	vZxWMgQt/cC9e7xKaGqfEXfKV2lW2Kcn+QFpv+3NO0EuKFiLLsGdbVCaI+cUljoZyTrBxXv8qNS
-	QR
-X-Google-Smtp-Source: AGHT+IElbGLyhlp/1ybVdhj0rXNPZOg5gvo0dz1RPUfJES3/ZAsbvfhG1ocMD7SptwzEZ+DrjQdnHg==
-X-Received: by 2002:a05:600c:3512:b0:46e:5b74:4858 with SMTP id 5b1f17b1804b1-47117877122mr69462225e9.13.1760948686986;
-        Mon, 20 Oct 2025 01:24:46 -0700 (PDT)
-Received: from brgl-uxlite.home ([2a01:cb1d:dc:7e00:5b13:a549:df98:9c00])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-471144b5c29sm220299395e9.12.2025.10.20.01.24.46
+        d=1e100.net; s=20230601; t=1760951446; x=1761556246;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JN4hv9R2L9jFNo/jgt/CUThZTtFLosT7JAkI2qBkxMo=;
+        b=Phshk+Vl0F9UhgGPginpUWxwjINVrPGIMTQf3hCJF4nWnzluheTsgYq98u1N8RbQ1C
+         NRxycJYoP4ySd44PSw3BxFKNQxWiBJ1JsIlpmO0PGuzQctDz6JckV60VjLr/RcflnBKQ
+         sAHVrU1Qbu6tTMOyT2ElGXH3kPH6xt/304DGp+iASqo1JjlepDOxb9YenxBFzoG3Lq6/
+         IZfSNaLg17P+tE+67EvK8VVfTiVpPl/jVKtguiGijeDbkKuZpm7emx+RBLugb6zFzr9Y
+         oC7gqOLQQY4SQUdEPQAZ3je6N0AC16ssxrPGxqcMABWIwh6B0dYMxDHLo3ALxK106PbY
+         nWNw==
+X-Gm-Message-State: AOJu0YxtLvrP9nhzWOAwwxQARLMOek0+t8qba4N7arZX81u/m8YdSBvJ
+	y31vWjktGh03+8sUBJ+sXB5ziu4G7GthUMxUDgJm8imSw6rlGKvNEEVfBRDkzTKrFRnqGYwVYKI
+	tMw/p
+X-Gm-Gg: ASbGncukzSUPuBcl82xOSHmtDaNDDLutAQZmzlOFzeiqqBpwKo3lR63pW8rYXWFulo6
+	Sf1/ncJOuom4bgwZ3H9bv9N2OcgsUVZMvGoff1TxTn5SRV/5a9pKiz/EQtupOFYkPw6Sv0fHmlx
+	pcEsvhtON2DflrF60DhPkofCWO6/DrHCuhs0YnqqnTjhQdtuIYCsq57iELyECO6M1Med0D55Omx
+	U4dnJb+G3HSPotd+gK6s2HIVdKjPgYTckqStFSWBiKHNRVgNyhlKMuvxZ991dSs/+E1509batqY
+	sVaCOyKh66OOfbi6D3dbvluxXHeQ2ab9qeSyL8H6iniPXGgLM21OiRVXwVyvZJkQPd1IudEz5Gd
+	glXuXUqCELbLKxZXnG8OYPJiGW3Aq1SE/BZuksBZrXh9KmDufd1PIRxOIEbtjyWeVzYGrWb6Q1q
+	kVYF2rNF039uDnrW22YWEjNtcGSXk/uM3bmepk2cBUJzh8oWEzb5y7g3Ml7jj8P5A=
+X-Google-Smtp-Source: AGHT+IH2cDARqfekJBd+QypZedAMjpj3N8XVrXHGzsTEFrBBUx3VpydymdPIVNeluGlYVRpj+6J84A==
+X-Received: by 2002:a05:6402:2113:b0:63b:f91e:60a2 with SMTP id 4fb4d7f45d1cf-63c1f6c1fc8mr11740439a12.25.1760951446164;
+        Mon, 20 Oct 2025 02:10:46 -0700 (PDT)
+Received: from localhost (p200300f65f06ab0400000000000001b9.dip0.t-ipconnect.de. [2003:f6:5f06:ab04::1b9])
+        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-63c49430272sm6148432a12.23.2025.10.20.02.10.45
+        for <linux-pwm@vger.kernel.org>
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Oct 2025 01:24:46 -0700 (PDT)
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Linus Walleij <linus.walleij@linaro.org>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>,
-	linux-kernel@vger.kernel.org,
-	kernel-janitors@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	linux-gpio@vger.kernel.org
-Subject: Re: [PATCH] gpio: mvebu: Slightly optimize mvebu_gpio_irq_handler()
-Date: Mon, 20 Oct 2025 10:24:45 +0200
-Message-ID: <176094868222.39929.1582779339210420040.b4-ty@linaro.org>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <7190f5def0489ed3f40435449c86cd7c710e6dd4.1760862679.git.christophe.jaillet@wanadoo.fr>
-References: <7190f5def0489ed3f40435449c86cd7c710e6dd4.1760862679.git.christophe.jaillet@wanadoo.fr>
+        Mon, 20 Oct 2025 02:10:45 -0700 (PDT)
+Date: Mon, 20 Oct 2025 11:10:43 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: linux-pwm@vger.kernel.org
+Subject: Re: [PATCH] pwm: Drop unused function pwm_apply_args()
+Message-ID: <h2sdkzp2y6es2cyfxxxxgfen6rd76u6lpxj7w3laiuzlgaeyyt@faaxl2kaq6xv>
+References: <20250922094327.1143944-2-u.kleine-koenig@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="zg6q6cxbxgfuwzmt"
+Content-Disposition: inline
+In-Reply-To: <20250922094327.1143944-2-u.kleine-koenig@baylibre.com>
 
-From: Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
 
+--zg6q6cxbxgfuwzmt
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] pwm: Drop unused function pwm_apply_args()
+MIME-Version: 1.0
 
-On Sun, 19 Oct 2025 10:31:38 +0200, Christophe JAILLET wrote:
-> In the main loop of mvebu_gpio_irq_handler() some calls to
-> irq_find_mapping() can be saved.
-> 
-> There is no point to find an irq number before checking if this something
-> has to be done.
-> By testing first, some calls can be saved.
-> 
-> [...]
+Hello,
 
-Applied, thanks!
+On Mon, Sep 22, 2025 at 11:43:28AM +0200, Uwe Kleine-K=F6nig wrote:
+> The function pwm_apply_args() was introduced with the concept of atomic
+> PWM configuration and needed for drivers not using this concept yet. Now
+> all drivers are converted accordingly and so no callers are left which
+> allows to remove this function.
+>=20
+> Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@baylibre.com>
+> ---
+> Hello,
+>=20
+> as of v6.17-rc7 there is still one caller left
+> (drivers/video/backlight/mp3309c.c), but commit 2720c87b7621
+> ("backlight: mp3309c: Drop pwm_apply_args()") that is currently in next
+> scheduled to go into v6.18-rc1 removes that last user. So this patch
+> isn't ready for the upcoming merge window yet.
 
-[1/1] gpio: mvebu: Slightly optimize mvebu_gpio_irq_handler()
-      https://git.kernel.org/brgl/linux/c/eb7f1c8415bbbb81f8674a490a5da7c22599a012
+2720c87b7621 is in v6.18-rc1, so I applied this now. Find it in
 
-Best regards,
--- 
-Bartosz Golaszewski <bartosz.golaszewski@linaro.org>
+https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
+next
+
+=2E
+
+Best regards
+Uwe
+
+--zg6q6cxbxgfuwzmt
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmj1/I4ACgkQj4D7WH0S
+/k7l4Af/Ud0fzjncZ/ktd2p44SyRShplIWgc0urTNCQZ/H2ET5BcdDNjTR3CmeT4
+EqZrk2PKoBnVQ/xURB7gOq05NWa/0r/wKN26wwbSB7itdmovAk7wCE0nicX2SiRY
+IAqoQ90i+6zaFGVBPsI8O++iUjnKnJCRc4QgMfQjElYci7dM08/vi9wlUTeDtzr3
+3dj2i1IekJgbRau6lJ3Lq/pf80LHGi/OKzKxfVhcMVoR2+wul/QgZ/jK6EN7VPKe
+tkks0aUaMt/5MpNlXsVwnLhGLg/SOvmWCk+BlQyxYicV6Wb5D8Mmx+xz0+bEOGo0
+mBCsUavzvONF5zGHIgoxhvhMIZdHcg==
+=jl+D
+-----END PGP SIGNATURE-----
+
+--zg6q6cxbxgfuwzmt--
 
