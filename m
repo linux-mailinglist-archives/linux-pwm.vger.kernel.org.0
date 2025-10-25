@@ -1,153 +1,211 @@
-Return-Path: <linux-pwm+bounces-7487-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7488-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A9DFC084C3
-	for <lists+linux-pwm@lfdr.de>; Sat, 25 Oct 2025 01:24:42 +0200 (CEST)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3522FC0901E
+	for <lists+linux-pwm@lfdr.de>; Sat, 25 Oct 2025 14:24:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 3A5D31B2159F
-	for <lists+linux-pwm@lfdr.de>; Fri, 24 Oct 2025 23:25:05 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D5DE53A6029
+	for <lists+linux-pwm@lfdr.de>; Sat, 25 Oct 2025 12:24:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 910A130DD34;
-	Fri, 24 Oct 2025 23:24:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC7572D5C7A;
+	Sat, 25 Oct 2025 12:24:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b="jUTlBQ2h"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="v1KZxjN0"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD3E92F5A22;
-	Fri, 24 Oct 2025 23:24:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761348269; cv=pass; b=tESIZXI3rYe74n1MlkmYxetEG3LosKmeN3UR1hdQDjz99Tbz9srsmGVoDx8Wt4YvF1W87bGfcvNavQPxn7Nj7P9kXzzJ6n6TRvefIAhbizE8PqujlDCJzBPDyifyWVTwv1CLlkT+FvgpXTXTWHecJR+SB7Zsfo10l0t51+fECNY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761348269; c=relaxed/simple;
-	bh=NQ0CrT99S0HB3iA81tiE1fKOXNruYRsIn5L3vGBZdtI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R8JSdoh30zTpkv6DtPR9UqjoEILC8+z0s+1Ndj9y9flFG9S6SiV2d8jrt6hAqlx98mamkkU772V9SXHMqb6FLq9Q8oF2I6f1yTOpM0T8cJsnr2EL37uclg12YjC5zQnpg1dIRbZ+1QTDUVK5x58ziodwvrPG+7DKkUIVgQ0ROQc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=sebastian.reichel@collabora.com header.b=jUTlBQ2h; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1761348264; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=E7jo3eFGtMbYc4umajgAJrDaAAeoH78FvXSvtwIPzMd+KALm6TW6J/PZo3Gl8IAj7J4S4JOqDkVaqCJ4DpyxUkL/D7r/nDZxCDXQIylw9m80ZHFV7ZnmYl6fN+yD1hWHfO07oqL+vl1wjfMlpqfazjWlj918MvnuxIHK7Hk60jc=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1761348264; h=Content-Type:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=TolhaGIsyaj1gVoV8dHb9QimZIX1Tzw1zXYiEcETqjM=; 
-	b=ERHFHpBMKqE6LtNxoI7EvA9o2mCsVLRI6J1+/qPThd+k1qt+nO9OwZhbx5E81USsXE7RyOCW1GyB5isp3iLRSkJC/p6ufY9tyScGPtH6liK71Qdq4msBQsSye0JsA4aNBjxrfKHSyGI+LcIwBsP7dWSDg8vI9r+LX3h+vlO9w2c=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=sebastian.reichel@collabora.com;
-	dmarc=pass header.from=<sebastian.reichel@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1761348264;
-	s=zohomail; d=collabora.com; i=sebastian.reichel@collabora.com;
-	h=Date:Date:From:From:To:To:Cc:Cc:Subject:Subject:Message-ID:References:MIME-Version:Content-Type:In-Reply-To:Message-Id:Reply-To;
-	bh=TolhaGIsyaj1gVoV8dHb9QimZIX1Tzw1zXYiEcETqjM=;
-	b=jUTlBQ2h6Tuak+aNMb2CNTnEQ4BDpyDVgaRRROiBpKRCvZOPLn1o5LGy8JyX0l9X
-	sOXFCDgYktIsDNXusx7tmsAjPkY6Gy0P2EcQplSNWKOk61O5CR3GNBKVdk6o+/41U8c
-	rO3cD7tc7lCrL45EbJ0fyWmdAPtKKmAhIvpw6Ir4=
-Received: by mx.zohomail.com with SMTPS id 1761348261746725.1283250784594;
-	Fri, 24 Oct 2025 16:24:21 -0700 (PDT)
-Received: by venus (Postfix, from userid 1000)
-	id 476FE181935; Sat, 25 Oct 2025 01:24:06 +0200 (CEST)
-Date: Sat, 25 Oct 2025 01:24:06 +0200
-From: Sebastian Reichel <sebastian.reichel@collabora.com>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	Andrzej Hajda <andrzej.hajda@intel.com>, Robert Foss <rfoss@kernel.org>, Vinod Koul <vkoul@kernel.org>, 
-	Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>, 
-	Bartosz Golaszewski <brgl@bgdev.pl>, Guenter Roeck <linux@roeck-us.net>, 
-	Andi Shyti <andi.shyti@kernel.org>, Jonathan Cameron <jic23@kernel.org>, 
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>, Georgi Djakov <djakov@kernel.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Joerg Roedel <joro@8bytes.org>, 
-	Jassi Brar <jassisinghbrar@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, 
-	Lee Jones <lee@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, 
-	Richard Weinberger <richard@nod.at>, Vignesh Raghavendra <vigneshr@ti.com>, 
-	Andrew Lunn <andrew+netdev@lunn.ch>, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-	Paolo Abeni <pabeni@redhat.com>, Johannes Berg <johannes@sipsolutions.net>, 
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>, Manivannan Sadhasivam <mani@kernel.org>, 
-	Bjorn Helgaas <bhelgaas@google.com>, Kishon Vijay Abraham I <kishon@kernel.org>, 
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Mark Brown <broonie@kernel.org>, 
-	Mathieu Poirier <mathieu.poirier@linaro.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
-	Olivia Mackall <olivia@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	Daniel Lezcano <daniel.lezcano@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, dmaengine@vger.kernel.org, 
-	linux-fpga@vger.kernel.org, linux-gpio@vger.kernel.org, linux-hwmon@vger.kernel.org, 
-	linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org, linux-input@vger.kernel.org, 
-	linux-pm@vger.kernel.org, iommu@lists.linux.dev, linux-media@vger.kernel.org, 
-	linux-mtd@lists.infradead.org, netdev@vger.kernel.org, linux-wireless@vger.kernel.org, 
-	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org, linux-pwm@vger.kernel.org, 
-	linux-remoteproc@vger.kernel.org, linux-crypto@vger.kernel.org, linux-sound@vger.kernel.org, 
-	linux-usb@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Remove extra blank lines
-Message-ID: <god73pukywwznfyym7tym6m5k6fn3u7hwzj5gwhrxytt7oinfv@pokb4aos7pp6>
-References: <20251023143957.2899600-1-robh@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C16211DE2A7
+	for <linux-pwm@vger.kernel.org>; Sat, 25 Oct 2025 12:24:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761395057; cv=none; b=XMl1qYCU6hYiOSSATgiODKQOaFt7QiWWtM7Dwrf+Rmbm/ndN+8ODfGC93dO41GGKigWcpcPrmn6WHzQkHookWI9tE/J1Plqi2E8kX2dJL6R8iUOcFGnkZoBzNYF9iGpr78T31iCCfcksz/Snh44lAYXhPZuquHVlcqhxPrj0xSQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761395057; c=relaxed/simple;
+	bh=MaumaobUbQQd4lPrGDKs71WR0+BDt21J7MK/9q2ksaQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=FIrOB6DKZ1sAXKHLBUj/UdqIDBTY36u/nns8WSzwCmZp7QrlrIEmh9cyEIAy7yQ94grARUfdxnj7L+2NparUni5utJC0hpWIQqB2rRKpMhIhNm8dyVk5v9iuD9FQlyuIQYdfWUANOMXcXxXW4vx39mMk5VM4OziElLhzuPjrPRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=v1KZxjN0; arc=none smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b6d2f5c0e8eso611604566b.3
+        for <linux-pwm@vger.kernel.org>; Sat, 25 Oct 2025 05:24:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1761395053; x=1761999853; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=lIsQKEoKbxbEkb+kg7sVbRygyGKcmH9a6HQvRcu2oQE=;
+        b=v1KZxjN0PhgSuPcQIE4cB2Mvy2Plwc4YQNIEItcAMMgBjBx73ulv4R4luSGcos1COM
+         PmWVpsPrCM3NBeJc0sGru/IF03o8mLm9mxaT44Ihb5rS8HDuM3t1JdOrRU1QYnQj/OHT
+         6/s3vHVdQj/2vbvF8KbLvrUuVX2XPW/3P/BAtclZ9gd7B6gDCaibrFbC+NHMt+/neD20
+         sLbZjtOXIRRRB/9AzAO0UqKhqFrtHOE90SVZ72pOMX2HBQFqcmz/4Jg7Z7I1uJ7cocLz
+         p9J8dCojFG2+PnO3JFcNv++6dRpuBap6gkw8Tc2aV+sMiWExusBRDxttbwm88Zfwb0Z7
+         Gs9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1761395053; x=1761999853;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=lIsQKEoKbxbEkb+kg7sVbRygyGKcmH9a6HQvRcu2oQE=;
+        b=E9vpM7nFX1EhlnMvUI2988QkwOP09Ab/d6gxBcl1hzrKsLm0Uw6ZVi1ZJ87TQ8FP2d
+         sDgx9jfQaXJYDnEREsMz0eXIupf0Eim7rVqv8/thinKaL460NFiFIgFhUz1zwz4Xb+y0
+         XUyHLqlAys+/Itnt/t0NLjV15N3dbV22C3Hcr/wvVP18hxsz0JkHrH7B/rpeCDwfQ1p9
+         UxarflBWRLwBM13JzQrROt8llWt6oSUAcBFq4AJZJ+S72fNeBfN5K36EF0tLw6kGtp6p
+         gi4iNXyINAOFTjiKBR3+ZFkMjy7dfZIJXWI6bISkPFoJ35rIfUYCSGKRwhLpR9lcWhpw
+         f5kw==
+X-Forwarded-Encrypted: i=1; AJvYcCUThqMQxZ6B8HGzXlZcdSPgHMmQ8xN7dCSy/hWytCfcHypchfYqwAWC9oN7iDH9L4Kw8/Oh20f4/gg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwtBuiySM/gLTRywB2cx71kzh00jrFZIfgdhTrWe18mGbd5LDnk
+	qFs3lHgv4lQZLk/UIjfbqNmlCKpRoNSPg1V274ATIINjMWf9lRDR7GcoRtyWgOY7WkI=
+X-Gm-Gg: ASbGncukqbIMwyH7/u8fclCq6a25wCqGHKnPRj8n8sX9BzQslOuvf+BGeog/9lBEpit
+	56XcLIKTokc9isp2q6JG0uRFMF+Xw6oOboevOAPzkRk+aLSvnvTRwTbmTGD4wnE01JpPNpNOMP2
+	maGwKl6/2lBiNVEdx8V9XWUbiyscoLf3u1Jn6GE6I0e21P9Khni6WbylbKYbvcX2PaSOj1TT1we
+	GkGjkXaUMwb5UvkC/la4yuH9cFP9WNWXGn0uVO0iIQ0XwNIvI0S+3bZvL3lW+oIy3xhN+mR6VPg
+	pkYyZCvj5RaiAxS7o79yDY7sqSuvUue/D35ik9eogDVGZfMNy4OGQgq8MvASYea9IuYIsxsHETW
+	mBlOEjZX78VECXeM+uxzVgWhJFsT1amqzlY6bmx5r+4tm93SBp42Erp2u8WZw/e7m8fA625+dAN
+	PXt0er7o9f4bGs+Pg=
+X-Google-Smtp-Source: AGHT+IGnX6aj4QplEbOKduC9Hm0/YqElExzhN8ylWo36D6yh7PlzsYWGk22j+Sqf+KNt5U99BqlldA==
+X-Received: by 2002:a17:907:db15:b0:b49:a5e4:754a with SMTP id a640c23a62f3a-b6d51c2ecb4mr964152366b.43.1761395052603;
+        Sat, 25 Oct 2025 05:24:12 -0700 (PDT)
+Received: from localhost ([2a02:8071:b783:6940:1d24:d58d:2b65:c291])
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-b6d853f97f7sm189813466b.51.2025.10.25.05.24.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 25 Oct 2025 05:24:12 -0700 (PDT)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Michal Wilczynski <m.wilczynski@samsung.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>
+Cc: Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
+	linux-pwm@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: [PATCH] rust: pwm: Drop wrapping of PWM polarity and state
+Date: Sat, 25 Oct 2025 14:23:56 +0200
+Message-ID: <20251025122359.361372-2-u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="4uianbie6i5kbvu2"
-Content-Disposition: inline
-In-Reply-To: <20251023143957.2899600-1-robh@kernel.org>
-X-Zoho-Virus-Status: 1
-X-Zoho-Virus-Status: 1
-X-Zoho-AV-Stamp: zmail-av-1.4.3/261.330.82
-X-ZohoMailClient: External
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3783; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=MaumaobUbQQd4lPrGDKs71WR0+BDt21J7MK/9q2ksaQ=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBo/MFfzsAw8q3FAGgozDa2VlLicakAFqPq0lVbs h04irDJYSOJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCaPzBXwAKCRCPgPtYfRL+ Tmg5CACg/RS57WtutcNK8+tVeLYrKZonQQjlmEz9VfBjYGo8ORCtlqzP74qfPUrvedbiGkdLdw1 k/qvsiybXk6sIPe4bDspWw2oJkNdiBkcZINqdIVeE5pGaLVNC4S/adzJX4Dreg6BVZBqHqyTDpw 5kKTUp0H9NrT78QKBH7d+lDmQomXofbQmI3u5MAOtrbuAQcSb7yOAucpyUOaXZKTD7WCJbuS8mq tu+Mr16H/e2kFptiv6GEawaiHTTSY2k1XCr0tXrvXKOTmuRpiRTH90iB2ru7VKSMi14dwdCjs27 xwJ5v+LNhh33X1c3pxuPVZYs8R/VkbVzLXU9pSHG3rui+z+F
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 
+These were introduced and used in an earlier revision of the patch that
+became commit fb3957af9ec6 ("pwm: Add Rust driver for T-HEAD TH1520
+SoC"). The variant that was actually applied sticks to the modern
+waveform abstraction only (and other drivers are supposed to do that,
+too), so they can be dropped.
 
---4uianbie6i5kbvu2
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] dt-bindings: Remove extra blank lines
-MIME-Version: 1.0
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+---
+Hello,
 
-Hi,
+this bases on my branch
+https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-next
+where I just applied Michal Wilczynski's series adding pwm Rust support[1].
 
-On Thu, Oct 23, 2025 at 09:37:56AM -0500, Rob Herring (Arm) wrote:
-> Generally at most 1 blank line is the standard style for DT schema
-> files. Remove the few cases with more than 1 so that the yamllint check
-> for this can be enabled.
->=20
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
-> ---
->  .../devicetree/bindings/power/supply/mt6360_charger.yaml     | 1 -
->  .../bindings/power/supply/stericsson,ab8500-charger.yaml     | 1 -
+Best regards
+Uwe
 
-Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+[1] https://lore.kernel.org/linux-pwm/9f38bb32-9160-4acd-83d7-902d3e1cad72@samsung.com/T/#t
+ rust/kernel/pwm.rs | 56 +---------------------------------------------
+ 1 file changed, 1 insertion(+), 55 deletions(-)
 
--- Sebastian
+diff --git a/rust/kernel/pwm.rs b/rust/kernel/pwm.rs
+index 79fbb13cd47f..c8f9f5b61bfa 100644
+--- a/rust/kernel/pwm.rs
++++ b/rust/kernel/pwm.rs
+@@ -15,38 +15,7 @@
+     prelude::*,
+     types::{ARef, AlwaysRefCounted, Opaque},
+ };
+-use core::{convert::TryFrom, marker::PhantomData, ptr::NonNull};
++use core::{marker::PhantomData, ptr::NonNull};
+-
+-/// PWM polarity. Mirrors [`enum pwm_polarity`](srctree/include/linux/pwm.h).
+-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+-pub enum Polarity {
+-    /// Normal polarity (duty cycle defines the high period of the signal).
+-    Normal,
+-
+-    /// Inversed polarity (duty cycle defines the low period of the signal).
+-    Inversed,
+-}
+-
+-impl TryFrom<bindings::pwm_polarity> for Polarity {
+-    type Error = Error;
+-
+-    fn try_from(polarity: bindings::pwm_polarity) -> Result<Self, Error> {
+-        match polarity {
+-            bindings::pwm_polarity_PWM_POLARITY_NORMAL => Ok(Polarity::Normal),
+-            bindings::pwm_polarity_PWM_POLARITY_INVERSED => Ok(Polarity::Inversed),
+-            _ => Err(EINVAL),
+-        }
+-    }
+-}
+-
+-impl From<Polarity> for bindings::pwm_polarity {
+-    fn from(polarity: Polarity) -> Self {
+-        match polarity {
+-            Polarity::Normal => bindings::pwm_polarity_PWM_POLARITY_NORMAL,
+-            Polarity::Inversed => bindings::pwm_polarity_PWM_POLARITY_INVERSED,
+-        }
+-    }
+-}
+ 
+ /// Represents a PWM waveform configuration.
+ /// Mirrors struct [`struct pwm_waveform`](srctree/include/linux/pwm.h).
+@@ -89,22 +58,6 @@ fn from(wf: Waveform) -> Self {
+     }
+ }
+ 
+-/// Wrapper for PWM state [`struct pwm_state`](srctree/include/linux/pwm.h).
+-#[repr(transparent)]
+-pub struct State(bindings::pwm_state);
+-
+-impl State {
+-    /// Creates a `State` wrapper by taking ownership of a C `pwm_state` value.
+-    pub(crate) fn from_c(c_state: bindings::pwm_state) -> Self {
+-        State(c_state)
+-    }
+-
+-    /// Returns `true` if the PWM signal is enabled.
+-    pub fn enabled(&self) -> bool {
+-        self.0.enabled
+-    }
+-}
+-
+ /// Describes the outcome of a `round_waveform` operation.
+ #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+ pub enum RoundingOutcome {
+@@ -164,13 +117,6 @@ pub fn label(&self) -> Option<&CStr> {
+         Some(unsafe { CStr::from_char_ptr(label_ptr) })
+     }
+ 
+-    /// Gets a copy of the current state of this PWM device.
+-    pub fn state(&self) -> State {
+-        // SAFETY: `self.as_raw()` gives a valid pointer. `(*self.as_raw()).state`
+-        // is a valid `pwm_state` struct. `State::from_c` copies this data.
+-        State::from_c(unsafe { (*self.as_raw()).state })
+-    }
+-
+     /// Sets the PWM waveform configuration and enables the PWM signal.
+     pub fn set_waveform(&self, wf: &Waveform, exact: bool) -> Result {
+         let c_wf = bindings::pwm_waveform::from(*wf);
 
---4uianbie6i5kbvu2
-Content-Type: application/pgp-signature; name="signature.asc"
+base-commit: 04a698c800c25149f9aa379250e78f737adeb3f1
+-- 
+2.47.3
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAmj8CpEACgkQ2O7X88g7
-+pqEIQ//WxlORWTU9xe37JxSV9323KQXYJPU3wtmtK4U8OlNGoVKu9XeR3w5pitG
-uy2cIzo80EdVMKsq5GKcONqwht31w9+RJaWZmytnll9Wbe3eiW3Lu6Ymx2zopgcW
-OoRuaiPPQUqGdgt7+VKgNt+4kH1sX/ur8z/Zd1rUrK9Xkks09pdqcZ/wpjm6KlQw
-e7x03OaDQ5h17Cg56SgH7NwoYjoUXDuSEKoZDx4wv5DQWh171Ez0/tWvYwYxM7+a
-Pxqt+zTDC1hdh6j1CaiOuwNb7pbdfcOWS7WZC8BPHNYW3eqFk5OQg+tZwEgoK9zV
-GLO0FrPPimJLgL2mfnq5FP0SzYU7FNgJD6gD/qKPzjsQlFLnwn69QCH/nTA9J/ZT
-ajcxgv6FLs3R3CGRptDBEUPOXez3dJeMeaN7hNeoswZNAe9uw1irXmedEzxLDO7S
-8WDVz6MvUAXOdXEcI+pUvuYfGWPwuJHspOgPuOwzO2sqg212V3sScOGcATq2BTDD
-mpc8LtRdKoZ3vUS9cVLRxtqLo8YB5roCBg0HEOexrwJayA074TSteqXhF2LH7LOW
-IcSZ37y+8QgWjTO2aXsiLJjoK2PsOLnvKzBRD5aeLhMd4H1Lw1xCxi75ut/fJPUY
-MLaS7WMtq7TVMRxBrjz8kaiR4opj84mVIXbVgoiISYooEKbbdic=
-=pPcb
------END PGP SIGNATURE-----
-
---4uianbie6i5kbvu2--
 
