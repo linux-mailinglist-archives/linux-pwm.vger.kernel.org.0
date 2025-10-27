@@ -1,122 +1,60 @@
-Return-Path: <linux-pwm+bounces-7492-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7493-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2070C0BA12
-	for <lists+linux-pwm@lfdr.de>; Mon, 27 Oct 2025 02:50:38 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9D5BDC0F6C5
+	for <lists+linux-pwm@lfdr.de>; Mon, 27 Oct 2025 17:46:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id B65ED4EEA04
-	for <lists+linux-pwm@lfdr.de>; Mon, 27 Oct 2025 01:50:32 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B356E484E43
+	for <lists+linux-pwm@lfdr.de>; Mon, 27 Oct 2025 16:38:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCAF42C027B;
-	Mon, 27 Oct 2025 01:50:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 38003313283;
+	Mon, 27 Oct 2025 16:36:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="SFY3HsTq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V0WnMzga"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.12])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BC9418C02E;
-	Mon, 27 Oct 2025 01:50:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05C662D46D0;
+	Mon, 27 Oct 2025 16:36:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761529826; cv=none; b=kuP22l7rSYTek7b3rcovEYjQNtlD53apUojadl4r4UyC01Gg5dCUMB47Pn6GHwNq3xirgID/EJw+iXuYPFzhit8VzdF5tvgfO4LhsNwfhnSoXd80IIzEwbSH6Fl5Lg5YsrK1PpUV68NkHBTc6WRukPH+wqDEeoAwffuhK3X1BzA=
+	t=1761582985; cv=none; b=c/c5bzKoTxxLCIeIAKhMRx9MkrkCRwxPduH/de0e203sEiXuOoAgKTTkJOMGIkqlOqE/LaXc8x0Oud8tQt0DTObNcDfI/I1044+5BK14xPu5IrOzulS5wHf6GKKNMQzbtUpZxePdCnw7M8UclfKVrxjeILWi30D0f0IGiXOPonY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761529826; c=relaxed/simple;
-	bh=T3pkaI/GJuOsGFoVg5/R4SNriMbvV6bNB454qQaWZQ8=;
+	s=arc-20240116; t=1761582985; c=relaxed/simple;
+	bh=5bkUbFX9gMJW4tdihtLae66ry9QAZ8utSkoN+9IssC0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LQAtezO5/4R5PaFcURhdb+93yXLU+udan6DUbahneHDgX/tNmJex+Mke+1RBYEhRPCdTQtpFYVYGW3k9xfSjG6MMT3IG2qPcZH8u8Y5hYyWMc4lpOmj2P73Rc39u6BD9t3mIJRCkwzeaPMTfrHZTzOfKeXirCwGEodO4oyF1bIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=SFY3HsTq; arc=none smtp.client-ip=198.175.65.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1761529825; x=1793065825;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=T3pkaI/GJuOsGFoVg5/R4SNriMbvV6bNB454qQaWZQ8=;
-  b=SFY3HsTqY2Ry2NQd3zO0yKdoJsln+nTLaiUb4zzF60W8D3fRq3fTXODw
-   vIBdycM9zJwvlhYvqOcGxcNv44Wqhmf9fou4m9uCosnAOkm6KckOTJUSi
-   nkN927iyFhYV3TRCynZEFAVQPkqrYSO/6TtlB7mDEjtvQ1U9lSgvnIdzd
-   XwnRRWL2OjwRSPQ87xHjhLVEbaRdYK45rUr66pRQNTdKsHayxukAQ/5wc
-   dIM67bUNf8kclm4K6Kwww5CDKvMH3gHlYXHgnPehlNFFU8HvWh+phtlbm
-   QuCapYO8U12dwTIYM86QRSxqOuwZLqOC3cCInr5Mx/LWbufk48meZkVPf
-   w==;
-X-CSE-ConnectionGUID: 6YWLrCLOQ/Gu/IAQzfBJ+Q==
-X-CSE-MsgGUID: UMt8ChPkQUa81pml1bmMLQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11586"; a="75050337"
-X-IronPort-AV: E=Sophos;i="6.19,257,1754982000"; 
-   d="scan'208";a="75050337"
-Received: from orviesa003.jf.intel.com ([10.64.159.143])
-  by orvoesa104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 26 Oct 2025 18:50:24 -0700
-X-CSE-ConnectionGUID: RqD3PVgcSpO3hdFc8HdBsw==
-X-CSE-MsgGUID: bAZX7S5kQLGkCNKy4yStdQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.19,257,1754982000"; 
-   d="scan'208";a="188967609"
-Received: from yilunxu-optiplex-7050.sh.intel.com (HELO localhost) ([10.239.159.165])
-  by orviesa003.jf.intel.com with ESMTP; 26 Oct 2025 18:50:09 -0700
-Date: Mon, 27 Oct 2025 09:36:28 +0800
-From: Xu Yilun <yilun.xu@linux.intel.com>
-To: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>,
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>,
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-	Thomas Zimmermann <tzimmermann@suse.de>,
-	Andrzej Hajda <andrzej.hajda@intel.com>,
-	Robert Foss <rfoss@kernel.org>, Vinod Koul <vkoul@kernel.org>,
-	Moritz Fischer <mdf@kernel.org>, Xu Yilun <yilun.xu@intel.com>,
-	Bartosz Golaszewski <brgl@bgdev.pl>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Andi Shyti <andi.shyti@kernel.org>,
-	Jonathan Cameron <jic23@kernel.org>,
-	Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-	Georgi Djakov <djakov@kernel.org>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Joerg Roedel <joro@8bytes.org>,
-	Jassi Brar <jassisinghbrar@gmail.com>,
-	Mauro Carvalho Chehab <mchehab@kernel.org>,
-	Lee Jones <lee@kernel.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	Richard Weinberger <richard@nod.at>,
-	Vignesh Raghavendra <vigneshr@ti.com>,
-	Andrew Lunn <andrew+netdev@lunn.ch>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Johannes Berg <johannes@sipsolutions.net>,
-	Krzysztof =?utf-8?Q?Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
-	Manivannan Sadhasivam <mani@kernel.org>,
-	Bjorn Helgaas <bhelgaas@google.com>,
-	Kishon Vijay Abraham I <kishon@kernel.org>,
-	Sebastian Reichel <sre@kernel.org>,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Mark Brown <broonie@kernel.org>,
-	Mathieu Poirier <mathieu.poirier@linaro.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Olivia Mackall <olivia@selenic.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Daniel Lezcano <daniel.lezcano@linaro.org>,
-	Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org,
-	linux-fbdev@vger.kernel.org, dmaengine@vger.kernel.org,
-	linux-fpga@vger.kernel.org, linux-gpio@vger.kernel.org,
-	linux-hwmon@vger.kernel.org, linux-i2c@vger.kernel.org,
-	linux-iio@vger.kernel.org, linux-input@vger.kernel.org,
-	linux-pm@vger.kernel.org, iommu@lists.linux.dev,
-	linux-media@vger.kernel.org, linux-mtd@lists.infradead.org,
-	netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-	linux-pci@vger.kernel.org, linux-phy@lists.infradead.org,
-	linux-pwm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
-	linux-crypto@vger.kernel.org, linux-sound@vger.kernel.org,
-	linux-usb@vger.kernel.org
-Subject: Re: [PATCH] dt-bindings: Remove extra blank lines
-Message-ID: <aP7MnJ8mIlZhT//S@yilunxu-OptiPlex-7050>
-References: <20251023143957.2899600-1-robh@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=jV+YRD8jzU1H+xJ4WdrDZbE3O3xNbOk7RVnU1Cr/GZvSDWPU124mwFFC1TE03WK39fzyykCVob4LcYeJL6RPlSWheg72+8WOiubgq/nK6vl0fBMx48wd5Hv+NTHoT9sY+Xq10188VohVS+QUrPuGhHgCa2PLi2USKGxUNIhhGvw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V0WnMzga; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9BB38C4CEF1;
+	Mon, 27 Oct 2025 16:36:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761582984;
+	bh=5bkUbFX9gMJW4tdihtLae66ry9QAZ8utSkoN+9IssC0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=V0WnMzga6sKwHdBCgsLdugWHbaVkz2FuL79z6EUUqQfj3H+58lpV1b9CED7L6YQyt
+	 zsuLAQQyQKzb/TqOh29bSZuQ1JMWE5FcUr5lnbOVTB+DKwa5KY2kDMkXlmDIzKJHKw
+	 BLtylgkl74+I8oq/9DLZfjcd6okZ32Ct4UjX8+fKTdlZuMYq0PosUF2KhfR8HhkU+P
+	 vsZWnp0fhPLgzb5qWBbhA6fSy9DEytBgLQTpvTUUUevhhdDiRz7Yq2TS+tPIHclZAI
+	 kown3/Vsp7Qma0N8P4PhDEZMC8w9KOftikgIIhyBbMNsckHIShExFIEUxhcrkauoVj
+	 wtwF4+buAurhA==
+Date: Mon, 27 Oct 2025 11:39:17 -0500
+From: Bjorn Andersson <andersson@kernel.org>
+To: george.moussalem@outlook.com
+Cc: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Baruch Siach <baruch@tkos.co.il>, 
+	Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Devi Priya <quic_devipriy@quicinc.com>, Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>, 
+	Baruch Siach <baruch.siach@siklu.com>
+Subject: Re: [PATCH v17 1/9] dt-bindings: pwm: add IPQ6018 binding
+Message-ID: <r7revm7tle6nh6kggf2kjwdz2pnpfdrn7web4ckqcbkorjodkq@ujl5mfh5eous>
+References: <20251008-ipq-pwm-v17-0-9bd43edfc7f7@outlook.com>
+ <20251008-ipq-pwm-v17-1-9bd43edfc7f7@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -125,18 +63,88 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20251023143957.2899600-1-robh@kernel.org>
+In-Reply-To: <20251008-ipq-pwm-v17-1-9bd43edfc7f7@outlook.com>
 
-On Thu, Oct 23, 2025 at 09:37:56AM -0500, Rob Herring (Arm) wrote:
-> Generally at most 1 blank line is the standard style for DT schema
-> files. Remove the few cases with more than 1 so that the yamllint check
-> for this can be enabled.
+On Wed, Oct 08, 2025 at 07:32:53PM +0400, George Moussalem via B4 Relay wrote:
+> From: Devi Priya <quic_devipriy@quicinc.com>
 > 
-> Signed-off-by: Rob Herring (Arm) <robh@kernel.org>
+> DT binding for the PWM block in Qualcomm IPQ6018 SoC.
+> 
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+> Co-developed-by: Baruch Siach <baruch.siach@siklu.com>
+> Signed-off-by: Baruch Siach <baruch.siach@siklu.com>
+> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
 
-[...]
+Thanks for your work on this, George.
 
->  Documentation/devicetree/bindings/fpga/fpga-region.yaml      | 5 -----
+We need your Signed-off-by here as well though.
 
-Acked-by: Xu Yilun <yilun.xu@intel.com>
+How about squashing the later additions to this same file, to avoid
+repeatedly changing the file you introduce here, in this same series?
+You can document your contribution by adding a line [george: Added
+compatibles for X, Y, Z] before your signed-off-by.
+
+Regards,
+Bjorn
+
+> ---
+>  .../devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml  | 44 ++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml b/Documentation/devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml
+> new file mode 100644
+> index 0000000000000000000000000000000000000000..1172f0b53fadc140482f9384a36020260df372b7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml
+> @@ -0,0 +1,44 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/pwm/qcom,ipq6018-pwm.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Qualcomm IPQ6018 PWM controller
+> +
+> +maintainers:
+> +  - Baruch Siach <baruch@tkos.co.il>
+> +
+> +properties:
+> +  compatible:
+> +    const: qcom,ipq6018-pwm
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  "#pwm-cells":
+> +    const: 2
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +  - "#pwm-cells"
+> +
+> +additionalProperties: false
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/clock/qcom,gcc-ipq6018.h>
+> +
+> +    pwm: pwm@1941010 {
+> +        compatible = "qcom,ipq6018-pwm";
+> +        reg = <0x01941010 0x20>;
+> +        clocks = <&gcc GCC_ADSS_PWM_CLK>;
+> +        assigned-clocks = <&gcc GCC_ADSS_PWM_CLK>;
+> +        assigned-clock-rates = <100000000>;
+> +        #pwm-cells = <2>;
+> +    };
+> 
+> -- 
+> 2.51.0
+> 
+> 
 
