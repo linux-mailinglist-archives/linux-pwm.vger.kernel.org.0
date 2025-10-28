@@ -1,107 +1,97 @@
-Return-Path: <linux-pwm+bounces-7503-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7504-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8924C13A52
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 Oct 2025 09:57:13 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id BA980C1402C
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 Oct 2025 11:11:03 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id C28555642C1
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 Oct 2025 08:51:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id B9CCF464459
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 Oct 2025 10:09:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 344A82DD5F3;
-	Tue, 28 Oct 2025 08:50:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7AB6B3002C8;
+	Tue, 28 Oct 2025 10:09:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qmHhx90L"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DME/ZmMH"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 052432DBF75;
-	Tue, 28 Oct 2025 08:50:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48E1429ACD1;
+	Tue, 28 Oct 2025 10:09:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761641421; cv=none; b=kHad4uiNxrLPrsH/0DXa0wrfQ0mhSrxb1+jK4+2yjyU7ItK3fxib5fnhg0262qGGLucfRA4tr5aRm5kxybuaoyCtixBv5lTEmNLm1NjIkLob5QqnRU56+Hdolo6aPxzsaIOpSBrHP0I6OWbhacxXDsPcGPJvrP+bLN5O92W+cTo=
+	t=1761646148; cv=none; b=NG5B1NQw7h7zFyINd2H4wejA0D/TLbOfy8GQq9iYVfIasXlEI6ArbM6lxo1s5IhOOB++LVTWdv6VrwMsnO4mj84gYFEHb68bjnPCddu/aCsM3nGPyWelPcxbk8a1n3rH/OpXqKpD/0/oOo5cK/orBrG1xiCCmO0Nw/97crEiezY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761641421; c=relaxed/simple;
-	bh=KDXhTRVe2x23tPuaEkQmJ+KZed5CS4Y7/Sq0vsM+Krs=;
+	s=arc-20240116; t=1761646148; c=relaxed/simple;
+	bh=6kNXKXkNNZS7lISKkrrbAtTK05DhAr6N4veKjlqS9es=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kTzKzwjBK/t3+qR+tRJjH/+Lv66mZtlSzhHqHy1PWJHc56DAEzNv2pou/B1Pi+tRNg6Upz0fMyE6zRez0r41dZW+D2bWztIUGqXa5xnxvtZTAM7dX1sKjCIeOY9rhHpY81N2aqaxelD9wXzb7BbgAyvdJrmFhh8UepNnUEwzr9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qmHhx90L; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEECFC4CEE7;
-	Tue, 28 Oct 2025 08:50:16 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=QUZ5dJL5JhbNRFhxRvKFhC7nRq+dA7qxy+Ip9WZmQ3765nS/NZvUfB3SZe8RmDvexPVA7qaypVFR39gpww68rnWvzhCr3eXtGQZ354NOM98/UZs7u2m8yiMn//qRpu+IoJw+PYeDZTgO1DX+wmEkACzCwN7tQtL43Ao0n/HewlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DME/ZmMH; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52031C4CEE7;
+	Tue, 28 Oct 2025 10:09:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761641420;
-	bh=KDXhTRVe2x23tPuaEkQmJ+KZed5CS4Y7/Sq0vsM+Krs=;
+	s=k20201202; t=1761646147;
+	bh=6kNXKXkNNZS7lISKkrrbAtTK05DhAr6N4veKjlqS9es=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qmHhx90LAeqKDo9OJhautzZdQwPxugsU/j5NRn1XafNc5m5Y1xk8DSY5IKucSYkm2
-	 6qDYFj8WKohnoZu3c9y2BRE3K8rqeW4eM1GWmpfy+us8eHq6wrWV9RoMB1fkhBo74a
-	 HagmcY1PvDNb3NGu0+25ssCRdCGrue2GwJ2n1+yZx/VbImaxnE3d3SDrswub9Adcpl
-	 hP07sZSlIlDscognFZ9tY5TdngpT31at74u3hfGl721sTxle7R8f0wk2JD51pKuFCR
-	 mAw+IXEqbYJ33NxTmlxqYXPYYBlVFHXCvfhbgoaR2Y/GAkboX3f5o95a05XJkaSFdK
-	 p8BvoQe2AvQ7g==
-Date: Tue, 28 Oct 2025 08:50:14 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Damon Ding <damon.ding@rock-chips.com>
-Cc: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Rob Herring <robh@kernel.org>,
+	b=DME/ZmMHqQrihdz2PW4W/jIpRBor6dFlx1Duk5bKqqFoKA2KQfnbdL+CQDP0BUNmS
+	 xBR0lHPrzkmCz9RKNQT8rVq7bFeB0pXvV6gfJnNXXYhxrBb67dSLyrJ/iuJrNBZP3O
+	 UOwDhzW3Gl4F6o9CmYDHHEKGcusVLDCPWqR8Mo/7DWHrlwO0UPe0y+QKWkz/ktHLCb
+	 bos6xzvlO05nqf0KKYy2HUsNc1W3IkshKPW73P7U2Lr1kZ8w/EFZcSMnM04OGKXxTX
+	 9+8QL/rd3P33pqyHXMJaM7hP/+Ff81M7i7+LVGLEL0ZFnF8AvCo0XXS7zeskWhDHH8
+	 pgc1p/UCagY9g==
+Date: Tue, 28 Oct 2025 10:08:58 +0000
+From: Drew Fustini <fustini@kernel.org>
+To: Michal Wilczynski <m.wilczynski@samsung.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>, Guo Ren <guoren@kernel.org>,
+	Fu Wei <wefu@redhat.com>, Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
 	Conor Dooley <conor+dt@kernel.org>,
-	Heiko Stuebner <heiko@sntech.de>, Lee Jones <lee@kernel.org>,
-	William Breathitt Gray <wbg@kernel.org>, kernel@collabora.com,
-	Jonas Karlman <jonas@kwiboo.se>, Alexey Charkov <alchark@gmail.com>,
-	linux-rockchip@lists.infradead.org, linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-	Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [PATCH v3 1/5] dt-bindings: pwm: Add a new binding for
- rockchip,rk3576-pwm
-Message-ID: <20251028-favored-dynamite-fa626b96ecba@spud>
-References: <20251027-rk3576-pwm-v3-0-654a5cb1e3f8@collabora.com>
- <20251027-rk3576-pwm-v3-1-654a5cb1e3f8@collabora.com>
- <ff9631f5-8fff-4be8-8b6f-807c29943ef6@rock-chips.com>
+	Paul Walmsley <paul.walmsley@sifive.com>,
+	Palmer Dabbelt <palmer@dabbelt.com>,
+	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
+	Marek Szyprowski <m.szyprowski@samsung.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Michael Turquette <mturquette@baylibre.com>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+	rust-for-linux@vger.kernel.org, linux-riscv@lists.infradead.org,
+	devicetree@vger.kernel.org, Elle Rhumsaa <elle@weathered-steel.dev>
+Subject: Re: [PATCH v16 6/7] riscv: dts: thead: Add PWM controller node
+Message-ID: <aQCWOridtd0MsG4q@gen8>
+References: <20251016-rust-next-pwm-working-fan-for-sending-v16-0-a5df2405d2bd@samsung.com>
+ <CGME20251016133822eucas1p15e605481cd324276ec87ab596e1527e8@eucas1p1.samsung.com>
+ <20251016-rust-next-pwm-working-fan-for-sending-v16-6-a5df2405d2bd@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="O1U2C28gYoD3m1pn"
-Content-Disposition: inline
-In-Reply-To: <ff9631f5-8fff-4be8-8b6f-807c29943ef6@rock-chips.com>
-
-
---O1U2C28gYoD3m1pn
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20251016-rust-next-pwm-working-fan-for-sending-v16-6-a5df2405d2bd@samsung.com>
 
-On Tue, Oct 28, 2025 at 11:06:15AM +0800, Damon Ding wrote:
-> On 10/28/2025 1:11 AM, Nicolas Frattaroli wrote:
-=20
-> The RK3506 and RV1126B platforms that are about to be upstream also use t=
-his
-> PWM IP. Would it be better to name the yaml file "pwm-rockchip-v4.yaml"?
+On Thu, Oct 16, 2025 at 03:38:06PM +0200, Michal Wilczynski wrote:
+> Add the Device Tree node for the T-HEAD TH1520 SoC's PWM controller.
+> 
+> Reviewed-by: Drew Fustini <fustini@kernel.org>
+> Tested-by: Drew Fustini <fustini@kernel.org>
+> Reviewed-by: Elle Rhumsaa <elle@weathered-steel.dev>
+> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
+> ---
+>  arch/riscv/boot/dts/thead/th1520.dtsi | 7 +++++++
+>  1 file changed, 7 insertions(+)
 
-No. Files should be named to match a compatibles.
+Applied to thead-dt-for-next, thanks!
 
-> Then subsequent platforms only need to expand the compatible property.
-
-That's all subsequent platforms need to do anyway!
-
---O1U2C28gYoD3m1pn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaQCDxgAKCRB4tDGHoIJi
-0oP/AQCtGkPkLjIuhG6acisp6J+BGBKZt/zk42Iegz+EmIq1xQEAvpU0wnBrYIGQ
-DQ8NJI1UvPDWp+Rn13RW0wjmDY/oaAg=
-=NwWc
------END PGP SIGNATURE-----
-
---O1U2C28gYoD3m1pn--
+-Drew
 
