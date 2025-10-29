@@ -1,91 +1,236 @@
-Return-Path: <linux-pwm+bounces-7518-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7521-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78E7DC17B5A
-	for <lists+linux-pwm@lfdr.de>; Wed, 29 Oct 2025 02:00:28 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 30C46C192E0
+	for <lists+linux-pwm@lfdr.de>; Wed, 29 Oct 2025 09:49:35 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E36F9403F69
-	for <lists+linux-pwm@lfdr.de>; Wed, 29 Oct 2025 01:00:15 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 6E380582319
+	for <lists+linux-pwm@lfdr.de>; Wed, 29 Oct 2025 08:37:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 734D2227EA8;
-	Wed, 29 Oct 2025 01:00:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A8D6F314B85;
+	Wed, 29 Oct 2025 08:37:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="C+uHI4yJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B3cljkLO"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from out-183.mta0.migadu.com (out-183.mta0.migadu.com [91.218.175.183])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 758682D7DC2
-	for <linux-pwm@vger.kernel.org>; Wed, 29 Oct 2025 01:00:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.183
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58B08311951;
+	Wed, 29 Oct 2025 08:37:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761699614; cv=none; b=J7tYNse+qCpmAgCcExaRkOw8nlcBBcq0JXPzHYcGcTEZ+N23+EBhuF0+NbVwlZgHIC8o5cFzWKJyRU2ZVnQ+5NoxG054y/C23oKLDqVz4JPTauh1lG1oXrM7KVZIQSZqqOjVst69YB2MY+d2GOEfvhu5iCfBZrOiiLh6GFXuwog=
+	t=1761727038; cv=none; b=HYqOEYMvI1iZ+s4d0GS75CR4ixiSS63B8BITa9M+BWeIG92GRcOMaebEJsOJEA6wI7rDoZwhyuXio497NtcQzy39xBx7bzOWMaLI6fitGsyLCFK6cIz8ao2MmNfV5fEbOJzvwjnprTDQGZutRoGy6p5ZvM38jsWzeNiPPiWfyLU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761699614; c=relaxed/simple;
-	bh=m2TntnE29Ayjgb90lea7jgHxSXwtxhfaO+9MYo3cUqA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kv5fDA1kAS3FBtn8YmqOqodLa4mWQwU5xwPFRMCjsncTZp4sADH0tZTb67h8+igCSFG1BO8Dc1xVluASabd9h7bFK0NjiBKxpaelF76+rWn96j8USVMJXfHtqk1oUds+HQUMBzQHDj42SwL4QbwKIGmlozakf0SsBRUYnarSwFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=C+uHI4yJ; arc=none smtp.client-ip=91.218.175.183
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
-Date: Wed, 29 Oct 2025 08:59:49 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1761699600;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=axfy//ogFDe/yGbFMo1sZMCFPL+4baIeWWIdu2LpDI8=;
-	b=C+uHI4yJrnTWHNX09+K4A6XEe9JSPPUru03wyNSgVfHv61E7wLAa4TZ331QLDUnPoQ1P6E
-	VjUIg4YW3JXeZ4EO+p4elnyhBy5vg944BCDQMdxymYkrakt5HKwr3RRDjZBvBZO2zy4wqQ
-	Odu3Jg8x6KTSeZ3PTZpwj1+hNJQKZC4=
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Troy Mitchell <troy.mitchell@linux.dev>
-To: Michal Wilczynski <m.wilczynski@samsung.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	Alex Gaynor <alex.gaynor@gmail.com>,
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Drew Fustini <fustini@kernel.org>, Guo Ren <guoren@kernel.org>,
-	Fu Wei <wefu@redhat.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>
-Cc: Stephen Rothwell <sfr@canb.auug.org.au>, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
-	linux-riscv@lists.infradead.org,
-	Troy Mitchell <troy.mitchell@linux.dev>
-Subject: Re: [PATCH 3/4] pwm: th1520: Use module_pwm_platform_driver! macro
-Message-ID: <aQFnBYc7C-nQslJ9@kernel.org>
-References: <20251028-pwm_fixes-v1-0-25a532d31998@samsung.com>
- <CGME20251028122318eucas1p17161f0e1f2281c868688e8a4cc3d8f68@eucas1p1.samsung.com>
- <20251028-pwm_fixes-v1-3-25a532d31998@samsung.com>
+	s=arc-20240116; t=1761727038; c=relaxed/simple;
+	bh=g3PLnFhIAD3MPzFWZaC1yc/r/jWqxyVn09enL7OcU/g=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=GZZA3jH8ZsjeWrOF/vdfBstg63l39RZYMq6NZRTAKlH4alc/ohHOf6qG+eaeW7IKorJQHh4pDm1saRDZJSqUU+6vy3q/3boWdC3eH/Km7qKxddDeIx8pXEkC/q6+y4Bwc00GF3j1Rjk+QO3enaaoy3UXETllxwr+eaEnO78Q+GE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B3cljkLO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id E7E49C4CEFB;
+	Wed, 29 Oct 2025 08:37:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761727038;
+	bh=g3PLnFhIAD3MPzFWZaC1yc/r/jWqxyVn09enL7OcU/g=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=B3cljkLOJkZ7GGmsem04/p+bQSiau+rBpT2ewEQj9+Bxyaka1M8YDuOn+b+ZTukXi
+	 n6SOaQjw2+xUUhH9VRRwZfOeSdF61/5KqmlCeya8YsU0+NE3XZWixd4SgS2eQgqm+O
+	 1ZYgEfeMfCdeqTKgaSo246ZfRDYq1Qrd9aq/OExDl2WcRcE704HJ5myGun7snH9cyX
+	 Yoon2p6MY2M319crm73mQoJwSLpzvk1jB9Xy+TYzDYAdHvpXgti3euey09kfrmCuB9
+	 qpmEjvNKD1Cto7qsTamhgqmtTNJcAIVxwtT/yOrqSf5L5doKoQbSLw7SpN7KyiNpU0
+	 IYkxaKh1r5+pg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCA45CCF9E9;
+	Wed, 29 Oct 2025 08:37:17 +0000 (UTC)
+From: George Moussalem via B4 Relay <devnull+george.moussalem.outlook.com@kernel.org>
+Subject: [PATCH v18 0/6] Add PWM support for IPQ chipsets
+Date: Wed, 29 Oct 2025 12:36:56 +0400
+Message-Id: <20251029-ipq-pwm-v18-0-edbef8efbb8e@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251028-pwm_fixes-v1-3-25a532d31998@samsung.com>
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIACjSAWkC/1WO0W7CMAxFfwXleUZO0jSFp/7HNCGWOKu1tSlpK
+ UOo/05aCQSP1/Y5vjcxUGIaxH5zE4kmHjh2OcjqYyNcc+x+CNjngVCoDO6UAu5P0F9acJWzxsn
+ CeqNEvu4TBf5fVZ9fOYcUWxibRMcHryWikSUag1tVKI3WgITTmd3B59d94mu9JO7c1sV2kTY8j
+ DFd13qTLBf32iSb5LNJXgCCRgxKW0Iqqzqex78Yf1fNUmaS9pWtXlib2d23LzT54Gyw7+w8z3c
+ BNp6mJAEAAA==
+X-Change-ID: 20250922-ipq-pwm-c8c75c147d52
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Baruch Siach <baruch@tkos.co.il>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ George Moussalem <george.moussalem@outlook.com>, 
+ Devi Priya <quic_devipriy@quicinc.com>, 
+ Baruch Siach <baruch.siach@siklu.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Krzysztof Kozlowski <krzk@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1761727035; l=5438;
+ i=george.moussalem@outlook.com; s=20250321; h=from:subject:message-id;
+ bh=g3PLnFhIAD3MPzFWZaC1yc/r/jWqxyVn09enL7OcU/g=;
+ b=CCe8UOTaj4TWXJPneYOO+SCUFX5S7gdMs58LJ5UtRV7X3b9fj2uM1w++vEhUJtCX///OiD599
+ MtqA6zBFkSUBUPcUgdiRze1fDN2D5S6mcAMkUeUBzIneV9ytQ1beKnl
+X-Developer-Key: i=george.moussalem@outlook.com; a=ed25519;
+ pk=/PuRTSI9iYiHwcc6Nrde8qF4ZDhJBlUgpHdhsIjnqIk=
+X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
+ with auth_id=364
+X-Original-From: George Moussalem <george.moussalem@outlook.com>
+Reply-To: george.moussalem@outlook.com
 
-On Tue, Oct 28, 2025 at 01:22:34PM +0100, Michal Wilczynski wrote:
-> The `pwm_th1520` Rust driver calls C functions from the `PWM` namespace,
-> triggering `modpost` warnings due to missing namespace import
-> declarations in its `.modinfo` section.
-> 
-> Fix these warnings and simplify the module declaration by switching from
-> the generic `kernel::module_platform_driver!` macro to the newly
-> introduced PWM-specific `kernel::module_pwm_platform_driver!` macro.
-> The new macro automatically handles the required `imports_ns: ["PWM"]`
-> declaration.
-> 
-> Signed-off-by: Michal Wilczynski <m.wilczynski@samsung.com>
-Reviewed-by: Troy Mitchell <troy.mitchell@linux.dev>
+Add PWM driver and binding support for IPQ chipsets.
+Also, add nodes to add support for pwm in ipq6018, ipq5018, ipq5332, and
+ipq9574.
+
+I've picked up work based on Devi's last submission (v15) which dates
+back to 05 October 2023 as below SoCs are still active.
+
+Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+---
+Changes in v18:
+- Updated maintainer info in binding
+- Squashed dt bindings patches into the first for adding compatibles for
+  IPQ5018, IPQ5332, and IPQ9574
+- Link to v17: https://lore.kernel.org/r/20251008-ipq-pwm-v17-0-9bd43edfc7f7@outlook.com
+
+Changes in v17:
+- Picked up RB tags from Dmitry and Rob
+- Removed unnecessary code comments
+- Corrected reg property in PWM node in ipq6018 DTS in line with
+  expected nr of bytes for address and size cells
+- Link to v16: https://lore.kernel.org/r/20251001-ipq-pwm-v16-0-300f237e0e68@outlook.com
+
+Changes in v16:
+- Removed reg description in bindings as the offset is not relative to
+  the TCSR region anymore since simple-mfd support was dropped and PWM
+  nodes defined as their own nodes, not child nodes. Updated the example
+  too.
+- Dropped patch to add simple-mfd support to the qcom,tcsr bindings
+- Simplified code to calculate divs and duty cycle as per Uwe's comments
+- Removed unused pwm_chip struct from ipq_pwm_chip struct
+- Removed unnecessary cast as per Uwe's comment
+- Replaced devm_clk_get & clk_prepare_enable by devm_clk_get_enabled
+- Replaced pwmchip_add by devm_pwmchip_add and removed .remove function
+- Removed .owner from driver struct
+- Added compatibles to the bindings and nodes to the device trees to add
+  PWM support in the IPQ5018, IPQ5332, and IPQ9574 SoCs
+- Link to v15: https://lore.kernel.org/r/20231005160550.2423075-1-quic_devipriy@quicinc.com
+
+Changes in v15:
+- No change
+- Link to v14: https://lore.kernel.org/r/20231005033053.2626465-1-quic_devipriy@quicinc.com
+
+Changes in v14:
+- Picked up the R-b tag
+- Link to v13: https://lore.kernel.org/r/20231004090449.256229-1-quic_devipriy@quicinc.com
+
+Changes in v13:
+- Updated the file name to match the compatible
+- Sorted the properties and updated the order in the required field
+- Dropped the syscon node from examples
+- Link to v12: https://lore.kernel.org/r/20230925065915.3467964-1-quic_devipriy@quicinc.com
+
+Changes in v12:
+- Picked up the R-b tag
+
+Changes in v11:
+- No change
+
+Changes in v10:
+- No change
+
+Changes in v9:
+- Add 'ranges' property to example (Rob)
+- Drop label in example (Rob)
+
+Changes in v8:
+- Add size cell to 'reg' (Rob)
+
+Changes in v7:
+- Use 'reg' instead of 'offset' (Rob)
+- Drop 'clock-names' and 'assigned-clock*' (Bjorn)
+- Use single cell address/size in example node (Bjorn)
+- Move '#pwm-cells' lower in example node (Bjorn)
+- List 'reg' as required
+
+Changes in v6:
+- Device node is child of TCSR; remove phandle (Rob Herring)
+- Add assigned-clocks/assigned-clock-rates (Uwe Kleine-König)
+
+Changes in v5:
+- Use qcom,pwm-regs for phandle instead of direct regs (Bjorn
+    Andersson, Kathiravan T)
+
+Changes in v4:
+- Update the binding example node as well (Rob Herring's bot)
+
+Changes in v3:
+- s/qcom,pwm-ipq6018/qcom,ipq6018-pwm/ (Rob Herring)
+
+Changes in v2:
+- Make #pwm-cells const (Rob Herring)
+
+---
+George Moussalem (6):
+      dt-bindings: pwm: qcom,ipq6018-pwm: Add compatible for ipq5018
+      dt-bindings: pwm: qcom,ipq6018-pwm: Add compatible for ipq5332
+      dt-bindings: pwm: qcom,ipq6018-pwm: Add compatible for ipq9574
+      arm64: dts: qcom: ipq5018: add pwm node
+      arm64: dts: qcom: ipq5332: add pwm node
+      arm64: dts: qcom: ipq9574: add pwm node
+
+Devi Priya (3):
+      dt-bindings: pwm: add IPQ6018 binding
+      pwm: driver for qualcomm ipq6018 pwm block
+      arm64: dts: qcom: ipq6018: add pwm node
+
+ .../devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml  |  51 +++++
+ arch/arm64/boot/dts/qcom/ipq5018.dtsi              |  10 +
+ arch/arm64/boot/dts/qcom/ipq5332.dtsi              |  10 +
+ arch/arm64/boot/dts/qcom/ipq6018.dtsi              |  10 +
+ arch/arm64/boot/dts/qcom/ipq9574.dtsi              |  10 +
+ drivers/pwm/Kconfig                                |  12 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-ipq.c                              | 212 +++++++++++++++++++++
+ 8 files changed, 316 insertions(+)
+---
+
+---
+Devi Priya (3):
+      dt-bindings: pwm: add IPQ6018 binding
+      pwm: driver for qualcomm ipq6018 pwm block
+      arm64: dts: qcom: ipq6018: add pwm node
+
+George Moussalem (3):
+      arm64: dts: qcom: ipq5018: add pwm node
+      arm64: dts: qcom: ipq5332: add pwm node
+      arm64: dts: qcom: ipq9574: add pwm node
+
+ .../devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml  |  51 +++++
+ arch/arm64/boot/dts/qcom/ipq5018.dtsi              |  10 +
+ arch/arm64/boot/dts/qcom/ipq5332.dtsi              |  10 +
+ arch/arm64/boot/dts/qcom/ipq6018.dtsi              |  10 +
+ arch/arm64/boot/dts/qcom/ipq9574.dtsi              |  10 +
+ drivers/pwm/Kconfig                                |  12 ++
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-ipq.c                              | 212 +++++++++++++++++++++
+ 8 files changed, 316 insertions(+)
+---
+base-commit: 56592520a52b43e69e5cf8afa0af032690c70175
+change-id: 20250922-ipq-pwm-c8c75c147d52
+
+Best regards,
+-- 
+George Moussalem <george.moussalem@outlook.com>
+
+
 
