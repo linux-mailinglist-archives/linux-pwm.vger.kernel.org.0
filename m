@@ -1,74 +1,58 @@
-Return-Path: <linux-pwm+bounces-7535-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7536-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4D5A9C1F9A1
-	for <lists+linux-pwm@lfdr.de>; Thu, 30 Oct 2025 11:40:47 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1BB73C1FE11
+	for <lists+linux-pwm@lfdr.de>; Thu, 30 Oct 2025 12:50:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id A1B353A1E60
-	for <lists+linux-pwm@lfdr.de>; Thu, 30 Oct 2025 10:40:20 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 9BB9C349BB2
+	for <lists+linux-pwm@lfdr.de>; Thu, 30 Oct 2025 11:50:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DF0E340264;
-	Thu, 30 Oct 2025 10:40:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B32231197A;
+	Thu, 30 Oct 2025 11:50:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="Dipggkwh"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SJ4psI5M"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from pandora.armlinux.org.uk (pandora.armlinux.org.uk [78.32.30.218])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4A0432570D;
-	Thu, 30 Oct 2025 10:40:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=78.32.30.218
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A39F23D2B2;
+	Thu, 30 Oct 2025 11:50:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761820818; cv=none; b=Aofy1vg7tbte5JnOYDW1B/xbemu+wMOk+XeG+it4jMBogHn1Bu+WPDD3k/NiEvFW+GIdon+3nB6MjZVgPbwo7jMRxCVD9epLgAKIbrzqcy5jjoeJJm5V6JC7BYZIxjTlIqOposBz2/gopr1YbXfQduGAk5fQKNAd7KY2bNnhqyI=
+	t=1761825006; cv=none; b=RXnxhLXWNCr7MKtxdfsvKN8EM4L88L36l9qbbY9+rpnNd2SSeVq6d4XzpyWbuFe7Sji4BXK76wqLMLvdU8p056vgFJ0OWq060vivzfxV31draPwLk8q0G+hssje3pnvNEIbdOLhtJDztm7h0852ybgA9tQ1pX4Bvfbc9DUoQI00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761820818; c=relaxed/simple;
-	bh=8Vzuw1iAvx1zgZghcv2owGbdLTGXx8dqKeXVGD0+4B4=;
+	s=arc-20240116; t=1761825006; c=relaxed/simple;
+	bh=moMPcJsHoh+D5tFeCvN/Eh1IJ6XaSFfSJQcEu0+Vvog=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=V5yYUbF9fOj8qkKQSLmwYFigAmnnvgxzjt7wHETPcflT9wkkxMVPc9+uS/FtJBG4MGKuklQkf2ffQULGjLwtod8hbjLOBcN/Yn52LI4TeETHFLxsCZn1VkETDn5kUP2JYZmNBwQvlqLMQJHpLDCkK50zkhWUzHGt5ZDVjm9HYFs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk; spf=none smtp.mailfrom=armlinux.org.uk; dkim=pass (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b=Dipggkwh; arc=none smtp.client-ip=78.32.30.218
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=armlinux.org.uk
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=armlinux.org.uk
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-	Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-	List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=RCywyWtPG7xhPz4mDJsFONHwjktY6zCv82HEx1Rjk2s=; b=DipggkwhifOTGFbt6Tw5h2OBCG
-	ShvA3eH+PJz5SAosWXlC6MzBX0ny72o8hYDYFpCd5ZK9t17vVAL7cnGRxOkUqXQj27Sp9XpKs3uvC
-	O3SEkV74W7Luyvz+J6dpAqBP4jxEu1R5EjfqvFHoejfVCpjfRI2hlEMc0QFR7Bf8nFdQke89adTkV
-	nu5PTgG+SEC2sNHaPYTG4pjLAhZCujDjhj3rGYHxFH3kG4/9go3ViQTBk5j7F2PcqHJsmjq2aFvI/
-	5yFSXd+d92/XAiED1/xTe2pTex1tL8h+M0oGuwIGJYAt7YVzmXUJStuz35ynhA7hNd5+2rO0ZQiEc
-	8APENvFA==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:34098)
-	by pandora.armlinux.org.uk with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.98.2)
-	(envelope-from <linux@armlinux.org.uk>)
-	id 1vEQ4g-000000005ZB-0ady;
-	Thu, 30 Oct 2025 10:40:10 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.98.2)
-	(envelope-from <linux@shell.armlinux.org.uk>)
-	id 1vEQ4e-000000008Oe-2a4n;
-	Thu, 30 Oct 2025 10:40:08 +0000
-Date: Thu, 30 Oct 2025 10:40:08 +0000
-From: "Russell King (Oracle)" <linux@armlinux.org.uk>
-To: "Krebs, Olaf" <Olaf.Krebs@emh-metering.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=duVrZXYC81pWDHsvrMLHghY/7n/9KOxJ6ppqRu4UWDtkIJbILkRHCDgnePA21sgIt2jueWcO0w4HKwLH+QmmrFdT2kvH/bokQNoXl0i45GoCLp2C7UspD7yoAE04GnZY9xQlUeoDNVecd3s7XT2lvdVyiQklP9517joAwq7hWOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SJ4psI5M; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D596C4CEF1;
+	Thu, 30 Oct 2025 11:50:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1761825004;
+	bh=moMPcJsHoh+D5tFeCvN/Eh1IJ6XaSFfSJQcEu0+Vvog=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=SJ4psI5MuXqxCO245p9pGERpCQi5pHOVlT7DSYUE/R4AZa/VnB170AnM6D47963zL
+	 H7ilQkhTy9xoyz/JbV1n9FQzp2hjWkNHqtj1iq8zRYPg+BIefMMJetoKH80QG1JmnO
+	 JT+xhsXNTO53e95Gq/dgJyvDnQ9ICtITcXrSi5WiIfRBykNaMFHlUTWFqbKizHDtd2
+	 TAD1nYg1xr1HDhsI1Zvt9UTUGTWGoU1wvjHAlFGpAVPuK47N3Z20abhOA9xA28jVVK
+	 O6Bmr69H7I5bVwYirMdP7n7ALFwT9pMEWTetRVwDQUnd4s1k5MflOTV+ZtM2AX9qC4
+	 LTOXGvLmfxt6A==
+Date: Thu, 30 Oct 2025 11:51:07 +0000
+From: Daniel Thompson <danielt@kernel.org>
+To: Michael Grzeschik <m.grzeschik@pengutronix.de>
 Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Shawn Guo <shawnguo@kernel.org>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	"open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
-	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>,
-	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>,
-	open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] Fix IMX PWM period setting
-Message-ID: <aQNAiDVKahkIrLYA@shell.armlinux.org.uk>
-References: <20251030084727.4098222-1-user@jenkins>
- <c26fde7dff3a41ff9f7e6c97e2a31801@emh-metering.com>
+	Lee Jones <lee@kernel.org>, Jingoo Han <jingoohan1@gmail.com>,
+	Helge Deller <deller@gmx.de>, Pengutronix <kernel@pengutronix.de>,
+	linux-pwm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] backlight: pwm_bl: apply the initial backlight state
+ with sane defaults
+Message-ID: <aQNRK5ksNDMMve0x@aspen.lan>
+References: <20250731-blpwm-v1-1-0171fd31bff9@pengutronix.de>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -77,22 +61,24 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c26fde7dff3a41ff9f7e6c97e2a31801@emh-metering.com>
-Sender: Russell King (Oracle) <linux@armlinux.org.uk>
+In-Reply-To: <20250731-blpwm-v1-1-0171fd31bff9@pengutronix.de>
 
-On Thu, Oct 30, 2025 at 08:51:20AM +0000, Krebs, Olaf wrote:
-> From: Olaf krebs <olaf.krebs@emh-metering.com>
-> 
-> We use 3 PWM channels to control an RGB LED. Without this patch we get an error:
+On Thu, Jul 31, 2025 at 10:47:18AM +0200, Michael Grzeschik wrote:
+> Currently when calling pwm_apply_might_sleep in the probe routine
+> the pwm will be configured with an not fully defined state.
+>
+> The duty_cycle is not yet set in that moment. There is a final
+> backlight_update_status call that will have a properly setup state.
+> However this change in the backlight can create a short flicker if the
+> backlight was already preinitialised.
+>
+> We fix the flicker by moving the pwm_apply after the default duty_cycle
+> can be calculated.
+>
+> Signed-off-by: Michael Grzeschik <m.grzeschik@pengutronix.de>
 
-Not build-tested.
+Reviewed-by: Daniel Thompson (RISCstar) <danielt@kernel.org>
 
-> -		if (tpm->user_count > 1)
-> +		if ((tpm->user_count > 1) && (tmp->real_period != 0))
 
-"tmp" vs "tpm". As there's no variable called "tmp" in this function...
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTP is here! 80Mbps down 10Mbps up. Decent connectivity at last!
+Daniel.
 
