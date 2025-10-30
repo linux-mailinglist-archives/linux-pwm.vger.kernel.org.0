@@ -1,45 +1,45 @@
-Return-Path: <linux-pwm+bounces-7542-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7545-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
-	by mail.lfdr.de (Postfix) with ESMTPS id 860B7C205CB
-	for <lists+linux-pwm@lfdr.de>; Thu, 30 Oct 2025 14:52:29 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 055F3C2055F
+	for <lists+linux-pwm@lfdr.de>; Thu, 30 Oct 2025 14:50:07 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 645371895769
-	for <lists+linux-pwm@lfdr.de>; Thu, 30 Oct 2025 13:48:55 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 51EB64EC906
+	for <lists+linux-pwm@lfdr.de>; Thu, 30 Oct 2025 13:49:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E031F25B2F4;
-	Thu, 30 Oct 2025 13:47:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2C7A3272811;
+	Thu, 30 Oct 2025 13:47:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="bthSk+pY"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="jL102vIb"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07DCE223DC0;
-	Thu, 30 Oct 2025 13:47:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 093512475C7;
+	Thu, 30 Oct 2025 13:47:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761832064; cv=none; b=PsrP4O1xiXCzlRl1tm46MMBkL3nCh20DDdGsBVub9fS6B7m3pmOUbq8ngdPPngDB7wFx5P+av9pgswUyU2/GNLooFnknGXKujvQbbNF6TjrfV+NBO2hCi+pvcK/zb6UoWOWYtRZxyNfNkppGw65MVFkAtabSLaN24uwpi+7sD7A=
+	t=1761832066; cv=none; b=QViZih9/Iw+8djqum2DV/Jr0ep4tiS46aDT3NkKqtaaMJFmQd0QTbnABsUi7RLJSBf+jJ/40svzNkcJY56ErJPavUwcuGYwjhNonBvsp/Hz6+FHiOFqql0bEaZbKBDG4nKRPqaUd+1Su6KTavIHEcJDNFhQWTMHhwVoUGsMIF1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761832064; c=relaxed/simple;
-	bh=Ikv9JdXv3RMjbnj6nWEnDlGUGXaU4ABfRCe9YfwQ+Qc=;
+	s=arc-20240116; t=1761832066; c=relaxed/simple;
+	bh=0bzgh6A6jaX5UZdXwU462kXOaA+FxKXetYBHp97Mrvs=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=IA2WkmOxsIzVuZchFQU0P475jAKknFh78biPPYRJiHlH107UqlHJ5xCnRuhzhzzcsW/uYi/yF4zpJkFELR0G8q1AnkU0xy0la72D8Mbln/uIsJvZFgdASosewjvfwN7LLvuaOm4HWcL7Rq0UGovwGyNs8s+qL0+RBO5sF4LO5jE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=bthSk+pY; arc=none smtp.client-ip=210.61.82.184
+	 MIME-Version:Content-Type; b=ESuYcC8/UC5cnIAZBU1l2hUb6fY7THVlueZ00Cx4xaIuJsbB8TwVj+1G6tsQ+Fu6QdFMz/xg5/4lIJJlnhfe9HpbAkH4m8vPNGVxsGz7GKQusrJOC4bxWltrVNVicLgSOJBeVWE+yNUxdYh/voRGralgP777y6h+cQNozAWzxLg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=jL102vIb; arc=none smtp.client-ip=210.61.82.184
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
-X-UUID: fc495936b59611f0b33aeb1e7f16c2b6-20251030
+X-UUID: fbdc476ab59611f0b33aeb1e7f16c2b6-20251030
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=VOzOTNAAyN7vYz7Yua2PoZcgyIUU0v5BE6O1gzYS/Fc=;
-	b=bthSk+pYmntR7KYcRnwoxBzCCZ8ALy6DMYQSu/Cybqpn1mGvwBxppl3sGmWlNxTQh3B9AlZ4+ooSuM1UfpB7uhuWUYWegtEHM5VwIHGjL6fcu4xmyrjsoKg49gxAU/zRfuRd7zHQZr95/OzqhLN4xCqBS5NNGOKVfkIHVn25Vaw=;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=qQrj0/qoTdAgWcDtEOeP1BrFMoKaYD0yxltUV08VxZE=;
+	b=jL102vIbRKESPVzeMsQzrypw0FgpdVsGx3RJkCozeDjqH3eD5cjPs0gg0ZpGLWI2w2yfBhokcUxRObP2m7eX5RtqX8TgHK5FClgRw/4I5KBZcY73EMRn073o5nmYQyH/ipfBP6bQhxchj3jH9CuYO2UgCXexNPgR7/zVup3Qi98=;
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:51cbbed9-64e0-4525-8679-ba8effb6b6cf,IP:0,UR
+X-CID-O-INFO: VERSION:1.3.6,REQID:147b7f1e-2c24-4bed-b3c2-ffc7cb51b183,IP:0,UR
 	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
 	elease,TS:0
-X-CID-META: VersionHash:a9d874c,CLOUDID:74c8db6a-d4bd-4ab9-8221-0049857cc502,B
+X-CID-META: VersionHash:a9d874c,CLOUDID:72c8db6a-d4bd-4ab9-8221-0049857cc502,B
 	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102|836|888|898,TC:-5,Content:
 	0|15|50,EDM:-3,IP:nil,URL:0,File:130,RT:0,Bulk:nil,QS:nil,BEC:nil,COL:0,OS
 	I:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
@@ -47,13 +47,13 @@ X-CID-BVR: 2,SSN|SDN
 X-CID-BAS: 2,SSN|SDN,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR
 X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: fc495936b59611f0b33aeb1e7f16c2b6-20251030
-Received: from mtkmbs11n2.mediatek.inc [(172.21.101.187)] by mailgw02.mediatek.com
+X-UUID: fbdc476ab59611f0b33aeb1e7f16c2b6-20251030
+Received: from mtkmbs10n1.mediatek.inc [(172.21.101.34)] by mailgw02.mediatek.com
 	(envelope-from <jh.hsu@mediatek.com>)
 	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1037317945; Thu, 30 Oct 2025 21:47:33 +0800
+	with ESMTP id 1702788412; Thu, 30 Oct 2025 21:47:32 +0800
 Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- mtkmbs10n1.mediatek.inc (172.21.101.34) with Microsoft SMTP Server
+ mtkmbs11n1.mediatek.inc (172.21.101.185) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
  15.2.1748.26; Thu, 30 Oct 2025 21:47:31 +0800
 Received: from mtksitap99.mediatek.inc (10.233.130.16) by
@@ -77,9 +77,9 @@ CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<linux-watchdog@vger.kernel.org>,
 	<Project_Global_Chrome_Upstream_Group@mediatek.com>, Jack Hsu
 	<jh.hsu@mediatek.com>
-Subject: [PATCH v6 07/11] dt-bindings: usb: Support MediaTek MT8189 evb board xhci
-Date: Thu, 30 Oct 2025 21:44:39 +0800
-Message-ID: <20251030134541.784011-8-jh.hsu@mediatek.com>
+Subject: [PATCH v6 08/11] dt-bindings: watchdog: Support MediaTek MT8189 evb board wdt
+Date: Thu, 30 Oct 2025 21:44:40 +0800
+Message-ID: <20251030134541.784011-9-jh.hsu@mediatek.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20251030134541.784011-1-jh.hsu@mediatek.com>
 References: <20251030134541.784011-1-jh.hsu@mediatek.com>
@@ -93,45 +93,25 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-MTK: N
 
-modify dt-binding for support mt8189 evb board dts node of xhci
+modify dt-binding for support mt8189 evb board dts node of wdt
 
 Signed-off-by: Jack Hsu <jh.hsu@mediatek.com>
 ---
- .../devicetree/bindings/usb/mediatek,mtk-xhci.yaml         | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/watchdog/mediatek,mtk-wdt.yaml | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.yaml b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.yaml
-index 004d3ebec091..05cb6a219e5c 100644
---- a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.yaml
-+++ b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.yaml
-@@ -34,6 +34,7 @@ properties:
-           - mediatek,mt8183-xhci
-           - mediatek,mt8186-xhci
-           - mediatek,mt8188-xhci
-+          - mediatek,mt8189-xhci
-           - mediatek,mt8192-xhci
-           - mediatek,mt8195-xhci
-           - mediatek,mt8365-xhci
-@@ -119,6 +120,9 @@ properties:
-   resets:
-     maxItems: 1
- 
-+  reset-names:
-+    maxItems: 1
-+
-   usb3-lpm-capable: true
- 
-   usb2-lpm-disable: true
-@@ -168,7 +172,8 @@ properties:
-             104 - used by mt8195, IP1, specific 1.04;
-             105 - used by mt8195, IP2, specific 1.05;
-             106 - used by mt8195, IP3, specific 1.06;
--          enum: [1, 2, 101, 102, 103, 104, 105, 106]
-+            110 - used by mt8189, IP4, specific 1.10;
-+          enum: [1, 2, 101, 102, 103, 104, 105, 106, 110]
- 
-   mediatek,u3p-dis-msk:
-     $ref: /schemas/types.yaml#/definitions/uint32
+diff --git a/Documentation/devicetree/bindings/watchdog/mediatek,mtk-wdt.yaml b/Documentation/devicetree/bindings/watchdog/mediatek,mtk-wdt.yaml
+index ba0bfd73ab62..a05f8155b738 100644
+--- a/Documentation/devicetree/bindings/watchdog/mediatek,mtk-wdt.yaml
++++ b/Documentation/devicetree/bindings/watchdog/mediatek,mtk-wdt.yaml
+@@ -41,6 +41,7 @@ properties:
+               - mediatek,mt7623-wdt
+               - mediatek,mt7629-wdt
+               - mediatek,mt8173-wdt
++              - mediatek,mt8188-wdt
+               - mediatek,mt8365-wdt
+               - mediatek,mt8516-wdt
+           - const: mediatek,mt6589-wdt
 -- 
 2.45.2
 
