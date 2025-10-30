@@ -1,150 +1,127 @@
-Return-Path: <linux-pwm+bounces-7565-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7566-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id 16896C22856
-	for <lists+linux-pwm@lfdr.de>; Thu, 30 Oct 2025 23:11:12 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7890EC228D2
+	for <lists+linux-pwm@lfdr.de>; Thu, 30 Oct 2025 23:25:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id ED5CD3B1060
-	for <lists+linux-pwm@lfdr.de>; Thu, 30 Oct 2025 22:10:29 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id DA31234F12A
+	for <lists+linux-pwm@lfdr.de>; Thu, 30 Oct 2025 22:25:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D5FE433557E;
-	Thu, 30 Oct 2025 22:10:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7DBCF30BF68;
+	Thu, 30 Oct 2025 22:25:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="OzQ9cZTw"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="ubrpQsIU"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0ADF32C92B
-	for <linux-pwm@vger.kernel.org>; Thu, 30 Oct 2025 22:10:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CC7325DD0C
+	for <linux-pwm@vger.kernel.org>; Thu, 30 Oct 2025 22:25:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761862226; cv=none; b=avXAYXOO2UJOcdTGDeOSX4AEW7ZzWkvvmgjNvwNEkHMRLhYnoKaCHKw+EG/X9Z2QL4GfZnIQAm5pwGUQDz0lcCp/eEYM24YWu6h7fuMuK0w24jU73sp52zOpDJgAlI7SLnmC7SP+IlKgumKIoj6yuFPR36Brst9DJ/Q7YCSrmzI=
+	t=1761863145; cv=none; b=gHmq1YXHVUlel/rqQrUqpYJZS5wjFmIlunXkUeEYdCAfsTVUJRJXPs021b3YrLD4NNLN3JFnYAKUSSlR6zu7Lqq3FiYX9Hp7YRO6EvPdfPvGinZRojDqEFqFwzj7341UJwRIYE2GmLbDHaFEm4Td55LZivuSe7aNDnICOV0+D0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761862226; c=relaxed/simple;
-	bh=yi3VN5iGYK0efOoeR4bO5a0LbuJ3TDjRF5ahHiHQFIw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=R6wCybiyL09mJOEhNPr36DV5SYroAyYzxJTSLO5jY+cGmJF1VnF3sQ06/dDGwFQNBMh2ub7YceafDRmmSMpTzY8zgdgqK+i2fq74m71X+3GSzWRyuFDU93tCzIWk52rotFQ931Rc0gOF9Ew6HyJZLabodWGsTphHQzQBJZEbXMM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=OzQ9cZTw; arc=none smtp.client-ip=209.85.208.43
+	s=arc-20240116; t=1761863145; c=relaxed/simple;
+	bh=SYIUerC/xexWng8EppMsWh0BUF/Bl5ux1CEatheccIw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=INM9su6AOdsxZhCy4aKHM+ZVCf2fAl7h0V5yeU5hGR1ZYYGiBzXdqplWE7CVv/wHAd12LOoEqkop5kRAJH+uTcQsZy/LuS8JXaJao2EmtcHenEJGojaMHQa9nqWWVVFhADMoiZmGAa5GsRS8K3gkdEzzsUOeW6cLlriVUSTrU9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=ubrpQsIU; arc=none smtp.client-ip=209.85.218.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-6406b8e1fb8so1554467a12.0
-        for <linux-pwm@vger.kernel.org>; Thu, 30 Oct 2025 15:10:24 -0700 (PDT)
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-b4539dddd99so381154966b.1
+        for <linux-pwm@vger.kernel.org>; Thu, 30 Oct 2025 15:25:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1761862223; x=1762467023; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=yi3VN5iGYK0efOoeR4bO5a0LbuJ3TDjRF5ahHiHQFIw=;
-        b=OzQ9cZTwp5Kdtm7TZ1v1+LSqhLknw5BJozH/7Jjiz0h+YDtceXWFnk4aXT2T+Vo3oO
-         wtJuLnSlYNSMaxQ5LjSqOWs8X6tYxx42SyBGupbRvJ7htcbh71CEeTjx2ubcA88awNMM
-         kG/hMK3fIn3rnChkrWtAH4J5sdWeFjP7e5PshZMQEsSuvSGg7ERZNNyBeyEgWtVskLs2
-         jEMBVxtZjZmmNxcyGGzPGI0MBvE3qz5MYDYLgAaiXZJQwqmd5S3zWnfOKx6mWDAyquzw
-         kDSlfxsXZjj3W8i8Zw7hDtMUKIqyX/e+kBa29t+0t6Sh4NI4N5AUUWOjk7U8qvRy2QC4
-         rtFg==
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1761863140; x=1762467940; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=5vuV/8yNqcCPgemhGCUUQBQDrlCH0iJrd6i7TcBGCZU=;
+        b=ubrpQsIU55miACbVaHSF9gNEgZrZ1Ug0JtXiBfZo0PibiuNXhx7E5srfJhJUOgqu78
+         1LQqBsgpC4o12BG5jqM9QlpkYiRk77/BRbt72C57SqoYmCuIvI6DBNK4jKuN9AOWPYZ8
+         rl9CZczZbfaHmtbsXjytjNYsbnSgeegAIWfgy+ukRohhmAxX1Ke+q0z9e0cO3kAtfTVK
+         QL/iAxWSk0A5Qfh/j8F4P4FbO4d3BNwtxtpbib+RZYbkXzFmCOhL4aEWNdehvZY8HXxg
+         iuw2QAtSWTgstDeKBzmSjgQEE5pcJvSLmarqW+ZKLljSFO2jG8JCHjFWFNQhxaFnm9Sd
+         6Oyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1761862223; x=1762467023;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=yi3VN5iGYK0efOoeR4bO5a0LbuJ3TDjRF5ahHiHQFIw=;
-        b=Oddx1ay9GordAEFUlKlI9fd9CsO0gySY6jrKHOymaAc4Z+yxxYltNIk6f7lGaQzACF
-         c1vx8g708cBYH7B9/XY5OWtJRhPkkLYoUcgqzYjmsSWHs9K5odsE3b86NyvRrwMcsakh
-         Tnlj9sSDbslDS0FlrHBNMafq11ccscfj+HiaPQXer/TCfzhFco/cfcrr4cvPIYmRhRE0
-         NiFBy+ZSiqfoEj37+hM8mGn5t5HaSTZKJQVXxUsXB4wO+mXcVxnysszzrgrdXXrbhaW6
-         eKYfu/GVw3MxKwD3RedcLmnvmyykd698uY3RYOSjAX5Mwe/w/9iXOJ3jBwYKpooUta1R
-         HHAg==
-X-Forwarded-Encrypted: i=1; AJvYcCX5PjZZDw8r5o4iBTs9nUgP2tUqZCyi/0PWhAsDAGhIe9/tGa/FZq1zWKURx3JWaBWRP1I1SyA1Sis=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxs28LnnmcjP5w/kqco7Y4GVqy6f+NmynoUjq+vwtPGljUOwE4e
-	ptpm3oOhyz/nwZfqbRGF89dikMLIhn9Uh1Cu6TmGE0oWwpU+olZ+HrqttV4sIVy54+k=
-X-Gm-Gg: ASbGncs/77ykpR8x3o1ne795Ft69jVAgP4uOWDIvofaXWX0FSbdnvUPnzHmQMUxYISc
-	ACs9jmMt6MN9UJ5fZzQgp41QwJYHJD6vVzTly/JVrVb7whXYylk0j+J9+4zwetN9rlz61BEo9Ve
-	o7aj/B8iGgqDxs5augQeA+NPe4OYkw0s1DaBA3qtLTdDrtFDksd3yzBt2qaE9hwXt62zPLnS2Z5
-	ELYAQovQgh3AO1TiMkaarNXB+zKXhDnvBSrkOV44nLH8VyArIHpdVCq+fwZ+zbVutmk0frHyBnV
-	l/Kp0uiIsK9356LzAdrk5zxhmMF7h95qMwMiV7dwRIIzMJbObsFkcEk+UAudlpWvlH/pEsQvGeI
-	dptFC66NXcDBg1tJZDxOciwSQnyr0D2jrfOZSit5ygAWqBb+FZpUYess/455w+M6stQlZlqOvK+
-	o6Pj03Fw==
-X-Google-Smtp-Source: AGHT+IEr5KfO9g5XB5M1oZw7bGno87HZnZZWw7Q18m6dtyDaC7sCL6xNw6zqoj036IrByLM0+eD+5w==
-X-Received: by 2002:a05:6402:3596:b0:63e:b49:c9c3 with SMTP id 4fb4d7f45d1cf-64077082133mr839973a12.31.1761862223219;
-        Thu, 30 Oct 2025 15:10:23 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1761863140; x=1762467940;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=5vuV/8yNqcCPgemhGCUUQBQDrlCH0iJrd6i7TcBGCZU=;
+        b=QpXD/XFFeI1C7nUXBs34oXLkD2ukVy9UgdXh/1wT1IcgS8WfrfUNV1hwpsz9tpXswe
+         qaKkRspXOQnC7pEFcJUglXp0nXwu3jeddNRu/ZKyDqSbeVijjyzzY/KLyfUQj+Iri+Uc
+         dt2xKgJY2WgWA7BGZg+S7teGrrxWYxjBNLnd3zXDW13yOdQc4iCiRhymf3PlhpuNVQmC
+         F7b2KxIHxUSVxd6UqRkhNJtMP6IeCAloZsB5fiGfnDfm/bqkVdX2FlU0kHsIxGgsvW0K
+         otW9dtUlTBmu1TNi29y6U8wbl5m3mIPC1TCjlG+IY/r9Xo5sLoaLIABHg+m+XlLwXp4w
+         Z4DQ==
+X-Gm-Message-State: AOJu0YwsZc30ImkrUbKS7SS62igSO54lrDysm8kuou6pBrYhebqSaB/C
+	Jc2usPHmLG9ukskzKEsjQNPFycYy/dH/MkwiWkAfGFu2kpaxU7yoE365QKFSSZvwMBc=
+X-Gm-Gg: ASbGncsfwmOhed4Ud7+ky3QwppS/2jRrXFct8iqsZ47YqMebF1SW0/nyBbpGGouA8B6
+	KTR/VXzrTOvZaeZ+q1MyOe1Of8XchzMUK6R++/582U1uoc9D1dcunuaBq/72FzlDdmcOjCEIsjn
+	IweqSnNAtYQIsmlAqBtgcTrsJdMZ22GhAuo2j2/MFFUkDaHiFsO6ppquY4HgCU+AdIsBOBmH0g0
+	230rP6e2FOcwVKIFLenmrAsKt5g4P78mpYMYVmf1Pz85OOV07MnJFVb/eAERhFm7oXL319zabM2
+	CNWT5gh//CDFejO/yf7lJ2nzJuUwaEXRB72e0vlgnMjdcl6Ul86sX8WF0Z+S7AEet49mXL92NOh
+	4PqV0kfFGG8wQhAj8eXWoyXbvlzBc4u6nkbxX6L+/PTPjx9UcMfN6CluJa6mBJFpWDQHZd+K1+v
+	310mAR5Q==
+X-Google-Smtp-Source: AGHT+IF5SUMEmxJ7sHz5EU26ysWE5fSSIeUi/liwYBUEkNzqfcfYDxvn9nhf0+F8pjiFc45fRSt38g==
+X-Received: by 2002:a17:907:806:b0:b3b:82ee:def9 with SMTP id a640c23a62f3a-b707083054emr117347566b.53.1761863140409;
+        Thu, 30 Oct 2025 15:25:40 -0700 (PDT)
 Received: from localhost ([2a02:8071:b783:6940:1d24:d58d:2b65:c291])
-        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-6407b390d7dsm60738a12.10.2025.10.30.15.10.21
+        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-b7044d00de6sm579859366b.74.2025.10.30.15.25.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 30 Oct 2025 15:10:22 -0700 (PDT)
-Date: Thu, 30 Oct 2025 23:10:19 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Miguel Ojeda <ojeda@kernel.org>
-Cc: Michal Wilczynski <m.wilczynski@samsung.com>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, linux-kernel@vger.kernel.org, 
-	patches@lists.linux.dev
-Subject: Re: [PATCH] pwm: fix Rust formatting
-Message-ID: <m3shamaznoachabbsxsknzk3snp7nrkmkwqmnfibbwmdfbhgy4@3seayfxsb7kh>
-References: <20251029182502.783392-1-ojeda@kernel.org>
+        Thu, 30 Oct 2025 15:25:39 -0700 (PDT)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Matthias Brugger <matthias.bgg@gmail.com>,
+	AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
+Cc: linux-pwm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-mediatek@lists.infradead.org,
+	Julia Lawall <julia.lawall@inria.fr>,
+	kernel test robot <lkp@intel.com>
+Subject: [PATCH] pwm: mediatek: Make use of struct_size macro
+Date: Thu, 30 Oct 2025 23:25:27 +0100
+Message-ID: <20251030222528.632836-2-u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="stxqejammn4geqdw"
-Content-Disposition: inline
-In-Reply-To: <20251029182502.783392-1-ojeda@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1113; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=SYIUerC/xexWng8EppMsWh0BUF/Bl5ux1CEatheccIw=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBpA+XYSVrbXsDagZh1G/OShMN8OLLSgCz++eV/0 4cjDcAPTWqJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCaQPl2AAKCRCPgPtYfRL+ TqUZB/9yusSl/guKODh4FsI0I+VSKcrmxssTgz9GdsZBh4o+ADFSw6swjRwKMmGEQovx/evZ0n2 ckY5v3yWkiu4td18CXVksMoUPZNhz/DFtmyjkx6IezcMEYhEeNv39mSbfDVy6r+YvKDZYDZF93c BtFVfvL2givWJwEOF1ZEoOPuy5Zej30p40lSSb+x+NUOy1IaQXsa2olJHZIfQe9ZoTZAsjClru6 fA89b6jO2Kw0Z9sFzSzihGGyH39655BbMp9d1BKhMArWNy8ANoWx7MvU/88ZBgIb+6ZuKNvKMlc lPEZp4uWp/Pt4LHbAgl3TnIZw+BVLw/FrcunXV613rpsopxj
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 
+struct_size provides the size of a struct with a flexible array member.
+Use that instead of open-coding it (with less checks than the global
+macro).
 
---stxqejammn4geqdw
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] pwm: fix Rust formatting
-MIME-Version: 1.0
+Reported-by: kernel test robot <lkp@intel.com>
+Reported-by: Julia Lawall <julia.lawall@inria.fr>
+Closes: https://lore.kernel.org/r/202510301753.iqGmTwae-lkp@intel.com/
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+---
+ drivers/pwm/pwm-mediatek.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Hello,
+diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
+index 4291072a13a7..d09f2eb4fb24 100644
+--- a/drivers/pwm/pwm-mediatek.c
++++ b/drivers/pwm/pwm-mediatek.c
+@@ -377,7 +377,7 @@ static int pwm_mediatek_probe(struct platform_device *pdev)
+ 	soc = of_device_get_match_data(&pdev->dev);
+ 
+ 	chip = devm_pwmchip_alloc(&pdev->dev, soc->num_pwms,
+-				  sizeof(*pc) + soc->num_pwms * sizeof(*pc->clk_pwms));
++				  struct_size(pc, clk_pwms, soc->num_pwms));
+ 	if (IS_ERR(chip))
+ 		return PTR_ERR(chip);
+ 	pc = to_pwm_mediatek_chip(chip);
 
-On Wed, Oct 29, 2025 at 07:25:02PM +0100, Miguel Ojeda wrote:
-> We do our best to keep the repository `rustfmt`-clean [1], thus run the
-> tool to fix the formatting issue.
->=20
-> A trailing empty comment [2] is added in order to preserve the wanted
-> style for imports (otherwise the tool will compact the first two items).
->=20
-> Link: https://rust-for-linux.com/contributing#submit-checklist-addendum [=
-1]
-> Link: https://docs.kernel.org/rust/coding-guidelines.html#style-formattin=
-g [2]
-> Fixes: a3d5a2b8da94 ("rust: pwm: Add complete abstraction layer")
-> Fixes: 121931a7b4dc ("rust: pwm: Add Kconfig and basic data structures")
-> Fixes: fb3957af9ec6 ("pwm: Add Rust driver for T-HEAD TH1520 SoC")
-> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+base-commit: 27a8bb33b660614184b9382c146afd2ebfd7d7b7
+-- 
+2.47.3
 
-Applied to
-https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
-next
-=2E
-
-Thanks!
-Uwe
-
---stxqejammn4geqdw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmkD4kgACgkQj4D7WH0S
-/k7ZFwgArUy6vPY6bP//G90gYhm0oJvRmV9rUOHtEWSHy7Y+GEm32WlMa6z3ojWB
-DHu/TuxL8wOTYetKoEyYOvVeP8RJuRB3y9PX5FUJBUKTan2TyLB6UglIsCOYmICn
-KHSXiLmsiXBkCwCiNZW7v/3kFsfBbzL7oGsbGEUOuV9V53F6Eg2vSkmWVQ4TgmpA
-IqUvkgohJ/HvrJcXJhy8wrCvKVtpkaTnA4rEtJPyCeGm3EJhitm1NF1VjVg1aT7U
-iPgPBELbJYM+X1j9V6lmfaLGNo1wJ5ubgmXzyAnSwuaS5Tj+XOFYkhAwynjOyQS3
-L3ute5H0Sj2hyzf7FHvWac/JBcO9EQ==
-=IT7F
------END PGP SIGNATURE-----
-
---stxqejammn4geqdw--
 
