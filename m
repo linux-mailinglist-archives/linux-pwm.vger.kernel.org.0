@@ -1,59 +1,59 @@
-Return-Path: <linux-pwm+bounces-7546-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7540-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 292BAC20610
-	for <lists+linux-pwm@lfdr.de>; Thu, 30 Oct 2025 14:53:45 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id DBCD9C20597
+	for <lists+linux-pwm@lfdr.de>; Thu, 30 Oct 2025 14:51:27 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 933B01A64F46
-	for <lists+linux-pwm@lfdr.de>; Thu, 30 Oct 2025 13:49:49 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id A17FB189246C
+	for <lists+linux-pwm@lfdr.de>; Thu, 30 Oct 2025 13:48:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E18F274FC2;
-	Thu, 30 Oct 2025 13:47:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C71FE226CF0;
+	Thu, 30 Oct 2025 13:47:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="pnSPtRSK"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="fqkkoN62"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mailgw01.mediatek.com (unknown [60.244.123.138])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DD84258EC3;
-	Thu, 30 Oct 2025 13:47:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=60.244.123.138
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FD24221FCA;
+	Thu, 30 Oct 2025 13:47:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761832066; cv=none; b=g8Nty+L3m9X1UoorWp+CgVrlMEdjAi1M6VskUz/DtjvVoVjDTEUANXxuZrKfJiaOZ+r9E0eaTFZLJ6KYOuB0mczq6q1a8jLH64hSXvWrmXvR/j7jyIQL9YxOibPtf+XhtbGha+/HnOTTLHUvKSe/P1r2uyatotShWNYk5OpBTQ4=
+	t=1761832061; cv=none; b=lC37qME2+9zeg6bcqKV1spraU0bVY76HJy5lgg1Luq0+rZVD/Q4I7pRKahAwTzBZf2zWQxLWWqi6TJP78ia9u4YK2fuXk1ZGtxC3jlMnwp5jGPlHERkfyCQGIMT4SDPmeZZLWBEgKxPLbAHM1Rr+YU2nZTsjK8R/Es05ACAArpU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761832066; c=relaxed/simple;
-	bh=3h1JQRYRD4y7g1qyu69Q8furdJvFBp0vUD2rQsdtvI8=;
+	s=arc-20240116; t=1761832061; c=relaxed/simple;
+	bh=HgW03hRzuf0SoucobeFd5CtBgaLwhLyamIonEcGRjvA=;
 	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Mn1uUPli713YSlPWIE9v0xY4OfwSiGaTbX5hVtqQSa0XiXHsZlwjrecEUHGHWW3+rocizsoboSgLRqOWGjkomN7V/IT+GumhTp1jVhJ1LwjpdwiLhU5Q9hawN0JpF9hn0y5vRK6xL02Nz0y9+PbEJQYOxaTuXBDhV81UcEj04mU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=pnSPtRSK; arc=none smtp.client-ip=60.244.123.138
+	 MIME-Version:Content-Type; b=j4+6UYiwNgjPDQFZEodwzBGbXbTOENxk2k4ipFGzNZw2GDm7RCBw06gZ56eUqRw6GP5l1zP2TMzqtwKX/FHy2DLkTeOE/AFbXHGohrTJCe7mcIPZLUxncLczsoyG2g/H6jmPa9xU+4qscQpAOldzPhLf9VvDk5QXm4R1T4daOd4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=fqkkoN62; arc=none smtp.client-ip=210.61.82.184
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
-X-UUID: fc041588b59611f0ae1e63ff8927bad3-20251030
+X-UUID: fc1e156eb59611f0b33aeb1e7f16c2b6-20251030
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
-	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=sTctCbCAKveRVNU/GGBYzcH8oR6FLlmYV4eJXyq9z8I=;
-	b=pnSPtRSK9lHc9z5QItXzuXZ2o2JyekBJB0r3ZLyHa8a8b0LLhm2Hbd2S1EUF0qjKo0MHW10IzLhrOYK3VhUPbWJZDCVTehalGpj2VYn2RSEy++ij9Xq2KdL9LBcBfVU8yS/Y3ul4qVuvw8aF4kdHTzZxMzk0gGIuZkqUhWJpFdE=;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:References:In-Reply-To:Message-ID:Date:Subject:CC:To:From; bh=7fB1bhjwv9jcR9FstEXdoFSBJ6cJVR2X4PtC1NkZ7yg=;
+	b=fqkkoN62AQ/H11Oj7RuQ0fnUaps6gyIYPLdkvnvkDQ8hOduteGit7JsmpJve+AoAHHK4cbLYEbg4KszRrCjtFdqmIr3nzw9k0ShcgIMLbRkk+t0QWg7Oq0fLxR1SlNZf5f2+AI0V3rFui3Ha4zV5PmHV1mHqzXNx9hMOVFuYwA8=;
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.3.6,REQID:03cad0db-e7b8-46dd-a8d8-5ff44611cae3,IP:0,UR
-	L:0,TC:0,Content:44,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
-	release,TS:44
-X-CID-META: VersionHash:a9d874c,CLOUDID:4ff1bc18-3399-4579-97ab-008f994989ea,B
+X-CID-O-INFO: VERSION:1.3.6,REQID:fc7f3f6a-4f70-4ed4-86e5-4e685ef5d9d0,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:a9d874c,CLOUDID:f565f3df-3890-4bb9-a90e-2a6a4ecf6c66,B
 	ulkID:nil,BulkQuantity:0,Recheck:0,SF:81|82|102|836|888|898,TC:-5,Content:
-	3|15|50,EDM:-3,IP:nil,URL:0,File:130,RT:0,Bulk:nil,QS:nil,BEC:nil,COL:0,OS
+	0|15|50,EDM:-3,IP:nil,URL:0,File:130,RT:0,Bulk:nil,QS:nil,BEC:nil,COL:0,OS
 	I:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
 X-CID-BVR: 2,SSN|SDN
 X-CID-BAS: 2,SSN|SDN,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR
 X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
-X-UUID: fc041588b59611f0ae1e63ff8927bad3-20251030
-Received: from mtkmbs14n2.mediatek.inc [(172.21.101.76)] by mailgw01.mediatek.com
+X-UUID: fc1e156eb59611f0b33aeb1e7f16c2b6-20251030
+Received: from mtkmbs10n2.mediatek.inc [(172.21.101.183)] by mailgw02.mediatek.com
 	(envelope-from <jh.hsu@mediatek.com>)
 	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
-	with ESMTP id 1665085208; Thu, 30 Oct 2025 21:47:32 +0800
+	with ESMTP id 232498615; Thu, 30 Oct 2025 21:47:32 +0800
 Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
- mtkmbs13n2.mediatek.inc (172.21.101.108) with Microsoft SMTP Server
+ MTKMBS09N1.mediatek.inc (172.21.101.35) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
  15.2.1748.26; Thu, 30 Oct 2025 21:47:30 +0800
 Received: from mtksitap99.mediatek.inc (10.233.130.16) by
@@ -76,10 +76,10 @@ CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
 	<linux-serial@vger.kernel.org>, <linux-usb@vger.kernel.org>,
 	<linux-watchdog@vger.kernel.org>,
 	<Project_Global_Chrome_Upstream_Group@mediatek.com>, Jack Hsu
-	<jh.hsu@mediatek.com>, Conor Dooley <conor.dooley@microchip.com>
-Subject: [PATCH v6 05/11] dt-bindings: serial: Support MediaTek MT8189 evb board uart
-Date: Thu, 30 Oct 2025 21:44:37 +0800
-Message-ID: <20251030134541.784011-6-jh.hsu@mediatek.com>
+	<jh.hsu@mediatek.com>
+Subject: [PATCH v6 06/11] dt-bindings: timer: Support MediaTek MT8189 evb board timer
+Date: Thu, 30 Oct 2025 21:44:38 +0800
+Message-ID: <20251030134541.784011-7-jh.hsu@mediatek.com>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <20251030134541.784011-1-jh.hsu@mediatek.com>
 References: <20251030134541.784011-1-jh.hsu@mediatek.com>
@@ -93,27 +93,25 @@ Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-MTK: N
 
-add compatible string for mt8189 evb board dts node of uart
+add compatible string for mt8189 evb board dts node of timer
 
 Signed-off-by: Jack Hsu <jh.hsu@mediatek.com>
-Reviewed-by: AngeloGioacchino Del Regno <angelogioacchino.delregno@collabora.com>
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
 ---
- Documentation/devicetree/bindings/serial/mediatek,uart.yaml | 1 +
+ Documentation/devicetree/bindings/timer/mediatek,timer.yaml | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/serial/mediatek,uart.yaml b/Documentation/devicetree/bindings/serial/mediatek,uart.yaml
-index 5bd8a8853ae0..3f0f4aea0a4c 100644
---- a/Documentation/devicetree/bindings/serial/mediatek,uart.yaml
-+++ b/Documentation/devicetree/bindings/serial/mediatek,uart.yaml
-@@ -47,6 +47,7 @@ properties:
-               - mediatek,mt8183-uart
-               - mediatek,mt8186-uart
-               - mediatek,mt8188-uart
-+              - mediatek,mt8189-uart
-               - mediatek,mt8192-uart
-               - mediatek,mt8195-uart
-               - mediatek,mt8365-uart
+diff --git a/Documentation/devicetree/bindings/timer/mediatek,timer.yaml b/Documentation/devicetree/bindings/timer/mediatek,timer.yaml
+index 337580dc77d8..8e705fe58dc5 100644
+--- a/Documentation/devicetree/bindings/timer/mediatek,timer.yaml
++++ b/Documentation/devicetree/bindings/timer/mediatek,timer.yaml
+@@ -44,6 +44,7 @@ properties:
+               - mediatek,mt8183-timer
+               - mediatek,mt8186-timer
+               - mediatek,mt8188-timer
++              - mediatek,mt8189-timer
+               - mediatek,mt8192-timer
+               - mediatek,mt8195-timer
+               - mediatek,mt8196-timer
 -- 
 2.45.2
 
