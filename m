@@ -1,138 +1,201 @@
-Return-Path: <linux-pwm+bounces-7572-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7573-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0E368C2484D
-	for <lists+linux-pwm@lfdr.de>; Fri, 31 Oct 2025 11:38:49 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3D75EC24F74
+	for <lists+linux-pwm@lfdr.de>; Fri, 31 Oct 2025 13:21:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id AE199345BCF
-	for <lists+linux-pwm@lfdr.de>; Fri, 31 Oct 2025 10:38:48 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D72A44E1DAA
+	for <lists+linux-pwm@lfdr.de>; Fri, 31 Oct 2025 12:21:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28CAF33F8DD;
-	Fri, 31 Oct 2025 10:38:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A15282E2DD4;
+	Fri, 31 Oct 2025 12:21:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JTUrI/kp"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="A4UWeNPA"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC1BB327214;
-	Fri, 31 Oct 2025 10:38:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1761907114; cv=none; b=i5oYK1Bgk/AG73dM18jZMMUu+t7DqjNPGzPVkkQmAmFz/jH3jPlYAazkcr6KjFgYTrFezhLbqyWcsgzT9Vvlyr92QKCH9i7lqeCIj/pqf3lxubkzhsyxOct3MQfKsKjOaOd+KddnEDnRbiuhXXY35nCMLHzCL6BaUhubXw2PyeY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1761907114; c=relaxed/simple;
-	bh=pCW3mqiYKpJ+hdcxPaMD/6xe2J8m7xgEe48dlvDZ3gY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=shnnbyq9qK5vLxpSPz09Cz1UTHLsL5XRmaFLm9AU8JVjKHV87ERo590g6FgJSWzRdoBlXyfwiqkdozMO8fY2sHVxIL2PQbvzSngtAeio2oiQsFTWOL1vZSZK51W4Em770/kOe7i52z2awEk/3pGiekYrytE/DBCFYQB791j0/oc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JTUrI/kp; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 372BFC4CEF8;
-	Fri, 31 Oct 2025 10:38:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1761907113;
-	bh=pCW3mqiYKpJ+hdcxPaMD/6xe2J8m7xgEe48dlvDZ3gY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=JTUrI/kpTP1FK7p2e+8hPfAZy7ga0BoJ9cSl7qZorGTNxxiKLgt6MZyK57ZH1Lr07
-	 6tcdKn+x6niUhnZl8r++Hx6gZMQvGcURlMLzPbdJefISbiIGWao0PzaldpHaRet2Pi
-	 Cq4+XtreH74oI49663XJEq8RhZy81HhMOo7ZF/v+h4a6GB9KlbXGyTSpmtPy28ONnE
-	 jR8BK8GJZqikTWRoRhv8xMpUxdqL6rTxF7QAawZaDAAcj8QW+gwoolUfWPi8C5eKSL
-	 s3Cenygcd5JjViuZ8K86iaUzocAk7iBxH3mc40jbKfBca0ugRTaQX5nIvmzjKiblQq
-	 H5F94Oe9DISAw==
-Date: Fri, 31 Oct 2025 10:38:24 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Jack Hsu <jh.hsu@mediatek.com>, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, jic23@kernel.org, dlechner@baylibre.com,
-	nuno.sa@analog.com, andy@kernel.org, matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com, srini@kernel.org,
-	ukleinek@kernel.org, gregkh@linuxfoundation.org,
-	jirislaby@kernel.org, daniel.lezcano@linaro.org, tglx@linutronix.de,
-	chunfeng.yun@mediatek.com, wim@linux-watchdog.org,
-	linux@roeck-us.net, sean.wang@mediatek.com,
-	zhiyong.tao@mediatek.com, andrew-ct.chen@mediatek.com,
-	lala.lin@mediatek.com, jitao.shi@mediatek.com,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-pwm@vger.kernel.org,
-	linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
-	linux-watchdog@vger.kernel.org,
-	Project_Global_Chrome_Upstream_Group@mediatek.com
-Subject: Re: [PATCH v6 07/11] dt-bindings: usb: Support MediaTek MT8189 evb
- board xhci
-Message-ID: <20251031-overbid-renounce-e6f3b03ee18f@spud>
-References: <20251030134541.784011-1-jh.hsu@mediatek.com>
- <20251030134541.784011-8-jh.hsu@mediatek.com>
- <20251030-underwent-courier-1f4322e1cb34@spud>
- <20251031-nifty-sticky-hoatzin-eeafeb@kuoka>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D86D2DECCC;
+	Fri, 31 Oct 2025 12:21:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1761913276; cv=pass; b=ue7hJm0qrGXBDz8odRvQM2hRrxzEwFsz1CuLHukhMy7vFQi1cVMv2LTY8CEjylD56+9JdWk0mKduo9emMQOdDzXHxSw1zNatyht7tEezeWSNasR8POfhjgdCcFK1jAbtgn1akdSRwHvmRE9MjyDPjA8Evh9gGc80ksYvcE0Qww0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1761913276; c=relaxed/simple;
+	bh=Scd1u7SC+wtoF8qRLRcLirPesMqeM0t7KGRqqRm5fyc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=phm11EargheRv52m2+A5buZZJ5lUJ5YVaFoYgzeYnJ9Tp5m+ukVSe4ZqtVTaovPnTZbulAeXXyekt/4QzliecKdqZudqCgYvFO2zQmIoZlNXY1T5CKZmiXb1im+6QPoHL4ZlLVo/D9QlCgymVbccLmLLRpqTvRN7e0gNCNot3F8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=A4UWeNPA; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+ARC-Seal: i=1; a=rsa-sha256; t=1761913244; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=NYrVCdrwtfSvlZFvJ04ri1DzX5zX+b3GD79h1D4eMLRK+QMF1d9Gjbk8uTIAj+zGkoAJb4xaZTd/j1SKn6x8IK0jf3mmTSZh9ocQNSkaoj8VVjZyc7G3isqnk3DQmngoLqesqxv0omMYcrVZgkFvc1SYkhP58fLyamktkuJfyOY=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1761913244; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=5zTIt+rAoBvPMQKP7EcQfAbiSRLViWy6hR5zucTP3Kg=; 
+	b=AgWKks5HGuNLTYPTjTAo5RCmaBhczJXzyVAtAdFgJz8BxzBx+cwzJHjph843CcGQXnWeWPtf7Q8W0SlTY33D8w9KfOJwvB7zcWpzLy6AQXNq1dkKkUCC6zJA7KFpDOgpSvpjaFh7Eomwvdcc05286lfR8CLt+2MNKlx2YyGs6C4=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1761913244;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=5zTIt+rAoBvPMQKP7EcQfAbiSRLViWy6hR5zucTP3Kg=;
+	b=A4UWeNPA23M7lsIukrsOH7bMGSKligZV1HnaAwV2DdWV6EclFAbHWF/fr7a0+yW4
+	pdvNPakawyFW5CNuDHtiQm/hXB/U1P5eEW3+7psTi3EP3NA138ZJQRXZv9sVLSpjS3H
+	44DG+udYIh/AlEO1zDtzVvp5ZbKgIWSirRZCQXm8=
+Received: by mx.zohomail.com with SMTPS id 1761913243469405.4251213598277;
+	Fri, 31 Oct 2025 05:20:43 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+To: Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+ Lee Jones <lee@kernel.org>, William Breathitt Gray <wbg@kernel.org>,
+ Johan Jonker <jbx6244@yandex.com>
+Cc: kernel@collabora.com, Jonas Karlman <jonas@kwiboo.se>,
+ Alexey Charkov <alchark@gmail.com>, linux-rockchip@lists.infradead.org,
+ linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+ linux-iio@vger.kernel.org
+Subject: Re: [PATCH v3 2/5] mfd: Add Rockchip mfpwm driver
+Date: Fri, 31 Oct 2025 13:20:37 +0100
+Message-ID: <3598089.ElGaqSPkdT@workhorse>
+In-Reply-To: <16341fe2-7d2b-45a6-a861-93950c1bbd1f@yandex.com>
+References:
+ <20251027-rk3576-pwm-v3-0-654a5cb1e3f8@collabora.com>
+ <20251027-rk3576-pwm-v3-2-654a5cb1e3f8@collabora.com>
+ <16341fe2-7d2b-45a6-a861-93950c1bbd1f@yandex.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="YeQbD5mvaLkqbUCf"
-Content-Disposition: inline
-In-Reply-To: <20251031-nifty-sticky-hoatzin-eeafeb@kuoka>
-
-
---YeQbD5mvaLkqbUCf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
 
-On Fri, Oct 31, 2025 at 09:19:26AM +0100, Krzysztof Kozlowski wrote:
-> On Thu, Oct 30, 2025 at 07:32:26PM +0000, Conor Dooley wrote:
-> > On Thu, Oct 30, 2025 at 09:44:39PM +0800, Jack Hsu wrote:
-> > > modify dt-binding for support mt8189 evb board dts node of xhci
-> > >=20
-> > > Signed-off-by: Jack Hsu <jh.hsu@mediatek.com>
-> > > ---
-> > >  .../devicetree/bindings/usb/mediatek,mtk-xhci.yaml         | 7 +++++=
-+-
-> > >  1 file changed, 6 insertions(+), 1 deletion(-)
-> > >=20
-> > > diff --git a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.=
-yaml b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.yaml
-> > > index 004d3ebec091..05cb6a219e5c 100644
-> > > --- a/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.yaml
-> > > +++ b/Documentation/devicetree/bindings/usb/mediatek,mtk-xhci.yaml
-> > > @@ -34,6 +34,7 @@ properties:
-> > >            - mediatek,mt8183-xhci
-> > >            - mediatek,mt8186-xhci
-> > >            - mediatek,mt8188-xhci
-> > > +          - mediatek,mt8189-xhci
-> > >            - mediatek,mt8192-xhci
-> > >            - mediatek,mt8195-xhci
-> > >            - mediatek,mt8365-xhci
-> > > @@ -119,6 +120,9 @@ properties:
-> > >    resets:
-> > >      maxItems: 1
-> > > =20
-> > > +  reset-names:
-> > > +    maxItems: 1
-> >=20
-> > Is this reset required on mt8189? Does it appear on other mediatek xhci
-> > controllers?
+On Tuesday, 28 October 2025 19:52:53 Central European Standard Time Johan J=
+onker wrote:
 >=20
-> reset was there, it is the name added for some unknown reason.
+> On 10/27/25 18:11, Nicolas Frattaroli wrote:
+> > With the Rockchip RK3576, the PWM IP used by Rockchip has changed
+> > substantially. Looking at both the downstream pwm-rockchip driver as
+> > well as the mainline pwm-rockchip driver made it clear that with all its
+> > additional features and its differences from previous IP revisions, it
+> > is best supported in a new driver.
+> >=20
+> > This brings us to the question as to what such a new driver should be.
+> > To me, it soon became clear that it should actually be several new
+> > drivers, most prominently when Uwe Kleine-K=C3=B6nig let me know that I
+> > should not implement the pwm subsystem's capture callback, but instead
+> > write a counter driver for this functionality.
+> >=20
+> > Combined with the other as-of-yet unimplemented functionality of this
+> > new IP, it became apparent that it needs to be spread across several
+> > subsystems.
+> >=20
+> > For this reason, we add a new MFD core driver, called mfpwm (short for
+> > "Multi-function PWM"). This "parent" driver makes sure that only one
+> > device function driver is using the device at a time, and is in charge
+> > of registering the MFD cell devices for the individual device functions
+> > offered by the device.
+> >=20
+> > An acquire/release pattern is used to guarantee that device function
+> > drivers don't step on each other's toes.
+> >=20
+> > Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> > ---
+> >  MAINTAINERS                        |   2 +
+> >  drivers/mfd/Kconfig                |  15 ++
+> >  drivers/mfd/Makefile               |   1 +
+> >  drivers/mfd/rockchip-mfpwm.c       | 340 +++++++++++++++++++++++++++
+> >  include/linux/mfd/rockchip-mfpwm.h | 454 +++++++++++++++++++++++++++++=
+++++++++
+> >  5 files changed, 812 insertions(+)
+> >=20
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index baecabab35a2..8f3235ba825e 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -22372,6 +22372,8 @@ L:	linux-rockchip@lists.infradead.org
+> >  L:	linux-pwm@vger.kernel.org
+> >  S:	Maintained
+>=20
+> >  F:	Documentation/devicetree/bindings/pwm/rockchip,rk3576-pwm.yaml
+>=20
+> A question not so much for Nicolas specific:
+> The yaml documents already have a 'maintainers' entry.
+> However MAINTAINERS is full yaml entries.
+> Could someone explain why we still need dual registration?
+>=20
+> maintainers:
+>   - Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+>=20
+> > +F:	drivers/soc/rockchip/mfpwm.c
+> > +F:	include/soc/rockchip/mfpwm.h
+>=20
+> different file name and location?
+>=20
+>   drivers/mfd/rockchip-mfpwm.c       | 340 +++++++++++++++++++++++++++
+>   include/linux/mfd/rockchip-mfpwm.h | 454 ++++++++++++++++++++++++++++++=
++++++++
+>=20
+>=20
 
-Ah, so not helpful at all since no name is defined and therefore making
-the property unusable :)
+Yeah, I forgot to adjust this when moving this to being an MFD.
+I'll fix it in v4.
 
---YeQbD5mvaLkqbUCf
-Content-Type: application/pgp-signature; name="signature.asc"
+> > [... snip ...]
+> > diff --git a/drivers/mfd/rockchip-mfpwm.c b/drivers/mfd/rockchip-mfpwm.c
+> > new file mode 100644
+> > index 000000000000..08c2d8da41b7
+> > --- /dev/null
+> > +++ b/drivers/mfd/rockchip-mfpwm.c
+> > [... snip ...]
+> > +
+> > +static int mfpwm_register_subdevs(struct rockchip_mfpwm *mfpwm)
+> > +{
+> > +	int ret;
+> > +
+>=20
+> > +	ret =3D mfpwm_register_subdev(mfpwm, "pwm-rockchip-v4");
+>=20
+> Not sure who came up with this name?
 
------BEGIN PGP SIGNATURE-----
+I did.
 
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaQSRnQAKCRB4tDGHoIJi
-0kPCAP96dXVUKgWcbJl1yhQ4f4EkFhlKfrn2Z7Gj6M2yxhUAZwD/XjwGvcKdjEOk
-OaeQJhtXQLUywWYtJY6pBr35YwUCWQo=
-=AXz7
------END PGP SIGNATURE-----
+> In case we need to filter wouldn't be easier to order it just like the bi=
+ndings: manufacture '-' function
 
---YeQbD5mvaLkqbUCf--
+It's based on the filename of the pwm output driver. pwm-rockchip.c
+is already taken by v1 to v3 hardware. Apparently however, pwm
+subsystem drivers then reverse the order in the driver name, so
+`pwm-rockchip.c` registers a driver with the name `rockchip-pwm`.
+
+So I'll rename my PWM output driver to `rockchip-pwm-v4`. The v4
+stays, it refers to the hardware IP revision.
+
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	ret =3D mfpwm_register_subdev(mfpwm, "rockchip-pwm-capture");
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > [... snip ...]
+
+Kind regards,
+Nicolas Frattaroli
+
+
+
+
 
