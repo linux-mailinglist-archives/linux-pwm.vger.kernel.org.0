@@ -1,201 +1,413 @@
-Return-Path: <linux-pwm+bounces-7580-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7581-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [IPv6:2604:1380:4601:e00::3])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F8E0C2B006
-	for <lists+linux-pwm@lfdr.de>; Mon, 03 Nov 2025 11:20:05 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id AC8C1C2CC12
+	for <lists+linux-pwm@lfdr.de>; Mon, 03 Nov 2025 16:32:47 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by am.mirrors.kernel.org (Postfix) with ESMTPS id 7669918844D4
-	for <lists+linux-pwm@lfdr.de>; Mon,  3 Nov 2025 10:20:29 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 31BF634A633
+	for <lists+linux-pwm@lfdr.de>; Mon,  3 Nov 2025 15:32:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 44CCA2FD7A0;
-	Mon,  3 Nov 2025 10:19:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59D4231E102;
+	Mon,  3 Nov 2025 15:26:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="CS8dHnLk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dR4lyfqy"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EDBB62FD677
-	for <linux-pwm@vger.kernel.org>; Mon,  3 Nov 2025 10:19:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C5C7313E01;
+	Mon,  3 Nov 2025 15:26:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762165199; cv=none; b=Qyd+feiFgbFo8leBVuBKpjH/BXFHFxzcGjaMZP7nH2gRxgsw2qGPAOJlJIf6RShQnzmb+F8Czk+hj2Pa49msvvp9F76eQxGi0vEiwt5ga4t09zl+rKQKgTYP7uwrLIK6jeJAPiEusy3OVSVEA1FQtPvxN+/12MQjBxYgYZ7xaR4=
+	t=1762183566; cv=none; b=dK4nsklbqchLJvcxfsf/t8nIbbwaVvK3LPASeKj8zkFbNJAbhBF+ZS4pjUIufIZ/P9P960oDrjmiimM0m9zXWjKspMyAH3qzUFAgDc/RWyrcuGz6f8ZafO/rqEw/OMg/0kx9ZOETivp67t9x0nfwIBYhRI9BWZEr/fwmHfTXUHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762165199; c=relaxed/simple;
-	bh=4QMq9wjSZaDTE+ctoXegsLcWF3J0EDdGYn1winwZ61w=;
+	s=arc-20240116; t=1762183566; c=relaxed/simple;
+	bh=vTEEqBvf4uzbZw74WdV2qWj7leVepYcRsHzgRilYAj0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F/coBDWucAPSUGBCb6biCunvCIDexAEM1ucr0EYy4h9PP6LkAyQKKltVLdWxFrpeiAmXEpckx1SYzrZmuag7tq9XFaOdKABuvZFOIWfBUkEx/TB95q7WsktlhdtlGDRMw3484Q25HMvHouBt0E3NHBzD42lHomKtTN4xzMl/h3U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=CS8dHnLk; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-471b80b994bso54915525e9.3
-        for <linux-pwm@vger.kernel.org>; Mon, 03 Nov 2025 02:19:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1762165194; x=1762769994; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Yk/MqQKqZE9ciR/f+72baGg6dFC+oYSceyoJ97PjXtQ=;
-        b=CS8dHnLk9I+TPjQEvFGtO1XW0yiFar5JN3nb+Uzjob/rc8We19Pr+7sPhHDMvX4fBn
-         ViwAN6sV0Aez+d9wqaHeNn5xrmj4xLagcL/LB3MD2pW4w08KqUgsUfApS3YWFnTSkfHJ
-         tkmcs6qzd02rDWIS5xgMz82VXvhQP1G8yqNgz51V2piUbMMMRTSqYh2cxprRJ0RL4VEl
-         IM094tOWZifZM5JEWhr/F+jnlNhe5g+x9fHzfW7xdm7LedQ/ZXZP2G/C8ip2bb9RfyBO
-         zeKaffvWzThn1F+x+EqyTCRJRTlyEi1x7PIqcO9rLAxQb4/Or4WV8c60cckxNifGXCPP
-         Hh5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1762165194; x=1762769994;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Yk/MqQKqZE9ciR/f+72baGg6dFC+oYSceyoJ97PjXtQ=;
-        b=Kq2OVLlLWMucWNhUu5Fbclh23SRkfMl/b3Wj9eCvWONktrf8GGxnavHYUYwt9I5xMc
-         6Ms2d8LWHgHiH38f2kondvdJPcqStcI8dgx0xjQWtq0w8oNrpWtQFmnFk2X8guNQyTFx
-         a0IQTpEavL6waIWpdzm7HsOQvgES2lA86F8dPsRcABMSuuzyCRfyYro+z6Xcf7zmTsec
-         dMA8Moc4qd21yAMUw5U3LIyiybZw4MVlVJixzDDXJsq4ZWZLoSjIp6ELjd5kI2dwNjNT
-         k29k+CCdvxpMWRctgU8vEJpPgaZdkKLrgdBktIkwlci+1w0oTYEZc5+Zh+hHMYTM1pVr
-         JRiw==
-X-Forwarded-Encrypted: i=1; AJvYcCXhy7Y9t1/MeWoVaKJoQHRPJQceG6rWJp2i1CoZchYnE2wTK0Atpj6xbxV63MfW9l4qaDUbnE5qCPU=@vger.kernel.org
-X-Gm-Message-State: AOJu0Ywc4ejIzBVhBrhOFcBbIJF8wvq2rWmt/TkTdd8bJgcRMnfgwT8P
-	NKUAG1lPWBck/svIA5t9Pf2pt3SytzSoipkKWRgFnuIoQn8h1Wcjv26VVEj+G3ZbBwvnF6P6yjQ
-	LjjYv
-X-Gm-Gg: ASbGncuDMrpVJ/iTHZ5uVsikVR9G5AWK85c1mmC1vgC34QB3AAriMfmnDG8fH2L+Uns
-	CsFpJI2ZJapPDEw+PNy92d78+ZGLLArksRct2VyHQqgiNdJthFC9jkDt2G5SYXFe4gVGlkK88oB
-	DW2MYyCg4+lwfAwBD6drNmlS0PnfMhY1AMFSgbqFZO0rjOaPG9I7hU8bA1C1tWLCccXRMueJsA5
-	n4t9/fAmTEuhUubTtMg0FhD8D7Bed7IwNYFIMC/CTDLM4QwANrIIxvBfWkL67djdLb0Cbi4rKyB
-	JTc+5FOMR8eZIoi5b09Lh6oqeGyUjd1zQ7OL3ev01vH+YBeY9uVSos43DGvwn46tYr5ZjP+ntXZ
-	LQyQi3kNqNc8ki2omkFZAmD01FxgssjhwLtsio4FWbiQdzyyblB1pXcj1swp/fYS4fyl7TycxMh
-	fx2lMey2AWPL3Q/JFiKpUA4CS6tKd+nQjMH0RCh4QIASen/YVCQZkExbP3jU75VCQS5pjkUIu5a
-	Q==
-X-Google-Smtp-Source: AGHT+IHOtduNrRBMSHOgFwat+JbsvBQbjZA2f2jjaeArzvIV58w9j8NgIBsWYYESYm2z3s+D+nQH/A==
-X-Received: by 2002:a05:600c:34d0:b0:471:1435:b0ea with SMTP id 5b1f17b1804b1-47730872aaamr92764025e9.24.1762165194241;
-        Mon, 03 Nov 2025 02:19:54 -0800 (PST)
-Received: from localhost (p200300f65f19f5043df592b151413282.dip0.t-ipconnect.de. [2003:f6:5f19:f504:3df5:92b1:5141:3282])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4773c569390sm144870105e9.16.2025.11.03.02.19.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Nov 2025 02:19:53 -0800 (PST)
-Date: Mon, 3 Nov 2025 11:19:52 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: "Krebs, Olaf" <Olaf.Krebs@emh-metering.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, 
-	"open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>, 
-	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>, 
-	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] Fix IMX PWM period setting
-Message-ID: <vi2hrue6l5g5ihoa3rh2u3pitgbwiyvr5su6dhztg6iowajwfw@6rj6lh5fbtb4>
-References: <20251103064813.522840-1-user@jenkins>
- <1b071599b84c4519a81990fbfe09782b@emh-metering.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=CLEx0+qHjJ2B4oN+ks+koZ1nYfbfC0Ob3mgGP2CHqqPLYS/ipZg1/siN/CAb4+SVadmOo8hPzjxxxgL7HgA3BdUbEM4fw2tDXHOiVMdbPFaDPh7gTGrxG8EvR6N4PrV262YjwpVzTj/ziUZF7np3BjuUF4uQIeR07xT2u4APMJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dR4lyfqy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6021C4CEFD;
+	Mon,  3 Nov 2025 15:25:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762183563;
+	bh=vTEEqBvf4uzbZw74WdV2qWj7leVepYcRsHzgRilYAj0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=dR4lyfqyfIeJ3Ig5IPvfd8uQHC7OCGkNY5Ighzdr7vuELihzTMXwpe1J33wj3KKqF
+	 yXmy51zxJLjI4GwonRG1NW5zAvQittC2tg3yCjRcZMgdiNt30fumnf97uLkEaLYA+4
+	 r6swm9vdmo8l8qyKlx6b9m3eX9FfPDwKiTLK9JjVkvYookjhlcFEBfKoOVT0WsG9+p
+	 82keLUNdicu7twpN0Qvj8BU2ViUhie01STXSh+ioYOCdTJddR+uVE8NIufhxzLUmM/
+	 5GGmf0rKR9Akh31tWmPTVFX7fFXFURZ+UPi8gqlwg3/kVJsyQmz7JnBtqO5mhL3JQK
+	 383L40wVejGiQ==
+Date: Mon, 3 Nov 2025 15:25:56 +0000
+From: Lee Jones <lee@kernel.org>
+To: Johan Jonker <jbx6244@yandex.com>
+Cc: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	William Breathitt Gray <wbg@kernel.org>, kernel@collabora.com,
+	Jonas Karlman <jonas@kwiboo.se>, Alexey Charkov <alchark@gmail.com>,
+	linux-rockchip@lists.infradead.org, linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH v3 2/5] mfd: Add Rockchip mfpwm driver
+Message-ID: <20251103152556.GB8064@google.com>
+References: <20251027-rk3576-pwm-v3-0-654a5cb1e3f8@collabora.com>
+ <20251027-rk3576-pwm-v3-2-654a5cb1e3f8@collabora.com>
+ <16341fe2-7d2b-45a6-a861-93950c1bbd1f@yandex.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="cs2lqjurbk5vnplp"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <1b071599b84c4519a81990fbfe09782b@emh-metering.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <16341fe2-7d2b-45a6-a861-93950c1bbd1f@yandex.com>
 
+On Tue, 28 Oct 2025, Johan Jonker wrote:
 
---cs2lqjurbk5vnplp
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3] Fix IMX PWM period setting
-MIME-Version: 1.0
+> 
+> 
+> On 10/27/25 18:11, Nicolas Frattaroli wrote:
+> > With the Rockchip RK3576, the PWM IP used by Rockchip has changed
+> > substantially. Looking at both the downstream pwm-rockchip driver as
+> > well as the mainline pwm-rockchip driver made it clear that with all its
+> > additional features and its differences from previous IP revisions, it
+> > is best supported in a new driver.
+> > 
+> > This brings us to the question as to what such a new driver should be.
+> > To me, it soon became clear that it should actually be several new
+> > drivers, most prominently when Uwe Kleine-König let me know that I
+> > should not implement the pwm subsystem's capture callback, but instead
+> > write a counter driver for this functionality.
+> > 
+> > Combined with the other as-of-yet unimplemented functionality of this
+> > new IP, it became apparent that it needs to be spread across several
+> > subsystems.
+> > 
+> > For this reason, we add a new MFD core driver, called mfpwm (short for
+> > "Multi-function PWM"). This "parent" driver makes sure that only one
+> > device function driver is using the device at a time, and is in charge
+> > of registering the MFD cell devices for the individual device functions
+> > offered by the device.
+> > 
+> > An acquire/release pattern is used to guarantee that device function
+> > drivers don't step on each other's toes.
+> > 
+> > Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> > ---
+> >  MAINTAINERS                        |   2 +
+> >  drivers/mfd/Kconfig                |  15 ++
+> >  drivers/mfd/Makefile               |   1 +
+> >  drivers/mfd/rockchip-mfpwm.c       | 340 +++++++++++++++++++++++++++
+> >  include/linux/mfd/rockchip-mfpwm.h | 454 +++++++++++++++++++++++++++++++++++++
+> >  5 files changed, 812 insertions(+)
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index baecabab35a2..8f3235ba825e 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -22372,6 +22372,8 @@ L:	linux-rockchip@lists.infradead.org
+> >  L:	linux-pwm@vger.kernel.org
+> >  S:	Maintained
+> 
+> >  F:	Documentation/devicetree/bindings/pwm/rockchip,rk3576-pwm.yaml
+> 
+> A question not so much for Nicolas specific:
+> The yaml documents already have a 'maintainers' entry.
+> However MAINTAINERS is full yaml entries.
+> Could someone explain why we still need dual registration?
+> 
+> maintainers:
+>   - Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> 
+> > +F:	drivers/soc/rockchip/mfpwm.c
+> > +F:	include/soc/rockchip/mfpwm.h
+> 
+> different file name and location?
+> 
+>   drivers/mfd/rockchip-mfpwm.c       | 340 +++++++++++++++++++++++++++
+>   include/linux/mfd/rockchip-mfpwm.h | 454 +++++++++++++++++++++++++++++++++++++
+> 
+> 
+> >  
+> >  ROCKCHIP RK3568 RANDOM NUMBER GENERATOR SUPPORT
+> >  M:	Daniel Golle <daniel@makrotopia.org>
+> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> > index dbeac6825a10..8b3a3160fbdf 100644
+> > --- a/drivers/mfd/Kconfig
+> > +++ b/drivers/mfd/Kconfig
+> > @@ -1367,6 +1367,21 @@ config MFD_RC5T583
+> >  	  Additional drivers must be enabled in order to use the
+> >  	  different functionality of the device.
+> >  
+> > +config MFD_ROCKCHIP_MFPWM
+> > +	tristate "Rockchip multi-function PWM controller"
+> > +	depends on OF
+> > +	depends on HAS_IOMEM
+> > +	depends on COMMON_CLK
+> > +	select MFD_CORE
+> > +	help
+> > +	  Some Rockchip SoCs, such as the RK3576, use a PWM controller that has
+> > +	  several different functions, such as generating PWM waveforms but also
+> > +	  counting waveforms.
+> > +
+> > +	  This driver manages the overall device, and selects between different
+> > +	  functionalities at runtime as needed. Drivers for them are implemented
+> > +	  in their respective subsystems.
+> > +
+> >  config MFD_RK8XX
+> >  	tristate
+> >  	select MFD_CORE
+> > diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> > index e75e8045c28a..ebadbaea9e4a 100644
+> > --- a/drivers/mfd/Makefile
+> > +++ b/drivers/mfd/Makefile
+> > @@ -231,6 +231,7 @@ obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
+> >  obj-$(CONFIG_MFD_VIPERBOARD)    += viperboard.o
+> >  obj-$(CONFIG_MFD_NTXEC)		+= ntxec.o
+> >  obj-$(CONFIG_MFD_RC5T583)	+= rc5t583.o rc5t583-irq.o
+> > +obj-$(CONFIG_MFD_ROCKCHIP_MFPWM)	+= rockchip-mfpwm.o
+> >  obj-$(CONFIG_MFD_RK8XX)		+= rk8xx-core.o
+> >  obj-$(CONFIG_MFD_RK8XX_I2C)	+= rk8xx-i2c.o
+> >  obj-$(CONFIG_MFD_RK8XX_SPI)	+= rk8xx-spi.o
+> > diff --git a/drivers/mfd/rockchip-mfpwm.c b/drivers/mfd/rockchip-mfpwm.c
+> > new file mode 100644
+> > index 000000000000..08c2d8da41b7
+> > --- /dev/null
+> > +++ b/drivers/mfd/rockchip-mfpwm.c
+> > @@ -0,0 +1,340 @@
+> > +// SPDX-License-Identifier: GPL-2.0-or-later
+> > +/*
+> > + * Copyright (c) 2025 Collabora Ltd.
+> > + *
+> > + * A driver to manage all the different functionalities exposed by Rockchip's
+> > + * PWMv4 hardware.
+> > + *
+> > + * This driver is chiefly focused on guaranteeing non-concurrent operation
+> > + * between the different device functions, as well as setting the clocks.
+> > + * It registers the device function platform devices, e.g. PWM output or
+> > + * PWM capture.
+> > + *
+> > + * Authors:
+> > + *     Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+> > + */
+> > +
+> > +#include <linux/array_size.h>
+> > +#include <linux/clk.h>
+> > +#include <linux/clk-provider.h>
+> > +#include <linux/mfd/core.h>
+> > +#include <linux/mfd/rockchip-mfpwm.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/overflow.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/spinlock.h>
+> > +
+> > +/**
+> > + * struct rockchip_mfpwm - private mfpwm driver instance state struct
+> > + * @pdev: pointer to this instance's &struct platform_device
+> > + * @base: pointer to the memory mapped registers of this device
+> > + * @pwm_clk: pointer to the PLL clock the PWM signal may be derived from
+> > + * @osc_clk: pointer to the fixed crystal the PWM signal may be derived from
+> > + * @rc_clk: pointer to the RC oscillator the PWM signal may be derived from
+> > + * @chosen_clk: a clk-mux of pwm_clk, osc_clk and rc_clk
+> > + * @pclk: pointer to the APB bus clock needed for mmio register access
+> > + * @active_func: pointer to the currently active device function, or %NULL if no
+> > + *               device function is currently actively using any of the shared
+> > + *               resources. May only be checked/modified with @state_lock held.
+> > + * @acquire_cnt: number of times @active_func has currently mfpwm_acquire()'d
+> > + *               it. Must only be checked or modified while holding @state_lock.
+> > + * @state_lock: this lock is held while either the active device function, the
+> > + *              enable register, or the chosen clock is being changed.
+> > + * @irq: the IRQ number of this device
+> > + */
+> > +struct rockchip_mfpwm {
+> > +	struct platform_device *pdev;
+> > +	void __iomem *base;
+> > +	struct clk *pwm_clk;
+> > +	struct clk *osc_clk;
+> > +	struct clk *rc_clk;
+> > +	struct clk *chosen_clk;
+> > +	struct clk *pclk;
+> > +	struct rockchip_mfpwm_func *active_func;
+> > +	unsigned int acquire_cnt;
+> > +	spinlock_t state_lock;
+> > +	int irq;
+> > +};
+> > +
+> > +static atomic_t subdev_id = ATOMIC_INIT(0);
+> > +
+> > +static inline struct rockchip_mfpwm *to_rockchip_mfpwm(struct platform_device *pdev)
+> > +{
+> > +	return platform_get_drvdata(pdev);
+> > +}
+> > +
+> > +static int mfpwm_check_pwmf(const struct rockchip_mfpwm_func *pwmf,
+> > +			    const char *fname)
+> > +{
+> > +	struct device *dev = &pwmf->parent->pdev->dev;
+> > +
+> > +	if (IS_ERR_OR_NULL(pwmf)) {
+> > +		dev_warn(dev, "called %s with an erroneous handle, no effect\n",
+> > +			 fname);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	if (IS_ERR_OR_NULL(pwmf->parent)) {
+> > +		dev_warn(dev, "called %s with an erroneous mfpwm_func parent, no effect\n",
+> > +			 fname);
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> > +
+> > +__attribute__((nonnull))
+> > +static int mfpwm_do_acquire(struct rockchip_mfpwm_func *pwmf)
+> > +{
+> > +	struct rockchip_mfpwm *mfpwm = pwmf->parent;
+> > +	unsigned int cnt;
+> > +
+> > +	if (mfpwm->active_func && pwmf->id != mfpwm->active_func->id)
+> > +		return -EBUSY;
+> > +
+> > +	if (!mfpwm->active_func)
+> > +		mfpwm->active_func = pwmf;
+> > +
+> > +	if (!check_add_overflow(mfpwm->acquire_cnt, 1, &cnt)) {
+> > +		mfpwm->acquire_cnt = cnt;
+> > +	} else {
+> > +		dev_warn(&mfpwm->pdev->dev, "prevented acquire counter overflow in %s\n",
+> > +			 __func__);
+> > +		return -EOVERFLOW;
+> > +	}
+> > +
+> > +	dev_dbg(&mfpwm->pdev->dev, "%d acquired mfpwm, acquires now at %u\n",
+> > +		pwmf->id, mfpwm->acquire_cnt);
+> > +
+> > +	return clk_enable(mfpwm->pclk);
+> > +}
+> > +
+> > +int mfpwm_acquire(struct rockchip_mfpwm_func *pwmf)
+> > +{
+> > +	struct rockchip_mfpwm *mfpwm;
+> > +	unsigned long flags;
+> > +	int ret = 0;
+> > +
+> > +	ret = mfpwm_check_pwmf(pwmf, "mfpwm_acquire");
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	mfpwm = pwmf->parent;
+> > +	dev_dbg(&mfpwm->pdev->dev, "%d is attempting to acquire\n", pwmf->id);
+> > +
+> > +	if (!spin_trylock_irqsave(&mfpwm->state_lock, flags))
+> > +		return -EBUSY;
+> > +
+> > +	ret = mfpwm_do_acquire(pwmf);
+> > +
+> > +	spin_unlock_irqrestore(&mfpwm->state_lock, flags);
+> > +
+> > +	return ret;
+> > +}
+> > +EXPORT_SYMBOL_NS_GPL(mfpwm_acquire, "ROCKCHIP_MFPWM");
+> > +
+> > +__attribute__((nonnull))
+> > +static void mfpwm_do_release(const struct rockchip_mfpwm_func *pwmf)
+> > +{
+> > +	struct rockchip_mfpwm *mfpwm = pwmf->parent;
+> > +
+> > +	if (!mfpwm->active_func)
+> > +		return;
+> > +
+> > +	if (mfpwm->active_func->id != pwmf->id)
+> > +		return;
+> > +
+> > +	/*
+> > +	 * No need to check_sub_overflow here, !mfpwm->active_func above catches
+> > +	 * this type of problem already.
+> > +	 */
+> > +	mfpwm->acquire_cnt--;
+> > +
+> > +	if (!mfpwm->acquire_cnt)
+> > +		mfpwm->active_func = NULL;
+> > +
+> > +	clk_disable(mfpwm->pclk);
+> > +}
+> > +
+> > +void mfpwm_release(const struct rockchip_mfpwm_func *pwmf)
+> > +{
+> > +	struct rockchip_mfpwm *mfpwm;
+> > +	unsigned long flags;
+> > +
+> > +	if (mfpwm_check_pwmf(pwmf, "mfpwm_release"))
+> > +		return;
+> > +
+> > +	mfpwm = pwmf->parent;
+> > +
+> > +	spin_lock_irqsave(&mfpwm->state_lock, flags);
+> > +	mfpwm_do_release(pwmf);
+> > +	dev_dbg(&mfpwm->pdev->dev, "%d released mfpwm, acquires now at %u\n",
+> > +		pwmf->id, mfpwm->acquire_cnt);
+> > +	spin_unlock_irqrestore(&mfpwm->state_lock, flags);
+> > +}
+> > +EXPORT_SYMBOL_NS_GPL(mfpwm_release, "ROCKCHIP_MFPWM");
+> > +
+> > +/**
+> > + * mfpwm_register_subdev - register a single mfpwm_func
+> > + * @mfpwm: pointer to the parent &struct rockchip_mfpwm
+> > + * @name: sub-device name string
+> > + *
+> > + * Allocate a single &struct mfpwm_func, fill its members with appropriate data,
+> > + * and register a new mfd cell.
+> > + *
+> > + * Returns: 0 on success, negative errno on error
+> > + */
+> > +static int mfpwm_register_subdev(struct rockchip_mfpwm *mfpwm,
+> > +				 const char *name)
+> > +{
+> > +	struct rockchip_mfpwm_func *func;
+> > +	struct mfd_cell cell = {};
+> > +
+> > +	func = devm_kzalloc(&mfpwm->pdev->dev, sizeof(*func), GFP_KERNEL);
+> > +	if (IS_ERR(func))
+> > +		return PTR_ERR(func);
+> > +	func->irq = mfpwm->irq;
+> > +	func->parent = mfpwm;
+> > +	func->id = atomic_inc_return(&subdev_id);
+> > +	func->base = mfpwm->base;
+> > +	func->core = mfpwm->chosen_clk;
+> > +	cell.name = name;
+> > +	cell.platform_data = func;
+> > +	cell.pdata_size = sizeof(*func);
+> > +	// cell.ignore_resource_conflicts = true;
+> > +	// cell.resources = mfpwm->pdev->resource;
+> > +	// cell.num_resources = mfpwm->pdev->num_resources;
+> > +
+> > +	return devm_mfd_add_devices(&mfpwm->pdev->dev, func->id, &cell, 1, NULL,
+> > +				    0, NULL);
+> > +}
+> > +
+> > +static int mfpwm_register_subdevs(struct rockchip_mfpwm *mfpwm)
+> > +{
+> > +	int ret;
+> > +
+> 
+> > +	ret = mfpwm_register_subdev(mfpwm, "pwm-rockchip-v4");
+> 
+> Not sure who came up with this name?
+> In case we need to filter wouldn't be easier to order it just like the bindings: manufacture '-' function
 
-Hello Olaf,
+Please snip your replies in the future.
 
-On Mon, Nov 03, 2025 at 06:50:20AM +0000, Krebs, Olaf wrote:
-> From: Olaf Krebs <okr@smgw.emh-meter.de>
->=20
-> If a second PWM is requested by a driver before the first is configured, =
-trying to configure any of these results in .user_count > 1 and thus the co=
-nfiguration fails.
-> Fix that by only erroring out by additionally checking if the period is a=
-ctually configured.
->=20
-> Exapmle: Using of 3 PWM channels to control a RGB LED.
->=20
-> DTS-Config for an imx93-Board:
-> 	...
-> 	led-controller {
-> 		compatible =3D "pwm-leds-multicolor";
-> 		multi-led {
-> 			label =3D "RGBled";
-> 			color =3D <LED_COLOR_ID_RGB>;
-> 			function =3D LED_FUNCTION_INDICATOR;
-> 			max-brightness =3D <255>;
-> 			led-red {
-> 				pwms =3D <&tpm5 0 1000000 PWM_POLARITY_INVERTED>;
-> 				color =3D <LED_COLOR_ID_RED>;
-> 			};
-> 			led-green {
-> 				pwms =3D <&tpm6 2 1000000 PWM_POLARITY_INVERTED>;
-> 				color =3D <LED_COLOR_ID_GREEN>;
-> 			};
-> 			led-blue {
-> 				pwms =3D <&tpm5 1 1000000 PWM_POLARITY_INVERTED>;
-> 				color =3D <LED_COLOR_ID_BLUE>;
-> 			};
-> 		};
-> 	};
-> 	...
->=20
-> Without this patch, an BUSY-error message is generated during initializat=
-ion.
->=20
-> [    7.395326] leds_pwm_multicolor led-controller: error -EBUSY: failed t=
-o set led PWM value for (null)
-> [    7.405167] leds_pwm_multicolor led-controller: probe with driver leds=
-_pwm_multicolor failed with error -16
->=20
-> Signed-off-by: Olaf krebs <olaf.krebs@emh-metering.com>
-
-checkpatch is still unhappy with your patch. That might be (at least
-partially) the fault of your MUA or MTA.
-
-> ---
->  drivers/pwm/pwm-imx-tpm.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/pwm/pwm-imx-tpm.c b/drivers/pwm/pwm-imx-tpm.c index =
-5b399de16d60..411daa7711f1 100644
-> --- a/drivers/pwm/pwm-imx-tpm.c
-> +++ b/drivers/pwm/pwm-imx-tpm.c
-> @@ -190,7 +190,7 @@ static int pwm_imx_tpm_apply_hw(struct pwm_chip *chip,
->  		 * there are multiple channels in use with different
->  		 * period settings.
->  		 */
-> -		if (tpm->user_count > 1)
-> +		if ((tpm->user_count > 1) && (tpm->real_period !=3D 0))
->  			return -EBUSY;
-
-Repeating my review for v2:
-> Please drop the added parenthesis.
-
-Have you considered "I wonder if a saner check would involve
-enable_count instead of user_count."?
-
-Best regards
-Uwe
-
---cs2lqjurbk5vnplp
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmkIgcUACgkQj4D7WH0S
-/k5zegf/ayuI0k1O/rvOwqgY2KX2snbmVt0zQXx+wWSvSz644LtOFQR+LgsDyy7u
-SlZmCAUgG9sTXIZk8uCCI9YhccesU/1Tybc5sca7brEOjTlWzWVGhzliodTxVbYI
-95iNCr3aNm6Lkhf6mfDO9FEVvfn7oTSZlDmeiBQyDaD9LDEVKyrHBbFC0GaEINLT
-GFLi3KqbLbvJu5df5v2xnsLIwH0zaWj13fMV1oocCylH9tp+YB5tGLMl4/3Ygq9b
-4R+YiqcoeL8cupykXBd0WR9S3lqUcIfME9FivoDTC3UDCTeNiMrDNgbF8mxOwd4+
-39agoAx03n2Cq66N/ZG21wkBHiffjA==
-=DpDO
------END PGP SIGNATURE-----
-
---cs2lqjurbk5vnplp--
+-- 
+Lee Jones [李琼斯]
 
