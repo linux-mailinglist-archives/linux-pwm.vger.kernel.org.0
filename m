@@ -1,85 +1,140 @@
-Return-Path: <linux-pwm+bounces-7578-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7579-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id B2602C282CA
-	for <lists+linux-pwm@lfdr.de>; Sat, 01 Nov 2025 17:32:59 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 66E2BC2A3AC
+	for <lists+linux-pwm@lfdr.de>; Mon, 03 Nov 2025 07:50:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 4A22E3BA2F7
-	for <lists+linux-pwm@lfdr.de>; Sat,  1 Nov 2025 16:29:15 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id D669A347EF8
+	for <lists+linux-pwm@lfdr.de>; Mon,  3 Nov 2025 06:50:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D9C7025A35E;
-	Sat,  1 Nov 2025 16:29:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DF7B20E702;
+	Mon,  3 Nov 2025 06:50:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BQxafMp2"
+	dkim=pass (2048-bit key) header.d=emh-metering.com header.i=@emh-metering.com header.b="ei12Vmxg"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from pmg.emh-metering.com (pmg.emh-metering.com [62.153.85.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9671A2571DD;
-	Sat,  1 Nov 2025 16:29:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36D081D416E;
+	Mon,  3 Nov 2025 06:50:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.153.85.195
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762014552; cv=none; b=FFo6cC6OCu2/WSf1UwkYbMbrfPZWhaj8iix+7F5nqhTspWxeGOouIvyKSLetJaj9zw5in0698kspy2inJrbZ7hgd+GQaNA02n1jhf5NaIJIpODPlZipRNQaZT86h/J75G9UXmEeyBSwqepcr1LcPJq0o9JcFor7kQ86HCNxUfcs=
+	t=1762152632; cv=none; b=cbVyN2kXKeIOMcX3UerNwYDQV5en3QfF0StJ2HkVPCLKy83c/wzzMxfkL2sPJzwZrcyvHe6uujONpKsT5f2YLBLZm9+yQNtF80njOZ/cMDKC1ecoKVLmyjbRnHq5MgLf7dNe2QhdiNw301Np3WcFvvqK4ko70vYkApxxY2kZLf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762014552; c=relaxed/simple;
-	bh=mOOA+C1R49pgXQracXNdHSHDAKyKnXuVu8Nt5iEqIfs=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=oOGv5NLbsGNlQts+2Y5GbItXN/oD1btgHfyruwvMkEJGiNrsqRWXoLmC59Z9hvQYdYJhxjGoLntzvmhKofIui6ujeRzzn8mgnN90sjn22Ie7vSwnzcmLO3JVHg4/km/n2G06PXV94mVLPGHsldft+hZfjfELpWDYOKoZw5wFRY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BQxafMp2; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F9A1C4CEF1;
-	Sat,  1 Nov 2025 16:28:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762014551;
-	bh=mOOA+C1R49pgXQracXNdHSHDAKyKnXuVu8Nt5iEqIfs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=BQxafMp292Sny2DJvfsRfD7LhATGsqCEfaNqeuS3nkX6fiGe9K4VSs3PErA1U+Qwe
-	 bQaJjq8HoT3eYDlg9HlkLZkQGv9wFrZyIfibLEwtMMgaUXcV48dyrh0OvHFxSvx2kH
-	 3GQxMudvC85ucDa7qDMg4fz0qLmSlNvhRmZWBJ9CN7zZ82zIqQxVP3cfvzSlhaDdVs
-	 2775tQVZalnjFTHwZXq+U2k8zgSZ9D6Q6DIDIsZrrtt7zbXa9xTuYSCigvUBi0HgU2
-	 Cgyajanlb/PE/oUxRiGAzE5shY/3J4pwOd4dvL8NIYwUosAhwpGoiTrkH4FgqRygoe
-	 hM6GjFdp4rDVA==
-Date: Sat, 1 Nov 2025 16:28:55 +0000
-From: Jonathan Cameron <jic23@kernel.org>
-To: Conor Dooley <conor@kernel.org>
-Cc: Jack Hsu <jh.hsu@mediatek.com>, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
- andy@kernel.org, matthias.bgg@gmail.com,
- angelogioacchino.delregno@collabora.com, srini@kernel.org,
- ukleinek@kernel.org, gregkh@linuxfoundation.org, jirislaby@kernel.org,
- daniel.lezcano@linaro.org, tglx@linutronix.de, chunfeng.yun@mediatek.com,
- wim@linux-watchdog.org, linux@roeck-us.net, sean.wang@mediatek.com,
- zhiyong.tao@mediatek.com, andrew-ct.chen@mediatek.com,
- lala.lin@mediatek.com, jitao.shi@mediatek.com, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org,
- linux-pwm@vger.kernel.org, linux-serial@vger.kernel.org,
- linux-usb@vger.kernel.org, linux-watchdog@vger.kernel.org,
- Project_Global_Chrome_Upstream_Group@mediatek.com
-Subject: Re: [PATCH v6 02/11] dt-bindings: iio: adc: Support MediaTek MT8189
- evb board auxadc
-Message-ID: <20251101162855.303b3e5e@jic23-huawei>
-In-Reply-To: <20251030-deftly-lent-0588c4e910b1@spud>
-References: <20251030134541.784011-1-jh.hsu@mediatek.com>
-	<20251030134541.784011-3-jh.hsu@mediatek.com>
-	<20251030-deftly-lent-0588c4e910b1@spud>
-X-Mailer: Claws Mail 4.3.1 (GTK 3.24.51; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1762152632; c=relaxed/simple;
+	bh=YlYPpkNMv1k/7qhVYm/6KIJE4qBuiONsX4rIdUOhzng=;
+	h=From:To:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=i5R3t6a5Ife8Mvo6M2Is/8gNz26Hp0GJ8Y1b2mSdSgFqNAsRynNf9CFElEZD227EXbhGRAJba7OxJ5TjDAv93yO60eKqnqxF1u8ldIAPPZKT/XmOkJRwVR6+5acjVROJfsa77Kx2Vv4N6ICz9NwV6J2nCQ2PgI3VsJmmGW3FFxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=emh-metering.com; spf=pass smtp.mailfrom=emh-metering.com; dkim=pass (2048-bit key) header.d=emh-metering.com header.i=@emh-metering.com header.b=ei12Vmxg; arc=none smtp.client-ip=62.153.85.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=emh-metering.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=emh-metering.com
+Received: from pmg.emh-metering.com (localhost.localdomain [127.0.0.1])
+	by pmg.emh-metering.com (Proxmox) with ESMTP id 79533201269;
+	Mon, 03 Nov 2025 07:50:21 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	emh-metering.com; h=cc:content-transfer-encoding:content-type
+	:content-type:date:from:from:in-reply-to:message-id:mime-version
+	:references:reply-to:subject:subject:to:to; s=EMH; bh=EB2O6kTVDp
+	xjxa6R1ervwAhb64BXCh6IFZiwSALTWaw=; b=ei12VmxgEys3hOhNzAqfWfZpUW
+	e8SIzsI7bzqQyiatL4os7UmgkilXHKCXIh0JLH3bQzfuxkMTU1zMfBPTcJwDOCRd
+	ReqAWzJuwjoWpCIwpYxc7M8wmtawa71/EORM6NFxDYV2lvN/bNuuFZYHcpHP3KG6
+	6lrUHsAPhzYD6YsWhRBEVgSBEdtTelGtaEqbq8nBJ8X8pfdmOswTIzwqH41ab1De
+	zKV95vvd+svWUeJhbVNsJKCQVC+LPinj5x6LfvN6F3KLHhPElDpRk0I5kjyakx12
+	pnqvuFEGXZGflaKwXb9esY/JU3FqffrOvbmyrW87UJOk3aPxhDmdq0wDrBlg==
+From: "Krebs, Olaf" <Olaf.Krebs@emh-metering.com>
+To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam
+	<festevam@gmail.com>, "open list:PWM SUBSYSTEM" <linux-pwm@vger.kernel.org>,
+	"open list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <imx@lists.linux.dev>,
+	"moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE"
+	<linux-arm-kernel@lists.infradead.org>, open list
+	<linux-kernel@vger.kernel.org>
+Subject: [PATCH v3] Fix IMX PWM period setting
+Thread-Topic: [PATCH v3] Fix IMX PWM period setting
+Thread-Index: AQHcTI3pZaT6LbFQuk2XOLVoRSV617TggtSg
+Date: Mon, 3 Nov 2025 06:50:20 +0000
+Message-ID: <1b071599b84c4519a81990fbfe09782b@emh-metering.com>
+References: <20251103064813.522840-1-user@jenkins>
+In-Reply-To: <20251103064813.522840-1-user@jenkins>
+Accept-Language: de-DE, en-US
+Content-Language: de-DE
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 
-On Thu, 30 Oct 2025 19:30:39 +0000
-Conor Dooley <conor@kernel.org> wrote:
+From: Olaf Krebs <okr@smgw.emh-meter.de>
 
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
-> pw-bot: not-applicable
+If a second PWM is requested by a driver before the first is configured, tr=
+ying to configure any of these results in .user_count > 1 and thus the conf=
+iguration fails.
+Fix that by only erroring out by additionally checking if the period is act=
+ually configured.
 
-Applied.
+Exapmle: Using of 3 PWM channels to control a RGB LED.
+
+DTS-Config for an imx93-Board:
+	...
+	led-controller {
+		compatible =3D "pwm-leds-multicolor";
+		multi-led {
+			label =3D "RGBled";
+			color =3D <LED_COLOR_ID_RGB>;
+			function =3D LED_FUNCTION_INDICATOR;
+			max-brightness =3D <255>;
+			led-red {
+				pwms =3D <&tpm5 0 1000000 PWM_POLARITY_INVERTED>;
+				color =3D <LED_COLOR_ID_RED>;
+			};
+			led-green {
+				pwms =3D <&tpm6 2 1000000 PWM_POLARITY_INVERTED>;
+				color =3D <LED_COLOR_ID_GREEN>;
+			};
+			led-blue {
+				pwms =3D <&tpm5 1 1000000 PWM_POLARITY_INVERTED>;
+				color =3D <LED_COLOR_ID_BLUE>;
+			};
+		};
+	};
+	...
+
+Without this patch, an BUSY-error message is generated during initializatio=
+n.
+
+[    7.395326] leds_pwm_multicolor led-controller: error -EBUSY: failed to =
+set led PWM value for (null)
+[    7.405167] leds_pwm_multicolor led-controller: probe with driver leds_p=
+wm_multicolor failed with error -16
+
+Signed-off-by: Olaf krebs <olaf.krebs@emh-metering.com>
+---
+ drivers/pwm/pwm-imx-tpm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/pwm/pwm-imx-tpm.c b/drivers/pwm/pwm-imx-tpm.c index 5b=
+399de16d60..411daa7711f1 100644
+--- a/drivers/pwm/pwm-imx-tpm.c
++++ b/drivers/pwm/pwm-imx-tpm.c
+@@ -190,7 +190,7 @@ static int pwm_imx_tpm_apply_hw(struct pwm_chip *chip,
+ 		 * there are multiple channels in use with different
+ 		 * period settings.
+ 		 */
+-		if (tpm->user_count > 1)
++		if ((tpm->user_count > 1) && (tpm->real_period !=3D 0))
+ 			return -EBUSY;
+=20
+ 		val =3D readl(tpm->base + PWM_IMX_TPM_SC);
+--
+2.47.3
+
+
 
