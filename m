@@ -1,97 +1,105 @@
-Return-Path: <linux-pwm+bounces-7588-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7589-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id A0B84C2FA25
-	for <lists+linux-pwm@lfdr.de>; Tue, 04 Nov 2025 08:35:02 +0100 (CET)
+Received: from am.mirrors.kernel.org (am.mirrors.kernel.org [147.75.80.249])
+	by mail.lfdr.de (Postfix) with ESMTPS id B1F1FC30B35
+	for <lists+linux-pwm@lfdr.de>; Tue, 04 Nov 2025 12:19:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 3DF0B3BD6AE
-	for <lists+linux-pwm@lfdr.de>; Tue,  4 Nov 2025 07:33:20 +0000 (UTC)
+	by am.mirrors.kernel.org (Postfix) with ESMTPS id EBB4C188D54A
+	for <lists+linux-pwm@lfdr.de>; Tue,  4 Nov 2025 11:18:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 51030305E09;
-	Tue,  4 Nov 2025 07:33:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A79082D73A6;
+	Tue,  4 Nov 2025 11:18:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ODIrewYx"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from cstnet.cn (smtp81.cstnet.cn [159.226.251.81])
-	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4182126C02;
-	Tue,  4 Nov 2025 07:33:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.81
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E0F82BE631;
+	Tue,  4 Nov 2025 11:18:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762241599; cv=none; b=NgY4FhjrgvNz05VGcDr1GK1t6i3awDOVT3R7HxncxIESQclo1jVR34rEwRuy+r6eUr8GTYhnpWC0eLLzW7vkQTQrwdzQSXk87hcJEzBea9hV+LBZpd8tpm4w4/b1zHY4VALEkHAYlZMW/B58ll+tVQ7RYq2PZtO67DH/IWyGd0k=
+	t=1762255100; cv=none; b=CUHRt0VuMfk200TdMueHB3nzZsIlCSku3DIkY04baAx3BFBXkmmA+35XNImZy9McjzI2z0dRjZiCTS9pT6oRD8ErooB+gBpZLq6S87VMNqWLFz8DwY7FIENez5PWouXrBxyg038x9XtUP2n79K6CgvZ8sfC30GfRHf4EuhKUOhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762241599; c=relaxed/simple;
-	bh=qxQ4Lwzk+bM1deNSGCTPLkdLK63ld+S2JJLs0EckS6M=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Fhg6QyrM1ai4hOedWncViSPhIsgj6vd0oPDAEXSCW3Fty+6vwoCDjgEiMgMPm5JSLWPDb7zAeKEjWDR843zH+Ww7ruQpNYwHeHJR3C+BnoyWSJnJqnEInczCuIe10uIZAW/AX+5UGNxyERlfm8G139VFhDBBvnqUXjibrOUKzxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
-Received: from localhost (unknown [124.16.138.129])
-	by APP-03 (Coremail) with SMTP id rQCowAAHhOswrAlpskJmAQ--.18495S2;
-	Tue, 04 Nov 2025 15:33:04 +0800 (CST)
-From: Chen Ni <nichen@iscas.ac.cn>
-To: ukleinek@kernel.org,
-	matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com
-Cc: linux-pwm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org,
-	Chen Ni <nichen@iscas.ac.cn>
-Subject: [PATCH] pwm: mediatek: Remove unneeded semicolon
-Date: Thu,  6 Nov 2025 05:48:47 +0800
-Message-Id: <20251105214847.1279520-1-nichen@iscas.ac.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1762255100; c=relaxed/simple;
+	bh=fj2SbyxXmiKjzW12lEreh+2amPcsYkSH41R8tYD90kA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pxTi9oGLkiBcBiHVmaysa51pcNwh0agEC+j8RXjw0qjJx81BTJaLiV4FQFzQIaQuHMvAfpBgVDd856oD4nYsluOrsMtFt5rc/fPGgcPcNvNB/IiBOzXsPp0vgRKR6RS4QOt0GwmCRZdGkYMaecjaZpX8B9BojaiH61q889Kcn+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ODIrewYx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B317C116D0;
+	Tue,  4 Nov 2025 11:18:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1762255099;
+	bh=fj2SbyxXmiKjzW12lEreh+2amPcsYkSH41R8tYD90kA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ODIrewYxNyso5c2rt/VaDZXqgu/poQAMspD22EfeDrIJbVyn4oYhMRhMiLZ3qAgQM
+	 646/Ez+EWV9QVIhoNBw2pROpZDEOiCXfsf1Lw9CMtAdzROmReaKwBQitI8cITstrBR
+	 R2YkRwgMMe/di/6klhrmqWO8JOxOKDx8Y00TCmnERpBx2G4GCyXGA3TgsPV3CRKlRS
+	 Xn54IYZ1CudQXLGmYh9j0tPVxXQOVFvgz+dc15piV3SyStL/Hca+G7MDF2oRq2Xrx6
+	 qUw7DKCEB/AzoBgG6M/YY08dYwEZl+S28yzseIKCiFYiI0Jc/6O5VSUSNH9YVBneL6
+	 bF2yNORuo+3FQ==
+Date: Tue, 4 Nov 2025 12:18:17 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Chen Ni <nichen@iscas.ac.cn>
+Cc: matthias.bgg@gmail.com, angelogioacchino.delregno@collabora.com, 
+	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Subject: Re: [PATCH] pwm: mediatek: Remove unneeded semicolon
+Message-ID: <3sgj7ykavhum3svp657khyp3udqrov7nuzvuaaneu6fo7wlxys@uyhlvrl7lnqi>
+References: <20251105214847.1279520-1-nichen@iscas.ac.cn>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:rQCowAAHhOswrAlpskJmAQ--.18495S2
-X-Coremail-Antispam: 1UD129KBjvdXoWrZFWDuF4rXw4DWFy5Ww1Utrb_yoWfJrcE9w
-	4kWrsrXrWUGwn8KrnxJ3yxZr9FyFn5uw409FsYvr43t3sruF40vFy0vrsIgw4DA340gFWD
-	K39xWr1fZF17ZjkaLaAFLSUrUUUUbb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUIcSsGvfJTRUUUbTxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
-	6rWj6s0DM7CIcVAFz4kK6r1j6r18M280x2IEY4vEnII2IxkI6ry26F1DM28lY4IEw2IIxx
-	k0rwA2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_JFI_Gr1l84ACjcxK
-	6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l84ACjcxK6I8E87Iv67AKxVWxJr0_GcWl84ACjc
-	xK6I8E87Iv6xkF7I0E14v26rxl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVAC
-	Y4xI64kE6c02F40Ex7xfMcIj6xIIjxv20xvE14v26r1j6r18McIj6I8E87Iv67AKxVWUJV
-	W8JwAm72CE4IkC6x0Yz7v_Jr0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI2
-	0VAGYxC7MxkF7I0En4kS14v26r1q6r43MxkIecxEwVAFwVW8CwCF04k20xvY0x0EwIxGrw
-	CFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE
-	14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcVC0I7IYx2
-	IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxK
-	x2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI
-	0_Jr0_GrUvcSsGvfC2KfnxnUUI43ZEXa7sR_TKZPUUUUU==
-X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="fc7lriu56xblnb2a"
+Content-Disposition: inline
+In-Reply-To: <20251105214847.1279520-1-nichen@iscas.ac.cn>
 
-Remove unnecessary semicolons reported by Coccinelle/coccicheck and the
-semantic patch at scripts/coccinelle/misc/semicolon.cocci.
 
-Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
----
- drivers/pwm/pwm-mediatek.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+--fc7lriu56xblnb2a
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] pwm: mediatek: Remove unneeded semicolon
+MIME-Version: 1.0
 
-diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-index f2c918c0d26a..fecc1b91e14c 100644
---- a/drivers/pwm/pwm-mediatek.c
-+++ b/drivers/pwm/pwm-mediatek.c
-@@ -266,7 +266,7 @@ static int pwm_mediatek_round_waveform_fromhw(struct pwm_chip *chip, struct pwm_
- 				DIV_ROUND_UP_ULL(NSEC_PER_SEC, clk_rate),
- 			.duty_length_ns = 0,
- 		};
--	};
-+	}
- 
- 	dev_dbg(&chip->dev, "pwm#%u: ENABLE: %x, CLKDIV: %x, PERIOD: %x, DUTY: %x @%lu -> %lld/%lld\n",
- 		pwm->hwpwm, wfhw->enable, clkdiv, cnt_period, cnt_duty, clk_rate,
--- 
-2.25.1
+Hello,
 
+On Thu, Nov 06, 2025 at 05:48:47AM +0800, Chen Ni wrote:
+> Remove unnecessary semicolons reported by Coccinelle/coccicheck and the
+> semantic patch at scripts/coccinelle/misc/semicolon.cocci.
+>=20
+> Signed-off-by: Chen Ni <nichen@iscas.ac.cn>
+
+Applied to
+https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-=
+next
+=2E I added a reference to the commit that introduced it and fixed the
+author date assuming you're not living in the future :-)
+
+Best regards
+Uwe
+
+--fc7lriu56xblnb2a
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmkJ4PYACgkQj4D7WH0S
+/k4PGQf/cEvFbnM8Pdp7I6Y6+Z2EVEtr1DR5c1dnmi1a4/Nk1P8D8V364eyXb7WH
+vmf+iI01U7XBfybzS49Z5EpJyXixcffYr83siyshJK2YADFKV5APYMlQ9w1uiC1k
+pIA2gMyqGxk6BkgaEyotHKdgX/JTByR9nP2ks4i736D/+8Exu4LA8WHjHc8yd/ht
+C5Zmqe1HnBB7MKlWw4SwvXvXdpU+cYY7pztBsaP8dMdN/dGBc5aafbWvL2YCdQjX
+CeEIyGQ14pUWk+bm8gup5I975XOrYmaIdnGEPmNxC3/1M1xyxfop+LbZ16QsrN9U
+qd6i5iUddF4Fva29kBrfvHMuVDgsFg==
+=XArI
+-----END PGP SIGNATURE-----
+
+--fc7lriu56xblnb2a--
 
