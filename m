@@ -1,119 +1,192 @@
-Return-Path: <linux-pwm+bounces-7607-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7608-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id DDD1DC489D3
-	for <lists+linux-pwm@lfdr.de>; Mon, 10 Nov 2025 19:40:21 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id 41E70C4C083
+	for <lists+linux-pwm@lfdr.de>; Tue, 11 Nov 2025 08:15:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id E060E3A55D3
-	for <lists+linux-pwm@lfdr.de>; Mon, 10 Nov 2025 18:36:29 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 524AA3BDFFD
+	for <lists+linux-pwm@lfdr.de>; Tue, 11 Nov 2025 07:08:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 281B32E62C4;
-	Mon, 10 Nov 2025 18:36:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97E3934DB52;
+	Tue, 11 Nov 2025 07:02:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qHjgQXbi"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="dUUyDblY"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9A17242925;
-	Mon, 10 Nov 2025 18:36:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4911C31CA50;
+	Tue, 11 Nov 2025 07:02:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762799788; cv=none; b=VGyhPOKqXewDbljNCDIKAIuCuzfVYF+ZBMMqualfwykAH2798XVQT8oung++V2efaCtUQL9rLs6OYusOVtMKQ3EqN3tQYM5+WAZr+Pv82Jkrkkye0ZSy3GPRX94v0DF2yCCeMUqqb+EiKlgVTahOcgtRDWEB7LyhTwTXvbJMcqg=
+	t=1762844559; cv=none; b=t8jcnW64yLirbdcImltO1juaW1JP3gf07bMd203HNwReeNNVevfD4ItG9Sf/ohxEQ/93gLivaBuUUrIiI6hglQZY+cuNsM2p9+/qhiuvBjUNLZwPOE5af3ro1t3MV16G17rt9IxarL8/7hBY0aXAHuilSAOahFZGiV29fQQYSoM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762799788; c=relaxed/simple;
-	bh=X2UMR+ek8t4dC9FVAihJ8te21o4CcIV3uaXVHjtVgcI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aChs30n3E2AhK+AAntc/VWrGXRy2Bgs8f1eKOfqlHUH/hifohQ47C8Jp8rYE+7XPfFDNDyOY0lIjPAU9VSTfDwYSZnFD9Y0e3q1qYlAJsQKPfvyrMOaw9iS9SHOjlEdDc5yoqyQdZZUFNLqS0Me4vk6PSx2k/yk69RSEduBSI+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qHjgQXbi; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E6263C116B1;
-	Mon, 10 Nov 2025 18:36:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762799787;
-	bh=X2UMR+ek8t4dC9FVAihJ8te21o4CcIV3uaXVHjtVgcI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qHjgQXbiAMJaLpbNPCzTNjHjQvoLTAlkmWF++9regAa9FjAr6Zu6vqf7TY/j0EJTl
-	 iGiOQpzp0AnQMKNXY6qj+2KPgHeiceemXV8Up9jDQe3GfrfYsaKWN7Og/6TUQKFFrR
-	 C7JuU/vC5nfFRY7jnEH202SPLeFN0sbaCwwbC8F5O8VdLzL5g1lRhOsf3hu2IBsoNw
-	 ZkQQKXckpe7gyO/9uUQlZm9s1pZ34252/byXsxLdczV5Ez1OCWBgCDiZQSROTnPTJy
-	 fooEUE8E7vlmmo4H/j+LtSMMPVe6N0WoC4iyEN7g8v6OlCm26TbVtzCmU359R2ixV/
-	 pwCqNZMVW0Akw==
-Date: Mon, 10 Nov 2025 19:36:21 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: George Moussalem <george.moussalem@outlook.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Baruch Siach <baruch@tkos.co.il>, Konrad Dybcio <konradybcio@kernel.org>, 
-	linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Devi Priya <quic_devipriy@quicinc.com>, 
-	Baruch Siach <baruch.siach@siklu.com>, Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v18 1/6] dt-bindings: pwm: add IPQ6018 binding
-Message-ID: <tqbdvt2yj2e7ycxiu7nlvwgeh4cf7em6n7gia7cd4f7lsqjdeg@ksyfpy63laop>
-References: <20251029-ipq-pwm-v18-0-edbef8efbb8e@outlook.com>
- <20251029-ipq-pwm-v18-1-edbef8efbb8e@outlook.com>
- <gkvbziqeae53bunqd556r4swaye4s4lcnwthryouynwfwqrnsi@6o4cjgxiwxco>
- <lkbwgakmqknqptsjrb7hvxv3bxi3fo62vml7tmf4avo7nr7cue@dwsovmchu2pp>
- <DS7PR19MB88832537DA9998530BAAC9C39DCEA@DS7PR19MB8883.namprd19.prod.outlook.com>
+	s=arc-20240116; t=1762844559; c=relaxed/simple;
+	bh=pJHq1+CpvYSVLItoTfdznn4/1n9AgIuK6uAkB9mBhLU=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=dTbHFjkh/LgVwkLNweOpaUATL91sj7chaB1St9NNcoJsUb+ewMz7Isa73qda/OOPW5evaYJhNf8BNlcuZWqkaoELDoBV8O9CD/49YgiCAPqupSgu6zDJMMM1dDd1qkir4Kw7HbW+c+H0ZA19ubxtZcPkHc6O0iXuqa/8G66LcE8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=dUUyDblY; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+X-UUID: 5fe74a46becc11f0b33aeb1e7f16c2b6-20251111
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=VVvqmxw4oeR9ramVcYJAAvK0TIuwI3k4LpZawcl2Au4=;
+	b=dUUyDblYxSfvpiQ09vUoBj+tQotisU1m2tcq6ZVcpuV6HM2wl2BoXRfAC3akjyyHIpSIHndhZMHn5zyKIx9fER8Bks1S2YnVCoRO2xE31mfv7Sz0NeUs+cF/5pqi75ziDd3enM7nOBQLeLYVMqPXbpYoaxJQdOuIGshhwo6uLGI=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.6,REQID:d5a53038-1a8e-4b40-9708-af58f88314e8,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:a9d874c,CLOUDID:a8e08382-b6af-4b29-9981-6bf838f9504d,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102|836|888|898,TC:-5,Content:0|15|5
+	0,EDM:-3,IP:nil,URL:99|1,File:130,RT:0,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0
+	,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_ULS
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 5fe74a46becc11f0b33aeb1e7f16c2b6-20251111
+Received: from mtkmbs11n1.mediatek.inc [(172.21.101.185)] by mailgw02.mediatek.com
+	(envelope-from <jh.hsu@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 618227753; Tue, 11 Nov 2025 15:02:24 +0800
+Received: from mtkmbs11n2.mediatek.inc (172.21.101.187) by
+ MTKMBS09N2.mediatek.inc (172.21.101.94) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1748.26; Tue, 11 Nov 2025 15:02:22 +0800
+Received: from mtksitap99.mediatek.inc (10.233.130.16) by
+ mtkmbs11n2.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.1748.26 via Frontend Transport; Tue, 11 Nov 2025 15:02:22 +0800
+From: Jack Hsu <jh.hsu@mediatek.com>
+To: <robh@kernel.org>, <krzk+dt@kernel.org>, <conor+dt@kernel.org>,
+	<jic23@kernel.org>, <dlechner@baylibre.com>, <nuno.sa@analog.com>,
+	<andy@kernel.org>, <matthias.bgg@gmail.com>,
+	<angelogioacchino.delregno@collabora.com>, <srini@kernel.org>,
+	<ukleinek@kernel.org>, <gregkh@linuxfoundation.org>, <jirislaby@kernel.org>,
+	<daniel.lezcano@linaro.org>, <tglx@linutronix.de>,
+	<chunfeng.yun@mediatek.com>, <wim@linux-watchdog.org>, <linux@roeck-us.net>,
+	<sean.wang@mediatek.com>, <zhiyong.tao@mediatek.com>,
+	<andrew-ct.chen@mediatek.com>, <lala.lin@mediatek.com>,
+	<jitao.shi@mediatek.com>
+CC: <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-iio@vger.kernel.org>, <linux-arm-kernel@lists.infradead.org>,
+	<linux-mediatek@lists.infradead.org>, <linux-pwm@vger.kernel.org>,
+	<linux-serial@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+	<linux-watchdog@vger.kernel.org>,
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>, Jack Hsu
+	<jh.hsu@mediatek.com>
+Subject: [PATCH v7 0/9] Add mt8189 dts evaluation board and Makefile
+Date: Tue, 11 Nov 2025 14:59:14 +0800
+Message-ID: <20251111070031.305281-1-jh.hsu@mediatek.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="s5dbfl4angh7vjuo"
-Content-Disposition: inline
-In-Reply-To: <DS7PR19MB88832537DA9998530BAAC9C39DCEA@DS7PR19MB8883.namprd19.prod.outlook.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK: N
 
 
---s5dbfl4angh7vjuo
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v18 1/6] dt-bindings: pwm: add IPQ6018 binding
-MIME-Version: 1.0
+In this patch series, 
+we add Mediatek MT8189 evaluation board dts, dtsi and Makefile,
+add/update related PMIC MT6319/MT6359 dtsi, 
+and also related dt-binding documents.
 
-Hello George,
+based on tag: next-20251111
 
-On Mon, Nov 10, 2025 at 03:41:49PM +0400, George Moussalem wrote:
-> On 11/10/25 15:32, Uwe Kleine-K=F6nig wrote:
-> >>> +  "#pwm-cells":
-> >>> +    const: 2
-> >=20
-> > Please use 3 here.
->=20
-> The driver doesn't support polarity and I don't know whether the HW even
-> supports it. Hence, I kept it as 2 as originally submitted by qcom
-> (Devi). I don't have access to the datasheets. Would you like me to
-> resubmit a new version anyways or keep as is?
+Note:
+This patch series depends on following dt-binding headers and yamls
+1.dt-binding headers
+  1. mt8189-pinfunc.h
+       https://patchwork.kernel.org/project/linux-mediatek/patch/20250919020525.7904-1-ot_cathy.xu@mediatek.com/
+  2. mt8189_gce.h 
+       https://patchwork.kernel.org/project/linux-mediatek/patch/20250820093831.23437-3-xiandong.wang@mediatek.com/ 
 
-I want all new drivers use 3 pwm-cells for consistency even if the
-hardware doesn't support the (currently) only flag. Additionally this
-simplifies things like pwm nexus nodes (see
-e71e46a6f19c46b38983bebde8bfac1c04968fdf).
+---
+Changs in v7:
+ - update explanation in cover letter
+ - remove Applied mediatek,mt2701-auxadc.yaml
+   (refer to: https://lore.kernel.org/linux-mediatek/20251101162855.303b3e5e@jic23-huawei/)
+ - remove Applied mediatek,efuse.yaml
+   (refer to: https://lore.kernel.org/linux-mediatek/176236193629.37589.12615931533548308117.b4-ty@kernel.org/)
+ - update dt-bindings commit msg
+   (use "mt8189" instead of "mt8189 evb board")
+ - update xhci.yaml
+   (drop "reset-names" property)
+ - update mt6319 dtsi
+   (change pmic node name as pmic@ )
+ - update mt6359 dtsi node
+   (remove mt635x-auadc.h, remove fg nodes)
+ - update mt8189 dtsi node
+   - update mt8189 clk node
+     (refer to: https://lore.kernel.org/linux-mediatek/20251106124330.1145600-1-irving-ch.lin@mediatek.com/)
+   - xhci node drop "reset-names" property
+   - update mt8189 thermal node
+     (refer to: https://lore.kernel.org/linux-mediatek/20251110094113.3965182-1-hanchien.lin@mediatek.com/)
 
-So yes, please change to 3.
+ - Link to v6: https://lore.kernel.org/linux-mediatek/20251030134541.784011-1-jh.hsu@mediatek.com/
 
-Best regards
-Uwe
+Changs in v6:
+ - add/fix dt-bindings for mt8189 dts node
+ - add pmic mt63xx dtsi for mt8189 evb board
+ - add complete device node of mt8189 evb board
+ - Fix previous version review comments
+ - Link to v5: https://patchwork.kernel.org/project/linux-mediatek/cover/20250718075630.644870-1-sirius.wang@mediatek.com/
 
---s5dbfl4angh7vjuo
-Content-Type: application/pgp-signature; name="signature.asc"
+Changs in v5:
+ - remove unused cpu-dile-state definition.
+ - change memory size in "reg" property which if filled in by bootloader.
 
------BEGIN PGP SIGNATURE-----
+Changs in v4:
+ - Correct cpu-idle-states.
+ - Change the "reg" property name of the "memory" node in the
+   device tree source (DTS) to lowercase.
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmkSMKMACgkQj4D7WH0S
-/k6MvwgAmAv345GS0OBmiRO1V+Um4ZZv+MMGog8wAp4dG4wNqRSfg+bJcDwN/11Z
-4yRhFo26C4hVPPs5JYHOx178k2EwvOtphK1flrb9r91w+24ySpvPDHhOzbOlk91M
-sVhXrVXHAUaVxZS+2lbyqXzWptistZhDfLGMso0s1M20vVYsmdMJkF7Z0N5OSzhW
-qplkJltikAmqaqYr8SPAVbH/a0mtPKProR/WPrV64gf9PFo6LwIpD9julJiJLlMB
-Ke//T2lvmH3YJwOov7UfszhXp7+TA8yKhwmxePPGcag7JIycFKsanR04XwvpB6JQ
-ADIY4Fd/OKtJZVbiAUf27scd1cMV0g==
-=XKuc
------END PGP SIGNATURE-----
+Changs in v3:
+ - Move ulposc and ulposc3 before cpu nodes.
+ - Refactor cpu-map to a single cluster0.
+ - Change cpu nodes name from medium core to big core.
+ - Move psci before timer nodes.
 
---s5dbfl4angh7vjuo--
+Changs in v2:
+ - Fix warning issues for make CHECK_DTBS=y.
+ - Add mediatek,uart.yaml document.
+
+---
+
+
+Jack Hsu (9):
+  dt-bindings: arm: Add compatible for MediaTek MT8189
+  dt-bindings: pwm: Support MediaTek MT8189 disp-pwm
+  dt-bindings: serial: Support MediaTek MT8189 uart
+  dt-bindings: timer: Support MediaTek MT8189 timer
+  dt-bindings: usb: Support MediaTek MT8189 xhci
+  dt-bindings: watchdog: Support MediaTek MT8189 wdt
+  arm64: dts: mediatek: Add MT6319 PMIC Support
+  arm64: dts: mediatek: update rtc properties for MT6359
+  arm64: dts: mediatek: Add mt8189 evaluation board dts
+
+ .../devicetree/bindings/arm/mediatek.yaml     |    4 +
+ .../bindings/pwm/mediatek,pwm-disp.yaml       |    1 +
+ .../bindings/serial/mediatek,uart.yaml        |    1 +
+ .../bindings/timer/mediatek,timer.yaml        |    1 +
+ .../bindings/usb/mediatek,mtk-xhci.yaml       |    4 +-
+ .../bindings/watchdog/mediatek,mtk-wdt.yaml   |    1 +
+ arch/arm64/boot/dts/mediatek/Makefile         |    1 +
+ arch/arm64/boot/dts/mediatek/mt6319.dtsi      |   66 +
+ arch/arm64/boot/dts/mediatek/mt6359.dtsi      |    3 +
+ arch/arm64/boot/dts/mediatek/mt8189-evb.dts   | 1082 ++++++
+ arch/arm64/boot/dts/mediatek/mt8189.dtsi      | 3310 +++++++++++++++++
+ 11 files changed, 4473 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt6319.dtsi
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8189-evb.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8189.dtsi
+
+-- 
+2.45.2
+
 
