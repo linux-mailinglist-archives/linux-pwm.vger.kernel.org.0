@@ -1,138 +1,100 @@
-Return-Path: <linux-pwm+bounces-7619-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7620-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 528E9C4F5E1
-	for <lists+linux-pwm@lfdr.de>; Tue, 11 Nov 2025 19:03:56 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0297C5111B
+	for <lists+linux-pwm@lfdr.de>; Wed, 12 Nov 2025 09:16:06 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id F1688341579
-	for <lists+linux-pwm@lfdr.de>; Tue, 11 Nov 2025 18:03:55 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6813D3AFC62
+	for <lists+linux-pwm@lfdr.de>; Wed, 12 Nov 2025 08:16:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1C4728468D;
-	Tue, 11 Nov 2025 18:03:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 32025274FF5;
+	Wed, 12 Nov 2025 08:16:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UoxZ2qIT"
+	dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b="XJunkJy9"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from imap4.hz.codethink.co.uk (imap4.hz.codethink.co.uk [188.40.203.114])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7FBD2798F8;
-	Tue, 11 Nov 2025 18:03:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49380192B75;
+	Wed, 12 Nov 2025 08:15:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=188.40.203.114
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1762884232; cv=none; b=X2h1omWYUQsJt8X+MInld4L6Co7W7xU5uLq8LDpKMZ1ZEz0OsvHO7d/OXv7gRbhtjibccO9QdXskIG2PdwU0db8A12Nm4aM5LgghNfSwCIWgYQQtkTKpCTVLa5cj1BPlkmX1jeqv5woWu7npms1ET42suYvxh43VziTEsFK30OQ=
+	t=1762935362; cv=none; b=W8cuEEW3TsYoU5J6uBA3STJTnAdad3dGx92Z66e4Xz7bs46bGKSvjPgQ9ZqSMAJgSIxgxkL7mom86cY97YsU6NTr5vFq14cLD3ap8/ba9n3QQeG1v0Xt3pdGyR5E4s1QnoHDcxhnDQGv7pMW0uazSFscDMKNe2Ma+QF9i5EqaTI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1762884232; c=relaxed/simple;
-	bh=mirE0FVC1aFCsQq2eMehFBIBONouR+WUmeEdSPLLXaU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F4pbBvf6LnY9krM64BcUDBtxo/7m7TkG1kiVB0J4q8Nb5UTXwC5Kqd0t8fipX4KH8rARN6Xk3qno/CABi4mnsrT3i4cLgzfyc3OAbj6ZDvsGbiuwPbagfMyCbEX9b/NCdXTKFkdhhChuLtrZzcVC/1D3nlFYulHwLaeq7ZTL2cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UoxZ2qIT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21B8BC4CEF5;
-	Tue, 11 Nov 2025 18:03:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1762884232;
-	bh=mirE0FVC1aFCsQq2eMehFBIBONouR+WUmeEdSPLLXaU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=UoxZ2qITmDCIv3Aw71Gtor6BXmxZ1wnoHiUP/IBntzbdAFxQ9XxovK8QSj2aDPfZf
-	 8IqPCAlCuq0F29Cbyszl60cwbOySqlX8Rj5fwBoLkDonymsRi7FtTTer6S+8EI4kqM
-	 /ut0BcYpYH4KdK4sZNYt0ARyTafsLbJsT2J1vKYwJE48dIlDpf49nt492SCsRajbeb
-	 N7w7bHAXlZp2gWqVuLabvi9TMqJAmHGuMrDDhb1WkFwSw2R9+XPQRX4y7EiAn/1Y0P
-	 pkrI36WZ83pDlW7P7nW0wY6+KaIUsVMglj8ztkQuZyvx7fRB8f45cARtGA3HLG7lmq
-	 XpVhTSucBjALg==
-Date: Tue, 11 Nov 2025 18:03:43 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Jack Hsu <jh.hsu@mediatek.com>
-Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org,
-	jic23@kernel.org, dlechner@baylibre.com, nuno.sa@analog.com,
-	andy@kernel.org, matthias.bgg@gmail.com,
-	angelogioacchino.delregno@collabora.com, srini@kernel.org,
-	ukleinek@kernel.org, gregkh@linuxfoundation.org,
-	jirislaby@kernel.org, daniel.lezcano@linaro.org, tglx@linutronix.de,
-	chunfeng.yun@mediatek.com, wim@linux-watchdog.org,
-	linux@roeck-us.net, sean.wang@mediatek.com,
-	zhiyong.tao@mediatek.com, andrew-ct.chen@mediatek.com,
-	lala.lin@mediatek.com, jitao.shi@mediatek.com,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	linux-iio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-mediatek@lists.infradead.org, linux-pwm@vger.kernel.org,
-	linux-serial@vger.kernel.org, linux-usb@vger.kernel.org,
-	linux-watchdog@vger.kernel.org,
-	Project_Global_Chrome_Upstream_Group@mediatek.com
-Subject: Re: [PATCH v7 8/9] arm64: dts: mediatek: update rtc properties for
- MT6359
-Message-ID: <20251111-heroism-greasily-fb01345ae609@spud>
-References: <20251111070031.305281-1-jh.hsu@mediatek.com>
- <20251111070031.305281-9-jh.hsu@mediatek.com>
+	s=arc-20240116; t=1762935362; c=relaxed/simple;
+	bh=9lFttpgfwCxR4/Gzin67BEKLTz/k+N1q4qSXGFW78SE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=EyRvbgiZ3oqvZTZQYvYHX8iJi2Xo/H4sjPZ0TyBC8mQFVmv1GRTVrb5EFkzRpAzv34IX4Rf/alH8GLj31TdLhC8nYEVfzeKRSzQgLuXObBOIqlWlkCM84V1P+pbhXituC9q69tmGb2VoUp6T94yiqcorNxvazfiQicxhN0Ai9vc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk; spf=pass smtp.mailfrom=codethink.co.uk; dkim=pass (2048-bit key) header.d=codethink.co.uk header.i=@codethink.co.uk header.b=XJunkJy9; arc=none smtp.client-ip=188.40.203.114
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=codethink.co.uk
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=codethink.co.uk
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=codethink.co.uk; s=imap4-20230908; h=Sender:Content-Transfer-Encoding:
+	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:
+	Reply-To; bh=m6Hg0b+Cx/Cb0iRwkxFZolAmLia6/s0EULb1X9hfULQ=; b=XJunkJy9awKsvjlf
+	rqrR1kFrwJ3DlpDrrY200/436zpH7zeTGPItqM5PcBKQrzxCsHu6j7h0vA2wnMKAK9Dk/TW/Fo7lX
+	cgzT4wZP/UkFcnUk363bJ+Kknc+kDyDGnK4+iYfqKVlV4fdFix8rKFnoWFgR5xa32SFa5M32eD2U/
+	mosJ9ZR4egncphjUfpHa57S7oxb8ZKUAuUeWDOUUl6/KLuE4IzQQlCA9sqILcL2W5eeTqhe++x2mz
+	MXVFHeY/9Qa3ENw2/TFIV7wl954b+S6u1Sc1TRLOCxdgjC3obxz/8nC9qRVZcKaCLBUfaffb+JakP
+	RgCW/YSdDdPrsFerfg==;
+Received: from [63.135.74.212] (helo=[192.168.1.241])
+	by imap4.hz.codethink.co.uk with esmtpsa  (Exim 4.94.2 #2 (Debian))
+	id 1vJ5Ly-003ih7-9S; Wed, 12 Nov 2025 07:33:18 +0000
+Message-ID: <0bdd6ab6-bfdd-400e-99b6-cfb186dfcc3e@codethink.co.uk>
+Date: Wed, 12 Nov 2025 07:33:15 +0000
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wFCZWHo1MJf80ONG"
-Content-Disposition: inline
-In-Reply-To: <20251111070031.305281-9-jh.hsu@mediatek.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v9 6/6] pwm: dwc: add of/platform support
+To: dongxuyang@eswincomputing.com
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, thierry.reding@gmail.com,
+ krzysztof.kozlowski+dt@linaro.org, greentime.hu@sifive.com,
+ jarkko.nikula@linux.intel.com, u.kleine-koenig@pengutronix.de,
+ linmin@eswincomputing.com, Ben Dooks <bjdooks@googlemail.com>
+References: <20230907161242.67190-7-ben.dooks@codethink.co.uk>
+ <20251110090508.739-1-dongxuyang@eswincomputing.com>
+Content-Language: en-GB
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+Organization: Codethink Limited.
+In-Reply-To: <20251110090508.739-1-dongxuyang@eswincomputing.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Sender: ben.dooks@codethink.co.uk
 
+On 10/11/2025 09:05, dongxuyang@eswincomputing.com wrote:
+>> The dwc pwm controller can be used in non-PCI systems, so allow
+>> either platform or OF based probing.
+>>
+> 
+> Hi Ben,
+> 
+> We're currently working on a platform driver for the DW_apb_timers PWM
+> controller used in our EIC7700 SoC. We noticed that you submitted a patch
+> for a DW PWM platform controller back in 2023, and we would like to kindly
+> ask about its current status. Do you have any plans to get it merged
+> into mainline?
 
---wFCZWHo1MJf80ONG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi, I think we got a lot of the code re-ordering in but never finished
+as the project came to an end and our customer decided never to ship any
+actual silicon.
 
-On Tue, Nov 11, 2025 at 02:59:22PM +0800, Jack Hsu wrote:
-> Update properties of rtc for mt6359 PMIC
->=20
-> Signed-off-by: Jack Hsu <jh.hsu@mediatek.com>
->=20
-> ---
-> Changs in v7:
->  - remove mt635x-auadc.h
->  - remove fg nodes
->=20
-> ---
->  arch/arm64/boot/dts/mediatek/mt6359.dtsi | 3 +++
->  1 file changed, 3 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/mediatek/mt6359.dtsi b/arch/arm64/boot/d=
-ts/mediatek/mt6359.dtsi
-> index 467d8a4c2aa7..fe737254c091 100644
-> --- a/arch/arm64/boot/dts/mediatek/mt6359.dtsi
-> +++ b/arch/arm64/boot/dts/mediatek/mt6359.dtsi
-> @@ -302,6 +302,9 @@ mt6359_vsram_others_sshub_ldo: ldo_vsram_others_sshub=
- {
-> =20
->  		mt6359rtc: rtc {
->  			compatible =3D "mediatek,mt6358-rtc";
-> +			#address-cells =3D <1>;
-> +			#size-cells =3D <1>;
-> +			status =3D "disabled";
+I am not sure how well our patches will apply now, but could have a
+quick look at this to see how much is left to do.
 
-Okay, this looks a lot better now. Still missing an explanation of why
-it has been moved to disabled though, especially since you just go and
-re-enable it (without adding child devices that use the address/size
-cells).
-pw-bot: changes-requested
+Unfortunately we had to delete everything at the end of the project
+so I do not have any sort of test setup.
 
->  		};
->  	};
->  };
-> --=20
-> 2.45.2
->=20
+-- 
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
 
---wFCZWHo1MJf80ONG
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaRN6fwAKCRB4tDGHoIJi
-0uoFAQDNm4ule8p2MhE3JjSHzEvgFm4U+PmD7w7D5a6po+6lFQD+MjosiBlNJq1z
-mhXOc0fMS+qD6LGsDwugFT6pPQ4lzwA=
-=+aBt
------END PGP SIGNATURE-----
-
---wFCZWHo1MJf80ONG--
+https://www.codethink.co.uk/privacy.html
 
