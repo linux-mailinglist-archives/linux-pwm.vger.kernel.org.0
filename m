@@ -1,261 +1,173 @@
-Return-Path: <linux-pwm+bounces-7638-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7639-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id A6EC2C6AD81
-	for <lists+linux-pwm@lfdr.de>; Tue, 18 Nov 2025 18:11:49 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id C5065C6B0B1
+	for <lists+linux-pwm@lfdr.de>; Tue, 18 Nov 2025 18:48:33 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 28BD84F5484
-	for <lists+linux-pwm@lfdr.de>; Tue, 18 Nov 2025 17:04:07 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id A74854E6CCE
+	for <lists+linux-pwm@lfdr.de>; Tue, 18 Nov 2025 17:43:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E94CE377E97;
-	Tue, 18 Nov 2025 17:03:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EA88D349AE6;
+	Tue, 18 Nov 2025 17:43:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="GAhphxTk"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="SHdXbM+D"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from TY3P286CU002.outbound.protection.outlook.com (mail-japaneastazon11010063.outbound.protection.outlook.com [52.101.229.63])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f54.google.com (mail-wr1-f54.google.com [209.85.221.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8FC9377E8F;
-	Tue, 18 Nov 2025 17:03:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.229.63
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763485421; cv=fail; b=pxi8lcxvI1mno72YRhaNBlUh/tnjGABeu1fZzKcbqOvGPErA9v5lZp0xveEqog0m+nb7BvlG7sI78khYvaboVlGiaNd9j6JSpLc/hMd+QqJjukLhGJuXSamOTEyzyHaFbPoW0x9jVVXhSMvq/NtODnl7oEq8fJglKpSt8mSC9io=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763485421; c=relaxed/simple;
-	bh=mhZPqPlugR4k7elq6rMO1CYJslNbhxJSCIaV29rEiY4=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=HV/4maUJSEVsuMtgKIt06JjIWowwjqOCU7fqUJNs7MQqMwPaL0EQnDYsexOXHZdiGncM6GN6e00AfA9rJ/rBUXRJcKilz7gvZkK5oGSD9wFwVktlCAen3iI6YJsuFwwhA9OPZ+Lbym4hSfO6PvJGsA+M6gJGnYUikwhqYPW7Ey0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=GAhphxTk; arc=fail smtp.client-ip=52.101.229.63
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=jXqXipD1lj6vY4WGwN6XcUAGRZY4njCGO7ymUNvk6A79fAFGVC8OgPuYQnfRQrmjQRHhGW+tg2wQR36MnQFj82+iLOm8DFCLdsL6XHiVQRqcpeZPkr3Ccd9spOImiugwl5ob6MLLnDIWyLA5oZiUo730PDhMfB4u6VuDJoOrhpeoxT7VJdsvh9a+1YTnbvSlRtRAHEAu/fxaFLU/xOnUiLZYa2Zxl3awrdRTNyRwBMp8ChC5RULAF4h3qvQzetSNmsi40PuKcdXjDjmj/5XM1IxR3SszqcRqgQjQLWSsQKNg4sfzZNFhOeYn45iHbVOQiM/hmqDib+mHaYJgusuDJg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=DS66ErokKsEv7bhhQGZltj5LO0wVR6ACHyGoGYQcprg=;
- b=AmEJBkZOCaQ1RZNBlgFjYxdZFGGf1ZGaExkaLrSsS1TiUy0LhHqQzpRAwWQCSN54+Qk0pBWkfandsZ5inKLgOlf4yN+RHX+MkNPTcU6M4SsIewPdgHIiHQp3n6HtMEQIRxO0FfPeXa4DEWtjzrfi18mHmg0Tnrf0900vGsLxUwfwmSjs/LEWsg7cqSGOdPLZV93b5mrySj9+sZH2NTiudVg+8ouT2MQxDCcsbw8PCc69OlVQVkWi6O0j+053Yo2SKMom8tRqdq8cRDrSGl+62Z8CRNfDgjyuxbSA4Hljf7bVy4ly1VtqeP9pK6G9J4f2LKmKTHGl/VRBUvQxaXnYFQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=DS66ErokKsEv7bhhQGZltj5LO0wVR6ACHyGoGYQcprg=;
- b=GAhphxTkLfPD9JQrnsXfQ0ZkdTgswEOyrd6jHVEyRTo7QX8oX8Rd9T7mfWHxD4O9nHSdkeeKaMGiXYPrtaZAzt0v6bLOZ2crXOOoB6W14ZdGTWbh/oonGkFHjj9ehzMZYnmSECjmi1uTXGJYFfBSSkVXuSRspSJ2gEZLnCT6VCk=
-Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com (2603:1096:400:3d0::7)
- by TYWPR01MB10772.jpnprd01.prod.outlook.com (2603:1096:400:2a4::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9343.10; Tue, 18 Nov
- 2025 17:03:34 +0000
-Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com
- ([fe80::86ef:ca98:234d:60e1]) by TY3PR01MB11346.jpnprd01.prod.outlook.com
- ([fe80::86ef:ca98:234d:60e1%6]) with mapi id 15.20.9343.009; Tue, 18 Nov 2025
- 17:03:34 +0000
-From: Biju Das <biju.das.jz@bp.renesas.com>
-To: =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= <ukleinek@kernel.org>, biju.das.au
-	<biju.das.au@gmail.com>
-CC: "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert
- Uytterhoeven <geert+renesas@glider.be>, Prabhakar Mahadev Lad
-	<prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>,
-	"stable@kernel.org" <stable@kernel.org>
-Subject: RE: [PATCH v4] pwm: rzg2l-gpt: Reinitialize the cache value in
- rzg2l_gpt_disable()
-Thread-Topic: [PATCH v4] pwm: rzg2l-gpt: Reinitialize the cache value in
- rzg2l_gpt_disable()
-Thread-Index: AQHcVXbT1K+z1LyjQk+ztnXMbmIpvrT2hVOAgAIJYkA=
-Date: Tue, 18 Nov 2025 17:03:34 +0000
-Message-ID:
- <TY3PR01MB1134679D611D611AC2CED72F886D6A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-References: <20251114145606.200948-1-biju.das.jz@bp.renesas.com>
- <ppqewbxcvsqcpp7met6vupmvxaftfjwiefej2c25jw4hoe3c23@lyh7saabrhkd>
-In-Reply-To: <ppqewbxcvsqcpp7met6vupmvxaftfjwiefej2c25jw4hoe3c23@lyh7saabrhkd>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TY3PR01MB11346:EE_|TYWPR01MB10772:EE_
-x-ms-office365-filtering-correlation-id: 7adbad08-eff0-4e55-a1fd-08de26c46873
-x-ld-processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;ARA:13230040|376014|1800799024|366016|38070700021;
-x-microsoft-antispam-message-info:
- =?iso-8859-1?Q?4Pya39DcwiuP1UVNsItHB3vJvueodlkBKC+vczPCKbG9DeJl1+8A64r9h3?=
- =?iso-8859-1?Q?R+E9jzca8kuDE+6eT+3+09/7t3zP4pXUbwB8Tb6OqFJo8CXTnLSo9xA8BY?=
- =?iso-8859-1?Q?7lN0a9erv+/PHK4JnFaxtSHzL3bOBoaYyed5JN9OdSyGEhL/VmpwFaC1Rl?=
- =?iso-8859-1?Q?sf18s4feI6xAerdG+MlXmrkv60UgI2Vos2hiYSEbleNJ7WudbcFz/YsQoS?=
- =?iso-8859-1?Q?EyUR2MTphVA90lehxCYXIbfU1NW+FZ2B++nCZNFcfM+9xrh62pYbWQoVXr?=
- =?iso-8859-1?Q?9QnIMJpqtlbDZERRBbr4576fF09JDZC/HtY1Fmh9judCCF2JW4VDGxQ1Xy?=
- =?iso-8859-1?Q?npePhSRVFYNV2saRvqneSqVRjYzN8DgttComQI+hMs6SPYnhz9RyBwOByE?=
- =?iso-8859-1?Q?9+jDxuJbvZTkE6Ic+VWyQ23smHHKBzWkUVV6NLD9QRD/IXdOIgwzavpBip?=
- =?iso-8859-1?Q?+FwmFGLv9sAnvSQiEeI/2xPTSn4wqPn+8338AMK4PQfiqTuPK9s75Ik1nA?=
- =?iso-8859-1?Q?xGntl5dfpZWCXJ1y/58dbqhVYOHP+jjaHEDRUPdJ+LC6B3Nrm0alcVsYSU?=
- =?iso-8859-1?Q?V1cWPu7bHeFOv4bNKR798lxjE8m7PtaMOl0Wbr+AybtNPFmc0w6IydiCa7?=
- =?iso-8859-1?Q?8rWuFnV/pE9PJCIlHySouNHkLPWMPINdX14Chk3jUqGZOghYXlbwgbq7s1?=
- =?iso-8859-1?Q?UpEK7NtnKPVqTeE+5+OPMmYUodUNB9icO9FQTSSwB4Rqnrn8uqjavVt74G?=
- =?iso-8859-1?Q?x4c76AdBBD8DqdmJM+QSoKPfDjvVZd9lgZx72aZyikE7OR56P+gdrDLhHN?=
- =?iso-8859-1?Q?ZXG9dlC/zJmYb7ESv7bGTgewyDfxX2WADupJK2VOnPDaZ/WPJT13wI/lX0?=
- =?iso-8859-1?Q?AvMK6JP7M4WrObr1QhP89ZlhAfZKab6vk1RMPElSjmOas3bFkmvo4cpp+Y?=
- =?iso-8859-1?Q?iL5pgqIno6RuEoxcjjrW6LWIg4pX0S8Gn3xx/LzF3o/8TQi5dKKSUiBodn?=
- =?iso-8859-1?Q?xrM8kGLdOm4pCvMfIzd/PBLub4VB+tVFcbiQfcu+NPgWd1CBvAMjzMFPHB?=
- =?iso-8859-1?Q?Cx+9LeHqcbHavkf2XNPIoPQf7KTF3wdwfXRPFx+3TMbJy4fSoOHvKL1X4U?=
- =?iso-8859-1?Q?gslapM36tPFIL45PkpvLA4bHrr4Y76ftDRw7wJW62kjoWnKL9O4SDugkJ/?=
- =?iso-8859-1?Q?JLlgcP+eXyV3r6mDSIXCv29Dzt9I02ONREFFcPzxRJTk2f5C+1yhAcrEFM?=
- =?iso-8859-1?Q?l97ulvo0CMIUcjQ+PQxCpyFDRpGNI6bvbGECFrkQ4mijA3nK1wSpSU+AqI?=
- =?iso-8859-1?Q?URgBYzGzUq/7pGBU/v7I7FmfnBGXoespxhfUbg6FWgoUz/hz2axFJ3gGaq?=
- =?iso-8859-1?Q?gCTHsBJW2CrLSvD6iETHYrySVM/O00+HGwWToUx0jh7LRyxhSawgcJ/cdr?=
- =?iso-8859-1?Q?bf1b1k5E3sDNCRnACw3n/vW2aHg4WqUvLTdWlwDmQNCrzysxmhQkOA2NEV?=
- =?iso-8859-1?Q?2P4Wx053pKTTHBwjc5f/yg70nNzxUiJO4njDVUkTMrEDQUIrIot65QGGhe?=
- =?iso-8859-1?Q?0k5Xh2Al/wjlAYCPGln8JJT/ZwiW?=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY3PR01MB11346.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(366016)(38070700021);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?DA7vow04HnvCsa+tKGaY89XfT7v1P4nAuSN96aM1ead1Y0cNOcg8UuUe4A?=
- =?iso-8859-1?Q?eCNKOQLfMoQ41GCql2fnpTdobY1Jj+DkHX/ozqhhy34nuiDh8dRDNeb0ZP?=
- =?iso-8859-1?Q?7piRQ214caDYe/83lCsEAxG/O37HwdqucXyDWM/Fr2S6bcXqrYSlUw0W+M?=
- =?iso-8859-1?Q?Urum/QI4g7R9MB09GYcBMB6H1z6ixusPZZdpQ2VEptNgfZ9awVkz+H9qku?=
- =?iso-8859-1?Q?9EY2MrCS6knwXvpFvrtR39qACRlptSrw/gPUXyiYVKfwtRz4+qgVTr+GgE?=
- =?iso-8859-1?Q?eLi3L11od9Qnrs3kaFJ+9q5KeFuqpiFuFMhzJH7Xtr1Z2+56i7VSqzw5gG?=
- =?iso-8859-1?Q?nG2bChb/S8BhHh/VGNNVn1FoUrebsp54NcnE+FNM2I87A61oD5rkSHbDYX?=
- =?iso-8859-1?Q?unbJzILZjj5h5tuX7J4+8Ywraf5xStJzYt49G+Yzp8FYpiCAZNHP52ReNV?=
- =?iso-8859-1?Q?UiSbXFs5kAi8rdR5By9fOhACxkn4UYaqDsr/twb7ymzfudzMSrNLqejoel?=
- =?iso-8859-1?Q?uGof+UkIvdUP5T90NHDls7nqXm7LRlhNXrQiF/LU7br8o60shu9ZnBNYtn?=
- =?iso-8859-1?Q?/4shAnv12hzvOfC9AldhH6NrLyZ5ihCuSeFEP3VI+ZfONFMz5B8lDS9kOi?=
- =?iso-8859-1?Q?UB3dUf5XTtbbxiPpqd33u6Lcqv0L2RA2bxiTEu2/C2+MW9Go/j9HKgC647?=
- =?iso-8859-1?Q?Piyu0lEJwuDo6RtpjfsAr5Bo0sNlUYM1mUfkF0fhrc5qJErWgaWK7L9mjs?=
- =?iso-8859-1?Q?kMty+cXxAQDPibCDpiLMURyj/C7C9FoTvLTQVeqB7yJR7fUlh8Sp0dM5J3?=
- =?iso-8859-1?Q?TbOz43K6FZtrIW5LijJEYU6aRmyH91hHrIC+SKdfYdKLoba/dr0DZN89vV?=
- =?iso-8859-1?Q?TUOLQaR4p91p0UayFH4im2qR1SaxXC0LxKiMHRIvCAaH9IQS4uM4EH14C8?=
- =?iso-8859-1?Q?CzGqVZk+2upfnAK8/R0HtlwlDUXAqahAtQJIZj2pSonroVvEbvK7IGOOix?=
- =?iso-8859-1?Q?PP9wb/VK0E5x/RBVLatvhoAWNZblLmXut/9ug3jBPSytNo6k9kQIdNmI2Q?=
- =?iso-8859-1?Q?JL7mY6pUHsrXPzmtnKUSvYbKVkOwb2Bt/3DPgOiWlmd2YKtrIeXINFbKGj?=
- =?iso-8859-1?Q?jHruvuJDHLXtE7qkbmRoBscFJH/Xi0nMsUoKUI7H3IOn4xwSVLJ/My65Fh?=
- =?iso-8859-1?Q?4EzHvmbCkNV/eDVEOlwD4L3U0QB3Og2cjURSL+MeXytVLsbl3bDWyzEwk/?=
- =?iso-8859-1?Q?yAlCiruNOmaOvEfrB0RHU1/43kZJLjJumbk0DnH1KrUueJa64ef7ZCoxjH?=
- =?iso-8859-1?Q?kKs6XbkGgQCy/ZmxvJFi33M0yZN12cYjmUnwEg+P75RmMvhW1JoHIsex/P?=
- =?iso-8859-1?Q?UgmJv4nLPnm2yIP1FeZzY+c76WLAzCrmz/f2O8Ui0lyJ/L/LEpx6azIwcK?=
- =?iso-8859-1?Q?+sqQp2GwH4QJVg/W939++8tFEWNiSojsf0KHX6v+ZTGsDOiiW9t/qP5Jiv?=
- =?iso-8859-1?Q?IDhuo+U3+TM4dKvCe0KGFTIFAZD2qx4GMO4AnGdctnThKlocyb2ujhCgq2?=
- =?iso-8859-1?Q?5utXqUyV01cmv/cyjmRjJBUYzftGVxbCZDKsPvzY+cEci75aWW6Ik32GgJ?=
- =?iso-8859-1?Q?e046+edIzye2FZX0WPGLj37MbSbCwx5ZyOaBwtZRmlJQfZa/AR3iqHhQ?=
- =?iso-8859-1?Q?=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F9AC346FA8
+	for <linux-pwm@vger.kernel.org>; Tue, 18 Nov 2025 17:43:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.54
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1763487797; cv=none; b=qRet8gJu2aHpBqSSrNY8WpxUE2qbbjQFQc0PGXg28LEDxc+SayITKbpTCGcUkxfvS18jAGmdihh+bSj7Uns7GKz/RPvakwzbeyQEJQ3SeDj3j/dtSBxYaDJ5gZYevwhPXcRcaEnkQEAWnKS3gLiwXUxG3Lv+LkeSBo7aoNEOKRY=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1763487797; c=relaxed/simple;
+	bh=oIj7BI1LHbab5CnzVOti3hZl7tEaf589+lY3XlHR6Zw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=EX+B2PbupmmakOZz7hLv/bKBh3W71cidD4xPZBqtl24ES97drUYEId0exmOCsQIs9pqYX91AM0kZfGXmGxl58DiqJPM3HTXbuGVTcTbGFjFIGveSVh60GX1AqOSfOAu3kqz9Y+OXYQmRTelylasoMmE15n74Lqbp8VyYgbZ2ww0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=SHdXbM+D; arc=none smtp.client-ip=209.85.221.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wr1-f54.google.com with SMTP id ffacd0b85a97d-42b2dc17965so4713670f8f.3
+        for <linux-pwm@vger.kernel.org>; Tue, 18 Nov 2025 09:43:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1763487791; x=1764092591; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2TOQhq9/NUebQebI2xcMlL9PDdj3FqsNrvxWPOAcGyE=;
+        b=SHdXbM+DoT0GeqhPeDGowoh8YSUBIW/M1ntBEx75S4ndvqUpaJQvaQE6NYYDf5V71k
+         iNsXEUbeDjXfT4M/pD61bM931p0usPuNaXcssuZc2R8Z5q/gzyr/cW7sFbUZs/hRP3AT
+         m3J/8EBoGg363P96vatZJmiWKF2jl9Pe0zxtbuaOoNOrlNxrOtoyaS2BgzrwAi8norFr
+         kogrDdrlSdXmfWrO7J+NkjQOUlD+UpLf0V5fKqadKS9e7mkqmG+E9t0pEz9PgbJkwluJ
+         LZiME3u1p6n2Gu/xIAZ7eFjoYEVuhi/IwVnpw08Edxj0MNV8exDFmduFdKcXtbOMax9o
+         NgGA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1763487791; x=1764092591;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2TOQhq9/NUebQebI2xcMlL9PDdj3FqsNrvxWPOAcGyE=;
+        b=jOlhqu0wguriqsjhNFLApq3mPoiXJ5I731HZ+f/vnQWuMcL0NxH7gj7+XZK1h43BNu
+         gQ/oSowosClINFz7XV4DcWWviqFT8uYt1FJW3MekSZyxmBOgY+K28s4BzlZf7BtFXUjV
+         RBGfmL+7Hd28JVIL+on6IWSBDnJi++Z7wAAu0XEKa0LPWYXqLMLC9Ajhgwaw4dGYVCtm
+         Xe7fKlHLMMk4rN0RGY0bYkBYXsf9BWcY6F1+5ymQQX2m5hCCZn1cUNnKEW6s4p/ApFKU
+         mHXDK9cMHVuRPXUlrQfAIfl28CRYdvXGG9J0YQIE9XQajiuFDGYpbiqEiJO7Kkx4uz0E
+         ULpQ==
+X-Gm-Message-State: AOJu0YynpJIAyMSd2T1uFC/uvm4APBHc+FhvPO+b9YSZnbfx0xAipKEU
+	tH0y2Vw8tS9PLggandgBHFb1L2C5oNlW6aKeaM4ql8UDOeJz8ACRdcXs9POIQoixT+evcdSSR+V
+	G9QV9
+X-Gm-Gg: ASbGncuj0qYiBOTJcY1D1mph4VdQ38prmbf0Bw6UIcM80KGH81URNTg0xS4htpMsvBY
+	CkrG6UGJgWa6LBLnvDQ4nip25MwIo0o0yxqoxU4kGCsv5eOiYOXLE0TnrhdjH6NbiqQckHjRcaL
+	s1Q2sBQRKctuDUArC8j7vPKaptvqPc9/+1xy2KQqTLJ5FC8u9g0DqzO1Nr2v3WI/qOTmKdsF4Ww
+	W0BBREgrn9WKCNHLcZHsYZq69tJO39u/9vv3/uRqIFmyKZ48fery/j78OtN+UQdUoMGycW13AXg
+	vH2tQEzJV0Wv9MU7YZ6xFl8+xvPHgmE4EbnZ5ebJ9T/x6tlK1rsTHlgHDG4g8yv5NL5KvMAlK6P
+	Kawg82AwAHqKLXMJpQW4gWNQqzz18maTfFLF/zDKE8utr2Lse5aj9EpjBHwv6MJPjLpKuaQ0Rxb
+	yj7UcNSfqej4q/Kz7JZwnS1I7WBdtz4DX34jHQvSCiSik0/IkOTJrNuIK660xsKFqeK+ay6en1r
+	Y1YoY7JIbbZEGydJpENc22X
+X-Google-Smtp-Source: AGHT+IEJ4tBZLVuUh7LHukSgFzWill2oPQ+ipSS7ojnOPYmnhEr7THEN7v+AAfwFvCW29131mcz8zA==
+X-Received: by 2002:a05:6000:2890:b0:42b:3ad7:fdd4 with SMTP id ffacd0b85a97d-42b5933e3a6mr18867946f8f.3.1763487791363;
+        Tue, 18 Nov 2025 09:43:11 -0800 (PST)
+Received: from localhost (p200300f65f0267081cfc29f03d015de2.dip0.t-ipconnect.de. [2003:f6:5f02:6708:1cfc:29f0:3d01:5de2])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-42b53f0b617sm32888594f8f.31.2025.11.18.09.43.10
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Nov 2025 09:43:11 -0800 (PST)
+From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: linux-pwm@vger.kernel.org
+Cc: Florian Fainelli <florian.fainelli@broadcom.com>,
+	Ray Jui <rjui@broadcom.com>,
+	Scott Branden <sbranden@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Stephen Warren <swarren@wwwdotorg.org>,
+	Bart Tanghe <bart.tanghe@thomasmore.be>,
+	linux-rpi-kernel@lists.infradead.org
+Subject: [PATCH] pwm: bcm2835: Make sure the channel is enabled after pwm_request()
+Date: Tue, 18 Nov 2025 18:43:02 +0100
+Message-ID: <20251118174303.1761577-2-u.kleine-koenig@baylibre.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY3PR01MB11346.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7adbad08-eff0-4e55-a1fd-08de26c46873
-X-MS-Exchange-CrossTenant-originalarrivaltime: 18 Nov 2025 17:03:34.1008
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: tA5FNrsp6BSTLm0V06wAE9Mj5QpweI7Fe32qrzxbhcoAi6FXdNng/+TRabZkKQp3cZKLgcNMcNNn6F9g3uYgLQ4dPQS2wr0FXj9lRLYwKNM=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: TYWPR01MB10772
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2489; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=oIj7BI1LHbab5CnzVOti3hZl7tEaf589+lY3XlHR6Zw=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBpHLAn1e6DjjpJlZPDote1zeo2WdPwn2zIysZtq ZCXLW29UoGJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCaRywJwAKCRCPgPtYfRL+ TuPgB/9I13/obGtiNWPBLi8Y6qUhmZRNkPCgMy7wiW2UoVnpTlKnbrdLuHUIj1jIJVsjW6iPBoS VuUmJokSEF7gdGpKJtLnyG6sYUi8DeqcF52gML5P6Uhdq0KP7oonnn8lIqKIPTsWqorrffEsRQy B3zuADWr31Lxpbg4pLHHeAIWFQddS+EZ4UV+3bMOL4Ly3JGehrQT1zgSaekAPC0dWt0EKT1zZA7 /ojoAmsCU0Fb6ep35kB+NRqb/vDuyPvowbtBxMQcqC/TMVe/XYj2fu+ccjpqqHtBqAHKHEZFdJU KJyPyQ25eR67l651rL1KvFqf3poZy5d2d8G5cYMb6B6dAJyR
+X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
+Content-Transfer-Encoding: 8bit
 
-Hi Uwe,
+The .free callback cleared among others the enable bit PWENx in the
+control register. When the PWM is requested later again this bit isn't
+restored but the core assumes the PWM is enabled and thus skips a
+request to configure the same state as before.
 
-Thanks for the feedback.
+To fix that don't touch the hardware configuration in .free(). For
+symmetry also drop .request() and configure the mode completely in
+.apply().
 
-> -----Original Message-----
-> From: Uwe Kleine-K=F6nig <ukleinek@kernel.org>
-> Sent: 17 November 2025 08:00
-> Subject: Re: [PATCH v4] pwm: rzg2l-gpt: Reinitialize the cache value in r=
-zg2l_gpt_disable()
->=20
-> Hello Biju,
->=20
-> On Fri, Nov 14, 2025 at 02:56:01PM +0000, Biju wrote:
-> > From: Biju Das <biju.das.jz@bp.renesas.com>
-> >
-> > The rzg2l_gpt_config() test the rzg2l_gpt->period_tick variable. This
-> > check is not valid, if enabling of a channel happens after disabling
-> > all the channels as it test against the cached value. Therefore,
-> > reinitialize the variable rzg2l_gpt->period_tick to 0 in
-> > rzg2l_gpt_disable(), when all the logical channels of a hardware channe=
-l is disabled.
-> >
-> > Cc: stable@kernel.org
-> > Fixes: 061f087f5d0b ("pwm: Add support for RZ/G2L GPT")
-> > Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
-> > ---
-> > v3->v4:
-> >  * Split the patch as separate from [1] for easy merging.
-> >  * Updated commit description
-> >  * Added comments about the fix in rzg2l_gpt_disable()
-> > v3:
-> >  * New patch
-> >
-> > [1]
-> > https://lore.kernel.org/all/20250915163637.3572-1-biju.das.jz@bp.renes
-> > as.com/#t
-> > ---
-> >  drivers/pwm/pwm-rzg2l-gpt.c | 11 ++++++++++-
-> >  1 file changed, 10 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/pwm/pwm-rzg2l-gpt.c b/drivers/pwm/pwm-rzg2l-gpt.c
-> > index 360c8bf3b190..ab91bfd7da48 100644
-> > --- a/drivers/pwm/pwm-rzg2l-gpt.c
-> > +++ b/drivers/pwm/pwm-rzg2l-gpt.c
-> > @@ -190,8 +190,17 @@ static void rzg2l_gpt_disable(struct rzg2l_gpt_chi=
-p *rzg2l_gpt,
-> >  	/* Stop count, Output low on GTIOCx pin when counting stops */
-> >  	rzg2l_gpt->channel_enable_count[ch]--;
-> >
-> > -	if (!rzg2l_gpt->channel_enable_count[ch])
-> > +	if (!rzg2l_gpt->channel_enable_count[ch]) {
-> >  		rzg2l_gpt_modify(rzg2l_gpt, RZG2L_GTCR(ch), RZG2L_GTCR_CST, 0);
-> > +		/*
-> > +		 * The rzg2l_gpt_config() test the rzg2l_gpt->period_tick
-> > +		 * variable. This check is not valid, if enabling of a channel
-> > +		 * happens after disabling all the channels as it test against
-> > +		 * the cached value. Therefore, reinitialize the variable
-> > +		 * rzg2l_gpt->period_tick to 0.
-> > +		 */
-> > +		rzg2l_gpt->period_ticks[ch] =3D 0;
-> > +	}
->=20
-> I think this is wrong. rzg2l_gpt_config() has:
->=20
->         if (rzg2l_gpt->channel_request_count[ch] > 1) {
->                 if (period_ticks < rzg2l_gpt->period_ticks[ch])
->                         return -EBUSY;
->                 else
->                         period_ticks =3D rzg2l_gpt->period_ticks[ch];
->         }
->=20
-> So if both PWMs of channel `ch` are requested but disabled, rzg2l_gpt->pe=
-riod_ticks[ch] is 0 so you
-> assign
->=20
-> 	period_ticks =3D rzg2l_gpt->period_ticks[ch];
->=20
-> . In that case however you don't want to change period_ticks, right?
+Fixes: e5a06dc5ac1f ("pwm: Add BCM2835 PWM driver")
+Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+---
+ drivers/pwm/pwm-bcm2835.c | 28 +++-------------------------
+ 1 file changed, 3 insertions(+), 25 deletions(-)
 
+diff --git a/drivers/pwm/pwm-bcm2835.c b/drivers/pwm/pwm-bcm2835.c
+index 578e95e0296c..532903da521f 100644
+--- a/drivers/pwm/pwm-bcm2835.c
++++ b/drivers/pwm/pwm-bcm2835.c
+@@ -34,29 +34,6 @@ static inline struct bcm2835_pwm *to_bcm2835_pwm(struct pwm_chip *chip)
+ 	return pwmchip_get_drvdata(chip);
+ }
+ 
+-static int bcm2835_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
+-{
+-	struct bcm2835_pwm *pc = to_bcm2835_pwm(chip);
+-	u32 value;
+-
+-	value = readl(pc->base + PWM_CONTROL);
+-	value &= ~(PWM_CONTROL_MASK << PWM_CONTROL_SHIFT(pwm->hwpwm));
+-	value |= (PWM_MODE << PWM_CONTROL_SHIFT(pwm->hwpwm));
+-	writel(value, pc->base + PWM_CONTROL);
+-
+-	return 0;
+-}
+-
+-static void bcm2835_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
+-{
+-	struct bcm2835_pwm *pc = to_bcm2835_pwm(chip);
+-	u32 value;
+-
+-	value = readl(pc->base + PWM_CONTROL);
+-	value &= ~(PWM_CONTROL_MASK << PWM_CONTROL_SHIFT(pwm->hwpwm));
+-	writel(value, pc->base + PWM_CONTROL);
+-}
+-
+ static int bcm2835_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			     const struct pwm_state *state)
+ {
+@@ -102,6 +79,9 @@ static int bcm2835_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	/* set polarity */
+ 	val = readl(pc->base + PWM_CONTROL);
+ 
++	val &= ~(PWM_CONTROL_MASK << PWM_CONTROL_SHIFT(pwm->hwpwm));
++	val |= PWM_MODE << PWM_CONTROL_SHIFT(pwm->hwpwm);
++
+ 	if (state->polarity == PWM_POLARITY_NORMAL)
+ 		val &= ~(PWM_POLARITY << PWM_CONTROL_SHIFT(pwm->hwpwm));
+ 	else
+@@ -119,8 +99,6 @@ static int bcm2835_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ }
+ 
+ static const struct pwm_ops bcm2835_pwm_ops = {
+-	.request = bcm2835_pwm_request,
+-	.free = bcm2835_pwm_free,
+ 	.apply = bcm2835_pwm_apply,
+ };
+ 
 
-Yes, what about adding the check that won't allow to set 0 period in this c=
-ase.
+base-commit: 3a8660878839faadb4f1a6dd72c3179c1df56787
+-- 
+2.47.3
 
-if ((rzg2l_gpt->channel_request_count[ch] > 1) && rzg2l_gpt->period_ticks[c=
-h])
-
-
-Cheers,
-Biju
 
