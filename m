@@ -1,159 +1,79 @@
-Return-Path: <linux-pwm+bounces-7641-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7642-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 358DEC6BDB9
-	for <lists+linux-pwm@lfdr.de>; Tue, 18 Nov 2025 23:26:02 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id CCB9FC6D939
+	for <lists+linux-pwm@lfdr.de>; Wed, 19 Nov 2025 10:05:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 2423A4E5DAF
-	for <lists+linux-pwm@lfdr.de>; Tue, 18 Nov 2025 22:26:01 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTPS id 89F352D69C
+	for <lists+linux-pwm@lfdr.de>; Wed, 19 Nov 2025 09:04:59 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91A1C319864;
-	Tue, 18 Nov 2025 22:24:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8B29F33375E;
+	Wed, 19 Nov 2025 09:04:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QmIowFeR"
+	dkim=pass (2048-bit key) header.d=businero.com header.i=@businero.com header.b="FTJ9X9ms"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.businero.com (mail.businero.com [162.19.67.48])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 606003161A5;
-	Tue, 18 Nov 2025 22:24:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C9BE8334361
+	for <linux-pwm@vger.kernel.org>; Wed, 19 Nov 2025 09:04:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.19.67.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763504675; cv=none; b=m7Y5CU2sQkrf5xQeVi709XgGJOTKSlUSuVM5szZaPWa0rt9kk7b2eXI/EeZAYqzx09P6QJ0ybqUzggNVSZa1rWMID4TEI9B31ETu5S1Ec70mh1TS82OvbobbbFTCvun1j05TEJQosbD50k72VhRj6WPLHMnDiFIjmcrTbi7du8A=
+	t=1763543098; cv=none; b=KXFxrcLEXDVXL6dYbHI9SB0MKowbvzl8Qu07hJvk6OnpnQJVkN6okFGDEB1s4hicKSsc4GCWXU4WeJq2YjdWH1deYFpphL0TrHPbQCPpPGf7p1mXKRpAtvLbkIH4FPNBEHcFxdgX8GA1G+2gKvhOrvy/cDetjMkuG0jsUC1+jjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763504675; c=relaxed/simple;
-	bh=UI0qW0QTVsPa0WcSzC957PMkoVMadpxOQeZqRYXUvOE=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aPZFXVmEQRm2oD0zbJR9Ef+u0+OpC4HY+m7Fs5IB1c8Q8gq8lyJxSET7mxpnpn6tfMqv/H7JUvGCaVRvcQyyx3LGK5FwQ2C49jZrG3XJETe11t82LOVzy+S0NkcfOxMQ85s+S/pqGcLyfj4MXQv6ldMKt+dYX6XLC8oQWmyL5iQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QmIowFeR; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC603C2BCAF;
-	Tue, 18 Nov 2025 22:24:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1763504674;
-	bh=UI0qW0QTVsPa0WcSzC957PMkoVMadpxOQeZqRYXUvOE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QmIowFeRWb8Gqona0IRcewhhdts0G4i34kQ+SAZ3mXSci7+QqYJyeIGk0bjdoONb1
-	 1bnRVuXfnSUnufaSzyrN6k0qfReex8cE6CZ5P7WlzY/MBOl1LZmb72wyxCRYOsYJOi
-	 A2GpYzVHVUXH0dvrTx9rm8UM7IrtyKf6bC9K2HBHyTyJLjJQNhlDVtYDYhpA5Z2Gg0
-	 IIf07fHHtigGROrf7VAX1wen46CnOxLoEEJL6rw3nmQPScDmNGjQKTRx1jz6xTKNxG
-	 TBOSW8jIZmR2zkdqAHi4NEvVRn6Ec3D8o8Opi9IidXOxTfCB5lt6cZqkUGbCWIiQ6c
-	 zREegV8fphxpg==
-Date: Tue, 18 Nov 2025 23:24:28 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: "biju.das.au" <biju.das.au@gmail.com>, 
-	"linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	Geert Uytterhoeven <geert+renesas@glider.be>, Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "stable@kernel.org" <stable@kernel.org>
-Subject: Re: [PATCH v4] pwm: rzg2l-gpt: Reinitialize the cache value in
- rzg2l_gpt_disable()
-Message-ID: <4xwhsp76tb6dn64n7nvyok5j4x5a3jbuovyqdrfvky5iz7rrih@ll4gpo67vn2i>
-References: <20251114145606.200948-1-biju.das.jz@bp.renesas.com>
- <ppqewbxcvsqcpp7met6vupmvxaftfjwiefej2c25jw4hoe3c23@lyh7saabrhkd>
- <TY3PR01MB1134679D611D611AC2CED72F886D6A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+	s=arc-20240116; t=1763543098; c=relaxed/simple;
+	bh=leFBUk45hKySV1sOBifzyACe7LDxt6sMLW47f3iaKCI=;
+	h=Message-ID:Date:From:To:Subject:MIME-Version:Content-Type; b=Do5TBoaD9mb93AS6jVtG005F9HYy2fbhDovPacS6qAKPKiDrqWjwi2JJK1g1U2+msAo/Gui58kBiV0OQPArK4BrI9dTCtwz8gRZcqMEUo0F7fTTrIhXmg09lbyZwMLTmCdAGQXydf+StH1nq/iAcxhzA7YyqAubylcA2RZa50Pw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=businero.com; spf=pass smtp.mailfrom=businero.com; dkim=pass (2048-bit key) header.d=businero.com header.i=@businero.com header.b=FTJ9X9ms; arc=none smtp.client-ip=162.19.67.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=businero.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=businero.com
+Received: by mail.businero.com (Postfix, from userid 1002)
+	id 8AB22226F8; Wed, 19 Nov 2025 09:56:09 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=businero.com; s=mail;
+	t=1763542573; bh=leFBUk45hKySV1sOBifzyACe7LDxt6sMLW47f3iaKCI=;
+	h=Date:From:To:Subject:From;
+	b=FTJ9X9mstS2LE2jUExezFJlRwGYsCp/Y2Z6gMsaCAiRQhQEpUL6U2pwc2TXAvCZMd
+	 o0aRuvQsETIaO4I5sUGrK9dSoAW10hA0FLFWvD7N44EGG0CQjQ9A7VxdDdJ3WhaANI
+	 dadd4sBBZ+tSF1Qb3DPRb6iKNK0qVRQHpfy8HNXHNW8YpnZ+4QZImNQLi7IiM0t3wy
+	 zJ9bHYytpcfL78xBWbARGB014lX9Za8pMoYJEwNLs9DymAyfyZuUSy7WfLxw46Fjk8
+	 9l6iHP9PLFO8a12Rrezg+iiryfvhgReryuyrCW6U8k7D/i9/e4jZhsRweV/w/WpcNh
+	 y95sKjCitkYew==
+Received: by mail.businero.com for <linux-pwm@vger.kernel.org>; Wed, 19 Nov 2025 08:56:05 GMT
+Message-ID: <20251119084352-0.1.cf.1e3fh.0.8fe94tvng6@businero.com>
+Date: Wed, 19 Nov 2025 08:56:05 GMT
+From: "Sofia Laine" <sofia.laine@businero.com>
+To: <linux-pwm@vger.kernel.org>
+Subject: Saumattomat lattiat
+X-Mailer: mail.businero.com
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="re7q6mbmcl7zwywz"
-Content-Disposition: inline
-In-Reply-To: <TY3PR01MB1134679D611D611AC2CED72F886D6A@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-
-
---re7q6mbmcl7zwywz
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v4] pwm: rzg2l-gpt: Reinitialize the cache value in
- rzg2l_gpt_disable()
-MIME-Version: 1.0
 
-Hello Biju,
+Hyv=C3=A4t naiset ja herrat,
 
-On Tue, Nov 18, 2025 at 05:03:34PM +0000, Biju Das wrote:
-> > On Fri, Nov 14, 2025 at 02:56:01PM +0000, Biju wrote:
-> > > diff --git a/drivers/pwm/pwm-rzg2l-gpt.c b/drivers/pwm/pwm-rzg2l-gpt.c
-> > > index 360c8bf3b190..ab91bfd7da48 100644
-> > > --- a/drivers/pwm/pwm-rzg2l-gpt.c
-> > > +++ b/drivers/pwm/pwm-rzg2l-gpt.c
-> > > @@ -190,8 +190,17 @@ static void rzg2l_gpt_disable(struct rzg2l_gpt_c=
-hip *rzg2l_gpt,
-> > >  	/* Stop count, Output low on GTIOCx pin when counting stops */
-> > >  	rzg2l_gpt->channel_enable_count[ch]--;
-> > >
-> > > -	if (!rzg2l_gpt->channel_enable_count[ch])
-> > > +	if (!rzg2l_gpt->channel_enable_count[ch]) {
-> > >  		rzg2l_gpt_modify(rzg2l_gpt, RZG2L_GTCR(ch), RZG2L_GTCR_CST, 0);
-> > > +		/*
-> > > +		 * The rzg2l_gpt_config() test the rzg2l_gpt->period_tick
-> > > +		 * variable. This check is not valid, if enabling of a channel
-> > > +		 * happens after disabling all the channels as it test against
-> > > +		 * the cached value. Therefore, reinitialize the variable
-> > > +		 * rzg2l_gpt->period_tick to 0.
-> > > +		 */
-> > > +		rzg2l_gpt->period_ticks[ch] =3D 0;
-> > > +	}
-> >=20
-> > I think this is wrong. rzg2l_gpt_config() has:
-> >=20
-> >         if (rzg2l_gpt->channel_request_count[ch] > 1) {
-> >                 if (period_ticks < rzg2l_gpt->period_ticks[ch])
-> >                         return -EBUSY;
-> >                 else
-> >                         period_ticks =3D rzg2l_gpt->period_ticks[ch];
-> >         }
-> >=20
-> > So if both PWMs of channel `ch` are requested but disabled, rzg2l_gpt->=
-period_ticks[ch] is 0 so you
-> > assign
-> >=20
-> > 	period_ticks =3D rzg2l_gpt->period_ticks[ch];
-> >=20
-> > . In that case however you don't want to change period_ticks, right?
->=20
->=20
-> Yes, what about adding the check that won't allow to set 0 period in this=
- case.
->=20
-> if ((rzg2l_gpt->channel_request_count[ch] > 1) && rzg2l_gpt->period_ticks=
-[ch])
+maailman johtavana hartsilattioiden valmistajana ja asentajana tarjoamme =
+ratkaisuja, jotka kest=C3=A4v=C3=A4t hankausta, kemikaaleja, kosteutta ja=
+ =C3=A4killisi=C3=A4 l=C3=A4mp=C3=B6tilan muutoksia.
 
-I think the easy to understand and obviously correct=E2=84=A2 check would b=
-e:=20
+- Turvallisuus ja kest=C3=A4vyys =E2=80=93 ISO-, HACCP-, PZH-sertifikaati=
+t
+- Ei seisokkeja - asennus 24/7, my=C3=B6s viikonloppuisin ja pyh=C3=A4p=C3=
+=A4ivin=C3=A4
+- Ekologiset ratkaisut - alhaiset p=C3=A4=C3=A4st=C3=B6t, helppo huoltaa
+- T=C3=A4ysi tuki =E2=80=93 suunnittelusta asennukseen ja huoltoon
 
-	if (rzg2l_gpt->enabled[ch][othersubchannel]) {
-		if (period_ticks < rzg2l_gpt->period_ticks[ch])
-			return -EBUSY;
-		else
-			period_ticks =3D rzg2l_gpt->period_ticks[ch];
-	}
+Haluatko hy=C3=B6dynt=C3=A4=C3=A4 ilmaista teknist=C3=A4 auditointia, jok=
+a auttaa sinua valitsemaan laitoksellesi parhaan ratkaisun?
 
-(Instead of tracking enabled[ch][subchannel], reading the respective
-register is another option.)
 
-Best regards
-Uwe
-
---re7q6mbmcl7zwywz
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmkc8hkACgkQj4D7WH0S
-/k7fXgf+LEwsrkKbRYnwBuUiLwRaUgnYlj0xKjUU9BmjTjX4Y09x8fM2+Icu4kC5
-KAX/hTgUU9Lbr0Jd4eYqCoxRBmbl8WI5ztlwAJ0iMQWMGDiUt5FK0KrLSr0QexcV
-dtaa1fz5t1ky8kmwbIjsMIbaZohdeiwAPDjMOyI9l+LMSg2/RK35MBAlOP0Bzaha
-aH/MGuf9aeFuS6do2ybgQwP5PpmzwVMcEu3JRdTvEYRYobwAudNcJ8Obh2rirk6K
-xUD0Hfv6FSRZ7MMSvkac/30VHAO9vv+5OKHG9iuJK/NoKtUyUpvV5MMopuE96zu8
-aEhUMffwly1M6bSR9vW/jlH7iw1pOQ==
-=9bIy
------END PGP SIGNATURE-----
-
---re7q6mbmcl7zwywz--
+Yst=C3=A4v=C3=A4llisin terveisin
+Sofia Laine
 
