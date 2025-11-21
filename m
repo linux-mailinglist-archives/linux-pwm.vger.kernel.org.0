@@ -1,154 +1,175 @@
-Return-Path: <linux-pwm+bounces-7648-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7649-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id B167DC7892C
-	for <lists+linux-pwm@lfdr.de>; Fri, 21 Nov 2025 11:50:03 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id D9742C79A38
+	for <lists+linux-pwm@lfdr.de>; Fri, 21 Nov 2025 14:48:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by tor.lore.kernel.org (Postfix) with ESMTPS id 40BF823EC5
-	for <lists+linux-pwm@lfdr.de>; Fri, 21 Nov 2025 10:50:02 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 32D1B35D238
+	for <lists+linux-pwm@lfdr.de>; Fri, 21 Nov 2025 13:41:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3EE2338918;
-	Fri, 21 Nov 2025 10:49:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4D29734FF56;
+	Fri, 21 Nov 2025 13:37:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="hYCLHqQ6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gdYQw6ix"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-f43.google.com (mail-ej1-f43.google.com [209.85.218.43])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8BFCC3242B0
-	for <linux-pwm@vger.kernel.org>; Fri, 21 Nov 2025 10:49:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65C5234FF6B
+	for <linux-pwm@vger.kernel.org>; Fri, 21 Nov 2025 13:36:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763722198; cv=none; b=D8EFulO4klnIEccewWmCwVfnqL4sN2uW8P59RnZM6h/Kusln1czZOPZwLjZqMqlx8BhYvUKab6lpB2aC2Hkh8ufUcM3yAPnTyhjVuZSsHtGMwlNy26eBW/Bl8OZ27spkEDSQIqqQxOA1QyX7FPptub10MPOziPlmOyP6eS66vxk=
+	t=1763732221; cv=none; b=hwiYY1QwU+Nn/CqeKDrTOXLAGChyQpmytb6dMR3GakObxN7sPdFiJrt6B7sGN5EbSBmqtqeolJRHK4Dt1cXTw7OLlu1tw4yl43pV+fQsC9piqRmVf8YsXF73l0sJ3siG0Y0A9I8+L57UaAiABshAyLeMPpjcaYD61MMbl3wTVck=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763722198; c=relaxed/simple;
-	bh=o2GHD2vVQeDTY8Mc2lfZRouJFu7XDQtXdonIBFyUN0g=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CmzY9G9tMnhtBnGB6kVeHsOA0a4M/AcPiYTVSvSGsvoUmth+tVSeLz48gYJtnXVjBmC317zbdXBZnrIRHqJI3xmt9XwLeiTZHbSnFF9IGxKcnwUmyedmiAMcpWEgtcLHrDdXltkG/LgJo64B5X7fJXOnVYoH+7hPwew9gldltKw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=hYCLHqQ6; arc=none smtp.client-ip=209.85.218.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ej1-f43.google.com with SMTP id a640c23a62f3a-b73b24f1784so356120866b.0
-        for <linux-pwm@vger.kernel.org>; Fri, 21 Nov 2025 02:49:55 -0800 (PST)
+	s=arc-20240116; t=1763732221; c=relaxed/simple;
+	bh=bEMBVT3G2HmnOIOq46oKgyqZAayCql6fIOgh/YGLetE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=b+NR4dFZCbRcw2EG3Gk37vGNsC0iRdGfk/049epmrmGlybNwm/1yRZxTgOEclg2jqAvog2GmACL+lxEWgVHeFDZBBTZ4KNfUgCcFYunidohNFANBzBMhD94WOsbaF4EdpTRskk85RrVh+6xhhCNX7cGbhVSNQLPqNa/tfq3SBjg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gdYQw6ix; arc=none smtp.client-ip=209.85.221.44
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-42b3720e58eso1624729f8f.3
+        for <linux-pwm@vger.kernel.org>; Fri, 21 Nov 2025 05:36:59 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1763722194; x=1764326994; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=26UO1qci6mMHxAgNpoSORIQku7Kf9/6dDzmicLSqdUQ=;
-        b=hYCLHqQ6Pau5HnEpqy9CQ19ftoW+HMKYvXGOw3bwkkCFjRqqT8lQvu3TJRGmavkm0p
-         hP1iXqXCq4TTgq6ZygyEvKxj+XgnUtutFpaD5bq6YbhfeFk5AP2rpS23TID2UdHXue8X
-         yqE4fSBIQFbfT4co4FGplk2uFM3JeOooeS630EEVpjfs3W8JaWViDuE0t9qk9pmjVjAu
-         iPc98PHlcDraRf9CTFlygVzvfzGDa82Xibl/gwl5UsYXDs2n16R5Je4h/ksx2FFaJ8lA
-         o3Gmz+M8uPLrC2NV0aJ92iYtsZorD6MOCBCp458fZomeuBonO7r0QhJn/izknQ5QTsZP
-         1hng==
+        d=gmail.com; s=20230601; t=1763732218; x=1764337018; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hMgD6ft5+aLPLTkR2tqcolD9UWsW68bmbguWMvIeR1U=;
+        b=gdYQw6ixcgFL1EH1SgvFQKmOzaje8CSM3M8wz8yo1pRPweyh/YHUuor7XvPjblJznb
+         c0vGkPAs1vEqFoRjBRca9h6/Ir/xBlhW6QyhP4OhZtfWzSyw+6oAcRLIvEn4WcinvFa4
+         k8o29k1vGKmlb0Zsz44sg4wMqJLxs01eI0YEJvbMKmcWTyWTJ+aZ3EUCV7YBp3D0VrJ9
+         gFaOEx6ofsIOzLGnFd0535yfLpLz0uBySzuoJ7fvBbooskwMKju+hZ5NUlxGzPxM300w
+         Y6vDpInokwu27nRk1soFqhKzjkyML2hHNEKcswSIOPRF4ayfJuWcjg6X+Aec2KjrZIYR
+         Pm2w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763722194; x=1764326994;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=26UO1qci6mMHxAgNpoSORIQku7Kf9/6dDzmicLSqdUQ=;
-        b=U7FEwTqNAxgURwBF/TyRP5GPUGuonFSKjry1fh1oq4u4qt4UB3Mq3g8nS+9OjFjsb3
-         Xx5W1VF6lDCZjRpRXINAY1cgeDEbs/bw1V/VNjtCQeB7nsBjtw9k826EO4bVbRM2nP7R
-         4V0EW58NZ1soU69tM9lcRXvWXnoonsvJcoFuXg7v7TSiO7P5/9puYV5Y+V4G2Kq27r73
-         HXDLWuq43JmLkwXKoDzYuOAxoAAPeRM8JDvX23B78BKtroYtz8epR82wlfyc9NtE4GjT
-         Ctay2162g2KsZ+VhSVXMCRUwARnq1i5EBgCOALA1IqSmiC4LNqVNiin/jl6uB9hqBk4K
-         4GaQ==
-X-Gm-Message-State: AOJu0Yzgbu/Y8ZiFguL5y01vf8bX5Y1ScjS7VXNa/2NvaEVNECIDbWr0
-	kK03F7wo5cKaQQYk/I15PmxrAmVAxewQB1CsuLFHOeJRMzoqMEiTIpV1asVa3D3ZWDQYWxPWHu0
-	q+gfV
-X-Gm-Gg: ASbGncs4tDuDBs21xmGLKzNtKFtVvVXaSqmr6J4n3ANh6HPEYaeeUG3WdTyoIPiX0m0
-	ouQy3fmQkQdTMGPyX5MF32BqZ+SPSFN8S2U5CTP5bUFjqhDA7W0YDePDIKLF8agk22/0ASNE29K
-	acNGxwVz6K4LL08a3rUoYwlunyQGw1haaXyMx2ULg78bp1t/2dYu7+2RfhHwBEY3NRzro2CdOc3
-	C019EZqpmXCio79fhSHf5nLzde8VW4MB6aGB0/EqI6rBAaKoKiYymnUAqjytRQcoxGsmmb2Ko1G
-	7KTQMoidaTwXlt0+FkLwuiaU8ge1ALmpu0w4LBr1L3mZRtuVa4RR5ylrTjbywPr6m00e0WRKJQS
-	W4FSCvbhg1krEYEXBdVcEXdGZCJosHBUdiwzYhcOoyIt2JtoOWlBdPDlDj7ubozybCTVn9tfwEr
-	clQLtFdozUahpvaLPjf6ECh7ljdt9uO6JFQrSxje6re0KCxO1ix4y8nfb+gTIdMW4SFEU08WAxO
-	lM=
-X-Google-Smtp-Source: AGHT+IF0TfelBkjxiYQc0GE74sN1diUpzXarIyeJRib2oKiYskHeLncA/Ko0KFtl3rlsdf6NY7439A==
-X-Received: by 2002:a17:906:6a1a:b0:b76:4082:c60f with SMTP id a640c23a62f3a-b766ed82cd5mr266413366b.6.1763722193756;
-        Fri, 21 Nov 2025 02:49:53 -0800 (PST)
-Received: from localhost (p200300f65f026708fb6c1faf4b8beb83.dip0.t-ipconnect.de. [2003:f6:5f02:6708:fb6c:1faf:4b8b:eb83])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-b76550191c8sm417081966b.54.2025.11.21.02.49.53
+        d=1e100.net; s=20230601; t=1763732218; x=1764337018;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=hMgD6ft5+aLPLTkR2tqcolD9UWsW68bmbguWMvIeR1U=;
+        b=NcBCko/az6DMgw7+met1VhdFN9yVBzL3VVUfjrYfOdTGH/uMu+bGrW24SYF8whrwkq
+         OKjc26Zwa+0NLJtVpwEohuwf56tiXIicW4rb1wNiOQuKr6wJW5v0PzKy6nOvaCHqumlr
+         vlDW5FS+wV7ig9pJ7LanjWC1KUfvnHz+d9p9AaRZbMs3/PorQdwk7n8mbYhL2BZ9oQd0
+         4d+w92XSU14nPj5SMw/m6fmcAlYa0K2gWB7TbkHUwLWqKj5fEGwUmlOUKYShphNxgV+j
+         SDm5dvMTEqsJbdjRPN7RoIcE2BeZQe90kiyXLZxTEuJKxDVi1Vo617vULEOk0GAU4RZz
+         HZWw==
+X-Forwarded-Encrypted: i=1; AJvYcCXP5ZQA0ikTJBw9mkCrZsAjMEgsWRo2evJmew87J8MuO59V5PniC83pFF0wGFXsgsg65lyG/E+FpdI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwUvDXFZc3Sg19GqAcHYCl32vHhDFzehra0rDQXS+XXABJZvp8q
+	8riClCLpgcQsRGCHRftZqnl/9qWW3DPVBlmjBgJqJh7iYPyeWgp2XrbA
+X-Gm-Gg: ASbGncsXf5HGT6m2U2DzpWgkBLeTyCNurnsnsnU23aV5rQNdJJOxugWtq2q7WYB9ony
+	EG6YpjM+3GspRD+YpOsx10qSg/dEx1NZHjTAfoCk8bkTiwbD3XLM5m/yDceKlAGmAhmEjMX56A5
+	3StxaO59hxxZ58yLCbI6Rgm6hsh/cTZgNhAh35t9sHcOVVNmpZTvOKzkZPBDN8eXqvoQTzVjNxf
+	j3XV/ZwJGAtLunwIQOYAmmrvkjoSa/Qe7iJquhiw1M0PA1dNpSgKWoMB2Q9vtCybP037nzSXpeu
+	eR5V8GPmnaTCoT6U+mOAy1EzvOIm/TQHx1AFpkscejP34/Xog5ujy71FWrWvpJO9qiLLvWUUt6g
+	xSEwAjg3ykIQ4P5IZtda62o+QR72oJuXoOm+n+ftepheu35BbFmdC9N5YAh5PDtrAr6gCQe5moT
+	XLphku1VlT9MljrCgY9oPbb9A56FVOI9bAmrcX13ZDxubNj4oDXNoNlMaeHCSimiOm2MF+yhosM
+	3P5ILOgtQ==
+X-Google-Smtp-Source: AGHT+IGY3oSwcGaW6ZcJ/FNnEG6C+KXeNKIt7CFlJ+YogOFO/waUcioY3eH/f4YCrBuCfqMFQpbz6w==
+X-Received: by 2002:a05:6000:601:b0:3eb:c276:a347 with SMTP id ffacd0b85a97d-42cc19f110amr2515574f8f.0.1763732217518;
+        Fri, 21 Nov 2025 05:36:57 -0800 (PST)
+Received: from biju.lan (host86-162-200-138.range86-162.btcentralplus.com. [86.162.200.138])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-42cb7f34fe8sm11158795f8f.15.2025.11.21.05.36.57
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 21 Nov 2025 02:49:53 -0800 (PST)
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: linux-pwm@vger.kernel.org
-Subject: [PATCH] pwm: Emit native configuration in /sys/kernel/debug/pwm
-Date: Fri, 21 Nov 2025 11:49:48 +0100
-Message-ID: <20251121104947.2652013-2-u.kleine-koenig@baylibre.com>
-X-Mailer: git-send-email 2.47.3
+        Fri, 21 Nov 2025 05:36:57 -0800 (PST)
+From: Biju <biju.das.au@gmail.com>
+X-Google-Original-From: Biju <biju.das.jz@bp.renesas.com>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: Biju Das <biju.das.jz@bp.renesas.com>,
+	linux-pwm@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	Biju Das <biju.das.au@gmail.com>,
+	linux-renesas-soc@vger.kernel.org,
+	stable@kernel.org
+Subject: [PATCH v5] pwm: rzg2l-gpt: Reinitialize the cache value in rzg2l_gpt_disable()
+Date: Fri, 21 Nov 2025 13:36:51 +0000
+Message-ID: <20251121133654.364688-1-biju.das.jz@bp.renesas.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2173; i=u.kleine-koenig@baylibre.com; h=from:subject; bh=o2GHD2vVQeDTY8Mc2lfZRouJFu7XDQtXdonIBFyUN0g=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBpIEPLbmVAFJhuzXbzjrc4pVWyunCrf+6GXEZ5y iBco6EanleJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCaSBDywAKCRCPgPtYfRL+ ThhxB/9qeooeEeRgPKp1l4MlA0zhgi/KUP1v9JNWY4pcSnR2a496IqCyBXjG18TCJoFwC3W9EnC WWlCsWUdqqviZgMinCZdrwofmKOyRQRScNaMCzuloZGj+l3iAw0pQ9rtCMcG1hZFfxwu0qRZMln QKBFwabcwvutzT3ZXNsMX93SAzJo3NSXH59gbNzaQLK0YuX8JK/8jQSxds0IP8UOuwYE5ACDOe9 p5xoHeVYiTA2my4yCTJAU8QVFu8X9yJPH9gLaGBvgqEpKVuWcsDDe0czCPV/nizFRsfwZcmHUoA SdyGF8iiNZGuubXcfqdtvbdtAYxj8qia/Vtadqhoryxo30i0
-X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
 Content-Transfer-Encoding: 8bit
 
-Currently there are two abstractions for PWM drivers. Use the waveform
-representation for the drivers that support it as this is more
-expressive and so tells more about the actual hardware state.
+From: Biju Das <biju.das.jz@bp.renesas.com>
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
+The rzg2l_gpt_config() test the rzg2l_gpt->period_tick variable. This
+check is not valid, if enabling of a channel happens after disabling all
+the channels as it test against the cached value. Therefore, reinitialize
+the variable rzg2l_gpt->period_tick to 0 in rzg2l_gpt_disable(), when
+all the logical channels of a hardware channel is disabled, and also don't
+allow to set the cached value in rzg2l_gpt_config(), if the other channel
+is not enabled.
+
+Cc: stable@kernel.org
+Fixes: 061f087f5d0b ("pwm: Add support for RZ/G2L GPT")
+Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
 ---
- drivers/pwm/core.c | 27 ++++++++++++++++++++++-----
- 1 file changed, 22 insertions(+), 5 deletions(-)
+v4->v5:
+ * Updated commit description and code comment to give more details on why
+   reinitialising the cached value to zero
+ * Added a check in rzg2l_gpt_config(), to prevent setting the cached value, if
+   the other channel is not enabled.
+v3->v4:
+ * Split the patch as separate from [1] for easy merging.
+ * Updated commit description
+ * Added comments about the fix in rzg2l_gpt_disable()
+v3:
+ * New patch
 
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index cd06229db394..515fdd16f733 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -2636,10 +2636,10 @@ static void pwm_dbg_show(struct pwm_chip *chip, struct seq_file *s)
+[1] https://lore.kernel.org/all/20250915163637.3572-1-biju.das.jz@bp.renesas.com/#t
+---
+ drivers/pwm/pwm-rzg2l-gpt.c | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/pwm/pwm-rzg2l-gpt.c b/drivers/pwm/pwm-rzg2l-gpt.c
+index 360c8bf3b190..38ad03ded9ce 100644
+--- a/drivers/pwm/pwm-rzg2l-gpt.c
++++ b/drivers/pwm/pwm-rzg2l-gpt.c
+@@ -190,8 +190,17 @@ static void rzg2l_gpt_disable(struct rzg2l_gpt_chip *rzg2l_gpt,
+ 	/* Stop count, Output low on GTIOCx pin when counting stops */
+ 	rzg2l_gpt->channel_enable_count[ch]--;
  
- 	for (i = 0; i < chip->npwm; i++) {
- 		struct pwm_device *pwm = &chip->pwms[i];
--		struct pwm_state state, hwstate;
-+		struct pwm_state state;
-+		int err;
+-	if (!rzg2l_gpt->channel_enable_count[ch])
++	if (!rzg2l_gpt->channel_enable_count[ch]) {
+ 		rzg2l_gpt_modify(rzg2l_gpt, RZG2L_GTCR(ch), RZG2L_GTCR_CST, 0);
++		/*
++		 * The rzg2l_gpt_config() test the rzg2l_gpt->period_tick
++		 * variable. This check is not valid, if enabling of a channel
++		 * happens after disabling all the channels as it test against
++		 * the cached value. Therefore, reinitialize the variable
++		 * rzg2l_gpt->period_tick to 0.
++		 */
++		rzg2l_gpt->period_ticks[ch] = 0;
++	}
  
- 		pwm_get_state(pwm, &state);
--		pwm_get_state_hw(pwm, &hwstate);
- 
- 		seq_printf(s, " pwm-%-3d (%-20.20s):", i, pwm->label);
- 
-@@ -2655,9 +2655,26 @@ static void pwm_dbg_show(struct pwm_chip *chip, struct seq_file *s)
- 			seq_puts(s, ", usage_power");
- 		seq_puts(s, "\n");
- 
--		seq_printf(s, "  actual configuration:    %3sabled, %llu/%llu ns, %s polarity",
--			   hwstate.enabled ? "en" : "dis", hwstate.duty_cycle, hwstate.period,
--			   hwstate.polarity ? "inverse" : "normal");
-+		if (pwmchip_supports_waveform(chip)) {
-+			struct pwm_waveform wf;
+ 	/* Disable pin output */
+ 	rzg2l_gpt_modify(rzg2l_gpt, RZG2L_GTIOR(ch), RZG2L_GTIOR_OxE(sub_ch), 0);
+@@ -271,10 +280,14 @@ static int rzg2l_gpt_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	 * in use with different settings.
+ 	 */
+ 	if (rzg2l_gpt->channel_request_count[ch] > 1) {
+-		if (period_ticks < rzg2l_gpt->period_ticks[ch])
+-			return -EBUSY;
+-		else
+-			period_ticks = rzg2l_gpt->period_ticks[ch];
++		u8 other_sub_ch = sub_ch ? (pwm->hwpwm - 1) : (pwm->hwpwm + 1);
 +
-+			err = pwm_get_waveform_might_sleep(pwm, &wf);
-+			if (!err)
-+				seq_printf(s, "  actual configuration: %lld/%lld [+%lld]",
-+					   wf.duty_length_ns, wf.period_length_ns, wf.duty_offset_ns);
++		if (rzg2l_gpt_is_ch_enabled(rzg2l_gpt, other_sub_ch)) {
++			if (period_ticks < rzg2l_gpt->period_ticks[ch])
++				return -EBUSY;
 +			else
-+				seq_printf(s, "  actual configuration: read out error: %pe\n", ERR_PTR(err));
-+		} else {
-+			struct pwm_state hwstate;
-+
-+			err = pwm_get_state_hw(pwm, &hwstate);
-+			if (!err)
-+				seq_printf(s, "  actual configuration:    %3sabled, %llu/%llu ns, %s polarity",
-+					   hwstate.enabled ? "en" : "dis", hwstate.duty_cycle, hwstate.period,
-+					   hwstate.polarity ? "inverse" : "normal");
-+			else
-+				seq_printf(s, "  actual configuration: read out error: %pe", ERR_PTR(err));
++				period_ticks = rzg2l_gpt->period_ticks[ch];
 +		}
- 
- 		seq_puts(s, "\n");
  	}
-
-base-commit: cda323dbda76600bf9761970d58517648f0de67d
+ 
+ 	prescale = rzg2l_gpt_calculate_prescale(rzg2l_gpt, period_ticks);
 -- 
-2.47.3
+2.43.0
 
 
