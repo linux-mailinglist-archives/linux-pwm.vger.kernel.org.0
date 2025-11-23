@@ -1,79 +1,79 @@
-Return-Path: <linux-pwm+bounces-7668-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7669-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21B93C7DEB5
-	for <lists+linux-pwm@lfdr.de>; Sun, 23 Nov 2025 10:26:14 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id 193FFC7DEC1
+	for <lists+linux-pwm@lfdr.de>; Sun, 23 Nov 2025 10:26:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id F067134EC76
-	for <lists+linux-pwm@lfdr.de>; Sun, 23 Nov 2025 09:26:08 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 522C63A9A9E
+	for <lists+linux-pwm@lfdr.de>; Sun, 23 Nov 2025 09:26:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EF4D92989A2;
-	Sun, 23 Nov 2025 09:26:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0A5A221CA02;
+	Sun, 23 Nov 2025 09:26:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Nmj9gQSn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kiAV9r6F"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72C4D284671
-	for <linux-pwm@vger.kernel.org>; Sun, 23 Nov 2025 09:26:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61D79273D81
+	for <linux-pwm@vger.kernel.org>; Sun, 23 Nov 2025 09:26:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763889964; cv=none; b=X0gjiRqTnh411uXXxxJRXSarhHFNWfATh18Dcbu7O47ussk5ogjD8fcKhj4BZ50rzgY3kuTFqVpNNzRHFNCFMpGH6yPl1n4cHy1Ww5onWtZapztc+jCDBriUgjMhHJn++m2kIa3jBGlNH9PebpEyz2HjBzNz1HxTsUHnrCLHrmg=
+	t=1763889975; cv=none; b=eLVIx6Ap3Jio9rZVXrwFRaqctwUSoYIbabkReZB5b9R8t65PuCtIUWs5nTgo6x7A8lBEjCmN5ieVYHckAE+UrJPerA5i4M9CMOmXT6aJqr4yivOLmX08hdgRI+IbOj75v1tYksTZfHh0uUYpGfqOZFzB8yvLOznqfMSE/obyLn0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763889964; c=relaxed/simple;
-	bh=IPEwVncrH6ErF+52BbShzNtxbAYEnVjh2jDi81dnwhs=;
+	s=arc-20240116; t=1763889975; c=relaxed/simple;
+	bh=hhfQrE5YZ3yIRunnDvDHhBDE/s9hEASQ0QrKj2P8WKM=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AsGshEKcEirzDZ8Aw6yfpHiVl0GUhB6kiuO8pCAuRfEsD/gJQtJ1+NVOrFl05mTN5WdTLhmEACPOcvNT5VI9MHFoEKD+7UUNbul8jkCUx8rLbSKU1AJ3UPBHKi5y3UZCqDM1p41h90Q8y82rhFugvMtf2ME3/HRbbmBJ/yTUGBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Nmj9gQSn; arc=none smtp.client-ip=209.85.214.175
+	 MIME-Version; b=A9nU+6mUTi+qv+FfmdC5lJjcco3MZZ+wjdxwirI9AEKWhEjyhWXPLbmk9rgxzpBvkGiVVll8rvgOUZFdAxguexUrT5OpCT3JZAVULJ6Dx/y0rwnSKW2sY11NIfyRlgbYr/x3oLFbXnwTKT4lQsc35ciu9krwwYhZ2Yel/hYnzyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kiAV9r6F; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-29586626fbeso41368135ad.0
-        for <linux-pwm@vger.kernel.org>; Sun, 23 Nov 2025 01:26:02 -0800 (PST)
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-29555b384acso41492795ad.1
+        for <linux-pwm@vger.kernel.org>; Sun, 23 Nov 2025 01:26:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763889961; x=1764494761; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1763889973; x=1764494773; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=dTc0MgLeOubcwcfQp1wa7TpaWq1ZdIbTR1ydG9HUjeU=;
-        b=Nmj9gQSnA7QNCb1Dh+6/n0OnFhYZYyF9gh3vEx6tyGp8L+C3NNnyDfODYiUUmDEXXN
-         ZzQUnpjaSGWFVnaUwww+HiswrApMKwErt252O2s4b6EttTal3WZoWy+optyYR0wHTKmM
-         gCfjTUqd5ZF8paL+WldB4/oYL53CuawhPPIBMMO2yTQlGF4zGnafAErMmhpPtdP5pbDB
-         u3bl/aSLDzgxONQ6mFuKJzEmJxb5j/CPY91ZAMuFYDiqEADqvayQ46T3D+qI2VpnFJK7
-         CuMfrr9dQZ6+HdJ6Rjb91EP1yjvWFcIVC+HM3ob1pZdSfcclE3cQk4/XvwB/nbmpmKw6
-         Nsew==
+        bh=c+x/h+SXCaTPKwxrPZvI12zlFOq5qesnIaQFOZDdW/8=;
+        b=kiAV9r6FmOiWCtQ6Ze4vNr0M53qDbdtc3997baVpmjkm3EjjJVhEOmQzAttiz4wMMl
+         tgKKFYLpvHaOYEvfgplEMbF+CvFCdvcWHGHDCQAL8x5z2VFYXkrzF4IqZIuoBivGtJbr
+         CckWkDH8RLjnhKTWJFT1rtOUddaoKCymFuqE+rkmFfPr5BQOOIFNQZihmuyOP29GFQ7x
+         Yu8y740jqi+Qdh0CVdvt6i8VBs4JpB89zhMckAEzb6WvZ2hVGnCDUnBhwPkwEEEPY2Jf
+         vqKwe29WtM2Yqn5TeLV5rt/AoNHLEifWSXzPnBrBzHKj8HJWO0QYNwifucYtF7Heg7aI
+         Ablw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763889962; x=1764494762;
+        d=1e100.net; s=20230601; t=1763889973; x=1764494773;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=dTc0MgLeOubcwcfQp1wa7TpaWq1ZdIbTR1ydG9HUjeU=;
-        b=Nz7+7xpDQPn2TeFlAB/CWIgPoDGDtzLUNs07p0hBo0MA4sxSV1IUik+yRl5mK0xD4u
-         /20ftMddV7lCD9JqMRQRz1+T9i+pntRxe6AoxHeKknVVs/NnxUAV80X21JdxtjXJjR29
-         r+pc+og/AQ/DMC17Fnff/pjvOrC+UbMAEDChnywXNDMhGy97hKbAFKX1ZX8cWJVUvTxS
-         LXGg7/XBlFE+Io3n2E6n40LvKSp1uPH+OWU0ElQ1GETTRZDwUUIe0PH1h2rrEyeIkf1w
-         P9Rd9ahGQ5DJkWbCavL5WJHC2/o7zFjhkQZ51G7zsg0qi4FRvmvLi1RuwEVZLoDjEJrS
-         gJyQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUdnbvRpA6AdW4mHdxpeqwHaEPFdYjtEhU12RnOlnTrvnBIgkLh7Zg3jFGHm+w+jm1XkzUYAMamO44=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzeeCfnK4gzmS484UQyba+24LX1xyz21CJYAmCTzOiOaPXQ99Zv
-	A+rjO9CYDqVL3hOOHK1pEKqiyH5zWkSiX5V0BHy4OqdJBlYGqVBQhZ2r
-X-Gm-Gg: ASbGncuvV4/24Y9TcablIKDub+sTvkvZSdcr31jn9nP1mBwxtKgdDynUR5rHUH1Eas7
-	3ruvhKo8mTy4WQgfuIcKUwpu1A/C/gzFEnkl6WAqmnL9F0TL+UlHNGMPMZJ68AwCoFLumlotr/F
-	ae47q3ZtK3mWClmra+QKH2Q+UzASr7IFxfzyKLpixu3sqoiC3Z7r0peHP3/NXZ9ZV8CYNuBJwsL
-	RsiZkEa9xaQD1KMWGsYtONp7AN6ShkX6tXqZoDn0lLuzarZM3a01xtkT7MxbW6OPe2HpSOz3s+U
-	wktcvshVl/Ou40c0VzOfkHDeHE53bgWXZ9qSkk4drtoEjm/kjVM2n7jD6bAuP0nLBcolP3nF/jd
-	0bpTXTEv7MlJRgx4qoTUhrjHV7zeO8+2NhZYOaRWgA76NOGZ69lBiQ5aP7XYL903mU/KrrpED9E
-	biYkjA5UKySgvyLCwKAFg8NFDyqg==
-X-Google-Smtp-Source: AGHT+IFojSe5onG6l0184Qd+32Us2flx99qw215kwkBj86ninqiLXlY2kvADM9/iJBS4TWCcsIsZyA==
-X-Received: by 2002:a17:902:f548:b0:295:4d97:84fc with SMTP id d9443c01a7336-29b6bf3bcc0mr89250955ad.32.1763889961522;
-        Sun, 23 Nov 2025 01:26:01 -0800 (PST)
+        bh=c+x/h+SXCaTPKwxrPZvI12zlFOq5qesnIaQFOZDdW/8=;
+        b=ECmyUMrWFEp9UU0huwxhZs7GdhqOs4GfAeY7tSjsRH2OiUNEqdqTv5MxRrURM0l0Iw
+         SF9ohfLCfB9LP+8ME2hffO4raL1uEBi8bmehFY6fSmKOo67WziLlHT96HMmpgQRkxTC8
+         9LG2eTrPyPePx516unssYuBeskdlRLCGqt98cwgLyYNFscl1MA9hfJbnUIIQlJdNXX9I
+         PxjrcVyrv58FpXZblBZN/63yJVYkma983WvRiTIhFBjrq96D0WFYSG5rL57r1CHBji+r
+         ij3Efujx8+e2qOJ2OURh8XtAnrh15deh3iECUJn3AcwU34YxRu0yS8EG7lv2l+DBGIeV
+         mEOw==
+X-Forwarded-Encrypted: i=1; AJvYcCUzPbTH8TmYaoKY3fdvYejfA/Gz/3x4eufrf49ELbPQnhr9F/FjMtrD3DDWjv/gpTXjw7BCgy/COLQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxDwYC0+rWbzSRN6eD41rtinAG+kVhSt8WwD8VLQxhDK+xMnQcb
+	2/ZPzvuO3muEld1ekt3sbdJjkTj0QRRujeibZ7VrwJ9ViFpU9BsYLb3F
+X-Gm-Gg: ASbGncuPsOlRm2G3KQ1aJPwF4OvXSJuorisp7uV19+IT3khaXDg4lWTnGWhPD2x/7o2
+	vM/4Agnv+3bhrcYT73k2x7s+8znmjJ5N6WN+A+l+he4aT/rPM2f5XJDrqs/M7+4nS5U5CGkPYq9
+	PWGhcbsnPSj0ykNBcG8QWGyKpzi7pVkkbBiYpzlmdVDfuwZzRW6xhtD+Ri8967+pEI6wTDLpAjQ
+	b5HuKO0NOY+rtUGjKcqIQmtxc1nojktz+YckHzHBfpwBAwlDoyndf2uLHyJ20oCrDRehFsMeFYS
+	2dDtrSz/dgy7F2BtQvcD802osuHgLnhoyzuzqa73lPYtG2vWj+SfyW5HhpZryVtJUn0RImuA5e5
+	MXJXBz7K+zo4BmV1ak4jlFnCPXNeodn87Pui2o8DmA0KlclJFt+FgjFOPqCgHL+ke9Wxret+1zs
+	gDUH98MymT/sPRCYlzkT466Cer5g==
+X-Google-Smtp-Source: AGHT+IFvuN898s0PRn7IHqlJzrCusouHL8HLAX1/JMZBn/PsKfoSrrGmFHNZ/OFvx15QZ7pZgA79MQ==
+X-Received: by 2002:a17:903:3c30:b0:298:8a9:766a with SMTP id d9443c01a7336-29b6c6b2e57mr86965995ad.53.1763889973533;
+        Sun, 23 Nov 2025 01:26:13 -0800 (PST)
 Received: from shankari-IdeaPad.. ([103.24.60.188])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29b5b138c08sm100811105ad.25.2025.11.23.01.25.48
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29b5b138c08sm100811105ad.25.2025.11.23.01.26.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Nov 2025 01:26:01 -0800 (PST)
+        Sun, 23 Nov 2025 01:26:13 -0800 (PST)
 From: Shankari Anand <shankari.ak0208@gmail.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
@@ -111,9 +111,9 @@ Cc: Boqun Feng <boqun.feng@gmail.com>,
 	rust-for-linux@vger.kernel.org,
 	linux-pwm@vger.kernel.org,
 	Shankari Anand <shankari.ak0208@gmail.com>
-Subject: [PATCH 02/10] drivers: gpu: Update ARef imports from sync::aref
-Date: Sun, 23 Nov 2025 14:54:30 +0530
-Message-Id: <20251123092438.182251-3-shankari.ak0208@gmail.com>
+Subject: [PATCH 03/10] rust: device: Update ARef and AlwaysRefCounted imports from sync::aref
+Date: Sun, 23 Nov 2025 14:54:31 +0530
+Message-Id: <20251123092438.182251-4-shankari.ak0208@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20251123092438.182251-1-shankari.ak0208@gmail.com>
 References: <20251123092438.182251-1-shankari.ak0208@gmail.com>
@@ -125,8 +125,8 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Update call sites to import `ARef` from `sync::aref`
-instead of `types`.
+Update call sites to import `ARef` and `AlwaysRefCounted`
+from `sync::aref` instead of `types`.
 
 This aligns with the ongoing effort to move `ARef` and
 `AlwaysRefCounted` to sync.
@@ -135,59 +135,55 @@ Suggested-by: Benno Lossin <lossin@kernel.org>
 Link: https://github.com/Rust-for-Linux/linux/issues/1173
 Signed-off-by: Shankari Anand <shankari.ak0208@gmail.com>
 ---
- drivers/gpu/drm/tyr/driver.rs          | 2 +-
- drivers/gpu/nova-core/gsp/sequencer.rs | 2 +-
- drivers/gpu/nova-core/vbios.rs         | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+ rust/kernel/device.rs          | 4 ++--
+ rust/kernel/device/property.rs | 5 +++--
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/tyr/driver.rs b/drivers/gpu/drm/tyr/driver.rs
-index 0389c558c036..264c2362237a 100644
---- a/drivers/gpu/drm/tyr/driver.rs
-+++ b/drivers/gpu/drm/tyr/driver.rs
-@@ -16,10 +16,10 @@
- use kernel::regulator;
- use kernel::regulator::Regulator;
- use kernel::sizes::SZ_2M;
-+use kernel::sync::aref::ARef;
- use kernel::sync::Arc;
- use kernel::sync::Mutex;
- use kernel::time;
--use kernel::types::ARef;
+diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
+index c79be2e2bfe3..21bde8d95185 100644
+--- a/rust/kernel/device.rs
++++ b/rust/kernel/device.rs
+@@ -158,7 +158,7 @@
+ /// `bindings::device::release` is valid to be called from any thread, hence `ARef<Device>` can be
+ /// dropped from any thread.
+ ///
+-/// [`AlwaysRefCounted`]: kernel::types::AlwaysRefCounted
++/// [`AlwaysRefCounted`]: kernel::sync::aref::AlwaysRefCounted
+ /// [`impl_device_context_deref`]: kernel::impl_device_context_deref
+ /// [`pci::Device`]: kernel::pci::Device
+ /// [`platform::Device`]: kernel::platform::Device
+@@ -540,7 +540,7 @@ pub trait DeviceContext: private::Sealed {}
+ /// [`Device<Normal>`]. It is the only [`DeviceContext`] for which it is valid to implement
+ /// [`AlwaysRefCounted`] for.
+ ///
+-/// [`AlwaysRefCounted`]: kernel::types::AlwaysRefCounted
++/// [`AlwaysRefCounted`]: kernel::sync::aref::AlwaysRefCounted
+ pub struct Normal;
  
- use crate::file::File;
- use crate::gem::TyrObject;
-diff --git a/drivers/gpu/nova-core/gsp/sequencer.rs b/drivers/gpu/nova-core/gsp/sequencer.rs
-index 2d0369c49092..9c689f0b21ab 100644
---- a/drivers/gpu/nova-core/gsp/sequencer.rs
-+++ b/drivers/gpu/nova-core/gsp/sequencer.rs
-@@ -14,12 +14,12 @@
-     device,
-     io::poll::read_poll_timeout,
+ /// The [`Core`] context is the context of a bus specific device when it appears as argument of
+diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/property.rs
+index 3a332a8c53a9..413221817ef1 100644
+--- a/rust/kernel/device/property.rs
++++ b/rust/kernel/device/property.rs
+@@ -14,7 +14,8 @@
+     fmt,
      prelude::*,
-+    sync::aref::ARef, //
-     time::{
-         delay::fsleep,
-         Delta, //
-     },
-     transmute::FromBytes,
--    types::ARef, //
- };
- 
- use crate::{
-diff --git a/drivers/gpu/nova-core/vbios.rs b/drivers/gpu/nova-core/vbios.rs
-index abf423560ff4..7c26e4a2d61c 100644
---- a/drivers/gpu/nova-core/vbios.rs
-+++ b/drivers/gpu/nova-core/vbios.rs
-@@ -11,8 +11,8 @@
-         Alignable,
-         Alignment, //
-     },
+     str::{CStr, CString},
+-    types::{ARef, Opaque},
 +    sync::aref::ARef,
-     transmute::FromBytes,
--    types::ARef,
++    types::Opaque,
  };
  
- use crate::{
+ /// A reference-counted fwnode_handle.
+@@ -359,7 +360,7 @@ fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+ }
+ 
+ // SAFETY: Instances of `FwNode` are always reference-counted.
+-unsafe impl crate::types::AlwaysRefCounted for FwNode {
++unsafe impl crate::sync::aref::AlwaysRefCounted for FwNode {
+     fn inc_ref(&self) {
+         // SAFETY: The existence of a shared reference guarantees that the
+         // refcount is non-zero.
 -- 
 2.34.1
 
