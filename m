@@ -1,174 +1,144 @@
-Return-Path: <linux-pwm+bounces-7663-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7664-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id CFD14C7D4DD
-	for <lists+linux-pwm@lfdr.de>; Sat, 22 Nov 2025 18:40:16 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id C0399C7DC31
+	for <lists+linux-pwm@lfdr.de>; Sun, 23 Nov 2025 07:34:10 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 91D454E0EE7
-	for <lists+linux-pwm@lfdr.de>; Sat, 22 Nov 2025 17:40:15 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 685D83AB460
+	for <lists+linux-pwm@lfdr.de>; Sun, 23 Nov 2025 06:34:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7A17326F2A6;
-	Sat, 22 Nov 2025 17:40:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E846273D77;
+	Sun, 23 Nov 2025 06:34:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Vews1kzq"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="bBVzQqXI"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A56819F115
-	for <linux-pwm@vger.kernel.org>; Sat, 22 Nov 2025 17:40:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0786272801;
+	Sun, 23 Nov 2025 06:34:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763833213; cv=none; b=lCTvMyeZOz+e++XI3h0bf3LTupnuBlh7RXUG7lSReM8X2DOVPz936nSk3UIqLQAW/41fJ7wMo1IP10PANwjd0tmbfAD2grmufYJ6BsNBgzTf8ZGIDyQWNnRa7Zs/+z1pnUYOhA1BMmFs5yL5h05BJDYrr6wAWRiJIJrQ+WtM/2I=
+	t=1763879646; cv=none; b=pXn0otyoHzGUJc4AgJfNmtUDofsbhQKY+3HgAs1ET/82LGgkyyu7hM9mC/dwrOYIqDrJxyd+YBtmK7sjHiZfwxH2L5fSvBeem1oz6Ga63nVtBrSXJadkVhNzFuCRIHhldPUtduU0+gxQkSOgElBgVLAAtpZBCZoxClj1Ji1gcSM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763833213; c=relaxed/simple;
-	bh=W0sOBsZOLElWNX2pZaNks+cTbmmZVnLMSdKXs/TKbPY=;
+	s=arc-20240116; t=1763879646; c=relaxed/simple;
+	bh=akx3FvBr6GvB3MVzDH+m/yO3t0ilYRRNHVVUnoTgWv8=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Iz5dS9jClTiNHo9R6HoFG+0OZqgRru3hLCoLtzEtUoTyiSU+5iQQalSqKm6tZZOpAV6qu4HRZ2H/SZhKtyQFiMZ5rl08S3fwhLnVVVLKyheMQfEPlC9tQBu1Qvj27s/y0R3vM62KK1FSZkPW3+fH0TnVy79kkEzr7b6enAyv4YI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Vews1kzq; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-b735e278fa1so1964666b.0
-        for <linux-pwm@vger.kernel.org>; Sat, 22 Nov 2025 09:40:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1763833208; x=1764438008; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=21OD+SyCQNqSK3AXddaaZ+MerlVY+Gk8EKG5MQw7KZg=;
-        b=Vews1kzqTLdfJasE2EcwP0UgjzgzR/DpmXudd+TG4PVUoz92rnakz7gHjCbCU0KEnX
-         fEZpICDF+P5HFEU6bRPp23mA5Blddhglp2Gwc4NAQ1ZeIQzTNSp1KtDYbr569jPnSMDv
-         tNZdXBGAyjh1N0/kRUBH39nBUhtsIQccAHIxbwsMx2zyUi8GvN+FvTFsehvQAknm2lme
-         m7nytfwP5aYqK+tMxjwZvzaWfQYic5aOupt+NOU8cWaf5e1WhKICT4NpMp7qfPaoksxq
-         nABqvjs+2noWVxSL3yl7CclOw4/TlL1nsE8JRHcfiuWOqwopbgjD6mii10w5OHHbp3xw
-         /pbw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763833208; x=1764438008;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=21OD+SyCQNqSK3AXddaaZ+MerlVY+Gk8EKG5MQw7KZg=;
-        b=FX1B0+OBS8FHieE1TJQzYxgWsHFt9/CWRyjhx+0wGH3/F699ymwarJiRkZAOsUy5ny
-         Z8ZJZbr2vvRUdm6b9VDmhpNmPWKYueH/cIS+HklmJQiFgvvM1n6NhJVtgcR1/mPNnGQ6
-         UE9pW+e9xIIRCTDGKocm96n2yzDxk3zPXWTN+EWpMlCNFkPdF3K6oJYt7E2VX84jLIFG
-         ENgu7gdEOHGdobt11X89l9AqP/4CQGq9+2YH13i+nj+Aua4qBi+FY5pHVUwpYsvZmCmG
-         S2GykEJJw1ietpriulLwkUFuMLK9ukyBn46KjbiZ5fuZr0T5NSAhys341vljkSajq0vR
-         KBUQ==
-X-Gm-Message-State: AOJu0YzN4dSlevvDOtGVBI7aztKmOghSkxFPXVElsGFDaDSL5gVFk9tM
-	QNCyrNP7liyGUU6Ys4Ok/PYnLEGeNpIWLRnW1z/XoJlD12Jp16Vw1bnynbn0oUb2PB4fyBAIaKQ
-	9hTzm
-X-Gm-Gg: ASbGncsxyLr7PH3iMSltCx6hGAqOxuB0mt5fHIK5RWTLAVYDq1vW/DZ2vE2zPIMCLxv
-	uV76WzS3T0X5fVHSKuTLcKLxofFDD3LGHlStNNom0nf8SMHLY/5bWPnU+J+RgZ083SGawfV+zQ+
-	U7s0apNf7V3mDUk5vh1qigWkhvKcGgyJFOFui38UAl1JBpIXRNuSqx7XcytQEVinb0qYZtdo7m+
-	T0N5nPqbTO7uOHVZtcTOiI2uMfWifwpBMalEH4j93oTHI2V865ItqEfAqWv0aBRUWpyVdlWgHrv
-	yPbCz9j8lxHdNjTi+dUJgMKK8XjuUmCbRQQ9AeK86Z2uhdguF4YoCqzY85qaxhoJUS5hPnRqWV5
-	OzyDLCtCxW2wbvLVXa9/+UvwdtbY1ObLKYo27T+Bil9PzCtF1G2LTZL0fj1wEW8mUiEGOUnffFy
-	Xrb+IlLCfV1sA6tKkUwGoSy7GnG7M=
-X-Google-Smtp-Source: AGHT+IEmLb/MIfTqpzCYZatvuH5VzJQUKqKgokYm9oXE/T+8S0OSS7GwjcXzAZ2iAsKXa2RKxRnIgw==
-X-Received: by 2002:a17:907:84a:b0:b3a:ecc1:7774 with SMTP id a640c23a62f3a-b767189c935mr573878966b.53.1763833208317;
-        Sat, 22 Nov 2025 09:40:08 -0800 (PST)
-Received: from localhost ([2a02:8071:b783:6940:1d24:d58d:2b65:c291])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-b7655028400sm748246066b.56.2025.11.22.09.40.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 22 Nov 2025 09:40:07 -0800 (PST)
-Date: Sat, 22 Nov 2025 18:40:06 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Sean Young <sean@mess.org>
-Cc: linux-pwm@vger.kernel.org
-Subject: Re: PWM and rounding for pwm-ir-tx
-Message-ID: <gntbqz4wgenwm2nwfr3vq32r2gztqdbvao5nftvkueci4ha5lt@ypcal2nsqfk4>
-References: <o7fry6bjh3trqrjb5vethqq4mumg37wjnvqafjlzuxc2ynedck@nb4x43jajm3j>
- <aSDjuAcJRhDFhmgc@gofer.mess.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=fwR7FZTlS0dtJZDUmYD5PMrq+X0Yr+6FQVNsZ4r5mWOmR9Lh9B/CHDUM+3ND8DjZFZrZ6G9iAW3fVH6ofArYxq1Q82iW6c+9uccDBtbF12SdoIkO1goUHmxkH0rqW5mbizgCwVppZGDJehZGLvcR39VuQL78w70Ks6RelEiHbH8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=bBVzQqXI; arc=none smtp.client-ip=192.198.163.18
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1763879644; x=1795415644;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=akx3FvBr6GvB3MVzDH+m/yO3t0ilYRRNHVVUnoTgWv8=;
+  b=bBVzQqXIJGUiadyW153dlyjKtGLVna5S7drrYN8uGPOJkK2Lmi6H/iF5
+   /M27zz0VHe27FQjBM8V8fkuRTgKjOiDxDopsDol7Dn1fJu8BC24CrZGM4
+   3/dyOAfvgqXWrVX+UX1iWMhJ5oi44MwTtPzFMQDLekwtR1jmWVjBxKejF
+   vMRPKPGjFVqSHAEGFfxh2K0QE0DfmqltFUBNmN1jxvgIsINT3fYpVeFha
+   tjDZuruvhuRfBloTe2ibxpprdcbDNqRtTZxyJOx02V+FTS6EIEXBupTaI
+   v4AVpLRLeDv/u+1GMv8Kt4oq+t6sS/4eZrRR0AamF2d1ocqzomcOGscK/
+   w==;
+X-CSE-ConnectionGUID: GsJvzUGZR1Wwlikd7r7cUw==
+X-CSE-MsgGUID: AAVLAt0jRjeF/29WkJMhcQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11621"; a="65100910"
+X-IronPort-AV: E=Sophos;i="6.20,220,1758610800"; 
+   d="scan'208";a="65100910"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Nov 2025 22:34:03 -0800
+X-CSE-ConnectionGUID: ZopYkFVrTNK+R8A1VXgBEw==
+X-CSE-MsgGUID: EyJttbKzSKmNlHNk99DZFQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.20,220,1758610800"; 
+   d="scan'208";a="192072057"
+Received: from lkp-server01.sh.intel.com (HELO adf6d29aa8d9) ([10.239.97.150])
+  by orviesa007.jf.intel.com with ESMTP; 22 Nov 2025 22:33:59 -0800
+Received: from kbuild by adf6d29aa8d9 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1vN3fZ-00085z-0v;
+	Sun, 23 Nov 2025 06:33:57 +0000
+Date: Sun, 23 Nov 2025 14:33:31 +0800
+From: kernel test robot <lkp@intel.com>
+To: Biju <biju.das.au@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Geert Uytterhoeven <geert+renesas@glider.be>,
+	Linus Walleij <linus.walleij@linaro.org>
+Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
+	Biju Das <biju.das.jz@bp.renesas.com>, linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	linux-renesas-soc@vger.kernel.org, linux-gpio@vger.kernel.org
+Subject: Re: [DO NOT APPLY PATCH v8 14/15] pinctrl: renesas: rzg2l-poeg:
+ output-disable request from GPT on dead time error
+Message-ID: <202511231456.D6amN8I5-lkp@intel.com>
+References: <20251121160842.371922-15-biju.das.jz@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="inph5jfho4vjyyub"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <aSDjuAcJRhDFhmgc@gofer.mess.org>
+In-Reply-To: <20251121160842.371922-15-biju.das.jz@bp.renesas.com>
+
+Hi Biju,
+
+kernel test robot noticed the following build errors:
+
+[auto build test ERROR on geert-renesas-drivers/renesas-pinctrl]
+[also build test ERROR on linusw-pinctrl/devel linusw-pinctrl/for-next geert-renesas-devel/next linus/master v6.18-rc6 next-20251121]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Biju/dt-bindings-pwm-rzg2l-gpt-Document-renesas-poegs-property/20251122-001415
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers.git renesas-pinctrl
+patch link:    https://lore.kernel.org/r/20251121160842.371922-15-biju.das.jz%40bp.renesas.com
+patch subject: [DO NOT APPLY PATCH v8 14/15] pinctrl: renesas: rzg2l-poeg: output-disable request from GPT on dead time error
+config: loongarch-randconfig-002-20251123 (https://download.01.org/0day-ci/archive/20251123/202511231456.D6amN8I5-lkp@intel.com/config)
+compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251123/202511231456.D6amN8I5-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202511231456.D6amN8I5-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+>> drivers/pinctrl/renesas/poeg/rzg2l-poeg.c:97:3: error: call to undeclared function 'rzg2l_gpt_poeg_disable_req_deadtime_error'; ISO C99 and later do not support implicit function declarations [-Wimplicit-function-declaration]
+      97 |                 rzg2l_gpt_poeg_disable_req_deadtime_error(chip->gpt_dev, chip->index, true);
+         |                 ^
+   drivers/pinctrl/renesas/poeg/rzg2l-poeg.c:97:3: note: did you mean 'rzg2l_gpt_poeg_disable_req_deadtime_err'?
+   include/linux/pwm/rzg2l-gpt.h:38:19: note: 'rzg2l_gpt_poeg_disable_req_deadtime_err' declared here
+      38 | static inline int rzg2l_gpt_poeg_disable_req_deadtime_err(void *gpt_device, u8 grp, bool on)
+         |                   ^
+   1 error generated.
 
 
---inph5jfho4vjyyub
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: PWM and rounding for pwm-ir-tx
-MIME-Version: 1.0
+vim +/rzg2l_gpt_poeg_disable_req_deadtime_error +97 drivers/pinctrl/renesas/poeg/rzg2l-poeg.c
 
-Hello Sean,
+    87	
+    88	static void rzg2l_poeg_config_irq(struct rzg2l_poeg_chip *chip)
+    89	{
+    90		if (test_bit(RZG2L_GPT_OABHF, chip->gpt_irq))
+    91			rzg2l_gpt_poeg_disable_req_both_high(chip->gpt_dev, chip->index, true);
+    92	
+    93		if (test_bit(RZG2L_GPT_OABLF, chip->gpt_irq))
+    94			rzg2l_gpt_poeg_disable_req_both_low(chip->gpt_dev, chip->index, true);
+    95	
+    96		if (test_bit(RZG2L_GPT_DTEF, chip->gpt_irq))
+  > 97			rzg2l_gpt_poeg_disable_req_deadtime_error(chip->gpt_dev, chip->index, true);
+    98	}
+    99	
 
-On Fri, Nov 21, 2025 at 10:12:08PM +0000, Sean Young wrote:
-> On Fri, Nov 21, 2025 at 05:04:41PM +0100, Uwe Kleine-K=F6nig wrote:
-> > I'm currently working on the pwm-bcm2835 driver, converting it to the
-> > waveform PWM API.
-> >=20
-> > A result of that conversation is that calling pwm_apply_atomic() will
-> > result in the period being rounded down instead of rounded to the
-> > nearest possible value. Looking at commit 11fc4edc483b ("pwm: bcm2835:
-> > Improve precision of PWM") I guess you will be unhappy about that.
-> >=20
-> > The obvious way forward is to let the pwm-ir-tx driver make use of the
-> > waveform API which allows better control over the actual hardware
-> > output.
->=20
-> That's very interesting, I must have missed the new waveform API. I agree,
-> this is a great way forward.
-
-I guess I'm not a good advertiser for the improvements I do :-)
-
-> > I looked into the pwm-ir-tx driver to check if I can do the conversion,
-> > but didn't understand the protocol good enough to try that.
-> >=20
-> > I wonder if you are still interested enough in the driver to do the
-> > conversion yourself? Alternatively can you point me to some documention
-> > resource explaining the protocol? Maybe there is even an easy way to
-> > test changes?
->=20
-> I'm more than happy to do the conversion, then I can also test that works
-> correctly with a logic analyizer.
-
-That's great.
-
-The functions that are already there should be enough in theory to pick
-the best configuration for your use case. Feel free to create helper
-functions in the pwm subsystem that help you. I guess a function
-pwm_roundup_waveform_might_sleep() might be useful.
-
-> For the pwm-bcm2835 driver: do you have a draft commit that enables the
-> waveform API? That way I can start testing any changes I make to pwm-ir-tx
-> on RPi.
-
-I pushed my wip change to:
-
-	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/wip=
--bcm2835-waveform
-
-I already did some testing on these changes and I think there are very
-little changes needed (if any at all) before posting that. But I want to
-apply another round of self-review before sending it out officially.
-
-Best regards
-Uwe
-
---inph5jfho4vjyyub
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmkh9XMACgkQj4D7WH0S
-/k61tQf+IV6eGFNCLYoPhdYqb1CrZhi3YKsY1kIBs46LgyDA45OnmUbLux7piCYs
-f2vtsNWwoAxTd7X38rjoGF1wOn4N3dhO5qVFUjPELL2Qj74b5Z7MZU2/v7jG9Hcf
-CqpljwwYlbWY2MLkYvURE1vcRMvssVgz4DnVIhq5ihhzYH1wSbAEPEzMHZ4SmsbE
-eiE03acqQHQpgGigxryMd9d1h290BM4mttKfu6nicSKk+NEuqI+tkLfs6WQQHIBa
-CHhhdvGYL24ej+mMPZ8zK1oB33bXcg/AxIvw3EpP81+b1tUQX+V7QE6qzDv9MFpL
-InA8KVcl20pLltnhIW3QB8vY0uQyZQ==
-=eCYf
------END PGP SIGNATURE-----
-
---inph5jfho4vjyyub--
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
