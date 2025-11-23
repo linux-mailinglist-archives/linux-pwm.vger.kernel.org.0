@@ -1,79 +1,79 @@
-Return-Path: <linux-pwm+bounces-7672-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7673-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
-	by mail.lfdr.de (Postfix) with ESMTPS id D291BC7DED9
-	for <lists+linux-pwm@lfdr.de>; Sun, 23 Nov 2025 10:27:56 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id C9451C7DECB
+	for <lists+linux-pwm@lfdr.de>; Sun, 23 Nov 2025 10:27:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 80BE73A9529
-	for <lists+linux-pwm@lfdr.de>; Sun, 23 Nov 2025 09:26:56 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 4DFD934E9C0
+	for <lists+linux-pwm@lfdr.de>; Sun, 23 Nov 2025 09:27:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6088113B293;
-	Sun, 23 Nov 2025 09:26:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18E5D284671;
+	Sun, 23 Nov 2025 09:27:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wg8gL3rt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MHUaIegI"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8E9C176ADE
-	for <linux-pwm@vger.kernel.org>; Sun, 23 Nov 2025 09:26:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2D6921CA02
+	for <linux-pwm@vger.kernel.org>; Sun, 23 Nov 2025 09:27:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763890015; cv=none; b=ScqnQvXC5Vb1lFgkiHxrGRJSUqxtPDs4WK4mUlZNrh2R7kMw3jKiCDgV0nSBCPn8Og6eA8fGKpZ9aG58yO97PvAD+wvPaIO25pgjzDSGvKnTHJ5+XE3nga0QgpvfsMoXPzH2Ztc9DU2y+XYxgmnUkjJXHAqCQ2NwYoQHX5wtGok=
+	t=1763890029; cv=none; b=iNMn/1bMvY24BiIqP0e5eG5WkdWxRHl5comeraDIEeqz8+vWTLvoox/XiwF4jZxR5o6hI6+bUZziN0g6QpBXI7k0aBhAnVPUPzjJaHceml4GUlvxHRAoI9tYP2GJCYcJ9LeGA4++nsNXhDugqbjD2iILxd0etsmxvpZpQIYISpg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763890015; c=relaxed/simple;
-	bh=kZYfkI2nCmz7qEGxmYNzPwIxYr9EHSD53GvUwikKHWw=;
+	s=arc-20240116; t=1763890029; c=relaxed/simple;
+	bh=hswRjYzI10zhUsDjz+wkVowHp0MANy7svfXMu6AA6rA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=itj1Ls/QC+4L0hPA8KQ5c9TYQ0MutUNFwluaNgl3gUG17neGJzKn3AFvRsU1w7aa/JK5E5zU+uKWPZnGUHbluA4zQ+PhPOyAQWrtNAZsRqjKlYhrMTNquuKDfsIkj5DlwRSFvtDJvcTSBqKEx9wbETew3oAJZoHzLwVYq67ltFw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wg8gL3rt; arc=none smtp.client-ip=209.85.214.169
+	 MIME-Version; b=gSzbNbKiZIvMFIZL0Co2d8F4ociYp/YFxp+z3HfspmIyAJrmgZPrl2K1vXhKYULP/brziRZJxc0SGV2DpYoefvo6qYP0nqe3LN+qHgDI5C4lwhzbPNqpgGECFDyT9lXhBQXTmubDxdZC/bzsFJDXClAEXoAtJJYcP7v6/OiPlsM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MHUaIegI; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-297ec50477aso13709965ad.1
-        for <linux-pwm@vger.kernel.org>; Sun, 23 Nov 2025 01:26:53 -0800 (PST)
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-297dd95ffe4so28688175ad.3
+        for <linux-pwm@vger.kernel.org>; Sun, 23 Nov 2025 01:27:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763890013; x=1764494813; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1763890026; x=1764494826; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=jcsZ1pYdc/lZZufwkk7hmx3zrC9Zk2tE9eYLDhtARFw=;
-        b=Wg8gL3rtvfAG7OKuY3TqC9T58J5r3F7nruwCS3wUeqJ/0UtxF/rVy+ifrUj1zGAmZg
-         Km/JjB4uUibg9z1sYgfXsWv6VWAfH9OefS0q2mo8FM4uL8K6tlV1LyKBbIw2SlAqMhPz
-         jwqLjCoYdCpGbnmWYASyzsq6QvyeNM5vVit55rCNupdXmEyrlYnAWXO5zLWojFgrW7CV
-         tB2Td85/zWw3O8FGgMG2ApxUpR5A0xF3l1mpJu8nNM2xJMVMGFTHBr+HnwDdVjntq0FC
-         9jPevqObnm8M+xrMlW4qtK3HqOtSMS9cC1FGGPBhPB+4IlG2vG2Sxlx4qU6mp9ePe7uB
-         pELw==
+        bh=SxofK3PIJmJGptGWmPl6GxImW1KehJK8Ra0bi1cA/KY=;
+        b=MHUaIegIDQOCo43fmEKY3VfYaRjaHxMRCjEJdRctUgEoSGnjge2xscSRhxisxU8SLl
+         NJOeH6ADpX8QYPEvx01Jwf16k1rSrrqsN4O0MpZ20Zdv+4CSNKUTyvoIW56eoxd8Dpmp
+         pYUoTjjP37fFEf70a3UvPetXiuceifTyDKvPplAmaqND2Tb4DY0t2PjixqOMwoODTu6n
+         Sfh2RkxmKFUMoSkEh2cvc5S6paa6Tu5jIws+SKUMNGGdFdKR6VVSMvI17kni9GyERYCZ
+         wsL4lT313URpHaa10qovYCCJauAnzm3FzwCqZjnTAPi2qR8mQeZUUFlKP2B1HTh460TS
+         VMMA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763890013; x=1764494813;
+        d=1e100.net; s=20230601; t=1763890026; x=1764494826;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=jcsZ1pYdc/lZZufwkk7hmx3zrC9Zk2tE9eYLDhtARFw=;
-        b=Uju1uVoltMt7dR5taOIwAH4kKRZtmP8SSFRPZsL8DKOamfG7YUtfOzWwlQ0sevLg/E
-         /7b2ZTYb8bhwqdMeNsc3UOJwZM6ptqkvuduv/hEqfO8v+4pDCBHpSEtutac6crjZ+Pem
-         H6nKR6qnt94qesszEtN1la0wvdyrUbFRMvm2sAUulNU64YGigi/sEu6WhJppn+yYKwQX
-         A0xmYejHGU4RgbCnooPaoifAoTbE3NOi5xgq9T7z/5X9SwWMhSljF6NNBPOOWNSvQMX6
-         Mdw1k6dN4a8T5yA5YOCX08wFmQ5Aci4anQAvgkFBGL1ivWyLdgMKe61LjJvvpCnEC3MM
-         la7Q==
-X-Forwarded-Encrypted: i=1; AJvYcCXH3A0arF2GdBPGr+f7yAwGyYXpkaVBWxpgNbd4ukKSwDvQbitSy+5e6CvUHoFHccXGYux75iydgxM=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyouJe0vv6oqaYjvzFDLtBOXfWG6pyzfhUPCnYOBDxFcuXvmgtz
-	2ppJlk8ERX2deMwGgj/ffmhGI4Qajsc1uzD6OtCRZg3AoWRaqNdkx6Zd
-X-Gm-Gg: ASbGncsij0yT0GfmDJ4wbCqT0uGzaH+PYoNG1KzwH9Eb5zsaz0LU13aU5jomw3JTADJ
-	SDzwQDr/o9uq4fnKFXX3STYUsytby56XauBpNA7b8MjNKbgVS8qMqB+m5rkk4YpYSaeMv51IOwi
-	Xc9QQDzWMqtq0AhgNAL4DHfvXE6cnVwoAN4+EUPVlzALUHuNpiczOm9JAeS50d0MfVIuamHbrwq
-	M3xExtH4grYHthoc+4WE1XvMR/Yb4DCQjQkjD3RGeHUq7UIZzit+W1/5ItA3i+k9lp5XTii6P3Z
-	x9T4Zinc9ni1KOSl2BjZI895a7ZwvMqw7wZNB5EPJ04cCnImirIX7PXokgD9eQhR+x8kPEli062
-	2BEtEqkYA7UT09F2/28j3BgYsEMzlSEh5Y/AlvQ2LJP7gYg6I12cPVGv+1oyFy0fs4voHbNPSJz
-	RldObv7TjewgTWX24UywUwZDPWRw==
-X-Google-Smtp-Source: AGHT+IEPaSiAglOPtRohHhMD3F7poU82nQz/JA+b9mPjFhoImXk6hT3H7zPq8hH/JIUpP2uJO5DptA==
-X-Received: by 2002:a17:902:ef4f:b0:295:82d0:9baa with SMTP id d9443c01a7336-29b6bfa8cd3mr100768505ad.17.1763890013033;
-        Sun, 23 Nov 2025 01:26:53 -0800 (PST)
+        bh=SxofK3PIJmJGptGWmPl6GxImW1KehJK8Ra0bi1cA/KY=;
+        b=jPe3ueW6EfSAnzCXxC38G9R35v0RSy4H4xbCWhialbn6d98n+rO1fcVL/0lZmvIsb2
+         ormiku1xL1LKZ3QikVK5Sk8Y2KxweaN5dCRAibbhbariyVF4rB+bdSLaLGH1PcEfFdJp
+         w4l6BSNE3WDLN2X7WR4hB7zXPVecx2XhIioV1uaP5SAJGl8erK2/oxbvI2yKUuqpPWzx
+         pK2s1kChwO2uzSCJfphH7vJXE0weR2q/zNfsYvNjAfZIXPvf36jL99V9bO7P4jBDYuvc
+         FYAerw3C0zSvjHJCDhLPGQcS5y7Ti9uMedYPJCFrXcXE9n0YbOg5xVQUFkrdJDljyM1J
+         2JAw==
+X-Forwarded-Encrypted: i=1; AJvYcCUXiEwbHXUcwvCZuD9M3V7mQDisqC+Qj8TJ/9WxB50hyVW+nOQ2iuave/cnTzFCRtsm59IfCbzCYTk=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yzi4KfkL3sJfH62TzcDJ+ZjrM6qhVj1DzMuGWJoIPcAWyRPMu5y
+	iY+sCf8DnIsr4Nd3rKBPLASpKHl0pk03PWEuANneG4Tkg45joLNuMJxf
+X-Gm-Gg: ASbGncvFmY0mZhaAfyTcc/7j5RDyxnpxs7pJblM7KVExas+1GwbdHTwZggURVNZde8s
+	pl/gXWfcC+ZxS7ll8KcH8SYlKskbxOxjv3hQG4wWHdeyZeM0WiNf7KW1RlRfScZlZmG1+N5OWTE
+	JtWEzNyuL8byJclrNFowgY86K5ni4yvbexX2X1ZJlVOwonrIUldO+tbUpUFTEJuoBgywyC6Rq28
+	ZLzbHWyQTtEWZnH19qDsekMw0CUG+xbTpoXCvOZSyHJg1/Rw6wsqF/OGbrevODoQfzKJLt1ABOt
+	YhGd/Gx1+NhmTk0U6aZHPmNt70r44ewsiGwEjaQ0MNK6GVO+JgRWk6Z9vAIgs6XlbXB2sD3D/c3
+	vPcUShv9OS5e49PnYK7LWz4BVEJccXWIcSEXs6IcGvXzS4nOec0+31dYDthVP3EcDVSK/GtuO3Z
+	954jc+hyB+eV4gDV5Y0iFNPl8FOw==
+X-Google-Smtp-Source: AGHT+IH1U8t8hCw2WDyvXF/0DPfy18rrujnj6Em/QND/b9i4osv8+SLy39cyAfSRsaedSvrbycJTtA==
+X-Received: by 2002:a17:903:290:b0:297:c048:fb60 with SMTP id d9443c01a7336-29b6bedf343mr95210775ad.25.1763890025910;
+        Sun, 23 Nov 2025 01:27:05 -0800 (PST)
 Received: from shankari-IdeaPad.. ([103.24.60.188])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29b5b138c08sm100811105ad.25.2025.11.23.01.26.41
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29b5b138c08sm100811105ad.25.2025.11.23.01.26.54
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Nov 2025 01:26:52 -0800 (PST)
+        Sun, 23 Nov 2025 01:27:05 -0800 (PST)
 From: Shankari Anand <shankari.ak0208@gmail.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
@@ -111,9 +111,9 @@ Cc: Boqun Feng <boqun.feng@gmail.com>,
 	rust-for-linux@vger.kernel.org,
 	linux-pwm@vger.kernel.org,
 	Shankari Anand <shankari.ak0208@gmail.com>
-Subject: [PATCH 06/10] rust: kernel: Update ARef and AlwaysRefCounted imports to use sync::aref
-Date: Sun, 23 Nov 2025 14:54:34 +0530
-Message-Id: <20251123092438.182251-7-shankari.ak0208@gmail.com>
+Subject: [PATCH 07/10] rust: kernel: Update ARef imports to use sync::aref
+Date: Sun, 23 Nov 2025 14:54:35 +0530
+Message-Id: <20251123092438.182251-8-shankari.ak0208@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20251123092438.182251-1-shankari.ak0208@gmail.com>
 References: <20251123092438.182251-1-shankari.ak0208@gmail.com>
@@ -125,9 +125,8 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Update call sites in `pwm.rs` to import `ARef`
-and `AlwaysRefCounted` from `sync::aref`
-instead of `types`.
+Update call sites in `scatterlist.rs` to import `ARef`
+from `sync::aref` instead of `types`.
 
 This aligns with the ongoing effort to move `ARef` and
 `AlwaysRefCounted` to sync.
@@ -136,22 +135,22 @@ Suggested-by: Benno Lossin <lossin@kernel.org>
 Link: https://github.com/Rust-for-Linux/linux/issues/1173
 Signed-off-by: Shankari Anand <shankari.ak0208@gmail.com>
 ---
- rust/kernel/pwm.rs | 3 ++-
+ rust/kernel/scatterlist.rs | 3 ++-
  1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/rust/kernel/pwm.rs b/rust/kernel/pwm.rs
-index cb00f8a8765c..1605d13d5d64 100644
---- a/rust/kernel/pwm.rs
-+++ b/rust/kernel/pwm.rs
-@@ -13,7 +13,8 @@
-     devres,
-     error::{self, to_result},
+diff --git a/rust/kernel/scatterlist.rs b/rust/kernel/scatterlist.rs
+index 196fdb9a75e7..b83c468b5c63 100644
+--- a/rust/kernel/scatterlist.rs
++++ b/rust/kernel/scatterlist.rs
+@@ -38,7 +38,8 @@
+     io::ResourceSize,
+     page,
      prelude::*,
--    types::{ARef, AlwaysRefCounted, Opaque}, //
-+    sync::aref::{ARef, AlwaysRefCounted},
-+    types::Opaque, //
+-    types::{ARef, Opaque},
++    sync::aref::ARef,
++    types::Opaque,
  };
- use core::{marker::PhantomData, ptr::NonNull};
+ use core::{ops::Deref, ptr::NonNull};
  
 -- 
 2.34.1
