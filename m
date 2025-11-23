@@ -1,79 +1,79 @@
-Return-Path: <linux-pwm+bounces-7671-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7672-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2200AC7DEC4
-	for <lists+linux-pwm@lfdr.de>; Sun, 23 Nov 2025 10:26:52 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [IPv6:2604:1380:45e3:2400::1])
+	by mail.lfdr.de (Postfix) with ESMTPS id D291BC7DED9
+	for <lists+linux-pwm@lfdr.de>; Sun, 23 Nov 2025 10:27:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 0AF454E1EAB
-	for <lists+linux-pwm@lfdr.de>; Sun, 23 Nov 2025 09:26:43 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 80BE73A9529
+	for <lists+linux-pwm@lfdr.de>; Sun, 23 Nov 2025 09:26:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88B47284671;
-	Sun, 23 Nov 2025 09:26:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6088113B293;
+	Sun, 23 Nov 2025 09:26:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l1syOFK/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wg8gL3rt"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C0EB27FD74
-	for <linux-pwm@vger.kernel.org>; Sun, 23 Nov 2025 09:26:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8E9C176ADE
+	for <linux-pwm@vger.kernel.org>; Sun, 23 Nov 2025 09:26:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1763890002; cv=none; b=kkX4c3VNAkc1gjRuXQeqwG8yengnxcwc4iMvUKyR1swjdIVyhnP2ry6KHCQ8bhjBsAbUgAkm+OmvS9WZ2OpUVro2ENzYszGwkkuEb5hr8l6oiJv4Nhn8vaUF4YvjSIgFICuhV2oHSdaP9k+nEp0fl8tHfn46QtvefvCANx/8U9s=
+	t=1763890015; cv=none; b=ScqnQvXC5Vb1lFgkiHxrGRJSUqxtPDs4WK4mUlZNrh2R7kMw3jKiCDgV0nSBCPn8Og6eA8fGKpZ9aG58yO97PvAD+wvPaIO25pgjzDSGvKnTHJ5+XE3nga0QgpvfsMoXPzH2Ztc9DU2y+XYxgmnUkjJXHAqCQ2NwYoQHX5wtGok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1763890002; c=relaxed/simple;
-	bh=vKoO79hHEPcCQYl/tNMLa4IXudiHam4RZkBRwZbei0g=;
+	s=arc-20240116; t=1763890015; c=relaxed/simple;
+	bh=kZYfkI2nCmz7qEGxmYNzPwIxYr9EHSD53GvUwikKHWw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=CAVf9xq1cbPIa933EcAQ08rE8AGj68Oqy7etjU3Ux7BXR9PKFhIDw1aHYOufBoqf5gm9ap12Ln8UNctnohwyWsRunb4ecNJimMB77tv5q5DYD9UWqGXr1cv9rirSo55PGvG577yAetin7cBgPC5iQ8OmhdvSjWg5VTD5+lH/ZNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l1syOFK/; arc=none smtp.client-ip=209.85.214.173
+	 MIME-Version; b=itj1Ls/QC+4L0hPA8KQ5c9TYQ0MutUNFwluaNgl3gUG17neGJzKn3AFvRsU1w7aa/JK5E5zU+uKWPZnGUHbluA4zQ+PhPOyAQWrtNAZsRqjKlYhrMTNquuKDfsIkj5DlwRSFvtDJvcTSBqKEx9wbETew3oAJZoHzLwVYq67ltFw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wg8gL3rt; arc=none smtp.client-ip=209.85.214.169
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-297ef378069so30256765ad.3
-        for <linux-pwm@vger.kernel.org>; Sun, 23 Nov 2025 01:26:40 -0800 (PST)
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-297ec50477aso13709965ad.1
+        for <linux-pwm@vger.kernel.org>; Sun, 23 Nov 2025 01:26:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1763890000; x=1764494800; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1763890013; x=1764494813; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HepyoJQ30V+nS3WwhUyswnLGOzdzEO2vo/wcuCFozBE=;
-        b=l1syOFK/G37q9PN7BrZKA9mj4Be5qzWE5IlcmClTr8OeaMahODUx21koQqvABB6wCX
-         8ClhO7CfqhHbFVZjh0pJT+jBL88ySAgO64dYzaPbJHiMFelNsX4PfV/qde5i6TjfTyVT
-         k0DLwAiciToHUtYEYYj7TqTUHtYbiLMyguYVVbnt2M5et6ewgrZVDL2mQETplvbm43+W
-         BUCFARN9c+mRQj2At0Pq8OX15gmydPNXTzK56E38OEBL+JwB9a3Fd6kBNW83saevUhoM
-         VE+HTbAmP8PbY1x/9cEH+ZhpKxUemc0oFlwNc0bCpvTUn6oOFJ3G0vBboNZDiZqqWSp1
-         3/kg==
+        bh=jcsZ1pYdc/lZZufwkk7hmx3zrC9Zk2tE9eYLDhtARFw=;
+        b=Wg8gL3rtvfAG7OKuY3TqC9T58J5r3F7nruwCS3wUeqJ/0UtxF/rVy+ifrUj1zGAmZg
+         Km/JjB4uUibg9z1sYgfXsWv6VWAfH9OefS0q2mo8FM4uL8K6tlV1LyKBbIw2SlAqMhPz
+         jwqLjCoYdCpGbnmWYASyzsq6QvyeNM5vVit55rCNupdXmEyrlYnAWXO5zLWojFgrW7CV
+         tB2Td85/zWw3O8FGgMG2ApxUpR5A0xF3l1mpJu8nNM2xJMVMGFTHBr+HnwDdVjntq0FC
+         9jPevqObnm8M+xrMlW4qtK3HqOtSMS9cC1FGGPBhPB+4IlG2vG2Sxlx4qU6mp9ePe7uB
+         pELw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1763890000; x=1764494800;
+        d=1e100.net; s=20230601; t=1763890013; x=1764494813;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=HepyoJQ30V+nS3WwhUyswnLGOzdzEO2vo/wcuCFozBE=;
-        b=pbiIogdjg/Pm1Ag1bv5X/FnEzIbbbr8cSfRktTquJkm/qiRLd8P4QlrdW5K6BLfbot
-         OfcRGk9nk+imY9MuyCZR0c28zPPO7g0dokjbmgmq7e6boMSCTybGAw0b08m6EZ8XWERs
-         DjEHs66Zwu4yoWvnqsMraLUXAL8FQf+9gHzclnSwnCeMsIxhIgz8WhVxM42wIsA1VPEd
-         F8RVPBobhr6G1A1SknVdZLqS9VtXEWkBe0mXNwfzbd7e4eOmJU95AWWBwaEOPaKWs6RD
-         qO88jtxLcEpEB2bFf6Gp+/lWOZyVeWE9BPnERLxsdllPWxaZaY8nzE4W2MGxfY7hGgVM
-         8fUg==
-X-Forwarded-Encrypted: i=1; AJvYcCVMQ0b/l3PXn2iDJrAyhQZLv3xLtMH8lKbwQdpsQFEh8FVH8OnItHvs2UbaKbFJeDmOr1RqvZzxI5c=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw5ODExG+t42qDdsTQ3l5/8rV3NB8acdgCtIt4SwYxiaTgcMzZ8
-	94yn2rdhMSIyR6uHbhU/NycMNDPLEMmUBsCfe3quD8xMH5R+4indM/Og
-X-Gm-Gg: ASbGncuts4qRZ2TuFkgioTqGASytpmPDA3cpG/jLrggQBJwNTCAqUFJ31MkbUKxDxcp
-	cYggc9JPvtW0XRdA3g1YR//DTIRX2q5qJU4zWdTDKM/Fq8cwuIxl2vbYRjNdWfkwiY4wtoIl0gm
-	Bb1u7B23pKqwBE4CDy47buEMVLxjAQqvHTyKN7QzwaK9j4xpd7Kb5fH1mw0bO30p8ouHA0406L+
-	HRLg2T0OtntyhrNNCosFtWl1zpsFPQlTW5bdPm9+hPKhvYaZSCcQAnvR0t4SWxoU63yXtN821Od
-	75yuAqkqBOvKdTfJcr9yZOKqQxk0yFD/vnx3LOVzF2YMHPZmW7QNaK+4VXn1oB4USNib/ymmmg3
-	B6LUFcjGakIc35bQ8Xt2z56gZzOhhQED9hcodFT0Xz3uK0w2vL3I83l6A7BrhpdpszxNyGMdLD0
-	fPxn8T8cOhlOZUzdZjwPpSNLCqFQ==
-X-Google-Smtp-Source: AGHT+IHnc+TnFjT4Ewq3NCmcVSOlFxFcCR7lWrTNRkJuldxiSn0BMR95iGNmXPyBh157L0RjhglO7g==
-X-Received: by 2002:a17:903:2c06:b0:295:6427:87d4 with SMTP id d9443c01a7336-29b6bf77fedmr93037125ad.50.1763890000307;
-        Sun, 23 Nov 2025 01:26:40 -0800 (PST)
+        bh=jcsZ1pYdc/lZZufwkk7hmx3zrC9Zk2tE9eYLDhtARFw=;
+        b=Uju1uVoltMt7dR5taOIwAH4kKRZtmP8SSFRPZsL8DKOamfG7YUtfOzWwlQ0sevLg/E
+         /7b2ZTYb8bhwqdMeNsc3UOJwZM6ptqkvuduv/hEqfO8v+4pDCBHpSEtutac6crjZ+Pem
+         H6nKR6qnt94qesszEtN1la0wvdyrUbFRMvm2sAUulNU64YGigi/sEu6WhJppn+yYKwQX
+         A0xmYejHGU4RgbCnooPaoifAoTbE3NOi5xgq9T7z/5X9SwWMhSljF6NNBPOOWNSvQMX6
+         Mdw1k6dN4a8T5yA5YOCX08wFmQ5Aci4anQAvgkFBGL1ivWyLdgMKe61LjJvvpCnEC3MM
+         la7Q==
+X-Forwarded-Encrypted: i=1; AJvYcCXH3A0arF2GdBPGr+f7yAwGyYXpkaVBWxpgNbd4ukKSwDvQbitSy+5e6CvUHoFHccXGYux75iydgxM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyouJe0vv6oqaYjvzFDLtBOXfWG6pyzfhUPCnYOBDxFcuXvmgtz
+	2ppJlk8ERX2deMwGgj/ffmhGI4Qajsc1uzD6OtCRZg3AoWRaqNdkx6Zd
+X-Gm-Gg: ASbGncsij0yT0GfmDJ4wbCqT0uGzaH+PYoNG1KzwH9Eb5zsaz0LU13aU5jomw3JTADJ
+	SDzwQDr/o9uq4fnKFXX3STYUsytby56XauBpNA7b8MjNKbgVS8qMqB+m5rkk4YpYSaeMv51IOwi
+	Xc9QQDzWMqtq0AhgNAL4DHfvXE6cnVwoAN4+EUPVlzALUHuNpiczOm9JAeS50d0MfVIuamHbrwq
+	M3xExtH4grYHthoc+4WE1XvMR/Yb4DCQjQkjD3RGeHUq7UIZzit+W1/5ItA3i+k9lp5XTii6P3Z
+	x9T4Zinc9ni1KOSl2BjZI895a7ZwvMqw7wZNB5EPJ04cCnImirIX7PXokgD9eQhR+x8kPEli062
+	2BEtEqkYA7UT09F2/28j3BgYsEMzlSEh5Y/AlvQ2LJP7gYg6I12cPVGv+1oyFy0fs4voHbNPSJz
+	RldObv7TjewgTWX24UywUwZDPWRw==
+X-Google-Smtp-Source: AGHT+IEPaSiAglOPtRohHhMD3F7poU82nQz/JA+b9mPjFhoImXk6hT3H7zPq8hH/JIUpP2uJO5DptA==
+X-Received: by 2002:a17:902:ef4f:b0:295:82d0:9baa with SMTP id d9443c01a7336-29b6bfa8cd3mr100768505ad.17.1763890013033;
+        Sun, 23 Nov 2025 01:26:53 -0800 (PST)
 Received: from shankari-IdeaPad.. ([103.24.60.188])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29b5b138c08sm100811105ad.25.2025.11.23.01.26.28
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-29b5b138c08sm100811105ad.25.2025.11.23.01.26.41
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Nov 2025 01:26:39 -0800 (PST)
+        Sun, 23 Nov 2025 01:26:52 -0800 (PST)
 From: Shankari Anand <shankari.ak0208@gmail.com>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
 	=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
@@ -111,9 +111,9 @@ Cc: Boqun Feng <boqun.feng@gmail.com>,
 	rust-for-linux@vger.kernel.org,
 	linux-pwm@vger.kernel.org,
 	Shankari Anand <shankari.ak0208@gmail.com>
-Subject: [PATCH 05/10] rust: kernel: Update ARef and AlwaysRefCounted imports to use sync::aref
-Date: Sun, 23 Nov 2025 14:54:33 +0530
-Message-Id: <20251123092438.182251-6-shankari.ak0208@gmail.com>
+Subject: [PATCH 06/10] rust: kernel: Update ARef and AlwaysRefCounted imports to use sync::aref
+Date: Sun, 23 Nov 2025 14:54:34 +0530
+Message-Id: <20251123092438.182251-7-shankari.ak0208@gmail.com>
 X-Mailer: git-send-email 2.34.1
 In-Reply-To: <20251123092438.182251-1-shankari.ak0208@gmail.com>
 References: <20251123092438.182251-1-shankari.ak0208@gmail.com>
@@ -125,8 +125,9 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Update call sites in `i2c.rs` to import `ARef` and
-`AlwaysRefCounted` from `sync::aref` instead of `types`.
+Update call sites in `pwm.rs` to import `ARef`
+and `AlwaysRefCounted` from `sync::aref`
+instead of `types`.
 
 This aligns with the ongoing effort to move `ARef` and
 `AlwaysRefCounted` to sync.
@@ -135,44 +136,23 @@ Suggested-by: Benno Lossin <lossin@kernel.org>
 Link: https://github.com/Rust-for-Linux/linux/issues/1173
 Signed-off-by: Shankari Anand <shankari.ak0208@gmail.com>
 ---
- rust/kernel/i2c.rs | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+ rust/kernel/pwm.rs | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/rust/kernel/i2c.rs b/rust/kernel/i2c.rs
-index 1aee46f59460..c50ca464d87c 100644
---- a/rust/kernel/i2c.rs
-+++ b/rust/kernel/i2c.rs
-@@ -17,10 +17,8 @@
-     of,
+diff --git a/rust/kernel/pwm.rs b/rust/kernel/pwm.rs
+index cb00f8a8765c..1605d13d5d64 100644
+--- a/rust/kernel/pwm.rs
++++ b/rust/kernel/pwm.rs
+@@ -13,7 +13,8 @@
+     devres,
+     error::{self, to_result},
      prelude::*,
-     str::CStrExt as _,
--    types::{
--        AlwaysRefCounted,
--        Opaque, //
--    }, //
-+    sync::aref::AlwaysRefCounted,
+-    types::{ARef, AlwaysRefCounted, Opaque}, //
++    sync::aref::{ARef, AlwaysRefCounted},
 +    types::Opaque, //
  };
+ use core::{marker::PhantomData, ptr::NonNull};
  
- use core::{
-@@ -32,7 +30,7 @@
-     }, //
- };
- 
--use kernel::types::ARef;
-+use kernel::sync::aref::ARef;
- 
- /// An I2C device id table.
- #[repr(transparent)]
-@@ -408,7 +406,7 @@ pub fn get(index: i32) -> Result<ARef<Self>> {
- kernel::impl_device_context_into_aref!(I2cAdapter);
- 
- // SAFETY: Instances of `I2cAdapter` are always reference-counted.
--unsafe impl crate::types::AlwaysRefCounted for I2cAdapter {
-+unsafe impl crate::sync::aref::AlwaysRefCounted for I2cAdapter {
-     fn inc_ref(&self) {
-         // SAFETY: The existence of a shared reference guarantees that the refcount is non-zero.
-         unsafe { bindings::i2c_get_adapter(self.index()) };
 -- 
 2.34.1
 
