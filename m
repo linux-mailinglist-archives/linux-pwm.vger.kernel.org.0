@@ -1,103 +1,56 @@
-Return-Path: <linux-pwm+bounces-7687-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7688-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3170FC817F3
-	for <lists+linux-pwm@lfdr.de>; Mon, 24 Nov 2025 17:11:27 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4B0CCC81978
+	for <lists+linux-pwm@lfdr.de>; Mon, 24 Nov 2025 17:34:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 732113ACD3A
-	for <lists+linux-pwm@lfdr.de>; Mon, 24 Nov 2025 16:10:58 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 5B020347300
+	for <lists+linux-pwm@lfdr.de>; Mon, 24 Nov 2025 16:32:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3ED7B314D12;
-	Mon, 24 Nov 2025 16:10:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 081DD25A2BB;
+	Mon, 24 Nov 2025 16:32:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="tnWmWrRQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B7BoMFTX"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2887313E37
-	for <linux-pwm@vger.kernel.org>; Mon, 24 Nov 2025 16:10:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDA121A285;
+	Mon, 24 Nov 2025 16:32:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764000657; cv=none; b=LzMd5/4k9fZLfP9Gr52ywoLVYVvYUsDdkjCMpRNX0FL2WQhc+Wh+S8Yr2iIYuNKPFYfznfjI7Xo80oIp11wlzpO2DHNhs9S1IvpLHmBUjon1/54F7hQvDSYhGQqQRhgBC3eJhl7UibpvuVbrGcc6E7ZfPg5amWz/doc5BBMyvIo=
+	t=1764001945; cv=none; b=mVZEi2HffEyQSlEAEL2l1cok6Gs15I8RNOz80DqrDU6iKBUHdKZ3GzRQt2gA+KPPssva/3u8dFjiOz5qsHQTw6r+Hnm5HgyrEWCp12d1PETsyVCeaOud2Kmc2jK1HI+lEcs6O50bugh8jikE6TqSW5XWB1E+tEeNWS8Y8Nt1PbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764000657; c=relaxed/simple;
-	bh=57eglluhUM2nZlJclDwE0caSnfRd7PY6EbxwsIKzZW4=;
+	s=arc-20240116; t=1764001945; c=relaxed/simple;
+	bh=voDZieryvn9LANZkkANxItsAwggAb8NAOD35MvQ5m54=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=felmCtQWjcdLD4YXpm6QygRjra4TtzdZQWr9+qLzTvuSoexOY977tTLsbj/614HMUu6MKUo+hnDYgCklSQQ4QNaSYxg77XGeKwegE05zpxJ41ZMiPtDiNuR3WVwBflSizIXn+ZcSstkhnTd/eHWWO8jEBKDHpjQj4JneHVzI2hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=tnWmWrRQ; arc=none smtp.client-ip=209.85.218.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-b713c7096f9so690676466b.3
-        for <linux-pwm@vger.kernel.org>; Mon, 24 Nov 2025 08:10:53 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1764000652; x=1764605452; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PNJKw8p/bVC9DDihKlO6wvtRyoc2CqJVoOEDDkEFruo=;
-        b=tnWmWrRQNWeVC//eu2/fIIaE+0OE36czXlPaZPKymZj8MN9ZvhrssnK5+n7nYGAqDD
-         ztQD8EYGkmKX/cot5R5oC+BgoqknKsDkNrZhcglYj/aX2XK32dBjAQa5Mr4yNrS/qE4J
-         sUq53wFdwnnYQFgsuty2tlnnWckUK+XyAk76ZAg3K4MX5LAri2pa+2nVSy+UJWU8uclJ
-         tAGnwiKdAThtyopLc4GZMtCHNLD7JyoGUBpQ6hUU+SqIRuI7+y+IiaQcL1iPTHngor8G
-         iJGtWwj1Ya+Rd3uLs3K6yP/cKpag+i8292ScySxacQC8C6ZEWdDPN+TrymaMtjmKXQHl
-         dfLw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764000652; x=1764605452;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PNJKw8p/bVC9DDihKlO6wvtRyoc2CqJVoOEDDkEFruo=;
-        b=pRm6fH822ZMV01eNW5W7f/gUEWUvoHRO+YXcweB+TqQrhyII+kYoIk0E7D76aZ1/C7
-         f+W3No7v/s+88IhPIaPMtjpvbN1Ql2vNX2nlHw0myWgTkQ5cW9YZY8Np3bVEVfcndvc3
-         StaEUparzZMWF23nOTlnMlSE4lFuJVDOsP5Xm1PYTVfQQlMAqpMWs2bSmJ9QT0GEcl9f
-         /rGP6icTq85erHZvb+mcFYTEIqUt82bkZaCTrtCCnGvygxMx6vPvVmnPRGobdyvO7V3c
-         ncfy4a5fdeLG6x+dvFaqzl5jrcZLvNiP8AFtnQKuYhaJhF92QCdczx3/QdojJnruomJ6
-         gVTQ==
-X-Forwarded-Encrypted: i=1; AJvYcCX+dKISVnQKTEHngOQFk3UoFuuXvm4AEHydSy7+Ri7avx5EGc1RPZkWEP3SCitjR5+8gcJq1b0xcAY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyjT56VLiwjnDNBBddFy07kfnEv6LyMbvrDoTEiyx10VjeoExqB
-	BOJEaH/il0i++RAN46Ku5LOmimtHOACaSIqgFqeVub4lTinPC1fim7o4jUnpR5FwL1g=
-X-Gm-Gg: ASbGnctXV2lBTwzdW2nJ43GnZJi/9kgEqae92UVa1GNQebi2sLkmfjf87gEjtjTCzHD
-	GFlND+m2TxpBoI9RZLDoB4XOLBkUxmB87jCti0yy7J037vLaXcMrC3GzRpBztkKLhY9d7M78F3J
-	pQrL4UAUPM1dULpLeNE3tRKEik0hW+F7o/dBQHewO9JvmPpXrXL2Cs1N9QKOfUVd+nD+RmIs9w3
-	J54bOyZlOsqg2aXeen//xhVgXuKgdhZSzKX68HmUJXZvPiWkzi3PsiMoZDaRd9hSN2NWuZ1i4wt
-	eEVm/x4AJkiElqNETXahfzmq5H4fcxZzZA6MhNsRIFsug+D04OXlni1FkT0C6xyPCGOxbg9vW0a
-	TfipJnjkupF7DCBCXpmnesBPaYgBe2JpIO7hDgoNlpuLI+5rBAQervtKLY8hAMgmQwPnaBCk2Bn
-	Kir96OV/vbvmZZ+ff6TNbKItwvy27cdUXEwK4DgeuYXMWWmors7om6rnOU19/NQyMSRvKQaLRU+
-	YO80dvkHZqn
-X-Google-Smtp-Source: AGHT+IGXZ9dwCsIFtfklKslD3fowlXA1qqiWl8NPh9/JTYvgg+1dn1ZwzOk8abK9I8dlvbUb861r3Q==
-X-Received: by 2002:a17:906:b52:b0:b76:b76e:112a with SMTP id a640c23a62f3a-b76b76e11d8mr159583366b.11.1764000651916;
-        Mon, 24 Nov 2025 08:10:51 -0800 (PST)
-Received: from localhost (p200300f65f0267087d3c06a64089a115.dip0.t-ipconnect.de. [2003:f6:5f02:6708:7d3c:6a6:4089:a115])
-        by smtp.gmail.com with UTF8SMTPSA id a640c23a62f3a-b766d386665sm1040566666b.53.2025.11.24.08.10.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Nov 2025 08:10:51 -0800 (PST)
-Date: Mon, 24 Nov 2025 17:10:50 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Shankari Anand <shankari.ak0208@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Arve =?utf-8?B?SGrDuG5uZXbDpWc=?= <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
-	Joel Fernandes <joelagnelf@nvidia.com>, Christian Brauner <brauner@kernel.org>, 
-	Carlos Llamas <cmllamas@google.com>, Suren Baghdasaryan <surenb@google.com>, 
-	Danilo Krummrich <dakr@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Alexandre Courbot <acourbot@nvidia.com>, 
-	"Rafael J . Wysocki" <rafael@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Igor Korotin <igor.korotin.linux@gmail.com>, 
-	Michal Wilczynski <m.wilczynski@samsung.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Daniel Almeida <daniel.almeida@collabora.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
-	Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	nouveau@lists.freedesktop.org, rust-for-linux@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 06/10] rust: kernel: Update ARef and AlwaysRefCounted
- imports to use sync::aref
-Message-ID: <44gv3fhqppn4fyg5fnxkhhanlbbxr2slqq7k3kr3owx7frpnxw@idgwxlcv4otn>
-References: <20251123092438.182251-1-shankari.ak0208@gmail.com>
- <20251123092438.182251-7-shankari.ak0208@gmail.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=r6fdtK7alK68Yv2mZn+er60Mb18Ga7qEP3oAMYdzsIY4E3+ab1pFMHPY5hWR4wI1zp8NBQKhsRGneInUn/mW9mGB9QNgq1bdflNVjE1ZXAmVZFJmL5j/vjLusDpPizxQ/ST/nBxTgQdCiUYv4HEnOHKggN/THcTgod/t3OQ9PJE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B7BoMFTX; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0E94C4CEF1;
+	Mon, 24 Nov 2025 16:32:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764001945;
+	bh=voDZieryvn9LANZkkANxItsAwggAb8NAOD35MvQ5m54=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=B7BoMFTXCri5txCP5y54mnBNr45Z/MJsIGtyFzcwHotgKIBW7Iturs8MDmGCotYZ3
+	 4PsLW76c7ZL0x+QUtctGjNzZr1Rogcp2TJnd9DzYiIvtw+rMh1072vRz/3uWmM6vbN
+	 Kvq5Zwa9Yt916C4OrwgenUYgrGtxibDpMB0yyNgNiWPji4Jf8Ud5XUN1O4RlIdY6bm
+	 SGPVpIQt4f5q5/P3LFL7yuvMLhDkHC1amVZeX1WlRPiYythlsBFLxmXGrvqovQM6bh
+	 nixFHTrwq4I9sfy90F3NkmyGvf/GYGePdsdWGNELobAnLnDZYu0EU2ekXnvimuEIlk
+	 EENJZI20ayCKg==
+Date: Mon, 24 Nov 2025 17:32:22 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Biju <biju.das.au@gmail.com>
+Cc: Biju Das <biju.das.jz@bp.renesas.com>, linux-pwm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, stable@kernel.org
+Subject: Re: [PATCH v5] pwm: rzg2l-gpt: Reinitialize the cache value in
+ rzg2l_gpt_disable()
+Message-ID: <cl3ggzh4sbounylnasm3hp2l2eusloxbv5uw7wxjwc7u47uobw@n24k6buqchu4>
+References: <20251121133654.364688-1-biju.das.jz@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -105,77 +58,129 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="neqw6trvue47vu5n"
+	protocol="application/pgp-signature"; boundary="5ys5mvvtwga6hrkb"
 Content-Disposition: inline
-In-Reply-To: <20251123092438.182251-7-shankari.ak0208@gmail.com>
+In-Reply-To: <20251121133654.364688-1-biju.das.jz@bp.renesas.com>
 
 
---neqw6trvue47vu5n
+--5ys5mvvtwga6hrkb
 Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 06/10] rust: kernel: Update ARef and AlwaysRefCounted
- imports to use sync::aref
+Subject: Re: [PATCH v5] pwm: rzg2l-gpt: Reinitialize the cache value in
+ rzg2l_gpt_disable()
 MIME-Version: 1.0
 
-Hello,
+Hello Biju,
 
-I suggest $Subject ~=3D s/kernel/pwm/.
-
-On Sun, Nov 23, 2025 at 02:54:34PM +0530, Shankari Anand wrote:
-> Update call sites in `pwm.rs` to import `ARef`
-> and `AlwaysRefCounted` from `sync::aref`
-> instead of `types`.
+On Fri, Nov 21, 2025 at 01:36:51PM +0000, Biju wrote:
+> From: Biju Das <biju.das.jz@bp.renesas.com>
 >=20
-> This aligns with the ongoing effort to move `ARef` and
-> `AlwaysRefCounted` to sync.
+> The rzg2l_gpt_config() test the rzg2l_gpt->period_tick variable. This
+> check is not valid, if enabling of a channel happens after disabling all
+> the channels as it test against the cached value. Therefore, reinitialize
+> the variable rzg2l_gpt->period_tick to 0 in rzg2l_gpt_disable(), when
+> all the logical channels of a hardware channel is disabled, and also don't
+> allow to set the cached value in rzg2l_gpt_config(), if the other channel
+> is not enabled.
 >=20
-> Suggested-by: Benno Lossin <lossin@kernel.org>
-> Link: https://github.com/Rust-for-Linux/linux/issues/1173
-> Signed-off-by: Shankari Anand <shankari.ak0208@gmail.com>
+> Cc: stable@kernel.org
+> Fixes: 061f087f5d0b ("pwm: Add support for RZ/G2L GPT")
+> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
 > ---
->  rust/kernel/pwm.rs | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> v4->v5:
+>  * Updated commit description and code comment to give more details on why
+>    reinitialising the cached value to zero
+>  * Added a check in rzg2l_gpt_config(), to prevent setting the cached val=
+ue, if
+>    the other channel is not enabled.
+> v3->v4:
+>  * Split the patch as separate from [1] for easy merging.
+>  * Updated commit description
+>  * Added comments about the fix in rzg2l_gpt_disable()
+> v3:
+>  * New patch
 >=20
-> diff --git a/rust/kernel/pwm.rs b/rust/kernel/pwm.rs
-> index cb00f8a8765c..1605d13d5d64 100644
-> --- a/rust/kernel/pwm.rs
-> +++ b/rust/kernel/pwm.rs
-> @@ -13,7 +13,8 @@
->      devres,
->      error::{self, to_result},
->      prelude::*,
-> -    types::{ARef, AlwaysRefCounted, Opaque}, //
-> +    sync::aref::{ARef, AlwaysRefCounted},
-> +    types::Opaque, //
->  };
->  use core::{marker::PhantomData, ptr::NonNull};
+> [1] https://lore.kernel.org/all/20250915163637.3572-1-biju.das.jz@bp.rene=
+sas.com/#t
+> ---
+>  drivers/pwm/pwm-rzg2l-gpt.c | 23 ++++++++++++++++++-----
+>  1 file changed, 18 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/pwm/pwm-rzg2l-gpt.c b/drivers/pwm/pwm-rzg2l-gpt.c
+> index 360c8bf3b190..38ad03ded9ce 100644
+> --- a/drivers/pwm/pwm-rzg2l-gpt.c
+> +++ b/drivers/pwm/pwm-rzg2l-gpt.c
+> @@ -190,8 +190,17 @@ static void rzg2l_gpt_disable(struct rzg2l_gpt_chip =
+*rzg2l_gpt,
+>  	/* Stop count, Output low on GTIOCx pin when counting stops */
+>  	rzg2l_gpt->channel_enable_count[ch]--;
+> =20
+> -	if (!rzg2l_gpt->channel_enable_count[ch])
+> +	if (!rzg2l_gpt->channel_enable_count[ch]) {
+>  		rzg2l_gpt_modify(rzg2l_gpt, RZG2L_GTCR(ch), RZG2L_GTCR_CST, 0);
+> +		/*
+> +		 * The rzg2l_gpt_config() test the rzg2l_gpt->period_tick
+> +		 * variable. This check is not valid, if enabling of a channel
+> +		 * happens after disabling all the channels as it test against
+> +		 * the cached value. Therefore, reinitialize the variable
+> +		 * rzg2l_gpt->period_tick to 0.
+> +		 */
+> +		rzg2l_gpt->period_ticks[ch] =3D 0;
+> +	}
+> =20
+>  	/* Disable pin output */
+>  	rzg2l_gpt_modify(rzg2l_gpt, RZG2L_GTIOR(ch), RZG2L_GTIOR_OxE(sub_ch), 0=
+);
+> @@ -271,10 +280,14 @@ static int rzg2l_gpt_config(struct pwm_chip *chip, =
+struct pwm_device *pwm,
+>  	 * in use with different settings.
+>  	 */
+>  	if (rzg2l_gpt->channel_request_count[ch] > 1) {
+> -		if (period_ticks < rzg2l_gpt->period_ticks[ch])
+> -			return -EBUSY;
+> -		else
+> -			period_ticks =3D rzg2l_gpt->period_ticks[ch];
+> +		u8 other_sub_ch =3D sub_ch ? (pwm->hwpwm - 1) : (pwm->hwpwm + 1);
 
-having no clue about Rust:
+I think this is the same as the simpler
 
-Can this patch be applied independent of the others via the pwm tree? If
-I understand correctly it's only patch #10 that depends on the previous
-patches, right?
+	u8 other_sub_ch =3D pwm->hwpwm ^ 1;
 
-Is there already a merge plan for this series?
+which might not be too magic when put in an inline function next to
+rzg2l_gpt_subchannel().
+
+> +		if (rzg2l_gpt_is_ch_enabled(rzg2l_gpt, other_sub_ch)) {
+> +			if (period_ticks < rzg2l_gpt->period_ticks[ch])
+> +				return -EBUSY;
+> +			else
+> +				period_ticks =3D rzg2l_gpt->period_ticks[ch];
+
+Do you need to set rzg2l_gpt->period_ticks[ch] to zero in the disable
+function given that it's only used if the other channel is enabled?
+
+> +		}
+>  	}
+> =20
+>  	prescale =3D rzg2l_gpt_calculate_prescale(rzg2l_gpt, period_ticks);
 
 Best regards
 Uwe
 
---neqw6trvue47vu5n
+--5ys5mvvtwga6hrkb
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmkkg4gACgkQj4D7WH0S
-/k4ZxggAnWhK6xpYiLeXmCfK1Sb7HgBa2AsbKye0MnHsSah6DHwnqx7klhUaZs6e
-21hOZ4ecYKPAdKbbwZUE4xMwMLKlAEMhJbkWsmUow5Q9+c+jvw0hfGAhiscylqP/
-yKADT4IOvjkjPQ0ty4go/b0bd0qvcWDcxJXhvKi5Z+AQokSHyF4QDqRLz3Jq+mE8
-T20JB7XDuIOEG7dN8qebw7XS5c4FCeCpSrCm7jeCHdfPuJj2iXz+L1IOedk3+a32
-6PdlPCZxmch7aH4fUMWHtsO81LM5JVhulRuGu1ItMrklyXvDV18T7HpvvOaWJaQY
-KYI/KdOn48adECwq4ltKA6NkZMhc4Q==
-=9ZGw
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmkkiJQACgkQj4D7WH0S
+/k7eCgf+J+hqUFH015giyfs23TgEBTWyBsXCSqxJppChT6Mpk39BZuLAGhWkd5mN
+O9Zx/Q6S8OThQcJgz5QUjglWpvUigigAKmRIHdUefYTHJZxPsbwTzaSogRXYEPO3
+lCJ0rCtjqlfn/Tgq8Eibu+3tcna1YSA5JguMmFMoSeAydcHRwL5hR446EwpfAreN
+usbmFJ/XJcojJCBRTMYao5j9oP1b4udsXy3y+jQ/lMtrC3SG8hYIizuIQRG6Uj51
+6Mhk/FEMKT0EAdEpbrCWsr6Zm/N3lUnYhMRUJElVj4m4+Xpc+vvsWmQLd6pueE+l
+mIQTK8IPbtK4oSECfiafuySjU+NSzw==
+=amZa
 -----END PGP SIGNATURE-----
 
---neqw6trvue47vu5n--
+--5ys5mvvtwga6hrkb--
 
