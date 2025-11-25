@@ -1,152 +1,174 @@
-Return-Path: <linux-pwm+bounces-7698-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7699-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id F0B63C85026
-	for <lists+linux-pwm@lfdr.de>; Tue, 25 Nov 2025 13:40:13 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id B4163C85074
+	for <lists+linux-pwm@lfdr.de>; Tue, 25 Nov 2025 13:54:48 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id BE1774E87CF
-	for <lists+linux-pwm@lfdr.de>; Tue, 25 Nov 2025 12:39:54 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id 6D03E3B1822
+	for <lists+linux-pwm@lfdr.de>; Tue, 25 Nov 2025 12:54:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E618302777;
-	Tue, 25 Nov 2025 12:39:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FEDE320CA2;
+	Tue, 25 Nov 2025 12:54:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="sbLmKVfF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XUl/X9YL"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 654182D8363
-	for <linux-pwm@vger.kernel.org>; Tue, 25 Nov 2025 12:39:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F78B27467D;
+	Tue, 25 Nov 2025 12:54:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764074392; cv=none; b=Ga8eno9jlNidGz5raSEzL2ebtqciuFnenQwdS956e/qynq6IyBmzyFpgrL1yZcDkqA3fIZohwSD7ZUEBQUJhbsQzCKKqchaidCHcIqo5a5Ro2oahUVqrCeRm2SDBfyqWy+VEvCaJ+7WxETM/fYY3/fxGMGUn83ggX39QFEkSEKc=
+	t=1764075285; cv=none; b=OKSj6/+ZqqQ98+EV/TcXJZuoN1hj0SvikknVtNYPJw9yXUvHxgmzA12vVSB5eGPbuPooVTgX/fCuIAO4nLVJofon6HjW3v4ExQ9cCFPxWzvI4Uw8HKH5bX98r0ZVSOHwQFhlJNDR/qFHmuWvV8lFER1Djxu3QEj96cpTw7t8EDw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764074392; c=relaxed/simple;
-	bh=G10RNBV+jYHZ+2n7e6/S3MjEijJxngQtVmbZp8vJqdg=;
-	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=sVjc6uCgkLal2rvQtUc7DZC//YMaOBsX6FK34hMzxR12olLnzQxGbPhBP4cfqc65n9Zsg+jJNl53sAVWqggO9o0RPwi+sXFkIpDIK4iFgI9znJ5sbyqOe7I/gQ9aa+Z1GLw+AW6brutSp75hJS7Nw19VwFiuFrJEDznMy/XR5e4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=sbLmKVfF; arc=none smtp.client-ip=209.85.128.74
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
-Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-47777158a85so72151325e9.3
-        for <linux-pwm@vger.kernel.org>; Tue, 25 Nov 2025 04:39:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1764074389; x=1764679189; darn=vger.kernel.org;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=ojWe1b8r/UImKNNJCHWtNLHUmExFFE68AIjW9wlYavw=;
-        b=sbLmKVfFEkm6wFYIwMuiApMg5BMeqilny8I1pnIyDIQpfnD93jaM4DSHR6W7HEJnNK
-         5VAjK6ohkg/LgaF+q0k0989ZhHoeVzg5r1nCDMz8Odj+IaaVxTmk0aLo6prvuAR+L1J6
-         xafUqSGYrili2Tv5acG8EwOKIHTmBpkSIjKwW3qxbtTo6sh0VU1n3cAgLwDT1oJhG2nW
-         B9ghqvcMWQGVcw6TUJ+wjeg8jO8MNtSQr5wJn3owdXpZ+Pg01nNaA2IiczqGUVD6FJid
-         yv+DEr2gqfFsCc+z6aDLCaF+/5lpm1e4WaMPNmyQXFja+YUp4n3EsVrYCtkw4Gl8X3ys
-         8KEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764074389; x=1764679189;
-        h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
-         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=ojWe1b8r/UImKNNJCHWtNLHUmExFFE68AIjW9wlYavw=;
-        b=cAomVDTVONZq5O8Jy2Gc7LInvUghfDSHQbqIlEtNUvtP1ergIDiQvwZxRI4g/gnN32
-         SvoKCGHpvARAfGXORNXWGIk11Au8x4erEB3nDqbPtUJjKMEHPx6whtIGCEaBWKFookIZ
-         LWGUZuRP3sgJO6OaHrgFz2IjeUwFc0y9egu2kboZ8isbxrc1K//7qBJrINLEXWTl/cKR
-         P2j8Vz1xEE3I4F4S78HaNcPle/PYPBZpSCdBdgI9tsKnk0psxQ5I+qWp3lu1zNM/7n5J
-         LBcros2ohpUfT6QQMFceQLJqTyx8Cqb9lcrPHVRWeERiSeGsaFf1aiG9njIF4qzq/or2
-         hsYw==
-X-Forwarded-Encrypted: i=1; AJvYcCWhNQEQ5nr6tSpePck+qmlmjozO1VbCulZjvdHaHDV5j4RC/FCO6R/V+VvoG1qfUB6rkp1QEfIOuRc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzdNJ5sJ/StPfkn7ljUm1fABLhS3VmEZdKXKSZ0du5mOS6KfTrg
-	/71QpKk/MkBfdflYHxi2eVx/ajHcmPq0y9TRz09yzJb0rqJIZOhrgGS9FQfrzwDyxq8v0tKjKF3
-	Bfyfi5vXLqrrlxXxzMg==
-X-Google-Smtp-Source: AGHT+IGGYXbl3NW70HoCq1BUicduv2r9uYzD+uC5Jcg7P8rx3FquzssE0TqvF8nfpxyfE19H4MBFZ8Ly+NNtPC0=
-X-Received: from wmbc14.prod.google.com ([2002:a7b:c00e:0:b0:477:a4d4:607a])
- (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:600c:8b35:b0:475:d8b3:a9d5 with SMTP id 5b1f17b1804b1-477c10d6fdamr159756165e9.10.1764074388898;
- Tue, 25 Nov 2025 04:39:48 -0800 (PST)
-Date: Tue, 25 Nov 2025 12:39:48 +0000
-In-Reply-To: <20251123092438.182251-1-shankari.ak0208@gmail.com>
+	s=arc-20240116; t=1764075285; c=relaxed/simple;
+	bh=+jw/W3j0K2vTtBJik+HnMKvnJjYPhesKjmTKzL4L1Bo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=qrtOUNACnMN8QAjx2SP10k3W8BosFHUMaNbypKxDJmhPXd8Srj3z8DnvGIpj4vEO0gxLqSZ1pOFDlPb8acFBFk2IutI+ZAYN2g4FGfcKQWFPTVLg3Kz5fkY+c5ItaqOfNmYBm6a1tVkcApOSW8uDNbq35IU4d9XE+KLh2W9lw3w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XUl/X9YL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31767C4CEF1;
+	Tue, 25 Nov 2025 12:54:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1764075285;
+	bh=+jw/W3j0K2vTtBJik+HnMKvnJjYPhesKjmTKzL4L1Bo=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=XUl/X9YLWbfmR1Trrn7yx21QAOAU9RUByP3DS+MuZ1JAbs7JGeqVlU9lte8xWL5Ve
+	 v8SHzXmC59Ms2mDueos1npgjuo9c6v673ZUua/0mEsb45w3OtbMur62qudXceNs0Io
+	 YDgbqpeKcml5n5HX8+E/9fEwZfWbrREcGN83Oy5NtpU7qmEbd7ogvdEawOjlEvwUf4
+	 YGg3Fab+UCmC6vVFJr+QBUF5S6XsMhHv7Zy1HkC+i2zHn0iw4/3IObjsaHEsMXIS94
+	 gBnAQsW7MIxb8mnM/dwfTZ8Fegb3t2yJdqO8KnsKN10EZL+9lnzK86ECEz7vXqj3Eb
+	 QmJTuKXzYrUzA==
+Date: Tue, 25 Nov 2025 12:54:39 +0000
+From: Lee Jones <lee@kernel.org>
+To: Daniel Thompson <daniel@riscstar.com>
+Cc: Michael Grzeschik <mgr@pengutronix.de>,
+	Daniel Thompson <danielt@kernel.org>,
+	Mark Brown <broonie@kernel.org>, linux-pwm@vger.kernel.org,
+	linux-fbdev@vger.kernel.org, Jingoo Han <jingoohan1@gmail.com>,
+	Helge Deller <deller@gmx.de>, linux-kernel@vger.kernel.org,
+	dri-devel@lists.freedesktop.org,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Pengutronix <kernel@pengutronix.de>
+Subject: Re: [PATCH] backlight: pwm_bl: apply the initial backlight state
+ with sane defaults
+Message-ID: <20251125125439.GA1127788@google.com>
+References: <20250731-blpwm-v1-1-0171fd31bff9@pengutronix.de>
+ <f492d4d3-751c-40a3-bb93-0e1bb192cde7@sirena.org.uk>
+ <aRxr_sR0ksklFsw-@aspen.lan>
+ <aSVnulk0yfAd4UCx@pengutronix.de>
+ <aSWUOoyusb2BJ6QA@aspen.lan>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-References: <20251123092438.182251-1-shankari.ak0208@gmail.com>
-Message-ID: <aSWjlJFD6SVGXBqE@google.com>
-Subject: Re: [PATCH 00/10] rust: refactor ARef and AlwaysRefCounted imports
-From: Alice Ryhl <aliceryhl@google.com>
-To: Shankari Anand <shankari.ak0208@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Arve =?utf-8?B?SGrDuG5uZXbDpWc=?=" <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
-	Joel Fernandes <joelagnelf@nvidia.com>, Christian Brauner <brauner@kernel.org>, 
-	Carlos Llamas <cmllamas@google.com>, Suren Baghdasaryan <surenb@google.com>, 
-	Danilo Krummrich <dakr@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Alexandre Courbot <acourbot@nvidia.com>, "Rafael J . Wysocki" <rafael@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Igor Korotin <igor.korotin.linux@gmail.com>, 
-	Michal Wilczynski <m.wilczynski@samsung.com>, Boqun Feng <boqun.feng@gmail.com>, 
-	Gary Guo <gary@garyguo.net>, 
-	"=?utf-8?B?QmrDtnJu?= Roy Baron" <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Daniel Almeida <daniel.almeida@collabora.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
-	Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, nouveau@lists.freedesktop.org, 
-	rust-for-linux@vger.kernel.org, linux-pwm@vger.kernel.org
-Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <aSWUOoyusb2BJ6QA@aspen.lan>
 
-On Sun, Nov 23, 2025 at 02:54:28PM +0530, Shankari Anand wrote:
-> This series updates the import sites of `ARef` and
-> `AlwaysRefCounted` in the Rust kernel code to use `sync::aref` instead
-> of the previous `types` module.
-> 
-> The refactor to `sync::aref` from `types::` was introduced in the commit: 
-> commit 07dad44aa9a9 
-> ("rust: kernel: move ARef and AlwaysRefCounted to sync::aref")
-> link [1]
-> 
-> The goal of this series is to complete the migration of these
-> types to `sync`, as discussed with Miguel Ojeda [2].
-> The last commit in this series removes the temporary re-exports
-> from `types.rs` that were originally added to avoid breaking the
-> build during the transition.
-> 
-> [1]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=07dad44aa9a93b16af19e8609a10b241c352b440
-> [2]: https://lore.kernel.org/lkml/CANiq72=hSTpAj7w8bvcwoJkivxD_FPKnx9jD6iNvhsENnnXBzg@mail.gmail.com/
-> 
-> Shankari Anand (10):
->   drivers: android: binder: Update ARef imports from sync::aref
->   drivers: gpu: Update ARef imports from sync::aref
->   rust: device: Update ARef and AlwaysRefCounted imports from sync::aref
->   rust: drm: Update AlwaysRefCounted imports to use sync::aref
->   rust: kernel: Update ARef and AlwaysRefCounted imports to use
->     sync::aref
->   rust: kernel: Update ARef and AlwaysRefCounted imports to use
->     sync::aref
->   rust: kernel: Update ARef imports to use sync::aref
->   rust: kernel: Update AlwaysRefCounted imports to use sync::aref
->   samples: rust: Update ARef imports to use sync::aref
->   rust: kernel: remove temporary re-exports of ARef and AlwaysRefCounted
-> 
->  drivers/android/binder/process.rs      |  2 +-
->  drivers/android/binder/thread.rs       |  3 +--
->  drivers/gpu/drm/tyr/driver.rs          |  2 +-
->  drivers/gpu/nova-core/gsp/sequencer.rs |  2 +-
->  drivers/gpu/nova-core/vbios.rs         |  2 +-
->  rust/kernel/device.rs                  |  4 ++--
->  rust/kernel/device/property.rs         |  5 +++--
->  rust/kernel/drm/gem/mod.rs             |  2 +-
->  rust/kernel/i2c.rs                     | 10 ++++------
->  rust/kernel/pwm.rs                     |  3 ++-
->  rust/kernel/scatterlist.rs             |  3 ++-
->  rust/kernel/types.rs                   |  2 --
->  rust/kernel/usb.rs                     |  3 ++-
->  samples/rust/rust_debugfs.rs           |  2 +-
->  14 files changed, 22 insertions(+), 23 deletions(-)
+On Tue, 25 Nov 2025, Daniel Thompson wrote:
 
-I will pick up the DRM ones (patch 2 & 4) once the branch re-opens on
-Dec 15th.
+> On Tue, Nov 25, 2025 at 09:24:26AM +0100, Michael Grzeschik wrote:
+> > On Tue, Nov 18, 2025 at 12:52:14PM +0000, Daniel Thompson wrote:
+> > > On Fri, Nov 14, 2025 at 02:09:56PM +0000, Mark Brown wrote:
+> > > > On Thu, Jul 31, 2025 at 10:47:18AM +0200, Michael Grzeschik wrote:
+> > > > > Currently when calling pwm_apply_might_sleep in the probe routine
+> > > > > the pwm will be configured with an not fully defined state.
+> > > > >
+> > > > > The duty_cycle is not yet set in that moment. There is a final
+> > > > > backlight_update_status call that will have a properly setup state.
+> > > > > However this change in the backlight can create a short flicker if the
+> > > > > backlight was already preinitialised.
+> > > >
+> > > > I'm seeing the libre.computer Renegade Elite producing warnings during
+> > > > boot in -next which bisect to this patch.  The warnings are:
+> > > >
+> > > > [   24.175095] input: adc-keys as /devices/platform/adc-keys/input/input1
+> > > > [   24.176612] ------------[ cut here ]------------
+> > > > [   24.177048] WARNING: CPU: 0 PID: 0 at kernel/context_tracking.c:127 ct_kernel_exit.constprop.0+0x98/0xa0
+> > > >
+> > > > ...
+> > > >
+> > > > [   24.190106] Call trace:
+> > > > [   24.190325]  ct_kernel_exit.constprop.0+0x98/0xa0 (P)
+> > > > [   24.190775]  ct_idle_enter+0x10/0x20
+> > > > [   24.191096]  cpuidle_enter_state+0x1fc/0x320
+> > > > [   24.191476]  cpuidle_enter+0x38/0x50
+> > > > [   24.191802]  do_idle+0x1e4/0x260
+> > > > [   24.192094]  cpu_startup_entry+0x34/0x3c
+> > > > [   24.192444]  rest_init+0xdc/0xe0
+> > > > [   24.192734]  console_on_rootfs+0x0/0x6c
+> > > > [   24.193082]  __primary_switched+0x88/0x90
+> > > > [   24.193445] ---[ end trace 0000000000000000 ]---
+> > > >
+> > > > which seems a little surprising but there is some console stuff there
+> > > > that looks relevant.
+> > > >
+> > > > Full log:
+> > > >
+> > > >     https://lava.sirena.org.uk/scheduler/job/2086528#L897
+> > >
+> > > Michael, reading these logs it looks to me like the underlying oops
+> > > is this backtrace (which makes a lot more sense given the code you
+> > > altered):
+> > >
+> > > [   24.133631] Call trace:
+> > > [   24.133853]  pwm_backlight_probe+0x830/0x868 [pwm_bl] (P)
+> > > [   24.134341]  platform_probe+0x5c/0xa4
+> > > [   24.134679]  really_probe+0xbc/0x2c0
+> > > [   24.135001]  __driver_probe_device+0x78/0x120
+> > > [   24.135391]  driver_probe_device+0x3c/0x154
+> > > [   24.135765]  __driver_attach+0x90/0x1a0
+> > > [   24.136111]  bus_for_each_dev+0x7c/0xdc
+> > > [   24.136462]  driver_attach+0x24/0x38
+> > > [   24.136785]  bus_add_driver+0xe4/0x208
+> > > [   24.137124]  driver_register+0x68/0x130
+> > > [   24.137468]  __platform_driver_register+0x24/0x30
+> > > [   24.137888]  pwm_backlight_driver_init+0x20/0x1000 [pwm_bl]
+> > > [   24.138389]  do_one_initcall+0x60/0x1d4
+> > > [   24.138735]  do_init_module+0x54/0x23c
+> > > [   24.139073]  load_module+0x1760/0x1cf0
+> > > [   24.139407]  init_module_from_file+0x88/0xcc
+> > > [   24.139787]  __arm64_sys_finit_module+0x1bc/0x338
+> > > [   24.140207]  invoke_syscall+0x48/0x104
+> > > [   24.140549]  el0_svc_common.constprop.0+0x40/0xe0
+> > > [   24.140970]  do_el0_svc+0x1c/0x28
+> > > [   24.141268]  el0_svc+0x34/0xec
+> > > [   24.141548]  el0t_64_sync_handler+0xa0/0xf0
+> > > [   24.141920]  el0t_64_sync+0x198/0x19c
+> > >
+> > > Should we back out the patch for now?
+> >
+> > I would be fine with that. But actually I would like to see the
+> > proof that without the patch, this backtrace will not trigger.
+> > Looking through the codepath, I could not directly find a case
+> > where this should happen.
+> 
+> I took a look at the logs Mark provided and I think the problem
+> is a divide-by-zero caused by calling pwm_backlight_brightness_default()
+> when state.period is zero.
+> 
+> It emerges as a BRK because the compiler recognised there is undefined
+> behaviour. The zero that we divide by comes from a ternary condition in
+> fls(). The compiler recognises one of the conditional code paths will
+> result in undefined behaviour so, it doesn't need to generating code for
+> the bad code path, it just injects a brk instruction.
+> 
+> 
+> > Mark, is there a way to rerun this without my patch?
+> 
+> I have to admit I thought this was why Mark provided a bisect log!
+> 
+> Anyhow, unless someone can refute the analysis above I do think we need
+> to pull the patch.
 
-Alice
+Un-applied now, thanks.
+
+-- 
+Lee Jones [李琼斯]
 
