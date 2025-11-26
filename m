@@ -1,176 +1,138 @@
-Return-Path: <linux-pwm+bounces-7703-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7704-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55028C895B6
-	for <lists+linux-pwm@lfdr.de>; Wed, 26 Nov 2025 11:44:29 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 83F55C898A1
+	for <lists+linux-pwm@lfdr.de>; Wed, 26 Nov 2025 12:34:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 0BFB84EBED5
-	for <lists+linux-pwm@lfdr.de>; Wed, 26 Nov 2025 10:43:55 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 6D47A4E3DEA
+	for <lists+linux-pwm@lfdr.de>; Wed, 26 Nov 2025 11:34:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0684D320A0A;
-	Wed, 26 Nov 2025 10:43:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 60DE2321445;
+	Wed, 26 Nov 2025 11:34:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NZS/8Mve"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tiRnR90C"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f48.google.com (mail-wm1-f48.google.com [209.85.128.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3ED6320A0B
-	for <linux-pwm@vger.kernel.org>; Wed, 26 Nov 2025 10:43:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07875248F7C;
+	Wed, 26 Nov 2025 11:34:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764153797; cv=none; b=L4PETy2w9gYLxRa9PH/S3FZJ4SySukVt9YPgLhsNOp7ko/qT+yoh4BTLIN4bqBMyMlc6N0qpt1dTzajDrm8F9S7hfH9RFzDbQy2PTzAEfLT2LLBVR+oDj8ftvYnp7V0JkWkdn5S85mJb06/3WDIgeS5B6IiEUbBXqlGWNZ1u7Gw=
+	t=1764156870; cv=none; b=DRYLzoZaCd1xgJ4n5G8qI8IG/DvQb7jgRr+KvKKUh1XLL5fVhQ76P4D4NbReFrer5cLfsfiDAfLFd6JvpGbsCa1LVhnWu60Hddt71k31ibzrxcBpxWVEdOGI5M4uL1ptICcy9mAY0X7aPcyQXnayPg5RZ0ZOSI0YnPVCm+tQsks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764153797; c=relaxed/simple;
-	bh=NR1VVRcQZA6ma1hDRE/H83eikDZdbd6qzrIOtMB/wxo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=VgqUZqjv2gJe+GZG6Ja86CH+hPL83w2jpkPFTmA9FyOChNzTuEslUQYCoKgZ/jSidzB3QGdqL/fvGtcu4RBcjdoWeneJnyMQuqo1S+RGxOqHUTvMGknl+jHi0gbi4knhqfdQgfKdrxT0jFa2PBGulvYyg0YUIMrLZnTgOSsp8wE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NZS/8Mve; arc=none smtp.client-ip=209.85.128.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f48.google.com with SMTP id 5b1f17b1804b1-47798ded6fcso38737035e9.1
-        for <linux-pwm@vger.kernel.org>; Wed, 26 Nov 2025 02:43:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764153794; x=1764758594; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=9mq5CbEjd8GhLwp2NrMaZDK+wqJGPSJKuaRnVHfJbPQ=;
-        b=NZS/8Mve6UfbFNYmswdgd2TR1RYBC+CwG+73zXlwFJd121CViR1lSSW7zAnFyi8661
-         yTZpKzfuGrC+E+o5uYfH+hcPaDjM5csOZP5sSEmsSNTmyFuGdvjJdbSkJdzDtSMHLwdx
-         +9mPiptp8XNUVVQVq58aark8KJpNGfsz+d4q2XxCPutmMflRuitUn8/xSJI8Do+QcO9E
-         aFDM+NlcJ7riWu6AF09rkQB9mLtW1IvGE9L6c4xDbWF4fqAQMXJ0pU0uWxv0J1g+Xy0R
-         iz80lXB4EO7GrO8ehV1hOh43mXD4nO0sO16jaGR+ucmIfi0yz/1HXEmVZFlkc4MkFYfD
-         7UwQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764153794; x=1764758594;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9mq5CbEjd8GhLwp2NrMaZDK+wqJGPSJKuaRnVHfJbPQ=;
-        b=B39Q0Vk0CNNOz3NGbzFGphFEyGvGECFs+xfDkK/qz9NtJLhrQ5uRtTPfreNjalci2a
-         iO5tkSoJ47v64IAxhieRDV9G93cWI3q5zPWgkXRUI+ObvlchYA8MkCm9UV2vc2odHGcN
-         fpjZqsfyV3CcVjqw7Ma8oZUTvTV29fHYCAf4WBxsm8e7e/kumhQn1rf0drvyTlCp7+HW
-         WaVFMDmUxE2HN5vvStzEtgJz0NTFc9iMtSFQ2akKM8sfbXlA3ff/1+TrWoWm+QGdA9PB
-         m/heFbBMbYH3skD+rwBno6CaBrOeOUUXixUugS7eIxxykV23CX1to7s/8ligwqq1oum8
-         kWLg==
-X-Forwarded-Encrypted: i=1; AJvYcCU6BA1ylJ6EgyGkx7qjXUGLoVZkwtV1MahNL7t5Ae0T0psyc+wHR2FJ/hEd17hfCBvf6B8wk+m1wZA=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwLOvnILZQ8giBf8SRsM4tWgmlBYArFgoaB5+uDstz+q+8Uq22T
-	otGNwulfuzqZ2P0/6tZ/WBjjROzv4ErJHewxuHV+Jc73a2IMWoY0+2jdrG1QZg==
-X-Gm-Gg: ASbGncs1xLvNfRYW+uyZ5qTEezjcJy3c80J0xEiaglYszi5YO16q5fHPIz/SHEc8LtZ
-	IWrrUxI7IYVqJqMkGt3+sIL0exHv6GAa/VWBD/G2sZi+trQztXWLWnvs9iVZrQf685BpzBUp33H
-	U9yU+s5jtv0MCHbJxytqsEE082AimGYs3EurpUS0NGyVTTPq5qkSNTi56ah8DgJWn+DX2y+Xc0h
-	U978gB8W6g5KwcwWKiBg/xT6DSb9cr0Vo2U8rUVy44AKjARo4rEGsjGM+HyeP1lJ2myZJ4lvOne
-	RJh0wCEddCMbfXUT76bsmquDSZmPYz+HHYPCLuXrS1yO0MWmPsKq0SdZkEHc81pSOzJAgZEHgsF
-	kfEmD76Q05H5Y1klC1FW8AtHOoKJd+/CgU0DullXr+s7Vp2fDnQ4PRJ98g/kHxg7Sbi2EJ99+uf
-	yQqM1lfs2vLZLniqOUBOwxCVSwtam+2G1hYALUBC21RukEhCdZQeQGLQ0231V2OdPOLCnin8iNz
-	AA=
-X-Google-Smtp-Source: AGHT+IGDQCBktlHP7XlaQJx6GpqJtsNTrxHBS+ivjHzh6Kcd83OVbwN6YnaySf7vK/vLpTylz9wT/w==
-X-Received: by 2002:a05:600c:c490:b0:477:b734:8c41 with SMTP id 5b1f17b1804b1-477c10c8596mr182627435e9.1.1764153793699;
-        Wed, 26 Nov 2025 02:43:13 -0800 (PST)
-Received: from biju.lan (host86-162-200-138.range86-162.btcentralplus.com. [86.162.200.138])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4790b0c3a28sm36441245e9.9.2025.11.26.02.43.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 26 Nov 2025 02:43:13 -0800 (PST)
-From: Biju <biju.das.au@gmail.com>
-X-Google-Original-From: Biju <biju.das.jz@bp.renesas.com>
-To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>,
-	linux-pwm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Biju Das <biju.das.au@gmail.com>,
-	linux-renesas-soc@vger.kernel.org,
-	stable@kernel.org
-Subject: [PATCH v6] pwm: rzg2l-gpt: Allow checking period_tick cache value only if sibling channel is enabled
-Date: Wed, 26 Nov 2025 10:42:48 +0000
-Message-ID: <20251126104308.142302-1-biju.das.jz@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
+	s=arc-20240116; t=1764156870; c=relaxed/simple;
+	bh=QWOeG+hAnYZqWr5qwOOpn60eMY9exWyqB4FUqstj6Ec=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
+	 Content-Type:References; b=bqT1+EK30q+8bw/akbnia2SFJFFJ6aGKLhaXrbwbivEEGppnbTol45D6gXgNKSHGR2lsYVie5HcL9xQ8WVy6sKU3d7gU40qVAV00k7p/hQDUB9zTZkGfEW9ecrSQLWguxi9ZS0e6WkYbwIF0LKMAhXnJa60xWFRpjwbjbqIRDD0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=tiRnR90C; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20251126113425euoutp0207410ed3fde7d7fb681922cd80c86f37~7i1KQG6Df3162131621euoutp02_;
+	Wed, 26 Nov 2025 11:34:25 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20251126113425euoutp0207410ed3fde7d7fb681922cd80c86f37~7i1KQG6Df3162131621euoutp02_
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1764156865;
+	bh=Mlk/8cVuM1r8cgr34kGmewo0VCLvDAclx64Kzq7IU10=;
+	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
+	b=tiRnR90C/z2zgZPKygxThBoTiu4KqlPU0OaQwH6dp6i76ubEfSiAM9znavX/GF7Rb
+	 RAFCNSTuOurGjRXsJvkb8/G0My+M92lJmm6hMlawYDQO2TxN8UKncGYm6UuLhBWRpA
+	 P0cee2QTEJo4ppVsAjcc2gTALBB+yYyV4JExx53Y=
+Received: from eusmtip1.samsung.com (unknown [203.254.199.221]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20251126113425eucas1p20472c28098c08344e4348a1ee22407ae~7i1J8Jf2K2271922719eucas1p2R;
+	Wed, 26 Nov 2025 11:34:25 +0000 (GMT)
+Received: from [192.168.1.44] (unknown [106.210.136.40]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20251126113423eusmtip1f3fa48d667a8b110b0790a7b70bca88e~7i1Ij3pon2329423294eusmtip1h;
+	Wed, 26 Nov 2025 11:34:23 +0000 (GMT)
+Message-ID: <cca5c7e8-d9c4-4e28-8da2-62dd521ceea3@samsung.com>
+Date: Wed, 26 Nov 2025 12:34:23 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 06/10] rust: kernel: Update ARef and AlwaysRefCounted
+ imports to use sync::aref
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+	=?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Shankari Anand <shankari.ak0208@gmail.com>, Greg Kroah-Hartman
+	<gregkh@linuxfoundation.org>, =?UTF-8?Q?Arve_Hj=C3=B8nnev=C3=A5g?=
+	<arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen
+	<maco@android.com>, Joel Fernandes <joelagnelf@nvidia.com>, Christian
+	Brauner <brauner@kernel.org>, Carlos Llamas <cmllamas@google.com>, Suren
+	Baghdasaryan <surenb@google.com>, Danilo Krummrich <dakr@kernel.org>, Alice
+	Ryhl <aliceryhl@google.com>, Maarten Lankhorst
+	<maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>, Alexandre Courbot <acourbot@nvidia.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>, Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>, Igor Korotin
+	<igor.korotin.linux@gmail.com>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo
+	<gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
+	<bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, Andreas
+	Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, Daniel
+	Almeida <daniel.almeida@collabora.com>, Abdiel Janulgue
+	<abdiel.janulgue@gmail.com>, Robin Murphy <robin.murphy@arm.com>,
+	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+	nouveau@lists.freedesktop.org, rust-for-linux@vger.kernel.org,
+	linux-pwm@vger.kernel.org
+Content-Language: en-US
+From: Michal Wilczynski <m.wilczynski@samsung.com>
+In-Reply-To: <CANiq72mQ4cu9wehGKxS92EK2H3kcX8XPpRmv2DdYmn6Ve9iDAw@mail.gmail.com>
 Content-Transfer-Encoding: 8bit
+X-CMS-MailID: 20251126113425eucas1p20472c28098c08344e4348a1ee22407ae
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20251125123134eucas1p230415281df788e787f4b71e4d7b3ac3f
+X-EPHeader: CA
+X-CMS-RootMailID: 20251125123134eucas1p230415281df788e787f4b71e4d7b3ac3f
+References: <20251123092438.182251-1-shankari.ak0208@gmail.com>
+	<20251123092438.182251-7-shankari.ak0208@gmail.com>
+	<44gv3fhqppn4fyg5fnxkhhanlbbxr2slqq7k3kr3owx7frpnxw@idgwxlcv4otn>
+	<CGME20251125123134eucas1p230415281df788e787f4b71e4d7b3ac3f@eucas1p2.samsung.com>
+	<CANiq72mQ4cu9wehGKxS92EK2H3kcX8XPpRmv2DdYmn6Ve9iDAw@mail.gmail.com>
 
-From: Biju Das <biju.das.jz@bp.renesas.com>
 
-The rzg2l_gpt_config() tests the rzg2l_gpt->period_tick variable when
-both channels of a hardware channel are in use. This check is not valid
-if rzg2l_gpt_config() is called after disabling all the channels, as it
-tests against the cached value. Hence, allow checking and setting the
-cached value only if the sibling channel is enabled.
 
-While at it, drop else after return statement to fix the check patch
-warning.
+On 11/25/25 13:31, Miguel Ojeda wrote:
+> On Mon, Nov 24, 2025 at 5:10 PM Uwe Kleine-König
+> <u.kleine-koenig@baylibre.com> wrote:
+>>
+>> having no clue about Rust:
+>>
+>> Can this patch be applied independent of the others via the pwm tree? If
+>> I understand correctly it's only patch #10 that depends on the previous
+>> patches, right?
+>>
+>> Is there already a merge plan for this series?
+> 
+> Yeah, if subsystems pick the independent patches at their own pace,
+> then that is great, so please do!
+> 
+> Then, after 1 or 2 cycles, we can do the flag day change on the Rust
+> tree (with any last changes needed Ack'd, but ideally there will be
+> none remaining).
+> 
+> It is what did in similar cases for renaming (or moving across the
+> path hierarchy) things in Rust. For simple things that get Ack'd quick
+> enough by everyone, sometimes we may be able to take everything in the
+> Rust tree.
+> 
+> Thanks!
+> 
+> Cheers,
+> Miguel
+> 
 
-Cc: stable@kernel.org
-Fixes: 061f087f5d0b ("pwm: Add support for RZ/G2L GPT")
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
----
-v5->v6:
- * Updated commit header and description.
- * Added rzg2l_gpt_sibling() for finding sibling channel.
- * Replaced local variable other_sub_ch->sibling_ch.
- * Dropped setting rzg2l_gpt->period_ticks[ch] in rzg2l_gpt_disable() as
-   it is not needed.
- * Dropped else after return statement to fix the check patch
-   warning.
-v4->v5:
- * Updated commit description and code comment to give more details on why
-   reinitialising the cached value to zero
- * Added a check in rzg2l_gpt_config(), to prevent setting the cached value, if
-   the other channel is not enabled.
-v3->v4:
- * Split the patch as separate from [1] for easy merging.
- * Updated commit description
- * Added comments about the fix in rzg2l_gpt_disable()
-v3:
- * New patch
+I think code wise it's fine, provided the subject is fixed like Uwe suggested.
 
-[1] https://lore.kernel.org/all/20250915163637.3572-1-biju.das.jz@bp.renesas.com/#t
----
- drivers/pwm/pwm-rzg2l-gpt.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/pwm/pwm-rzg2l-gpt.c b/drivers/pwm/pwm-rzg2l-gpt.c
-index 360c8bf3b190..4856af080e8e 100644
---- a/drivers/pwm/pwm-rzg2l-gpt.c
-+++ b/drivers/pwm/pwm-rzg2l-gpt.c
-@@ -96,6 +96,11 @@ static inline unsigned int rzg2l_gpt_subchannel(unsigned int hwpwm)
- 	return hwpwm & 0x1;
- }
- 
-+static inline unsigned int rzg2l_gpt_sibling(unsigned int hwpwm)
-+{
-+	return hwpwm ^ 0x1;
-+}
-+
- static void rzg2l_gpt_write(struct rzg2l_gpt_chip *rzg2l_gpt, u32 reg, u32 data)
- {
- 	writel(data, rzg2l_gpt->mmio + reg);
-@@ -271,10 +276,14 @@ static int rzg2l_gpt_config(struct pwm_chip *chip, struct pwm_device *pwm,
- 	 * in use with different settings.
- 	 */
- 	if (rzg2l_gpt->channel_request_count[ch] > 1) {
--		if (period_ticks < rzg2l_gpt->period_ticks[ch])
--			return -EBUSY;
--		else
-+		u8 sibling_ch = rzg2l_gpt_sibling(pwm->hwpwm);
-+
-+		if (rzg2l_gpt_is_ch_enabled(rzg2l_gpt, sibling_ch)) {
-+			if (period_ticks < rzg2l_gpt->period_ticks[ch])
-+				return -EBUSY;
-+
- 			period_ticks = rzg2l_gpt->period_ticks[ch];
-+		}
- 	}
- 
- 	prescale = rzg2l_gpt_calculate_prescale(rzg2l_gpt, period_ticks);
--- 
-2.43.0
-
+Acked-by: Michal Wilczynski <m.wilczynski@samsung.com>
 
