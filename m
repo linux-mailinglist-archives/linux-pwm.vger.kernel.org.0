@@ -1,75 +1,56 @@
-Return-Path: <linux-pwm+bounces-7705-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7706-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id EEA93C8CE97
-	for <lists+linux-pwm@lfdr.de>; Thu, 27 Nov 2025 07:25:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 17868C8D705
+	for <lists+linux-pwm@lfdr.de>; Thu, 27 Nov 2025 10:06:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 92A3E34DC28
-	for <lists+linux-pwm@lfdr.de>; Thu, 27 Nov 2025 06:25:09 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 9754E34F312
+	for <lists+linux-pwm@lfdr.de>; Thu, 27 Nov 2025 09:06:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79CC430F54D;
-	Thu, 27 Nov 2025 06:25:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6F0B320CAA;
+	Thu, 27 Nov 2025 09:06:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dVjoN0WF"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XiCia616"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF694A0C;
-	Thu, 27 Nov 2025 06:25:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B94791F7586;
+	Thu, 27 Nov 2025 09:06:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764224705; cv=none; b=SQJlz4JHaCKHjRksXG50Xe+gaDR6NZ2+kTTtzxu3lGbqvLZkEkEi/SO3MxlFCSG0UoSXhyk5BBfyy+Ww0FgD9OyYR2aaGvo3EyOdUVFf9aUQ1YYvRCRoLndnCYpKbU0dPJf5nDwnvuEpcNACkoJ6hCJ72jCKmvGY4Fs0MDspqyI=
+	t=1764234380; cv=none; b=i2VKu8wwPLHXbrKl/ywdX0OnAJXMqPtFi5VN8rXvBle7bHHSMQgV73yu/zwYrfHttSWobRGarwqCKExYxCrPQwCAqtx84JZG9algpHBZK5KeF9WR1kwXnmGv6aacRIup5YBo/Pn4fMTYRQUtHeswo3fguqeIVL1V/zcZAArBmII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764224705; c=relaxed/simple;
-	bh=R4j/+SfWFPfTOjJJhvG8UmzZTElqDhpfnL+sCjoX5ro=;
+	s=arc-20240116; t=1764234380; c=relaxed/simple;
+	bh=ge3py+4MCp7Mg423L5dT8NctDgCuRZqI/wnwaIpcKTU=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HLkbDWt7sM8HLBrKcWzn7920f5MpyJ0pm7Emz4GUhIbun/J+Go0SOqdGXq+LJsisT9WGojq3C/7FVo+laozX3MwQ8cTpgJjaqVluuA0IAQNtWr5wLvDxI43qyqN7Y59pjhnEWwPlXcH3D2qMYNqwyeztdRd8z/OgVwYZGUkJ6Ho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dVjoN0WF; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F896C4CEF8;
-	Thu, 27 Nov 2025 06:25:04 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=em0xyM8JDmxeTr2CRKt849LtA6uR2D/KmFG7di3/VM7/3qIwXNxKtomCINTzVStnD21zQlEfEgouRcTLLZ3+eFQVbhNXPBlA/bCn7FwV38IN7Ie7BgGKF6Ge9+uA81nOWNzvxYotksqvFAuA3k5pFGoR4xWWf8L9/m5TVJVPV3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XiCia616; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DC8BC4CEF8;
+	Thu, 27 Nov 2025 09:06:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764224704;
-	bh=R4j/+SfWFPfTOjJJhvG8UmzZTElqDhpfnL+sCjoX5ro=;
+	s=k20201202; t=1764234380;
+	bh=ge3py+4MCp7Mg423L5dT8NctDgCuRZqI/wnwaIpcKTU=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dVjoN0WFXDayuYp5cxV3lmaSDCsS8/DR5DXmZxjr9SYfUo89CcCyb9A2VkkqU19Ix
-	 1Vo+7H73aAIS4dtrRkZXC+Mk1Hp5Kc4We+YumTsTsmsLoJEDy6g5zkpHsUmNrGfh9V
-	 YCEH90Z8IupSR1i57GG1/6cs/aNl3egSRW/hmZJJjNN7mjwD8c84+PULfyEOwCZZci
-	 XExXDRNf4g/P9T2Z2OLviian/+3PnoJVBmeNY+2XZz4rN5BkN0lXCJBwSFGHCPdhjv
-	 Z/GCJFQsCylPBvzz0QV/WQPqFSuEQS9Fju60FfTIxkw4ouRgZHQqOh3NNLKCAGyY50
-	 v+ubILpjzZjLQ==
-Date: Thu, 27 Nov 2025 07:25:01 +0100
+	b=XiCia616ot9C7pnVRCnBhPQ/3ZaY3Q1KvKbfPDd5YM8mzvwPMip/Xmi6YmY58FtA2
+	 3IalgqKpyMj93vKUbNpSe8UcDAG0iAbVMycjmPduI6vi47C9KqQzyAsc3q7YT8NffQ
+	 Hx6PleJIAB7Z6hclg/AwQj2UCQuicITcNApW/qHjoYuryBJYW01snEVmLurGjYTlQA
+	 GUQ9fhlMr4u4Evlqv9N+s6MygiUWuxjJbC4WRVN3ahS+LyI3GPfrzclc15SS0A4CNo
+	 lgj2CRGkSkZNeXYW2bXmH74QbCcxUL30ThrkjTdOUeiyBt3rsbkR1VRHq4bswGanCf
+	 hk7NbIKHNOZVA==
+Date: Thu, 27 Nov 2025 10:06:17 +0100
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Michal Wilczynski <m.wilczynski@samsung.com>
-Cc: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, 
-	Shankari Anand <shankari.ak0208@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	Arve =?utf-8?B?SGrDuG5uZXbDpWc=?= <arve@android.com>, Todd Kjos <tkjos@android.com>, Martijn Coenen <maco@android.com>, 
-	Joel Fernandes <joelagnelf@nvidia.com>, Christian Brauner <brauner@kernel.org>, 
-	Carlos Llamas <cmllamas@google.com>, Suren Baghdasaryan <surenb@google.com>, 
-	Danilo Krummrich <dakr@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Alexandre Courbot <acourbot@nvidia.com>, 
-	"Rafael J . Wysocki" <rafael@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Alex Gaynor <alex.gaynor@gmail.com>, Igor Korotin <igor.korotin.linux@gmail.com>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
-	Daniel Almeida <daniel.almeida@collabora.com>, Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
-	Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	nouveau@lists.freedesktop.org, rust-for-linux@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 06/10] rust: kernel: Update ARef and AlwaysRefCounted
- imports to use sync::aref
-Message-ID: <5p3nstyadh6txzo22eoerryjhegzuoeods7mscr663ipo4bi5u@ixpxt25lv5qc>
-References: <20251123092438.182251-1-shankari.ak0208@gmail.com>
- <20251123092438.182251-7-shankari.ak0208@gmail.com>
- <44gv3fhqppn4fyg5fnxkhhanlbbxr2slqq7k3kr3owx7frpnxw@idgwxlcv4otn>
- <CGME20251125123134eucas1p230415281df788e787f4b71e4d7b3ac3f@eucas1p2.samsung.com>
- <CANiq72mQ4cu9wehGKxS92EK2H3kcX8XPpRmv2DdYmn6Ve9iDAw@mail.gmail.com>
- <cca5c7e8-d9c4-4e28-8da2-62dd521ceea3@samsung.com>
+To: Biju <biju.das.au@gmail.com>
+Cc: Biju Das <biju.das.jz@bp.renesas.com>, linux-pwm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, stable@kernel.org
+Subject: Re: [PATCH v6] pwm: rzg2l-gpt: Allow checking period_tick cache
+ value only if sibling channel is enabled
+Message-ID: <wmc5r5j7ldnv4roac32tavejwj5twrjhy77iws5pqkh3zbfanu@psdcy543bjsf>
+References: <20251126104308.142302-1-biju.das.jz@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -77,83 +58,61 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="vfuv755wwcx3lvvj"
+	protocol="application/pgp-signature"; boundary="77zltqbkgywj6a2d"
 Content-Disposition: inline
-In-Reply-To: <cca5c7e8-d9c4-4e28-8da2-62dd521ceea3@samsung.com>
+In-Reply-To: <20251126104308.142302-1-biju.das.jz@bp.renesas.com>
 
 
---vfuv755wwcx3lvvj
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
+--77zltqbkgywj6a2d
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 06/10] rust: kernel: Update ARef and AlwaysRefCounted
- imports to use sync::aref
+Subject: Re: [PATCH v6] pwm: rzg2l-gpt: Allow checking period_tick cache
+ value only if sibling channel is enabled
 MIME-Version: 1.0
 
-Hello,
-
-On Wed, Nov 26, 2025 at 12:34:23PM +0100, Michal Wilczynski wrote:
-> On 11/25/25 13:31, Miguel Ojeda wrote:
-> > On Mon, Nov 24, 2025 at 5:10=E2=80=AFPM Uwe Kleine-K=C3=B6nig
-> > <u.kleine-koenig@baylibre.com> wrote:
-> >>
-> >> having no clue about Rust:
-> >>
-> >> Can this patch be applied independent of the others via the pwm tree? =
-If
-> >> I understand correctly it's only patch #10 that depends on the previous
-> >> patches, right?
-> >>
-> >> Is there already a merge plan for this series?
-> >=20
-> > Yeah, if subsystems pick the independent patches at their own pace,
-> > then that is great, so please do!
-> >=20
-> > Then, after 1 or 2 cycles, we can do the flag day change on the Rust
-> > tree (with any last changes needed Ack'd, but ideally there will be
-> > none remaining).
-> >=20
-> > It is what did in similar cases for renaming (or moving across the
-> > path hierarchy) things in Rust. For simple things that get Ack'd quick
-> > enough by everyone, sometimes we may be able to take everything in the
-> > Rust tree.
+Hello
+On Wed, Nov 26, 2025 at 10:42:48AM +0000, Biju wrote:
+> From: Biju Das <biju.das.jz@bp.renesas.com>
 >=20
-> I think code wise it's fine, provided the subject is fixed like Uwe sugge=
-sted.
+> The rzg2l_gpt_config() tests the rzg2l_gpt->period_tick variable when
+> both channels of a hardware channel are in use. This check is not valid
+> if rzg2l_gpt_config() is called after disabling all the channels, as it
+> tests against the cached value. Hence, allow checking and setting the
+> cached value only if the sibling channel is enabled.
 >=20
-> Acked-by: Michal Wilczynski <m.wilczynski@samsung.com>
+> While at it, drop else after return statement to fix the check patch
+> warning.
+>=20
+> Cc: stable@kernel.org
+> Fixes: 061f087f5d0b ("pwm: Add support for RZ/G2L GPT")
+> Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
 
-OK, I applied it to
+I'm happy with the patch now and applied it to
 
 	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for=
--nexxt
+-next
 
-=2E I will rebase this branch to v6.19-rc1 once that's released and then
-send it to Linus for v6.20-rc1 (assuming he has so many fingers and toes
-to not switch to 7.0 before :-).
+=2E I won't send it to Linus before 6.18, but it will be part of the PR
+for 6.19-rc1.
 
-If it turns out to go in via the rust tree, tell me, then I'll drop it.
-In that case take my
-
-Acked-by: Uwe Kleine-K=C3=B6nig <ukleinek@kernel.org>
-
-Best regards and thanks for the patch and the reviews,
+Thanks
 Uwe
 
---vfuv755wwcx3lvvj
+--77zltqbkgywj6a2d
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmkn7roACgkQj4D7WH0S
-/k6ZHwf+Noz5chJYLoR5w2W8NQkWrDZTPRSGfLRgyvS2Ips8wejkfM7vURYuz3d4
-uxK4jTwvI8zJhG3Y6yDSgjZqAjPq1wX5xOy1AGKOJvBUNn+T6P4vgxkhbNOG8o1R
-NU5jowT5s1Kg15tbR7yBxCkHUiJlBSgMHHYiRNZyl/i/RtjgUzDKELZq7bF2WyF0
-LTdzLQrDUm1MwnMAEjJLOsavVruTRiSuPhx/DeknD56cASrCzieJENj0nrFlYQac
-whEs9Yey9+fXN1xV/LJFqQnWKnzBERchqxNNjSA7NuV1eQcNpBO8Oiobtm5nCmR0
-G3b2Qc7jMdTphZ2eYtG/GoiFK1RPMA==
-=OFiN
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmkoFIcACgkQj4D7WH0S
+/k7K3gf8CkdPqX3ARHTincS6SUPKHrT7TCCg/gyj6pUc0FrC1rGlBprS7oUwO7Qv
+nWRkLoZM6Hh2RCOEQk8ae+bTZyOiohVBYQtP725NE8L862zMaqRwnyghm4ZDlxKk
+IoDp8rwTIaVjl1k+/9Q3oiwTHYCdR65TGTTR4XXIgsklUN6uQ4lefeNiPuMfTixn
+bZGdlk9tjV/Sm8cKDSv1rEno6ZKBRpYUykMtcRqkJq3k6f+354X50YQBHDf+9MqM
+nWS91P8Vb5MyxDv+fB+NazY65AVKC4qGUs/W6SUOmM6jwjyiFf9Ldxaz1rBe7ZzJ
+x4ChbD6H/MOGC2yqhdxEtGkZqdduzA==
+=Kmfh
 -----END PGP SIGNATURE-----
 
---vfuv755wwcx3lvvj--
+--77zltqbkgywj6a2d--
 
