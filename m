@@ -1,87 +1,87 @@
-Return-Path: <linux-pwm+bounces-7713-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7714-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id 88675C90714
-	for <lists+linux-pwm@lfdr.de>; Fri, 28 Nov 2025 01:39:28 +0100 (CET)
+Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
+	by mail.lfdr.de (Postfix) with ESMTPS id A73DDC9072C
+	for <lists+linux-pwm@lfdr.de>; Fri, 28 Nov 2025 01:40:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 9431134DC96
-	for <lists+linux-pwm@lfdr.de>; Fri, 28 Nov 2025 00:39:23 +0000 (UTC)
+	by sv.mirrors.kernel.org (Postfix) with ESMTPS id D6B5C3ABD5D
+	for <lists+linux-pwm@lfdr.de>; Fri, 28 Nov 2025 00:39:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2104B22B8B6;
-	Fri, 28 Nov 2025 00:39:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C648C23C513;
+	Fri, 28 Nov 2025 00:39:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dU2TJw3s"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="L8UvmslD"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
+Received: from mail-dl1-f44.google.com (mail-dl1-f44.google.com [74.125.82.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B79521D011
-	for <linux-pwm@vger.kernel.org>; Fri, 28 Nov 2025 00:39:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2585423817E
+	for <linux-pwm@vger.kernel.org>; Fri, 28 Nov 2025 00:39:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764290344; cv=none; b=kA0c1eEX++mQWcl7RnBrlzw6MnQg4khycDZ6zsaPbWSE07arAy/2t9PqjF2/ERoEGoRyy07GseG9JMbxOsY78hbEDjA+Q9DTWRX4DC2l3spevAd51qT9imV49cwUEi5DrGEhunZ7T7U2Lr2fl24QyeIBiec1nCADucM3Yn38Knk=
+	t=1764290347; cv=none; b=RYGvarqD/OBYDxWae9/NVpRn57BHfN7QYOGMq3UHlq3QxYv+GsCgATN+rCek9KEfmgMhK/XHeeAoM0LhMGDkPu/sZMFc+XEFH5ERg9AXxyFx/g8hRipVAN+JSTuFXgNlbGmCXNi4RFMUj4V4x7KnOd1GjEtxf7m5M4f0hzfJiac=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764290344; c=relaxed/simple;
-	bh=XcYxuRkbMSMmuYTP8YMtFe+YyYOjM9ZCAbhwFZWTHDQ=;
+	s=arc-20240116; t=1764290347; c=relaxed/simple;
+	bh=OSim1mj9HkSTe46cFg4rOkLc0yUfhq8IhSvph0dkAAM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=K9+WSPyabm6AOgt2Hah2Ae7HA8vdAcvxw6OXFQsBUbOxVVXZUenZ/dxntTbZ9L4TSWltmfdZ4uJ3Or8KbeMsP1W89DJLeEWuYF1zVtbLITdLXJABfiC5Yon+5ggz3VXTcQKKAu9LpdIPyXZt46dlmN0ewqeqbuquVqyubJ6oJEg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dU2TJw3s; arc=none smtp.client-ip=209.85.210.175
+	 MIME-Version; b=B5mEwVkYpUEBS9qdMl+Vw8Q7w+75hbR7SfzIzKDc2NLgxPeXODeA69C01lS2ih3CxakfK+1xuhCcWEACegjNwu3/y8x418qvvT1lMSgkyqnL8jHUuyo5L3MMePjvJgUhEYyNd9YuSz+icd04D2FTYfyUG2bhwmKzxzpL53DlBQ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=L8UvmslD; arc=none smtp.client-ip=74.125.82.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7b9a98b751eso1014173b3a.1
-        for <linux-pwm@vger.kernel.org>; Thu, 27 Nov 2025 16:39:01 -0800 (PST)
+Received: by mail-dl1-f44.google.com with SMTP id a92af1059eb24-11b6bc976d6so2809282c88.0
+        for <linux-pwm@vger.kernel.org>; Thu, 27 Nov 2025 16:39:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764290341; x=1764895141; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1764290344; x=1764895144; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=3m55KX3612XXkHw/M8fDHwtC9cUcyqT3pIXf0q1wbKI=;
-        b=dU2TJw3srcBY4QTSMsy4bOUbZU3UjzqtrGa1RJFlCUPXJMNbKtCiGnYFq5H22spjG5
-         2wX6McH/wPxDDbQzmTaZFs+a169vTpFJ85w1xQ03a3i3QMs/WHFjVhb4+zbUo5CeJcQE
-         VygnLbOKVXSszTkPUCQw0kSY8p9j31R9cpRzOGQVxzIS6c1fwQTG2UXixIe7XSy2fQaQ
-         xWmV6QnXu+zcTKU80HN3s3hhUnYgLhuM3b78+YzUWoCquY0RkJwTktc+zX1ZjLzVIxq0
-         l1RgZO4weFM14+bf+kKSfNJHHM4/ohTSrck22LMz6Pw5Nfu1KF/N6NbRYfU4TWwI9dHj
-         ozRA==
+        bh=afOk1ITr+hgg7p4RIrqg51cCVfFBtTkqq0M/4LUt7uo=;
+        b=L8UvmslD3fd3bSbhWrunjz3CO1hEf4yuyNX1j+NssbDyWmUoyIPrPANbHjVtMf5slS
+         LsOZsww5Sd3yhB4q/Tp2zP7BAh3HpsEanpTfJmwuxPEDjEV8XJ3UeQ9+8YRQB+4ytI/S
+         tOgP6BPA9vJMrhJSe6tHr7vDkqkSosm/VvNIjWFixJMDulpD0pA0JOpVGxlU+i5dh+EM
+         3Rd+xSUviS8w3BzQDTOBum8oXP+5as3MyLNMmxTqQ/t7SMGoLMFWSPMHvswIAjwYF6Hx
+         mGAjsZR9BDg6cIvNNq4x7Cjitwl39cwZq5BUwhToEQZWlr6LA36pEZayzi+sROLDcCBn
+         fBpA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764290341; x=1764895141;
+        d=1e100.net; s=20230601; t=1764290344; x=1764895144;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=3m55KX3612XXkHw/M8fDHwtC9cUcyqT3pIXf0q1wbKI=;
-        b=M2DSP+3wEJegYBDGzjLA3bfr5s8TwCRf9fmz+3kKaNZWDV0V/0XmRARIl9yXnpixEM
-         OfGDp5tNDy5Shi0YGFVmki6/3aLvpczzEg4Qk0kEtSzj2cxe2zgNd59CiMZgBIqsgLlC
-         wgUEc4IOYp6K2zIaTLQdKpQ0ORz67IfslxrkSzoW+bNHdbWUQFy29MsBkCD0FheXF3HO
-         Lifc5OLbS+tgJhUFbQ3Th4VAyvWyFbqoAsAhcgYcHU9P3xwmsUYAFQmi/Aw0BXi/ZTHt
-         QZHyGpZN8336PDMFCO4Qbz/XCKrtyGDydTbxwFwCDcPQX7lNMMJSYeTeh4apx6F8GT8w
-         P6CA==
-X-Forwarded-Encrypted: i=1; AJvYcCVi7r0N7OFvHVSjbsMcRJOcR4MFMKItuzL7yQ40JNYV/zDcst0RpV3x0BRo0vnrNIbhopOd8PWPN7I=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxgTNQVSFvkbhYAc7ZPbDWC9cki96HAjQI6BhSC4jkEigRL11qQ
-	TQwlIQqeHp0elVncHSPyBb0RwA17UM7vhZaMt2wiuGIwFj4kNB/LefPw
-X-Gm-Gg: ASbGncshypiy2N/kNnmhMwsRHAQA76i8tu1CX7XZGSIu+kaEK5fSV1oVIdug7Fo210E
-	c7YmSEdy5q/5WJtTRZ5rbOpY/Dl7znOezYFQtQ7iLanFYiYtfGJ7nZ1YiONOiSramMzhF47mouG
-	gKuBznE07/Re4K6E2DNisweay0yb64TiePol+KCizVFzlzTBR3Dqdt0QI6kuIPnMD/6dnrENawz
-	T4cJA0DmHv/rn8kN7p1hJAEyjyNkVkuHyMsTHhKQvIm7Hp98pKgHO37e5Cq9a/1BEloU2NHcn1i
-	HyC6B5G0zWnYmpK5lAJ/umsvFd14rU/P/6/raRjH6Dzb/+MQTWN+PyZUVyoNXLiC9ebT92oPqBK
-	oxpsTd7eJVck2vUHnwjm4nOi5tbXO6bWfM+dt89hBzPvBzBvyiYug02NvUFc3tWlDI9suOxEcB7
-	E4QA0LmYSEgNmYLN4awJGbMnFSO8Eva9rKRf9eXm9tlc4=
-X-Google-Smtp-Source: AGHT+IGC4C2OgJTsiIUdA0q3wwE6Lz47PE6qPSYvxBvdGl77cHEpD66qLHgLZop5EYDl/xrIDZ2zcQ==
-X-Received: by 2002:a05:7022:e803:b0:11b:8b4b:bff7 with SMTP id a92af1059eb24-11cbba71950mr9482927c88.39.1764290340780;
-        Thu, 27 Nov 2025 16:39:00 -0800 (PST)
+        bh=afOk1ITr+hgg7p4RIrqg51cCVfFBtTkqq0M/4LUt7uo=;
+        b=N42FZC4d7BZHX4KLQK0YPkf497rCDU1KF3a89NjKWe5iFBaCWGl/0Mcg8W3Mlf7nUn
+         A5WrcPr1BjQBLdFM2i/C1O0DEnU3fkXvVaAwRmTSzcgAmo2zDqQJhDXH9P9fFsyuHK20
+         Z711rXBRfISDpoOY4Sw+gDLmgg2F6vAwRuWey6I4ieRDhZeIzcXVEJtDDBKMHHad6ufR
+         KBNas666mOIzl4N3gnodBf2z+Iy9RN+tlE9B5aAcuBkttldmbDw+dMRzzUoktfFFrLg5
+         yJX0l1foe6CcwXQuNB6KN//Naxe2wA4mOqXmehsiPGdAMlOA6/d1rcFdnodc66XvBOiG
+         wkNA==
+X-Forwarded-Encrypted: i=1; AJvYcCXwd/Tkm3/eQbFSpK+0djYCJ6UdHlBHN8X4sXmmRpDf3i7JWdPfrcfdK31X8bIVowYGneQkdvHCozs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy49zpVlagXA78K1M4LpBaiwfAVmRHmmiPb5QcNPylAK0AQGtzF
+	0BPoLn2WTYJyXgWdTf9Yg/sNSlurViDGcIdzChBg6rnjCUt7rhg2dbLHx1YK3Q==
+X-Gm-Gg: ASbGncujj/mHBXCd0wq8BLm5F+sJr0RdVyvUv8Abt8RVPLI8cHwOF2+aBacOp+FAAOb
+	Wor3wC1j56vVJSrc2Oy1nRx8GV2qKu/XXfg4kQdO9cqJ0rkzwHPmRxr0+hx4d8M1C4VwSEsZSuE
+	cAkCi9X6ZNtzyw6QRy+XWMmBReggUXZjH56e6P/XTf5HSdluhwUguzKdbNMem+lQapbufSGcqXE
+	cS777/akR4di9ftGB9rF7QyFlNwPSHGN4NXgo52K5NzoR2vp/OjGg51nsPqZ7/iM2jYegltXEMk
+	GpDdwXSIZK09PMXzq2UkSIgtTnCvhPf8KFnNgIRezn3F+t1eG75Xw+uuK6e5+mkEkn2gkfkG9ek
+	MjmkKS13BCW9SjSEikFnBwlJ+xkn9JZZBOOem37WxrgYKmRsU5ce89vhJax7GTapC1IGhf+Qx4P
+	yeACUWmHo67cIllKeFlqPxwageouHgEvZsnkRskHIkq+gZxa6bmzxzuQ==
+X-Google-Smtp-Source: AGHT+IFT8RsjgV6EDZ8DwSkn6xgloOqqY5oHeZflkVbmSve7CDF6qj9GaFa5/HSngXC5dIgtO9Drrg==
+X-Received: by 2002:a05:7022:a93:b0:11b:a738:65b2 with SMTP id a92af1059eb24-11c94aefcabmr20854764c88.5.1764290344092;
+        Thu, 27 Nov 2025 16:39:04 -0800 (PST)
 Received: from ParadiseLost.localdomain (lohr.com.br. [177.69.253.233])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-11dcaee7076sm12404561c88.4.2025.11.27.16.38.58
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-11dcaee7076sm12404561c88.4.2025.11.27.16.39.02
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Nov 2025 16:39:00 -0800 (PST)
+        Thu, 27 Nov 2025 16:39:03 -0800 (PST)
 From: "Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
 To: ukleinek@kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	linux-pwm@vger.kernel.org,
 	rafael.v.volkmer@gmail.com
-Subject: [PATCH v7 4/9] pwm: tiehrpwm: derive PERIOD_MAX from TBPRD field
-Date: Thu, 27 Nov 2025 21:36:29 -0300
-Message-ID: <20251128003634.247529-5-rafael.v.volkmer@gmail.com>
+Subject: [PATCH v7 5/9] pwm: tiehrpwm: use FIELD_PREP() for prescaler fields
+Date: Thu, 27 Nov 2025 21:36:30 -0300
+Message-ID: <20251128003634.247529-6-rafael.v.volkmer@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20251128003634.247529-1-rafael.v.volkmer@gmail.com>
 References: <20251128003634.247529-1-rafael.v.volkmer@gmail.com>
@@ -93,36 +93,69 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Replace the open-coded PERIOD_MAX constant (0x10000) with a definition
-derived from the TBPRD field layout. Introduce TIEHRPWM_TBPRD_TBPRD to
-describe the 16-bit TBPRD field and compute TIEHRPWM_PERIOD_MAX as
-FIELD_MAX(TIEHRPWM_TBPRD_TBPRD) + 1.
+Refactor TBCTL prescaler handling to use GENMASK() and FIELD_PREP()
+instead of open-coded shifts.
 
-This keeps the effective upper bound unchanged while tying it directly
-to the hardware register layout instead of a hard-coded literal.
+Split the prescaler bits into TIEHRPWM_TBCTL_CLKDIV_MASK and
+TIEHRPWM_TBCTL_HSPCLKDIV_MASK and introduce TIEHRPWM_TBCTL_PRESCALE_MASK
+to cover both fields. Use FIELD_PREP() in set_prescale_div() to build
+the prescaler value, and update ehrpwm_modify() to clear and program
+both fields in a single call. The removed *_SHIFT macros are no longer
+needed.
 
 No functional change intended.
 
 Signed-off-by: Rafael V. Volkmer <rafael.v.volkmer@gmail.com>
 ---
- drivers/pwm/pwm-tiehrpwm.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ drivers/pwm/pwm-tiehrpwm.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
-index 0802f0553587..4b8b4a9e7379 100644
+index 4b8b4a9e7379..41af1bf74cbb 100644
 --- a/drivers/pwm/pwm-tiehrpwm.c
 +++ b/drivers/pwm/pwm-tiehrpwm.c
-@@ -38,7 +38,9 @@
+@@ -25,7 +25,10 @@
+ #define TIEHRPWM_TBCTL_PRDLD_SHDW		FIELD_PREP(TIEHRPWM_TBCTL_PRDLD, 0)
+ #define TIEHRPWM_TBCTL_PRDLD_IMDT		FIELD_PREP(TIEHRPWM_TBCTL_PRDLD, 1)
  
+-#define TIEHRPWM_TBCTL_CLKDIV_MASK		GENMASK(12, 7)
++#define TIEHRPWM_TBCTL_CLKDIV_MASK		GENMASK(12, 10)
++#define TIEHRPWM_TBCTL_HSPCLKDIV_MASK		GENMASK(9, 7)
++#define TIEHRPWM_TBCTL_PRESCALE_MASK		(TIEHRPWM_TBCTL_CLKDIV_MASK | \
++						TIEHRPWM_TBCTL_HSPCLKDIV_MASK)
+ 
+ #define TIEHRPWM_TBCTL_CTRMODE_MASK		GENMASK(1, 0)
+ #define TIEHRPWM_TBCTL_CTRMODE_UP		FIELD_PREP(TIEHRPWM_TBCTL_CTRMODE_MASK, 0)
+@@ -33,9 +36,6 @@
+ #define TIEHRPWM_TBCTL_CTRMODE_UPDOWN		FIELD_PREP(TIEHRPWM_TBCTL_CTRMODE_MASK, 2)
+ #define TIEHRPWM_TBCTL_CTRMODE_FREEZE		FIELD_PREP(TIEHRPWM_TBCTL_CTRMODE_MASK, 3)
+ 
+-#define TIEHRPWM_TBCTL_HSPCLKDIV_SHIFT		7
+-#define TIEHRPWM_TBCTL_CLKDIV_SHIFT		10
+-
  #define TIEHRPWM_CLKDIV_MAX			7
  #define TIEHRPWM_HSPCLKDIV_MAX			7
--#define TIEHRPWM_PERIOD_MAX			0x10000
-+
-+#define TIEHRPWM_TBPRD_TBPRD			GENMASK(15, 0)
-+#define TIEHRPWM_PERIOD_MAX			(FIELD_MAX(TIEHRPWM_TBPRD_TBPRD) + 1)
  
- /* compare module registers */
- #define TIEHRPWM_CMPA				0x12
+@@ -174,8 +174,8 @@ static int set_prescale_div(unsigned long rqst_prescaler, u16 *prescale_div,
+ 			*prescale_div = (1 << clkdiv) *
+ 					(hspclkdiv ? (hspclkdiv * 2) : 1);
+ 			if (*prescale_div >= rqst_prescaler) {
+-				*tb_clk_div = (clkdiv << TIEHRPWM_TBCTL_CLKDIV_SHIFT) |
+-					(hspclkdiv << TIEHRPWM_TBCTL_HSPCLKDIV_SHIFT);
++				*tb_clk_div = FIELD_PREP(TIEHRPWM_TBCTL_CLKDIV_MASK, clkdiv) |
++					FIELD_PREP(TIEHRPWM_TBCTL_HSPCLKDIV_MASK, hspclkdiv);
+ 				return 0;
+ 			}
+ 		}
+@@ -252,7 +252,7 @@ static int ehrpwm_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	pm_runtime_get_sync(pwmchip_parent(chip));
+ 
+ 	/* Update clock prescaler values */
+-	ehrpwm_modify(pc->mmio_base, TIEHRPWM_TBCTL, TIEHRPWM_TBCTL_CLKDIV_MASK, tb_divval);
++	ehrpwm_modify(pc->mmio_base, TIEHRPWM_TBCTL,  TIEHRPWM_TBCTL_PRESCALE_MASK, tb_divval);
+ 
+ 	if (pwm->hwpwm == 1) {
+ 		/* Channel 1 configured with compare B register */
 -- 
 2.43.0
 
