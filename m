@@ -1,87 +1,87 @@
-Return-Path: <linux-pwm+bounces-7712-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7713-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sv.mirrors.kernel.org (sv.mirrors.kernel.org [139.178.88.99])
-	by mail.lfdr.de (Postfix) with ESMTPS id CAC9CC9071A
-	for <lists+linux-pwm@lfdr.de>; Fri, 28 Nov 2025 01:39:35 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 88675C90714
+	for <lists+linux-pwm@lfdr.de>; Fri, 28 Nov 2025 01:39:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by sv.mirrors.kernel.org (Postfix) with ESMTPS id C1CB23AADAC
-	for <lists+linux-pwm@lfdr.de>; Fri, 28 Nov 2025 00:39:18 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 9431134DC96
+	for <lists+linux-pwm@lfdr.de>; Fri, 28 Nov 2025 00:39:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B5D5422AE7F;
-	Fri, 28 Nov 2025 00:39:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2104B22B8B6;
+	Fri, 28 Nov 2025 00:39:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Az36a0rc"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dU2TJw3s"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E715C227E95
-	for <linux-pwm@vger.kernel.org>; Fri, 28 Nov 2025 00:38:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B79521D011
+	for <linux-pwm@vger.kernel.org>; Fri, 28 Nov 2025 00:39:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764290342; cv=none; b=gK26GWAyHPhmdqqlrOJLL9qBz6AbkEmq65ak/MIh+UD58eGsZNiimD8CQr/tP8q6jOXSJ4aHGAhvVRxA3SIoz7EQvnF/q2bS9iWvUjjJM26vwZPfz2FzOvDb37baSZPBRd2zJt9aIxdxxSiKSc/aMekifVMJUmXOPJkIyY7Yo7M=
+	t=1764290344; cv=none; b=kA0c1eEX++mQWcl7RnBrlzw6MnQg4khycDZ6zsaPbWSE07arAy/2t9PqjF2/ERoEGoRyy07GseG9JMbxOsY78hbEDjA+Q9DTWRX4DC2l3spevAd51qT9imV49cwUEi5DrGEhunZ7T7U2Lr2fl24QyeIBiec1nCADucM3Yn38Knk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764290342; c=relaxed/simple;
-	bh=bHKg8688KxIbIu3scsuk8kYDaEqkgSWMViJ2vaTFUT0=;
+	s=arc-20240116; t=1764290344; c=relaxed/simple;
+	bh=XcYxuRkbMSMmuYTP8YMtFe+YyYOjM9ZCAbhwFZWTHDQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UitNKyDOyyVBeLvmfDjVOy8SGvYVXI1WatA2SkR9bGvaD9+eDQ7JdIDBdy0w3cx51tJe+18jrOufEwZEAsh1c16nohUBx70MTwa269p0Je73i1oVpqvVuPzjnm1tAoGMkxCN7MvBqFn4BdYRWouYoRy92WuKHyuke/GmnHS2O7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Az36a0rc; arc=none smtp.client-ip=209.85.214.169
+	 MIME-Version; b=K9+WSPyabm6AOgt2Hah2Ae7HA8vdAcvxw6OXFQsBUbOxVVXZUenZ/dxntTbZ9L4TSWltmfdZ4uJ3Or8KbeMsP1W89DJLeEWuYF1zVtbLITdLXJABfiC5Yon+5ggz3VXTcQKKAu9LpdIPyXZt46dlmN0ewqeqbuquVqyubJ6oJEg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dU2TJw3s; arc=none smtp.client-ip=209.85.210.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-29845b06dd2so17848035ad.2
-        for <linux-pwm@vger.kernel.org>; Thu, 27 Nov 2025 16:38:58 -0800 (PST)
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-7b9a98b751eso1014173b3a.1
+        for <linux-pwm@vger.kernel.org>; Thu, 27 Nov 2025 16:39:01 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1764290338; x=1764895138; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1764290341; x=1764895141; darn=vger.kernel.org;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TtuDHKEV5UkQRRA9Aqhc0gyimLn41C2SrbraOXqSNvo=;
-        b=Az36a0rci1of/3yt2kQNOdSnNSjwaHxcLHrbz0kMXF4L8l7yU3UkgWDSrhTNYJT9vW
-         e92GcmAtxPbZlMDQt5EwyBPzJAb3rQLME15/7sWozOJpSmz3/xqrmO0wvkieISpBPVta
-         MNUilHGlsuPHYIuDaTyltWl48g/4wjEKgfoiVRdC8n5ZIBnvt2y9Pj9UXhi2ir3qjSap
-         lZynDASfxbOe3YyuwLAYWsvKMYzaA/7Ln1hT5B1zyQKP5ucqT8aEwX2/Twi1+o5pRssp
-         8rcDljoEUsMEQedqrwCIfzRh/b9dpzCPkvonznBDWOWC6KQzUVgQ8E8oeYtWoNHENQ+2
-         IzJw==
+        bh=3m55KX3612XXkHw/M8fDHwtC9cUcyqT3pIXf0q1wbKI=;
+        b=dU2TJw3srcBY4QTSMsy4bOUbZU3UjzqtrGa1RJFlCUPXJMNbKtCiGnYFq5H22spjG5
+         2wX6McH/wPxDDbQzmTaZFs+a169vTpFJ85w1xQ03a3i3QMs/WHFjVhb4+zbUo5CeJcQE
+         VygnLbOKVXSszTkPUCQw0kSY8p9j31R9cpRzOGQVxzIS6c1fwQTG2UXixIe7XSy2fQaQ
+         xWmV6QnXu+zcTKU80HN3s3hhUnYgLhuM3b78+YzUWoCquY0RkJwTktc+zX1ZjLzVIxq0
+         l1RgZO4weFM14+bf+kKSfNJHHM4/ohTSrck22LMz6Pw5Nfu1KF/N6NbRYfU4TWwI9dHj
+         ozRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764290338; x=1764895138;
+        d=1e100.net; s=20230601; t=1764290341; x=1764895141;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=TtuDHKEV5UkQRRA9Aqhc0gyimLn41C2SrbraOXqSNvo=;
-        b=lK44QBKrLKBMuXOT8ITDn3LUrLSks9P8n5PohifOmC/4rNZVA98mLUBgtN6DyX4ygx
-         tpY9bMR0pek2RDBsEz6h/57dbcOwfJqCWsKjNCJMoNZ3GqFRDChjbSAAVtdaU1+8qtVy
-         nHG/hAv4w9KaKpF5gmg6+lMjQTmmvHNyY1AJmVcj8tVavLPAlHwD2WvG2vFGE26U4nq3
-         QgfEcOkjhoxTCk+0sQFTNY6gM4Q2lKUFcTXZoF8JALfQQ3PgSB+5koioy4SU9TAZgZOx
-         9vOtEQptJL8kqqSJS9jxtc6vq+VStiC4FYSSiA9/UXDrdVPw/plu9dhUbXciVSYLFk/5
-         dk/Q==
-X-Forwarded-Encrypted: i=1; AJvYcCW/lW/JjujecMy3rcod6ChRBrM14+lAx6xKCReGbD1hdREB/wXWX6DHOz270i0n5IBU6DkfozxPn1o=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yzc8F+UBVjbWO2Q3lVxc9zTHIeYkZYTPNgrRjKHGnFOG3LO2rdZ
-	d5xqWxtlPHSB0RDFk3/H8kwb+50EOUl+TBde0aLWg0jdIm4FyL8h+AGM
-X-Gm-Gg: ASbGncshe1I3WC7tmh8gJ35w7e3eda3/kU91DrO+J5XXgbxLzovlAyFKfgRIeWbg8tw
-	BnieGbWHWbtPuRY2A8JBSWNxLQSFniIIljK8+D84UVE2b02b9GJUfqOqu0V6atPH+fYtZNI//Mo
-	Ovkpfb0hPwVOc4ZRnhDzr+WOGnVkJ8sCEf0Cp56ZvVJv2KkpkWU54vlYSq6f5OUo43Vloy+Jela
-	gCJUXuT0gbj21xojGKB+XMln3kbgHCAhFhrWuJWjKwvv8/4GmZvKTpzFuNu+qUcV7Q8ObbXIb1G
-	PJgV2CnCNyTxYdlwrwJTbVESa0yTrGtJzrVH5Dl76klY88rZiy9Jn4SJBY3SZkcQktk/ctB7b7l
-	JvlKfQ1KKIDKFmdVw/BbclgNsck9a5mChmnq1FrCN0zdEkKt3AfVEz08qpYFurIUAvtkf6QBSBk
-	MTfcgDq8hylOiLu0KU4H4ExB9gfLnHRCXlWZ2ofF86O9Q=
-X-Google-Smtp-Source: AGHT+IHW+tPiN6CDXpO3aHyqH6Qyx9O/PsctZJUF41D9BYde7hvpZJ7PwzIliFHdrWa9qV7RDFbo2w==
-X-Received: by 2002:a05:7022:a92:b0:11b:1cae:a0fa with SMTP id a92af1059eb24-11c9d55469dmr21786825c88.0.1764290337952;
-        Thu, 27 Nov 2025 16:38:57 -0800 (PST)
+        bh=3m55KX3612XXkHw/M8fDHwtC9cUcyqT3pIXf0q1wbKI=;
+        b=M2DSP+3wEJegYBDGzjLA3bfr5s8TwCRf9fmz+3kKaNZWDV0V/0XmRARIl9yXnpixEM
+         OfGDp5tNDy5Shi0YGFVmki6/3aLvpczzEg4Qk0kEtSzj2cxe2zgNd59CiMZgBIqsgLlC
+         wgUEc4IOYp6K2zIaTLQdKpQ0ORz67IfslxrkSzoW+bNHdbWUQFy29MsBkCD0FheXF3HO
+         Lifc5OLbS+tgJhUFbQ3Th4VAyvWyFbqoAsAhcgYcHU9P3xwmsUYAFQmi/Aw0BXi/ZTHt
+         QZHyGpZN8336PDMFCO4Qbz/XCKrtyGDydTbxwFwCDcPQX7lNMMJSYeTeh4apx6F8GT8w
+         P6CA==
+X-Forwarded-Encrypted: i=1; AJvYcCVi7r0N7OFvHVSjbsMcRJOcR4MFMKItuzL7yQ40JNYV/zDcst0RpV3x0BRo0vnrNIbhopOd8PWPN7I=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgTNQVSFvkbhYAc7ZPbDWC9cki96HAjQI6BhSC4jkEigRL11qQ
+	TQwlIQqeHp0elVncHSPyBb0RwA17UM7vhZaMt2wiuGIwFj4kNB/LefPw
+X-Gm-Gg: ASbGncshypiy2N/kNnmhMwsRHAQA76i8tu1CX7XZGSIu+kaEK5fSV1oVIdug7Fo210E
+	c7YmSEdy5q/5WJtTRZ5rbOpY/Dl7znOezYFQtQ7iLanFYiYtfGJ7nZ1YiONOiSramMzhF47mouG
+	gKuBznE07/Re4K6E2DNisweay0yb64TiePol+KCizVFzlzTBR3Dqdt0QI6kuIPnMD/6dnrENawz
+	T4cJA0DmHv/rn8kN7p1hJAEyjyNkVkuHyMsTHhKQvIm7Hp98pKgHO37e5Cq9a/1BEloU2NHcn1i
+	HyC6B5G0zWnYmpK5lAJ/umsvFd14rU/P/6/raRjH6Dzb/+MQTWN+PyZUVyoNXLiC9ebT92oPqBK
+	oxpsTd7eJVck2vUHnwjm4nOi5tbXO6bWfM+dt89hBzPvBzBvyiYug02NvUFc3tWlDI9suOxEcB7
+	E4QA0LmYSEgNmYLN4awJGbMnFSO8Eva9rKRf9eXm9tlc4=
+X-Google-Smtp-Source: AGHT+IGC4C2OgJTsiIUdA0q3wwE6Lz47PE6qPSYvxBvdGl77cHEpD66qLHgLZop5EYDl/xrIDZ2zcQ==
+X-Received: by 2002:a05:7022:e803:b0:11b:8b4b:bff7 with SMTP id a92af1059eb24-11cbba71950mr9482927c88.39.1764290340780;
+        Thu, 27 Nov 2025 16:39:00 -0800 (PST)
 Received: from ParadiseLost.localdomain (lohr.com.br. [177.69.253.233])
-        by smtp.gmail.com with ESMTPSA id a92af1059eb24-11dcaee7076sm12404561c88.4.2025.11.27.16.38.56
+        by smtp.gmail.com with ESMTPSA id a92af1059eb24-11dcaee7076sm12404561c88.4.2025.11.27.16.38.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 27 Nov 2025 16:38:57 -0800 (PST)
+        Thu, 27 Nov 2025 16:39:00 -0800 (PST)
 From: "Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
 To: ukleinek@kernel.org
 Cc: linux-kernel@vger.kernel.org,
 	linux-pwm@vger.kernel.org,
 	rafael.v.volkmer@gmail.com
-Subject: [PATCH v7 3/9] pwm: tiehrpwm: use GENMASK() and FIELD_PREP() for register fields
-Date: Thu, 27 Nov 2025 21:36:28 -0300
-Message-ID: <20251128003634.247529-4-rafael.v.volkmer@gmail.com>
+Subject: [PATCH v7 4/9] pwm: tiehrpwm: derive PERIOD_MAX from TBPRD field
+Date: Thu, 27 Nov 2025 21:36:29 -0300
+Message-ID: <20251128003634.247529-5-rafael.v.volkmer@gmail.com>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20251128003634.247529-1-rafael.v.volkmer@gmail.com>
 References: <20251128003634.247529-1-rafael.v.volkmer@gmail.com>
@@ -93,141 +93,36 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Convert the TIEHRPWM TBCTL, AQCTL, AQSFRC and AQCSFRC field definitions
-to use GENMASK() and FIELD_PREP() instead of open-coded bit masks and
-shifted literals.
+Replace the open-coded PERIOD_MAX constant (0x10000) with a definition
+derived from the TBPRD field layout. Introduce TIEHRPWM_TBPRD_TBPRD to
+describe the 16-bit TBPRD field and compute TIEHRPWM_PERIOD_MAX as
+FIELD_MAX(TIEHRPWM_TBPRD_TBPRD) + 1.
 
-This makes the eHRPWM register layout more explicit, reduces hand-rolled
-bit arithmetic and aligns the driver with common kernel bitfield
-patterns.
+This keeps the effective upper bound unchanged while tying it directly
+to the hardware register layout instead of a hard-coded literal.
 
 No functional change intended.
 
 Signed-off-by: Rafael V. Volkmer <rafael.v.volkmer@gmail.com>
 ---
- drivers/pwm/pwm-tiehrpwm.c | 88 ++++++++++++++++++++------------------
- 1 file changed, 47 insertions(+), 41 deletions(-)
+ drivers/pwm/pwm-tiehrpwm.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
-index f8625394c056..0802f0553587 100644
+index 0802f0553587..4b8b4a9e7379 100644
 --- a/drivers/pwm/pwm-tiehrpwm.c
 +++ b/drivers/pwm/pwm-tiehrpwm.c
-@@ -13,6 +13,7 @@
- #include <linux/clk.h>
- #include <linux/pm_runtime.h>
- #include <linux/of.h>
-+#include <linux/bitfield.h>
+@@ -38,7 +38,9 @@
  
- /* EHRPWM registers and bits definitions */
- 
-@@ -21,15 +22,16 @@
- #define TIEHRPWM_TBPRD				0x0A
- 
- #define TIEHRPWM_TBCTL_PRDLD			BIT(3)
--#define TIEHRPWM_TBCTL_PRDLD_SHDW		0
--#define TIEHRPWM_TBCTL_PRDLD_IMDT		BIT(3)
--#define TIEHRPWM_TBCTL_CLKDIV_MASK		(BIT(12) | BIT(11) | BIT(10) | BIT(9) | \
--						BIT(8) | BIT(7))
--#define TIEHRPWM_TBCTL_CTRMODE_MASK		(BIT(1) | BIT(0))
--#define TIEHRPWM_TBCTL_CTRMODE_UP		0
--#define TIEHRPWM_TBCTL_CTRMODE_DOWN		BIT(0)
--#define TIEHRPWM_TBCTL_CTRMODE_UPDOWN		BIT(1)
--#define TIEHRPWM_TBCTL_CTRMODE_FREEZE		(BIT(1) | BIT(0))
-+#define TIEHRPWM_TBCTL_PRDLD_SHDW		FIELD_PREP(TIEHRPWM_TBCTL_PRDLD, 0)
-+#define TIEHRPWM_TBCTL_PRDLD_IMDT		FIELD_PREP(TIEHRPWM_TBCTL_PRDLD, 1)
+ #define TIEHRPWM_CLKDIV_MAX			7
+ #define TIEHRPWM_HSPCLKDIV_MAX			7
+-#define TIEHRPWM_PERIOD_MAX			0x10000
 +
-+#define TIEHRPWM_TBCTL_CLKDIV_MASK		GENMASK(12, 7)
-+
-+#define TIEHRPWM_TBCTL_CTRMODE_MASK		GENMASK(1, 0)
-+#define TIEHRPWM_TBCTL_CTRMODE_UP		FIELD_PREP(TIEHRPWM_TBCTL_CTRMODE_MASK, 0)
-+#define TIEHRPWM_TBCTL_CTRMODE_DOWN		FIELD_PREP(TIEHRPWM_TBCTL_CTRMODE_MASK, 1)
-+#define TIEHRPWM_TBCTL_CTRMODE_UPDOWN		FIELD_PREP(TIEHRPWM_TBCTL_CTRMODE_MASK, 2)
-+#define TIEHRPWM_TBCTL_CTRMODE_FREEZE		FIELD_PREP(TIEHRPWM_TBCTL_CTRMODE_MASK, 3)
++#define TIEHRPWM_TBPRD_TBPRD			GENMASK(15, 0)
++#define TIEHRPWM_PERIOD_MAX			(FIELD_MAX(TIEHRPWM_TBPRD_TBPRD) + 1)
  
- #define TIEHRPWM_TBCTL_HSPCLKDIV_SHIFT		7
- #define TIEHRPWM_TBCTL_CLKDIV_SHIFT		10
-@@ -48,22 +50,25 @@
- #define TIEHRPWM_AQSFRC				0x1A
- #define TIEHRPWM_AQCSFRC			0x1C
- 
--#define TIEHRPWM_AQCTL_CBU_MASK			(BIT(9) | BIT(8))
--#define TIEHRPWM_AQCTL_CBU_FRCLOW		BIT(8)
--#define TIEHRPWM_AQCTL_CBU_FRCHIGH		BIT(9)
--#define TIEHRPWM_AQCTL_CBU_FRCTOGGLE		(BIT(9) | BIT(8))
--#define TIEHRPWM_AQCTL_CAU_MASK			(BIT(5) | BIT(4))
--#define TIEHRPWM_AQCTL_CAU_FRCLOW		BIT(4)
--#define TIEHRPWM_AQCTL_CAU_FRCHIGH		BIT(5)
--#define TIEHRPWM_AQCTL_CAU_FRCTOGGLE		(BIT(5) | BIT(4))
--#define TIEHRPWM_AQCTL_PRD_MASK			(BIT(3) | BIT(2))
--#define TIEHRPWM_AQCTL_PRD_FRCLOW		BIT(2)
--#define TIEHRPWM_AQCTL_PRD_FRCHIGH		BIT(3)
--#define TIEHRPWM_AQCTL_PRD_FRCTOGGLE		(BIT(3) | BIT(2))
--#define TIEHRPWM_AQCTL_ZRO_MASK			(BIT(1) | BIT(0))
--#define TIEHRPWM_AQCTL_ZRO_FRCLOW		BIT(0)
--#define TIEHRPWM_AQCTL_ZRO_FRCHIGH		BIT(1)
--#define TIEHRPWM_AQCTL_ZRO_FRCTOGGLE		(BIT(1) | BIT(0))
-+#define TIEHRPWM_AQCTL_CBU_MASK			GENMASK(9, 8)
-+#define TIEHRPWM_AQCTL_CBU_FRCLOW		FIELD_PREP(TIEHRPWM_AQCTL_CBU_MASK, 1)
-+#define TIEHRPWM_AQCTL_CBU_FRCHIGH		FIELD_PREP(TIEHRPWM_AQCTL_CBU_MASK, 2)
-+#define TIEHRPWM_AQCTL_CBU_FRCTOGGLE		FIELD_PREP(TIEHRPWM_AQCTL_CBU_MASK, 3)
-+
-+#define TIEHRPWM_AQCTL_CAU_MASK			GENMASK(5, 4)
-+#define TIEHRPWM_AQCTL_CAU_FRCLOW		FIELD_PREP(TIEHRPWM_AQCTL_CAU_MASK, 1)
-+#define TIEHRPWM_AQCTL_CAU_FRCHIGH		FIELD_PREP(TIEHRPWM_AQCTL_CAU_MASK, 2)
-+#define TIEHRPWM_AQCTL_CAU_FRCTOGGLE		FIELD_PREP(TIEHRPWM_AQCTL_CAU_MASK, 3)
-+
-+#define TIEHRPWM_AQCTL_PRD_MASK			GENMASK(3, 2)
-+#define TIEHRPWM_AQCTL_PRD_FRCLOW		FIELD_PREP(TIEHRPWM_AQCTL_PRD_MASK, 1)
-+#define TIEHRPWM_AQCTL_PRD_FRCHIGH		FIELD_PREP(TIEHRPWM_AQCTL_PRD_MASK, 2)
-+#define TIEHRPWM_AQCTL_PRD_FRCTOGGLE		FIELD_PREP(TIEHRPWM_AQCTL_PRD_MASK, 3)
-+
-+#define TIEHRPWM_AQCTL_ZRO_MASK			GENMASK(1, 0)
-+#define TIEHRPWM_AQCTL_ZRO_FRCLOW		FIELD_PREP(TIEHRPWM_AQCTL_ZRO_MASK, 1)
-+#define TIEHRPWM_AQCTL_ZRO_FRCHIGH		FIELD_PREP(TIEHRPWM_AQCTL_ZRO_MASK, 2)
-+#define TIEHRPWM_AQCTL_ZRO_FRCTOGGLE		FIELD_PREP(TIEHRPWM_AQCTL_ZRO_MASK, 3)
- 
- #define TIEHRPWM_AQCTL_CHANA_POLNORMAL		(TIEHRPWM_AQCTL_CAU_FRCLOW | \
- 						TIEHRPWM_AQCTL_ZRO_FRCHIGH)
-@@ -74,22 +79,23 @@
- #define TIEHRPWM_AQCTL_CHANB_POLINVERSED	(TIEHRPWM_AQCTL_CBU_FRCHIGH | \
- 						TIEHRPWM_AQCTL_ZRO_FRCLOW)
- 
--#define TIEHRPWM_AQSFRC_RLDCSF_MASK		(BIT(7) | BIT(6))
--#define TIEHRPWM_AQSFRC_RLDCSF_ZRO		0
--#define TIEHRPWM_AQSFRC_RLDCSF_PRD		BIT(6)
--#define TIEHRPWM_AQSFRC_RLDCSF_ZROPRD		BIT(7)
--#define TIEHRPWM_AQSFRC_RLDCSF_IMDT		(BIT(7) | BIT(6))
--
--#define TIEHRPWM_AQCSFRC_CSFB_MASK		(BIT(3) | BIT(2))
--#define TIEHRPWM_AQCSFRC_CSFB_FRCDIS		0
--#define TIEHRPWM_AQCSFRC_CSFB_FRCLOW		BIT(2)
--#define TIEHRPWM_AQCSFRC_CSFB_FRCHIGH		BIT(3)
--#define TIEHRPWM_AQCSFRC_CSFB_DISSWFRC		(BIT(3) | BIT(2))
--#define TIEHRPWM_AQCSFRC_CSFA_MASK		(BIT(1) | BIT(0))
--#define TIEHRPWM_AQCSFRC_CSFA_FRCDIS		0
--#define TIEHRPWM_AQCSFRC_CSFA_FRCLOW		BIT(0)
--#define TIEHRPWM_AQCSFRC_CSFA_FRCHIGH		BIT(1)
--#define TIEHRPWM_AQCSFRC_CSFA_DISSWFRC		(BIT(1) | BIT(0))
-+#define TIEHRPWM_AQSFRC_RLDCSF_MASK		GENMASK(7, 6)
-+#define TIEHRPWM_AQSFRC_RLDCSF_ZRO		FIELD_PREP(TIEHRPWM_AQSFRC_RLDCSF_MASK, 0)
-+#define TIEHRPWM_AQSFRC_RLDCSF_PRD		FIELD_PREP(TIEHRPWM_AQSFRC_RLDCSF_MASK, 1)
-+#define TIEHRPWM_AQSFRC_RLDCSF_ZROPRD		FIELD_PREP(TIEHRPWM_AQSFRC_RLDCSF_MASK, 2)
-+#define TIEHRPWM_AQSFRC_RLDCSF_IMDT		FIELD_PREP(TIEHRPWM_AQSFRC_RLDCSF_MASK, 3)
-+
-+#define TIEHRPWM_AQCSFRC_CSFB_MASK		GENMASK(3, 2)
-+#define TIEHRPWM_AQCSFRC_CSFB_FRCDIS		FIELD_PREP(TIEHRPWM_AQCSFRC_CSFB_MASK, 0)
-+#define TIEHRPWM_AQCSFRC_CSFB_FRCLOW		FIELD_PREP(TIEHRPWM_AQCSFRC_CSFB_MASK, 1)
-+#define TIEHRPWM_AQCSFRC_CSFB_FRCHIGH		FIELD_PREP(TIEHRPWM_AQCSFRC_CSFB_MASK, 2)
-+#define TIEHRPWM_AQCSFRC_CSFB_DISSWFRC		FIELD_PREP(TIEHRPWM_AQCSFRC_CSFB_MASK, 3)
-+
-+#define TIEHRPWM_AQCSFRC_CSFA_MASK		GENMASK(1, 0)
-+#define TIEHRPWM_AQCSFRC_CSFA_FRCDIS		FIELD_PREP(TIEHRPWM_AQCSFRC_CSFA_MASK, 0)
-+#define TIEHRPWM_AQCSFRC_CSFA_FRCLOW		FIELD_PREP(TIEHRPWM_AQCSFRC_CSFA_MASK, 1)
-+#define TIEHRPWM_AQCSFRC_CSFA_FRCHIGH		FIELD_PREP(TIEHRPWM_AQCSFRC_CSFA_MASK, 2)
-+#define TIEHRPWM_AQCSFRC_CSFA_DISSWFRC		FIELD_PREP(TIEHRPWM_AQCSFRC_CSFA_MASK, 3)
- 
- #define TIEHRPWM_NUM_PWM_CHANNEL		2	/* EHRPWM channels */
- 
+ /* compare module registers */
+ #define TIEHRPWM_CMPA				0x12
 -- 
 2.43.0
 
