@@ -1,240 +1,205 @@
-Return-Path: <linux-pwm+bounces-7731-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7732-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8B616C91CB6
-	for <lists+linux-pwm@lfdr.de>; Fri, 28 Nov 2025 12:32:30 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3F688C91FB4
+	for <lists+linux-pwm@lfdr.de>; Fri, 28 Nov 2025 13:25:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 8D6C74E0324
-	for <lists+linux-pwm@lfdr.de>; Fri, 28 Nov 2025 11:32:28 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 462014E3878
+	for <lists+linux-pwm@lfdr.de>; Fri, 28 Nov 2025 12:25:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CB48530EF68;
-	Fri, 28 Nov 2025 11:32:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 20F36329374;
+	Fri, 28 Nov 2025 12:25:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="PRJoywFE";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="jzdoycil"
+	dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b="G3BW2x9R"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx0a-0031df01.pphosted.com (mx0a-0031df01.pphosted.com [205.220.168.131])
+Received: from mout02.posteo.de (mout02.posteo.de [185.67.36.66])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 342462D238F
-	for <linux-pwm@vger.kernel.org>; Fri, 28 Nov 2025 11:32:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.168.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D582A30DEBC
+	for <linux-pwm@vger.kernel.org>; Fri, 28 Nov 2025 12:25:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.67.36.66
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764329547; cv=none; b=NzbENZtUfyOgJW00lcyJEyNLBx4WsKvlAT9wHGb7sn3f5GTeoulCcZvQby/j7rn2DH4bFsa2Cc9BGzX0CnLA5QFi9dvc5bsTqPA869nm8sqoZ1YESbf4EvhZRCKzhSihFiW+elHzklxVfTHAeq3wvhN1vn2UhtcAWPY5Ja0Yhgk=
+	t=1764332709; cv=none; b=iLg/yOQVGMXF6pw9DYa4EEXBZhJxiFN4yjuvWKwaCV89IrpHSzWbbd9VRtQ3X4L2wwFNW7K45L5Gb9IdVBhX8zDYzRG2L031Fz0Z1/eoZ0ay435/iuNb7kuj5L4tMPVMACo5VTZ9oyl3Og0nrcv3NOFPPNfmyDsCwcOY5I0nrts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764329547; c=relaxed/simple;
-	bh=IlGqejTxUcXaPC+LhR6zkeAqRrGA+xSroN39yUlX3vA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TOE50WZFkcbyJ/OWQJ5H3zBRalirtnJWs6Tt3tQn22jj8TaKBS15qpqHDdyRFVo9jYW/OtVz7VIonRZ0YZbC61KEjzmxQ6PJvT0L9BsFCXXQIrjvlX+8yAcAAJ0aCQbtTeksGUsZH/BnqSze72qTy1RhPSd6q3w6EL/s8ZGEKeY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=PRJoywFE; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=jzdoycil; arc=none smtp.client-ip=205.220.168.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279863.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 5AS8Oagt3531031
-	for <linux-pwm@vger.kernel.org>; Fri, 28 Nov 2025 11:32:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	on0p2ah52fek9cWslbKDUISLiT/n/kp65o4z/5HVnso=; b=PRJoywFEHT45aAq6
-	DFXhUwLZMAqffYKbjZIUHSB+uGFmNRTDbd9+9xuJqup+VXhpu/aTIDn5xs+8A+mM
-	Hak9q68lN1XVjVYVhe0AJT3Q0VRM+E+J2kKpIM57txt2XoF2tTCrol5dyseurpCr
-	jiQQpMP/5cojkzTXd9s3s9JHSUEyqO+0NKExrcogp2S9boomxwOvp4Vrl82POtmy
-	UOWpFfcEvszZyEUf3PvMBIryYSSohZ07gdc3UQC7L2gINrhij95Fbf33CBFYxaq6
-	1HyftBUanJ4VXTVycYAj9R1DzZ17zzKHOZ972nE4LeUwZ2CaTgnFpUWJIeiBA7aI
-	r3Punw==
-Received: from mail-vs1-f71.google.com (mail-vs1-f71.google.com [209.85.217.71])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4apm2rub7m-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-pwm@vger.kernel.org>; Fri, 28 Nov 2025 11:32:25 +0000 (GMT)
-Received: by mail-vs1-f71.google.com with SMTP id ada2fe7eead31-5dfd5a5052eso116353137.1
-        for <linux-pwm@vger.kernel.org>; Fri, 28 Nov 2025 03:32:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1764329544; x=1764934344; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=on0p2ah52fek9cWslbKDUISLiT/n/kp65o4z/5HVnso=;
-        b=jzdoycilLzQVLMjgQdn8IuOUQrR5TKBjjF0u3WZKxedWe6E2IH3LNPWGWL3vBTBZe/
-         hsEgDv8sGyn+OV3duxZbdFkNlN7ffcCYh0XYyA5pTYy8OoLbAFGOf3R2PGc7p8TOk/s9
-         Z6OUpkuhlJpPY4WhTLS5OtyhC0MXBchZnXqZojliMg7VN61m8uZgWVhUuDPDF5wgIZ6o
-         h524ZoOvuU1fhSufL/ARFZmGrOFVqfiRlkH7+mEgYyddP01EXbtwtN5WgMPI1ZXbQcpx
-         0OX9F/QhRUzlaJCywTD/TLqN9gFxc57QOb4sOcNiif0CGY2v57Xn2HLUOeDJPv/r7h2B
-         QWVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1764329544; x=1764934344;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=on0p2ah52fek9cWslbKDUISLiT/n/kp65o4z/5HVnso=;
-        b=ICPFtqFMKRuUfvy6jf/X44wk9iud7AxuT08HHOqfyo0ivAglNsvpI9rappzhgX2hoh
-         vboKwPJsL3RLqH/jOe5/dMOKNhVrkcfn1S3li5M9TDlCQVAKUtarSV0kqWjFi+uNmdn0
-         ksFacUpsRv9/d0q/UF/t/Crewh+Y4pNpb9gKT8YNBJp5+huaFDx8r9khOash038aI5vX
-         /5NMieT2Xnjje87xr9h9TSBVxAcBnFPGnsDLa0UhkUlNq33VNp4mrOpbbbbpYVUjIrd5
-         aKwPVJhXaUt5R2AfB0z1Uw531gFGiXQg9Gz15W1FBROSdvzTSHCKs76cOR2uyzQbp5YR
-         lA2w==
-X-Forwarded-Encrypted: i=1; AJvYcCWLJ2Y/00CS6FHtOQWJT7k2z2V7DSvqUxpTLGPIpYqOgFzuvfSiJkHUGk7Dlhlc6Y6oDblin7SfMMU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxRpk8i3Noy/0B3ATmqpar1Qx7l8G/pN3lhhLIhSQWa3oygJIqC
-	X0pN+ern1gcuJwbK+cB71iQz5MSUiSmXSCXNJVLKb+FZc7wnSsRDsv8t16eyGADebo9I2hIRrn3
-	VFu0AwOZMGWFEiJdkuCVNJUTzYMOm/BC64gb3kUU4qwSTDRm0XoxnUrtOTyqP7fc=
-X-Gm-Gg: ASbGncsWgrgEM8gca80jpVIihrURrDHWNbgWAtAQNmcNlFmUYN09P30dY/1iUl6cCzl
-	PMv2/vfdpYrb0+puJScPo19oqVTQoXerv4L8l4nU1aWqG7zsn4gBOj53OszcGX2kQwEkY4xGQGl
-	/UotwnID3XLAAxVeHj8hhRCxF1cpbag7ThjueKC2iKil2i/TV5KR4hSTwFrv6+SwWTmLKZ9brJ0
-	krbBv+4evbQms2JcI+SxIssPJ0H1/P9lEeOIZg3VzJCXJxYx9rcwGjXLmzuRIGf8KFkM29m3MLW
-	GUPvDoBJn4AwQ4w226C8txfpC87+7bMNhcQCSH3SC/P96CiG+hr/t6kOE/c3w6+rY5wigKdKBWl
-	jppFjvCYIrj2mztJ60nmIYnT3j/pajo02vKTkcMDLHVQ2+HbXiNukb0YHyps/4dWci0c=
-X-Received: by 2002:a05:6102:e12:b0:5df:b52f:58ff with SMTP id ada2fe7eead31-5e1e6a59ccemr5076349137.5.1764329544299;
-        Fri, 28 Nov 2025 03:32:24 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IEVhtD3wbD8HAzB+HwO3p0fm45hGD9PrKrgX7qTDxq/Kq5y5qaWEjnnLYt3dJAVxNoxoiURPA==
-X-Received: by 2002:a05:6102:e12:b0:5df:b52f:58ff with SMTP id ada2fe7eead31-5e1e6a59ccemr5076344137.5.1764329543867;
-        Fri, 28 Nov 2025 03:32:23 -0800 (PST)
-Received: from [192.168.119.202] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-b76f51c68d0sm429606966b.28.2025.11.28.03.32.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 28 Nov 2025 03:32:23 -0800 (PST)
-Message-ID: <3aa86b13-9505-4f64-a168-4c46962b715e@oss.qualcomm.com>
-Date: Fri, 28 Nov 2025 12:32:21 +0100
+	s=arc-20240116; t=1764332709; c=relaxed/simple;
+	bh=Uy+CKLSmjfEonlIIdz7ylya5/5TSAc/WK9H2XEkj/dA=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=SGt1ciA9h+b2ijo6Ai+92KSdArjrQkvuVzSi7XIZr0x91jdlBj94OBvZObit09RaNcEAZhlS5q93gZHYtdOEyKdetzfZwEW2JCUW6trmMfWJhBp/lqAET1JsdE+OaIEQFt44pzEB4L8gOtEw1abHXHq7FLu9wChg0lChMjf415I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de; spf=pass smtp.mailfrom=posteo.de; dkim=pass (2048-bit key) header.d=posteo.de header.i=@posteo.de header.b=G3BW2x9R; arc=none smtp.client-ip=185.67.36.66
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=posteo.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=posteo.de
+Received: from submission (posteo.de [185.67.36.169]) 
+	by mout02.posteo.de (Postfix) with ESMTPS id 27C6F240107
+	for <linux-pwm@vger.kernel.org>; Fri, 28 Nov 2025 13:25:05 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=posteo.de; s=2017;
+	t=1764332705; bh=ygIWY5afUFzvHpwhYDklQ/i75zkS+Wu119xSFraOeSM=;
+	h=Message-ID:Subject:From:To:Cc:Date:Autocrypt:Content-Type:
+	 MIME-Version:OpenPGP:From;
+	b=G3BW2x9RGG0O1+QELbAPhvd5tLXbzhCMYEk9H90d9IbnKjn5o/spNFfJfJ/TsDGDH
+	 jOFHR5UiUzcb28hF/N6YN118SL/+ltyT4Zu67aNMhO7K0ddiaSxGmR6yIf3rKBeXur
+	 LrU0sO4NKHdZY9R8qouSdFYd94LMsly3W64uhIQtyBLTIXFjQr+HlFmJQPQ8xwMSYx
+	 YpfIpYuJ6JpApbzJpF29pF1pW+A0E8v40jPhzcl3/JX05ZPq+74WDveWHZU6QWzASZ
+	 yCUHhWsjCG+JTYYY0w9ccpb2+asUAhmS0YwkJp2F8IOroMqXm/PxIM06m6uNeUE3WM
+	 syvRiCaOSgMwQ==
+Received: from customer (localhost [127.0.0.1])
+	by submission (posteo.de) with ESMTPSA id 4dHsv16jN3z6tn4;
+	Fri, 28 Nov 2025 13:25:01 +0100 (CET)
+Message-ID: <8711d40496e0e12e3efcd7fd9e11bdea6de68c6d.camel@posteo.de>
+Subject: Re: [PATCH] Move pwm registration into pwm::Chip::new
+From: Markus Probst <markus.probst@posteo.de>
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: Drew Fustini <fustini@kernel.org>, Guo Ren <guoren@kernel.org>, Fu Wei	
+ <wefu@redhat.com>, Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?=
+ <ukleinek@kernel.org>,  Michal Wilczynski <m.wilczynski@samsung.com>,
+ Miguel Ojeda <ojeda@kernel.org>, Alex Gaynor <alex.gaynor@gmail.com>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>,
+ =?ISO-8859-1?Q?Bj=F6rn?= Roy Baron	 <bjorn3_gh@protonmail.com>, Benno
+ Lossin <lossin@kernel.org>, Andreas Hindborg	 <a.hindborg@kernel.org>,
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich	 <dakr@kernel.org>,
+ linux-riscv@lists.infradead.org, linux-pwm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Date: Fri, 28 Nov 2025 12:25:04 +0000
+In-Reply-To: <aSlrVLT92kmazgyh@google.com>
+References: <20251127-pwm_safe_register-v1-1-d22d0ed068ac@posteo.de>
+	 <aSlrVLT92kmazgyh@google.com>
+Autocrypt: addr=markus.probst@posteo.de; prefer-encrypt=mutual;
+ keydata=mQINBGiDvXgBEADAXUceKafpl46S35UmDh2wRvvx+UfZbcTjeQOlSwKP7YVJ4JOZrVs93
+ qReNLkOWguIqPBxR9blQ4nyYrqSCV+MMw/3ifyXIm6Pw2YRUDg+WTEOjTixRCoWDgUj1nOsvJ9tVA
+ m76Ww+/pAnepVRafMID0rqEfD9oGv1YrfpeFJhyE2zUw3SyyNLIKWD6QeLRhKQRbSnsXhGLFBXCqt
+ 9k5JARhgQof9zvztcCVlT5KVvuyfC4H+HzeGmu9201BVyihJwKdcKPq+n/aY5FUVxNTgtI9f8wIbm
+ fAjaoT1pjXSp+dszakA98fhONM98pOq723o/1ZGMZukyXFfsDGtA3BB79HoopHKujLGWAGskzClwT
+ jRQxBqxh/U/lL1pc+0xPWikTNCmtziCOvv0KA0arDOMQlyFvImzX6oGVgE4ksKQYbMZ3Ikw6L1Rv1
+ J+FvN0aNwOKgL2ztBRYscUGcQvA0Zo1fGCAn/BLEJvQYShWKeKqjyncVGoXFsz2AcuFKe1pwETSsN
+ 6OZncjy32e4ktgs07cWBfx0v62b8md36jau+B6RVnnodaA8++oXl3FRwiEW8XfXWIjy4umIv93tb8
+ 8ekYsfOfWkTSewZYXGoqe4RtK80ulMHb/dh2FZQIFyRdN4HOmB4FYO5sEYFr9YjHLmDkrUgNodJCX
+ CeMe4BO4iaxUQARAQABtCdNYXJrdXMgUHJvYnN0IDxtYXJrdXMucHJvYnN0QHBvc3Rlby5kZT6JAl
+ QEEwEIAD4CGwMFCwkIBwICIgIGFQoJCAsCBBYCAwECHgcCF4AWIQSCdBjE9KxY53IwxHM0dh/4561
+ D0gUCaIZ9HQIZAQAKCRA0dh/4561D0pKmD/92zsCfbD+SrvBpNWtbit7J9wFBNr9qSFFm2n/65qen
+ NNWKDrCzDsjRbALMHSO8nigMWzjofbVjj8Nf7SDcdapRjrMCnidS0DuW3pZBo6W0sZqV/fLx+AzgQ
+ 7PAr6jtBbUoKW/GCGHLLtb6Hv+zjL17KGVO0DdQeoHEXMa48mJh8rS7VlUzVtpbxsWbb1wRZJTD88
+ ALDOLTWGqMbCTFDKFfGcqBLdUT13vx706Q29wrDiogmQhLGYKc6fQzpHhCLNhHTl8ZVLuKVY3wTT+
+ f9TzW1BDzFTAe3ZXsKhrzF+ud7vr6ff9p1Zl+Nujz94EDYHi/5Yrtp//+N/ZjDGDmqZOEA86/Gybu
+ 6XE/v4S85ls0cAe37WTqsMCJjVRMP52r7Y1AuOONJDe3sIsDge++XFhwfGPbZwBnwd4gEVcdrKhnO
+ ntuP9TvBMFWeTvtLqlWJUt7n8f/ELCcGoO5acai1iZ59GC81GLl2izObOLNjyv3G6hia/w50Mw9MU
+ dAdZQ2MxM6k+x4L5XeysdcR/2AydVLtu2LGFOrKyEe0M9XmlE6OvziWXvVVwomvTN3LaNUmaINhr7
+ pHTFwDiZCSWKnwnvD2+jA1trKq1xKUQY1uGW9XgSj98pKyixHWoeEpydr+alSTB43c3m0351/9rYT
+ TTi4KSk73wtapPKtaoIR3rOFHLQXbWFya3VzLnByb2JzdEBwb3N0ZW8uZGWJAlEEEwEIADsWIQSCd
+ BjE9KxY53IwxHM0dh/4561D0gUCaIO9eAIbAwULCQgHAgIiAgYVCgkICwIEFgIDAQIeBwIXgAAKCR
+ A0dh/4561D0oHZEACEmk5Ng9+OXoVxJJ+c9slBI2lYxyBO84qkWjoJ/0GpwoHk1IpyL+i+kF1Bb7y
+ Hx9Tiz8ENYX7xIPTZzS8hXs1ksuo76FQUyD6onA/69xZIrYZ0NSA5HUo62qzzMSZL7od5e12R6OPR
+ lR0PIuc4ecOGCEq3BLRPfZSYrL54tiase8HubXsvb6EBQ8jPI8ZUlr96ZqFEwrQZF/3ihyV6LILLk
+ geExgwlTzo5Wv3piOXPTITBuzuFhBJqEnT25q2j8OumGQ+ri8oVeAzx24g1kc11pwpR0sowfa5MvZ
+ WrrBcaIL7uJfR/ig7FyGnTQ1nS3btf3p0v8A3fc4eUu/K2No3l2huJp3+LHhCmpmeykOhSB63Mj3s
+ 3Q87LD0HE0HBkTEMwp+sD97ZRpO67H5shzJRanUaDTb/mREfzpJmRT1uuec0X2zItL7a6itgMJvYI
+ KG29aJLX3fTzzVzFGPgzVZYEdhu4y53p0qEGrrC1JtKR6DRPE1hb/OdWOkjmJ75+PPLD9U5IuRd6y
+ sHJWsEBR1F0wkMPkEofWsvMYJzWXx/rvTWO8N4D6HigTgBXAXNgbc3IHpHlkvKoBJptv6DRVRtIrz
+ 0G0cfBY0Sm7he4N2IYDWWdGnPBZ3rlLSdj5EiBU2YWgIgtLrb8ZNJ3ZlhYluGnBJDGRqy2jC9s1jY
+ 66sLA9g==
+Content-Type: multipart/signed; micalg="pgp-sha256";
+	protocol="application/pgp-signature"; boundary="=-OiyZeEsFRz6+aj2Addkj"
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v19 2/6] pwm: driver for qualcomm ipq6018 pwm block
-To: george.moussalem@outlook.com,
-        =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley
- <conor+dt@kernel.org>, Baruch Siach <baruch@tkos.co.il>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Konrad Dybcio <konradybcio@kernel.org>
-Cc: linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Devi Priya <quic_devipriy@quicinc.com>,
-        Baruch Siach <baruch.siach@siklu.com>
-References: <20251128-ipq-pwm-v19-0-13bc704cc6a5@outlook.com>
- <20251128-ipq-pwm-v19-2-13bc704cc6a5@outlook.com>
-Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <20251128-ipq-pwm-v19-2-13bc704cc6a5@outlook.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUxMTI4MDA4NCBTYWx0ZWRfX/gf0640XkGbc
- zlL7xo0H+qIbpxZT7J7UrilSpQ8BkjsiE7ni4MKPQZq1MIr5VwEx2Ah81KuYi14YWzl1x8nnZBU
- QGuC6TFD5aITE1mOSiXg/NOHPhsVOfejZn3Ss3N4J8z6/H2yKHrS+98TFGW4Jjw/cgGgxYsYQoG
- O7H2o930lBwJn8920DjPRBkhJf9GdZbGijQiz4gZ29Z1OuxGHKEHfnyJgdMlhhZfsqiH23xV+3t
- wMu0HcPV7YVgkBsHiN9yjHctEG/1QuL7+2gPcW5MjDIdSe3UCYJVehCHzXy66WS65M/QFNY046/
- WN9VtikJBlGWvt9s3ZdBKpJBtxSPxXSrHvKhSauxyHyxHzj3+spOf2i9Ca0zMXAiJvWDkE86kso
- OGxsetp0vikQbJ4hGAvvS1WJHIkxUw==
-X-Proofpoint-ORIG-GUID: OvO3-aEBa27mhVP_ZiJGqE1rdOW3dt3a
-X-Authority-Analysis: v=2.4 cv=W941lBWk c=1 sm=1 tr=0 ts=69298849 cx=c_pps
- a=P2rfLEam3zuxRRdjJWA2cw==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=6UeiqGixMTsA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=COk6AnOGAAAA:8 a=Lh10uZTOAAAA:8 a=VwQbUJbxAAAA:8
- a=UqCG9HQmAAAA:8 a=k7Gwnk5ueRFZCsjwaScA:9 a=QEXdDO2ut3YA:10
- a=ODZdjJIeia2B_SHc_B0f:22 a=TjNXssC_j7lpFel5tvFf:22 a=h7PWpkqlkWt1jHQZSjMD:22
-X-Proofpoint-GUID: OvO3-aEBa27mhVP_ZiJGqE1rdOW3dt3a
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2025-11-28_03,2025-11-27_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- clxscore=1015 spamscore=0 malwarescore=0 phishscore=0 suspectscore=0
- priorityscore=1501 impostorscore=0 lowpriorityscore=0 bulkscore=0
- adultscore=0 classifier=typeunknown authscore=0 authtc= authcc=
- route=outbound adjust=0 reason=mlx scancount=1 engine=8.22.0-2510240001
- definitions=main-2511280084
+OpenPGP: url=https://posteo.de/keys/markus.probst@posteo.de.asc; preference=encrypt
 
-On 11/28/25 11:29 AM, George Moussalem via B4 Relay wrote:
-> From: Devi Priya <quic_devipriy@quicinc.com>
-> 
-> Driver for the PWM block in Qualcomm IPQ6018 line of SoCs. Based on
-> driver from downstream Codeaurora kernel tree. Removed support for older
-> (V1) variants because I have no access to that hardware.
-> 
-> Tested on IPQ5018 and IPQ6010 based hardware.
-> 
-> Co-developed-by: Baruch Siach <baruch.siach@siklu.com>
-> Signed-off-by: Baruch Siach <baruch.siach@siklu.com>
-> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
-> Reviewed-by: Bjorn Andersson <andersson@kernel.org>
-> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
-> ---
 
-[...]
+--=-OiyZeEsFRz6+aj2Addkj
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> +/* The frequency range supported is 1 Hz to clock rate */
-> +#define IPQ_PWM_MAX_PERIOD_NS	((u64)NSEC_PER_SEC)
-> +
-> +/*
-> + * The max value specified for each field is based on the number of bits
-> + * in the pwm control register for that field
-> + */
-> +#define IPQ_PWM_MAX_DIV		0xFFFF
-> +
-> +/*
-> + * Two 32-bit registers for each PWM: REG0, and REG1.
-> + * Base offset for PWM #i is at 8 * #i.
-> + */
-> +#define IPQ_PWM_REG0			0
-> +#define IPQ_PWM_REG0_PWM_DIV		GENMASK(15, 0)
-> +#define IPQ_PWM_REG0_HI_DURATION	GENMASK(31, 16)
-> +
-> +#define IPQ_PWM_REG1			4
-> +#define IPQ_PWM_REG1_PRE_DIV		GENMASK(15, 0)
+On Fri, 2025-11-28 at 09:28 +0000, Alice Ryhl wrote:
+> On Thu, Nov 27, 2025 at 05:15:06PM +0000, Markus Probst wrote:
+> > The `pwm::Registration::register` function provides no guarantee that t=
+he
+> > function isn't called twice with the same pwm chip, which is considered
+> > unsafe.
+> >=20
+> > Add the code responsible for the registration into `pwm::Chip::new`. Th=
+e
+> > registration will happen before the driver gets access to the refcounte=
+d
+> > pwm chip and can therefore guarantee that the registration isn't called
+> > twice on the same pwm chip.
+> >=20
+> > Signed-off-by: Markus Probst <markus.probst@posteo.de>
+> > ---
+> > This patch provides the additional guarantee that the pwm chip doesn't
+> > get registered twice.
+> >=20
+> > The following changes were made:
+> > - change the visibility of `pwm::Registration` to private
+> > - remove the `pwm::Registration::register` function
+> > - add code for registering the pwm chip in `pwm::Chip::new`
+> > - add Send + Sync bounds to `PwmOps`
+> >=20
+> > Note that I wasn't able to test this patch, due to the lack of hardware=
+.
+>=20
+> Overall looks reasonable, but I have one question:
+>=20
+> > @@ -654,50 +668,23 @@ unsafe fn dec_ref(obj: NonNull<Chip<T>>) {
+> >  // structure's state is managed and synchronized by the kernel's devic=
+e model
+> >  // and PWM core locking mechanisms. Therefore, it is safe to move the =
+`Chip`
+> >  // wrapper (and the pointer it contains) across threads.
+> > -unsafe impl<T: PwmOps + Send> Send for Chip<T> {}
+> > +unsafe impl<T: PwmOps> Send for Chip<T> {}
+> > =20
+> >  // SAFETY: It is safe for multiple threads to have shared access (`&Ch=
+ip`) because
+> >  // the `Chip` data is immutable from the Rust side without holding the=
+ appropriate
+> >  // kernel locks, which the C core is responsible for. Any interior mut=
+ability is
+> >  // handled and synchronized by the C kernel code.
+> > -unsafe impl<T: PwmOps + Sync> Sync for Chip<T> {}
+> > +unsafe impl<T: PwmOps> Sync for Chip<T> {}
+>=20
+> Why was this changed?
 
-Sorry for coming in so late, you may consider this as material for a
-follow-up patch (I *really* don't want to hold off your v19..)
+Registration::register required PwmOps to be Send + Sync.
+Prior to this change, Chip::new didn't require it for PwmOps. Meaning
+it was possible to allocate a new Chip with a PwmOps that is not Send +
+Sync. As there was no use for it and it isn't possible anymore to
+allocate a new Chip without registering it, I added Send + Sync as
+trait dependency (see 1. hunk of rust/kernel/pwm.rs in the patch).
 
-I see that on ipq9574 the registers are named:
+Because PwmOps now implied Send + Sync, it wasn't necessary anymore to
+have the additional bounds there.
 
-base = 0x1941010 = tcsr + 0xa010
+Thanks
+- Markus Probst
 
-0x0	CFG0_R0
-0x4	CFG1_R0
-0x8	CFG0_R1
-0xc	CFG1_R1
-0x10	CFG0_R2
-0x14	CFG1_R2
-0x18	CFG0_R3
-0x1c	CFG1_R3
+>=20
+> Alice
 
-CFG0 and CFG1 are what you called REG0/REG1 and Rn is confusingly the
-index of the controller/output
+--=-OiyZeEsFRz6+aj2Addkj
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
 
-The other bits in CFG1 (29:16) are RESERVED so there's nothing you
-missed in there
+-----BEGIN PGP SIGNATURE-----
 
-> +
-> +/*
-> + * Enable bit is set to enable output toggling in pwm device.
-> + * Update bit is set to trigger the change and is unset automatically
-> + * to reflect the changed divider and high duration values in register.
-> + */
-> +#define IPQ_PWM_REG1_UPDATE		BIT(30)
-> +#define IPQ_PWM_REG1_ENABLE		BIT(31)
-> +
-> +struct ipq_pwm_chip {
-> +	struct clk *clk;
-> +	void __iomem *mem;
-> +};
-> +
-> +static struct ipq_pwm_chip *ipq_pwm_from_chip(struct pwm_chip *chip)
-> +{
-> +	return pwmchip_get_drvdata(chip);
-> +}
-> +
-> +static unsigned int ipq_pwm_reg_read(struct pwm_device *pwm, unsigned int reg)
-> +{
-> +	struct ipq_pwm_chip *ipq_chip = ipq_pwm_from_chip(pwm->chip);
-> +	unsigned int off = 8 * pwm->hwpwm + reg;
+iQIzBAABCAAdFiEEgnQYxPSsWOdyMMRzNHYf+OetQ9IFAmkplJkACgkQNHYf+Oet
+Q9KJhQ//clYqiwDcWI4RaF0O+C3T96TqVmJsruXKfEMATKWDSFg5P8EJecH/Vgd8
+Jdk5FN8xjMy/+ZCP7rW8AZCUOi5vrL8d8EJQNTS0EXuG04UUUIgUPwqNXX9LxdG4
+2m4ZUqXN34HCxs2ojwN0irOogL9Bt0JlWwWDOm0fzvSEe1NCrtx4A7LOOUgdqplg
+vjQbxdR5qJ+/0bgGFk42h+nstvz1s05vOHJrMFcPSlvapzCL72jhnR2f/a6/1rSd
+VEZPuxp+K6VZ72YpFgG6SZDeRKgtKz8LSuKTSr11qXAL4UkKZXGpU9KSuD3eBLBD
+ERYNZ0ovq/m7JSv8q7tBSzgX5bGyw0FHnLmuar2CmYh/WNZ5FqagfF75sLgYnoVU
++DFo3d26+O4V5QYGyu32iPEhpnoKMHvbm8EcLdjzepZ8tAgxX7f4daEPYJz1qyA0
+wxTrNY2qE6DHJfDe9pBXqj2giLjCyEKjY1cLbM8gV9k4aDEHxFTvufclosRuptWN
+n/IITBOMrdzD7cMnaZcs/6OBk+pQa1QDyqYMy4fqBVX3ZdhnkbzkDM6Owhd4oMuI
+MQJE3IPzullpRwAr+/8rtuSqikDuEMgXdCHrjv8kD2qeeAkgoodkwV1tpG+bs6Qi
+0vfjW+HbeawQw9wpFpiBb74tSzRpcf31cmi5ScevMCGHrQ6QYAw=
+=oy2y
+-----END PGP SIGNATURE-----
 
-This magic 8 could be #defined as IPQ6018_PWM_CONTROLLER_STRIDE or so
-
-Konrad
+--=-OiyZeEsFRz6+aj2Addkj--
 
