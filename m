@@ -1,77 +1,108 @@
-Return-Path: <linux-pwm+bounces-7755-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7756-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8974CA523D
-	for <lists+linux-pwm@lfdr.de>; Thu, 04 Dec 2025 20:37:34 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 54ED8CA6CD1
+	for <lists+linux-pwm@lfdr.de>; Fri, 05 Dec 2025 10:04:52 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 614B8314B402
-	for <lists+linux-pwm@lfdr.de>; Thu,  4 Dec 2025 19:36:53 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id BA72930361D8
+	for <lists+linux-pwm@lfdr.de>; Fri,  5 Dec 2025 09:04:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 594D734DB61;
-	Thu,  4 Dec 2025 19:30:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KDwinERc"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02687315794;
+	Fri,  5 Dec 2025 09:04:51 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3312C34DB5D;
-	Thu,  4 Dec 2025 19:30:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [52.229.205.26])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 95E12309EFA;
+	Fri,  5 Dec 2025 09:04:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.229.205.26
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764876632; cv=none; b=fe5N97XKOpsl0mk0Sm9mGWDVNmNwxc6P0Ih90WMEGc5mUTJTxZlFfkC6uncd8831U7UAX4bLwy54d/KbbbkOqb7/9JQuSsHvSjlUB+qyYaZHvUl73B+vCMhVn7eAlJKsaQxXWlbLdH0iDZ5nB2s/bTR41n4fLypNLthx8K5NUu0=
+	t=1764925487; cv=none; b=SUOlkA1FNZ6i+cEmHGTogFQzynOBVEJjxn0bpFWp4Kx3q5fhf1q8rT9eZi3sen0LJdcodZEaVQA/Kwt2RNgjtIZk/Tatwlv8lTkRaRtZLvD8jzpzMejjvZxuWr3IecCGuqDVNhcubo0Jjioh5hhtxuTwXIrW8vcEQ2jFmLAa7DU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764876632; c=relaxed/simple;
-	bh=4n3ipQMSXGvtUzwffo3s5knNbGcdthd9JZ3qmvp4isQ=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=TUvbGiwdngSuCDyi/2TikehtvNsmRZZbJIW4s2k+cxNAIaU8uJRhvADg8kdGsk5Z4TYDJQdJ4nAEb+jZOjurCyaHv1epj+TZzGonUiaumdKvtNIOxeF3Mzx4vyWUPPEvwyfhXCz+bVutEWgMdP+4RaL4FcQSEaFPfElxsH66hhQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KDwinERc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 161BAC4CEFB;
-	Thu,  4 Dec 2025 19:30:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1764876632;
-	bh=4n3ipQMSXGvtUzwffo3s5knNbGcdthd9JZ3qmvp4isQ=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=KDwinERc6hN03YkLqkOMr4nzt3IeJIlOzmXbG2kkcNORP6MljqJnxWzRHp97v8gRA
-	 bQfDsDeQYpHZNAiI38tLRiaw2RrlLe5vDysyJUV8vkxv2WnjRc7mZv5f5HVXEheH0S
-	 BR5Alk8F9LSzO/7Aho/yNe7wLaEhdKUmpK++J7vetDGTsaT988jXYOTL7KdhKtK3Tr
-	 INPUQHVtXsyTqAPTNpSofEeuQ375d9NiDzKahVVGnpNVLoTNvHaP1qncdkp7VrfeEl
-	 Pc9gr/OjV2D+M9oaBQrCQEnYw4UT0QazNQhmOVdqOOY5IYO8mOuQQW7qx+vY/0Zgni
-	 yP7FmnagBDSKw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 78A94380048B;
-	Thu,  4 Dec 2025 19:27:31 +0000 (UTC)
-Subject: Re: [GIT PULL] pwm: Changes for v6.19-rc1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <ew3w7xtjwbsk77bzdjj2fek3z5kzou2su2gdhdn5qqrnboyxgj@sqmo7mn5myes>
-References: <ew3w7xtjwbsk77bzdjj2fek3z5kzou2su2gdhdn5qqrnboyxgj@sqmo7mn5myes>
-X-PR-Tracked-List-Id: <linux-pwm.vger.kernel.org>
-X-PR-Tracked-Message-Id: <ew3w7xtjwbsk77bzdjj2fek3z5kzou2su2gdhdn5qqrnboyxgj@sqmo7mn5myes>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git tags/pwm/for-6.19-rc1
-X-PR-Tracked-Commit-Id: fae00ea9f00367771003ace78f29549dead58fc7
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 77956cf36494cc5e5649b187f552b90fb14d0674
-Message-Id: <176487645017.944914.14839231147559213126.pr-tracker-bot@kernel.org>
-Date: Thu, 04 Dec 2025 19:27:30 +0000
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Daniel Gomez <da.gomez@samsung.com>, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, Michal Wilczynski <m.wilczynski@samsung.com>
+	s=arc-20240116; t=1764925487; c=relaxed/simple;
+	bh=oE8GoZP04K680ASQk1ozGiSx1k2fBPmgcNZwSMjytWk=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=o6oRQTaKBt1aqaY3kz8zdysUWfzbjj6xmk74R7Il7MtXX3s3R51lSK1+7CkOdh/mGN2V0sLRwZctBpni3kBrS5q2RhvEABBXuRYljP9r4x9J1Bxl41mZzs9gbzGUaoAwonoNM0oRiWFEyUtw2KMvb/i1t51Kb7b99kisHzCoupI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=52.229.205.26
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from E0005152DT.eswin.cn (unknown [10.12.96.41])
+	by app1 (Coremail) with SMTP id TAJkCgCXkGgOoDJpadmBAA--.39523S2;
+	Fri, 05 Dec 2025 17:04:15 +0800 (CST)
+From: dongxuyang@eswincomputing.com
+To: ukleinek@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	p.zabel@pengutronix.de,
+	linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: ningyu@eswincomputing.com,
+	linmin@eswincomputing.com,
+	xuxiang@eswincomputing.com,
+	wangguosheng@eswincomputing.com,
+	pinkesh.vaghela@einfochips.com,
+	Xuyang Dong <dongxuyang@eswincomputing.com>
+Subject: [PATCH 0/2] Add driver support for ESWIN EIC7700 PWM controller
+Date: Fri,  5 Dec 2025 17:04:11 +0800
+Message-Id: <20251205090411.1388-1-dongxuyang@eswincomputing.com>
+X-Mailer: git-send-email 2.31.1.windows.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:TAJkCgCXkGgOoDJpadmBAA--.39523S2
+X-Coremail-Antispam: 1UD129KBjvdXoWruF4UGFyDXFy7Cw1fJr1xAFb_yoWDGFbEkw
+	4furZ7Xw4ruF95AayYyrZ3ZFyqyF45Wr1vkFZ0k34Y9wnrur15KrykZ34UZ3WIyF45AF1D
+	AryIyF1Skr17XjkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+	9fnUUIcSsGvfJTRUUUbhxFF20E14v26r4j6ryUM7CY07I20VC2zVCF04k26cxKx2IYs7xG
+	6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rwA2F7IY1VAKz4vEj48ve4kI8w
+	A2z4x0Y4vE2Ix0cI8IcVAFwI0_tr0E3s1l84ACjcxK6xIIjxv20xvEc7CjxVAFwI0_Gr1j
+	6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwVC2z280aVCY1x0267AKxVW0oV
+	Cq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv7VC0
+	I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r1j6r
+	4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02628v
+	n2kIc2xKxwAKzVCY07xG64k0F24lc7CjxVAaw2AFwI0_Jw0_GFylc2xSY4AK6svPMxAIw2
+	8IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_Jr4l
+	x2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVWUtVW8ZwCIc40Y0x0EwIxGrw
+	CI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWxJwCI
+	42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2z2
+	80aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbknY7UUUUU==
+X-CM-SenderInfo: pgrqw5xx1d0w46hv4xpqfrz1xxwl0woofrz/
 
-The pull request you sent on Mon, 1 Dec 2025 09:54:20 +0100:
+From: Xuyang Dong <dongxuyang@eswincomputing.com>
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git tags/pwm/for-6.19-rc1
+Add support for the ESWIN EIC7700 PWM (Pulse Width Modulation) based on
+Synopsys DWC PWM.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/77956cf36494cc5e5649b187f552b90fb14d0674
+Features:
+The EIC7700 PWM driver supports a duty cycle range from 0% to 100%, with
+explicit support added for both 0% and 100% duty cycles.
 
-Thank you!
+Supported chips:
+ESWIN EIC7700 series SoC.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Test:
+Tested this patch on the Sifive HiFive Premier P550 (which used the EIC7700
+SoC).
+
+Xuyang Dong (2):
+  dt-bindings: pwm: eswin: Add EIC7700 pwm controller
+  pwm: eswin: Add EIC7700 pwm driver
+
+ .../bindings/pwm/eswin,eic7700-pwm.yaml       |  73 ++++++
+ drivers/pwm/Kconfig                           |  12 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-dwc-core.c                    |  76 ++++--
+ drivers/pwm/pwm-dwc-eic7700.c                 | 231 ++++++++++++++++++
+ drivers/pwm/pwm-dwc.h                         |  16 +-
+ 6 files changed, 384 insertions(+), 25 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pwm/eswin,eic7700-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-dwc-eic7700.c
+
+--
+2.34.1
+
 
