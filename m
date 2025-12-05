@@ -1,73 +1,120 @@
-Return-Path: <linux-pwm+bounces-7761-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7764-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id BD31CCA70DA
-	for <lists+linux-pwm@lfdr.de>; Fri, 05 Dec 2025 11:03:13 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8D903CA8F74
+	for <lists+linux-pwm@lfdr.de>; Fri, 05 Dec 2025 20:02:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 22C06302E102
-	for <lists+linux-pwm@lfdr.de>; Fri,  5 Dec 2025 10:03:13 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 55D8630EE830
+	for <lists+linux-pwm@lfdr.de>; Fri,  5 Dec 2025 18:58:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88B591D6AA;
-	Fri,  5 Dec 2025 10:03:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5AB4E3590AB;
+	Fri,  5 Dec 2025 18:40:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="QYH73ycq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OB4B8ACn"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 776BA301704;
-	Fri,  5 Dec 2025 10:03:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81509358D30
+	for <linux-pwm@vger.kernel.org>; Fri,  5 Dec 2025 18:40:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764928988; cv=none; b=tk8gtSpom/6kAhzaGNtKNB1wege4rpq7AaqCMOKQgeiHyWcI5HD3nQ1sINC2g2W6WbnIf55QljvB5YS8FLsdsyzUDB3+mE6qHSmVy4TN7udTgxqDGUYDpsetoeD/d9uHRl8oHnvNR98170NcUCGWD0jLkHo9bOOVHnzkPsy7CPs=
+	t=1764960045; cv=none; b=VmQzWbYMPAR4IPKUnZZBQSJZ5Ri4eKXiGEjsadQXDU+9wPj3Ep5ASawo6N2bv+OMq5DWmA0z3sVS9m5WPcjvbJXCFiwf574Uft2BiiTmaI6yDWf8mmFsnUI5jFL2cnbDHatVLbHISu+CR1ZnnpzVwTjiDW/epUOdufNbABzPq3M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764928988; c=relaxed/simple;
-	bh=Y1FAYJA48M/Xcdycplj+Xi9Ecwdzft2Jl0ep83NiIVw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=men0rZax9TyvTvr6nJCQ/qLvcJSpg814SwcCQZCt2FmV5ATORwinFfiBFjol+eSTG8wdi/gBWHcrhWJ6KC/XAgwJ46jZqL/pb3rsrf6z91S1Yj8hlc8lzgD5lzqqbenVgbU6wFwc2Hbj5csZnhuxAYK3piLsUjrzYKgWLOAIukU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=QYH73ycq; arc=none smtp.client-ip=185.246.84.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-02.galae.net (Postfix) with ESMTPS id D3EF51A1F87;
-	Fri,  5 Dec 2025 10:02:58 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id A04B960731;
-	Fri,  5 Dec 2025 10:02:58 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 57C0B10B60769;
-	Fri,  5 Dec 2025 11:02:55 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1764928977; h=from:subject:date:message-id:to:cc:mime-version:
-	 content-transfer-encoding:in-reply-to:references;
-	bh=lcJDgYt4uOmEYvg+2YJwYcGPnE9cLxBjU9f46SXWfsg=;
-	b=QYH73ycqdkq9nIP4JkzGLReG3T2s82hM1YeCDTJ793yrPo/JT1ry06U+vbdF+Na1wJhdc8
-	Y9dp/i4/OtUMuZ6Zlwhh8qDWBxGrf3PTFqbRqIRlv9Q3+LgTmW7Qyd+kLJBwqijd5gPrBw
-	Rjit5qI4EgdGffp8AXFuhEy2AN8mhN9GBsEI/fLt9OmUNtGy9Deb6HkHSvfpBV2DkDsz9O
-	7xCgbQ7WwKr03gasvqBZyqJ+0WTHV9zWfY7YxXGQRQyQyHcDMVD6xzYB2zHS4IKwS87TxG
-	BlhVJIRXY1dZbAstlx88WfIrlCfcYmo+qraM+vB4nRhg2jM7sdzsyJA+zvu9Og==
-From: Richard Genoud <richard.genoud@bootlin.com>
-To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev,
+	s=arc-20240116; t=1764960045; c=relaxed/simple;
+	bh=6Yy3IShQVWKoUdXCDZD3yBqKU2764SqgOZHs7jYW65g=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=BI2z/EGj/KkCmJ9GPedPfG8V9EH1gxasxKhUCbISFd6Rk+IJJCON6GNs1JuiwYL/z/jtCezfFnczVVKVMXwOZcpdPFo7hMOdZ1HyMdpRbhUFyJqPcMHsuqVp0h0Rpc6KiqrBM9vodnRMRBaRcCF53rN/VhVCZxXaqqAZOz3MAsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OB4B8ACn; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7b6dd81e2d4so2648351b3a.0
+        for <linux-pwm@vger.kernel.org>; Fri, 05 Dec 2025 10:40:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1764960040; x=1765564840; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Gx4zuHCdfmsBvfViSx4dewQ3NC0pwlIv6go7qc93ekw=;
+        b=OB4B8ACnPwttjampNMBOyr5SQc3Lvq62ehcw0tv8++5+w4VkufFKGOxcDXbCKO0ZfO
+         pqHpYswzVY/GbBPI+w8G4ywayCKLapa5R5RRM5i2PHXKwztAC+JznM87b23IhWGIJEVT
+         yG9433rpC9RO7QrY1GfZ+wpMP2+38InsAw4QmJFd1Bjsg6AGdaT1bZaBxwH4CGQ4fMcE
+         aId8rOKhpwqC3YyolpgTi+TLuRH/VfgLCHC0pVdT/YZ6awxPOzVVMl6bTAP733KmyNnW
+         M7SgQvULVcIthAa8zUMJM8LwpiUB1HemuP45Sq/wLzODq6jNbAW4kOyCRQJSdAnQZsSt
+         +pBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1764960040; x=1765564840;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=Gx4zuHCdfmsBvfViSx4dewQ3NC0pwlIv6go7qc93ekw=;
+        b=oBuxtFthzYHW0EpmY8U7FFTsRpk+aOzXs2bBekCJowxi26cQp26C3SyWTDvT9iv/vy
+         jRMRLct0Ec3cTsb9JTUrqkY6itbm0kEuieT1SC+zwjiGIz5B2UhsWA3bLUOOtCZSwy/a
+         H53vjcpsABP5ZSoJxDT5DBuyznNqmKJ2bOjTFA8YnC7M+nBxqBenINoGTkKYGUIBua0V
+         X9goPybYnT9bjsM+klaYoago2sWiRqrRY9FOAW/dx8jvT9gKuYXLGLkZP3ausnlwL1UH
+         VBQ8AWlccla0pBIY8Fh99rFmTApjb5qF4YRRFy+lHwE0FzTz946Y8Oj34JC1tb5BcX2+
+         YK2g==
+X-Forwarded-Encrypted: i=1; AJvYcCWHzj+T60ncjrfR08sWqXcx+6m3sQC1h86MzQ+wdpAbCqJ2NKuuG5camo3AvmevFqxCbeHUyV6tgwM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxgaIsvVmXo9eAVPmaD6luty9gB0a5h1perzA/GDJ5rToiH9iy7
+	T2GpEFcEn145nkDx6vn5+e530bK4mfHyrYq3JhuVPdvGV+FUKBFLVKHh
+X-Gm-Gg: ASbGnctf+64WMG/FALHQkO+8clc10XFMbzhmDOECLwcK+GAnxODQZK9VI+7YAhwyDAX
+	fz+1OvWpTS/wdf6dU0EAUrDVWTcFnhYqO9Q8WXJXkmfKR1m+EuscbvyJkRCfvh/vgcK2V3qidTt
+	yKKPkRUPyZg5J4kcHbXWsNhcWc6jSn4mubQpoXPnlyZKsYlRsf0gm+50GINlojEXwQxR0uk5foM
+	OmH6JcRuYo6gPh0T8fNJPZF39+8jPIcz3+ULvtC6W8AuuDE0+AnFcLVqKJbWNgz8FTuuMh/Aqnp
+	n3GqABgq71T7ky0Ks3ixyFn4SFicbNTCXTD8HAMqnlgJhSaV4gn84pl5T2/47l7Z+0SDXyZK3Rs
+	VaPHWVFwLoZZHbudPEmdJa4ppMpKlqMjTLCckokCb6oRXlmYzf9lyZNJm5LYBV3VyONWihWo44n
+	fsoRrkWelrugen+mrGoluyYWD+/w==
+X-Google-Smtp-Source: AGHT+IFdaIOl2EVfDf53MnHxu6h2Csp/9+fkL7qdsbkngVF7MJLua/LR1xBA2DmFila+UaeQfEKpNw==
+X-Received: by 2002:a05:6a00:ac3:b0:7e8:4433:8fb5 with SMTP id d2e1a72fcca58-7e8c6cab76fmr135748b3a.61.1764960039751;
+        Fri, 05 Dec 2025 10:40:39 -0800 (PST)
+Received: from shankari-IdeaPad.. ([103.24.60.188])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7e2a0533f08sm5952079b3a.23.2025.12.05.10.40.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Dec 2025 10:40:39 -0800 (PST)
+From: Shankari Anand <shankari.ak0208@gmail.com>
+To: Igor Korotin <igor.korotin.linux@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+	=?UTF-8?q?Arve=20Hj=C3=B8nnev=C3=A5g?= <arve@android.com>,
+	Todd Kjos <tkjos@android.com>,
+	Martijn Coenen <maco@android.com>,
+	Joel Fernandes <joelagnelf@nvidia.com>,
+	Christian Brauner <brauner@kernel.org>,
+	Carlos Llamas <cmllamas@google.com>,
+	Suren Baghdasaryan <surenb@google.com>,
+	Danilo Krummrich <dakr@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+	Maxime Ripard <mripard@kernel.org>,
+	Thomas Zimmermann <tzimmermann@suse.de>,
+	David Airlie <airlied@gmail.com>,
+	Simona Vetter <simona@ffwll.ch>,
+	Alexandre Courbot <acourbot@nvidia.com>,
+	"Rafael J . Wysocki" <rafael@kernel.org>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	Alex Gaynor <alex.gaynor@gmail.com>,
+	Michal Wilczynski <m.wilczynski@samsung.com>,
+	Boqun Feng <boqun.feng@gmail.com>,
+	Gary Guo <gary@garyguo.net>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Benno Lossin <lossin@kernel.org>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Trevor Gross <tmgross@umich.edu>,
+	Daniel Almeida <daniel.almeida@collabora.com>,
+	Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+	Robin Murphy <robin.murphy@arm.com>,
+	Shankari Anand <shankari.ak0208@gmail.com>,
 	linux-kernel@vger.kernel.org,
-	Richard Genoud <richard.genoud@bootlin.com>
-Subject: [PATCH 4/4] MAINTAINERS: Add entry on Allwinner H616 PWM driver
-Date: Fri,  5 Dec 2025 11:02:39 +0100
-Message-ID: <20251205100239.1563353-5-richard.genoud@bootlin.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <20251205100239.1563353-1-richard.genoud@bootlin.com>
-References: <20251205100239.1563353-1-richard.genoud@bootlin.com>
+	dri-devel@lists.freedesktop.org,
+	nouveau@lists.freedesktop.org,
+	rust-for-linux@vger.kernel.org,
+	linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 05/10] rust: kernel: Update ARef and AlwaysRefCounted imports to use sync::aref
+Date: Sat,  6 Dec 2025 00:10:23 +0530
+Message-Id: <20251205184023.7230-1-shankari.ak0208@gmail.com>
+X-Mailer: git-send-email 2.34.1
+In-Reply-To: <1b7408c5-64a8-42f1-92ab-dd90a883c1a4@gmail.com>
+References: <1b7408c5-64a8-42f1-92ab-dd90a883c1a4@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -75,34 +122,26 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
 
-Add myself as maintainer of Allwinner H616 PWM driver and device-tree
-bindings.
+Hello Igor,
 
-Signed-off-by: Richard Genoud <richard.genoud@bootlin.com>
----
- MAINTAINERS | 6 ++++++
- 1 file changed, 6 insertions(+)
+> 
+> NIT: This module already imports `AlwaysRefCounted`, so please use the
+> imported name instead of the full path for consistency.
+> 
+> >       fn inc_ref(&self) {
+> >           // SAFETY: The existence of a shared reference guarantees that the refcount is non-zero.
+> >           unsafe { bindings::i2c_get_adapter(self.index()) };
+> 
+> Thanks
+> Igor
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 578c068b738b..b336c0fff4e4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -903,6 +903,12 @@ S:	Maintained
- F:	Documentation/devicetree/bindings/sound/allwinner,sun50i-h6-dmic.yaml
- F:	sound/soc/sunxi/sun50i-dmic.c
- 
-+ALLWINNER H616 PWM DRIVER
-+M:	Richard Genoud <richard.genoud@bootlin.com>
-+S:	Maintained
-+F:	Documentation/devicetree/bindings/pwm/allwinner,sun50i-h616-pwm.yaml
-+F:	drivers/pwm/pwm-sun50i-h616.c
-+
- ALLWINNER HARDWARE SPINLOCK SUPPORT
- M:	Wilken Gottwalt <wilken.gottwalt@posteo.net>
- S:	Maintained
--- 
-2.47.3
+I apologize for the overlook. I was just focussing on changing the path. 
+I'll make the required changes and send a v2.
 
+As this patch is part of a series, am I supposed to send all the patches with a v2, 
+some have been acked by already, hence I had the question?
+
+Thanks and regards,
+Shankari
 
