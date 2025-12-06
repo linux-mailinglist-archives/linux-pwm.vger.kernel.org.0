@@ -1,208 +1,238 @@
-Return-Path: <linux-pwm+bounces-7766-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7767-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3BAB2CAA0C6
-	for <lists+linux-pwm@lfdr.de>; Sat, 06 Dec 2025 05:33:56 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 61446CAA37A
+	for <lists+linux-pwm@lfdr.de>; Sat, 06 Dec 2025 10:34:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 5B3C1301E6D7
-	for <lists+linux-pwm@lfdr.de>; Sat,  6 Dec 2025 04:33:48 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 1BBD530131D8
+	for <lists+linux-pwm@lfdr.de>; Sat,  6 Dec 2025 09:34:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C412B23EA95;
-	Sat,  6 Dec 2025 04:33:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 833D7239E7D;
+	Sat,  6 Dec 2025 09:34:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="ZATwAjZk"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bx700QVJ"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.9])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1494C1A256E;
-	Sat,  6 Dec 2025 04:33:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5205819F137;
+	Sat,  6 Dec 2025 09:34:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1764995624; cv=none; b=UdlW/tDMmVRoFLT/LzEI9vdcY12O4WxrrypxE9jMviVBvZ6Rf98bd4RUarXe3OghtoGbEgKU4AbIhGkLWa7CNtaYbs1zTgPRaV2kZC29TO20IAQdP1pYb+jsdW+/nQjL9GMke0Zer4acZS2syJ1VfdYCcU7U3LB43JgHWcdjMgQ=
+	t=1765013677; cv=none; b=U8wWPE7iXSioUXGGax/vOCSn/kmDG08kiSp2Ng43jq6BVcymaYWQ8wJNE+fjpMxJ+182g0Zc6zC9QeNwtmtaBoM29W7UGZITG2ZqxUwXAINYwSpM6LgPCZZsuZnxTBr4AiubcsIgJ+WWHeokjF0INqVwkUfLiVP+DTxB2hdiebQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1764995624; c=relaxed/simple;
-	bh=1RXda8DebYFioOiumkkWKKD95G9Tw8ToK4dBLUquDSg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dFMAPAF+jlsz2zJdGIQAcR/eg4iACDcRlsiJBsRThDV/hroh3nDfQWGbY/jIU3LmHl7Uy9Wyy4VqSfLNqAAeE6Y7vOJ6BKgZuQIbyU4iLH92CvsPdFilOS3k33CHZLPcMpvjVnepLeR+jFQHhoHUieGLkiGXj6/NzsAEoWCZf2U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=ZATwAjZk; arc=none smtp.client-ip=192.198.163.9
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1764995623; x=1796531623;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=1RXda8DebYFioOiumkkWKKD95G9Tw8ToK4dBLUquDSg=;
-  b=ZATwAjZkVBu1sDZff9xwZxmPTB07KET6SVhaUbn7fJTyeKRzU+fltgsH
-   PVVAc66OGWGHquZ0txaPEDr//h55XPrC0uu8xaaDgoMqnLFSQbdhIrAaU
-   62a8U7fwaD+wrOzb0vxvfXe7PYfZFJoiCu3HjD6JQHr8hYe6TzG1zoTHS
-   CaUR9/7nXsPCIwUGJ/DU3k+KsyfHnoB7z/xoBmHd1Wy0QEO/DbOI9gfHw
-   WxgY+HLSmX9FMKoIbcvM1+1OzOfELx/TILPNm00FV7JDz8v1Ndy6FBMWJ
-   IOB6UwFeERDuOqWhWrlxifDpEbduAvx5YK5gkz5hZQC2kPUCd6a8Pl6L+
-   A==;
-X-CSE-ConnectionGUID: 7FXn9Tp/QSaHWv9GjbMNfw==
-X-CSE-MsgGUID: 6FfmdcGSTcGQQGjQVTsYKg==
-X-IronPort-AV: E=McAfee;i="6800,10657,11633"; a="77714545"
-X-IronPort-AV: E=Sophos;i="6.20,254,1758610800"; 
-   d="scan'208";a="77714545"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Dec 2025 20:33:43 -0800
-X-CSE-ConnectionGUID: WgE21FiOSiGitnIlBwcihA==
-X-CSE-MsgGUID: Ak20VQHVTPSmYGdp4jTokA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.20,254,1758610800"; 
-   d="scan'208";a="199938011"
-Received: from lkp-server01.sh.intel.com (HELO 4664bbef4914) ([10.239.97.150])
-  by orviesa004.jf.intel.com with ESMTP; 05 Dec 2025 20:33:39 -0800
-Received: from kbuild by 4664bbef4914 with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1vRjzD-00000000Fqj-37PO;
-	Sat, 06 Dec 2025 04:33:35 +0000
-Date: Sat, 6 Dec 2025 12:32:50 +0800
-From: kernel test robot <lkp@intel.com>
-To: Richard Genoud <richard.genoud@bootlin.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
+	s=arc-20240116; t=1765013677; c=relaxed/simple;
+	bh=LVpVlpi6OB57YEEuOdpQyyiZg0u6TcCf1CGA1h9vpBg=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=hPVeDaOyCunOHqWEcrsBA55neBDwopY9yN8bJWuGDcinL/ogFXBKMpctkL7lVrkhPU2aj1400zqgxd98xlJgPtl38lXEnw3CcCDcBhyyQWjpaqRhQuUXc7is1t9Yk6K1DPbzvZVNJm8gnYkwbX3L4eZOzvXF0sUGteFK10vJQak=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bx700QVJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3542CC4CEF5;
+	Sat,  6 Dec 2025 09:34:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1765013676;
+	bh=LVpVlpi6OB57YEEuOdpQyyiZg0u6TcCf1CGA1h9vpBg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=bx700QVJbLTGUIeKm0O22TtLPhUtMrkFcl7fdbcJZVOwdiqeLbjF5hrQeiOdJCXdC
+	 krutnylAbtSh9mi3fVU7U3Zf94ROz3cOezsxTnOp72rIOV1wxreOzIlSI3LBBeD3LU
+	 PO4RKzI66ic6zAclhP+WlgH+vrzyXwxUkL21B+JxTy1WI87F8DejeP0TQie8riE1A1
+	 G16crdFM3HpnnxUV/C4lSxpuDXimp0B9gJ+5vmkqIsU2HJGuob8KsyEnqSiWRlzeyZ
+	 OdncME6viW0HhYT7EVURDb4SvohUqn4RP4h0A9yO8gWT3ZsGeoDPZNjQ2cBW8dTAYb
+	 TYbJ2kwZIcq4g==
+From: William Breathitt Gray <wbg@kernel.org>
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+Cc: William Breathitt Gray <wbg@kernel.org>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
 	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>
-Cc: oe-kbuild-all@lists.linux.dev,
-	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Heiko Stuebner <heiko@sntech.de>,
+	Lee Jones <lee@kernel.org>,
+	kernel@collabora.com,
+	Jonas Karlman <jonas@kwiboo.se>,
+	Alexey Charkov <alchark@gmail.com>,
+	linux-rockchip@lists.infradead.org,
+	linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
 	linux-kernel@vger.kernel.org,
-	Richard Genoud <richard.genoud@bootlin.com>
-Subject: Re: [PATCH 2/4] pwm: sun50i: Add H616 PWM support
-Message-ID: <202512061246.jJ5UrB71-lkp@intel.com>
-References: <20251205100239.1563353-3-richard.genoud@bootlin.com>
+	linux-iio@vger.kernel.org
+Subject: Re: [PATCH v3 4/5] counter: Add rockchip-pwm-capture driver
+Date: Sat,  6 Dec 2025 18:34:17 +0900
+Message-ID: <20251206093419.40067-1-wbg@kernel.org>
+X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20251027-rk3576-pwm-v3-4-654a5cb1e3f8@collabora.com>
+References: <20251027-rk3576-pwm-v3-4-654a5cb1e3f8@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20251205100239.1563353-3-richard.genoud@bootlin.com>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5608; i=wbg@kernel.org; h=from:subject; bh=LVpVlpi6OB57YEEuOdpQyyiZg0u6TcCf1CGA1h9vpBg=; b=owGbwMvMwCW21SPs1D4hZW3G02pJDJnGPyYceT6/uuOowkeJzKMXdru+8oyTXW/9KnZb0Npb5 7YnyTsHdJSyMIhxMciKKbL0mp+9++CSqsaPF/O3wcxhZQIZwsDFKQATKctj+B/fezxbrcnBZa22 wAYGEZnP65yLGeM210wtSArdtY9jiTYjwy/3uODLKTURuz+fPbGii+Pa+yd/Tl7sa/pnEH5pndn eClYA
+X-Developer-Key: i=wbg@kernel.org; a=openpgp; fpr=8D37CDDDE0D22528F8E89FB6B54856CABE12232B
+Content-Transfer-Encoding: 8bit
 
-Hi Richard,
+> +struct rockchip_pwm_capture {
+> +	struct rockchip_mfpwm_func *pwmf;
+> +	struct counter_device *counter;
 
-kernel test robot noticed the following build warnings:
+Is this structure member used at all? If not, you should just remove it.
 
-[auto build test WARNING on 6987d58a9cbc5bd57c983baa514474a86c945d56]
+> +	bool is_enabled;
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Richard-Genoud/dt-bindings-pwm-sunxi-add-PWM-controller-for-Allwinner-H616/20251205-214804
-base:   6987d58a9cbc5bd57c983baa514474a86c945d56
-patch link:    https://lore.kernel.org/r/20251205100239.1563353-3-richard.genoud%40bootlin.com
-patch subject: [PATCH 2/4] pwm: sun50i: Add H616 PWM support
-config: parisc-allyesconfig (https://download.01.org/0day-ci/archive/20251206/202512061246.jJ5UrB71-lkp@intel.com/config)
-compiler: hppa-linux-gcc (GCC) 15.1.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20251206/202512061246.jJ5UrB71-lkp@intel.com/reproduce)
+Does this device offer some way to probe whether PWM capture mode is
+enabled? I suspect so, because I see PWM_ENABLE.pwm_en enables the
+channel and PWM_CTRL.pwm_mode selects capture mode, so perhaps we're
+able to read the current state of those registers. If you're able to
+read those registers to determine the enable state, I'd suggest wrapping
+that into a helper function and calling it when you need to determine
+whether the capture mode is currently enabled.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202512061246.jJ5UrB71-lkp@intel.com/
+If we're not able to probe the enable state, is it safe to assume we're
+in a disabled state when the module loads, or should we ensure it by
+unconditionally disabling PWM capture mode during
+rockchip_pwm_capture_probe()?
 
-All warnings (new ones prefixed by >>):
+> +	spinlock_t enable_lock;
+> +};
+> +
+> +/*
+> + * Channel 0 receives a state changed notification whenever the LPC interrupt
+> + * fires.
+> + *
+> + * Channel 1 receives a state changed notification whenever the HPC interrupt
+> + * fires.
+> + */
+> +static struct counter_signal rkpwmc_signals[] = {
+> +	{
+> +		.id = 0,
+> +		.name = "Channel 0"
+> +	},
+> +	{
+> +		.id = 1,
+> +		.name = "Channel 1"
+> +	},
+> +};
 
-   drivers/pwm/pwm-sun50i-h616.c: In function 'h616_pwm_get_state':
-   drivers/pwm/pwm-sun50i-h616.c:76:41: error: implicit declaration of function 'FIELD_GET' [-Wimplicit-function-declaration]
-      76 | #define PWM_REG_DUTY(reg)               FIELD_GET(PWM_DUTY_MASK, reg)
-         |                                         ^~~~~~~~~
-   drivers/pwm/pwm-sun50i-h616.c:452:30: note: in expansion of macro 'PWM_REG_DUTY'
-     452 |         tmp = NSEC_PER_SEC * PWM_REG_DUTY(val);
-         |                              ^~~~~~~~~~~~
-   drivers/pwm/pwm-sun50i-h616.c: In function 'h616_pwm_calc':
-   drivers/pwm/pwm-sun50i-h616.c:79:41: error: implicit declaration of function 'FIELD_MAX' [-Wimplicit-function-declaration]
-      79 | #define PWM_PERIOD_MAX                  FIELD_MAX(PWM_PERIOD_MASK)
-         |                                         ^~~~~~~~~
-   drivers/pwm/pwm-sun50i-h616.c:493:54: note: in expansion of macro 'PWM_PERIOD_MAX'
-     493 |                 freq = div64_u64(NSEC_PER_SEC * (u64)PWM_PERIOD_MAX, period);
-         |                                                      ^~~~~~~~~~~~~~
-   drivers/pwm/pwm-sun50i-h616.c: In function 'h616_pwm_apply':
-   drivers/pwm/pwm-sun50i-h616.c:78:41: error: implicit declaration of function 'FIELD_PREP' [-Wimplicit-function-declaration]
-      78 | #define PWM_DUTY(dty)                   FIELD_PREP(PWM_DUTY_MASK, dty)
-         |                                         ^~~~~~~~~~
-   drivers/pwm/pwm-sun50i-h616.c:577:23: note: in expansion of macro 'PWM_DUTY'
-     577 |                 val = PWM_DUTY(chan->active_cycles);
-         |                       ^~~~~~~~
-   drivers/pwm/pwm-sun50i-h616.c: In function 'h616_add_composite_clk':
->> drivers/pwm/pwm-sun50i-h616.c:666:28: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-     666 |                 mux->reg = (u64)mux->reg + reg;
-         |                            ^
-   drivers/pwm/pwm-sun50i-h616.c:676:29: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-     676 |                 gate->reg = (u64)gate->reg + reg;
-         |                             ^
-   drivers/pwm/pwm-sun50i-h616.c:686:29: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
-     686 |                 rate->reg = (u64)rate->reg + reg;
-         |                             ^
+From "31.3.1 Capture Mode" of the Rockchip RK3506 Technical Reference
+Manual[^1], it looks like "clk_pwm" is the only signal that is counted
+for PWM_HPC AND PWM_LPC. So instead of two Signals, you would have just
+one Signal named "PWM Clock" which sources your two Synapses defined below.
 
+Technically, "pwm_in" is also a signal evaluated (its polarity is used
+to determine whether we're counting for PWM_HPC or PWM_LPC) but the
+respective Synapse would be COUNTER_SYNAPSE_ACTION_NONE because this
+signal not actually triggering the change in the count value. You're
+welcome to add the "pwm_in" signal here if you like, but I'd say it's
+optional if you actually want to expose it here.
 
-vim +666 drivers/pwm/pwm-sun50i-h616.c
+> +static const enum counter_synapse_action rkpwmc_hpc_lpc_actions[] = {
+> +	COUNTER_SYNAPSE_ACTION_BOTH_EDGES,
+> +
+> +};
 
-   650	
-   651	static int h616_add_composite_clk(const struct clk_pwm_data *data,
-   652					  void __iomem *reg, spinlock_t *lock,
-   653					  struct device *dev, struct clk_hw **hw)
-   654	{
-   655		const struct clk_ops *mux_ops = NULL, *gate_ops = NULL, *rate_ops = NULL;
-   656		struct clk_hw *mux_hw = NULL, *gate_hw = NULL, *rate_hw = NULL;
-   657	
-   658	
-   659		if (data->mux_hw) {
-   660			struct clk_mux *mux;
-   661	
-   662			mux_hw = data->mux_hw;
-   663			mux = to_clk_mux(mux_hw);
-   664			mux->lock = lock;
-   665			mux_ops = mux_hw->init->ops;
- > 666			mux->reg = (u64)mux->reg + reg;
-   667		}
-   668	
-   669		if (data->gate_hw) {
-   670			struct clk_gate *gate;
-   671	
-   672			gate_hw = data->gate_hw;
-   673			gate = to_clk_gate(gate_hw);
-   674			gate->lock = lock;
-   675			gate_ops = gate_hw->init->ops;
-   676			gate->reg = (u64)gate->reg + reg;
-   677		}
-   678	
-   679		if (data->rate_hw) {
-   680			struct clk_divider *rate;
-   681	
-   682			rate_hw = data->rate_hw;
-   683			rate = to_clk_divider(rate_hw);
-   684			rate_ops = rate_hw->init->ops;
-   685			rate->lock = lock;
-   686			rate->reg = (u64)rate->reg + reg;
-   687	
-   688			if (rate->table) {
-   689				const struct clk_div_table *clkt;
-   690				int table_size = 0;
-   691	
-   692				for (clkt = rate->table; clkt->div; clkt++)
-   693					table_size++;
-   694				rate->width = order_base_2(table_size);
-   695			}
-   696		}
-   697	
-   698		*hw = clk_hw_register_composite(dev, data->name, data->parent_names,
-   699						data->num_parents, mux_hw,
-   700						mux_ops, rate_hw, rate_ops,
-   701						gate_hw, gate_ops, data->flags);
-   702	
-   703		return PTR_ERR_OR_ZERO(*hw);
-   704	}
-   705	
+Add COUNTER_SYNAPSE_ACTION_NONE to this array. When the polarity is
+high, the Synapse for PWM_HPC will be active with
+COUNTER_SYNAPSE_ACTION_BOTH_EDGES, while the Synapse for PWM_LPC will be
+inactive with COUNTER_SYNAPSE_ACTION_NONE; the inverse occurs when the
+polarity switches to low.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> +static struct counter_synapse rkpwmc_pwm_synapses[] = {
+> +	{
+> +		.actions_list = rkpwmc_hpc_lpc_actions,
+> +		.num_actions = ARRAY_SIZE(rkpwmc_hpc_lpc_actions),
+> +		.signal = &rkpwmc_signals[0]
+> +	},
+> +	{
+> +		.actions_list = rkpwmc_hpc_lpc_actions,
+> +		.num_actions = ARRAY_SIZE(rkpwmc_hpc_lpc_actions),
+> +		.signal = &rkpwmc_signals[1]
+> +	},
+> +};
+
+Both Synapses are sourced by the same single Signal ("PWM Clock") so set
+both "signal" members to &rkpwmc_signals[0].
+
+> +enum rkpwmc_count_id {
+> +	COUNT_LPC = 0,
+> +	COUNT_HPC = 1,
+> +};
+> +
+> +static struct counter_count rkpwmc_counts[] = {
+> +	{
+> +		.id = COUNT_LPC,
+> +		.name = "PWM core clock cycles during which the signal was low",
+> +		.functions_list = rkpwmc_functions,
+> +		.num_functions = ARRAY_SIZE(rkpwmc_functions),
+> +		.synapses = rkpwmc_pwm_synapses,
+> +		.num_synapses = ARRAY_SIZE(rkpwmc_pwm_synapses),
+> +		.ext = rkpwmc_ext,
+> +		.num_ext = ARRAY_SIZE(rkpwmc_ext),
+> +	},
+> +	{
+> +		.id = COUNT_HPC,
+> +		.name = "PWM core clock cycles during which the signal was high",
+> +		.functions_list = rkpwmc_functions,
+> +		.num_functions = ARRAY_SIZE(rkpwmc_functions),
+> +		.synapses = rkpwmc_pwm_synapses,
+> +		.num_synapses = ARRAY_SIZE(rkpwmc_pwm_synapses),
+> +		.ext = rkpwmc_ext,
+> +		.num_ext = ARRAY_SIZE(rkpwmc_ext),
+> +	},
+> +};
+
+Count names should be short and descriptive. I think the RK3506 manual
+section "31.4.2 Registers Summary" description for the PWM_HPC and
+PWM_LPC register do a pretty good job of that:
+
+* Low Polarity Capture
+* High Polarity Capture
+
+How about changing the two Count names to those respectively?
+
+> +static int rkpwmc_count_read(struct counter_device *counter,
+> +			     struct counter_count *count, u64 *value)
+> +{
+> +	struct rockchip_pwm_capture *pc = counter_priv(counter);
+> +
+> +	guard(spinlock)(&pc->enable_lock);
+> +
+> +	if (!pc->is_enabled) {
+> +		*value = 0;
+> +		return 0;
+> +	}
+
+I don't think there's a need to check whether capture mode is disabled.
+The user should be aware of the enable state of the Count by checking
+the respective "enable" attribute; and if they ignore that, a value of
+"0" doesn't inherently tell them that the Count is disabled which makes
+it moot to do so. I'd suggest just removing this check entirely and
+returning the register values unconditionally.
+
+> +
+> +	switch (count->id) {
+> +	case COUNT_LPC:
+> +		*value = mfpwm_reg_read(pc->pwmf->base, PWMV4_REG_LPC);
+> +		return 0;
+> +	case COUNT_HPC:
+> +		*value = mfpwm_reg_read(pc->pwmf->base, PWMV4_REG_HPC);
+> +		return 0;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static const struct counter_ops rkpwmc_ops = {
+> +	.count_read = rkpwmc_count_read,
+> +};
+
+You should implement a signal_read() callback if its possible to probe
+the current state of PWM Clock. You should implement action_read() if
+its possible to probe the current polarity of "pwm_in" in order to set
+which Synapse is currently active.
+
+William Breathitt Gray
+
+[^1] https://opensource.rock-chips.com/images/3/36/Rockchip_RK3506_TRM_Part_1_V1.2-20250811.pdf
 
