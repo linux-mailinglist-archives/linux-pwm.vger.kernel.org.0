@@ -1,46 +1,53 @@
-Return-Path: <linux-pwm+bounces-7795-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7796-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1BA81CB8444
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Dec 2025 09:28:40 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8EA56CB854F
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Dec 2025 09:55:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D9B273078E9D
-	for <lists+linux-pwm@lfdr.de>; Fri, 12 Dec 2025 08:25:23 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 679A8305B7D4
+	for <lists+linux-pwm@lfdr.de>; Fri, 12 Dec 2025 08:52:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B964F30FF1D;
-	Fri, 12 Dec 2025 08:25:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13E7A30ACEB;
+	Fri, 12 Dec 2025 08:52:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="REBSKmeM"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="M1yjPg9J"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 889DB305047;
-	Fri, 12 Dec 2025 08:25:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F25430B511
+	for <linux-pwm@vger.kernel.org>; Fri, 12 Dec 2025 08:52:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765527923; cv=none; b=o5yiDsonFA2ANSuCnuVHGzT6Pqa9jn+2HW8Yz7zGNt9yttkezOUylTptqnLhjcAZwp0xYlHcrQWXCsf9ArwQ0szaOkkQuErPovG1FL9Twpc8w5fM/wOx9GKD6Ott0iTTQCNFUXDOJob9L39IN4w1ZwgTRJpgWil/JzmPjo8kN8Q=
+	t=1765529573; cv=none; b=YCCMSdxwneafIfkJxCmfDegUZhi14Pl9U1vn8uhCXVAGP5WL0B99/esSN9SyxLnQKM/e1IC57vLGnhHUExR+QE94f+vDYklQrP1DNYGbJWKmgeELW/FSYKPDHGjZWHClCk5450aqQCYo6790K0tY+49XaIlOOgk2LTdyZFB+g8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765527923; c=relaxed/simple;
-	bh=upWDMuhIcu+SWLL+zcWNbgXHC/uII+5c6EWIs8OVh4w=;
+	s=arc-20240116; t=1765529573; c=relaxed/simple;
+	bh=guyZbBQHrFcxrRkwkYTczuuu6O76dEdlDJHFch5+Vv0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EtywV6Tb/KutSs9xxE6YjwXPG+TkoHSTd8aaZHMg4wg3FzsPKdLlpYEb+4H8zyjRST1cM7PWzt8vQz37KfSkBBiXgydryhvsndEDkvBM+gkd3CwBa8vSmyU7WEPJi3ImdsvcYdEFbk9i0EQcU2lV3YH39zg+NgBfaX/W9k/+gCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=REBSKmeM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB12CC16AAE;
-	Fri, 12 Dec 2025 08:25:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765527922;
-	bh=upWDMuhIcu+SWLL+zcWNbgXHC/uII+5c6EWIs8OVh4w=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=REBSKmeMQWaTuTDumDAxCM/gg6gPeV2Mb5zrZq9bd2exPFYF4NLN+oP/LPKrNDNqT
-	 mEODKK6EBO8RjhVuBr7ifr+kIMjFTrPD1CKA3+cZ1Qx9uOs24ksR137CcA6LdG/3UO
-	 LFTpUBC/Em8GF2e6EgaSdXS74tlPk4pte0HLIBDyTvEsFugXzSEyaxV9YJBHmwfYet
-	 zJIYwhs5baNqRvVWlcfnqCfB59slJO3ZlIVIR3wCopr/Imt3tFCsnXPtJr2Q41sTUn
-	 15OZFZFhq1CHGbTdISJgRMx5cTWhwWMENTQjzHZQQ3ipGlqVVHuh7bDlffhN+grq47
-	 PVHvDsmjx/BPA==
-Message-ID: <93224408-6b09-4cec-8e84-a66d9ef138e6@kernel.org>
-Date: Fri, 12 Dec 2025 09:25:16 +0100
+	 In-Reply-To:Content-Type; b=KhMtiqY9O+oaIBaZ57Ve34HUeU+2MMVrC8SGRKQkpqk2GV1tNXInCCNOTa+NmZMS6YMYkOpmFwaRybx7MYZCULi53tAa0rHsqOSrLrzKvjJxhtDZjmEyG0aypX3heNFMVfzcApWYDaEsdUMYPdidLo9Ckbidzm+A+pa75pLcmZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=M1yjPg9J; arc=none smtp.client-ip=185.246.85.4
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-03.galae.net (Postfix) with ESMTPS id AD5224E41BAA;
+	Fri, 12 Dec 2025 08:52:48 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 81504606DF;
+	Fri, 12 Dec 2025 08:52:48 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 0EB3A103C8C8B;
+	Fri, 12 Dec 2025 09:52:41 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1765529567; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:content-language:in-reply-to:references;
+	bh=dpnbMKxrEd/92FzSGRgQG+BUDZSd3g31Xk5DTCxA3Fo=;
+	b=M1yjPg9J+9muV+mGaXWjHEpEB8kPYNU0mxz3j2MPylOHDAf1GZIVKa3XR/Uq1wdQxphknu
+	8WK9IWMYyYUnEZe++tinnnDQCnGb54YGG4k5gtvfoWE0jD8h/Fnt0aPHIsPpQH//5rS+ZW
+	hZR+5HL9zSgHdJ2sPwT13beOMHP8RXEkeBDhfsHMYvD/Ir4GZQzV4oPc4atqBsHNF5YVGJ
+	svOFwmOmtL+JxmBQgTmVoZ4zqQpAkZ4YE3+YXKsRkO9PvU0ngBLGZCkgmOoJj63m932sDG
+	GJp6FKJ1BoJ2SAa/wdo3zwpsNRsBnVEA1tfAVL4xAM4g1/QKX6DYo5sEevh+Eg==
+Message-ID: <1c8fe534-4b87-46a7-9806-9cbbe5560545@bootlin.com>
+Date: Fri, 12 Dec 2025 09:52:41 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -50,7 +57,7 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH 1/4] dt-bindings: pwm: sunxi: add PWM controller for
  Allwinner H616
-To: Richard GENOUD <richard.genoud@bootlin.com>
+To: Krzysztof Kozlowski <krzk@kernel.org>
 Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
@@ -64,98 +71,74 @@ References: <20251205100239.1563353-1-richard.genoud@bootlin.com>
  <20251205100239.1563353-2-richard.genoud@bootlin.com>
  <20251208-gorgeous-capuchin-of-protection-4ad0c2@quoll>
  <4d34658b-874d-4681-95c1-616f5b385550@bootlin.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <4d34658b-874d-4681-95c1-616f5b385550@bootlin.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+ <93224408-6b09-4cec-8e84-a66d9ef138e6@kernel.org>
+From: Richard GENOUD <richard.genoud@bootlin.com>
+Content-Language: en-US, fr
+Organization: Bootlin
+In-Reply-To: <93224408-6b09-4cec-8e84-a66d9ef138e6@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On 12/12/2025 08:50, Richard GENOUD wrote:
->>> +
->>> +  clocks:
->>> +    items:
->>> +      - description: Bus Clock
->>> +
+Le 12/12/2025 à 09:25, Krzysztof Kozlowski a écrit :
+> On 12/12/2025 08:50, Richard GENOUD wrote:
+>>>> +
+>>>> +  clocks:
+>>>> +    items:
+>>>> +      - description: Bus Clock
+>>>> +
+>>>
+>>> Are you sure there is no first clock? Really, really sure? If you add it
+>>> later, I would be pretty sad, because that's unnecessary duplication of
+>>> binidngs....
+>> I surely don't want to make you sad :)
 >>
->> Are you sure there is no first clock? Really, really sure? If you add it
->> later, I would be pretty sad, because that's unnecessary duplication of
->> binidngs....
-> I surely don't want to make you sad :)
+>> Having a second look at the sun4i binding, I think there's a way to use it.
+>> The sun4i, as you said, has a module clock (OSC24M) and an optional bus
+>> clock.
+>> Here, the bus clock is mandatory, but the H616 PWM uses OSC24M and APB1
+>> as clock sources.
+>>
+>> So, I guess that if we add something like that:
+>>      clocks:
+>>        minItems: 1
+>>        items:
+>>          - description: Module Clock
+>>          - description: Bus Clock
+>> +      - description: APB Clock
+>>
+>>      clock-names:
+>>        minItems: 1
+>>        items:
+>>          - const: mod
+>>          - const: bus
+>> +      - const: apb
+>>
+>>      resets:
+>>        maxItems: 1
+>>
+>> In the sun4i pwm binding, we could re-use it for the H616 pwm right?
+>> (APB clock is maybe not the best name, could be secondary module clock)
 > 
-> Having a second look at the sun4i binding, I think there's a way to use it.
-> The sun4i, as you said, has a module clock (OSC24M) and an optional bus 
-> clock.
-> Here, the bus clock is mandatory, but the H616 PWM uses OSC24M and APB1 
-> as clock sources.
 > 
-> So, I guess that if we add something like that:
->     clocks:
->       minItems: 1
->       items:
->         - description: Module Clock
->         - description: Bus Clock
-> +      - description: APB Clock
+> apb is probably the bus clock, so you don't need to change the bindings
+> at all.
+Indeed, your're right!
+So the only difference will the the #clock-cells for h616.
+I'll send a v2 using the sun4i binding.
+
+Thanks!
+
+Regards,
+Richard
+
 > 
->     clock-names:
->       minItems: 1
->       items:
->         - const: mod
->         - const: bus
-> +      - const: apb
-> 
->     resets:
->       maxItems: 1
-> 
-> In the sun4i pwm binding, we could re-use it for the H616 pwm right?
-> (APB clock is maybe not the best name, could be secondary module clock)
+> Best regards,
+> Krzysztof
 
 
-apb is probably the bus clock, so you don't need to change the bindings
-at all.
-
-Best regards,
-Krzysztof
+-- 
+Richard Genoud, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
