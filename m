@@ -1,77 +1,156 @@
-Return-Path: <linux-pwm+bounces-7798-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7799-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 122ACCBA4A8
-	for <lists+linux-pwm@lfdr.de>; Sat, 13 Dec 2025 05:46:10 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 35E7DCBD626
+	for <lists+linux-pwm@lfdr.de>; Mon, 15 Dec 2025 11:39:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3AFE73045A52
-	for <lists+linux-pwm@lfdr.de>; Sat, 13 Dec 2025 04:45:49 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 352F4300A9DC
+	for <lists+linux-pwm@lfdr.de>; Mon, 15 Dec 2025 10:39:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 298C317BB21;
-	Sat, 13 Dec 2025 04:45:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 844AE2C11F5;
+	Mon, 15 Dec 2025 10:39:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eXJVNHzH"
+	dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b="QNcdR6eL"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw02.mediatek.com (unknown [210.61.82.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02B5C757EA;
-	Sat, 13 Dec 2025 04:45:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFE8E3164BD;
+	Mon, 15 Dec 2025 10:39:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.61.82.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765601148; cv=none; b=LLfR/5GbJAkH56N8RfIPwO1VVtvv1a5h3TRo+kWp1nFVjRW4k1V4Ql1zGbWb4EUK+d3VVYyi+EqQvskxlq2ljJKYNVNEdWaFRik+t1RSBkVigygpGozB0iyKc8RtBhTGVK5zvCxEHhQ+XJEfMKQJsy8F6LDNLNSGCz6LCUN7eYI=
+	t=1765795151; cv=none; b=mIA1y5/vMbSWbEEWH5FpFlx6wX1puMCopbqRknFmqu+qY8i017IOJD7AmnEoE7rs4rY7y9+kvD7BoJh2+cG4qY4GjwIRrhLZFZOdtnBYP14JVGyNlpu7CYB2LMoIYsVhi6Yqsgm3FlldkSGIcZrXKhAQiB13mJbZM8U9yUjr6EQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765601148; c=relaxed/simple;
-	bh=/+Kccn/rXLn6pWMEXsTeejS8K/Zn8A06MiXBqK7RfdE=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=RiciPJiUkTvRC0DHNAcj99CUjyPxbzOcEFCf0Y9hyDzdb48Q/XyHjf5Jwv9of8h/FMAJgE5oJWF21Rs9AZxRze2j0UwaDM5AZxEScqXyZ914qIhMo1/EammNqfQt2bNDRoULeMTyG6TwUA02IqjzHxQgpQG+vgb1qswRPuA9Ut0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eXJVNHzH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D998AC4CEF7;
-	Sat, 13 Dec 2025 04:45:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1765601147;
-	bh=/+Kccn/rXLn6pWMEXsTeejS8K/Zn8A06MiXBqK7RfdE=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=eXJVNHzHhYtk/K79ohP10eRmFKjVZ3uGCzjruWfMws2rT74WIZ9NN082C5cZ1cgre
-	 /ujxmVcGhQ939vexpeI7Va+2fDISMAR9uZM95l/89lgQ/0UwrzPM05fzSi8LTVxSaM
-	 XxvYJnxpfzn03PjqyqZ2K+eiXA8HAf5uCiVC/EHVTFib1TGXxim8sIW5UOkB2xyV7V
-	 bTrtfKBSlWS5gmntWe0Sib0hVJG5s286hdYkuAqMIMLzadism9cZwRWwQ7pKSvUqq9
-	 oi1EqtEr1JgbRkYIkL8EuzVeleMhEgIwbrbtb1Ii7I3ERkU+skkqFsRWcflGB0dJ3B
-	 SZbbsExhA3tWA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id F2C61380A954;
-	Sat, 13 Dec 2025 04:42:41 +0000 (UTC)
-Subject: Re: [GIT PULL] pwm: th1520: Fix missing Kconfig dependencies
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <ntweqab35rlrfyvrkdljo6zebaxrs4ttceqam763ozip6vhbke@inqoc34facoe>
-References: <ntweqab35rlrfyvrkdljo6zebaxrs4ttceqam763ozip6vhbke@inqoc34facoe>
-X-PR-Tracked-List-Id: <linux-pwm.vger.kernel.org>
-X-PR-Tracked-Message-Id: <ntweqab35rlrfyvrkdljo6zebaxrs4ttceqam763ozip6vhbke@inqoc34facoe>
-X-PR-Tracked-Remote: https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git tags/pwm/for-6.19-rc1-fixes
-X-PR-Tracked-Commit-Id: 3c180003dffbc252a72dec4f0c697e12922e0417
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: a919610db43b34621d0c3b333e12db9002caf5da
-Message-Id: <176560096056.2405448.11122580576506737742.pr-tracker-bot@kernel.org>
-Date: Sat, 13 Dec 2025 04:42:40 +0000
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, Michal Wilczynski <m.wilczynski@samsung.com>, Markus Probst <markus.probst@gmail.com>
+	s=arc-20240116; t=1765795151; c=relaxed/simple;
+	bh=Vt2JfkmO0mYcFcvjJqqVNwNLlfwaH65yrX0bhgj6nTI=;
+	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=eCys231tmaP8xouAjWMT5LAQSOGuMfxkEhawooJtuJOR+ga6/pTFQejMCuOKlGyyW2L9jT1hZyBOB6EhsSsx7golr/bqR0QFHIGj/HjEanLX1pehbkEorfsaL3Q6OTxL9sKkhn85McjbVMRepwDVAkwCiYTwfTUYc+8yeKWn7jg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com; spf=pass smtp.mailfrom=mediatek.com; dkim=pass (1024-bit key) header.d=mediatek.com header.i=@mediatek.com header.b=QNcdR6eL; arc=none smtp.client-ip=210.61.82.184
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=mediatek.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mediatek.com
+X-UUID: 446d9e28d9a211f0b33aeb1e7f16c2b6-20251215
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=mediatek.com; s=dk;
+	h=Content-Type:Content-Transfer-Encoding:MIME-Version:Message-ID:Date:Subject:CC:To:From; bh=7XaRLbBJhSEUDHmd2FnN+oJUsUUjUDK/6biwWL7Eots=;
+	b=QNcdR6eL+kQirLta076bPuKRIaKsBrLuei843dKjry65dCwifq+6fNuevpCV3MafIsK9QWRDuRvZ6zgHgRFULE7fUF6MO19ZFyXSN8SMkTkA1lNT9FDYEeDjUCD3FuVMVGAOYJH6ZYK1y59/A2NeIV1ewWmveI181XFsR+hnmRY=;
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.3.6,REQID:3a5fc7e5-fa8b-4166-bd5c-cb8f3d95daff,IP:0,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:0,FILE:0,BULK:0,RULE:Release_Ham,ACTION:r
+	elease,TS:0
+X-CID-META: VersionHash:a9d874c,CLOUDID:a8d474c6-8a73-4871-aac2-7b886d064f36,B
+	ulkID:nil,BulkQuantity:0,Recheck:0,SF:102|836|888|898,TC:-5,Content:0|15|5
+	0,EDM:-3,IP:nil,URL:0,File:130,RT:0,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OS
+	A:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 2,SSN|SDN
+X-CID-BAS: 2,SSN|SDN,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR
+X-CID-RHF: D41D8CD98F00B204E9800998ECF8427E
+X-UUID: 446d9e28d9a211f0b33aeb1e7f16c2b6-20251215
+Received: from mtkmbs11n2.mediatek.inc [(172.21.101.187)] by mailgw02.mediatek.com
+	(envelope-from <payne.lin@mediatek.com>)
+	(Generic MTA with TLSv1.2 ECDHE-RSA-AES256-GCM-SHA384 256/256)
+	with ESMTP id 901118016; Mon, 15 Dec 2025 18:39:00 +0800
+Received: from mtkmbs11n1.mediatek.inc (172.21.101.185) by
+ MTKMBS09N1.mediatek.inc (172.21.101.35) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.2562.29; Mon, 15 Dec 2025 18:38:58 +0800
+Received: from mtksitap99.mediatek.inc (10.233.130.16) by
+ mtkmbs11n1.mediatek.inc (172.21.101.73) with Microsoft SMTP Server id
+ 15.2.2562.29 via Frontend Transport; Mon, 15 Dec 2025 18:38:58 +0800
+From: 20190311120055 created <payne.lin@mediatek.com>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <matthias.bgg@gmail.com>, "Matthias
+ Brugger" <p.zabel@pengutronix.de>, AngeloGioacchino Del Regno
+	<angelogioacchino.delregno@collabora.com>
+CC: <linux-pwm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-mediatek@lists.infradead.org>,
+	<Project_Global_Chrome_Upstream_Group@mediatek.com>,
+	<sirius.wang@mediatek.com>, <vince-wl.liu@mediatek.com>,
+	<jh.hsu@mediatek.com>, Payne Lin <payne.lin@mediatek.com>
+Subject: [PATCH] pwm: mediatek: Add error handling for zero rate in PWM state
+Date: Mon, 15 Dec 2025 18:38:47 +0800
+Message-ID: <20251215103855.3099184-1-payne.lin@mediatek.com>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-MTK: N
 
-The pull request you sent on Fri, 12 Dec 2025 11:52:38 +0100:
+From: Payne Lin <payne.lin@mediatek.com>
 
-> https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git tags/pwm/for-6.19-rc1-fixes
+Added a check to handle cases where the rate is zero in the
+mtk_disp_pwm_get_state function. This prevents division by zero errors
+when calculating the period.
+- Added error message for zero rate scenario
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/a919610db43b34621d0c3b333e12db9002caf5da
+Signed-off-by: Payne Lin <payne.lin@mediatek.com>
+---
+ drivers/pwm/pwm-mtk-disp.c | 31 +++++++++++++++++++------------
+ 1 file changed, 19 insertions(+), 12 deletions(-)
 
-Thank you!
-
+diff --git a/drivers/pwm/pwm-mtk-disp.c b/drivers/pwm/pwm-mtk-disp.c
+index bafd6b6195f6..dd0ae041af70 100644
+--- a/drivers/pwm/pwm-mtk-disp.c
++++ b/drivers/pwm/pwm-mtk-disp.c
+@@ -176,19 +176,18 @@ static int mtk_disp_pwm_get_state(struct pwm_chip *chip,
+ 	struct mtk_disp_pwm *mdp = to_mtk_disp_pwm(chip);
+ 	u64 rate, period, high_width;
+ 	u32 clk_div, pwm_en, con0, con1;
+-	int err;
++	int ret;
+ 
+-	err = clk_prepare_enable(mdp->clk_main);
+-	if (err < 0) {
+-		dev_err(pwmchip_parent(chip), "Can't enable mdp->clk_main: %pe\n", ERR_PTR(err));
+-		return err;
++	ret = clk_prepare_enable(mdp->clk_main);
++	if (ret < 0) {
++		dev_err(pwmchip_parent(chip), "Can't enable mdp->clk_main: %pe\n", ERR_PTR(ret));
++		goto err_handle;
+ 	}
+ 
+-	err = clk_prepare_enable(mdp->clk_mm);
+-	if (err < 0) {
+-		dev_err(pwmchip_parent(chip), "Can't enable mdp->clk_mm: %pe\n", ERR_PTR(err));
+-		clk_disable_unprepare(mdp->clk_main);
+-		return err;
++	ret = clk_prepare_enable(mdp->clk_mm);
++	if (ret < 0) {
++		dev_err(pwmchip_parent(chip), "Can't enable mdp->clk_mm: %pe\n", ERR_PTR(ret));
++		goto err_disable_clk_main;
+ 	}
+ 
+ 	/*
+@@ -212,15 +211,23 @@ static int mtk_disp_pwm_get_state(struct pwm_chip *chip,
+ 	 * period has 12 bits, clk_div 11 and NSEC_PER_SEC has 30,
+ 	 * so period * (clk_div + 1) * NSEC_PER_SEC doesn't overflow.
+ 	 */
++	if (rate == 0) {
++		dev_err(pwmchip_parent(chip), "rate is zero, cannot calculate period\n");
++		ret = -EINVAL;
++		goto err_disable_clk_mm;
++	}
+ 	state->period = DIV64_U64_ROUND_UP(period * (clk_div + 1) * NSEC_PER_SEC, rate);
+ 	high_width = FIELD_GET(PWM_HIGH_WIDTH_MASK, con1);
+ 	state->duty_cycle = DIV64_U64_ROUND_UP(high_width * (clk_div + 1) * NSEC_PER_SEC,
+ 					       rate);
+ 	state->polarity = PWM_POLARITY_NORMAL;
++
++err_disable_clk_mm:
+ 	clk_disable_unprepare(mdp->clk_mm);
++err_disable_clk_main:
+ 	clk_disable_unprepare(mdp->clk_main);
+-
+-	return 0;
++err_handle:
++	return ret;
+ }
+ 
+ static const struct pwm_ops mtk_disp_pwm_ops = {
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+2.45.2
+
 
