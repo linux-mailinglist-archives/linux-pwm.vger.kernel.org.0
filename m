@@ -1,51 +1,51 @@
-Return-Path: <linux-pwm+bounces-7805-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7806-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 601CFCC68EB
-	for <lists+linux-pwm@lfdr.de>; Wed, 17 Dec 2025 09:26:23 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 06BA6CC68DC
+	for <lists+linux-pwm@lfdr.de>; Wed, 17 Dec 2025 09:25:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id D9A823046154
-	for <lists+linux-pwm@lfdr.de>; Wed, 17 Dec 2025 08:25:42 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id BF53C30168A8
+	for <lists+linux-pwm@lfdr.de>; Wed, 17 Dec 2025 08:25:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E76720CCE4;
-	Wed, 17 Dec 2025 08:25:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 052DB338935;
+	Wed, 17 Dec 2025 08:25:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="U8AhfwTm"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="tgJq2G6n"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43DAE33EB07;
-	Wed, 17 Dec 2025 08:25:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13181257829;
+	Wed, 17 Dec 2025 08:25:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1765959937; cv=none; b=bfTtx2y1ExHSFrNl6Pv/1CTSIbx5qscOq/wufcRDGYYOVaVcypIe0kt6egSSjv4BrrT6J1Vwhik6TPmzo3sub4LnE1NeDTzhTK8wEqc5PDjgW0a0GcO2mdATrRvy/pvqySlK3PSZdDjerGGavYz19EjRlD9hF1TqqpSQXKRBG0M=
+	t=1765959941; cv=none; b=rhxGd8F4i0/o13YRlK9ZdJyuJuyBcx7oRKOJxE4vqOY4gM+81WEmlAktwOz+1YeXCj8sty9AoHUivcjqu3aYqUB7TlHgkmNZkaqWwcr0+CB6wt4vFj0AeLuYuo+6ida5cXOTLtx4CBYixHdWAjUs1TCVdPFJ1kNGU03fNaUjbDY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1765959937; c=relaxed/simple;
-	bh=evFZwjlzvXHjkqK0R2AFe3sUyEqQ9n7YUfDCJh3pUhI=;
+	s=arc-20240116; t=1765959941; c=relaxed/simple;
+	bh=8rK8UObtNlXunH3ZCqgjs2acF9kkhu7gtkhWT9H0ndc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Bjji38wq9xan2492fxjrUhnsP4RNw4ZdbegwHlztHM7h6W37/nOwdw91+SejTf6vuDxv1M0FVQ4sD8saoy2X1KnRCuGTLFpXKJ97ZB8+kuk92WQBwr//fPRtb4qLD9VgBrZWuMkOVokwTR/YLG96GtwBjUsqguxBgNd/6CWOo0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=U8AhfwTm; arc=none smtp.client-ip=185.246.85.4
+	 MIME-Version; b=uPsomI0jaExjMKHwfM+BTgcbX2c29gt133iKOnDqvusD/jlgtdemBR7L48OzudQvL1UhH5c3IdEtCm3oHWTrG/AyhIXLrjRPIrYzq2JMIdXrPYQROVZDJB6Ixi5KDVZUiJYTEgusCQlGi+W9QQgNCOL7a0gRUnK0tp97/7b4kvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=tgJq2G6n; arc=none smtp.client-ip=185.246.84.56
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id 8A3B34E41C51;
-	Wed, 17 Dec 2025 08:25:32 +0000 (UTC)
+	by smtpout-02.galae.net (Postfix) with ESMTPS id 6BB921A223C;
+	Wed, 17 Dec 2025 08:25:34 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id 5B16D6072F;
-	Wed, 17 Dec 2025 08:25:32 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 0079F119502E3;
-	Wed, 17 Dec 2025 09:25:27 +0100 (CET)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 3CC1C6072F;
+	Wed, 17 Dec 2025 08:25:34 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id DE0C7119502EA;
+	Wed, 17 Dec 2025 09:25:31 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1765959929; h=from:subject:date:message-id:to:cc:mime-version:
+	t=1765959933; h=from:subject:date:message-id:to:cc:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=aEM5QbdUXJsRLpURVvs7QvZzTARrGZdkj7npX4h2AHg=;
-	b=U8AhfwTmv42+iyY4wmGOZfLDUHZG27Q5ff7hdfcZu88RprrIP8d0vS1cIF8wM+Oz1sOOGS
-	YmTiHbZx+VgpQnIUhOYQ5hDOUMKZYtq7kzVCcuF8mqw42D/QQgbLzqQDs0vwEDPrlkjLxm
-	jFDNKEZcCg4qucRvrT4fPox5YjszphmoKOzzl0X+iLBg3N5JSuYEnc0k1uKYi5SC25GxE6
-	NmfRcCJY+dc+eiIaQnFRHnA9SddSCHY01n02PV/eA6XIAMnlwS73SqWqywgFGTp1zzGnJS
-	JJqj+Gir9Aja9kpo2rKbMwKLQkRQu6bhVAVkNp/xwcuAk2UQz24qcEq0HDaO0A==
+	bh=NBiL1YfDIGET34Id9XIjZ47HfM8LVPK1or9ae7Uci6c=;
+	b=tgJq2G6nPfnc4g0pNVcNkONaQEneuCLW6L6pcrABcxqM37l3tmbyw7q3OWFCPFQljO0HA9
+	uYwsGyrB+fDFIg9Kvd0CMGwlwqGXzqTBeiN3sZejKHErsttrrBTqc1JdWIRcQll3CJE4LJ
+	X5u3U2/IegyB0rcK+ytLAc6mGfJqqVepWOtSMsHrt+VQYiFaleHZdPWn5AN/JPH+P2fCcv
+	4O6cUjosS8+ZJwZSELEMF1D7FeDDbAEFaiJaxQJxbSON28z3e591nDBQfl/H4/t22mV5Tq
+	g+8iPup5cv2C5bkj3+fekFM1iepqkCtVLuTM2Jk/QovawtRVl7gdOn6HsC6PZg==
 From: Richard Genoud <richard.genoud@bootlin.com>
 To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
 	Rob Herring <robh@kernel.org>,
@@ -61,11 +61,10 @@ Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
 	linux-arm-kernel@lists.infradead.org,
 	linux-sunxi@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
-	Richard Genoud <richard.genoud@bootlin.com>,
-	Joao Schim <joao@schimsalabim.eu>
-Subject: [PATCH v2 3/4] arm64: dts: allwinner: h616: add PWM controller
-Date: Wed, 17 Dec 2025 09:25:03 +0100
-Message-ID: <20251217082504.80226-4-richard.genoud@bootlin.com>
+	Richard Genoud <richard.genoud@bootlin.com>
+Subject: [PATCH v2 4/4] MAINTAINERS: Add entry on Allwinner H616 PWM driver
+Date: Wed, 17 Dec 2025 09:25:04 +0100
+Message-ID: <20251217082504.80226-5-richard.genoud@bootlin.com>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20251217082504.80226-1-richard.genoud@bootlin.com>
 References: <20251217082504.80226-1-richard.genoud@bootlin.com>
@@ -78,82 +77,30 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Last-TLS-Session-Version: TLSv1.3
 
-The H616 has a PWM controller that can provide PWM signals, but also
-plain clocks.
+Add myself as maintainer of Allwinner H616 PWM driver and device-tree
+bindings.
 
-Add the PWM controller node and pins in the device tree.
-
-Tested-by: Joao Schim <joao@schimsalabim.eu>
 Signed-off-by: Richard Genoud <richard.genoud@bootlin.com>
 ---
- .../arm64/boot/dts/allwinner/sun50i-h616.dtsi | 47 +++++++++++++++++++
- 1 file changed, 47 insertions(+)
+ MAINTAINERS | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h616.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h616.dtsi
-index 8d1110c14bad..1c7628a6e4bb 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h616.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h616.dtsi
-@@ -236,6 +236,17 @@ watchdog: watchdog@30090a0 {
- 			clocks = <&osc24M>;
- 		};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 5b11839cba9d..df2de03e6e38 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -903,6 +903,11 @@ S:	Maintained
+ F:	Documentation/devicetree/bindings/sound/allwinner,sun50i-h6-dmic.yaml
+ F:	sound/soc/sunxi/sun50i-dmic.c
  
-+		pwm: pwm@300a000 {
-+			compatible = "allwinner,sun50i-h616-pwm";
-+			reg = <0x0300a000 0x400>;
-+			clocks = <&osc24M>, <&ccu CLK_BUS_PWM>;
-+			clock-names = "mod", "bus";
-+			resets = <&ccu RST_BUS_PWM>;
-+			#pwm-cells = <3>;
-+			#clock-cells = <1>;
-+			status = "disabled";
-+		};
++ALLWINNER H616 PWM DRIVER
++M:	Richard Genoud <richard.genoud@bootlin.com>
++S:	Maintained
++F:	drivers/pwm/pwm-sun50i-h616.c
 +
- 		pio: pinctrl@300b000 {
- 			compatible = "allwinner,sun50i-h616-pinctrl";
- 			reg = <0x0300b000 0x400>;
-@@ -340,6 +351,42 @@ nand_rb1_pin: nand-rb1-pin {
- 				bias-pull-up;
- 			};
- 
-+			/omit-if-no-ref/
-+			pwm0_pin: pwm0-pin {
-+				pins = "PD28";
-+				function = "pwm0";
-+			};
-+
-+			/omit-if-no-ref/
-+			pwm1_pin: pwm1-pin {
-+				pins = "PG19";
-+				function = "pwm1";
-+			};
-+
-+			/omit-if-no-ref/
-+			pwm2_pin: pwm2-pin {
-+				pins = "PH2";
-+				function = "pwm2";
-+			};
-+
-+			/omit-if-no-ref/
-+			pwm3_pin: pwm3-pin {
-+				pins = "PH0";
-+				function = "pwm3";
-+			};
-+
-+			/omit-if-no-ref/
-+			pwm4_pin: pwm4-pin {
-+				pins = "PI14";
-+				function = "pwm4";
-+			};
-+
-+			/omit-if-no-ref/
-+			pwm5_pin: pwm5-pin {
-+				pins = "PA12";
-+				function = "pwm5";
-+			};
-+
- 			/omit-if-no-ref/
- 			spi0_pins: spi0-pins {
- 				pins = "PC0", "PC2", "PC4";
+ ALLWINNER HARDWARE SPINLOCK SUPPORT
+ M:	Wilken Gottwalt <wilken.gottwalt@posteo.net>
+ S:	Maintained
 -- 
 2.47.3
 
