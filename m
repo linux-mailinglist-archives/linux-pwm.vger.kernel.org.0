@@ -1,80 +1,81 @@
-Return-Path: <linux-pwm+bounces-7817-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7818-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D1DB4CD109B
-	for <lists+linux-pwm@lfdr.de>; Fri, 19 Dec 2025 18:05:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 41BCDCD10A7
+	for <lists+linux-pwm@lfdr.de>; Fri, 19 Dec 2025 18:05:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4E5EC303CF74
-	for <lists+linux-pwm@lfdr.de>; Fri, 19 Dec 2025 17:03:14 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D6B6D306AE0F
+	for <lists+linux-pwm@lfdr.de>; Fri, 19 Dec 2025 17:03:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40A3333893E;
-	Fri, 19 Dec 2025 17:03:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A29133A710;
+	Fri, 19 Dec 2025 17:03:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lkW8clCe"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aw3lC+lv"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76E18328B4E
-	for <linux-pwm@vger.kernel.org>; Fri, 19 Dec 2025 17:03:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2409B3009E1
+	for <linux-pwm@vger.kernel.org>; Fri, 19 Dec 2025 17:03:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766163792; cv=none; b=hx6+PtdwlfUBIWeT2VZ2SZAPxMLIoE7GDepWWBT/MECCoYzI2YtrJjlzIyC6P4JuxF6rgNibEeszgG3FT/ifVhahQsZrMbiX7jZaWepbrJLX+Zq5O+7GNhIhKt80+OBYwLTedaJSrOWM6F1paoIAUHk+FNJ+5mZT2evQJ/t6Et4=
+	t=1766163795; cv=none; b=tf7cisA1nAaUUymSU3Muck7NSkDyLnz17EzxnVGjbPUrWFb8amLWMBl5dz0gCa2XhJSit+G4PQxidOWLTVNXdqbdw7DpzYnOK9DAyBzUf4XdcVEjVq4P183gX9QChCSw+GgCGjTUk4I8H1VusOM/nRMbFJ/JfagkKRHuXa93L4I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766163792; c=relaxed/simple;
-	bh=egoZVQFjPWXGAtIOxW8GGJxkfc1zdWWNBbnwf9mSVYw=;
+	s=arc-20240116; t=1766163795; c=relaxed/simple;
+	bh=efsEAY5WuZhVB4BmfqXi5WRiTR8Oxn6NV6rPGVWEAOE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=MFVXTnXIjjtbTX2j6h7tmdlIWGZmeeOxioQhC5WZy5hOLunvKC/s2PWjs5kZKhL2Ob07CmLqI+f2DtBLKZt61NoPAP/1aDMuPeoTovzWbERxwaUh9D76ilGi26lUoezAnb5oMr+1cPs1LDeA53zh+43ArL0R0k59l24Yw0mH7LU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lkW8clCe; arc=none smtp.client-ip=209.85.167.53
+	 In-Reply-To:To:Cc; b=Y9AnH4nbZ9rLeJcgbOMMsmY2lI60UwPvxDcz3SYyWxJVJQq00bzTpapCEwwdD8hadjQ/xVeVIezcNdZrZDE7y3PO3pWIN6W357Q4gmyXyMoNkxND+DCLfwVq3bOwP2Ct13uNc021kjFm3aW2mVZki7fwKKnqE24yHczcXdssZT4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aw3lC+lv; arc=none smtp.client-ip=209.85.167.41
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-5943d20f352so2290183e87.0
-        for <linux-pwm@vger.kernel.org>; Fri, 19 Dec 2025 09:03:10 -0800 (PST)
+Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-598f81d090cso2229437e87.2
+        for <linux-pwm@vger.kernel.org>; Fri, 19 Dec 2025 09:03:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766163788; x=1766768588; darn=vger.kernel.org;
+        d=gmail.com; s=20230601; t=1766163790; x=1766768590; darn=vger.kernel.org;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=ma36rwIjBKTPa9sms/UpO3LEYEw0JfjoZI+1B4sWIu8=;
-        b=lkW8clCecQtiCA9bBuGNyAV22GNNKiOyDSdF7e/INllEh8Cd85PxlUtNG3xN/ZzQwz
-         WZBnTdSlNH4zd+9QiZf1dljq57mxvXQDBzQHWD9Y8R4zkiFywMQCbMgGREZ85ZH1rg+Z
-         wM35vQyjMPcAyowENVmFLrHf/LDQWuFTZODmVQ4TYygnVTZcCmzVDUyfdaksaR5wAFsC
-         LF6JHeX1AyPhXHrlDu7JsDep0JsnoroPoxbP2Lzj8ENNs4fR9jXv4nruVHP1bhACjPBN
-         367d+Fii89tV8UNmPOg4wrMRCbmhosvUWgMtaug61HR6LeQwWPgkKHtM0HRyGAdZGprG
-         g1ZQ==
+        bh=pa9nztFG8VMOQ6dqwU2/oLzKHaOnP4dlHhzGZaw1gMs=;
+        b=aw3lC+lv5QZY60WjAdxse/xAY7K4jqkKW7OYGeINPkEiwtPuBfjs5nPX3XiYSwhnaP
+         BedccNwUgpKuL3UbhS7QHb/wmSX5zpn5fqPmNmvEUnmMd2EyiHiANzn3MCjyhRCIjj+g
+         G6kAnufLMgMNOyR7sO8bK5oHTMki7h1+CymnS/6NPK5pLw+fnMjj/y/OrmBHR1ITy5bI
+         lf9ONZetC+xCpY2v9ubL4e9FSTD0d7R6EHTSmi/lK1SpOKI6gmd2n28Vh7bW3hgVm0VV
+         O+hlaKF2LZ3myjxWqb6Hs241AAYyRXGeHntIya/JfFfTXHFZ1SOtUFSn07dO7TMcx2i4
+         So3A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766163788; x=1766768588;
+        d=1e100.net; s=20230601; t=1766163790; x=1766768590;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=ma36rwIjBKTPa9sms/UpO3LEYEw0JfjoZI+1B4sWIu8=;
-        b=B06IZFjR5ltvltAmAhx594iCcnuFvtYRj0y6YZNJHTbdyE3+oFTEymzdjMWzwVWHGG
-         W+lrRH4nVYrwNalMh0E8JF3ov8dGohKqxjCRyPlfGx1qWiaRBjhZOqDSA2ZqZnYSUE3l
-         IX0WQhENG2kzMmW/9+fWDdtcBOi3h8xiumpHs8rFPLEIaEfv8qXc1X4L/+mVWwW+Teja
-         0AdtoQhC3n+wi95L7BYSj9GjThI1XaPpIOqWqcCE/V1GgU/DT1ntIGlp44YBjR0WGp7f
-         V0uofLLRZQce0BeAj48cRwH5hfE7Ivlq6g+Y70Q/N9hQpzR57X6UgWHo73PoqMBCQYWD
-         ginQ==
-X-Gm-Message-State: AOJu0YwKdykNhsxHV+gbNzmSsFX+3Ab348a+sZgnw7x5B6wisjFUMJS1
-	ufZHhd+TX3Re8O4ZI21uIhL5BQZBbdPdjFrk54+jEro/kGN0rX/ebZMr
-X-Gm-Gg: AY/fxX6kmqoDps9af8cMVDoHMKn57AfVcrmAwALRv4QFKZDawzpu2+qr8roMk/TXIIK
-	NFBjKgWkVv20agC2SGS7zg2shnY51Jm/Rx002ddi6iwbjFRsawlK3o2vLMEnKVcyhiDk4+6TIfn
-	rUEtfnbYusWn2xbOMwxFcy2Fk8gOwkVuygAweeRWAbVRouy6bN3l3/RuIhw1sKa2iCoNYfGjgYb
-	0/r6dmMdbHjKKyVe/an4sXIQDGK+e71gGgXv92S67qJJ8rqBqXBtV4rStx5kl5NXl4bfyukfKBV
-	CQDqUcYOJg8q+W4XJhSpIAhTcWYA9U4NwOJbdSCUYYQpwAvn0XWZFiOv4OF/eNdrGUYEOtpEAQL
-	FnOWkXbKJqQaH/6z14GZ6R0y5dhKqVZxTU2Ehpnk2Lp2TqmOAQLWKljzfmOjKvhLS1heioJx0qq
-	OMUt/5ktuv55M16rfwGtW9bqxGF7bWSgL9t7n2CKmWKnPqqb2cwhug0JGrCdksX01mkWjhT1V35
-	dODHA==
-X-Google-Smtp-Source: AGHT+IHPLj4Rik2hLkTATs3YXSZ7zfCQNkBcE6S2phkIRux+ZDXsQmQ96eqxP9mRVz4A0fUxd1NEGA==
-X-Received: by 2002:a05:6512:3c8b:b0:595:81e1:2d00 with SMTP id 2adb3069b0e04-59a17d1c2d7mr1454976e87.0.1766163788384;
-        Fri, 19 Dec 2025 09:03:08 -0800 (PST)
+        bh=pa9nztFG8VMOQ6dqwU2/oLzKHaOnP4dlHhzGZaw1gMs=;
+        b=J45CGNVb06NJH834zDHteMIJH/GLc/WZb03oiF/xgtlH1djj+65BvF7+cX6edSzy7G
+         3Ewep3wtYj/wE8kloKwtaikDl10eFnrSTf0LyfkLVmdAdckllY1R1ZJ0FMghHVjHK9IW
+         /GmHxRpeHY0W304oAJvh9jX+3E/qbWScHjzMYF/haUQXnIx8bMigjAO8A9CIyLniF/mA
+         yrQ0wrOv4w60+L2D1QqcE0+49ikKS6QzjDIy6HggPLN6EP357uCrjXX1d6A8VH4aJ5Yy
+         osKQjwetw1yeegbNM1Y11l/sjEj/NCv9hHhozcZTvuBuisyl2FkOSWSsybEyTnhO1d01
+         vlgw==
+X-Gm-Message-State: AOJu0Yw2827uovIHQIHhqZpF2Z/IgmnkNlGg9xCieleaSYD8Emp6qQcG
+	ZWje/4RafXw1M6eg2igzcBfD3gKy6V5yvCTWuYewL/NlecpYmKDzmAbi
+X-Gm-Gg: AY/fxX672uK5ROgnI4lCvrNvnLuLXbMlQNv88JHOrzvyMRgI1egVhf7kVy26YGuTlsY
+	q8l5Naw26yjY43lPu5cOdvpFYD22QbhzXWDxrAx8WkqYoiatJS2r49/M+18IX2FGAUqK8TKJXoN
+	Eq8Bu5/xMCTDmp/63reo2pKG7ksyzuYGFydxh9X6CjL4DgeYcTrxVHGSZ4NwenvL30IPwDeQhRo
+	hVLHGx+BfowP/m5+QXfGvigstLLY1XlJzPT2V2MXW+ecCX+PaaQavhmi12zjZutxaoTOtSfGpjN
+	wWcPrRLG+o7hKXWYTnzPCi1LbvYlevNezg4JCc4r4KCFiOGMYG9fOy5eCP01cF7TNPOlq/tDYHq
+	c0leFrba45JeTBTfIcc5GkVoya6OnFV6dOYRCBf6FfJ/7UCCJmwrkJOl30I0nayr96DZv2LU+0a
+	XoGjkNhOzqucFIVJl2gmbJqSv+yKOgmopxKdLzCPmqqHYUBEjLMaqPc4Ls2KZzK3IFqifAFJlmI
+	SxeUA==
+X-Google-Smtp-Source: AGHT+IEkCBpl3eKd3d9brWpyXGg/JMPPKAqKU5igDnr8qX9hUH4DhfwKgcrVdyi1T4cSdd0ItDs2Nw==
+X-Received: by 2002:a05:6512:128c:b0:598:faf1:3c95 with SMTP id 2adb3069b0e04-59a17d46185mr1423702e87.36.1766163789863;
+        Fri, 19 Dec 2025 09:03:09 -0800 (PST)
 Received: from LT-5CG5341NQ4.nordic.imtech.com (84-253-208-48.bb.dnainternet.fi. [84.253.208.48])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-59a18618d6fsm828449e87.65.2025.12.19.09.03.07
+        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-59a18618d6fsm828449e87.65.2025.12.19.09.03.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Dec 2025 09:03:07 -0800 (PST)
+        Fri, 19 Dec 2025 09:03:09 -0800 (PST)
 From: Kari Argillander <kari.argillander@gmail.com>
-Date: Fri, 19 Dec 2025 19:02:51 +0200
-Subject: [PATCH 1/2] rust: pwm: Fix potential memory leak on init error
+Date: Fri, 19 Dec 2025 19:02:52 +0200
+Subject: [PATCH 2/2] rust: pwm: Simplify to_result call sites and unsafe
+ blocks
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -83,7 +84,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20251219-pwm-rust-v1-1-46873e19679d@gmail.com>
+Message-Id: <20251219-pwm-rust-v1-2-46873e19679d@gmail.com>
 References: <20251219-pwm-rust-v1-0-46873e19679d@gmail.com>
 In-Reply-To: <20251219-pwm-rust-v1-0-46873e19679d@gmail.com>
 To: Michal Wilczynski <m.wilczynski@samsung.com>, 
@@ -97,47 +98,157 @@ To: Michal Wilczynski <m.wilczynski@samsung.com>,
 Cc: linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org, 
  linux-kernel@vger.kernel.org, Kari Argillander <kari.argillander@gmail.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1766163785; l=1470;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1766163785; l=6047;
  i=kari.argillander@gmail.com; s=20251219; h=from:subject:message-id;
- bh=egoZVQFjPWXGAtIOxW8GGJxkfc1zdWWNBbnwf9mSVYw=;
- b=0GKkMQPkd6eS4+0/cMSPxm7esjCifgCh9/TrrsM6cbCbcR9aV9MJTyvbp7Ndmbqd+z0nUJoll
- Hyk1uTz02AACSJin1ixFVu0sI/nIrry5tctiEiNE5zQzD2Ec7rdwuHU
+ bh=efsEAY5WuZhVB4BmfqXi5WRiTR8Oxn6NV6rPGVWEAOE=;
+ b=Daw4DWf9oXGGg6sGSk+Pmokb46y0JxMbfO5poL/1f+cv48f5QlSZDdmc76HCJvGFxtIJVQ0x1
+ 6Yy+r9MVu61AhK9w0hdmP3jpQyJdxiCS45zSlzD6NnuQhf5q1UN3uby
 X-Developer-Key: i=kari.argillander@gmail.com; a=ed25519;
  pk=RwSxyhTpE3z4sywdDbIkC3q33ZQLNyhYWxT44iTY6r4=
 
-When initializing a PWM chip using pwmchip_alloc(), the allocated device
-owns an initial reference that must be released on all error paths.
+Remove unnecessary temporary variables around to_result() calls and move
+trailing semicolons outside unsafe blocks to improve readability and
+produce cleaner rustfmt output.
 
-If __pinned_init() were to fail, the allocated pwm_chip would currently
-leak because the error path returned without calling pwmchip_put().
-
-While __pinned_init() does not currently have any failure paths in code
-base, this change makes the ownership transfer explicit and keeps the
-code correct if failure paths are added in the future.
+No functional change intended.
 
 Signed-off-by: Kari Argillander <kari.argillander@gmail.com>
 ---
- rust/kernel/pwm.rs | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ rust/kernel/pwm.rs | 47 ++++++++++++++---------------------------------
+ 1 file changed, 14 insertions(+), 33 deletions(-)
 
 diff --git a/rust/kernel/pwm.rs b/rust/kernel/pwm.rs
-index 2dd72a39acb5..4b6a3b5ef929 100644
+index 4b6a3b5ef929..3b6c72dcbd39 100644
 --- a/rust/kernel/pwm.rs
 +++ b/rust/kernel/pwm.rs
-@@ -607,7 +607,12 @@ pub fn new<'a>(
-         let drvdata_ptr = unsafe { bindings::pwmchip_get_drvdata(c_chip_ptr) };
+@@ -129,8 +129,7 @@ pub fn set_waveform(&self, wf: &Waveform, exact: bool) -> Result {
+         // SAFETY: `self.as_raw()` provides a valid `*mut pwm_device` pointer.
+         // `&c_wf` is a valid pointer to a `pwm_waveform` struct. The C function
+         // handles all necessary internal locking.
+-        let ret = unsafe { bindings::pwm_set_waveform_might_sleep(self.as_raw(), &c_wf, exact) };
+-        to_result(ret)
++        to_result(unsafe { bindings::pwm_set_waveform_might_sleep(self.as_raw(), &c_wf, exact) })
+     }
  
-         // SAFETY: We construct the `T` object in-place in the allocated private memory.
--        unsafe { data.__pinned_init(drvdata_ptr.cast())? };
-+        if let Err(e) = unsafe { data.__pinned_init(drvdata_ptr.cast()) } {
-+            // SAFETY: It is safe to call `pwmchip_put()` with a valid pointer
-+            // obtained from `pwmchip_alloc()`.
-+            unsafe { bindings::pwmchip_put(c_chip_ptr) };
-+            return Err(e);
-+        }
+     /// Queries the hardware for the configuration it would apply for a given
+@@ -160,9 +159,7 @@ pub fn get_waveform(&self) -> Result<Waveform> {
+ 
+         // SAFETY: `self.as_raw()` is a valid pointer. We provide a valid pointer
+         // to a stack-allocated `pwm_waveform` struct for the kernel to fill.
+-        let ret = unsafe { bindings::pwm_get_waveform_might_sleep(self.as_raw(), &mut c_wf) };
+-
+-        to_result(ret)?;
++        to_result(unsafe { bindings::pwm_get_waveform_might_sleep(self.as_raw(), &mut c_wf) })?;
+ 
+         Ok(Waveform::from(c_wf))
+     }
+@@ -263,8 +260,8 @@ unsafe fn serialize_wfhw(wfhw: &T::WfHw, wfhw_ptr: *mut c_void) -> Result {
+                 core::ptr::from_ref::<T::WfHw>(wfhw).cast::<u8>(),
+                 wfhw_ptr.cast::<u8>(),
+                 size,
+-            );
+-        }
++            )
++        };
+ 
+         Ok(())
+     }
+@@ -284,8 +281,8 @@ unsafe fn deserialize_wfhw(wfhw_ptr: *const c_void) -> Result<T::WfHw> {
+                 wfhw_ptr.cast::<u8>(),
+                 core::ptr::from_mut::<T::WfHw>(&mut wfhw).cast::<u8>(),
+                 size,
+-            );
+-        }
++            )
++        };
+ 
+         Ok(wfhw)
+     }
+@@ -311,9 +308,7 @@ unsafe fn deserialize_wfhw(wfhw_ptr: *const c_void) -> Result<T::WfHw> {
+         // Now, call the original release function to free the `pwm_chip` itself.
+         // SAFETY: `dev` is the valid pointer passed into this callback, which is
+         // the expected argument for `pwmchip_release`.
+-        unsafe {
+-            bindings::pwmchip_release(dev);
+-        }
++        unsafe { bindings::pwmchip_release(dev) };
+     }
+ 
+     /// # Safety
+@@ -413,9 +408,7 @@ unsafe fn deserialize_wfhw(wfhw_ptr: *const c_void) -> Result<T::WfHw> {
+         match T::round_waveform_fromhw(chip, pwm, &wfhw, &mut rust_wf) {
+             Ok(()) => {
+                 // SAFETY: `wf_ptr` is guaranteed valid by the C caller.
+-                unsafe {
+-                    *wf_ptr = rust_wf.into();
+-                };
++                unsafe { *wf_ptr = rust_wf.into() };
+                 0
+             }
+             Err(e) => e.to_errno(),
+@@ -615,16 +608,12 @@ pub fn new<'a>(
+         }
  
          // SAFETY: `c_chip_ptr` points to a valid chip.
-         unsafe {
+-        unsafe {
+-            (*c_chip_ptr).dev.release = Some(Adapter::<T>::release_callback);
+-        }
++        unsafe { (*c_chip_ptr).dev.release = Some(Adapter::<T>::release_callback) };
+ 
+         // SAFETY: `c_chip_ptr` points to a valid chip.
+         // The `Adapter`'s `VTABLE` has a 'static lifetime, so the pointer
+         // returned by `as_raw()` is always valid.
+-        unsafe {
+-            (*c_chip_ptr).ops = Adapter::<T>::VTABLE.as_raw();
+-        }
++        unsafe { (*c_chip_ptr).ops = Adapter::<T>::VTABLE.as_raw() };
+ 
+         // Cast the `*mut bindings::pwm_chip` to `*mut Chip`. This is valid because
+         // `Chip` is `repr(transparent)` over `Opaque<bindings::pwm_chip>`, and
+@@ -646,9 +635,7 @@ unsafe impl<T: PwmOps> AlwaysRefCounted for Chip<T> {
+     fn inc_ref(&self) {
+         // SAFETY: `self.0.get()` points to a valid `pwm_chip` because `self` exists.
+         // The embedded `dev` is valid. `get_device` increments its refcount.
+-        unsafe {
+-            bindings::get_device(&raw mut (*self.0.get()).dev);
+-        }
++        unsafe { bindings::get_device(&raw mut (*self.0.get()).dev) };
+     }
+ 
+     #[inline]
+@@ -657,9 +644,7 @@ unsafe fn dec_ref(obj: NonNull<Chip<T>>) {
+ 
+         // SAFETY: `obj` is a valid pointer to a `Chip` (and thus `bindings::pwm_chip`)
+         // with a non-zero refcount. `put_device` handles decrement and final release.
+-        unsafe {
+-            bindings::put_device(&raw mut (*c_chip_ptr).dev);
+-        }
++        unsafe { bindings::put_device(&raw mut (*c_chip_ptr).dev) };
+     }
+ }
+ 
+@@ -693,9 +678,7 @@ pub fn register(self) -> Result<ARef<Chip<T>>> {
+ 
+         // SAFETY: `c_chip_ptr` points to a valid chip with its ops initialized.
+         // `__pwmchip_add` is the C function to register the chip with the PWM core.
+-        unsafe {
+-            to_result(bindings::__pwmchip_add(c_chip_ptr, core::ptr::null_mut()))?;
+-        }
++        to_result(unsafe { bindings::__pwmchip_add(c_chip_ptr, core::ptr::null_mut()) })?;
+ 
+         let registration = Registration {
+             chip: ARef::clone(&self.chip),
+@@ -731,9 +714,7 @@ fn drop(&mut self) {
+         // SAFETY: `chip_raw` points to a chip that was successfully registered.
+         // `bindings::pwmchip_remove` is the correct C function to unregister it.
+         // This `drop` implementation is called automatically by `devres` on driver unbind.
+-        unsafe {
+-            bindings::pwmchip_remove(chip_raw);
+-        }
++        unsafe { bindings::pwmchip_remove(chip_raw) };
+     }
+ }
+ 
 
 -- 
 2.43.0
