@@ -1,256 +1,182 @@
-Return-Path: <linux-pwm+bounces-7818-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7819-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41BCDCD10A7
-	for <lists+linux-pwm@lfdr.de>; Fri, 19 Dec 2025 18:05:49 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id C46CFCD4449
+	for <lists+linux-pwm@lfdr.de>; Sun, 21 Dec 2025 19:53:11 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D6B6D306AE0F
-	for <lists+linux-pwm@lfdr.de>; Fri, 19 Dec 2025 17:03:18 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 71B983007C6F
+	for <lists+linux-pwm@lfdr.de>; Sun, 21 Dec 2025 18:52:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A29133A710;
-	Fri, 19 Dec 2025 17:03:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56B1D3090FE;
+	Sun, 21 Dec 2025 18:52:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aw3lC+lv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KzfXdfh6"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lf1-f41.google.com (mail-lf1-f41.google.com [209.85.167.41])
+Received: from mail-wr1-f44.google.com (mail-wr1-f44.google.com [209.85.221.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2409B3009E1
-	for <linux-pwm@vger.kernel.org>; Fri, 19 Dec 2025 17:03:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D46CE23D7DB
+	for <linux-pwm@vger.kernel.org>; Sun, 21 Dec 2025 18:52:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766163795; cv=none; b=tf7cisA1nAaUUymSU3Muck7NSkDyLnz17EzxnVGjbPUrWFb8amLWMBl5dz0gCa2XhJSit+G4PQxidOWLTVNXdqbdw7DpzYnOK9DAyBzUf4XdcVEjVq4P183gX9QChCSw+GgCGjTUk4I8H1VusOM/nRMbFJ/JfagkKRHuXa93L4I=
+	t=1766343176; cv=none; b=kYSA0YfUtLUzcZqKPfYpEiZd/LOVq18v/Z4gH3NkOQtTZZrEPYjo1FzpN6GOeWdfy88BqZiJ4WKbicbWUDJWDvriaghLTqU2Ejk4OC8v2wbHSvdvZefvA5aXdhmbT/wOGEWOhvcdLDqYsHjGySTGW6Yik13Qqxa7QtNh3Z1GTB8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766163795; c=relaxed/simple;
-	bh=efsEAY5WuZhVB4BmfqXi5WRiTR8Oxn6NV6rPGVWEAOE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Y9AnH4nbZ9rLeJcgbOMMsmY2lI60UwPvxDcz3SYyWxJVJQq00bzTpapCEwwdD8hadjQ/xVeVIezcNdZrZDE7y3PO3pWIN6W357Q4gmyXyMoNkxND+DCLfwVq3bOwP2Ct13uNc021kjFm3aW2mVZki7fwKKnqE24yHczcXdssZT4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aw3lC+lv; arc=none smtp.client-ip=209.85.167.41
+	s=arc-20240116; t=1766343176; c=relaxed/simple;
+	bh=wTYyJ6KNs7lcO1LDw5mry706MHNd9SS12sadjX2FW+o=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jLqDkEm80mYEnjxEbACYM4UgGER1Vf9vRqEsSHFlU1T15WSs5vt0LsqIsy9iMe2jqYZPitUbb2i4Dkvbj4lJTfijIs8KaEKZJ4VvujNon0S3X+eDS4iqYEqtOcr/w3dHxKl1kYxF/US9juUoOxrAZqVfBA0TYtN/0A5KDPLEsAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KzfXdfh6; arc=none smtp.client-ip=209.85.221.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-598f81d090cso2229437e87.2
-        for <linux-pwm@vger.kernel.org>; Fri, 19 Dec 2025 09:03:11 -0800 (PST)
+Received: by mail-wr1-f44.google.com with SMTP id ffacd0b85a97d-42fbad1fa90so2718056f8f.0
+        for <linux-pwm@vger.kernel.org>; Sun, 21 Dec 2025 10:52:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1766163790; x=1766768590; darn=vger.kernel.org;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=pa9nztFG8VMOQ6dqwU2/oLzKHaOnP4dlHhzGZaw1gMs=;
-        b=aw3lC+lv5QZY60WjAdxse/xAY7K4jqkKW7OYGeINPkEiwtPuBfjs5nPX3XiYSwhnaP
-         BedccNwUgpKuL3UbhS7QHb/wmSX5zpn5fqPmNmvEUnmMd2EyiHiANzn3MCjyhRCIjj+g
-         G6kAnufLMgMNOyR7sO8bK5oHTMki7h1+CymnS/6NPK5pLw+fnMjj/y/OrmBHR1ITy5bI
-         lf9ONZetC+xCpY2v9ubL4e9FSTD0d7R6EHTSmi/lK1SpOKI6gmd2n28Vh7bW3hgVm0VV
-         O+hlaKF2LZ3myjxWqb6Hs241AAYyRXGeHntIya/JfFfTXHFZ1SOtUFSn07dO7TMcx2i4
-         So3A==
+        d=gmail.com; s=20230601; t=1766343172; x=1766947972; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EkFUuskD3aXQcMoKgf00kBQMcF6mPoLg5bi7MGfjH3A=;
+        b=KzfXdfh6NwIpnEQ4xNJnZZg+yOATN0UgK0sDOfv83+I7tzjFOsfhCiCOfWou024bSY
+         EMD90GWxJYj22UpfJPEDq+7Sg2rowa9AVgDxPZ/udfGKvDRk3CRtfoXY3v3DtZBM12Td
+         DIDYD4f5mgRF5XliMEgO5SoNHPQBgJWoO4YkU4Wdmf8SiMSYrdd/bvBIrKeA8MfzDcjf
+         wz/8t9zs0Cb5Kbc3mCPBqqmsVtgg5MOJXuBQZk5THfpGDCePrZfr7T8J/YMIiQ6MvL0q
+         5cV7C4bmeDJ4RCLxjRh1vmELDTuzCFUQt4lJukGsaW1HKDF5goh/KSCSN2c/Pl9fzt9d
+         CQdw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1766163790; x=1766768590;
-        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
-         :mime-version:subject:date:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=pa9nztFG8VMOQ6dqwU2/oLzKHaOnP4dlHhzGZaw1gMs=;
-        b=J45CGNVb06NJH834zDHteMIJH/GLc/WZb03oiF/xgtlH1djj+65BvF7+cX6edSzy7G
-         3Ewep3wtYj/wE8kloKwtaikDl10eFnrSTf0LyfkLVmdAdckllY1R1ZJ0FMghHVjHK9IW
-         /GmHxRpeHY0W304oAJvh9jX+3E/qbWScHjzMYF/haUQXnIx8bMigjAO8A9CIyLniF/mA
-         yrQ0wrOv4w60+L2D1QqcE0+49ikKS6QzjDIy6HggPLN6EP357uCrjXX1d6A8VH4aJ5Yy
-         osKQjwetw1yeegbNM1Y11l/sjEj/NCv9hHhozcZTvuBuisyl2FkOSWSsybEyTnhO1d01
-         vlgw==
-X-Gm-Message-State: AOJu0Yw2827uovIHQIHhqZpF2Z/IgmnkNlGg9xCieleaSYD8Emp6qQcG
-	ZWje/4RafXw1M6eg2igzcBfD3gKy6V5yvCTWuYewL/NlecpYmKDzmAbi
-X-Gm-Gg: AY/fxX672uK5ROgnI4lCvrNvnLuLXbMlQNv88JHOrzvyMRgI1egVhf7kVy26YGuTlsY
-	q8l5Naw26yjY43lPu5cOdvpFYD22QbhzXWDxrAx8WkqYoiatJS2r49/M+18IX2FGAUqK8TKJXoN
-	Eq8Bu5/xMCTDmp/63reo2pKG7ksyzuYGFydxh9X6CjL4DgeYcTrxVHGSZ4NwenvL30IPwDeQhRo
-	hVLHGx+BfowP/m5+QXfGvigstLLY1XlJzPT2V2MXW+ecCX+PaaQavhmi12zjZutxaoTOtSfGpjN
-	wWcPrRLG+o7hKXWYTnzPCi1LbvYlevNezg4JCc4r4KCFiOGMYG9fOy5eCP01cF7TNPOlq/tDYHq
-	c0leFrba45JeTBTfIcc5GkVoya6OnFV6dOYRCBf6FfJ/7UCCJmwrkJOl30I0nayr96DZv2LU+0a
-	XoGjkNhOzqucFIVJl2gmbJqSv+yKOgmopxKdLzCPmqqHYUBEjLMaqPc4Ls2KZzK3IFqifAFJlmI
-	SxeUA==
-X-Google-Smtp-Source: AGHT+IEkCBpl3eKd3d9brWpyXGg/JMPPKAqKU5igDnr8qX9hUH4DhfwKgcrVdyi1T4cSdd0ItDs2Nw==
-X-Received: by 2002:a05:6512:128c:b0:598:faf1:3c95 with SMTP id 2adb3069b0e04-59a17d46185mr1423702e87.36.1766163789863;
-        Fri, 19 Dec 2025 09:03:09 -0800 (PST)
-Received: from LT-5CG5341NQ4.nordic.imtech.com (84-253-208-48.bb.dnainternet.fi. [84.253.208.48])
-        by smtp.gmail.com with ESMTPSA id 2adb3069b0e04-59a18618d6fsm828449e87.65.2025.12.19.09.03.08
+        d=1e100.net; s=20230601; t=1766343172; x=1766947972;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=EkFUuskD3aXQcMoKgf00kBQMcF6mPoLg5bi7MGfjH3A=;
+        b=IibHWXY4UL6EOgGPLo/p3HCDcyT31ONnskNOAmSpzDMnIl6WQJhzv0l8AeKV/7mCxv
+         BOhgUieZaIqUDrnst/78arVF9DHCuxePqjRCoNi2uzsj1mRGs14tp+L/QkS7p2yN7iuP
+         3GPDm5/epndbGR5D9gZ+DTrI88VhF+Xq0xH3ud9Iek9Ho4442N52FEeis7qwi3BXD22Q
+         pWhzdV/oAHZTy59rsR93lbqOWaCql413j8/iu7YlbbFSmugbt4OXVYslaaDt3wGaRjb5
+         lCfF4qt+p0NqFBDmmBg6BBOfsjw9Tmr1kjKjftMYRE4v7nMprPu/gO60ep9YBI/eKhsq
+         9cjQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVmyNbQlCyZwVr70Kve86MWmjes1PYJyb6Fmc4NdBftER96wqCNOy5js3gz3s5BivY4jEk6PflOlmE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxqOc7dQWJdOpt5zLyFTnsUN4tQG8s0+iQU8Lo9W5x9ip/BOlwF
+	l78JWdn3BSreOD48ttugohjAlMosR/CVhVBZJ20iegoRTrt/l1EdHVJU
+X-Gm-Gg: AY/fxX4LS+SiDjJtnHaVEbA6F23DWOb4EfCqNo2S1U2Ja2R/AGw+IHrVnXc+niB/0Dz
+	1MiMzL/OCGCLB/06JvjGa79/ZsUnaUMAU8yvWD77p1v4yhxApUz8acdCMOlTHGQ1935EdkGAzl7
+	XLiPl6A7EpjnDXYVA6DrB2CeWqyT3E79GT2Er8wJ/gTG5QmsuAsGKlKggQOtzoNKe5rFeANdtDQ
+	kKcl8AgOunRsWv1SjLol2Mtfi09agWwF/AwDVOOpPHQvyASemjCipvu+G1rVsDTOykS41sTt1kX
+	z83KFsq9NWv9vBnQh7RJh6c2iETNh/26DP6TRMEWpFCqBzbrTNLWP1BDX1zbGyvSoQA4pcB65Hc
+	4eFcjmOW5dwmrC8Jcb0ReBIqFR1RKRJw6MyC0LT8bJOFfGRAMgLzRa2hjtCzeM9v/E+sjXg2NjG
+	xkO0dtnJJ6Wufag3CJOJwpm0te/7obsjiahvSEMxwBoRrj6TY8S5UEOVkKPbcxOCo63lgQ
+X-Google-Smtp-Source: AGHT+IEkkDr9J9+zdibSJ3aQ9iWL0xgIJ5GrJUheHH61EjSouzXE+O5/goeHQ+aazrE5IYrzxVO9HA==
+X-Received: by 2002:a05:6000:4008:b0:430:f241:a11f with SMTP id ffacd0b85a97d-4324e4fa8a7mr8787306f8f.30.1766343171984;
+        Sun, 21 Dec 2025 10:52:51 -0800 (PST)
+Received: from jernej-laptop.localnet (82-192-45-213.dynamic.telemach.net. [82.192.45.213])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4325d10cc48sm7775667f8f.16.2025.12.21.10.52.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Dec 2025 09:03:09 -0800 (PST)
-From: Kari Argillander <kari.argillander@gmail.com>
-Date: Fri, 19 Dec 2025 19:02:52 +0200
-Subject: [PATCH 2/2] rust: pwm: Simplify to_result call sites and unsafe
- blocks
+        Sun, 21 Dec 2025 10:52:51 -0800 (PST)
+From: Jernej =?UTF-8?B?xaBrcmFiZWM=?= <jernej.skrabec@gmail.com>
+To: Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <u.kleine-koenig@baylibre.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+ Samuel Holland <samuel@sholland.org>, Philipp Zabel <p.zabel@pengutronix.de>,
+ Richard Genoud <richard.genoud@bootlin.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+ linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Richard Genoud <richard.genoud@bootlin.com>,
+ Krzysztof Kozlowski <krzk@kernel.org>
+Subject:
+ Re: [PATCH v2 1/4] dt-bindings: pwm: allwinner: add h616 pwm compatible
+Date: Sun, 21 Dec 2025 19:52:50 +0100
+Message-ID: <10771871.nUPlyArG6x@jernej-laptop>
+In-Reply-To: <20251217082504.80226-2-richard.genoud@bootlin.com>
+References:
+ <20251217082504.80226-1-richard.genoud@bootlin.com>
+ <20251217082504.80226-2-richard.genoud@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20251219-pwm-rust-v1-2-46873e19679d@gmail.com>
-References: <20251219-pwm-rust-v1-0-46873e19679d@gmail.com>
-In-Reply-To: <20251219-pwm-rust-v1-0-46873e19679d@gmail.com>
-To: Michal Wilczynski <m.wilczynski@samsung.com>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, 
- Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
- Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
- Danilo Krummrich <dakr@kernel.org>
-Cc: linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org, 
- linux-kernel@vger.kernel.org, Kari Argillander <kari.argillander@gmail.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1766163785; l=6047;
- i=kari.argillander@gmail.com; s=20251219; h=from:subject:message-id;
- bh=efsEAY5WuZhVB4BmfqXi5WRiTR8Oxn6NV6rPGVWEAOE=;
- b=Daw4DWf9oXGGg6sGSk+Pmokb46y0JxMbfO5poL/1f+cv48f5QlSZDdmc76HCJvGFxtIJVQ0x1
- 6Yy+r9MVu61AhK9w0hdmP3jpQyJdxiCS45zSlzD6NnuQhf5q1UN3uby
-X-Developer-Key: i=kari.argillander@gmail.com; a=ed25519;
- pk=RwSxyhTpE3z4sywdDbIkC3q33ZQLNyhYWxT44iTY6r4=
 
-Remove unnecessary temporary variables around to_result() calls and move
-trailing semicolons outside unsafe blocks to improve readability and
-produce cleaner rustfmt output.
+Dne sreda, 17. december 2025 ob 09:25:01 Srednjeevropski standardni =C4=8Da=
+s je Richard Genoud napisal(a):
+> Allwinner H616 PWM block is quite different from the A10 or H6, but at
+> the end, it uses the same clocks as the H6; so the sun4i pwm binding can
+> be used.
+> It has 6 channels than can generate PWM waveforms or clocks if bypass is
+> enabled.
+>=20
+> Suggested-by: Krzysztof Kozlowski <krzk@kernel.org>
+> Signed-off-by: Richard Genoud <richard.genoud@bootlin.com>
+> ---
+>  .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 19 ++++++++++++++++++-
+>  1 file changed, 18 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pw=
+m.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
+> index 1197858e431f..4f58110ec98f 100644
+> --- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
+> +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
+> @@ -14,6 +14,9 @@ properties:
+>    "#pwm-cells":
+>      const: 3
+> =20
+> +  "#clock-cells":
+> +    const: 1
 
-No functional change intended.
+Why #clock-cells? I don't see any reason to add it.
 
-Signed-off-by: Kari Argillander <kari.argillander@gmail.com>
----
- rust/kernel/pwm.rs | 47 ++++++++++++++---------------------------------
- 1 file changed, 14 insertions(+), 33 deletions(-)
+Other properties seem fine.
 
-diff --git a/rust/kernel/pwm.rs b/rust/kernel/pwm.rs
-index 4b6a3b5ef929..3b6c72dcbd39 100644
---- a/rust/kernel/pwm.rs
-+++ b/rust/kernel/pwm.rs
-@@ -129,8 +129,7 @@ pub fn set_waveform(&self, wf: &Waveform, exact: bool) -> Result {
-         // SAFETY: `self.as_raw()` provides a valid `*mut pwm_device` pointer.
-         // `&c_wf` is a valid pointer to a `pwm_waveform` struct. The C function
-         // handles all necessary internal locking.
--        let ret = unsafe { bindings::pwm_set_waveform_might_sleep(self.as_raw(), &c_wf, exact) };
--        to_result(ret)
-+        to_result(unsafe { bindings::pwm_set_waveform_might_sleep(self.as_raw(), &c_wf, exact) })
-     }
- 
-     /// Queries the hardware for the configuration it would apply for a given
-@@ -160,9 +159,7 @@ pub fn get_waveform(&self) -> Result<Waveform> {
- 
-         // SAFETY: `self.as_raw()` is a valid pointer. We provide a valid pointer
-         // to a stack-allocated `pwm_waveform` struct for the kernel to fill.
--        let ret = unsafe { bindings::pwm_get_waveform_might_sleep(self.as_raw(), &mut c_wf) };
--
--        to_result(ret)?;
-+        to_result(unsafe { bindings::pwm_get_waveform_might_sleep(self.as_raw(), &mut c_wf) })?;
- 
-         Ok(Waveform::from(c_wf))
-     }
-@@ -263,8 +260,8 @@ unsafe fn serialize_wfhw(wfhw: &T::WfHw, wfhw_ptr: *mut c_void) -> Result {
-                 core::ptr::from_ref::<T::WfHw>(wfhw).cast::<u8>(),
-                 wfhw_ptr.cast::<u8>(),
-                 size,
--            );
--        }
-+            )
-+        };
- 
-         Ok(())
-     }
-@@ -284,8 +281,8 @@ unsafe fn deserialize_wfhw(wfhw_ptr: *const c_void) -> Result<T::WfHw> {
-                 wfhw_ptr.cast::<u8>(),
-                 core::ptr::from_mut::<T::WfHw>(&mut wfhw).cast::<u8>(),
-                 size,
--            );
--        }
-+            )
-+        };
- 
-         Ok(wfhw)
-     }
-@@ -311,9 +308,7 @@ unsafe fn deserialize_wfhw(wfhw_ptr: *const c_void) -> Result<T::WfHw> {
-         // Now, call the original release function to free the `pwm_chip` itself.
-         // SAFETY: `dev` is the valid pointer passed into this callback, which is
-         // the expected argument for `pwmchip_release`.
--        unsafe {
--            bindings::pwmchip_release(dev);
--        }
-+        unsafe { bindings::pwmchip_release(dev) };
-     }
- 
-     /// # Safety
-@@ -413,9 +408,7 @@ unsafe fn deserialize_wfhw(wfhw_ptr: *const c_void) -> Result<T::WfHw> {
-         match T::round_waveform_fromhw(chip, pwm, &wfhw, &mut rust_wf) {
-             Ok(()) => {
-                 // SAFETY: `wf_ptr` is guaranteed valid by the C caller.
--                unsafe {
--                    *wf_ptr = rust_wf.into();
--                };
-+                unsafe { *wf_ptr = rust_wf.into() };
-                 0
-             }
-             Err(e) => e.to_errno(),
-@@ -615,16 +608,12 @@ pub fn new<'a>(
-         }
- 
-         // SAFETY: `c_chip_ptr` points to a valid chip.
--        unsafe {
--            (*c_chip_ptr).dev.release = Some(Adapter::<T>::release_callback);
--        }
-+        unsafe { (*c_chip_ptr).dev.release = Some(Adapter::<T>::release_callback) };
- 
-         // SAFETY: `c_chip_ptr` points to a valid chip.
-         // The `Adapter`'s `VTABLE` has a 'static lifetime, so the pointer
-         // returned by `as_raw()` is always valid.
--        unsafe {
--            (*c_chip_ptr).ops = Adapter::<T>::VTABLE.as_raw();
--        }
-+        unsafe { (*c_chip_ptr).ops = Adapter::<T>::VTABLE.as_raw() };
- 
-         // Cast the `*mut bindings::pwm_chip` to `*mut Chip`. This is valid because
-         // `Chip` is `repr(transparent)` over `Opaque<bindings::pwm_chip>`, and
-@@ -646,9 +635,7 @@ unsafe impl<T: PwmOps> AlwaysRefCounted for Chip<T> {
-     fn inc_ref(&self) {
-         // SAFETY: `self.0.get()` points to a valid `pwm_chip` because `self` exists.
-         // The embedded `dev` is valid. `get_device` increments its refcount.
--        unsafe {
--            bindings::get_device(&raw mut (*self.0.get()).dev);
--        }
-+        unsafe { bindings::get_device(&raw mut (*self.0.get()).dev) };
-     }
- 
-     #[inline]
-@@ -657,9 +644,7 @@ unsafe fn dec_ref(obj: NonNull<Chip<T>>) {
- 
-         // SAFETY: `obj` is a valid pointer to a `Chip` (and thus `bindings::pwm_chip`)
-         // with a non-zero refcount. `put_device` handles decrement and final release.
--        unsafe {
--            bindings::put_device(&raw mut (*c_chip_ptr).dev);
--        }
-+        unsafe { bindings::put_device(&raw mut (*c_chip_ptr).dev) };
-     }
- }
- 
-@@ -693,9 +678,7 @@ pub fn register(self) -> Result<ARef<Chip<T>>> {
- 
-         // SAFETY: `c_chip_ptr` points to a valid chip with its ops initialized.
-         // `__pwmchip_add` is the C function to register the chip with the PWM core.
--        unsafe {
--            to_result(bindings::__pwmchip_add(c_chip_ptr, core::ptr::null_mut()))?;
--        }
-+        to_result(unsafe { bindings::__pwmchip_add(c_chip_ptr, core::ptr::null_mut()) })?;
- 
-         let registration = Registration {
-             chip: ARef::clone(&self.chip),
-@@ -731,9 +714,7 @@ fn drop(&mut self) {
-         // SAFETY: `chip_raw` points to a chip that was successfully registered.
-         // `bindings::pwmchip_remove` is the correct C function to unregister it.
-         // This `drop` implementation is called automatically by `devres` on driver unbind.
--        unsafe {
--            bindings::pwmchip_remove(chip_raw);
--        }
-+        unsafe { bindings::pwmchip_remove(chip_raw) };
-     }
- }
- 
+Best regards,
+Jernej
 
--- 
-2.43.0
+> +
+>    compatible:
+>      oneOf:
+>        - const: allwinner,sun4i-a10-pwm
+> @@ -36,6 +39,7 @@ properties:
+>            - const: allwinner,sun50i-h5-pwm
+>            - const: allwinner,sun5i-a13-pwm
+>        - const: allwinner,sun50i-h6-pwm
+> +      - const: allwinner,sun50i-h616-pwm
+> =20
+>    reg:
+>      maxItems: 1
+> @@ -62,7 +66,9 @@ allOf:
+>        properties:
+>          compatible:
+>            contains:
+> -            const: allwinner,sun50i-h6-pwm
+> +            enum:
+> +              - allwinner,sun50i-h6-pwm
+> +              - allwinner,sun50i-h616-pwm
+> =20
+>      then:
+>        properties:
+> @@ -83,6 +89,17 @@ allOf:
+>          clocks:
+>            maxItems: 1
+> =20
+> +  - if:
+> +      not:
+> +        properties:
+> +          compatible:
+> +            contains:
+> +              const: allwinner,sun50i-h616-pwm
+> +
+> +    then:
+> +      properties:
+> +        "#clock-cells": false
+> +
+>  required:
+>    - compatible
+>    - reg
+>=20
+
+
+
 
 
