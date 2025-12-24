@@ -1,137 +1,98 @@
-Return-Path: <linux-pwm+bounces-7823-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7824-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7CC7ACD65A1
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Dec 2025 15:22:22 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9FC62CDB721
+	for <lists+linux-pwm@lfdr.de>; Wed, 24 Dec 2025 06:57:41 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6DF9F3026B2F
-	for <lists+linux-pwm@lfdr.de>; Mon, 22 Dec 2025 14:22:04 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id D4F933007AAE
+	for <lists+linux-pwm@lfdr.de>; Wed, 24 Dec 2025 05:57:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A21412DC348;
-	Mon, 22 Dec 2025 14:22:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD9C41FBC92;
+	Wed, 24 Dec 2025 05:57:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="DCvWmjBy"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hBqnP2QO"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AF4F2BE048;
-	Mon, 22 Dec 2025 14:22:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1766413323; cv=pass; b=Eah//3Z34iAL6YS/dUQvs6QWZBYghrsEN4uQphe/H+PDs2lMKN0nwxujAsr5GpnZ1OWb+2gXdEaWmGuurjgeXnkLcC9+CykfE8/St6TNEWhve5tOWABA0Fmv51ZoW6sYP8lMyzBFgklJK/gu0Ol6o20X3m9m49oklRTA8sq9RoE=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1766413323; c=relaxed/simple;
-	bh=R2nplfYnI5UXtK/0Y8D6GrkdO71eLFjuU0Q8vbZoidU=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=O4jL3xl6ADSldCj7WodkUEl7ORhahcfoVhWMKUWkoBmAo0AFH9WHv2g+z2II2gUZEymmqRYxpccLfgMRw78XY915yG70Y1Fc+K+AJpkN65EyV6cKmuqRgQwHoOEenMOn/LIqZyC9ZnjlwdHazBjOJ7uBttZkCa0brAhQiNYw/lk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=DCvWmjBy; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1766413299; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=dSJA3frU6QuloPJJDWgkZ6o1bJd9LXPMPFMfvnII4R3z4ppxhQHfsbXfnJ75hZdquAOUQmDkfs9/UqpqSqsY6zE8E0gKxAQDpZSY+HS0+51R3f6q4gVaLo9GE6CBmge35G/KeQ6zB4/kiYkPKbuFlT18rvsC+jcUA5yAUeE0Mb4=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1766413299; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=a9KrdtA4sTPYPLeGS9oWNYHBt1scy7mdbGzi7GGj4R4=; 
-	b=CwE0Vd7HAzfAJJGN3Fo4IUd8X9+79ZVriSQu2cBXMgB9WFJDn3ADQj7OE1FILJPbubUQsGTWJoLXGqMC1cDtyHO2h7jdgnueKP3AYqygV0M2n40PBzYhD6F2KAZVMEbsIxYqIAKmce3QnF1u6tpwxDVIyGDoGfg5Pq/HdrcFj2s=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1766413299;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=a9KrdtA4sTPYPLeGS9oWNYHBt1scy7mdbGzi7GGj4R4=;
-	b=DCvWmjBy68tXZW/QwbdL7dV6gfGYITgZbzVws93gdr0fl4UloTTJU4+WSuP028e+
-	bfDLsJcEq33TfuLT9FUB+bfOOkg+79ZNnOU8VsnNYY2/53H2kZipnVZy6aYLOMr2YV0
-	z9/MB4UPC8DO6kE/iCy6AgfDEy9Tull5TJwmWwGA=
-Received: by mx.zohomail.com with SMTPS id 1766413298347127.09238611384126;
-	Mon, 22 Dec 2025 06:21:38 -0800 (PST)
-Content-Type: text/plain;
-	charset=us-ascii
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B40781DA62E
+	for <linux-pwm@vger.kernel.org>; Wed, 24 Dec 2025 05:57:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1766555859; cv=none; b=iw+nsLcDSRdtx6VVm1/tI3F1j2nj11JAjjXeCSyel6+K1J6D0aTtceXHhIErKqUN+3n38pwJNx3rpcFuk4LqfeFrdSoWWN61N13Dt+osDXkxR7zXO9PiTQXNufrILKFGHJmT6ySXQq366V540l9oEYB9KMxjFou85sPCJIMiyP4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1766555859; c=relaxed/simple;
+	bh=1dy5sdYgJxDLSQg+pWbq+5q4BekQWKbhPhmgl/qHr5Q=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t9QzCTdiLWaSaoaqJmdGoso0gyEzVAnmfD0agAa8SjZns1uvpIvtS7G6ZCvh9NaIfkJYLztCAk+KruNIbblBdQ6OXQ8nFCdbeL4/LOZ7onAxUt/5+bxWjMqaV59y61X8QkN07A6DoKF8qxpDgN5PwLhfTcT2+W81ylUDVQ5VEpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hBqnP2QO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA548C4CEFB;
+	Wed, 24 Dec 2025 05:57:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1766555859;
+	bh=1dy5sdYgJxDLSQg+pWbq+5q4BekQWKbhPhmgl/qHr5Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hBqnP2QOELlm33NUm2yDnBfJ4zeUSTW1p1+gL2wHX3So5HL3L9B02sRWqOx2vOu1P
+	 ngnJqEjwlT6VXC+6q9IL/WBuP7tqBb9n6zEeLQN38l0V7hxsMWJMiQakM17xOArSuM
+	 AtL0chayy4JimHO2dzaXNXEyqvHNQtDDab00B9zTAWYniMZdRDi+pg12Zss+LZ4Tjr
+	 fiPcyAUMDU9YEXJ0088W7a3FFLQ1rX4qaCSRTMruFFaECI0soiJeqyFvQL1x4LlOpC
+	 nwfT/HAtnGSMj52cghE2gdy7GFrINGZN3lIi2tyz98ZA1pIT8Kz2G5s24iQkPUWNBA
+	 j06Uaux+MlqEA==
+Date: Wed, 24 Dec 2025 06:57:33 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Marek Vasut <marek.vasut@mailbox.org>
+Cc: Jean Delvare <jdelvare@suse.de>, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH] pwm: argon-fan-hat: Add hardware dependency
+Message-ID: <2l5iqxj2tgfvv4aszl74oatmlxwrfr4m7hy4y3lpybg2zhlrj7@p2ln65gnss64>
+References: <20251103164752.533aee39@endymion>
+ <05b5b096-33cd-45c4-9d9c-286d743c6916@mailbox.org>
+ <f6c2d892b64057c079662e8bd64060d45c156288.camel@suse.de>
+ <643bb99a-4d0e-47bc-a60e-208dcc151034@mailbox.org>
+ <65639f87c800a1ffcd60d20bb9915772a0d7f456.camel@suse.de>
+ <99609491-10bf-46f0-8178-a3c3d375b742@mailbox.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.700.81\))
-Subject: Re: [PATCH] drivers: pwm: replace `kernel::c_str!` with C-Strings
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <20251222-cstr-pwm-v1-1-e8916d976f8d@gmail.com>
-Date: Mon, 22 Dec 2025 11:21:21 -0300
-Cc: Drew Fustini <fustini@kernel.org>,
- Guo Ren <guoren@kernel.org>,
- Fu Wei <wefu@redhat.com>,
- =?utf-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Miguel Ojeda <ojeda@kernel.org>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <lossin@kernel.org>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- Trevor Gross <tmgross@umich.edu>,
- Danilo Krummrich <dakr@kernel.org>,
- linux-riscv@lists.infradead.org,
- linux-pwm@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- rust-for-linux@vger.kernel.org,
- Tamir Duberstein <tamird@gmail.com>
-Content-Transfer-Encoding: 7bit
-Message-Id: <607D76B0-1A8A-4A62-A961-14796A7FD31E@collabora.com>
-References: <20251222-cstr-pwm-v1-1-e8916d976f8d@gmail.com>
-To: Tamir Duberstein <tamird@kernel.org>
-X-Mailer: Apple Mail (2.3826.700.81)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="7lwit6bhcuqlbjbf"
+Content-Disposition: inline
+In-Reply-To: <99609491-10bf-46f0-8178-a3c3d375b742@mailbox.org>
 
 
+--7lwit6bhcuqlbjbf
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] pwm: argon-fan-hat: Add hardware dependency
+MIME-Version: 1.0
 
-> On 22 Dec 2025, at 09:24, Tamir Duberstein <tamird@kernel.org> wrote:
-> 
-> From: Tamir Duberstein <tamird@gmail.com>
-> 
-> C-String literals were added in Rust 1.77. Replace instances of
-> `kernel::c_str!` with C-String literals where possible.
-> 
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> ---
-> drivers/pwm/pwm_th1520.rs | 3 +--
-> 1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm_th1520.rs b/drivers/pwm/pwm_th1520.rs
-> index e3b7e77356fc..8ae8f852ec02 100644
-> --- a/drivers/pwm/pwm_th1520.rs
-> +++ b/drivers/pwm/pwm_th1520.rs
-> @@ -22,7 +22,6 @@
-> 
-> use core::ops::Deref;
-> use kernel::{
-> -    c_str,
->     clk::Clk,
->     device::{Bound, Core, Device},
->     devres,
-> @@ -327,7 +326,7 @@ fn drop(self: Pin<&mut Self>) {
->     OF_TABLE,
->     MODULE_OF_TABLE,
->     <Th1520PwmPlatformDriver as platform::Driver>::IdInfo,
-> -    [(of::DeviceId::new(c_str!("thead,th1520-pwm")), ())]
-> +    [(of::DeviceId::new(c"thead,th1520-pwm"), ())]
-> );
-> 
-> impl platform::Driver for Th1520PwmPlatformDriver {
-> 
-> ---
-> base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
-> change-id: 20251222-cstr-pwm-c9b9a4701157
-> 
-> Best regards,
-> --  
-> Tamir Duberstein <tamird@gmail.com>
-> 
-> 
+Hello,
 
-Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
+it seems we all agree that this patch isn't suitable to go in as is. So
+I mark it as "Changes-Requested" in patchwork and discard this thread
+=66rom my inbox.
 
+Thanks and happy holidays,
+Uwe
+
+--7lwit6bhcuqlbjbf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmlLgMoACgkQj4D7WH0S
+/k7DkAgAqEJgDcMleM3w62EyDe3DZ7tIfICjYGew19fCUUVB7rp0y0KJXeOfDIe2
+WhSyfJaz/T+cd4AtzROfxst9hHaiVXu1KZjtiwfg/lR1TXvhgrdbWaR6bfxEHecO
+iH9upjplkJWtwCyisP+RgBANNh85Rzq7iX2WI+IdOroIPwKQxhcNhLNhUsRSHZhR
+wYfE9MlF25gufMjBu5eTeGKTY1ibVIv93drAXy2cQLnSfa0d4P/av7AtmONst1Bb
+dX4/1vtnWKlz0W+fozBKqL5zF9mK4UTCj4+JtfpodlWRpzp/XRULtIIhW/r6WUza
+9gA+9TjO15hTQknMGDC1XeuBlDMpRw==
+=fCeH
+-----END PGP SIGNATURE-----
+
+--7lwit6bhcuqlbjbf--
 
