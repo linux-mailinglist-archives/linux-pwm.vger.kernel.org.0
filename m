@@ -1,133 +1,138 @@
-Return-Path: <linux-pwm+bounces-7835-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7836-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 92DCCCEAE44
-	for <lists+linux-pwm@lfdr.de>; Wed, 31 Dec 2025 00:38:22 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id C7C56CEDFCE
+	for <lists+linux-pwm@lfdr.de>; Fri, 02 Jan 2026 08:52:12 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 94F5B30581E4
-	for <lists+linux-pwm@lfdr.de>; Tue, 30 Dec 2025 23:36:44 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 80D783004F68
+	for <lists+linux-pwm@lfdr.de>; Fri,  2 Jan 2026 07:52:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E69592FDC28;
-	Tue, 30 Dec 2025 23:36:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 151532D24A7;
+	Fri,  2 Jan 2026 07:52:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="sMi7S4cK";
-	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="sMi7S4cK"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NrVVpHmi"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail.mleia.com (mleia.com [178.79.152.223])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lf1-f53.google.com (mail-lf1-f53.google.com [209.85.167.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9948E2E5D32;
-	Tue, 30 Dec 2025 23:36:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.79.152.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C6B22749DC
+	for <linux-pwm@vger.kernel.org>; Fri,  2 Jan 2026 07:52:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767137780; cv=none; b=b44p63QbAy/qGlVRG24j2nGrHJiHxAzy9H701Rp2AagjWU0CGZJXDAiDXSCny1DgsLE8wj/Gz3E8wKv6p2e56gkHO72JtkCn4eGLiILDlyzJcDs6SsiujumxFSegORSGh2ZmQfug4BScd3aSRGnzntmKSeWInM3WD2paZRg5jas=
+	t=1767340330; cv=none; b=Ev4LunAfs2JSvLvCWePNiKzrxW6nPA1mp+DS6wwnFR5Z29M0YdhdlPnsHk+Ya3EdfTFbZnO2VHflpZ+mJUGmL+KhhtbDetBJQr9aIlLcUMi5RxdpWaGAIsEMt+ffFOOLMGC4lBFD2g2NKiFwzyrma2Q/V0hYB2bFEC3znC3jzis=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767137780; c=relaxed/simple;
-	bh=fRbNyr2cuRipwrLi8FVp7melLLkMjoIZA13ghnT0lS8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JP8tntQaog8oe0NI3eHldcPLso5weEFDeAlQq55aXiJw5LwyXdqYJ+BqrhMGLwwNv+OLEn2+cD+9SWNgHq97YUMK9Xxzt0P4Oo8y9r/EcFP/yh/XJ3cO5ZymoLcjCu24QTLLpOGnD3fPc85G14jT1MJu/RA9SjOkIUGvj5F0oV8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com; spf=none smtp.mailfrom=mleia.com; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=sMi7S4cK; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=sMi7S4cK; arc=none smtp.client-ip=178.79.152.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mleia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
-	t=1767137768; bh=fRbNyr2cuRipwrLi8FVp7melLLkMjoIZA13ghnT0lS8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sMi7S4cKutKVX/HnKgs8r+o63CntnvognGZ5p1Um4zhoI7xXB6za5k1FWWfO2aD5o
-	 HT7Z9Gip4Qd9f8KPmAcD8xHjvnTvImNtISAUsjqhdOH+xOyYS9TJ/Jqc+l96R63RtN
-	 PxWBbyBot3UXTxrLZLYitjTo3DJaBdJ0XKKBNlH4kMCc6bWYO/K7zQfx06Ieak4ut0
-	 0k90B4qlINbi2FxAPyn34tR9gbAGx/LMVFdWKQuxGg3WB9bOAtWK5GtivPP2FlbWUG
-	 2DN7mpEm5fXaMIzkhWD7pwOx0NVm0lDV/AD0mvUc7H/xDfqYxZiAiPkr5S/uwDEz1s
-	 Y86kuLCx27FtQ==
-Received: from mail.mleia.com (localhost [127.0.0.1])
-	by mail.mleia.com (Postfix) with ESMTP id BD7103E956D;
-	Tue, 30 Dec 2025 23:36:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
-	t=1767137768; bh=fRbNyr2cuRipwrLi8FVp7melLLkMjoIZA13ghnT0lS8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sMi7S4cKutKVX/HnKgs8r+o63CntnvognGZ5p1Um4zhoI7xXB6za5k1FWWfO2aD5o
-	 HT7Z9Gip4Qd9f8KPmAcD8xHjvnTvImNtISAUsjqhdOH+xOyYS9TJ/Jqc+l96R63RtN
-	 PxWBbyBot3UXTxrLZLYitjTo3DJaBdJ0XKKBNlH4kMCc6bWYO/K7zQfx06Ieak4ut0
-	 0k90B4qlINbi2FxAPyn34tR9gbAGx/LMVFdWKQuxGg3WB9bOAtWK5GtivPP2FlbWUG
-	 2DN7mpEm5fXaMIzkhWD7pwOx0NVm0lDV/AD0mvUc7H/xDfqYxZiAiPkr5S/uwDEz1s
-	 Y86kuLCx27FtQ==
-Received: from [192.168.1.100] (91-159-24-186.elisa-laajakaista.fi [91.159.24.186])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.mleia.com (Postfix) with ESMTPSA id 369463E9491;
-	Tue, 30 Dec 2025 23:36:08 +0000 (UTC)
-Message-ID: <9bb897bd-a7b1-442b-8931-dac9826de2c9@mleia.com>
-Date: Wed, 31 Dec 2025 01:36:02 +0200
+	s=arc-20240116; t=1767340330; c=relaxed/simple;
+	bh=Q6a+OL7+xR7FBhQ8E7EDUAYDtakbQh4kXFo9WQcfiXE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=fDQyLFpsIFQvd5kLa+qIZ6ljqvfD8M4THjq26aQGqShkOrCOfzIEfYg9UE3/C+eYAlpXJbzrx+VqU0soNgYvVySUrXarzM3sGZ0SZ2NoFpLumSM411iM92XhUUKxdE67HoARiZWlugPXk7S/Dl01mH4y03vXh1a9lPTJCnx1pzo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NrVVpHmi; arc=none smtp.client-ip=209.85.167.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lf1-f53.google.com with SMTP id 2adb3069b0e04-59583505988so18173067e87.1
+        for <linux-pwm@vger.kernel.org>; Thu, 01 Jan 2026 23:52:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767340325; x=1767945125; darn=vger.kernel.org;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=W2saNlD4YLRu5eDzJ7LgWITs0Np3bAKpvAb8pzQ1AsY=;
+        b=NrVVpHmizjE4mIj20v6VAcd7NTVhEMALkpAcTCXES90dEZyexJTNWpR43TYVDKv3HA
+         moTnaz6Gq7lvDdcJikRFn/yKGXDgKgmHmNUvAiGpoAMTBQIpBsneQ+7UEHFnvfDeRkGa
+         xrXOKScaUEbgN0+ELz9owQ8aim/0vvB0KViXuhzqH7MXcKNEesC6e+C3notev6ghfVMo
+         rgmShidTkH8kaPWQ4dnnnL+drtOOzsdhSWLXpZtsipDOjMfn4ZFD4Vo9335eUVoruYIi
+         DHR0Qjjlkf93WFtx1hxyUTFLPMRiar32d54GIiDjStzyVmKw/GqbON/X5/b7MUpA24l2
+         LF0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767340325; x=1767945125;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W2saNlD4YLRu5eDzJ7LgWITs0Np3bAKpvAb8pzQ1AsY=;
+        b=sUnWXIgX6i4r0Y5JwGO5EkUXUlz33jDXXyxeFjEdJOEhD++fiHOpZ8TssPDQM5W6XM
+         YfsFtvEsYjSIfEhs0LkCCUkuSEKS/X0Tunj97zoBAkmbqquQDxRrq+9Uxz0XNnjxknWC
+         uMIU5xx6FNYtGxiVN8HfW2c9+UV9IojxIlMiMnaWp+XBT1OYBr+MEymHJJKceusfai+y
+         IrnXAwGMMI2F4r0+9kWLCY68DANbbbx32C2QiMh6euvMdhhBuoHKjqcvRRvaTqaXOiKs
+         SiRsNizY6WjqYVp5HMAEyQryFHzgYX8llwP0YcmyfYIVptz1QWlLlYplq/vAm/jN6suN
+         LKIA==
+X-Gm-Message-State: AOJu0YxGYoWZaPYvda1igyejBlJJmWcC+CYbP0fVB2gW0oeazSFpIBY5
+	pV9Lba4hNKe/fJgXTBSrJckzNUwWkufDbdD8Jv8IMFD9Wh3bVRduB0az
+X-Gm-Gg: AY/fxX51xEymM146yJCVwH95CXaMnuvpx4Agw3WjySYHt5fnOCUwXBUq7RYy//+DOxa
+	bNIxfOaeKph0u6BC9GV3H6CFEy+GV19kvpID+hh66/AEorrp1JBxkKyZRP4SQ9bAhhWTW32AlJD
+	iYjnOGvIWKP6Sjd8x9T5FrlblslZS4IaRGd0KxODzO69OAkqXtfGM+6wp1ZmsK/jak7bac108Sx
+	S3kNc+1IbaBnPkjlEHcxcVO4+JYRLIiKOTDY6CiKolqh68Sl0QHfAqppqBkVjr0I4w0IrkuSPVY
+	CutjHCKT5ZlV59hYZjP6lVC7XL+jEueRaIvHAtbDoaDXYpyyn0kkJXgkSQ329O5A6jFny4bZbtu
+	HQRzsvdDf9hZjn0ozeCrw1WGGMDYK18If0ItwVIHXFbUZRNGolzQ7UDiAoFVi8bDAF2rgnYKsFN
+	7TyjiANXat4QHwBGtVp+jRZoMWDt37DcsqnWoOAhtFo1WV
+X-Google-Smtp-Source: AGHT+IFHAcifTVnP6L978ufKvxPiVZE13KxXx3nNBPeRryrxrvaahWms1Vw2tRm6qz5m0DYaU/2MgA==
+X-Received: by 2002:a05:6512:12c8:b0:596:9ebf:25a2 with SMTP id 2adb3069b0e04-59a126ea38bmr13792586e87.19.1767340324877;
+        Thu, 01 Jan 2026 23:52:04 -0800 (PST)
+Received: from LT-5CG5341NQ4.nordic.imtech.com ([83.245.248.13])
+        by smtp.gmail.com with ESMTPSA id 38308e7fff4ca-381224de35bsm107688061fa.7.2026.01.01.23.52.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 01 Jan 2026 23:52:04 -0800 (PST)
+From: Kari Argillander <kari.argillander@gmail.com>
+Subject: [PATCH v2 0/2] rust: pwm: Fix init error handling and tidy style
+Date: Fri, 02 Jan 2026 09:51:40 +0200
+Message-Id: <20260102-pwm-rust-v2-0-2702ce57d571@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 2/2] arm: dts: lpc32xx: add clocks property to Motor
- Control PWM device tree node
-To: Rob Herring <robh@kernel.org>
-Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Frank Li <Frank.Li@nxp.com>,
- Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
- linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <20251228224907.1729627-1-vz@mleia.com>
- <20251228224907.1729627-3-vz@mleia.com>
- <20251230175933.GA864856-robh@kernel.org>
-From: Vladimir Zapolskiy <vz@mleia.com>
-In-Reply-To: <20251230175933.GA864856-robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-49551924 
-X-CRM114-CacheID: sfid-20251230_233608_792516_4FCC31B4 
-X-CRM114-Status: GOOD (  16.24  )
+X-B4-Tracking: v=1; b=H4sIAAx5V2kC/23MSw7CIBSF4a00dywGaOXhyH2YDpoC7U2kNFBR0
+ 7B3sWOH/8nJt0OyEW2Ca7NDtBkThqUGPzUwzsMyWYKmNnDKL4wzTdaXJ/GZNiKNU50w1DHVQr2
+ v0Tp8H9S9rz1j2kL8HHJmv/UPkhmhpBNKtpZpIbW5TX7Ax3kMHvpSyhe8uTOroAAAAA==
+X-Change-ID: 20251219-pwm-rust-7df846d0f183
+To: Michal Wilczynski <m.wilczynski@samsung.com>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, 
+ Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+ Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+ Danilo Krummrich <dakr@kernel.org>
+Cc: linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Kari Argillander <kari.argillander@gmail.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1767340323; l=984;
+ i=kari.argillander@gmail.com; s=20251219; h=from:subject:message-id;
+ bh=Q6a+OL7+xR7FBhQ8E7EDUAYDtakbQh4kXFo9WQcfiXE=;
+ b=/0urX8Mgu/X3gLbseyGwjoiJE5i3Z41wlNFwEKMo5r8VPH9v9yim7Wp2oJ9A6/sujHEX/KA8h
+ 6lFDJAv/o0fDtFMvrTtss8G6Mv+iqg1WaGorxcYWm8dac9Ce7JsT99V
+X-Developer-Key: i=kari.argillander@gmail.com; a=ed25519;
+ pk=RwSxyhTpE3z4sywdDbIkC3q33ZQLNyhYWxT44iTY6r4=
 
-On 12/30/25 19:59, Rob Herring wrote:
-> On Mon, Dec 29, 2025 at 12:49:07AM +0200, Vladimir Zapolskiy wrote:
->> Motor Control PWM depends on its own supply clock, the clock gate control
->> is present in TIMCLK_CTRL1 register.
-> 
-> You say it is required, so does that mean this hasn't ever worked? Or it
-> happened to work because something else turned on the clock?
+This series contains two small updates to the Rust PWM bindings.
 
-There is no upstream driver for this particular PWM controller, I'm about to
-submit one though, and so far I've completed my review of its dt properties.
+The first patch fixes a potential memory leak on an error path during PWM
+chip initialization. Someone needs to decide if this goes to stable.
 
->>
-> 
-> Fixes tag?
+The second patch is just style-only cleanup.
 
-It'd make sense, however as I've said above formally there is no fixed
-runtime bug, if the scope is limited to the upstream only.
+Signed-off-by: Kari Argillander <kari.argillander@gmail.com>
+---
+Changes in v2:
+- Use inspect_err().
+- Reword SAFETY comment.
+- Reword git messages.
+- Added Fixes tag
+- Link to v1: https://lore.kernel.org/r/20251219-pwm-rust-v1-0-46873e19679d@gmail.com
 
-Fixes: b7d41c937ed7 ("ARM: LPC32xx: Add the motor PWM to base dts file")
+---
+Kari Argillander (2):
+      rust: pwm: Fix potential memory leak on init error
+      rust: pwm: Simplify to_result call sites and unsafe blocks
 
->> Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
->> ---
->>   arch/arm/boot/dts/nxp/lpc/lpc32xx.dtsi | 1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/arch/arm/boot/dts/nxp/lpc/lpc32xx.dtsi b/arch/arm/boot/dts/nxp/lpc/lpc32xx.dtsi
->> index 39af48470ed5..abd401fda94e 100644
->> --- a/arch/arm/boot/dts/nxp/lpc/lpc32xx.dtsi
->> +++ b/arch/arm/boot/dts/nxp/lpc/lpc32xx.dtsi
->> @@ -304,6 +304,7 @@ i2c2: i2c@400a8000 {
->>   			mpwm: pwm@400e8000 {
->>   				compatible = "nxp,lpc3220-motor-pwm";
->>   				reg = <0x400e8000 0x78>;
->> +				clocks = <&clk LPC32XX_CLK_MCPWM>;
->>   				#pwm-cells = <3>;
->>   				status = "disabled";
->>   			};
->> -- 
->> 2.43.0
->>
+ rust/kernel/pwm.rs | 53 +++++++++++++++++++----------------------------------
+ 1 file changed, 19 insertions(+), 34 deletions(-)
+---
+base-commit: cc3aa43b44bdb43dfbac0fcb51c56594a11338a8
+change-id: 20251219-pwm-rust-7df846d0f183
 
+Best regards,
 -- 
-Best wishes,
-Vladimir
+Kari Argillander <kari.argillander@gmail.com>
+
 
