@@ -1,119 +1,109 @@
-Return-Path: <linux-pwm+bounces-7850-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7851-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id AE394CF4F42
-	for <lists+linux-pwm@lfdr.de>; Mon, 05 Jan 2026 18:17:56 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 91574CF529E
+	for <lists+linux-pwm@lfdr.de>; Mon, 05 Jan 2026 19:07:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1AD9B30D04A3
-	for <lists+linux-pwm@lfdr.de>; Mon,  5 Jan 2026 17:09:20 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 2173C302FCF1
+	for <lists+linux-pwm@lfdr.de>; Mon,  5 Jan 2026 18:07:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DF8CC3054F9;
-	Mon,  5 Jan 2026 17:09:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4378032C943;
+	Mon,  5 Jan 2026 18:07:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ni28G60F"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="hLRK8SXB"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.9])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73CE9322B90
-	for <linux-pwm@vger.kernel.org>; Mon,  5 Jan 2026 17:09:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E4AF3246E4;
+	Mon,  5 Jan 2026 18:07:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.9
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767632957; cv=none; b=YKZUsdp3+T61YvtfNBV6q3Fp5lvb1wIbSDZ0sKBCZwGezZbbMeqfQCgJqIiRsFQcY8VtDKReOyQL8iTFrOd5FDTyiX8a7EVDL/FWyghgRtT8hMtoilaeJVn8t3gU2Q6RKWKEs2SXZpeWz12PcIpQZbkO7Q1zLX+hw49SfDpmQTg=
+	t=1767636435; cv=none; b=kAnpQYdz99asBymJZqeclFBdKTHDyyv9yvFg/NlvDMn8HV5zaunxt6bv3zsvKZl0m0DEs/LlKQ7KTxjvdAl23dt+cb81FHaGRqXyj+AzezdFvP6LwdGiuj8ywIBmZ4HoXIyRhvMbvfP6pl/iLVRH67IIKrvtKt4VQ+1xqQ5cnDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767632957; c=relaxed/simple;
-	bh=AI1wYPw1WSz5qgZsJPGfst+nTTz8MG0P3bfm7SX7V1I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=Xvy3cHLOc+d8Z0Bdw6aNia2hE9MdypB0D+h1wu+JhAwA8hzuAaOi70nSIhZMSfF/Frzwi6QFl8bZbRfDghoidgQJJQblEnuvzGSB9+LxM+ShcUZTVbtO8hZyTIj9fiAdcZOu1LlXwEYKiwBMdPq2Bx12Xgg2cGTpo5l9xMO+vNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=ni28G60F; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20260105170910euoutp01fad7ea02296683c3c80f729b105bb258~H5M2U4UMh1714117141euoutp01a
-	for <linux-pwm@vger.kernel.org>; Mon,  5 Jan 2026 17:09:10 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20260105170910euoutp01fad7ea02296683c3c80f729b105bb258~H5M2U4UMh1714117141euoutp01a
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1767632950;
-	bh=5xmUoTayWuvB81VRZnjQHc05KNDT+9emYL6rxIOk0sg=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=ni28G60Fr3Lwbsna6LOobloNS6pbLrABYKBLgXzJMDQKd2DQyO9qksMLgOlebWCsg
-	 nypFx+uVms2n2Hrg/38zPNN/HH7X9gTgaaFU4dA9jwVudFA3EHWff6YP5D4QH+KY7K
-	 7ipkDsAw3RLm70OOtwRfXQ4OadN1xloEE2Vj5ShA=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20260105170910eucas1p2ee59b1dcea1fa67b21e6256e2da6a84e~H5M2Ezpwt2713327133eucas1p2r;
-	Mon,  5 Jan 2026 17:09:10 +0000 (GMT)
-Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20260105170909eusmtip2f66732762ea0c0d6a685a93ba31c08d0~H5M12jKPo2496624966eusmtip2b;
-	Mon,  5 Jan 2026 17:09:09 +0000 (GMT)
-Message-ID: <c56beb39-c186-49c7-9620-50ad398cc596@samsung.com>
-Date: Mon, 5 Jan 2026 18:09:09 +0100
+	s=arc-20240116; t=1767636435; c=relaxed/simple;
+	bh=2Yd0U4QLroIAEUZF76pg3bSoONnirZrVb/TJ2EsEa04=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Tunw0LFOZTinVNyC3RSMG9frFmTWkvju+bpl/WS9oi2ULOUQVPE2RW7+o/g49S9iMB8I/NGuC8c0RyoHjBPowzN18HL+SKJORvj0GFVPrH5Qzszhpz9YuuBVD6KexvC9wejp15RScXYiu+mSgTcNokEBiDLZ0m8Mdm+ExMVfo1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com; spf=pass smtp.mailfrom=linux.intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=hLRK8SXB; arc=none smtp.client-ip=198.175.65.9
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1767636434; x=1799172434;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=2Yd0U4QLroIAEUZF76pg3bSoONnirZrVb/TJ2EsEa04=;
+  b=hLRK8SXB7IsdjGFgXXcH9THhbjbySzT0k2gc3h8nPxykAAkk/e1o2ZUI
+   tpVhxPzFHeOkVx5sqxrcP5pApuv0tTWBLXWsrOaD4gHeO99j35bgM4RXB
+   mNE9bwQwzJjLxOfmbFnR7YKoirpIhmrmMXCqmPRlwLkM3qhS/vJ5azXeE
+   0rLPa3Spmq7E77+h83FksoMd1TArFWCrjw48c32lJCRkrvw91ZJ0husav
+   RzLMhh4wrHgbZLZUfokzvTo08n0vmPjBN36oIFW5SHJ824Ur8h9OwwpI4
+   Vt96AfNaNtKuG+tZsNms1apjtIXhXlUk160twRI5gNC8noBw33lMTy2Hm
+   Q==;
+X-CSE-ConnectionGUID: 03mHBy+zRUO28Gnrrf0k0w==
+X-CSE-MsgGUID: 4wh7w8j8SEyqFLSGlbcuXQ==
+X-IronPort-AV: E=McAfee;i="6800,10657,11662"; a="91657351"
+X-IronPort-AV: E=Sophos;i="6.21,204,1763452800"; 
+   d="scan'208";a="91657351"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by orvoesa101.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2026 10:07:12 -0800
+X-CSE-ConnectionGUID: LwJsBZqbQv6o0BFQ9MpsVQ==
+X-CSE-MsgGUID: iXkIrSOLQGGcJEwAm+a6wQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,204,1763452800"; 
+   d="scan'208";a="207003793"
+Received: from klitkey1-mobl1.ger.corp.intel.com (HELO localhost) ([10.245.244.215])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jan 2026 10:07:10 -0800
+Date: Mon, 5 Jan 2026 20:07:07 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To: Raag Jadav <raag.jadav@intel.com>
+Cc: ukleinek@kernel.org, heikki.krogerus@linux.intel.com,
+	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] pwm: dwc: Use size macro
+Message-ID: <aVv9y8RuA_LLm7GZ@smile.fi.intel.com>
+References: <20260105091737.17280-1-raag.jadav@intel.com>
+ <aVvpzK1fXqwms6Ct@smile.fi.intel.com>
+ <aVvsFsLvNHuBWvUv@black.igk.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 14/27] rust: pwm: add __rust_helper to helpers
-To: Alice Ryhl <aliceryhl@google.com>, rust-for-linux@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <20260105-define-rust-helper-v2-14-51da5f454a67@google.com>
-Content-Transfer-Encoding: 7bit
-X-CMS-MailID: 20260105170910eucas1p2ee59b1dcea1fa67b21e6256e2da6a84e
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20260105124303eucas1p194e4764812c4a861ee7cfb83bdca596d
-X-EPHeader: CA
-X-CMS-RootMailID: 20260105124303eucas1p194e4764812c4a861ee7cfb83bdca596d
-References: <20260105-define-rust-helper-v2-0-51da5f454a67@google.com>
-	<CGME20260105124303eucas1p194e4764812c4a861ee7cfb83bdca596d@eucas1p1.samsung.com>
-	<20260105-define-rust-helper-v2-14-51da5f454a67@google.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aVvsFsLvNHuBWvUv@black.igk.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 
-
-
-On 1/5/26 13:42, Alice Ryhl wrote:
-> This is needed to inline these helpers into Rust code.
+On Mon, Jan 05, 2026 at 05:51:34PM +0100, Raag Jadav wrote:
+> On Mon, Jan 05, 2026 at 06:41:48PM +0200, Andy Shevchenko wrote:
+> > On Mon, Jan 05, 2026 at 02:47:37PM +0530, Raag Jadav wrote:
+> > > Use SZ_4K from size.h instead of hardcoding constant.
+> > 
+> > Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 > 
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> ---
-> Cc: Michal Wilczynski <m.wilczynski@samsung.com>
-> Cc: linux-pwm@vger.kernel.org
-> ---
->  rust/helpers/pwm.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> Thank you.
 > 
-> diff --git a/rust/helpers/pwm.c b/rust/helpers/pwm.c
-> index d75c588863685d3990b525bb1b84aa4bc35ac397..eb24d2ea8e748364f3e17dccbb6a92fd7f2514c0 100644
-> --- a/rust/helpers/pwm.c
-> +++ b/rust/helpers/pwm.c
-> @@ -4,17 +4,17 @@
->  
->  #include <linux/pwm.h>
->  
-> -struct device *rust_helper_pwmchip_parent(const struct pwm_chip *chip)
-> +__rust_helper struct device *rust_helper_pwmchip_parent(const struct pwm_chip *chip)
->  {
->  	return pwmchip_parent(chip);
->  }
->  
-> -void *rust_helper_pwmchip_get_drvdata(struct pwm_chip *chip)
-> +__rust_helper void *rust_helper_pwmchip_get_drvdata(struct pwm_chip *chip)
->  {
->  	return pwmchip_get_drvdata(chip);
->  }
->  
-> -void rust_helper_pwmchip_set_drvdata(struct pwm_chip *chip, void *data)
-> +__rust_helper void rust_helper_pwmchip_set_drvdata(struct pwm_chip *chip, void *data)
->  {
->  	pwmchip_set_drvdata(chip, data);
->  }
-> 
+> > OTOH, not sure if it's just an unneeded churn. What was the motivation to
+> > create this patch?
 
-Acked-by: Michal Wilczynski <m.wilczynski@samsung.com>
+> Your hard work[1] continues to motivate me :)
+
+Ha-ha, but that one has a principal difference, i.e. there was _a custom macro_
+*already*, which was replaced with a generic one. From the code perspective
+it's not a churn as it kills the unneeded custom macro. Here the situation is
+different, i.e. the explicit number 0x1000 is changed to SZ_4K. Just a line to
+change, the added header inclusion and no other changes, so as a standalone one
+it sounds to me like a churn.
+
+> [1] https://lore.kernel.org/r/20250825163545.39303-3-andriy.shevchenko@linux.intel.com
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
 
 
