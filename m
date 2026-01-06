@@ -1,247 +1,297 @@
-Return-Path: <linux-pwm+bounces-7858-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7859-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EC4BCCF8839
-	for <lists+linux-pwm@lfdr.de>; Tue, 06 Jan 2026 14:29:55 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id B0D15CF95F3
+	for <lists+linux-pwm@lfdr.de>; Tue, 06 Jan 2026 17:34:09 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B49B5306A094
-	for <lists+linux-pwm@lfdr.de>; Tue,  6 Jan 2026 13:27:39 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4E4DC3004B9D
+	for <lists+linux-pwm@lfdr.de>; Tue,  6 Jan 2026 16:27:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50BBB330D36;
-	Tue,  6 Jan 2026 13:27:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A40CD312814;
+	Tue,  6 Jan 2026 16:27:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="skBJRGeF"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Z/9QDxDP"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from BYAPR05CU005.outbound.protection.outlook.com (mail-westusazon11010066.outbound.protection.outlook.com [52.101.85.66])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f50.google.com (mail-ed1-f50.google.com [209.85.208.50])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C37CE331A44;
-	Tue,  6 Jan 2026 13:27:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.85.66
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767706047; cv=fail; b=nL1EE24GZI5bevLqG/VVljOvj5eC791b7E17YbFksMNqnQFTrNkz/QjdwqcR3xp3POErb+7oQIW9+X1QRRQpocrncbOHuIl/G268DubdjLLMAMVtHmDL2CaKWGWQ6uERSlMv1Ne6X+GzJmlqIl5Ni1Y7NhmiRlshvOdoa6ctqcQ=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767706047; c=relaxed/simple;
-	bh=5pVSm+qbkB25w7pXM5Xp2c1ghsVmImZTgix1LhLrCyQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=kT/YS2Q7IQtpzilODmWB1yHxQ5IKq7fTcWgdekxE37/sVElv+CJ3hE8dbExg+UOdKNipUxdNJOAS6g/SmCJMIBa+b0g09KV2Cdvg56NxiQUKcOpZaXVNHTmYCK0uLUdl5NaO/CNofCj1eC7i8LFxxl4YIKlVQuAnyD40T3e0CfM=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=skBJRGeF; arc=fail smtp.client-ip=52.101.85.66
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=viYQCNTREO7pjTQCXBRdIReK++HJictZz2a+ZzVZpgMlsLb/jdpE38WIpRtO0fg8gtjlKJqy9i1nK0imh50RYDWyJ0+KBv33mPpQ4VU1gXlO4f3QJcSm7gXqY5oQU/bw8WXhnHdprgQAgCXbOpY5lIf1J6CiDole1fuY68JyAgShOWb20qSk8N/mxw57ClRwjjHIjWw7LLvgQYqhRhsWwIBol2BoHDMQiR4AtdsTtZmI6KWJ4S8S8p74goKhaxOnjduuy2ddaJxLYVSAIQ3v398vXSiD7C/jCNDuymjB7gS2Ul5xyKAHmIdtQ1QTAMygpoG2wH05XqfaAxkk3Z9oPA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=TuPlLcozPno5cCKrv9AzHq1Ho2cPM1nMkVoo1EtlgK4=;
- b=qCuZrq91KqHzQqCWr8ENT0HdDkiONaq5YFEnTBKiuq9tSuDjJIjJfJEqgKdkOMRNPnvlFRlnHJ6VqdjouZ1k8yMKu51aAOAXvBiUyjzo50Lxi+2um0TyMvJocdK2a0/bfuWtYEQryF3VM61WHA57Oh4vnt3yODQpsp98nS2R4tXEGs1i+wS0PABMHZ6VdpUxqPBERk9MsxRx7JuIvoZ9shQz9KhjriZ1b/c3SekWP8Gu2mQGPoX78uvHrpfS5B/hNQDjBAkrZoJwmJoyicxuH0fseLVjk94tNOJ/wmeprA7/HCjqgxIZosEo3PQDARg45951bXxAtzlAVh0RozyViQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 198.47.23.194) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=ti.com;
- dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=ti.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TuPlLcozPno5cCKrv9AzHq1Ho2cPM1nMkVoo1EtlgK4=;
- b=skBJRGeFNcv/vulGvd0pINK2E5o3soPQTfo8o0bqw1QASsXt0+s7zHyy3+sR6OQ9TxCkdywAH7pJlm/Yp3nH3ZE2c3adVOdt0E90aQ/f+u65c1LWy5kkYUDqdtsS3zZpAr8HTExOhYqZGUtUu+UZ/3bqtZy/C+BJrD8o/dwtmuk=
-Received: from MW4PR04CA0348.namprd04.prod.outlook.com (2603:10b6:303:8a::23)
- by PH5PR10MB997735.namprd10.prod.outlook.com (2603:10b6:510:34d::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9478.4; Tue, 6 Jan
- 2026 13:27:20 +0000
-Received: from CO1PEPF000044F9.namprd21.prod.outlook.com
- (2603:10b6:303:8a:cafe::7b) by MW4PR04CA0348.outlook.office365.com
- (2603:10b6:303:8a::23) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9478.4 via Frontend Transport; Tue, 6
- Jan 2026 13:27:16 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.23.194)
- smtp.mailfrom=ti.com; dkim=none (message not signed) header.d=none;dmarc=pass
- action=none header.from=ti.com;
-Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
- 198.47.23.194 as permitted sender) receiver=protection.outlook.com;
- client-ip=198.47.23.194; helo=lewvzet200.ext.ti.com; pr=C
-Received: from lewvzet200.ext.ti.com (198.47.23.194) by
- CO1PEPF000044F9.mail.protection.outlook.com (10.167.241.199) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9520.0 via Frontend Transport; Tue, 6 Jan 2026 13:27:19 +0000
-Received: from DLEE215.ent.ti.com (157.170.170.118) by lewvzet200.ext.ti.com
- (10.4.14.103) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Tue, 6 Jan
- 2026 07:27:14 -0600
-Received: from DLEE203.ent.ti.com (157.170.170.78) by DLEE215.ent.ti.com
- (157.170.170.118) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Tue, 6 Jan
- 2026 07:27:14 -0600
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE203.ent.ti.com
- (157.170.170.78) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
- Transport; Tue, 6 Jan 2026 07:27:14 -0600
-Received: from [10.249.141.75] ([10.249.141.75])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 606DRBxx2936523;
-	Tue, 6 Jan 2026 07:27:12 -0600
-Message-ID: <4dd61e57-bc6a-485d-847d-8a86b854d358@ti.com>
-Date: Tue, 6 Jan 2026 18:57:11 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FA0525F96D
+	for <linux-pwm@vger.kernel.org>; Tue,  6 Jan 2026 16:27:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.50
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767716860; cv=none; b=nacc9OgBDlzVeVmBkeKf0rF9Ab+z9CIeNActbOxYHsPm8RyU8QkkPuaPTrm777IBRk6QVbTUQU37kMeSwWYi5uRTYYJEutWzUCOk2fkMpA1lqhh/5S7XO+3S/hHOMhdR1S3jjOgtFfP+raKUv8VswH4eJ14sxrO0owSNt2TXdUk=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767716860; c=relaxed/simple;
+	bh=4qxe2EeZAfI5QvxYDL8siuAHNYdc42STvjGMc1czfpo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UeF1M5h19aPh5JZ3JHF1Xvk/ahz3FBlPV14UqX2NNgFooD7ZSwisUHzV1fYB2dDeoeBF4ADy/IPiFmcYogfo8GzH1EUkC8Z0WT0fts9PKaIeNtAbWbxNoELBZ8yvUbR5qmVKdTW4VOEfp4WBGBK0WnNb19OuvPwQlba+WFcRs9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Z/9QDxDP; arc=none smtp.client-ip=209.85.208.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-ed1-f50.google.com with SMTP id 4fb4d7f45d1cf-6505cbe47d8so1852052a12.1
+        for <linux-pwm@vger.kernel.org>; Tue, 06 Jan 2026 08:27:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1767716857; x=1768321657; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=vzik8nXSR3mn/i9DyKHW0aMjXX+S/DWXAlyIvVyk9CI=;
+        b=Z/9QDxDPG2RnnuTejNz+6dGb2Xb1Xe5REqHx4aoTrp99l51zQLcq+Ll0HVax1T1hWo
+         Lv0McHW2S6eNxkZnGC2D8LD798DnZ/jny/j9uey7p1h+OPR4vNDxFEKgKpdVe1hBUEqr
+         1XBJ/f10Ii+vIgnOM9GiVzOMKxUzPxuyGpsnZtZG4VzxxduyAVHeQiSlR0r9bY4Gqc3X
+         N01d2EqWAGRkCw9hTWFGB8vC0jC2BaizQDh+XJcQAxbesFRNth1TYKW5Rr6QF1zwR1wU
+         tUQp7ZbnwXYQMvdl8EZbj9IbbBvrbQ6DgMJJ+JleN8L3FLGe+MQJTOPFOTeu0T/LU42W
+         1Czg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767716857; x=1768321657;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=vzik8nXSR3mn/i9DyKHW0aMjXX+S/DWXAlyIvVyk9CI=;
+        b=JoizABSPyXC+7Xxqh41nQFbLYL/HdY84x4Vl1IodHdgAZGNXpxD+knCQ7nWIaUNW1z
+         l3GqVNP6tblpKxVKlQaxtA+tbvoAEgRqRvEENSSFLUhg4HCgIlUsuU2NxXI34E1irebR
+         x3JVUO7qDwxbmINmyfeFVWpiMUqjW4d62LMQ+KOtD8xkyVFU2Jv9xBTOr57BE27dYf/G
+         hTJqYqwOk6fb3jkZd/zltc91SJvSNH7Rvp8+R9B6pbqg8p/UQnjMg7yTGp1d48W/uDEN
+         s3213cimoHCvLfQZZJOK70WGaM6fxHHhB+KHLaHia4HdU+ES2fAleDL2Cq+ftDBv5yZA
+         1PAw==
+X-Forwarded-Encrypted: i=1; AJvYcCUlzcc3j8r9J6/eaIrgvs97HmpW3PVNv1fYtJE5HvKXJsE+uoIv6eclvDWCg+uFx0FDpFn/CZtqmhk=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwhS3eKaaUljQMiWdVjGKhxT3cX3a8fmclryvZE8Tgi/9tpiYbq
+	It7nYQrbhuDUt7GxiA5fXBhrOfq6jwwdYuR8vGxNovcLZ3e3DO/O6WgqpFokLbIeua0=
+X-Gm-Gg: AY/fxX45R5imxuaLesohUbbsGIMiMcEnsDD4aoVQk+XxXy6EJuU/vNu5lWS9/N/CqEO
+	0d3xXXvopzS2D3Jm6sG7AQ1Yc2ANPyqbBwbK1Pw/bE9XT81VD8E0UbKLmn+4CG0mZYLajFqHAzN
+	OMy28xF9aO8gwXLFLHPq+b8r4SlMR2Bneu36F3iCJ7Wd99NJfajRjGDBfWuiB8l2sz4Uz/wW/1U
+	KSHQAA0q7AWHu3SP5+kawjP320Mq5rHDsx6Q8pZdrxACxekHpHEcZ/z6MxkYBUWE0+qcNP40mbM
+	hjwCZeBW5Mxuq1Y2gRkWTYuUe7clLU1r+uevjtYG2fqsQUHQHa8d4a1Q1DKaYb4pk9KnpchlV/x
+	P6BOy3tIkTYiwIiMJl929m7LFRUn1gZfMkMixVIQvlqbvHbgBCEJnESocKXZxrMPtAoTvAqYXDR
+	lwvokg4OQJ/IHP4NiDWIubtSh3OVU=
+X-Google-Smtp-Source: AGHT+IFAk9Nui8g2Wvca+PO/+8m/8D82to1wW+PFqJUMRDqkKSTBkNs3hxMpJZxnAFqxb/4tZ/EvCQ==
+X-Received: by 2002:a05:6402:210b:b0:641:15d:6b97 with SMTP id 4fb4d7f45d1cf-6507921efbemr2995418a12.2.1767716856825;
+        Tue, 06 Jan 2026 08:27:36 -0800 (PST)
+Received: from localhost ([2a02:8071:b783:6940:1d24:d58d:2b65:c291])
+        by smtp.gmail.com with UTF8SMTPSA id 4fb4d7f45d1cf-6507b9d51c5sm2493981a12.14.2026.01.06.08.27.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 06 Jan 2026 08:27:36 -0800 (PST)
+Date: Tue, 6 Jan 2026 17:27:34 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Richard GENOUD <richard.genoud@bootlin.com>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>, 
+	Jernej Skrabec <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org, Joao Schim <joao@schimsalabim.eu>
+Subject: Re: [PATCH v2 2/4] pwm: sun50i: Add H616 PWM support
+Message-ID: <mu3ciykmtxoaa24mdw7mofpdapbii23qrubw6uzptszok43tta@tq3rguupehwe>
+References: <20251217082504.80226-1-richard.genoud@bootlin.com>
+ <20251217082504.80226-3-richard.genoud@bootlin.com>
+ <en7wscywn3xpw7cxvc2ngwrmjfciglzxgaje5qc5ngiehrjufh@jbvgp2neyzzx>
+ <9c55d591-a280-4ed7-91b1-0c867cfff658@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] pwm: tiehrpwm: Enable EHRPWM controller before setting
- configuration
-To: Gokul Praveen <g-praveen@ti.com>, <j-keerthy@ti.com>,
-	<ukleinek@kernel.org>, <linux-pwm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>
-CC: <n-francis@ti.com>
-References: <20260106105411.36033-1-g-praveen@ti.com>
-Content-Language: en-US
-From: "Kumar, Udit" <u-kumar1@ti.com>
-In-Reply-To: <20260106105411.36033-1-g-praveen@ti.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000044F9:EE_|PH5PR10MB997735:EE_
-X-MS-Office365-Filtering-Correlation-Id: 86c6e292-c19f-4410-6ca3-08de4d275167
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|36860700013|1800799024|82310400026|376014;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YndmaUVjNEEzeEFUS1JuZ3F1SEVpR0hZNGdkRUlXcUkrVlpvelpxTU11RjMx?=
- =?utf-8?B?UXhoSkRNVjJpMUV1d1BLYzE1UXRRcEdqL0tpRVV2RWV6SU1VckU5aDF3YTdy?=
- =?utf-8?B?Z0src0FiTXorZk1DN1NTQWp6Q3JPRFRTRkZTNnFUcmhoT1drMFE2dm9IUUlM?=
- =?utf-8?B?Ylh5RjdJakFkZTJlMytqR0RQaVFBOUlIZlVBU0NXV0lmNHRHdXBPRHpTS2FI?=
- =?utf-8?B?RklNV0JnZ1lISk9SUjVyUjI4anAvVUJwaStRaElwVkUvK3Q5V3dhK3hWMHJJ?=
- =?utf-8?B?a09tdnJ6WTJYczZhd0NhUUJrZ2twM043MnRCeGFraDBFVVFxdUJETldNV1Jo?=
- =?utf-8?B?WUhwQ1Uzb2JLUGRMN241c3lTbjBGWGhFQ1oxc3k1M2ZGVGpwVkMzNVVEenZO?=
- =?utf-8?B?b0pyajZnTjlvVnAwWWZKOHc4RUhyd2N0Y2FqZWN3eVhKQzYvTDQ3V0RxRmd5?=
- =?utf-8?B?T2dGeG5CRE9mMTdzd0h4SGZjWGJlTlJVanhHM2xMaXpQdkJBVjNwUUd5Mzlx?=
- =?utf-8?B?NXZFYTlpZGxpeGZSRWlya1JDNmVhYmZNVUtIUjhhOGtBdDRXaWhmNXlqQkNM?=
- =?utf-8?B?WktpOWNhOEQ0dTVQMmRBZHBkT3ZiYVJFVmxXSEJ6bTltc0RhOTNKRkU2cGZN?=
- =?utf-8?B?eG41Z0RENnVnVW11LzdYNTY2V2hvZ3lFZVh3aWhJTDV2MVZ5OU80RENYbjhR?=
- =?utf-8?B?TXB3UWhFZ0NnRlVXNElVK3JKc2Y2Qm9PbE5HUmg1Z29NMzRDRmhINmlHaDVv?=
- =?utf-8?B?TEtma3JMbTl2eWV1MnM2OXVaSGpBbXRRUDlDUWdGZitIQStoYWg5VFlBZUhE?=
- =?utf-8?B?L0FnLzZQdHpDNlAvWExKMUx1SVp6b3RhRTVsQWF1R2trRDlRaXFOb0tIcktM?=
- =?utf-8?B?UTROZG5BS1B6NWNQdExhZS9IcFdaamxLQWpGSEdXMStWUk1MckFJZHRieStz?=
- =?utf-8?B?RE5XbG44aE1RM2lWSVZTcnRXR3p1cmtqVWxkUHBYTWdpQnYvU0VBNjJhZXdv?=
- =?utf-8?B?VmllRXQ2UTd6MWhKa2VqWC93Q003dVRuKzZscVRSZldPd3BaaHVJSnA2dGRG?=
- =?utf-8?B?ZXdKRU8rbzRMRkJvT1Buc29LeE5hcW5CUTlYWTBHcTdXVHBESkxGUmNYTFVO?=
- =?utf-8?B?Z3dDcFVyc1B5VGpKdVBiZVNlTUxEUjZXQ21jRkFDbE9Dbk9uTjBGVUprS1Bv?=
- =?utf-8?B?ZEM4QkVUM0Erem5IRlY5WmlETHNyVDQ1bHNDdTdaVkR1S2VCUDA5dWZ5Tzcx?=
- =?utf-8?B?MkdyOU9zOWlRT3Nzem1RdHdTUWhuTXNudndmY3RLZW9ybFQ2VjFNMDRZR3Vl?=
- =?utf-8?B?MkNOSy9TbjlmbkltL05RZjd1aTRqcG9nNjgxK3pyZHhlbjJHT2kzZXpPczYx?=
- =?utf-8?B?ZlMwSTJ2VmdwcWl6OHY5K2ZLOFZlcWZMaTFlUTQ3YlNzbDR2S1FIODRxSTJn?=
- =?utf-8?B?elp6aTBXL0w2dUkzQXVLOVdIaWhJUUpmcHhORUdwdXl0NzdpWUdYRGNMcVhH?=
- =?utf-8?B?d1ZTVDQwbUdVd2JOaU9UUVpwT2pSQkJiZUNhc0F2UHdaeDB4Yks5LzdGZkxT?=
- =?utf-8?B?blFYVklqTUMySE9xS0JFMWQvU3BvTGxqSUQyZWNIajhPRkxTSURVWXNBODB4?=
- =?utf-8?B?bFlxYWVDYlkzM0VaREJXWENDWXpZaUhNTEpuU093UWFVRDMzcngwdFlJd3Rj?=
- =?utf-8?B?enZnQjFad1RwTEh0eFYrckppNU44bXJPelhpOHArVjRndEFFNm9ZT1NDMGc0?=
- =?utf-8?B?WmNxQklwVmNNS3JtSHh0dFcyYVVTUDl4dmE2dENYeC9CRHlpUnVRVVJvak81?=
- =?utf-8?B?VWFyUk9EclRiNDdMOE02b00vWEp5V2VCVmg2aUdHZ3JjWXYxK09RYkV3TlE0?=
- =?utf-8?B?Y0xaaWtObW9IekUxSnhaclhBNUsrWVRyNjNSUkFzMEVsYUhPWHRoS0NiWXhZ?=
- =?utf-8?B?a2VwNHhsOGptcjdwWE4wcVhRM0VzelFqc09GakFTbkxyK0d2cXlGTUE2cXla?=
- =?utf-8?B?ZTVXYjN2ZjJvUmlvU1ovVEpmSFVoSm5MWUZFQUJ4MklMdGxjckMzK2R1NEwr?=
- =?utf-8?B?Y3pEWlVBK1lzeU96aGpUbGYrZGpZcXhzQzY5K1ovN0xPWFRlWmFuTk53R2dS?=
- =?utf-8?Q?Ni7Y=3D?=
-X-Forefront-Antispam-Report:
-	CIP:198.47.23.194;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:lewvzet200.ext.ti.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(36860700013)(1800799024)(82310400026)(376014);DIR:OUT;SFP:1101;
-X-OriginatorOrg: ti.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jan 2026 13:27:19.7261
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 86c6e292-c19f-4410-6ca3-08de4d275167
-X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.23.194];Helo=[lewvzet200.ext.ti.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000044F9.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH5PR10MB997735
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="xoh64gb6ddxqpmu6"
+Content-Disposition: inline
+In-Reply-To: <9c55d591-a280-4ed7-91b1-0c867cfff658@bootlin.com>
 
 
-On 1/6/2026 4:24 PM, Gokul Praveen wrote:
-> The period and duty cycle configurations does not get reflected
-> after setting them using sysfs nodes. This is because at the
-> end of ehrpwm_pwm_config function, the put_sync function is
-> called which resets the hardware.
+--xoh64gb6ddxqpmu6
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 2/4] pwm: sun50i: Add H616 PWM support
+MIME-Version: 1.0
+
+Hello Richard,
+
+On Tue, Jan 06, 2026 at 12:19:59PM +0100, Richard GENOUD wrote:
+> Le 24/12/2025 =E0 10:54, Uwe Kleine-K=F6nig a =E9crit :
+> > this patch isn't checkpatch clean.
+>=20
+> Yes, I've seen that.
+> It's because checkpatch doesn't detect that PWM_XY_SRC_MUX/GATE/DIV are
+> structures
+> If I unwrap PWM_XY_SRC_MUX/GATE/DIV and PWM_X_DIV, checkpatch doesn't
+> complain anymore (indeed, do/while loops are not allowed at file-scope)
+
+At least add parenthesis around usages of _reg. (And if you know that
+checkpatch points out things that you don't agree to, preempting the
+critic in the cover letter is a good idea.)
+
+> I can drop PWM_XY_SRC_MUX/GATE/DIV PWM_X_DIV and declare the structures
+> directly under PWM_XY_CLK_SRC() and PWM_X_CLK() if you prefer, but I
+> find it less readable than the current form.
+
+No strong feeling here.
+=20
+> > On Wed, Dec 17, 2025 at 09:25:02AM +0100, Richard Genoud wrote:
+> > > +#define PWM_XY_SRC_GATE(_pair, _reg)			\
+> > > +struct clk_gate gate_xy_##_pair =3D {			\
+> > > +	.reg =3D (void *)_reg,				\
+> > > +	.bit_idx =3D PWM_XY_CLK_CR_GATE_BIT,		\
+> > > +	.hw.init =3D &(struct clk_init_data){		\
+> > > +		.ops =3D  &clk_gate_ops,			\
+> > > +	}						\
+> >=20
+> > I would consider
+> >=20
+> > 	.hw.init.ops =3D ...;
+> >=20
+> > and
+> >=20
+> > 	.hw =3D {
+> > 		.init =3D {
+> > 			.ops =3D ...;
+> > 		},
+> > 	},
+> >=20
+> > natural here. The middleway you chose looks strange to me.
+>=20
+> Actually, it's:
+> 	.hw.init->ops =3D ... ;
+> That's why I used this middleway construct.
+
+Ah I see. Then it's fine for me.
+
+> > > +#define PWM_XY_SRC_MUX(_pair, _reg)			\
+> > > +struct clk_mux mux_xy_##_pair =3D {			\
+> > > +	.reg =3D (void *)_reg,				\
+> > > +	.shift =3D PWM_XY_CLK_CR_SRC_SHIFT,		\
+> > > +	.mask =3D PWM_XY_CLK_CR_SRC_MASK,			\
+> >=20
+> > Huh, why does this structure has both a shift and a mask value? What is
+> > the difference between
+> >=20
+> > 	.shift =3D 7,
+> > 	.mask =3D 1,
+> >=20
+> > and
+> >=20
+> > 	.shift =3D 0,
+> > 	.mask =3D 1 << 7,
+> >=20
+> > ? If the latter is equivalent, you could just pass
+> > H616_PWM_XY_CLK_CR_SRC and get rid of the extra definitions for _SHIFT
+> > and _MASK.
+> >=20
+> Unfortunately, struct clk_mux wants a shift and an unshifted mask, and
+> according to:
+> https://elixir.bootlin.com/linux/v6.18.3/source/drivers/clk/clk-mux.c#L93=
+-L94
+> using a 0 shift and mask =3D 1 << 7 won't work.
+
+How annoying, I put that on my todo list ...
+
+> > > +static inline struct h616_pwm_chip *to_h616_pwm_chip(struct pwm_chip=
+ *chip)
+> >=20
+> > It probably doesn't help much, but conceptually this could be
+> >=20
+> > 	static inline struct h616_pwm_chip *to_h616_pwm_chip(const struct pwm_=
+chip *chip)
+> >=20
+> Indeed, I'll add that.
+
+If you rename it to h616_pwm_from_chip it even has the driver specific
+prefix.
+
+> > > +
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +static int h616_pwm_calc(struct pwm_chip *chip, unsigned int idx,
+> > > +			 const struct pwm_state *state)
+> > > +{
+> > > +	struct h616_pwm_chip *h616chip =3D to_h616_pwm_chip(chip);
+> > > +	struct h616_pwm_channel *chan =3D &h616chip->channels[idx];
+> > > +	unsigned int cnt, duty_cnt;
+> > > +	unsigned long max_rate;
+> > > +	long calc_rate;
+> > > +	u64 duty, period, freq;
+> > > +
+> > > +	duty =3D state->duty_cycle;
+> > > +	period =3D state->period;
+> > > +
+> > > +	max_rate =3D clk_round_rate(chan->pwm_clk, UINT32_MAX);
+> >=20
+> > Huh, is this an artificial limitation? Do you rely on how clk_round_rate
+> > picks the return value? (I.e. nearest value? nearest time? round up?
+> > round down?)
+>=20
+> What I want to achieve here is to handle the lowest possible period case.
+> Without the bypass, the lowest period is build with the highest clock,
+> duty cycle =3D 1 and period cycle =3D 2 (0x10001 in period register)
+> So, if the input clock is 100MHz, we have a lowest period of 20ns.
+> Now, if we enable the bypass, the period register is ignored and we direc=
+tly
+> have the 100MHz clock as PWM output, that can act as a 10ns period with 5=
+ns
+> duty
+> So the logic here is to detect this specific lowest period case that can =
+be
+> achieved by enabling the bypass.
+> For that, the highest clock is retrieved and compared to the wanted period
+> and duty.
+>=20
+> Now, I learned the hard way that clk_round_rate() is actually limited to a
+> 32 bits value:
+> clk_round_rate() calls at one point clk_divider_bestdiv() that uses
+> DIV_ROUND_UP_ULL() which in turn uses do_div(n,base):
+>   do_div - returns 2 values: calculate remainder and update new dividend
+>   @n: uint64_t dividend (will be updated)
+>   @base: uint32_t divisor
+> So, in order to get the exact highest clock rate, I use clk_round_rate()
+> with U32_MAX.
+
+IMHO this should be addressed in the clk framework. And until this
+happend the code in the pwm driver needs a verbose comment.
+=20
+> > > +	dev_dbg(pwmchip_parent(chip), "period=3D%llu cnt=3D%u duty=3D%llu d=
+uty_cnt=3D%u\n",
+> > > +		period, cnt, duty, duty_cnt);
+> >=20
+> > This is little helpful without the input parameters.
+> >=20
+> as
+> 	duty =3D state->duty_cycle;
+> 	period =3D state->period;
+> The input parameters are there, right?
+> But I can add the missing idx.
+
+Today I agree, don't know why I missed that. It would be nice to stick
+to the format that e.g. pwm-stm32 uses for the input parameters to make
+me notice even on busy days that the input parameters are there :-)
+
+> > > +	for (unsigned int i =3D 0; i < data->npwm; i++) {
+> >=20
+> > Huh, AFAIK we're not using declarations in for loops in the kernel.
 >
-> Fix it by preventing the pwm controller from going into
-> low-power mode.
->
-> 'Fixes: 5f027d9b83db("pwm: tiehrpwm: Implement
-> .apply() callback")'
->
-> Signed-off-by: Gokul Praveen <g-praveen@ti.com>
+> Actually, I've read somewhere (in LWN I guess) that Linus seems ok with t=
+hat,
+> but I'll remove it if you prefer.
 
-No new line,  between Fixes and Signed-off-by Please ,
+If you find your source again, I'd be interested.
 
-You can drop ' before fixes.
+Best regards
+Uwe
 
-rest LGTM.
+--xoh64gb6ddxqpmu6
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-> ---
->   drivers/pwm/pwm-tiehrpwm.c | 22 +++++++++++++---------
->   1 file changed, 13 insertions(+), 9 deletions(-)
->
-> diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
-> index 7a86cb090f76..408aed70be8c 100644
-> --- a/drivers/pwm/pwm-tiehrpwm.c
-> +++ b/drivers/pwm/pwm-tiehrpwm.c
-> @@ -237,7 +237,6 @@ static int ehrpwm_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
->   	if (period_cycles < 1)
->   		period_cycles = 1;
->   
-> -	pm_runtime_get_sync(pwmchip_parent(chip));
->   
->   	/* Update clock prescaler values */
->   	ehrpwm_modify(pc->mmio_base, TBCTL, TBCTL_CLKDIV_MASK, tb_divval);
-> @@ -290,12 +289,11 @@ static int ehrpwm_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
->   	if (!(duty_cycles > period_cycles))
->   		ehrpwm_write(pc->mmio_base, cmp_reg, duty_cycles);
->   
-> -	pm_runtime_put_sync(pwmchip_parent(chip));
-> -
->   	return 0;
->   }
->   
-> -static int ehrpwm_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
-> +static int ehrpwm_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm,
-> +				const struct pwm_state *state)
->   {
->   	struct ehrpwm_pwm_chip *pc = to_ehrpwm_pwm_chip(chip);
->   	u16 aqcsfrc_val, aqcsfrc_mask;
-> @@ -304,6 +302,13 @@ static int ehrpwm_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
->   	/* Leave clock enabled on enabling PWM */
->   	pm_runtime_get_sync(pwmchip_parent(chip));
->   
-> +	ret = ehrpwm_pwm_config(chip, pwm, state->duty_cycle, state->period, state->polarity);
-> +
-> +	if (ret) {
-> +		pm_runtime_put_sync(pwmchip_parent(chip));
-> +		return ret;
-> +	}
-> +
->   	/* Disabling Action Qualifier on PWM output */
->   	if (pwm->hwpwm) {
->   		aqcsfrc_val = AQCSFRC_CSFB_FRCDIS;
-> @@ -391,12 +396,11 @@ static int ehrpwm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->   		return 0;
->   	}
->   
-> -	err = ehrpwm_pwm_config(chip, pwm, state->duty_cycle, state->period, state->polarity);
-> -	if (err)
-> -		return err;
-> -
->   	if (!enabled)
-> -		err = ehrpwm_pwm_enable(chip, pwm);
-> +		err = ehrpwm_pwm_enable(chip, pwm, state);
-> +	else
-> +		err = ehrpwm_pwm_config(chip, pwm, state->duty_cycle,
-> +					state->period, state->polarity);
->   
->   	return err;
->   }
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmldN/QACgkQj4D7WH0S
+/k6a3wf/dyB2OrJF/DAgW2HOZ0tlnIpsQAvUNWwXN8AM1HMaPt4MSdhAioirsfN0
+/Aw1KjjVBKXpdbfo2twmv9ZSbREgKxIH6hske49hZVlubzdGwbSkxy61kdL6j1xG
+odksjFrtzafYhMt8gC4tAmdSdigtAGF146BBSyrRksobpo4mySFMYUIQmQMnZIM7
+znYdQIuYbtMsTkZ7B+uSveguzBgoDPvlzA6E4n6as9mATma6EW5GNw0WOqcdioQt
+kh74bbrr+qilk1uS7x7AaMS5HPqL3R0/qiZpxobJkXoSUn36WRqEAGWGmvs1XoYt
+5E9L+65geD1aHNOvvn5S3ezdcebtyA==
+=mAfF
+-----END PGP SIGNATURE-----
+
+--xoh64gb6ddxqpmu6--
 
