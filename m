@@ -1,127 +1,108 @@
-Return-Path: <linux-pwm+bounces-7852-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7853-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id A8768CF6F39
-	for <lists+linux-pwm@lfdr.de>; Tue, 06 Jan 2026 08:03:03 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8BE1BCF785C
+	for <lists+linux-pwm@lfdr.de>; Tue, 06 Jan 2026 10:27:17 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 38D313015023
-	for <lists+linux-pwm@lfdr.de>; Tue,  6 Jan 2026 07:02:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BBBEC3133069
+	for <lists+linux-pwm@lfdr.de>; Tue,  6 Jan 2026 09:20:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ADF493090E0;
-	Tue,  6 Jan 2026 07:02:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4877C30F958;
+	Tue,  6 Jan 2026 09:20:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="KY24gprE"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="jyk05fZ/"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-08.mail-europe.com (mail-08.mail-europe.com [57.129.93.249])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62CB62F9D82
-	for <linux-pwm@vger.kernel.org>; Tue,  6 Jan 2026 07:02:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=57.129.93.249
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3A7B030BF62;
+	Tue,  6 Jan 2026 09:20:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767682975; cv=none; b=D+0z2FKMxdlBteYmPYa2dlO0wKybwLCMDR+KLr3ehs8WPdOfYZV5tuSF78fgU8hHXCWEk8O24DuxVzzZeEHf+sGCJkKt7zKCGGAFxOgnz7/trCZzULwJKso98Rf/XY7XyHtGIEllboNH1fWdJF+QPFiqj6pb8GjxobmDJafUitw=
+	t=1767691254; cv=none; b=DjbaJszbLV7tvTQeK2eVQOB4dHpDEM20MIYDUrvFoVaKR/jh1OBzH0JNwBbvZVDtjBa5T1mfzGshO2LvsJ8h5WaWjP+Nf3hEptVF8vPW5+/+UlDy9hlzmjBFGLWNiKxwo5VfTCHXBF628jf/gaX1jw2nFf7sH6Ro1tpZ6aD6SMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767682975; c=relaxed/simple;
-	bh=dl7pYMeFGS3yu5g46TvWW9y/9LSwCxG+//0ej2AUWLU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=YDzffXdB/fllX5C//v3x5BWTBUG/1TRkOFiJ6u3CCzWWY1zSSUYEZhlMzx6Q4wRkEKbgvrZo76q+7lpAOorNPLgM5F2dm+FVCt7NbC8cU2lqs2awps2elox7skVth366I0da0SByohk/XYzs26xwEZoJyVtt78gjylKclCpicks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=KY24gprE; arc=none smtp.client-ip=57.129.93.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=geanix.com;
-	s=protonmail2; t=1767682957; x=1767942157;
-	bh=Ff33WQ4GQXy7iOXr07oKwZiyvNoomCN0lMUIfbK3JYQ=;
-	h=From:Date:Subject:Message-Id:To:Cc:From:To:Cc:Date:Subject:
-	 Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
-	b=KY24gprEBSRLNs4XwnP8ztibL8SJvCsGaIRZl5Luww9RJVgq2f1n7OooViBUZ4eoD
-	 3F6SaU6rkt2Z8FKkDtCYGMXd54dsXinZA1/si92Lu22j0PqlHo6y936qjXCIRIiS7P
-	 p2vYjFs4YRnMcmlR436AYZv+GH3MqaCL0KEjWv6rBnB2fQaUZRm1+wX9tc5RIIhve7
-	 KsVZPYm2uGvLXnlYv/h78+W4ciQEraJ0pZaBmWJgIG5616aNBv3B0J7tLa0Yf80/qY
-	 wlkpmcClHRROnnmb+0JHb6WYCyrOfKTpRiGvUrKAtF5zY/qcKxv5DEWfsr5Ah2eeAh
-	 HIJA8EEJ5uclw==
-X-Pm-Submission-Id: 4dlhv00m80z1DFFx
-From: Sean Nyekjaer <sean@geanix.com>
-Date: Tue, 06 Jan 2026 08:01:57 +0100
-Subject: [PATCH] pwm: stm32: handle polarity change when PWM is enabled
+	s=arc-20240116; t=1767691254; c=relaxed/simple;
+	bh=oOeYTrnQxGPulauC7TDQ/8FzcIcuR5115oWjDelvo6U=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=MtKDiGPVcXIKk0/RdbGxHew85s6+zQJUqC15vVIPRl0Nc2Ms+eGOK3bP0wjFDmSNnI73xI/C5T2cJBQEOWjOAHU6XsdZNrinYY431fLPa3PUxtmkL/KNeEGvdTQR2Vj7bNiiF8EGdFeIj+k490r8IUXvLaF1FRF+I9GDjJOpMrs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=jyk05fZ/; arc=none smtp.client-ip=198.175.65.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1767691252; x=1799227252;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=oOeYTrnQxGPulauC7TDQ/8FzcIcuR5115oWjDelvo6U=;
+  b=jyk05fZ/5WG3lUylV0/fWgwl361vWCDhQTbK5l2zWPI3yaVQuMFDbX9O
+   h+P+9t8AXf80UFIw9xKOU91+jLmBhNpBqTZUouqWUfKBXZJ6VPncUV7Sb
+   KS/Kf2SNuzXGsLyuYMk4o9pOO2rZRjGLOjetFPR6DvZMPNSqTNNs9aQb1
+   2cDSEyFvOmPEzPCLIzaMSGQ8CBV6N7nymaEpRL63NaP6ynbXfTlB2KJ6/
+   JG/01heXVUo5nnBU8KOSAJymrdcg2+aKxQ6CtkUt79g1dxsBSIeB9KgJT
+   8sRdwdzHDyRIi3261olSV8zr91jnj4Xg4RGwlWGVyetDgyNyegyBzXf45
+   g==;
+X-CSE-ConnectionGUID: HmVSAsXJRz6Xncvy15PgrQ==
+X-CSE-MsgGUID: FOqni6JFR8uWMELz9HbeGw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11662"; a="79360758"
+X-IronPort-AV: E=Sophos;i="6.21,204,1763452800"; 
+   d="scan'208";a="79360758"
+Received: from fmviesa001.fm.intel.com ([10.60.135.141])
+  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2026 01:20:52 -0800
+X-CSE-ConnectionGUID: xn1SB4kURNeTd4yE4V4HnA==
+X-CSE-MsgGUID: 9vbT8GC2Tfmylghk1fElgg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,204,1763452800"; 
+   d="scan'208";a="233753110"
+Received: from black.igk.intel.com ([10.91.253.5])
+  by fmviesa001.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 06 Jan 2026 01:20:50 -0800
+Date: Tue, 6 Jan 2026 10:20:47 +0100
+From: Raag Jadav <raag.jadav@intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: ukleinek@kernel.org, heikki.krogerus@linux.intel.com,
+	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v1] pwm: dwc: Use size macro
+Message-ID: <aVzT728UnMQyFV8q@black.igk.intel.com>
+References: <20260105091737.17280-1-raag.jadav@intel.com>
+ <aVvpzK1fXqwms6Ct@smile.fi.intel.com>
+ <aVvsFsLvNHuBWvUv@black.igk.intel.com>
+ <aVv9y8RuA_LLm7GZ@smile.fi.intel.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260106-stm32-pwm-v1-1-33e9e8a9fc33@geanix.com>
-X-B4-Tracking: v=1; b=H4sIAGSzXGkC/6tWKk4tykwtVrJSqFYqSi3LLM7MzwNyDHUUlJIzE
- vPSU3UzU4B8JSMDIzMDQwNT3eKSXGMj3YLyXF1Lw+QkCxNjMwuDNBMloPqCotS0zAqwWdGxtbU
- AIJCvw1sAAAA=
-X-Change-ID: 20260105-stm32-pwm-91cb843680f4
-To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
- Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
- linux-pwm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
- stable@vger.kernel.org, Sean Nyekjaer <sean@geanix.com>
-X-Mailer: b4 0.14.2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aVv9y8RuA_LLm7GZ@smile.fi.intel.com>
 
-After commit 7346e7a058a2 ("pwm: stm32: Always do lazy disabling"),
-polarity changes are ignored. Updates to the TIMx_CCER CCxP bits are
-ignored by the hardware when the master output is enabled via the
-TIMx_BDTR MOE bit.
+On Mon, Jan 05, 2026 at 08:07:07PM +0200, Andy Shevchenko wrote:
+> On Mon, Jan 05, 2026 at 05:51:34PM +0100, Raag Jadav wrote:
+> > On Mon, Jan 05, 2026 at 06:41:48PM +0200, Andy Shevchenko wrote:
+> > > On Mon, Jan 05, 2026 at 02:47:37PM +0530, Raag Jadav wrote:
+> > > > Use SZ_4K from size.h instead of hardcoding constant.
+> > > 
+> > > Acked-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > 
+> > Thank you.
+> > 
+> > > OTOH, not sure if it's just an unneeded churn. What was the motivation to
+> > > create this patch?
+> 
+> > Your hard work[1] continues to motivate me :)
+> 
+> Ha-ha, but that one has a principal difference, i.e. there was _a custom macro_
+> *already*, which was replaced with a generic one. From the code perspective
+> it's not a churn as it kills the unneeded custom macro. Here the situation is
+> different, i.e. the explicit number 0x1000 is changed to SZ_4K. Just a line to
+> change, the added header inclusion and no other changes, so as a standalone one
+> it sounds to me like a churn.
 
-Handle polarity changes by temporarily disabling the PWM when required,
-in line with apply() implementations used by other PWM drivers.
+Fair, but converting to standard macro is noteworthy IMHO.
+I'll leave the final call to you all.
 
-Fixes: 7346e7a058a2 ("pwm: stm32: Always do lazy disabling")
-Cc: stable@vger.kernel.org
-Signed-off-by: Sean Nyekjaer <sean@geanix.com>
----
-This patch is only applicable for stable tree's <= 6.12
-How to explicitly state that and what is the procedure?
----
- drivers/pwm/pwm-stm32.c | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+Raag
 
-diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
-index eb24054f9729734da21eb96f2e37af03339e3440..d5f79e87a0653e1710d46e6bf9268a59638943fe 100644
---- a/drivers/pwm/pwm-stm32.c
-+++ b/drivers/pwm/pwm-stm32.c
-@@ -452,15 +452,23 @@ static int stm32_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 
- 	enabled = pwm->state.enabled;
- 
-+	if (state->polarity != pwm->state.polarity) {
-+		if (enabled) {
-+			stm32_pwm_disable(priv, pwm->hwpwm);
-+			enabled = false;
-+		}
-+
-+		ret = stm32_pwm_set_polarity(priv, pwm->hwpwm, state->polarity);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	if (!state->enabled) {
- 		if (enabled)
- 			stm32_pwm_disable(priv, pwm->hwpwm);
- 		return 0;
- 	}
- 
--	if (state->polarity != pwm->state.polarity)
--		stm32_pwm_set_polarity(priv, pwm->hwpwm, state->polarity);
--
- 	ret = stm32_pwm_config(priv, pwm->hwpwm,
- 			       state->duty_cycle, state->period);
- 	if (ret)
-
----
-base-commit: eb18504ca5cf1e6a76a752b73daf0ef51de3551b
-change-id: 20260105-stm32-pwm-91cb843680f4
-
-Best regards,
--- 
-Sean Nyekjaer <sean@geanix.com>
-
+> > [1] https://lore.kernel.org/r/20250825163545.39303-3-andriy.shevchenko@linux.intel.com
 
