@@ -1,287 +1,161 @@
-Return-Path: <linux-pwm+bounces-7863-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7864-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0BB63CFD25E
-	for <lists+linux-pwm@lfdr.de>; Wed, 07 Jan 2026 11:24:29 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 27CA5CFEE64
+	for <lists+linux-pwm@lfdr.de>; Wed, 07 Jan 2026 17:35:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id EF23C300EA23
-	for <lists+linux-pwm@lfdr.de>; Wed,  7 Jan 2026 10:24:26 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 8B7CA30FDB50
+	for <lists+linux-pwm@lfdr.de>; Wed,  7 Jan 2026 16:16:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEE611E515;
-	Wed,  7 Jan 2026 10:23:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79DA1363C4D;
+	Wed,  7 Jan 2026 15:10:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="eh1K3/SV"
+	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="LnmnRkXn"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from CH5PR02CU005.outbound.protection.outlook.com (mail-northcentralusazon11012067.outbound.protection.outlook.com [40.107.200.67])
+Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37A3D312813;
-	Wed,  7 Jan 2026 10:23:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.200.67
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767781429; cv=fail; b=cgrBTCmQ+29GcnMXLvTzEbfjF0HYa3yBbqTBImJk4w3Tk7/49bEqsERDWfM+Hv3hRQvWnS6kD1zc6UgPZ0ga+eLsDL6Pj2OwjPcJhx5pJOOy266eVoOP4+gSJBTMjelUUBu/HiY7MvPNLpYjUbW71e9eUW/Hpt9ZzEog70VsYuY=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767781429; c=relaxed/simple;
-	bh=zCje2cZNX/l81C/PAe1BPbuxuiCjR1mYrZ1i3BK/NDk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=kKe7mHsHmKskzJCUnFPLHIaeL8z8UVJSbhsWI64CxaI/giITmbl/HDlVFQGQ4RikT7QZjbsZgS82nmVd4RP7w1gyXm5nHvdJ3e9fqUGc2wh6oeE2OoqEXA6nNAjhFxornkWA7C2XRYc9/iHIw1jMNzZekINhC0sZkwJexmTdASE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=eh1K3/SV; arc=fail smtp.client-ip=40.107.200.67
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=IofpCwuci5Gbl8k7iUYkb2sTfMba3rR6KGOU3dXhJjRpfG9clXdi2DibDd7CYvqDJ3OCX0WvJ21QWpOIHCsSH+AU3lYu/AsFWIoUBWsktUhdSvbdxaV5hpN5w4Kblc+Pn1jjw8kTnwiXeCq2uVFZXL7f9FM44B98UOSNP1RZEyHYQV2xVRESIYggAhMYmYdYqE9W0cpfG/hMOsl9usRJQ4jxf7qIMQcceEq7qzkkplAqQasUCGOPqdf7R7/MfWjwdlBLvgI5yVULIByfzFUKCNQAnLtS60D/nubrah79efIsFNzPl+yK4XJhdMHbDr14/XSiq4nyfN+YaBfWCH5wRQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=MQKndZDIMG1OrEBXuFEoQSChodRmeNhAyFCwmO+NTpw=;
- b=eQd+jEIUnftbHx+3PN7J1cmgWMqqRhZ9qyi9LGMTxtgrg4hyNsVvshqG5MnQwubl9bqALncYy3Shjufyq8pHeC96sFm726oAkbnrKf7iBipWjG1YDpQC4e7i5eSwFW5//Uux2k8foUkjMB1rRNMIHu6+yihxee4Tlx8zCMgtKETvsJq7/L7cD7jd3sp8XF6YUTc72Vn+kTXOKTZo0h/SC7zDHCYw+n7U0yRig6LrsqpIshCb70NZ/Yd3oSyX4MjT5KAJkuS0DuCCFyA3k+fXm+4ZzZH0S8ogtZwJqFY8sTzQqEEysG6yVNt2Ob+36jGjZDOlKWmKOj1BrJ0Uq2sK2A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 198.47.23.194) smtp.rcpttodomain=gmail.com smtp.mailfrom=ti.com; dmarc=pass
- (p=quarantine sp=none pct=100) action=none header.from=ti.com; dkim=none
- (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MQKndZDIMG1OrEBXuFEoQSChodRmeNhAyFCwmO+NTpw=;
- b=eh1K3/SVM10gL+zpQ6K61uhl9qoNbSdmgOG26prcHrqU1UywcT7NSX1HE2iQWoQKkW0ZmHtsLDhMltaU7LVW2fJ+beL3BT3ftKbRe4qUaUCluipXESKVP0NjBMF2iUdcajLV3+EINiFQb1u4i78P4pxnpHVVN/HOc7VU4JkY/Wg=
-Received: from BL1PR13CA0273.namprd13.prod.outlook.com (2603:10b6:208:2bc::8)
- by SJ5PPF1D755039F.namprd10.prod.outlook.com (2603:10b6:a0f:fc02::790) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9478.4; Wed, 7 Jan
- 2026 10:23:41 +0000
-Received: from BN2PEPF000055DF.namprd21.prod.outlook.com
- (2603:10b6:208:2bc:cafe::c5) by BL1PR13CA0273.outlook.office365.com
- (2603:10b6:208:2bc::8) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9520.0 via Frontend Transport; Wed, 7
- Jan 2026 10:23:41 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.23.194)
- smtp.mailfrom=ti.com; dkim=none (message not signed) header.d=none;dmarc=pass
- action=none header.from=ti.com;
-Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
- 198.47.23.194 as permitted sender) receiver=protection.outlook.com;
- client-ip=198.47.23.194; helo=lewvzet200.ext.ti.com; pr=C
-Received: from lewvzet200.ext.ti.com (198.47.23.194) by
- BN2PEPF000055DF.mail.protection.outlook.com (10.167.245.9) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9520.0 via Frontend Transport; Wed, 7 Jan 2026 10:23:40 +0000
-Received: from DLEE202.ent.ti.com (157.170.170.77) by lewvzet200.ext.ti.com
- (10.4.14.103) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Wed, 7 Jan
- 2026 04:23:36 -0600
-Received: from DLEE202.ent.ti.com (157.170.170.77) by DLEE202.ent.ti.com
- (157.170.170.77) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Wed, 7 Jan
- 2026 04:23:36 -0600
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE202.ent.ti.com
- (157.170.170.77) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
- Transport; Wed, 7 Jan 2026 04:23:36 -0600
-Received: from [172.24.233.104] (a0507176-hp-z2-tower-g9-workstation-desktop-pc.dhcp.ti.com [172.24.233.104])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 607ANXEK547341;
-	Wed, 7 Jan 2026 04:23:34 -0600
-Message-ID: <60ef0a6d-f4f5-41ea-899c-e353ec9c1c8c@ti.com>
-Date: Wed, 7 Jan 2026 15:53:33 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23BF23624AF;
+	Wed,  7 Jan 2026 15:10:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767798603; cv=none; b=sH+nUUvUodydvu+aQfp/9/2P+EXDJWnVYsR3RmknntFqY4PbX9CCFl9TG1GqYnf4E4L0aKCcdKnyEb9pRieqBFMv7rqrOkqLg91m/uqCjJ2o02blLwJ5x38rhk+554reo7QuhmNNiurERDSRwOcBBNnzCDh6LzdnwUClk0Zm8uU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767798603; c=relaxed/simple;
+	bh=rJaqvOB8/875SKmK7dTBqU4qyFZchqY4Kmbj5roEflw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=XuREAnuHoYKymaa1Fok/kKmfEztYVfV+yDzNf+TLtwjFHo4RkErdRwhYl1j2dcfR4/I1PAVEhVbhqV5Rr/vHph9B7E+IYN+CgCMv2rOsRvEY9VURR+Sdg92PlNuUppPTZRwga2lg8/YDXkHbed6wP2UCGgFBjSKBlBMYktmeqr8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=LnmnRkXn; arc=none smtp.client-ip=148.251.105.195
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
+	s=mail; t=1767798599;
+	bh=rJaqvOB8/875SKmK7dTBqU4qyFZchqY4Kmbj5roEflw=;
+	h=From:Subject:Date:To:Cc:From;
+	b=LnmnRkXnQNe1UnB0hMqYpQRqFTI6QfwNN3MV5sH8fGUIQPJFt5Goe1ISJWNT5I48c
+	 0CUrGVe0NSoMAwjGGkwkvgUylrysHJq+bzq5gb+iMhRFHaMwRLdVZx1VDU7z1VSImH
+	 mHSCZISTSmr24CLvcNa0I5sdP4vFS+holZI3tcgDA7sCwtb4Ybg4c4H2tkiSRkTCX2
+	 ae8xmUWzSdOPoSg34EThmEzyjWOn1AhreRUsZHchab3/AfvulkkZ9YHHIG7LMdJfcS
+	 HJbWdCSybK/SQ5tCFnD8lLo4hiZ2yV8gxk4WklOp2UTmAGYVpop6yz5ciPnyPa8M+5
+	 B6hFEa1P6pe8g==
+Received: from [192.168.0.79] (unknown [IPv6:2804:14d:72b4:81ae:67c:16ff:fe57:b5a3])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: dwlsalmeida)
+	by bali.collaboradmins.com (Postfix) with ESMTPSA id F2FB117E13D8;
+	Wed,  7 Jan 2026 16:09:54 +0100 (CET)
+From: Daniel Almeida <daniel.almeida@collabora.com>
+Subject: [PATCH v3 0/3] Clk improvements
+Date: Wed, 07 Jan 2026 12:09:51 -0300
+Message-Id: <20260107-clk-type-state-v3-0-77d3e3ee59c2@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] pwm: tiehrpwm: Enable EHRPWM controller before setting
- configuration
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-CC: <j-keerthy@ti.com>, <linux-pwm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <u-kumar1@ti.com>, <n-francis@ti.com>,
-	"Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>, Gokul Praveen
-	<g-praveen@ti.com>
-References: <20260107055339.10999-1-g-praveen@ti.com>
- <kkddrxw37dx7w6f6csomopcwz5xk2o7ezddrisfisij6lq46hf@ije72we4xrek>
-Content-Language: en-US
-From: Gokul Praveen <g-praveen@ti.com>
-In-Reply-To: <kkddrxw37dx7w6f6csomopcwz5xk2o7ezddrisfisij6lq46hf@ije72we4xrek>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BN2PEPF000055DF:EE_|SJ5PPF1D755039F:EE_
-X-MS-Office365-Filtering-Correlation-Id: ab8e2c8c-d07b-411b-9ad4-08de4dd6d418
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|1800799024|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?TzdYQkUwenBKZUdIajF4MG51TzhiNGxTeXc0aDl4NWU4QW5HQ0s4RGc1Kysw?=
- =?utf-8?B?SmczUGZsMitqbUh3U2dTT2RHanRRNS80cy91QlZmeU9Md3VNRkFzWEdHR3gw?=
- =?utf-8?B?aXlJMHlWZjY4OWJraW5xUFo5Y3NPUVcrU3JTY3lURFVBNFc1MUQvUEVBNXVI?=
- =?utf-8?B?T1E3OGZLNllQd2trQnRKNmo0ejVMQzkyb0ZNcWt2L3RuUDVWeDhobDVDTlZM?=
- =?utf-8?B?Q3ZWMTc0V1UvTHpjSDAwSTkyL3lKSlNUWTJuODliQnFpZmQ3dndaRUxpeXh6?=
- =?utf-8?B?NER5cU1KZml2MnFIemcwSlVhU1lWMXJQZkNnU2ZQcTIydDcwTzZ6NlF4YW1l?=
- =?utf-8?B?dmw0MmlPZ05ENTFOMVhveVJBdXJVb1Y3Tk5wbDN6Q3hKbGV3SE1VaHQxUWNu?=
- =?utf-8?B?MkVzcjI2TVlCaklnMEgyclBEMThJWFpoWWdMYjdBQUZ1a2NrbXFlMjNFNmpR?=
- =?utf-8?B?ZlZ3OFVSNjRyV3NnWnpZN2QyaVcwMVRNMXl5OXFUZ0dNOWc5RitTUjZzQXV2?=
- =?utf-8?B?TUs2citOQjhPMENEdUQ1bitNc2tpQ1ZGVmx2elZsL2c5Y1p4dnlVTG1nTVM2?=
- =?utf-8?B?MjNBcWUzTE9sbDBKVXN2Z0grUnlHK0tHWHc0NEdZUjJ6Mkl5N2JIdTFCcUhE?=
- =?utf-8?B?V0N1TmRLbUgxSm1BcytCdEYrQUNBdlBnekZyVzRCMzFxNTBZRGJISFM4QzVL?=
- =?utf-8?B?UjcvZld3QzVERDNvSWt4Y0VhN2ljV1c3cEdaSU9xNEtRWDNLVVNINExnNUFE?=
- =?utf-8?B?cXJtTjhEMXUvU09adk5vbStOOGpNcGNxY2hRZWZCd1FIQnpJaTk5L3lWazhP?=
- =?utf-8?B?UWl5ejVaQUR6YnhiNG5JL0NvODd0cGNGams3cGhoUEEvTTJ1NjZyZk5MRmZG?=
- =?utf-8?B?MWZBNDYvRlRFZFc5UXhtT2Z0QmxncFl2cEM4c1VhNkQ0R2VCejNNSDdsM052?=
- =?utf-8?B?RytuSVNDV2ZrUE83VG1Sb2ZzK2F3djcvamxzeEJuZUFtTGtlQnVqTjUyR0xD?=
- =?utf-8?B?OG55STRNZW5sSFY0clMvWk5TbnJZaS9YYnhxNHBDcHlsUlJNTGZWdFJ1Y1Fr?=
- =?utf-8?B?VFhSd1lWTDNBK2s2T1EvcHJpRjNjUGZTSlpMeEFFbkZQbDltYk9YSU95U1gx?=
- =?utf-8?B?Q2R0VThZNkhwT3hUdU1PZmt0Q2NUYnRJRXV6WXFKajBuYzFvbDlGamI5eUp1?=
- =?utf-8?B?U296UVpXUHNHV1NjVjZMaDJwaklua2xuRWRNb2NKNVJBL1dGYm1HdDk2TEVG?=
- =?utf-8?B?emlvMHBrRWtJSDVlUUdsMTFvaXN2UVRsMlZnWFhhbkxXb3FpZTFTLzROeDh1?=
- =?utf-8?B?Q1V5aGVKUXRIMFRTRVhvdzI3N05vM0htRElwVC9jZ2w0aWQ0d09QOTJmVzZj?=
- =?utf-8?B?azZ5Y3Q5QmE1d0UxZnJFTGxOT3BwcFJaZmNmcnZsdUlUWlRQeXlmckhJZFFj?=
- =?utf-8?B?dmxUQ1BKenlpRGJhOGNGL2JaMnhIQkx2Q1VoRHBjdXdxVTZYdm4wbURRN3Vo?=
- =?utf-8?B?bTE3ODNwdkFDQzhrWk9IZStrcXhTZDJwelFxaXVPbWNIQytkTit5YUMyenBW?=
- =?utf-8?B?VkFSK1FVSThvSmpRcWpDbXN0Z3RzNGVSSnBkMzhwTDNHTStLZ1BBWG4rcSs4?=
- =?utf-8?B?QjBNUTdlMkRBa1pkSjZRYXFsQ0RsenhsdndmUmVSRlFZM2JUZU4wWVhONStM?=
- =?utf-8?B?TTYzRWtqZ1VZYWV3NlJzUy91VEVCSG5pS2xKb0Z0NnRUSzRyb1dGN1RoZVV4?=
- =?utf-8?B?THhhb1pUbUVZNVVRcVVTNGVueS9jaTgrQlRHNVlWR1ZzbnhzZnY2citqTlB5?=
- =?utf-8?B?ME1tRG1MeTVoeHY5SzRqdUpBUUVoNDBEdll6QmJlN2twNEtSb1FhcEJDSGdI?=
- =?utf-8?B?T1dWVFJQNkhCRy91OU05V3gxVGdPRmtPdXlCc2ZFMDlQdjdyY2ova0FaOWox?=
- =?utf-8?B?b2tlYzJxejhyOEI5RkpzQWdZNTBGSmdHMDBEZENSSXlYamtKcWlWVllIMEZF?=
- =?utf-8?B?bExBYnpOcHh3QVpIcG1RUkNtSUVDWDhCemsvQ29xZXlNY3hHcUNZMXllOW5z?=
- =?utf-8?B?WnJLWXRaa2ZRTUhJcUdxZ3liUDQyUzVHUjFrWkJhdGxJTS9RQlJIRDRQNmJL?=
- =?utf-8?Q?HsTU=3D?=
-X-Forefront-Antispam-Report:
-	CIP:198.47.23.194;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:lewvzet200.ext.ti.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(1800799024)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: ti.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 Jan 2026 10:23:40.8761
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: ab8e2c8c-d07b-411b-9ad4-08de4dd6d418
-X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.23.194];Helo=[lewvzet200.ext.ti.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BN2PEPF000055DF.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SJ5PPF1D755039F
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAD93XmkC/6WQzW7DIBCEX8XiXCoWjAk+9T2qHPhZGtTYJECtW
+ lHevSSu1Ko59jgrzbczcyEFc8RCxu5CMi6xxDQ3IZ464g5mfkMafdOEMy6ZZpq64zut6wlpqaY
+ idQyMUd5LCZ400yljiJ934Ou+6ZDTROsho/nBKP6AWYAC3enBSrGDISj74tLxaGzK5tml6UY+x
+ FJTXu9JF37j/4e29QH2YOWUUbBaOQBrBwF/rPvrVjLj+aONVbemxJrStkjTFOvYaeOwV1IY2b5
+ YxkGDlz3q4IMKGoVv151ES36PPHbfE/f3SAVnT8s6OypcMCr0CA75uIiW4PoFV/nla7YBAAA=
+X-Change-ID: 20250909-clk-type-state-c01aa7dd551d
+To: "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Viresh Kumar <viresh.kumar@linaro.org>, Danilo Krummrich <dakr@kernel.org>, 
+ Alice Ryhl <aliceryhl@google.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Drew Fustini <fustini@kernel.org>, Guo Ren <guoren@kernel.org>, 
+ Fu Wei <wefu@redhat.com>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+ Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+ Trevor Gross <tmgross@umich.edu>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, linux-riscv@lists.infradead.org, 
+ linux-pwm@vger.kernel.org, linux-clk@vger.kernel.org, 
+ rust-for-linux@vger.kernel.org, 
+ Daniel Almeida <daniel.almeida@collabora.com>
+X-Mailer: b4 0.14.3
 
-Hi Uwe,
+This series contains a few improvements that simplifies clock handling for
+drivers.
 
-Thank you for your prompt response and reply.
+Patch 1 implements the same typestate pattern that has been used
+successfully for Regulators. This is needed because otherwise drivers
+will be responsible for unpreparing and disabling clocks themselves and
+ultimately handling the reference counts on their own. This is
+undesirable. The patch automatically encodes this information using the
+type system so that no misuse can occur.
 
-On 07/01/26 15:21, Uwe Kleine-König wrote:
-> Hello,
-> 
-> adding Rafael to Cc: who sent a patch series for this driver that I
-> didn't come around to review yet. Given that neither he nor me noticed
-> the problem addressed in this patch I wonder if it applies to all
-> hardware variants.
-> 
+Patch 2 makes things more convenient by offering devres-managed APIs. This
+lets drivers set clock parameters once and forget about lifetime
+management.
 
-Yes, it applies to all hardware variants, Uwe.
+Patch 3 converts clk.rs to the newer kernel-vertical style in order to make
+future changes easier.
 
-> On Wed, Jan 07, 2026 at 11:23:39AM +0530, Gokul Praveen wrote:
->> The period and duty cycle configurations does not get reflected
->> after setting them using sysfs nodes. This is because at the
->> end of ehrpwm_pwm_config function, the put_sync function is
->> called which resets the hardware.
->>
->> Fix it by preventing the pwm controller from going into
->> low-power mode.
->>
->> Fixes: 5f027d9b83db("pwm: tiehrpwm: Implement .apply() callback")
->> Signed-off-by: Gokul Praveen <g-praveen@ti.com>
->> ---
->> v2 <==> v1
->> ==========
->> * Removed space between Fixes and Signed-off tag
->>
->>   drivers/pwm/pwm-tiehrpwm.c | 22 +++++++++++++---------
->>   1 file changed, 13 insertions(+), 9 deletions(-)
->>
->> diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
->> index 7a86cb090f76..408aed70be8c 100644
->> --- a/drivers/pwm/pwm-tiehrpwm.c
->> +++ b/drivers/pwm/pwm-tiehrpwm.c
->> @@ -237,7 +237,6 @@ static int ehrpwm_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
->>   	if (period_cycles < 1)
->>   		period_cycles = 1;
->>   
->> -	pm_runtime_get_sync(pwmchip_parent(chip));
->>   
->>   	/* Update clock prescaler values */
->>   	ehrpwm_modify(pc->mmio_base, TBCTL, TBCTL_CLKDIV_MASK, tb_divval);
->> @@ -290,12 +289,11 @@ static int ehrpwm_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
->>   	if (!(duty_cycles > period_cycles))
->>   		ehrpwm_write(pc->mmio_base, cmp_reg, duty_cycles);
->>   
->> -	pm_runtime_put_sync(pwmchip_parent(chip));
->> -
->>   	return 0;
->>   }
->>   
->> -static int ehrpwm_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
->> +static int ehrpwm_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm,
->> +				const struct pwm_state *state)
-> 
-> With this function also caring for *state the name isn't appropriate any
-> more.
-> 
+This depends on Alice Ryhl's series [0].
 
-But the duty cycle, period and polarity values are extracted from the 
-state parameter, right?
+[0]: https://lore.kernel.org/rust-for-linux/20251218-clk-send-sync-v3-0-e48b2e2f1eac@google.com/
 
-Please feel free to correct me if I am wrong, Uwe?
->>   {
->>   	struct ehrpwm_pwm_chip *pc = to_ehrpwm_pwm_chip(chip);
->>   	u16 aqcsfrc_val, aqcsfrc_mask;
->> @@ -304,6 +302,13 @@ static int ehrpwm_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
->>   	/* Leave clock enabled on enabling PWM */
->>   	pm_runtime_get_sync(pwmchip_parent(chip));
->>   
->> +	ret = ehrpwm_pwm_config(chip, pwm, state->duty_cycle, state->period, state->polarity);
->> +
->> +	if (ret) {
->> +		pm_runtime_put_sync(pwmchip_parent(chip));
->> +		return ret;
->> +	}
->> +
->>   	/* Disabling Action Qualifier on PWM output */
->>   	if (pwm->hwpwm) {
->>   		aqcsfrc_val = AQCSFRC_CSFB_FRCDIS;
->> @@ -391,12 +396,11 @@ static int ehrpwm_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->>   		return 0;
->>   	}
->>   
->> -	err = ehrpwm_pwm_config(chip, pwm, state->duty_cycle, state->period, state->polarity);
->> -	if (err)
->> -		return err;
->> -
->>   	if (!enabled)
->> -		err = ehrpwm_pwm_enable(chip, pwm);
->> +		err = ehrpwm_pwm_enable(chip, pwm, state);
->> +	else
->> +		err = ehrpwm_pwm_config(chip, pwm, state->duty_cycle,
->> +					state->period, state->polarity);
->>   
->>   	return err;
->>   }
-> 
-> Why are the changes from the two hunks above needed? Reading the change
-> log I only understand the first hunk and would expect it to be enough.
-> 
-The 2nd hunk is needed I believe because now, the ehrpwm_pwm_config 
-function is called inside the ehrpwm_pwm_enable function.
+---
+Changes in v3:
+- Rebased on top of 6.19-rc4
+- Dropped patch 1 (from Alice), added her series as a dependency instead
+- Fixed Tyr, PWM_TH1520 drivers
+- Changed clk.rs imports to kernel-vertical style
+- Added support get_optional shortcut for Prepared and Enabled (i.e.:
+  Clk::<Enabled>::get_optional())
+- Fixed misplaced #[inline] tag
 
-Hence, calling the ehrpwm_pwm_config function before the 
-ehrpwm_pwm_enable function within the ehrpwm_pwm_apply function would be 
-a redundant call I believe when we try to enable the ehrpwm.
+Thanks, Danilo {
+  - Moved the devres changes into its own patch
+  - Require &Device<Bound> for all functions where a &Device is used
+  - Account for con_in in SAFETY comments where applicable
+  - Added backticks
+}
 
-Now, coming to the ehrpwm_pwm_config function which I have added after 
-the  ehrpwm_pwm_enable function in the else case, it would be needed I 
-believe in order to change the duty cycle and period at runtime after 
-the pwm has been enabled.
+- Link to v2: https://lore.kernel.org/r/20250910-clk-type-state-v2-0-1b97c11bb631@collabora.com
 
-Please feel free and do correct me if I am wrong, Uwe.
+Changes in v2:
+- Added Alice's patch as patch 1, since it is a dependency.
+- Added devm helpers (like we did for Regulator<T>)
+- Fixed missing clk_put() call in Drop (Danilo)
+- Fixed missing parenthesis and wrong docs (Viresh)
+- Removed extra "dev" parameter from "shutdown" example (Danilo)
+- Removed useless type annotation from example (Danilo)
+- Link to v1: https://lore.kernel.org/rust-for-linux/20250729-clk-type-state-v1-1-896b53816f7b@collabora.com/#r
 
-> Best regards
-> Uwe
+---
+Daniel Almeida (3):
+      rust: clk: use the type-state pattern
+      rust: clk: add devres-managed clks
+      rust: clk: use 'kernel vertical style' for imports
+
+ drivers/cpufreq/rcpufreq_dt.rs |   2 +-
+ drivers/gpu/drm/tyr/driver.rs  |  31 +--
+ drivers/pwm/pwm_th1520.rs      |  17 +-
+ rust/kernel/clk.rs             | 466 +++++++++++++++++++++++++++++------------
+ rust/kernel/cpufreq.rs         |   8 +-
+ 5 files changed, 346 insertions(+), 178 deletions(-)
+---
+base-commit: 9ace4753a5202b02191d54e9fdf7f9e3d02b85eb
+change-id: 20250909-clk-type-state-c01aa7dd551d
+prerequisite-change-id: 20250904-clk-send-sync-3cfa7f4e1ce2:v3
+prerequisite-patch-id: 13476f9e7e7c3bdbcab42912948953743381b1e0
+prerequisite-patch-id: 8f91583384bb4516afcac66d21ac08b3982747b2
+prerequisite-patch-id: b2ad5ecbd9a395b622bc04f891b5bb276f6f6b16
+
+Best regards,
+-- 
+Daniel Almeida <daniel.almeida@collabora.com>
 
 
