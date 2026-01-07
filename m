@@ -1,155 +1,130 @@
-Return-Path: <linux-pwm+bounces-7866-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7871-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DA0BFCFFE50
-	for <lists+linux-pwm@lfdr.de>; Wed, 07 Jan 2026 21:01:13 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C298CFFE35
+	for <lists+linux-pwm@lfdr.de>; Wed, 07 Jan 2026 21:00:13 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 0EABB3009FCE
-	for <lists+linux-pwm@lfdr.de>; Wed,  7 Jan 2026 20:00:48 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 40D7D3152CAF
+	for <lists+linux-pwm@lfdr.de>; Wed,  7 Jan 2026 19:48:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D9883644AD;
-	Wed,  7 Jan 2026 15:10:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5E6F32A3C8;
+	Wed,  7 Jan 2026 19:48:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="WbxUGimf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RoB4MfJv"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f180.google.com (mail-dy1-f180.google.com [74.125.82.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 852A836403C;
-	Wed,  7 Jan 2026 15:10:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54C1B2D0C82
+	for <linux-pwm@vger.kernel.org>; Wed,  7 Jan 2026 19:48:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767798612; cv=none; b=sw3mYKFd6COqyHgNg6xWsd4hFTy9R4Aay3ApB/ILjfYnX8wCHRdZ6wBkniyxOc5NxEArFcYsdQESTipOuEgPpY0m29kXmZ4wdcvlxj5V4HuRPGMpiE393ir+brnzujvCGGIQrhExSDjUffjo04sWw5aiKjNpf7+gFbuUTvK1yk8=
+	t=1767815318; cv=none; b=Hl5D55eA6qYBdye9b7gI6JsJ4ZEoz9hv8G2SYq+/gf8L01BKojSEM4xsfAHZXIKSeIh6dwaZWmb7eA5i/ISGH5agl4wcbFXWfImdwqsx8jjyA5coVaBaxNuVYR3t1QXdnnIAf0CTg4Q95rLNhvvhR/SMLvqSFdBQfZ9LhLkvBMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767798612; c=relaxed/simple;
-	bh=90di0w1PwxPIRzuSClWm8hTlTurueeQPrjHhHA1IgeE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Lr+CpMhW1a+OY2t5pf2yTBL9mZjZMO5gYCpsDxlCP68xj2UY8LxyVbTTeQeapxwfXOGxFlrjg9POunI+e8ym/ukQrYwUIF6/sWe28VCf+L3NDgpT7oeLXp+lZ6t1KT5JttyXbOPSGpfMbCdyUGlQPTB5gEG3thyASDItwgJRi7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=WbxUGimf; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1767798608;
-	bh=90di0w1PwxPIRzuSClWm8hTlTurueeQPrjHhHA1IgeE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=WbxUGimfzP1F2xdrdKe/4cd+wlHBTKhKTGbIJq3+nq4YJ2hsGZfl7PcRgQ4RGiBs1
-	 dtSuohh7qCBvMt0aJuuvXZfkQTiaG4QDZ9nx9ak+XP+t/JRMwRc+9iCl5jI/diqDNK
-	 dLqasMDWtpSjOnCaPPPKpS/agyuMomX7YkrtoFWONOXCLUgvmzyl/n8cmA2SJNpkX5
-	 GeJSvxuSN4GhvqLeXEOdJnjSEcxCU0LxaUjx+hQSbqBzrZrppwCiz9bvJBwLCAFWiX
-	 w/tYrDOBR7aAWG6Ydn2+yoQJp0lXhTUYV09eF92e5fEmZ7M1Y81NwfByPFfBig9Pzy
-	 dv/MMlIrcuw8A==
-Received: from [192.168.0.79] (unknown [IPv6:2804:14d:72b4:81ae:67c:16ff:fe57:b5a3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dwlsalmeida)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 75C9117E1529;
-	Wed,  7 Jan 2026 16:10:04 +0100 (CET)
-From: Daniel Almeida <daniel.almeida@collabora.com>
-Date: Wed, 07 Jan 2026 12:09:53 -0300
-Subject: [PATCH v3 2/3] rust: clk: add devres-managed clks
+	s=arc-20240116; t=1767815318; c=relaxed/simple;
+	bh=2NF359DW37ZojkG4f4MDIy0ciudLZitBmJbZxlljHso=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=mJaFxfHmQv2AKZtybuipwesk8Nh0GnZatnLNOskUtt4H+fhGiDruxe50sDCXUDxWdrtVG/0ZTcLzeBrI5r/kE/4f2NBjIc3BLAe3LnSjAjMAA9LMQDMSzKckgRPUyslBsTqnuODhxTFze1pgP0A7AVRnSry/H2+teN6v9HYN0No=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RoB4MfJv; arc=none smtp.client-ip=74.125.82.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-dy1-f180.google.com with SMTP id 5a478bee46e88-2abf5900cd5so2067710eec.1
+        for <linux-pwm@vger.kernel.org>; Wed, 07 Jan 2026 11:48:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1767815307; x=1768420107; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2NF359DW37ZojkG4f4MDIy0ciudLZitBmJbZxlljHso=;
+        b=RoB4MfJvgo8/S7am11OHkY+UURZPxzGbWLUsM2E40xaAWUCmtSbrTlcNT4C2yAgEpF
+         /1wkzk+GrxJhwocREGmY/1U/rsdYh3/Vrb1SH33Y9n/urBXRWZOaZhwv/sbjrdpesey4
+         43VCnzcvXLpvQXm1RSPzMm88aeeZ8OKl2MvhBBqL3JYOVotHImupPr9dXbImK+uAGKDY
+         gos4rrTCx7oxm/cQm6uqRPEcW7OAnaspQK5J2XamMWI5XOz4xydqX23ZBFM70X4j3vF5
+         mXe3Ju9cT0clpzRu0t/qFNJChuzfcNUCAag2hyKz8tKfSEBBA81Nj1OErkIse+0QG2Wr
+         idMQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1767815307; x=1768420107;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=2NF359DW37ZojkG4f4MDIy0ciudLZitBmJbZxlljHso=;
+        b=KCULkiH86MeUAZOftftl8uECtfPizjUPPnPdNH+E5W6wt1Pydaa2oTA4JSTIHA/2tk
+         7LeCd4EKKTvdYo+qbYPAVfsjhAkZEOgSh5Tw2hpm0Z2e+tuNQym+eLPczbTxFFRMNcae
+         QS+vxPC4/aPHqkXLDxewc9o9gt1fcgyaReuOnOqNQHvsmPlfty7Ggs29Y2sJSwar0x15
+         3W5wywi0xNge0xP05LBKGAKeIRiiFo3KFVr6F/cNfao2mVgeDgPBoj4vFRzNz7RsLRXh
+         mjB+EHrPVFfrumdBlH0SCPF53VdKQdf81KaSsi/Mn9S0CWKtmqhuPECN2t2iq3hzu80O
+         YNwg==
+X-Forwarded-Encrypted: i=1; AJvYcCX+TCSG/5CexxjuIYrsL/eLBS60WtYHpO7Co4czJUpARce64bVieNrjWO41L+cX4CRMsc+RCj6Y62o=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyX/qz5r1vdvwKoOQfyWBiQHJQW2Pw/W/cH8/vBxkxrxHyD9x5z
+	By4/VEgTdZazXiLPVayGxFq7w6Cs7AnugdXAsCW4Hy15W6U+ZbDNp0X7
+X-Gm-Gg: AY/fxX6wt9SQE7krr7Nb3Xl8CCuOTc9L8VW/ihA53HccuPdcj3lI93WH8yrPtisLBiH
+	QP0KUOL0GSLenoD/IrvtWZRHoZXZboMSlkK+5BOUhnAhit6oNgdEpZiVXd1AeVeI57b4N9L91SY
+	XFxCTNLeSZs5dKNB9YQpoNQdV1En7qV7gyBwnzikOqawOLjXjNcHNFw5R8DO/zfon9Yadx9zEQl
+	8oWT4nm6Tu121Pkfjbg/KQAb1Tq2tNnNPS0qLrbXqVCR8QZCi7RRFhAhneXXY6HpD7+Nxl3y6h0
+	K8FyfgLvLmALlAWRuy6Ih61yo0figWGXEIf/XHhXtpSfMeTQBD2hM46nKygT+ezWk6Z89rDeE/C
+	bMlFuhLo5dUE1OtriK7BSC1zN7nN1bExHyNpH/E5n2trpdZvPuCwrPV8OAJxSZcQVcqLtNAw220
+	lNdhD1KDp5J7pmCheleAKxt9eOyduw4b19hg8kMg0Ounln0TwhJVIAxVLZeuPLhlRpOdvV7nDJd
+	UydXAWVFN/36pXTqD0l5ctpe0n1Dg==
+X-Google-Smtp-Source: AGHT+IGYjVUu+lgv9P/uKlsGT5xYW9cLxtGl24dRMoeIVtDU/FsjhOKh8eUikrWCzN/Ql7qltByiCg==
+X-Received: by 2002:a05:7300:3f05:b0:2b0:56fd:4b67 with SMTP id 5a478bee46e88-2b17d21b4dcmr1970898eec.12.1767815306652;
+        Wed, 07 Jan 2026 11:48:26 -0800 (PST)
+Received: from ParadiseLost.localdomain ([177.10.10.214])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2b17078dd8fsm8626994eec.20.2026.01.07.11.48.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 Jan 2026 11:48:26 -0800 (PST)
+From: "Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
+To: ukleinek@kernel.org
+Cc: g-praveen@ti.com,
+	j-keerthy@ti.com,
+	linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	n-francis@ti.com,
+	rafael.v.volkmer@gmail.com,
+	u-kumar1@ti.com
+Subject: Re: [PATCH v2] pwm: tiehrpwm: Enable EHRPWM controller before setting configuration
+Date: Wed,  7 Jan 2026 16:47:58 -0300
+Message-ID: <20260107194802.3917-1-rafael.v.volkmer@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <kkddrxw37dx7w6f6csomopcwz5xk2o7ezddrisfisij6lq46hf@ije72we4xrek>
+References: <kkddrxw37dx7w6f6csomopcwz5xk2o7ezddrisfisij6lq46hf@ije72we4xrek>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260107-clk-type-state-v3-2-77d3e3ee59c2@collabora.com>
-References: <20260107-clk-type-state-v3-0-77d3e3ee59c2@collabora.com>
-In-Reply-To: <20260107-clk-type-state-v3-0-77d3e3ee59c2@collabora.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>, 
- Viresh Kumar <viresh.kumar@linaro.org>, Danilo Krummrich <dakr@kernel.org>, 
- Alice Ryhl <aliceryhl@google.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Drew Fustini <fustini@kernel.org>, Guo Ren <guoren@kernel.org>, 
- Fu Wei <wefu@redhat.com>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
- Trevor Gross <tmgross@umich.edu>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, linux-riscv@lists.infradead.org, 
- linux-pwm@vger.kernel.org, linux-clk@vger.kernel.org, 
- rust-for-linux@vger.kernel.org, 
- Daniel Almeida <daniel.almeida@collabora.com>
-X-Mailer: b4 0.14.3
+Content-Transfer-Encoding: quoted-printable
 
-The clk API allows fine-grained control, but some drivers might be
-more interested in a "set and forget" API.
-
-Expand the current API to support this. The clock will automatically be
-disabled, unprepared and freed when the device is unbound from the bus
-without further intervention by the driver.
-
-Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
----
- rust/kernel/clk.rs | 43 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
-
-diff --git a/rust/kernel/clk.rs b/rust/kernel/clk.rs
-index 6323b40dc7ba..e840e7c20af7 100644
---- a/rust/kernel/clk.rs
-+++ b/rust/kernel/clk.rs
-@@ -95,6 +95,49 @@ impl Sealed for super::Prepared {}
-         impl Sealed for super::Enabled {}
-     }
- 
-+    /// Obtains and enables a [`devres`]-managed [`Clk`] for a bound device.
-+    ///
-+    /// [`devres`]: crate::devres::Devres
-+    pub fn devm_enable(dev: &Device<Bound>, name: Option<&CStr>) -> Result {
-+        let name = name.map_or(ptr::null(), |n| n.as_char_ptr());
-+
-+        // SAFETY: It is safe to call [`devm_clk_get_enabled`] with a valid
-+        // device pointer.
-+        from_err_ptr(unsafe { bindings::devm_clk_get_enabled(dev.as_raw(), name) })?;
-+        Ok(())
-+    }
-+
-+    /// Obtains and enables a [`devres`]-managed [`Clk`] for a bound device.
-+    ///
-+    /// This does not print any error messages if the clock is not found.
-+    ///
-+    /// [`devres`]: crate::devres::Devres
-+    pub fn devm_enable_optional(dev: &Device<Bound>, name: Option<&CStr>) -> Result {
-+        let name = name.map_or(ptr::null(), |n| n.as_char_ptr());
-+
-+        // SAFETY: It is safe to call [`devm_clk_get_optional_enabled`] with a
-+        // valid device pointer.
-+        from_err_ptr(unsafe { bindings::devm_clk_get_optional_enabled(dev.as_raw(), name) })?;
-+        Ok(())
-+    }
-+
-+    /// Same as [`devm_enable_optional`], but also sets the rate.
-+    pub fn devm_enable_optional_with_rate(
-+        dev: &Device,
-+        name: Option<&CStr>,
-+        rate: Hertz,
-+    ) -> Result {
-+        let name = name.map_or(ptr::null(), |n| n.as_char_ptr());
-+
-+        // SAFETY: It is safe to call
-+        // [`devm_clk_get_optional_enabled_with_rate`] with a valid device
-+        // pointer.
-+        from_err_ptr(unsafe {
-+            bindings::devm_clk_get_optional_enabled_with_rate(dev.as_raw(), name, rate.as_hz())
-+        })?;
-+        Ok(())
-+    }
-+
-     /// A trait representing the different states that a [`Clk`] can be in.
-     pub trait ClkState: private::Sealed {
-         /// Whether the clock should be disabled when dropped.
-
--- 
-2.52.0
-
+Hi Uwe, Gokul,=0D
+=0D
+Thanks for CC'ing me on this thread.=0D
+=0D
+On 07/01/26 15:21, Uwe Kleine-K=C3=B6nig wrote:=0D
+> Hello,=0D
+> =0D
+> adding Rafael to Cc: who sent a patch series for this driver that I=0D
+> didn't come around to review yet. Given that neither he nor me noticed=0D
+> the problem addressed in this patch I wonder if it applies to all=0D
+> hardware variants.=0D
+>=0D
+=0D
+I also didn't observe the issue described here in my testing: duty cycle an=
+d=0D
+period changes always appeared to take effect as expected.=0D
+=0D
+My tests were done on an AM623 EVM.=0D
+=0D
+One possible explanation is that my test flow mostly exercised configuratio=
+n=0D
+while the PWM was already enabled/active, which could mask the effect of a=
+=0D
+put_sync/reset happening after configuration.=0D
+=0D
+Regarding my pending patch series for this driver: it should not =0D
+conflict this change, as it's largely preparatory refactoring for a =0D
+follow-up series.=0D
+=0D
+Best regards,=0D
+Rafael V. Volkmer=0D
 
