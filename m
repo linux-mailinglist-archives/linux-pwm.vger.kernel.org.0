@@ -1,152 +1,136 @@
-Return-Path: <linux-pwm+bounces-7867-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7869-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C88DACFE7F9
-	for <lists+linux-pwm@lfdr.de>; Wed, 07 Jan 2026 16:12:27 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id E26AACFEE67
+	for <lists+linux-pwm@lfdr.de>; Wed, 07 Jan 2026 17:36:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 615923039283
-	for <lists+linux-pwm@lfdr.de>; Wed,  7 Jan 2026 15:10:24 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C246134139CF
+	for <lists+linux-pwm@lfdr.de>; Wed,  7 Jan 2026 16:16:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15CF4364E9E;
-	Wed,  7 Jan 2026 15:10:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B4C33446A4;
+	Wed,  7 Jan 2026 16:06:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="Ns//fbuH"
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="KziO1atL"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from bali.collaboradmins.com (bali.collaboradmins.com [148.251.105.195])
+Received: from mail-06.mail-europe.com (mail-06.mail-europe.com [85.9.210.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2944036403A;
-	Wed,  7 Jan 2026 15:10:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.251.105.195
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2DBB346FD7
+	for <linux-pwm@vger.kernel.org>; Wed,  7 Jan 2026 16:06:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.9.210.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767798617; cv=none; b=ngBuqc4R6NHFPiIMHJgNYeM6mwJ/VB8fy7jtk4lsKFQZJfmtMsDwZrrD2XdSuo9hPpoi+0RPyegLhnj3vNwqrPUzt08J94g0AYgz06fPr0qKFZ2NGNhaU3KdEIA0oPLZuuo9eZUC/L8aPnT2TXMeFNhHdg98EKZsIAcYdvu1uBQ=
+	t=1767801981; cv=none; b=oS2nBz6voZAoY5n/+shoSzF5YY+BpnNQIz6pHnUZ0STGDUAF7hbZz6L0yxy2HDd+0s1l6B9SXx8CPXyLPSDkfzoYR14k1lcsVHfQrvooIfNFAHQmUnIqR2iVLzFLzIgNEHvZAltDyPUaLirPg53Pive2CQX8+d0tksxCmFLlkHo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767798617; c=relaxed/simple;
-	bh=ruLJwy622onfjhp6xw4ADLI848biIUuAYSyoTpnglgk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EXZU1um8PsGdkyqdrILpaLcRPp3tqKVoBLLPBgBiqz8rynZICKJBWf+IULPFXTtFitF1KxMZYoWVg7O/20Dk7VvE4D5+zK3yBG8jRtKmJKR4QyPV3BQLp4VHwDgMETTU+QYTHiHR9nrprEemY6gTLpJIlBFk/HyzEeFtOI5TVBQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=Ns//fbuH; arc=none smtp.client-ip=148.251.105.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1767798613;
-	bh=ruLJwy622onfjhp6xw4ADLI848biIUuAYSyoTpnglgk=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Ns//fbuHmUm/HgngBvDsWHryUZciMHDGToh4HmqboY21nv7PgA6YRLVzqwc/ussOs
-	 ZQP3qHnEY7LqDX37RDggfwg/Ml0FDGY0sMDUIiqk025dyeZ/kBFFdFq1l/kvUm0b5r
-	 WXGEzLK7OW0bpfwKe3UVLwAfAsO6VZFPBNuX15y7DalJk+OIispsFWxNJqFoIgCif8
-	 5BkFdTvV+ZVCAekmzuVxH/MuWSigA7mpmnDmERHcXxWk+noVZu12+Q28ujpxY4BxnW
-	 pfNz18biBjrIzEvESliCT7I1uNocZbY439hV4UveGeKp3PvIvaxLxcSIUtDiznvijR
-	 6j8wQDyLu0zfA==
-Received: from [192.168.0.79] (unknown [IPv6:2804:14d:72b4:81ae:67c:16ff:fe57:b5a3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: dwlsalmeida)
-	by bali.collaboradmins.com (Postfix) with ESMTPSA id 2D03E17E1534;
-	Wed,  7 Jan 2026 16:10:09 +0100 (CET)
-From: Daniel Almeida <daniel.almeida@collabora.com>
-Date: Wed, 07 Jan 2026 12:09:54 -0300
-Subject: [PATCH v3 3/3] rust: clk: use 'kernel vertical style' for imports
+	s=arc-20240116; t=1767801981; c=relaxed/simple;
+	bh=7OFNQcA6uqsXEiUwn5GUpmW7VKSRsWQTmn01vKNV7H0=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NneXNuVjN/RmQUg/cQSCOO/qqEKLNPTZc0Cf0b1dW7L1MU0bqQoQXl0b51RdrUsJ2RzTYxUon/d20Vp8nG2vxzuJeVg+hyrLalcu+KaVJ8rMS/wQtg11Bfi+8RqMS46BX1xiE7tcEiBqLZkyoc75OldVw6HL0qOaFksXeH0zVac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=KziO1atL; arc=none smtp.client-ip=85.9.210.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=geanix.com;
+	s=protonmail2; t=1767801959; x=1768061159;
+	bh=3g3VrAehq1DtdyJEabqqf3fDXyycbpVTX+V8NEpPD+w=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=KziO1atL1h1acJHJ/nknbCs7ObEO1ICTzusYp85opcS3th6hdnJOb1o4kr0TijZCW
+	 gkhu7tFC8I7wgheAOzmlMPheEO3Vn+u63B2Cnp/yXsw6rQNg0wJb6BNYtc3uHZIWsL
+	 AaxXJS008BZ//21a/Gnj6s0FxhPv2f7lwd5eFndRSDdDpI2VSkakvsqplsOlIHikut
+	 B5ryQdmRlp1cJ0MAG5WuAAQQneDWMIj4OAPUenerwhgDyj8OIpbDJHEXgMW6CY3VWt
+	 JF0d4fK0d0qnlJGeqT3/pEwO8waDmIg8sXCwTJBRZ3lFc8G+qzAAnv8dcjiTbTzh5H
+	 vFaIwAf3sTkGw==
+Date: Wed, 07 Jan 2026 16:05:56 +0000
+To: =?utf-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+From: Sean Nyekjaer <sean@geanix.com>
+Cc: Fabrice Gasnier <fabrice.gasnier@foss.st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, linux-pwm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] pwm: stm32: handle polarity change when PWM is enabled
+Message-ID: <fwaodg2ovh7j47ifwjhgeppxs3oiqht5ecbs7bmfbi7j6djejs@shwokpcmutr3>
+In-Reply-To: <nwhixocvhii27jvcyg7ex5emewntgfhyxa4ds5vo2dphe7xfe4@ibjsjdd5fgmn>
+References: <20260106-stm32-pwm-v1-1-33e9e8a9fc33@geanix.com> <kemjjoyrhqglqq4p2j6kygspevq2mdbiujtnksw4rkdapoqcfy@zte2c7fhqvn3> <2e2iahbzcepbzwgk7xeta2afxmycfjgv2zofzngqjvp4on46r2@mzpi4bz4uqie> <nwhixocvhii27jvcyg7ex5emewntgfhyxa4ds5vo2dphe7xfe4@ibjsjdd5fgmn>
+Feedback-ID: 134068486:user:proton
+X-Pm-Message-ID: 57d8dde4371b846314f7e2b8b867b714e4f3c48f
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260107-clk-type-state-v3-3-77d3e3ee59c2@collabora.com>
-References: <20260107-clk-type-state-v3-0-77d3e3ee59c2@collabora.com>
-In-Reply-To: <20260107-clk-type-state-v3-0-77d3e3ee59c2@collabora.com>
-To: "Rafael J. Wysocki" <rafael@kernel.org>, 
- Viresh Kumar <viresh.kumar@linaro.org>, Danilo Krummrich <dakr@kernel.org>, 
- Alice Ryhl <aliceryhl@google.com>, 
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
- Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
- David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
- Drew Fustini <fustini@kernel.org>, Guo Ren <guoren@kernel.org>, 
- Fu Wei <wefu@redhat.com>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Michael Turquette <mturquette@baylibre.com>, 
- Stephen Boyd <sboyd@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
- Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
- Trevor Gross <tmgross@umich.edu>
-Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
- dri-devel@lists.freedesktop.org, linux-riscv@lists.infradead.org, 
- linux-pwm@vger.kernel.org, linux-clk@vger.kernel.org, 
- rust-for-linux@vger.kernel.org, 
- Daniel Almeida <daniel.almeida@collabora.com>
-X-Mailer: b4 0.14.3
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Convert all imports to use the new import style. This will make it easier
-to land new changes in the future.
+Hi Uwe,
 
-No change of functionality implied.
+On Wed, Jan 07, 2026 at 04:54:46PM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> Hey Sean,
+>=20
+> On Tue, Jan 06, 2026 at 11:30:34AM +0000, Sean Nyekjaer wrote:
+> > On Tue, Jan 06, 2026 at 11:22:57AM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> > > On Tue, Jan 06, 2026 at 08:01:57AM +0100, Sean Nyekjaer wrote:
+> > > > After commit 7346e7a058a2 ("pwm: stm32: Always do lazy disabling"),
+> > > > polarity changes are ignored. Updates to the TIMx_CCER CCxP bits ar=
+e
+> > > > ignored by the hardware when the master output is enabled via the
+> > > > TIMx_BDTR MOE bit.
+> > > [...]
+> > > I have hardware using this driver, will set it up later this week for
+> > > testing.
+> >=20
+> > Very cool, looking forward to hear if you can re-produce.
+>=20
+> I cannot. I have:
+>=20
+> =09# uname -r
+> =096.11.0-rc1-00028-geb18504ca5cf-dirty
+>=20
+> (the -dirty is only from enabling the pwm for my machine, no driver
+> changes)
+>=20
+> =09# cat /sys/kernel/debug/pwm
+> =090: platform/40001000.timer:pwm, 4 PWM devices
+> =09...
+> =09 pwm-3   (sysfs               ): requested enabled period: 313720 ns d=
+uty: 10000 ns polarity: normal
+>=20
+> and pulseview/sigrok detects 3.187251% with a period of 313.8 =C2=B5s.
+>=20
+> After
+>=20
+> =09echo inversed > /sys/class/pwm/pwmchip0/pwm3/polarity
+>=20
+> the output changes to
+>=20
+> =09# cat /sys/kernel/debug/pwm
+> =090: platform/40001000.timer:pwm, 4 PWM devices
+> =09...
+> =09 pwm-3   (sysfs               ): requested enabled period: 313720 ns d=
+uty: 10000 ns polarity: inverse
+>=20
+> and pulseview/sigrok claims 96.812749% with a period of 313.8 =C2=B5s.
+> So the polarity change happend as expected.
+>=20
+> This is on an st,stm32mp135f-dk board.
+>=20
+> Where is the difference to your observations?
+>=20
 
-Link: https://docs.kernel.org/rust/coding-guidelines.html#imports
-Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
----
- rust/kernel/clk.rs | 32 ++++++++++++++++++++++++++------
- 1 file changed, 26 insertions(+), 6 deletions(-)
+Thanks for taking a look!
+I'm using the PWM for a backlight. With this [0] in my dts:
 
-diff --git a/rust/kernel/clk.rs b/rust/kernel/clk.rs
-index e840e7c20af7..73a2b51414a1 100644
---- a/rust/kernel/clk.rs
-+++ b/rust/kernel/clk.rs
-@@ -80,12 +80,23 @@ fn from(freq: Hertz) -> Self {
- mod common_clk {
-     use super::Hertz;
-     use crate::{
--        device::{Bound, Device},
--        error::{from_err_ptr, to_result, Result},
--        prelude::*,
-+        device::{
-+            Bound,
-+            Device, //
-+        },
-+        error::{
-+            from_err_ptr,
-+            to_result,
-+            Result, //
-+        },
-+        prelude::*, //
-     };
- 
--    use core::{marker::PhantomData, mem::ManuallyDrop, ptr};
-+    use core::{
-+        marker::PhantomData,
-+        mem::ManuallyDrop,
-+        ptr, //
-+    };
- 
-     mod private {
-         pub trait Sealed {}
-@@ -216,8 +227,17 @@ pub struct Error<State: ClkState> {
-     ///
-     /// ```
-     /// use kernel::c_str;
--    /// use kernel::clk::{Clk, Enabled, Hertz, Unprepared, Prepared};
--    /// use kernel::device::{Bound, Device};
-+    /// use kernel::clk::{
-+    ///     Clk,
-+    ///     Enabled,
-+    ///     Hertz,
-+    ///     Prepared,
-+    ///     Unprepared, //
-+    /// };
-+    /// use kernel::device::{
-+    ///     Bound,
-+    ///     Device, //
-+    /// };
-     /// use kernel::error::Result;
-     ///
-     /// fn configure_clk(dev: &Device<Bound>) -> Result {
+[0]:
+=09backlight: backlight {
+=09=09compatible =3D "pwm-backlight";
+=09=09pwms =3D <&pwm4 0 125000 PWM_POLARITY_INVERTED>;
+=09=09brightness-levels =3D <102 235 255>;
+=09=09default-brightness-level =3D <80>;
+=09=09num-interpolated-steps =3D <100>;
+=09=09enable-gpios =3D <&gpiof 12 GPIO_ACTIVE_LOW>;
+=09status =3D "okay";
+=09};
 
--- 
-2.52.0
+Maybe that is doing something differently.
+
+/Sean
 
 
