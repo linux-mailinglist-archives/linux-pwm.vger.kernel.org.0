@@ -1,204 +1,218 @@
-Return-Path: <linux-pwm+bounces-7873-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7874-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 36015D01437
-	for <lists+linux-pwm@lfdr.de>; Thu, 08 Jan 2026 07:42:26 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6B269D01461
+	for <lists+linux-pwm@lfdr.de>; Thu, 08 Jan 2026 07:44:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3E251302D5C2
-	for <lists+linux-pwm@lfdr.de>; Thu,  8 Jan 2026 06:41:03 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 6E7403000189
+	for <lists+linux-pwm@lfdr.de>; Thu,  8 Jan 2026 06:44:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F05BB33CE86;
-	Thu,  8 Jan 2026 06:41:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD53F33E369;
+	Thu,  8 Jan 2026 06:44:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="A/F7swDf"
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="e5KrIPDz"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azhn15010055.outbound.protection.outlook.com [52.102.136.55])
+Received: from mail-4323.protonmail.ch (mail-4323.protonmail.ch [185.70.43.23])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B160F2620DE;
-	Thu,  8 Jan 2026 06:40:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.102.136.55
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767854461; cv=fail; b=YhbzX9eBIRKkdRo1VNpnt3cuLr5Q3nmSP7aTGhenfD47ESmZHx8Df7J4uzWwqlkLB5V70rYWUg3vceL8yic/Aggv74rQUH8vJpAwHEv7xlUSUY/QeUSer6ethOzK047UMxZuc6ruEsWGhXmqVJYBG+tUJBShugdoyq2n0eeLEXc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767854461; c=relaxed/simple;
-	bh=+PHcCdHD4CUWnAQL5R134g9H9JpKByIaQmNv8K2usNI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=mW4pwmqBAPHz7b6JcK/DAhPU34LWeBMicoF4rIY8GM15a7KvEQVD16fZrAU1NkEXRxaO+bxzutdP4h8RYgL8oMFP+dNHbBvAmu6qVTLfOkSURlwNj4nYWEWwDf/E+3YN6o1/l4bUtQSbIU41hNnrtnxOYI/mmYrNb53HCY0mFdo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=A/F7swDf; arc=fail smtp.client-ip=52.102.136.55
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=HRjY5yLJlpgVdtwzpDNDRcMVIFexKGq930D+uxG0s8YelhtIphwmmvaPxTQskBoL+Fy+1QIsMcBxdf5mMmgJ93qNBFSycpjLgehmH/lEeXk9hxm2xo9dxJZUGdIk4rFiTBuwBm3Jj0Wrv8nVuirJRHjpGf2PQLVmfZ3jwrkpBtq+Lac57+k3wEEMcraEhW9E3e0Qv7Jmby533KcuaV2U9T13UCBcIWtWjhOeIm4LwUm/NO7xrVl6vpU2u0kh3zaE6cbdyKqWdvLQyoccRSaHrcXIiDKXwT/uWeYvp/DVbJgEp9vy7U1jUCNb9Oy45+/8j5zXdrLQqpPE+dptRG6h9A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=NYDYT0vUFsASXvqs6ccbOcppzq4m1xMcZdQPCaZF96k=;
- b=BYJ+jcV2G+EC6fUsEcEnbKS2IKwTlFINx1zVpapwwJE5ox6XUl0udQe6B3ZdpWeZHSAV8lb/P5Jea1a2OKufylopgz4e/wm7D2IrdVQ12mL74bpiCCl5hF01pJfeKLoWYuJCcTmp5RW2SJWQLXpZnkQwwULHkarJebytqJvDUgBLjlp33kxB+0DN4jL973TtsgElXDtHRcHNFZ5B8RFImZbEbCZHl4eGDGhQuzLY8/N/NHzwjXgh3dSAV4bsS4yAFcLKgq46ljRKuE1yamz/6zBpy4ltyJajVJ2cix6JMzDHUiAYzVZbNH0JzZJWeaiPV78R/61fMi8sgYnVq7xFng==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 198.47.23.194) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=ti.com;
- dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=ti.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=NYDYT0vUFsASXvqs6ccbOcppzq4m1xMcZdQPCaZF96k=;
- b=A/F7swDfPSiFDoqGPQxoG6BCRzcdKZle4JyBlWnD5LRlmcXC8FnxgaCykOz/1mFA/xlR+ows6b4upt3jSXreNeP6XL8b1Sga4HHvSCNq7Du1rBR2yZbY7UwdzvSyD6ttPazQ9+CNjjJFTbUZ97H5qGseG9i/UGFl2EapYeohMIc=
-Received: from PH7P220CA0127.NAMP220.PROD.OUTLOOK.COM (2603:10b6:510:327::7)
- by MW5PR10MB5873.namprd10.prod.outlook.com (2603:10b6:303:19b::16) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9478.4; Thu, 8 Jan
- 2026 06:40:48 +0000
-Received: from CO1PEPF000044FC.namprd21.prod.outlook.com
- (2603:10b6:510:327:cafe::18) by PH7P220CA0127.outlook.office365.com
- (2603:10b6:510:327::7) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9499.3 via Frontend Transport; Thu, 8
- Jan 2026 06:40:45 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.23.194)
- smtp.mailfrom=ti.com; dkim=none (message not signed) header.d=none;dmarc=pass
- action=none header.from=ti.com;
-Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
- 198.47.23.194 as permitted sender) receiver=protection.outlook.com;
- client-ip=198.47.23.194; helo=lewvzet200.ext.ti.com; pr=C
-Received: from lewvzet200.ext.ti.com (198.47.23.194) by
- CO1PEPF000044FC.mail.protection.outlook.com (10.167.241.202) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9520.0 via Frontend Transport; Thu, 8 Jan 2026 06:40:45 +0000
-Received: from DLEE202.ent.ti.com (157.170.170.77) by lewvzet200.ext.ti.com
- (10.4.14.103) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Thu, 8 Jan
- 2026 00:40:38 -0600
-Received: from DLEE210.ent.ti.com (157.170.170.112) by DLEE202.ent.ti.com
- (157.170.170.77) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Thu, 8 Jan
- 2026 00:40:38 -0600
-Received: from lelvem-mr06.itg.ti.com (10.180.75.8) by DLEE210.ent.ti.com
- (157.170.170.112) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
- Transport; Thu, 8 Jan 2026 00:40:38 -0600
-Received: from [172.24.233.104] (a0507176-hp-z2-tower-g9-workstation-desktop-pc.dhcp.ti.com [172.24.233.104])
-	by lelvem-mr06.itg.ti.com (8.18.1/8.18.1) with ESMTP id 6086eZ5I1923924;
-	Thu, 8 Jan 2026 00:40:36 -0600
-Message-ID: <60da27d5-5d85-4fbe-9b18-b7e74f9ab893@ti.com>
-Date: Thu, 8 Jan 2026 12:10:35 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22F1225F99F;
+	Thu,  8 Jan 2026 06:44:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.70.43.23
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1767854662; cv=none; b=cXf4JXXRP0LGK0HHEVPgPrMkS3trBupIm/aWNc1oAjFjlIfF5KgBW92lR3JgX1UJgDFHB4N2rF+QDHtmZCorPk25Hk/npvB4Jht0V/Ce+mel9FQtHmsg0/7HgRv7aPA0jYCyD2QdM4IR1FNgoy+s92lWckcan/UMvbDqQQcFNI8=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1767854662; c=relaxed/simple;
+	bh=YoLFn32Xw+uftb+RucH5H8d09ERQBdftmuXlOIqVMpA=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PTq0Dmc5HF7+EpyI65DohuYhkQoRRnS8OWlU+mdSgxNEycM0hHJ+X7JiolrI4S8AT7tAh3fgm6F63R51Fq3jM6fTD7pFA6KjcTA2gIqtUhqnaH7cK6NroyuRPVbCvAXF1jB2iQ8fGOMUi0knsaIXk2OYSO8eHpr3HLztm4J2A0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=e5KrIPDz; arc=none smtp.client-ip=185.70.43.23
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=geanix.com;
+	s=protonmail2; t=1767854649; x=1768113849;
+	bh=JvbqfdE84s/Q3OOhKk+KWzNYUT7BCFUTKaN5MZ+iwW8=;
+	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
+	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
+	 Message-ID:BIMI-Selector;
+	b=e5KrIPDzjg1eSWFaPCAMJbQZi9QV6uXXbAp8JUNHoExGxRVbZYfPic5fG1Stk+ety
+	 UglMdcOOJzCoJhMUgZm9hviKfZl3fGbI9RWfijo6ADEua7tzieJTcJ1tEbJcQUAzWH
+	 EkQlM+nAIari9yZuVeKSy6NK1iDvyruNab0gvzuqy+QJiQknsoen5KM5UmFhnc5oPh
+	 CugkPCSuozE+CMdPaeCodhQ4SfuqaPLyya41H1JmE0W7kDRrhYFAX8uOLS2JarTlBF
+	 xV1cyBCoyVEQbwNblQZBlFLihg+w/3mJAMR61vodMHj/+FsiTqZIjZZVXH+ju+oUtf
+	 Aw5U8tsJUWdKA==
+Date: Thu, 08 Jan 2026 06:44:06 +0000
+To: =?utf-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+From: Sean Nyekjaer <sean@geanix.com>
+Cc: Fabrice Gasnier <fabrice.gasnier@foss.st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, linux-pwm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] pwm: stm32: handle polarity change when PWM is enabled
+Message-ID: <paj3uf6apunonvfz2w2anqmddivjrofmfo5wktygz4r6l7diqf@7gen7gjgyuar>
+In-Reply-To: <zj2vpruzoeyvyyzxiqcffajyhpmem4q75l6gzgxd4jgaizhrdq@bxuudn4kyvr3>
+References: <20260106-stm32-pwm-v1-1-33e9e8a9fc33@geanix.com> <kemjjoyrhqglqq4p2j6kygspevq2mdbiujtnksw4rkdapoqcfy@zte2c7fhqvn3> <2e2iahbzcepbzwgk7xeta2afxmycfjgv2zofzngqjvp4on46r2@mzpi4bz4uqie> <nwhixocvhii27jvcyg7ex5emewntgfhyxa4ds5vo2dphe7xfe4@ibjsjdd5fgmn> <fwaodg2ovh7j47ifwjhgeppxs3oiqht5ecbs7bmfbi7j6djejs@shwokpcmutr3> <zj2vpruzoeyvyyzxiqcffajyhpmem4q75l6gzgxd4jgaizhrdq@bxuudn4kyvr3>
+Feedback-ID: 134068486:user:proton
+X-Pm-Message-ID: 014263d0e98d319b81f8ce02eec1a63633eddc36
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2] pwm: tiehrpwm: Enable EHRPWM controller before setting
- configuration
-To: "Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>, <ukleinek@kernel.org>
-CC: <j-keerthy@ti.com>, <linux-kernel@vger.kernel.org>,
-	<linux-pwm@vger.kernel.org>, <n-francis@ti.com>, <u-kumar1@ti.com>, "Gokul
- Praveen" <g-praveen@ti.com>
-References: <kkddrxw37dx7w6f6csomopcwz5xk2o7ezddrisfisij6lq46hf@ije72we4xrek>
- <20260107194802.3917-1-rafael.v.volkmer@gmail.com>
-Content-Language: en-US
-From: Gokul Praveen <g-praveen@ti.com>
-In-Reply-To: <20260107194802.3917-1-rafael.v.volkmer@gmail.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: CO1PEPF000044FC:EE_|MW5PR10MB5873:EE_
-X-MS-Office365-Filtering-Correlation-Id: 0871842b-03ff-431b-f9d3-08de4e80d9e7
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|82310400026|34070700014|376014|34020700016|36860700013|1800799024|12100799066;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?amNMYjBQY2JnSHJ2Wisvb0FNblNiaHA1aE5wc3Z6a2Jhb1ZxcEtjM295Sm14?=
- =?utf-8?B?cEJKblg3VDlmbXM0VGk5TVhMWEdwbmlnbFBhQncvMkRLSEYrdzlUVlVvQldE?=
- =?utf-8?B?dFpLVmdRUjByMWNuRUFrTnljZzRVcmU0MVRIQ2tRTGRRT2Y5U043QWxuTnBz?=
- =?utf-8?B?NGY5MjZlZHBiRW1uWDhrb1I5VWlDZE5HNkozYW1pQUJ1dDdBV3pQOGd5ZFNv?=
- =?utf-8?B?N3RBTkx4a25rdnI4NU10aHJDd0o3T3ZFT00velZabzhaS1FoSUIxRUIxd05q?=
- =?utf-8?B?dk0yaFNtNFZTck1CNXgyeE01ekpOTXM1cm5kQm01RVI1TFJIaHZzNEowblBs?=
- =?utf-8?B?b0NsYlhYSXBDeDJVOEdLaGdsNzVjNEtrblg4ZzZOeGw0T05zRXpSN3h4N0Nv?=
- =?utf-8?B?SlhjM0VKVFlqOFpIYlhQbWxXOWVFdDBaZ21hUWVrRFMybDFJNGFEMWZHcEdk?=
- =?utf-8?B?cWIrbVRsQnJpMUU5eElOY0hxeW5NY05UalJ3MlpHM2ZQeTgycWl1YjBadDQ4?=
- =?utf-8?B?REx5cU0wcmQyUVd1QnZ6ZWRLVExqTjR3K1J0a3hFaGR5MVlEVmRXY3JjT1Yv?=
- =?utf-8?B?Y2ZCS1JpM3UxSUpvWHRwY1NHQXFYRUJYbnBsUzA1UjZlSHBiN2dHdHp1R3o0?=
- =?utf-8?B?VExvSFdwYVdpRDJLMFVCZktOQlE3VVZFZDhnMDRZOG9UQjFoQjFNNkh2RUZ6?=
- =?utf-8?B?cUlrNzZtbTRsOWRvdW5sRElpODZianFNQkhnSnFvVStra0prYlk0QmxZMm04?=
- =?utf-8?B?cVdXekUvVHRwOTBqRUJBd2cyUDhuZFlqanFsVDNwcEswUit6ZW5TT0ZEUTVI?=
- =?utf-8?B?Z2h3azBIanJtSG03T1FFSXMvMTh3SjM5b2lXeDA4SGJJeW9jdk9aam42WmdW?=
- =?utf-8?B?MmRReDVobHlXa05HMjlVMkRLbVI5Q2xsUjFQN0VRS291ekpUZ2NnSXExaGdH?=
- =?utf-8?B?cW9aWGlCL0xnbFBENmF6N0hQOUNiYVJ3WU51MkE3ajdTb29nT3BkVVhRWkpn?=
- =?utf-8?B?TnBBdE93TVhpemlSNVI0WmtJU0pud0tUYk00OFp6d3BvaFZFQnlpeFM5T0hZ?=
- =?utf-8?B?WGx3YXd6YkJ2ejNJQzRrNGZsT2Y1TVhyejk3bW55SmlhdVEwN1lMVUUyT2F4?=
- =?utf-8?B?aWs0V0ZtOWMwSzRZY1dyaXRXVWFrY21vS0ZkZkMzeHhkNnVuNk1GS25ZaHVk?=
- =?utf-8?B?d0NmK24xUklGeXZsZkRocnJ4b3RRRkVrOWxXVWVmbWFOZU1tOVFQdjFOdGR2?=
- =?utf-8?B?UlQ3VWpqeUI3aFFkWHQ2cnliY3VrdG1vRUw2V09hc2cvV3ZacWtIQVQxWWdJ?=
- =?utf-8?B?WGhpbzBHS3hoKzhnUGtsUlFGemxpVW5zYlJtNDhKOTRNRkowcDNPNk50Z0pt?=
- =?utf-8?B?c0ZxbjBOU2pKcGJrMEgwSXA5MUdOakpzRXNaVmw4aGVQVnpqYnRobTVJazF4?=
- =?utf-8?B?S2pjVHVaUlRDalRLZmlLTDRPaWVyUEFOcmhwNUkvY25JRzZFc3IzOGNrRU5l?=
- =?utf-8?B?ajdBODJkUkxDekYyVUYvd0tMUytVUWdUbzNHY004NXRrQ0c0RkNJRUd5c29T?=
- =?utf-8?B?R0FLdU5tUjB3WXN2Y1Zkc1hodEJ1OFlnbzROeTRXa2ZCYXMyWkVqMWtYcU00?=
- =?utf-8?B?RXRlNk5jUmlqY3FTenJ2MzdGVVRjaVBBVTBUdGlCcnRlTWMzYy9LMzIxSksr?=
- =?utf-8?B?UzBGdHZiRlA3SG11RGlEbVBlQm1IcEZRbzBmLzUvaGZhOFRKV1NEQ2QrVzZC?=
- =?utf-8?B?L3k0VnRnSHIzQnh3L3ZVekt4ZXlxaDl6aTJ3YlE4RnpmN3lZQzVqVGhBQytJ?=
- =?utf-8?B?R0FieGFrRFhiQmVaTWQ5Z1E3OEVNZTU4WjFwY2tNUFBBVmV1d1R5ZGpCYlky?=
- =?utf-8?B?d1lGTXZjUXJNTHlHcW1jZUZzMlJiejRqOVV0TXBZZUtOQkhhanA5WGlHcGdm?=
- =?utf-8?B?QWZVdkRrMjI1eUF1YnF2d1g3bmFBQjlmY1pCT1VZUWJsTi8zN1owZ1N5dE9s?=
- =?utf-8?B?aWJoeVRpdVRRWGdBWHhYamVva2hxV0NzNTZmcDJZZ3BHNmllNy9qSThnRTNt?=
- =?utf-8?B?V3lzdjBKallnL1hSYkZsNUJDYXdXNnJHMTNOL2w0MGx5elhheTlFQXZJUThI?=
- =?utf-8?Q?uUI4=3D?=
-X-Forefront-Antispam-Report:
-	CIP:198.47.23.194;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:lewvzet200.ext.ti.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(82310400026)(34070700014)(376014)(34020700016)(36860700013)(1800799024)(12100799066);DIR:OUT;SFP:1501;
-X-OriginatorOrg: ti.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jan 2026 06:40:45.0971
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0871842b-03ff-431b-f9d3-08de4e80d9e7
-X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.23.194];Helo=[lewvzet200.ext.ti.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	CO1PEPF000044FC.namprd21.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MW5PR10MB5873
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Rafael,
+Hi Uwe,
 
-On 08/01/26 01:17, Rafael V. Volkmer wrote:
-> Hi Uwe, Gokul,
-> 
-> Thanks for CC'ing me on this thread.
-> 
-> On 07/01/26 15:21, Uwe Kleine-König wrote:
->> Hello,
->>
->> adding Rafael to Cc: who sent a patch series for this driver that I
->> didn't come around to review yet. Given that neither he nor me noticed
->> the problem addressed in this patch I wonder if it applies to all
->> hardware variants.
->>
-> 
-> I also didn't observe the issue described here in my testing: duty cycle and
-> period changes always appeared to take effect as expected.
-> 
-> My tests were done on an AM623 EVM.
-> 
-> One possible explanation is that my test flow mostly exercised configuration
-> while the PWM was already enabled/active, which could mask the effect of a
-> put_sync/reset happening after configuration.
-> 
+On Thu, Jan 08, 2026 at 07:05:15AM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> On Wed, Jan 07, 2026 at 04:05:56PM +0000, Sean Nyekjaer wrote:
+> > On Wed, Jan 07, 2026 at 04:54:46PM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> > > On Tue, Jan 06, 2026 at 11:30:34AM +0000, Sean Nyekjaer wrote:
+> > > > On Tue, Jan 06, 2026 at 11:22:57AM +0100, Uwe Kleine-K=C3=B6nig wro=
+te:
+> > > > > On Tue, Jan 06, 2026 at 08:01:57AM +0100, Sean Nyekjaer wrote:
+> > > > > > After commit 7346e7a058a2 ("pwm: stm32: Always do lazy disablin=
+g"),
+> > > > > > polarity changes are ignored. Updates to the TIMx_CCER CCxP bit=
+s are
+> > > > > > ignored by the hardware when the master output is enabled via t=
+he
+> > > > > > TIMx_BDTR MOE bit.
+> > > > > [...]
+> > > > > I have hardware using this driver, will set it up later this week=
+ for
+> > > > > testing.
+> > > >=20
+> > > > Very cool, looking forward to hear if you can re-produce.
+> > >=20
+> > > I cannot. I have:
+> > >=20
+> > > =09# uname -r
+> > > =096.11.0-rc1-00028-geb18504ca5cf-dirty
+> > >=20
+> > > (the -dirty is only from enabling the pwm for my machine, no driver
+> > > changes)
+> > >=20
+> > > =09# cat /sys/kernel/debug/pwm
+> > > =090: platform/40001000.timer:pwm, 4 PWM devices
+> > > =09...
+> > > =09 pwm-3   (sysfs               ): requested enabled period: 313720 =
+ns duty: 10000 ns polarity: normal
+> > >=20
+> > > and pulseview/sigrok detects 3.187251% with a period of 313.8 =C2=
+=B5s.
+> > >=20
+> > > After
+> > >=20
+> > > =09echo inversed > /sys/class/pwm/pwmchip0/pwm3/polarity
+> > >=20
+> > > the output changes to
+> > >=20
+> > > =09# cat /sys/kernel/debug/pwm
+> > > =090: platform/40001000.timer:pwm, 4 PWM devices
+> > > =09...
+> > > =09 pwm-3   (sysfs               ): requested enabled period: 313720 =
+ns duty: 10000 ns polarity: inverse
+> > >=20
+> > > and pulseview/sigrok claims 96.812749% with a period of 313.8 =C2=
+=B5s.
+> > > So the polarity change happend as expected.
+> > >=20
+> > > This is on an st,stm32mp135f-dk board.
+> > >=20
+> > > Where is the difference to your observations?
+> > >=20
+> >=20
+> > Thanks for taking a look!
+> > I'm using the PWM for a backlight. With this [0] in my dts:
+> >=20
+> > [0]:
+> > =09backlight: backlight {
+> > =09=09compatible =3D "pwm-backlight";
+> > =09=09pwms =3D <&pwm4 0 125000 PWM_POLARITY_INVERTED>;
+> > =09=09brightness-levels =3D <102 235 255>;
+> > =09=09default-brightness-level =3D <80>;
+> > =09=09num-interpolated-steps =3D <100>;
+> > =09=09enable-gpios =3D <&gpiof 12 GPIO_ACTIVE_LOW>;
+> > =09status =3D "okay";
+> > =09};
+> >=20
+> > Maybe that is doing something differently.
+>=20
+> What is the actual problem you have? I assume it's the backlight being
+> off after boot? Does it start working if you disable and reenable?
 
-Yes, this is the reason why the configuration was taking effect for you 
-, Rafael, as the PWM was already enabled when setting the configuration 
-hence masking the effect of a put_sync/reset happening after configuration.
+Yes, no backlight at default brightness. But the range is inverted so a low=
+ brightness
+setting i get maximum brightness.
+No, it never enters stm32_pwm_set_polarity().
 
-Best Regards
-Gokul Praveen
+>=20
+> Can you please boot with
+>=20
+> =09trace_event=3Dpwm
+>=20
+> on the command line and provide /sys/kernel/debug/tracing/trace from
+> after the problem happend?
 
-> Regarding my pending patch series for this driver: it should not
-> conflict this change, as it's largely preparatory refactoring for a
-> follow-up series.
-> 
-> Best regards,
-> Rafael V. Volkmer
+Tracing output is the same before and after this patch:
+# tracer: nop
+#
+# entries-in-buffer/entries-written: 2/2   #P:2
+#
+#                                _-----=3D> irqs-off/BH-disabled
+#                               / _----=3D> need-resched
+#                              | / _---=3D> hardirq/softirq
+#                              || / _--=3D> preempt-depth
+#                              ||| / _-=3D> migrate-disable
+#                              |||| /     delay
+#           TASK-PID     CPU#  |||||  TIMESTAMP  FUNCTION
+#              | |         |   |||||     |         |
+    kworker/u5:0-24      [000] .....     1.867389: pwm_apply: 482f1c0e: per=
+iod=3D125000 duty_cycle=3D0 polarity=3D1 enabled=3D0 err=3D0
+     kworker/1:0-22      [001] .....     1.984044: pwm_apply: 482f1c0e: per=
+iod=3D125000 duty_cycle=3D101960 polarity=3D1 enabled=3D1 err=3D0
+
+I have added this diff to the kernel to show what happens:
+diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
+index 67414b97ef4d..94f6d0f33365 100644
+--- a/drivers/pwm/pwm-stm32.c
++++ b/drivers/pwm/pwm-stm32.c
+@@ -394,6 +394,7 @@ static int stm32_pwm_set_polarity(struct stm32_pwm *pri=
+v, int ch,
+ {
+ =09u32 mask;
+
++=09printk("stm32_pwm_set_polarity: %d\n", polarity);
+ =09mask =3D TIM_CCER_CC1P << (ch * 4);
+ =09if (priv->have_complementary_output)
+ =09=09mask |=3D TIM_CCER_CC1NP << (ch * 4);
+@@ -455,6 +456,7 @@ static int stm32_pwm_apply(struct pwm_chip *chip, struc=
+t pwm_device *pwm,
+ =09int ret;
+
+ =09enabled =3D pwm->state.enabled;
++=09printk("stm32_pwm_apply: enabled %d, state->polarity %d, pwm->state.pol=
+arity %d\n", enabled, state->polarity, pwm->state.polarity);
+
+ =09if (!state->enabled) {
+ =09=09if (enabled)
+
+Before this patch:
+root@localhost:~# journalctl -k | grep pwm
+Jan 8 7:30:33 localhost kernel: stm32_pwm_apply: enabled 0, state->polarity=
+ 1, pwm->state.polarity 0
+Jan 8 7:30:33 localhost kernel: stm32_pwm_apply: enabled 0, state->polarity=
+ 1, pwm->state.polarity 1
+
+After this patch:
+root@localhost:~# journalctl -k | grep pwm
+Jan 8 7:38:33 localhost kernel: stm32_pwm_apply: enabled 0, state->polarity=
+ 1, pwm->state.polarity 0
+Jan 8 7:38:33 localhost kernel: stm32_pwm_set_polarity: 1
+Jan 8 7:38:33 localhost kernel: stm32_pwm_apply: enabled 0, state->polarity=
+ 1, pwm->state.polarity 1
+
+I hope that clarifies things :)
+
+/Sean
 
 
