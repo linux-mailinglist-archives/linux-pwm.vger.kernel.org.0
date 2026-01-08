@@ -1,126 +1,113 @@
-Return-Path: <linux-pwm+bounces-7878-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7879-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 24EA9D03E05
-	for <lists+linux-pwm@lfdr.de>; Thu, 08 Jan 2026 16:33:05 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 56E56D03E0E
+	for <lists+linux-pwm@lfdr.de>; Thu, 08 Jan 2026 16:33:16 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 00658304D548
-	for <lists+linux-pwm@lfdr.de>; Thu,  8 Jan 2026 15:20:57 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 54158302CAAC
+	for <lists+linux-pwm@lfdr.de>; Thu,  8 Jan 2026 15:27:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AAD24A50C9;
-	Thu,  8 Jan 2026 12:10:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 388AA4D245F;
+	Thu,  8 Jan 2026 12:45:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="M4oCYYR0"
+	dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b="lyOmVC6e"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-06.mail-europe.com (mail-06.mail-europe.com [85.9.210.45])
+Received: from mail-106111.protonmail.ch (mail-106111.protonmail.ch [79.135.106.111])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A94DD4A1A9E
-	for <linux-pwm@vger.kernel.org>; Thu,  8 Jan 2026 12:10:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=85.9.210.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91A2E4D247A
+	for <linux-pwm@vger.kernel.org>; Thu,  8 Jan 2026 12:45:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=79.135.106.111
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767874240; cv=none; b=VUQlXjT5kOU8bMeGDgAcDVRuH0qbYBQxZ1wytMIcTvl1UGFfZLm2D5/OZGtMJNxaNnmM5CRl8oWpgK0iSn+jjkHwpxihy15qpq6PK/scM31RZuThYlUX/LU901doo/minfk41uye71H7lrtZuZ2p/mzwhPKZBAiFpciGPVS2u9o=
+	t=1767876351; cv=none; b=dzd8X45b5lg4PU74A+2HQMXKFnW9sEA/EHBAOzXoJNwPLktkiVN1EIsmJjcK+g2mQlI9O8tDVcUV748yibcpO76Al/9e+drYfNFVvLDIHKJ6bqLQSqq0//BZ4mbZUrV42c6N5zw+QEt82YhmF84DTlyRKkDvnpdRhvorn4WzhHA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767874240; c=relaxed/simple;
-	bh=FE5f+QneiLfkB+gsfq9DOycQ8EkGDZ8mWOYLDEug3U8=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=T7Boa/SVfzN2X9VhRl1jz4/U2b99kWGBgs6/NcU+WJROyqzaJupmnVmRrJx1wdd01+HCkiInVTynhJZk46RD6Ms6B/jfiVjVS21n48KDvhdQjXLzYy1HvWQxwHultu8/C7sGhKeX+nVL4fxNUfVh6h1j5PMVHigN3PaLbDgnq8M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=M4oCYYR0; arc=none smtp.client-ip=85.9.210.45
+	s=arc-20240116; t=1767876351; c=relaxed/simple;
+	bh=D6fKN4f7C5FKbpG7szxX8++uDksOX+1oMjGH0iRMq48=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=gUkuQQG+O4JUv2w0HqJom6xUYTm2fD630n4S+EL7J48+SaeaE18wveBB2es8wCh33dDdUEECVqp0k9L+m0CgIRAz/otpZdoNi33Rrm8xIzNTnC15eLHk9MEBs7Wz8OKvNNwyksnKA8HfklR3phCK0DL4mY+FCwayP4bsFfsK3po=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com; spf=pass smtp.mailfrom=geanix.com; dkim=pass (2048-bit key) header.d=geanix.com header.i=@geanix.com header.b=lyOmVC6e; arc=none smtp.client-ip=79.135.106.111
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=geanix.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=geanix.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=geanix.com;
-	s=protonmail2; t=1767874226; x=1768133426;
-	bh=e9Gn14IpojzvUVrHWdXmzVkyL12/O34BYkSCNxkLXBk=;
-	h=Date:To:From:Cc:Subject:Message-ID:In-Reply-To:References:
-	 Feedback-ID:From:To:Cc:Date:Subject:Reply-To:Feedback-ID:
-	 Message-ID:BIMI-Selector;
-	b=M4oCYYR05LjR1zuWmGDLY2NUDmgqoA0Gs7RIIA+jsPfvKLSztQWtPWNrCFHINJfCA
-	 HFXOvt9td6Rtbae2jI34iZADjK26DfHt8wMZYngw2WqA3QgjgtfA19ixm0AiMX/5nA
-	 GspzkdlI2oqkssw84nB6a2pxOpT2syKFjRd0aJl9DbkXW7oyDKLBpLkG6GSnJQdLvd
-	 msN4snaag7B79uKVpGOK3aKfLCmTgMGoX7I7FpmPlQQkcc6S9udkPEMDy/cBtMjrhQ
-	 1mg2gUajN4kAVQonHK1UpGoTOzGMTbko1kMlPnvL+3RYZaFymnmkO+XYQJ9Sr1ye5u
-	 Mtj7TEkdLVBMA==
-Date: Thu, 08 Jan 2026 12:10:22 +0000
-To: =?utf-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+	s=protonmail2; t=1767876332; x=1768135532;
+	bh=aLc1ABNGDOubKMqJjdyEE2rUDJu3+cw3hXTWYt1I64k=;
+	h=From:Date:Subject:Message-Id:To:Cc:From:To:Cc:Date:Subject:
+	 Reply-To:Feedback-ID:Message-ID:BIMI-Selector;
+	b=lyOmVC6eOUwGhcHBO5Eb3462sjFxqRvWZvq2Tnb1kiC0M83ZmLC0cGE15QPCn0EMK
+	 kF1laGjM9ulpW5X22nlxzMJ85BP/dhI7K6CWlDtnKld6FfPTWSR6zdv03ndr4j9NU0
+	 Ss/4Guj/HI1LBft19+e9PmHrG+KRRO93IF1DGv3PUieuC+syUKAKulF+7GR/KaNubo
+	 rSujErEg5+imTtlN4P9JxaF+q7AsQKKt35FTBBrIMYq2GRHE5SgO12fWaPNKBy+jWn
+	 pWPn+Ojc2VX2jb9s/f57BlvSiBYPBr5QSGNKGcWchPAUuBNNwDVezVFpSCX5lzuqNc
+	 asTVPIsgl8NHw==
+X-Pm-Submission-Id: 4dn4Pk0Vvcz1DLbC
 From: Sean Nyekjaer <sean@geanix.com>
-Cc: Fabrice Gasnier <fabrice.gasnier@foss.st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, linux-pwm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH] pwm: stm32: handle polarity change when PWM is enabled
-Message-ID: <scu6yj7say5bnhbgyns4xrjbrzdayckk2ghn2a4xsgg4dswakv@6ushlcfw4dju>
-In-Reply-To: <r2jq72u3hfxrl4slgvuei2eobke37apebf67naxrvuabtcvaxe@pamwe3nejqge>
-References: <20260106-stm32-pwm-v1-1-33e9e8a9fc33@geanix.com> <kemjjoyrhqglqq4p2j6kygspevq2mdbiujtnksw4rkdapoqcfy@zte2c7fhqvn3> <2e2iahbzcepbzwgk7xeta2afxmycfjgv2zofzngqjvp4on46r2@mzpi4bz4uqie> <nwhixocvhii27jvcyg7ex5emewntgfhyxa4ds5vo2dphe7xfe4@ibjsjdd5fgmn> <fwaodg2ovh7j47ifwjhgeppxs3oiqht5ecbs7bmfbi7j6djejs@shwokpcmutr3> <zj2vpruzoeyvyyzxiqcffajyhpmem4q75l6gzgxd4jgaizhrdq@bxuudn4kyvr3> <paj3uf6apunonvfz2w2anqmddivjrofmfo5wktygz4r6l7diqf@7gen7gjgyuar> <r2jq72u3hfxrl4slgvuei2eobke37apebf67naxrvuabtcvaxe@pamwe3nejqge>
-Feedback-ID: 134068486:user:proton
-X-Pm-Message-ID: 65182a408632275be51d6c5397e4a1b9201fdc8e
+Date: Thu, 08 Jan 2026 13:45:23 +0100
+Subject: [PATCH v2] pwm: stm32: Always program polarity
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Message-Id: <20260108-stm32-pwm-v2-1-ced582974f8b@geanix.com>
+X-B4-Tracking: v=1; b=H4sIAOKmX2kC/03MSwrCMBSF4a2UOzaSRw2NI/chHcR4095B05KUW
+ CnZu7EgOPwPh2+HhJEwwbXZIWKmRHOoIU8NuNGGARk9a4PkUnPBLyytk5JseU3MCPfoWqU77lu
+ o/yWip+2w7n3tkdI6x/dBZ/Fdf4r+U7JggimFBjtrvFPqNqANtJ3dPEFfSvkAjw/CIKMAAAA=
+X-Change-ID: 20260105-stm32-pwm-91cb843680f4
+To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Maxime Coquelin <mcoquelin.stm32@gmail.com>, 
+ Alexandre Torgue <alexandre.torgue@foss.st.com>
+Cc: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
+ linux-pwm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ stable@vger.kernel.org, Sean Nyekjaer <sean@geanix.com>
+X-Mailer: b4 0.14.2
 
-Hi,
-On Thu, Jan 08, 2026 at 12:33:10PM +0100, Uwe Kleine-K=C3=B6nig wrote:
-> On Thu, Jan 08, 2026 at 06:44:06AM +0000, Sean Nyekjaer wrote:
-> > I hope that clarifies things :)
->=20
-> It does. I'm convinced the following patch implements a simpler fix:
->=20
-> diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
-> index eb24054f9729..86e6eb7396f6 100644
-> --- a/drivers/pwm/pwm-stm32.c
-> +++ b/drivers/pwm/pwm-stm32.c
-> @@ -458,8 +458,7 @@ static int stm32_pwm_apply(struct pwm_chip *chip, str=
-uct pwm_device *pwm,
->  =09=09return 0;
->  =09}
-> =20
-> -=09if (state->polarity !=3D pwm->state.polarity)
-> -=09=09stm32_pwm_set_polarity(priv, pwm->hwpwm, state->polarity);
-> +=09stm32_pwm_set_polarity(priv, pwm->hwpwm, state->polarity);
-> =20
->  =09ret =3D stm32_pwm_config(priv, pwm->hwpwm,
->  =09=09=09       state->duty_cycle, state->period);
->=20
-> While is isn't optimal as it might write the polarity into hardware when
-> it's not necessary, the same holds true for the values for duty_cycle
-> and period. Compared to your patch this is simple enough to make me ok
-> with applying it to 6.12.x (and older stable kernels) without an
-> equivalent commit in mainline. (Backporting the waveform stuff is out of
-> the question IMNSHO.)
+Commit 7346e7a058a2 ("pwm: stm32: Always do lazy disabling") triggered a
+regression where PWM polarity changes could be ignored.
 
-The above does work, I have also checked that it doesn't write the
-polarity if the PWM is active.
-Agree, with the backporting part :)
+stm32_pwm_set_polarity() was skipped due to a mismatch between the
+cached pwm->state.polarity and the actual hardware state, leaving the
+hardware polarity unchanged.
 
->=20
-> Also I'm still convinced that 7edf7369205b isn't the correct commit to
-> blame. This one changes the preconditions for the problem to occur (and
-> thus it's plausible that it's the result of your bisection), but even
-> before 7edf7369205b the problem can happen with:
->=20
-> =09pwm_apply(mypwm, &(struct pwm_state){ .enabled =3D true, .polarity =3D=
- PWM_POLARITY_NORMAL, .period =3D DC, .duty_cycle =3D DC });
-> =09pwm_apply(mypwm, &(struct pwm_state){ .enabled =3D false, .polarity =
-=3D PWM_POLARITY_INVERSED, .period =3D DC, .duty_cycle =3D DC });
-> =09pwm_apply(mypwm, &(struct pwm_state){ .enabled =3D true, .polarity =3D=
- PWM_POLARITY_INVERSED, .period =3D DC, .duty_cycle =3D DC });
->=20
-> After the 1st call polarity is configured to normal (unless the bug
-> happens already earlier :-), the 2nd disables the hardware without
-> configuration of the polarity (before and after 7edf7369205b), and the
-> third skips setting of the polarity because state->polarity already
-> matches pwm->state.polarity. The original problem exists since=20
-> 7edf7369205b ("pwm: Add driver for STM32 plaftorm").
->=20
-I will move the fixes tag.
+Fixes: 7edf7369205b ("pwm: Add driver for STM32 plaftorm")
+Cc: stable@vger.kernel.org # <= 6.12
+Signed-off-by: Sean Nyekjaer <sean@geanix.com>
+Co-developed-by: Uwe Kleine-König <ukleinek@kernel.org>
+---
+This patch is only applicable for stable tree's <= 6.12
+---
+Changes in v2:
+- Taken patch improvements for Uwe
+- Link to v1: https://lore.kernel.org/r/20260106-stm32-pwm-v1-1-33e9e8a9fc33@geanix.com
+---
+ drivers/pwm/pwm-stm32.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-> Are you able to create an improved patch with these insights in a timely
-> manner? (Grab authorship for yourself and honoring my part with a
-> Co-developed-by is fine for me.)
-I'll do it now and add the Co-developd-by tag
+diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
+index eb24054f9729734da21eb96f2e37af03339e3440..86e6eb7396f67990249509dd347cb5a60c9ccf16 100644
+--- a/drivers/pwm/pwm-stm32.c
++++ b/drivers/pwm/pwm-stm32.c
+@@ -458,8 +458,7 @@ static int stm32_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 		return 0;
+ 	}
+ 
+-	if (state->polarity != pwm->state.polarity)
+-		stm32_pwm_set_polarity(priv, pwm->hwpwm, state->polarity);
++	stm32_pwm_set_polarity(priv, pwm->hwpwm, state->polarity);
+ 
+ 	ret = stm32_pwm_config(priv, pwm->hwpwm,
+ 			       state->duty_cycle, state->period);
 
-/Sean
+---
+base-commit: eb18504ca5cf1e6a76a752b73daf0ef51de3551b
+change-id: 20260105-stm32-pwm-91cb843680f4
+
+Best regards,
+-- 
+Sean Nyekjaer <sean@geanix.com>
 
 
