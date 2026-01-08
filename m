@@ -1,130 +1,176 @@
-Return-Path: <linux-pwm+bounces-7871-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7872-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5C298CFFE35
-	for <lists+linux-pwm@lfdr.de>; Wed, 07 Jan 2026 21:00:13 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7A0F6D01301
+	for <lists+linux-pwm@lfdr.de>; Thu, 08 Jan 2026 07:05:25 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 40D7D3152CAF
-	for <lists+linux-pwm@lfdr.de>; Wed,  7 Jan 2026 19:48:40 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 7A347301D600
+	for <lists+linux-pwm@lfdr.de>; Thu,  8 Jan 2026 06:05:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E5E6F32A3C8;
-	Wed,  7 Jan 2026 19:48:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8F6E42FFDE3;
+	Thu,  8 Jan 2026 06:05:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RoB4MfJv"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lIXYRiaV"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-dy1-f180.google.com (mail-dy1-f180.google.com [74.125.82.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54C1B2D0C82
-	for <linux-pwm@vger.kernel.org>; Wed,  7 Jan 2026 19:48:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63FCB2641D8;
+	Thu,  8 Jan 2026 06:05:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1767815318; cv=none; b=Hl5D55eA6qYBdye9b7gI6JsJ4ZEoz9hv8G2SYq+/gf8L01BKojSEM4xsfAHZXIKSeIh6dwaZWmb7eA5i/ISGH5agl4wcbFXWfImdwqsx8jjyA5coVaBaxNuVYR3t1QXdnnIAf0CTg4Q95rLNhvvhR/SMLvqSFdBQfZ9LhLkvBMw=
+	t=1767852322; cv=none; b=WTrfItNqQDnUP0VLGypV8xfP0oz5+P/bObRlvtSJbL0Eu/uZx0KqgdMGBFjTw1XslvZgu9cMuSsfxj0vvbA2gUXAiqNTPgb5Zh0IQg9Qyabet1w3uKyzTr934rwbOt9TdePxNON6N9BzHg6GPv6LseJ887q7YbOm7O1tu17+x4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1767815318; c=relaxed/simple;
-	bh=2NF359DW37ZojkG4f4MDIy0ciudLZitBmJbZxlljHso=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mJaFxfHmQv2AKZtybuipwesk8Nh0GnZatnLNOskUtt4H+fhGiDruxe50sDCXUDxWdrtVG/0ZTcLzeBrI5r/kE/4f2NBjIc3BLAe3LnSjAjMAA9LMQDMSzKckgRPUyslBsTqnuODhxTFze1pgP0A7AVRnSry/H2+teN6v9HYN0No=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RoB4MfJv; arc=none smtp.client-ip=74.125.82.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-dy1-f180.google.com with SMTP id 5a478bee46e88-2abf5900cd5so2067710eec.1
-        for <linux-pwm@vger.kernel.org>; Wed, 07 Jan 2026 11:48:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1767815307; x=1768420107; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=2NF359DW37ZojkG4f4MDIy0ciudLZitBmJbZxlljHso=;
-        b=RoB4MfJvgo8/S7am11OHkY+UURZPxzGbWLUsM2E40xaAWUCmtSbrTlcNT4C2yAgEpF
-         /1wkzk+GrxJhwocREGmY/1U/rsdYh3/Vrb1SH33Y9n/urBXRWZOaZhwv/sbjrdpesey4
-         43VCnzcvXLpvQXm1RSPzMm88aeeZ8OKl2MvhBBqL3JYOVotHImupPr9dXbImK+uAGKDY
-         gos4rrTCx7oxm/cQm6uqRPEcW7OAnaspQK5J2XamMWI5XOz4xydqX23ZBFM70X4j3vF5
-         mXe3Ju9cT0clpzRu0t/qFNJChuzfcNUCAag2hyKz8tKfSEBBA81Nj1OErkIse+0QG2Wr
-         idMQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1767815307; x=1768420107;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=2NF359DW37ZojkG4f4MDIy0ciudLZitBmJbZxlljHso=;
-        b=KCULkiH86MeUAZOftftl8uECtfPizjUPPnPdNH+E5W6wt1Pydaa2oTA4JSTIHA/2tk
-         7LeCd4EKKTvdYo+qbYPAVfsjhAkZEOgSh5Tw2hpm0Z2e+tuNQym+eLPczbTxFFRMNcae
-         QS+vxPC4/aPHqkXLDxewc9o9gt1fcgyaReuOnOqNQHvsmPlfty7Ggs29Y2sJSwar0x15
-         3W5wywi0xNge0xP05LBKGAKeIRiiFo3KFVr6F/cNfao2mVgeDgPBoj4vFRzNz7RsLRXh
-         mjB+EHrPVFfrumdBlH0SCPF53VdKQdf81KaSsi/Mn9S0CWKtmqhuPECN2t2iq3hzu80O
-         YNwg==
-X-Forwarded-Encrypted: i=1; AJvYcCX+TCSG/5CexxjuIYrsL/eLBS60WtYHpO7Co4czJUpARce64bVieNrjWO41L+cX4CRMsc+RCj6Y62o=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyX/qz5r1vdvwKoOQfyWBiQHJQW2Pw/W/cH8/vBxkxrxHyD9x5z
-	By4/VEgTdZazXiLPVayGxFq7w6Cs7AnugdXAsCW4Hy15W6U+ZbDNp0X7
-X-Gm-Gg: AY/fxX6wt9SQE7krr7Nb3Xl8CCuOTc9L8VW/ihA53HccuPdcj3lI93WH8yrPtisLBiH
-	QP0KUOL0GSLenoD/IrvtWZRHoZXZboMSlkK+5BOUhnAhit6oNgdEpZiVXd1AeVeI57b4N9L91SY
-	XFxCTNLeSZs5dKNB9YQpoNQdV1En7qV7gyBwnzikOqawOLjXjNcHNFw5R8DO/zfon9Yadx9zEQl
-	8oWT4nm6Tu121Pkfjbg/KQAb1Tq2tNnNPS0qLrbXqVCR8QZCi7RRFhAhneXXY6HpD7+Nxl3y6h0
-	K8FyfgLvLmALlAWRuy6Ih61yo0figWGXEIf/XHhXtpSfMeTQBD2hM46nKygT+ezWk6Z89rDeE/C
-	bMlFuhLo5dUE1OtriK7BSC1zN7nN1bExHyNpH/E5n2trpdZvPuCwrPV8OAJxSZcQVcqLtNAw220
-	lNdhD1KDp5J7pmCheleAKxt9eOyduw4b19hg8kMg0Ounln0TwhJVIAxVLZeuPLhlRpOdvV7nDJd
-	UydXAWVFN/36pXTqD0l5ctpe0n1Dg==
-X-Google-Smtp-Source: AGHT+IGYjVUu+lgv9P/uKlsGT5xYW9cLxtGl24dRMoeIVtDU/FsjhOKh8eUikrWCzN/Ql7qltByiCg==
-X-Received: by 2002:a05:7300:3f05:b0:2b0:56fd:4b67 with SMTP id 5a478bee46e88-2b17d21b4dcmr1970898eec.12.1767815306652;
-        Wed, 07 Jan 2026 11:48:26 -0800 (PST)
-Received: from ParadiseLost.localdomain ([177.10.10.214])
-        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2b17078dd8fsm8626994eec.20.2026.01.07.11.48.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 Jan 2026 11:48:26 -0800 (PST)
-From: "Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
-To: ukleinek@kernel.org
-Cc: g-praveen@ti.com,
-	j-keerthy@ti.com,
-	linux-kernel@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	n-francis@ti.com,
-	rafael.v.volkmer@gmail.com,
-	u-kumar1@ti.com
-Subject: Re: [PATCH v2] pwm: tiehrpwm: Enable EHRPWM controller before setting configuration
-Date: Wed,  7 Jan 2026 16:47:58 -0300
-Message-ID: <20260107194802.3917-1-rafael.v.volkmer@gmail.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <kkddrxw37dx7w6f6csomopcwz5xk2o7ezddrisfisij6lq46hf@ije72we4xrek>
-References: <kkddrxw37dx7w6f6csomopcwz5xk2o7ezddrisfisij6lq46hf@ije72we4xrek>
+	s=arc-20240116; t=1767852322; c=relaxed/simple;
+	bh=Y0fA6F5gUKCiQEzQ6rqIGJ2uKAFcVjNQMVrpQtOL7pY=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=mS0bwI0+g0ubfiNz9buel+2FBncd6CgzNnqQpKI3uI+3yhCwALwIAD3gR9pepq0lXMnjKNNOlVvCTn8O1tdOKHsVxyzCShduFRZw8XukGovQvRpMPi97cTU54+LXNNdLrreB2cwMIytx9ZlWDF0dZ5SLgTueJYI7A/bOpgNGL4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lIXYRiaV; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50B2EC16AAE;
+	Thu,  8 Jan 2026 06:05:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1767852321;
+	bh=Y0fA6F5gUKCiQEzQ6rqIGJ2uKAFcVjNQMVrpQtOL7pY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=lIXYRiaVhagNWfVsVfoP5Th5/6rWC/KxcfFTbaHxSGjmtjsWNnNb41BLHiRpxxXUq
+	 vD/8p65ebOpFi2ZzyaehMslFktgp/gOGRoC+Aw3EpY95vqUcq4h4mO8vFPTe5IUnsi
+	 7FlyRh8qCePW1T4IQxiinj05H1YcgON2RDiBmMwJT7Cz7dqfOiVuDypRrgxSHv4Rlw
+	 mzyArY6SuUnl/uC48lcx2F88VVTwsLodSYF7LXzqfoWclhwP6+d8ttZk/3j2hVYcIR
+	 uqqwTiXSYRJi4HGz17ytPKe1N/i9BM3/S6UxiFQeD+y2DUr75RXQnKcjUgzuzyzkZX
+	 XnSb5YRaAFR+g==
+Date: Thu, 8 Jan 2026 07:05:15 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Sean Nyekjaer <sean@geanix.com>
+Cc: Fabrice Gasnier <fabrice.gasnier@foss.st.com>, 
+	Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@foss.st.com>, 
+	linux-pwm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: Re: [PATCH] pwm: stm32: handle polarity change when PWM is enabled
+Message-ID: <zj2vpruzoeyvyyzxiqcffajyhpmem4q75l6gzgxd4jgaizhrdq@bxuudn4kyvr3>
+References: <20260106-stm32-pwm-v1-1-33e9e8a9fc33@geanix.com>
+ <kemjjoyrhqglqq4p2j6kygspevq2mdbiujtnksw4rkdapoqcfy@zte2c7fhqvn3>
+ <2e2iahbzcepbzwgk7xeta2afxmycfjgv2zofzngqjvp4on46r2@mzpi4bz4uqie>
+ <nwhixocvhii27jvcyg7ex5emewntgfhyxa4ds5vo2dphe7xfe4@ibjsjdd5fgmn>
+ <fwaodg2ovh7j47ifwjhgeppxs3oiqht5ecbs7bmfbi7j6djejs@shwokpcmutr3>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="2fbnr5emdw3vpmkk"
+Content-Disposition: inline
+In-Reply-To: <fwaodg2ovh7j47ifwjhgeppxs3oiqht5ecbs7bmfbi7j6djejs@shwokpcmutr3>
 
-Hi Uwe, Gokul,=0D
-=0D
-Thanks for CC'ing me on this thread.=0D
-=0D
-On 07/01/26 15:21, Uwe Kleine-K=C3=B6nig wrote:=0D
-> Hello,=0D
-> =0D
-> adding Rafael to Cc: who sent a patch series for this driver that I=0D
-> didn't come around to review yet. Given that neither he nor me noticed=0D
-> the problem addressed in this patch I wonder if it applies to all=0D
-> hardware variants.=0D
->=0D
-=0D
-I also didn't observe the issue described here in my testing: duty cycle an=
-d=0D
-period changes always appeared to take effect as expected.=0D
-=0D
-My tests were done on an AM623 EVM.=0D
-=0D
-One possible explanation is that my test flow mostly exercised configuratio=
-n=0D
-while the PWM was already enabled/active, which could mask the effect of a=
-=0D
-put_sync/reset happening after configuration.=0D
-=0D
-Regarding my pending patch series for this driver: it should not =0D
-conflict this change, as it's largely preparatory refactoring for a =0D
-follow-up series.=0D
-=0D
-Best regards,=0D
-Rafael V. Volkmer=0D
+
+--2fbnr5emdw3vpmkk
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] pwm: stm32: handle polarity change when PWM is enabled
+MIME-Version: 1.0
+
+Hello Sean,
+
+On Wed, Jan 07, 2026 at 04:05:56PM +0000, Sean Nyekjaer wrote:
+> On Wed, Jan 07, 2026 at 04:54:46PM +0100, Uwe Kleine-K=F6nig wrote:
+> > On Tue, Jan 06, 2026 at 11:30:34AM +0000, Sean Nyekjaer wrote:
+> > > On Tue, Jan 06, 2026 at 11:22:57AM +0100, Uwe Kleine-K=F6nig wrote:
+> > > > On Tue, Jan 06, 2026 at 08:01:57AM +0100, Sean Nyekjaer wrote:
+> > > > > After commit 7346e7a058a2 ("pwm: stm32: Always do lazy disabling"=
+),
+> > > > > polarity changes are ignored. Updates to the TIMx_CCER CCxP bits =
+are
+> > > > > ignored by the hardware when the master output is enabled via the
+> > > > > TIMx_BDTR MOE bit.
+> > > > [...]
+> > > > I have hardware using this driver, will set it up later this week f=
+or
+> > > > testing.
+> > >=20
+> > > Very cool, looking forward to hear if you can re-produce.
+> >=20
+> > I cannot. I have:
+> >=20
+> > 	# uname -r
+> > 	6.11.0-rc1-00028-geb18504ca5cf-dirty
+> >=20
+> > (the -dirty is only from enabling the pwm for my machine, no driver
+> > changes)
+> >=20
+> > 	# cat /sys/kernel/debug/pwm
+> > 	0: platform/40001000.timer:pwm, 4 PWM devices
+> > 	...
+> > 	 pwm-3   (sysfs               ): requested enabled period: 313720 ns d=
+uty: 10000 ns polarity: normal
+> >=20
+> > and pulseview/sigrok detects 3.187251% with a period of 313.8 =B5s.
+> >=20
+> > After
+> >=20
+> > 	echo inversed > /sys/class/pwm/pwmchip0/pwm3/polarity
+> >=20
+> > the output changes to
+> >=20
+> > 	# cat /sys/kernel/debug/pwm
+> > 	0: platform/40001000.timer:pwm, 4 PWM devices
+> > 	...
+> > 	 pwm-3   (sysfs               ): requested enabled period: 313720 ns d=
+uty: 10000 ns polarity: inverse
+> >=20
+> > and pulseview/sigrok claims 96.812749% with a period of 313.8 =B5s.
+> > So the polarity change happend as expected.
+> >=20
+> > This is on an st,stm32mp135f-dk board.
+> >=20
+> > Where is the difference to your observations?
+> >=20
+>=20
+> Thanks for taking a look!
+> I'm using the PWM for a backlight. With this [0] in my dts:
+>=20
+> [0]:
+> 	backlight: backlight {
+> 		compatible =3D "pwm-backlight";
+> 		pwms =3D <&pwm4 0 125000 PWM_POLARITY_INVERTED>;
+> 		brightness-levels =3D <102 235 255>;
+> 		default-brightness-level =3D <80>;
+> 		num-interpolated-steps =3D <100>;
+> 		enable-gpios =3D <&gpiof 12 GPIO_ACTIVE_LOW>;
+> 	status =3D "okay";
+> 	};
+>=20
+> Maybe that is doing something differently.
+
+What is the actual problem you have? I assume it's the backlight being
+off after boot? Does it start working if you disable and reenable?
+
+Can you please boot with
+
+	trace_event=3Dpwm
+
+on the command line and provide /sys/kernel/debug/tracing/trace from
+after the problem happend?
+
+Best regards
+Uwe
+
+--2fbnr5emdw3vpmkk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmlfSRgACgkQj4D7WH0S
+/k76/wf+NFddM6PhSOYwyq/PnXeCfIhk+HaeZvBs4UvpXIOr4ndVeTWKnzuWw1Da
+Pg2CmR/mfGLa4KZFQx6++CwRb/vWKtaAWIFWO4WtVRG4GIGinHvzB6SOPMXrcPFZ
+R0L+ORoiCV6U0sMqmQpOIVIE7k8hRSp0f3uIB1wJY4J1br/ltzBwi1BWDmj6WvmV
+PIll80wwi3lEpWj18zpt74atfQG34YXeT+RoZNqj/FVUKxHMRS7WSE3/tSAnXiCw
+csNFUAlb+htjXqecAZU9D6Ay9C1jUL5lCYxISZRQGB8alzYTSKA2KyuEHdhqzaYT
+pE+/udBA5H5rD34ILTOdL4N3aY+5ew==
+=ofVw
+-----END PGP SIGNATURE-----
+
+--2fbnr5emdw3vpmkk--
 
