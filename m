@@ -1,68 +1,68 @@
-Return-Path: <linux-pwm+bounces-7899-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7897-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A70B5D19DDD
-	for <lists+linux-pwm@lfdr.de>; Tue, 13 Jan 2026 16:26:15 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A6E0BD19C76
+	for <lists+linux-pwm@lfdr.de>; Tue, 13 Jan 2026 16:14:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 10CD93030614
-	for <lists+linux-pwm@lfdr.de>; Tue, 13 Jan 2026 15:14:26 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id B372F3012784
+	for <lists+linux-pwm@lfdr.de>; Tue, 13 Jan 2026 15:13:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 788923933ED;
-	Tue, 13 Jan 2026 15:13:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6602F3921F5;
+	Tue, 13 Jan 2026 15:13:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="I0xhZ6ud"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Dj+qPv+j"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f73.google.com (mail-wr1-f73.google.com [209.85.221.73])
+Received: from mail-wm1-f74.google.com (mail-wm1-f74.google.com [209.85.128.74])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49DD136A02C
-	for <linux-pwm@vger.kernel.org>; Tue, 13 Jan 2026 15:13:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.73
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4806438E100
+	for <linux-pwm@vger.kernel.org>; Tue, 13 Jan 2026 15:13:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.74
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768317216; cv=none; b=AsD+4siYjZ4b6/eOS72Sm3eS4Sb4QfCmqYyw18B9FYaHGX4iOyLc183bf7atKBbRI3Ovrv1P9792s70PRzm0SMwu37ln/7GWR7oMRCRNHP6CzkZ+WZvYYut7vaxKnlH2zPeE0IYKIPbKM1p086Fx/lXi5oLQhUJHRKLgZmqoEOs=
+	t=1768317212; cv=none; b=QvM1jwAuTZHhDQCK4o+uGqCPZsJWsfcDv2xD+6IguhinajnFdBP93tyC8C4DgVguJ5b9gj9vH18aIqR5qlkgy+Q3lBjqHkG+E7Pu5zVFszokHyEJhONN/ZUz0UqJZw/0Gxw/u4iVYA7WwQubbMOVrE+p6IWMSsSbuRd0dg7tWC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768317216; c=relaxed/simple;
-	bh=5DE8fHUHNeug+88kGFo3S/QoXnkelD/PvswD8rGjIrM=;
+	s=arc-20240116; t=1768317212; c=relaxed/simple;
+	bh=gBgvzdGxsZJ9P+o4TYuYZOZRWaJW6R3le+1fCyVi18I=;
 	h=Date:In-Reply-To:Mime-Version:References:Message-ID:Subject:From:
-	 To:Cc:Content-Type; b=od0+37tK7/FnENzd52YfaqtuwK0eIHHsSPU017ZF00SkIilhvt5v7UJSSWjLGG8c5o1G/+W9sKeUvjx7ZL8MOmOcc08pglvZQK24zs0Wap9ziiZew3F8AN7PI660hUR4OYAtlohHKd27z1fYoRfHjsx5wbBRBS/NMnYaBCLE2zI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=I0xhZ6ud; arc=none smtp.client-ip=209.85.221.73
+	 To:Cc:Content-Type; b=WcS8iftmy+ThonMTnewUE9k6ggkRlGLkSCq0muteoGZi5W8IMwwZ5xrec/y7ACuZPJN4DOkSG+tBmE0QkOtY+DtccUjBrodScaPoK8lgbcT7Stsy2SgA3ndqIm5z4CPmjZSN7dgMwAVTwKU5uvBJuLaLPAHWnf5x/0D5if6iWRY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=Dj+qPv+j; arc=none smtp.client-ip=209.85.128.74
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=flex--aliceryhl.bounces.google.com
-Received: by mail-wr1-f73.google.com with SMTP id ffacd0b85a97d-43284f60a8aso4350404f8f.3
-        for <linux-pwm@vger.kernel.org>; Tue, 13 Jan 2026 07:13:28 -0800 (PST)
+Received: by mail-wm1-f74.google.com with SMTP id 5b1f17b1804b1-47d28e7960fso78405125e9.0
+        for <linux-pwm@vger.kernel.org>; Tue, 13 Jan 2026 07:13:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1768317207; x=1768922007; darn=vger.kernel.org;
+        d=google.com; s=20230601; t=1768317209; x=1768922009; darn=vger.kernel.org;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:from:to:cc:subject:date:message-id:reply-to;
-        bh=clahOJSyAVmCLVNVjHaJTlJ4hThwgbY6ylIwpTEN8h8=;
-        b=I0xhZ6udPcaRNeEhWztS9BIlheYHH78ilQ0ssnqyG+aDyEtt2ZgRIJEFMXcZxmErFh
-         Ej2OY3B9/C1PglWoh/3bi7ywKQ9Bu5WqQgOzme5UiIqNVRzyb/pQXdUnkO6Qmgkjtrt+
-         VV8NK9cTKMs6OTRzWSN8SAXRtB9ypauip8DK5c77gK3x0M6AZ5GljGjFio4BWiy7IzkO
-         OSIzEOHDw6GimKjcPKgT/IlhLE7eXigs3cSRMyYQcP+NVnhC02k7+z2xaiaE4vOvtQbp
-         oq2p3JqOcIirjWXkhLjLJdZo5/nTn7RtXay4utXCAc9lv569lZArjJVIyxu8U2kfUKi3
-         eAZQ==
+        bh=+856FUFrQ1uMLS1oGlG8WJLskHLLy9o2M4Kx5xq+7BM=;
+        b=Dj+qPv+jJqupyZRP7Wj37/5EsQU+bNFiakmdCA3aNZJS6iapgb4zKg/sYzUB+oIrSG
+         tc8/6UBQBj5CWJnRY73jLigb6vZBJ7m5N4onkJ4PNZ/VXaI0uF6ckckOw9mzuoNlrFm7
+         sbtnnrEt4L8kY8VMQeTjYfkwAb31SHZtOLHs/mR6faOCZSS4TtTl8uMyBep+om0FkIQc
+         C1rm+TsNue6AhtOQ3NrKV07mQT8624VGrnGC9VK48ne34gXjfU7PX1aXQa+tp561eDJY
+         G6TNBaH8fX9vEqPpVCDZfKPU6BNOk+2f6EBQ2baWfVjwLsWbKwbu7cFEZ8LHpbyYiFXf
+         fHMw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768317207; x=1768922007;
+        d=1e100.net; s=20230601; t=1768317209; x=1768922009;
         h=cc:to:from:subject:message-id:references:mime-version:in-reply-to
          :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=clahOJSyAVmCLVNVjHaJTlJ4hThwgbY6ylIwpTEN8h8=;
-        b=ZA2/ZQtVqP93cWSJTfH+mHLklVAFIsqiHfKyxuTOLMHRnmQ3NeXp7yfJIbzMph3LC5
-         ARNtoBvnz8Xb92mXE5sGX92ksAbQFedknanGDHyLojgb3p4rO7Y4SSGHxyNBKPC9UIHs
-         75tFHHmf3EQzAhLaBP8wMJCnIL5LuGEf0rM+2/a6zBz0RqzckY5byo5qoztLOK3ESzlH
-         YymNXZmyeAuxzKAgZvhh3lN6mGIU5w5Dc/nLhew5tCwJGqdp4xXrbgJg19ZiZU5aoGcz
-         a4S/hsRUISdZmGa1BrIbT0rh7D/Jwho2d7ehSQJIM+DlLvkDuOsQuNcHzES219Nus6eQ
-         EHjg==
-X-Forwarded-Encrypted: i=1; AJvYcCU9jPpAeH0GX4DER5j+gXFhqC//tTSLUeBv+iadRC/klJV5WnpltBeWR5FW9VtjbhmaKTote99l9iQ=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxrsXiwTw8VcCon6KOB96W3pr0JyKrp+ioxxyd71fOkCKtNIGiD
-	QWckjFjrHgslZ6yERMlyYobkw7BCEUnTZmV5j1CCeJjrjTK5NRdlYLxdWkxo4Cl+vlrxbYk2GyN
-	E8IxI/VFVfObsy83mLA==
-X-Google-Smtp-Source: AGHT+IFANjV4vLX5QPuJ5KpCs0Rj644PourkYIVXhMKZkYuRk0oEaR0gmzWWf8Xi/v74hg4ToVXO6AC9XE7qoTU=
-X-Received: from wrbbs10.prod.google.com ([2002:a05:6000:70a:b0:430:a835:4ce8])
+        bh=+856FUFrQ1uMLS1oGlG8WJLskHLLy9o2M4Kx5xq+7BM=;
+        b=PRThVFiinXdkXEkcvfLPSsZfG3MQwhzCR+jxk6qGlk5ExUaUiKEqiDTtlXb0tJKUhd
+         3uOtVOc2iYXRqzRuU3MasEX1GvXe6hhyLXxzW2LgsPWDm0PfZ+QOuUx+NI1b/6yAgfl1
+         FwHrf+imDK/tcVs4lc/8leFA9tTXtdtNANHrVzzTKJL+tkNq6P2Alh1td8qVS2Kn1HJr
+         n8UhPvZ/uLPjH37btXEB7SDmZzSLGGEGHTTk3eOpjc6JDEm8Pf5d/ToPjFuUjxuk8baE
+         0QLOXLE6Cc8BOFjKMKoFcYvRLy1JBikIk0MJ4KeSSeQPS3SqNCGQzxbFJ6goJOEGd0lC
+         ReqA==
+X-Forwarded-Encrypted: i=1; AJvYcCW7dmHuQDbfb1W+2RUNl2BLo+Y0QEfuNdQltp2tnqovjqzJxqthQ2ZFPhH8GqKaNsCXuRQ/fTGy3ek=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxWu9VPJadGc5uGI25NhAUBh2orNsQZC1r5HKHF3QxzjPcZxdOI
+	QJE61NSBIHR6NvaCMztmw6tnUEV6PPdDgm8lqDBBlYcSOm8dMRu5xap1HlOp9xnaQyuxwkmIHlj
+	7YgNvzH3oTaNVbhVE0g==
+X-Google-Smtp-Source: AGHT+IGmHpal9o9kYRCqeudE5OGpHQsDJxQXH71nc/uK+vHzcbqRlM1R9M+yj/rHy+PL0q1Xd9tRxUhXRg/AaE8=
+X-Received: from wmkn12.prod.google.com ([2002:a7b:c5cc:0:b0:47b:e2d9:2e56])
  (user=aliceryhl job=prod-delivery.src-stubby-dispatcher) by
- 2002:a05:6000:1a8b:b0:432:84f9:95f4 with SMTP id ffacd0b85a97d-432c374f4a7mr27176145f8f.31.1768317206801;
- Tue, 13 Jan 2026 07:13:26 -0800 (PST)
-Date: Tue, 13 Jan 2026 15:12:36 +0000
+ 2002:a05:600c:1f8c:b0:477:7d94:5d0e with SMTP id 5b1f17b1804b1-47d84b40955mr245818705e9.27.1768317208607;
+ Tue, 13 Jan 2026 07:13:28 -0800 (PST)
+Date: Tue, 13 Jan 2026 15:12:37 +0000
 In-Reply-To: <20260113-clk-send-sync-v4-0-712bc7d94a79@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
@@ -72,22 +72,22 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0
 References: <20260113-clk-send-sync-v4-0-712bc7d94a79@google.com>
 X-Developer-Key: i=aliceryhl@google.com; a=openpgp; fpr=49F6C1FAA74960F43A5B86A1EE7A392FDE96209F
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1369; i=aliceryhl@google.com;
- h=from:subject:message-id; bh=5DE8fHUHNeug+88kGFo3S/QoXnkelD/PvswD8rGjIrM=;
- b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBpZmEQNNwQvfw9jQxuDNt4fC2n5Cfx+vcwSjcWB
- EjbHAg9hU2JAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCaWZhEAAKCRAEWL7uWMY5
- RvRxEACuwFIesZvoHE5gK5RQaiufwGNORvDKEuP1GJmMebtB3qC4PmH2wFMguWvNpJTUKWU0D5d
- jdQ+ITMxKWDtDMpGzdoBMliByodTN5wwtvNZGIPaLLEUZ+uImdP1HlZ+5M03+eyQJOMs05GW7Zc
- TSlL6zpiv+54WAj40TJH1d5HPB0WLbITPscM6xHXaCvfaCMxSEcbqqDprp8VoDZ6zgZSeAIqc8v
- zVSXwizZxkbc9uGfqfyY6kGS2soNpo+IyeElYFqMNY4pR992VOqL1+37BbqF6BxAxLrtBwNoyBC
- KbUq7ZcC+1DqYAejPv1soQ+e+hcJK9X/dtfkBjW6GBe3B9P0Y6s7qEHIUqV7BSEvxOB/mIQ5UZ0
- rtRm3VEAOnA8v8E2oGTQazJ58ezoKWwB5L6muDTmHlSyEYQhVqNUNAVsxi61bWxCcuXPu9KmxgC
- LHI3zLNriAuors7Gzwlu7Ahzu/6yPgqwJ6ebzzMhWAwTKLvVRvIL7BbAMjEEfFofP9IEuyazi/l
- Up8zWnwYgaiqqLz/g9gxZdaF1h1dm0DWqMUCkAe0/o95w00/ZUtgyOkYMGdSqL8zyYHhS6K7/Qg
- NaPzd6f01DT77HGn2DEO6xOX2PbrAgvzU9PVSXxUEpt/0wR1I5PF2aS3brFDfpjwLpJ/0c2p8pf 28UFVHEynEoLnxg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1702; i=aliceryhl@google.com;
+ h=from:subject:message-id; bh=gBgvzdGxsZJ9P+o4TYuYZOZRWaJW6R3le+1fCyVi18I=;
+ b=owEBbQKS/ZANAwAKAQRYvu5YxjlGAcsmYgBpZmEQ3m0NLVAdMWPcGPUsnYIg3W5r/sNDHFFhx
+ Dkr8r8Oc/GJAjMEAAEKAB0WIQSDkqKUTWQHCvFIvbIEWL7uWMY5RgUCaWZhEAAKCRAEWL7uWMY5
+ RvfEEACjTscIGJhJynFAKM6GeR0pshAjNruRsL1XI2fjXIhSE+SSnT4iB2E59xTIcS3M+nwv0oR
+ lptUt2zMowQ0JNWnWfMlhYHwaSgd7j+IBwQOVbs8KFtzuMLrLQD1PpJmYQYsx9aIlzyb5uPIF+p
+ 6I7+cnay5Xpoc6yv21NhJ1/WW77v+u3zgxTMoY6eyuF7ItHn0gI12TPn5TDUyqba8oE7XCAEiz5
+ DY7lo6vCuKHJHY/ysoW1cIN/3CLRBTgof4w8crzoLDnO26t1/55uZ6xRyhgkVNrWfpuKTpOFW+R
+ AES7YP3VLCq2TMXhF9XeJ/ZqiDJFo2sawCja+1APoWHLnZRPL7Yn4JhxuD0vg9JpdjyEEGQk1LJ
+ eNCsvUE1AsYAHWajubBONw1i0Zp9grMM2d+rkKCESW7cmqCNVBTEMUekH/wzc8r4N4FJSRq5Gen
+ a/jBA/914TYhFX3ld9WgYBN1nrvIur9CJdr3CwZZmc1y6cAwUw21Fnh77pJF5/CRK2VXR1UPL4Y
+ epuqg2O56ZCBKBG24sLv0yZ2FylVV1jXkBGC0sPytS+Zw26BczE2hM1tgQ0JaDOKKFTGWLF2x6Z
+ 1h9mybuFKl/JaZmCCV/9SPM03m6WMzhmRV/Xnv6AGxM6KuU/VWAMbEPsCuoc0Po791vKHzbbfCd 1qJ4UwkULxYnX9A==
 X-Mailer: b4 0.14.2
-Message-ID: <20260113-clk-send-sync-v4-1-712bc7d94a79@google.com>
-Subject: [PATCH v4 1/3] rust: clk: implement Send and Sync
+Message-ID: <20260113-clk-send-sync-v4-2-712bc7d94a79@google.com>
+Subject: [PATCH v4 2/3] tyr: remove impl Send/Sync for TyrData
 From: Alice Ryhl <aliceryhl@google.com>
 To: Stephen Boyd <sboyd@kernel.org>
 Cc: Michael Turquette <mturquette@baylibre.com>, 
@@ -104,39 +104,45 @@ Cc: Michael Turquette <mturquette@baylibre.com>,
 	linux-pwm@vger.kernel.org, Alice Ryhl <aliceryhl@google.com>
 Content-Type: text/plain; charset="utf-8"
 
-These traits are required for drivers to embed the Clk type in their own
-data structures because driver data structures are usually required to
-be Send. Since the Clk type is thread-safe, implement the relevant
-traits.
+Now that clk implements Send and Sync, we no longer need to manually
+implement these traits for TyrData. Thus remove the implementations.
 
-Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
+The comment also mentions the regulator. However, the regulator had the
+traits added in commit 9a200cbdb543 ("rust: regulator: implement Send
+and Sync for Regulator<T>"), which is already in mainline.
+
 Reviewed-by: Danilo Krummrich <dakr@kernel.org>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 Reviewed-by: Boqun Feng <boqun.feng@gmail.com>
 Reviewed-by: Gary Guo <gary@garyguo.net>
+Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
 Signed-off-by: Alice Ryhl <aliceryhl@google.com>
 ---
- rust/kernel/clk.rs | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/gpu/drm/tyr/driver.rs | 12 ------------
+ 1 file changed, 12 deletions(-)
 
-diff --git a/rust/kernel/clk.rs b/rust/kernel/clk.rs
-index c1cfaeaa36a22be2e3180b1e9142bb608ab276ea..d192fbd97861212d738d24510eebcd99c9177f2c 100644
---- a/rust/kernel/clk.rs
-+++ b/rust/kernel/clk.rs
-@@ -129,6 +129,13 @@ mod common_clk {
-     #[repr(transparent)]
-     pub struct Clk(*mut bindings::clk);
+diff --git a/drivers/gpu/drm/tyr/driver.rs b/drivers/gpu/drm/tyr/driver.rs
+index 0389c558c0367522471ea78fcf72a6b58c4a3650..09711fb7fe0b1c83b72bffba06f5a76c53244f4d 100644
+--- a/drivers/gpu/drm/tyr/driver.rs
++++ b/drivers/gpu/drm/tyr/driver.rs
+@@ -53,18 +53,6 @@ pub(crate) struct TyrData {
+     pub(crate) gpu_info: GpuInfo,
+ }
  
-+    // SAFETY: It is safe to call `clk_put` on another thread than where `clk_get` was called.
-+    unsafe impl Send for Clk {}
-+
-+    // SAFETY: It is safe to call any combination of the `&self` methods in parallel, as the
-+    // methods are synchronized internally.
-+    unsafe impl Sync for Clk {}
-+
-     impl Clk {
-         /// Gets [`Clk`] corresponding to a [`Device`] and a connection id.
-         ///
+-// Both `Clk` and `Regulator` do not implement `Send` or `Sync`, but they
+-// should. There are patches on the mailing list to address this, but they have
+-// not landed yet.
+-//
+-// For now, add this workaround so that this patch compiles with the promise
+-// that it will be removed in a future patch.
+-//
+-// SAFETY: This will be removed in a future patch.
+-unsafe impl Send for TyrData {}
+-// SAFETY: This will be removed in a future patch.
+-unsafe impl Sync for TyrData {}
+-
+ fn issue_soft_reset(dev: &Device<Bound>, iomem: &Devres<IoMem>) -> Result {
+     regs::GPU_CMD.write(dev, iomem, regs::GPU_CMD_SOFT_RESET)?;
+ 
 
 -- 
 2.52.0.457.g6b5491de43-goog
