@@ -1,64 +1,53 @@
-Return-Path: <linux-pwm+bounces-7894-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7895-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id D32C5D11C23
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 Jan 2026 11:14:44 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5B1D5D1757B
+	for <lists+linux-pwm@lfdr.de>; Tue, 13 Jan 2026 09:42:14 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 4A08E30055A1
-	for <lists+linux-pwm@lfdr.de>; Mon, 12 Jan 2026 10:14:44 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 1A4AB30057C6
+	for <lists+linux-pwm@lfdr.de>; Tue, 13 Jan 2026 08:42:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E984429BDBA;
-	Mon, 12 Jan 2026 10:14:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6F3EF3806CB;
+	Tue, 13 Jan 2026 08:42:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="WOIojuOf";
-	dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b="kZ34JSvh"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="D4bCiz1s"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail.mleia.com (mleia.com [178.79.152.223])
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B03C29B78D;
-	Mon, 12 Jan 2026 10:14:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.79.152.223
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 643F73803E1;
+	Tue, 13 Jan 2026 08:42:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768212883; cv=none; b=XXnSyOustDS2uUR/hsBwas/2EPLaYtSSktyjnEcqc/PLwCNssOPWJ4KUlaAcdpsGoEcTX50APLDkDztuO9N2X+7M/UxmFy645ec8GrgzzzpOEwUIAhztTs4K54tKIfOMcfMz3W0u+l6e3RgBISHVOtpnENiI4x7r2PhK20J8Jgk=
+	t=1768293730; cv=none; b=WodNiEz3DrxaLhJpAQb4klkZ9HU7MHU++B9ihKYYOKUcYNZ+brhYO0eWicDgtKUmTeWqWPlN16IHMaHCYvZ31xQo/eup/P8h2Qd1pYntz3LbAqWsiUYh50E86zE2Vwm6dSIYFOJ6VtDQ3vKJRLARb8yZxgVybbXwOeQRbBLQT3U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768212883; c=relaxed/simple;
-	bh=TnpQUvJ527eVwMXBZYhbLsnGOQrXDJENMWY2sTT8Lv0=;
+	s=arc-20240116; t=1768293730; c=relaxed/simple;
+	bh=eTaa7uYVYlhQUbpYnGgaDJsedn/8UNk3+6twemkS4Do=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZkUd3KilybPlGIzmePo+FJjtIeQ932GFFPwMncoNS1UwtfTg6nUEqMDAjt5WdtepbamAZn5Bo86/p1IsjOIXWMt2bqUP23fS7klCMH657SQzwJIuasj/Aa8m+aTO1kczL+XBuOHTgieUMm+ygnr4p/m410NTDsoe4R0FCE+k2gE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com; spf=none smtp.mailfrom=mleia.com; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=WOIojuOf; dkim=pass (2048-bit key) header.d=mleia.com header.i=@mleia.com header.b=kZ34JSvh; arc=none smtp.client-ip=178.79.152.223
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=mleia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=mleia.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
-	t=1768212881; bh=TnpQUvJ527eVwMXBZYhbLsnGOQrXDJENMWY2sTT8Lv0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WOIojuOfUGdy/xij8sel/MB5Xq5jZPvH4V5TRSlrWwu+9IhzRUM+R2QCiOtNxTJUv
-	 e9RwQqq6c5Z9zItIWBE5vrSBgwc4urKAVbgcbJ0BIOYWeaQakeRhFQJmXIvrbx1hLl
-	 1LcOt6GxPQUrPjCDXTLZyxst8fodtf3eKsDEAtxugU/ceCb4npar+Vmp9IC4eRnbs9
-	 hC8bx1wSVR9SzVUKgMre32BA8iE50wOyU/DCpA28y9Afk3JuyaAx22YkI5iwv0RkxM
-	 qfeMhHyVJGNYDJls1rh4STXSYnL24SiEEnseYGcrbLs9Vrpzexn1gKfdYvkkP1aiPc
-	 X22Zne0zCtE6A==
-Received: from mail.mleia.com (localhost [127.0.0.1])
-	by mail.mleia.com (Postfix) with ESMTP id E423D3EBBAC;
-	Mon, 12 Jan 2026 10:14:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mleia.com; s=mail;
-	t=1768212880; bh=TnpQUvJ527eVwMXBZYhbLsnGOQrXDJENMWY2sTT8Lv0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kZ34JSvhZuw4dczNIwYdjpy07yXmmOM59LEY3sf9lFrJMbsSHG3kv6sDqvGl3Sy76
-	 KLp+rgAZBXcbb4M4CpD2cUhKQh0hb1Xja8/oopI/X0vdopS9ByIrhe09ToEBo5jMtL
-	 8gdlN1fzuIMZjZdZ/drW6b0y7E/GUVyfxG+//VTHAALqnks21+zlXQ4XZ1yPH0ofF9
-	 TiCY0T/mAdiQqNV9a5yRVNWfDh47XMl0KgdIU5h2vFSj2ij/wlXS1ATYYYIL+W/RGG
-	 +JBe4CG1mXfiG3mm2vIVI68rgfNy3uPdo8uouvLxvEOgo0/4LSZdBdiLtT24y1Eb8X
-	 pmsjkFjdPC+vA==
-Received: from [192.168.1.100] (91-159-24-186.elisa-laajakaista.fi [91.159.24.186])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mail.mleia.com (Postfix) with ESMTPSA id 525733EBBA0;
-	Mon, 12 Jan 2026 10:14:40 +0000 (UTC)
-Message-ID: <20bd5723-212b-474d-84ea-52dec73a5333@mleia.com>
-Date: Mon, 12 Jan 2026 12:14:39 +0200
+	 In-Reply-To:Content-Type; b=UZukX1NU1q3a0+1dmcA0XjcxVp5qKDP6re7aNZsGWpiq2dbkVQiodbgpXxRYyiTDkSnpX8TzsuVd6yyfa2/Xl5Noo5+/d4eTL91LzA5x5a/ry1arE5hNdBvQAddpdFbU/Uv9XxaIhNhrEzFEN+j+JA0Hnu6CL+qNp0tabog+xTU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=D4bCiz1s; arc=none smtp.client-ip=185.246.84.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-02.galae.net (Postfix) with ESMTPS id 7A1CA1A2827;
+	Tue, 13 Jan 2026 08:42:05 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 3871B60732;
+	Tue, 13 Jan 2026 08:42:05 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 22D80103C8A64;
+	Tue, 13 Jan 2026 09:41:59 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1768293724; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:content-language:in-reply-to:references;
+	bh=pU7qH//lkIIPOm3hIL5pTBY7h36/3Zgg7ieWlukkNE0=;
+	b=D4bCiz1sH77ktIaCzuq9ouXD6Bb+9rcZLbksqXn5C5ZShIDVgPNKcycB5YHLz1ljAdTywQ
+	yizWUJ2Ong5/FkCDGAY2FwIRFtw57d1tgtKzXkbBUejiYBk6x84Jl+81nnJroZsIteoCc/
+	HtNh0V8qXoeW6/JwFvMcybq32S+Y7BMLJlOKfQdC1+mkuUlvaOe/efPeSi9+HT3O36e085
+	KVGIxEQfMxo6pGC1Nw8Ly7EpKh/QRV7ImiupwpK4xZBTi8R/8yxfH232Y0gsjoWLEh6Ogb
+	vzHUA7bwXJpaICbUmsXzlCR0TknanG2tPNKrXGK9+0AHTIjUZPh3oP8iXHnX9g==
+Message-ID: <d077abbb-6a4b-4349-88be-0d90e23eb570@bootlin.com>
+Date: Tue, 13 Jan 2026 09:41:58 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -66,69 +55,46 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 1/2] dt-bindings: pwm: nxp,lpc32xx-pwm: Add optional Motor
- Control PWM interrupt
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Frank Li <Frank.Li@nxp.com>,
- Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>,
+Subject: Re: [PATCH v2 2/4] pwm: sun50i: Add H616 PWM support
+To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>, Philipp Zabel
+ <p.zabel@pengutronix.de>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
  linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org
-References: <20260110014524.3379187-1-vz@mleia.com>
- <20260110014524.3379187-2-vz@mleia.com>
- <20260112-garnet-axolotl-of-acceptance-3978fd@quoll>
-From: Vladimir Zapolskiy <vz@mleia.com>
-In-Reply-To: <20260112-garnet-axolotl-of-acceptance-3978fd@quoll>
+ linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+ linux-kernel@vger.kernel.org, Joao Schim <joao@schimsalabim.eu>
+References: <20251217082504.80226-1-richard.genoud@bootlin.com>
+ <20251217082504.80226-3-richard.genoud@bootlin.com>
+ <en7wscywn3xpw7cxvc2ngwrmjfciglzxgaje5qc5ngiehrjufh@jbvgp2neyzzx>
+ <9c55d591-a280-4ed7-91b1-0c867cfff658@bootlin.com>
+ <mu3ciykmtxoaa24mdw7mofpdapbii23qrubw6uzptszok43tta@tq3rguupehwe>
+From: Richard GENOUD <richard.genoud@bootlin.com>
+Content-Language: en-US, fr
+Organization: Bootlin
+In-Reply-To: <mu3ciykmtxoaa24mdw7mofpdapbii23qrubw6uzptszok43tta@tq3rguupehwe>
 Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-49551924 
-X-CRM114-CacheID: sfid-20260112_101440_950511_BC358454 
-X-CRM114-Status: GOOD (  12.33  )
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 
-On 1/12/26 11:10, Krzysztof Kozlowski wrote:
-> On Sat, Jan 10, 2026 at 03:45:23AM +0200, Vladimir Zapolskiy wrote:
->> NXP LPC32xx Motor Control PWM has an interrupt line shared with TIMER4,
->> and the interrupt may be used to report events from programmable counters
->> e.g. timer counter limit (period), match counter (pulse-width), or from
->> counters on input lines of PWM channels.
+Hi Uwe,
+>>>> +	for (unsigned int i = 0; i < data->npwm; i++) {
+>>>
+>>> Huh, AFAIK we're not using declarations in for loops in the kernel.
 >>
->> As a reference and for more details see NXP LPC32xx User Manual, table 595.
->>
->> Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
->> ---
->>   .../devicetree/bindings/pwm/nxp,lpc3220-pwm.yaml       | 10 ++++++++++
->>   1 file changed, 10 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/pwm/nxp,lpc3220-pwm.yaml b/Documentation/devicetree/bindings/pwm/nxp,lpc3220-pwm.yaml
->> index cdd83ac29caf..53520f005acb 100644
->> --- a/Documentation/devicetree/bindings/pwm/nxp,lpc3220-pwm.yaml
->> +++ b/Documentation/devicetree/bindings/pwm/nxp,lpc3220-pwm.yaml
->> @@ -32,6 +32,16 @@ required:
->>   
->>   allOf:
->>     - $ref: pwm.yaml#
->> +  - if:
->> +      properties:
->> +        compatible:
->> +          contains:
->> +            enum:
->> +              - nxp,lpc3220-motor-pwm
->> +    then:
->> +      properties:
->> +        interrupts:
->> +          maxItems: 1
+>> Actually, I've read somewhere (in LWN I guess) that Linus seems ok with that,
+>> but I'll remove it if you prefer.
 > 
-> Properties must be defined in top-level. You only narrow constraints or
-> disallow them :false per variant in if:then: blocks.
+> If you find your source again, I'd be interested.
+I took me some time, but I finally found it (thanks to Hervé):
+https://lore.kernel.org/all/CAHk-=wiCOTW5UftUrAnvJkr6769D29tF7Of79gUjdQHS_TkF5A@mail.gmail.com/
+
+
 > 
+> Best regards
+> Uwe
 
-It makes sense. In this case would it be better to split the schema file
-into two, one for each PWM type? Two described PWM types are too unsimilar,
-apparently it was wrong to merge them under a single .yaml file in the commit
-4cd2f417a0ac ("dt-bindings: pwm: Convert lpc32xx-pwm.txt to yaml format").
-
--- 
-Best wishes,
-Vladimir
+Regards,
+Richard
 
