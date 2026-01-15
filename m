@@ -1,53 +1,54 @@
-Return-Path: <linux-pwm+bounces-7906-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7907-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id D0257D23A1B
-	for <lists+linux-pwm@lfdr.de>; Thu, 15 Jan 2026 10:40:21 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id D7206D23BD7
+	for <lists+linux-pwm@lfdr.de>; Thu, 15 Jan 2026 10:55:05 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id E40E230573F6
-	for <lists+linux-pwm@lfdr.de>; Thu, 15 Jan 2026 09:36:36 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 28F59302EF4C
+	for <lists+linux-pwm@lfdr.de>; Thu, 15 Jan 2026 09:52:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E052E35CB9E;
-	Thu, 15 Jan 2026 09:36:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8D6F35F8AF;
+	Thu, 15 Jan 2026 09:52:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FEnl69bU"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Wv0/ls4Q"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE382357A3B;
-	Thu, 15 Jan 2026 09:36:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3C5A2DA77F;
+	Thu, 15 Jan 2026 09:52:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768469787; cv=none; b=YhLdqY8HTLOVg2v4AX4lKGo5Q0WuQLHvWShZJ5IKDBuTiSGWeWtbHpb7wLFEu8He7MB6BeT6mCRRZo79GG75/bwcckJN1kSgJWyt7dYZ5TnRaP75zpj2FG5Yl1fIriyQY47GcKqEi0n9YTBwXj83NeRThcqe5MFFRixkhIM6MvQ=
+	t=1768470760; cv=none; b=blpjZZNAWj8VMmbrEoFTyvJUrhSuo27rYfaMnj4cfgtt4yN/CVnfJ4efSQIgOl0IeE4NoNIMRQuX7dQBSYIs1nuNcv9G5zqLs1o3W69pceFTZeCm42AX0rBVcnAZ4xPs91GalvifyhabpyQrAAt95QsoLeQ58trBJiDgwcyuy20=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768469787; c=relaxed/simple;
-	bh=f72U/wCXjwulYI3pBGU7Hk+ytVTUHLWM8EJRa8rHwBA=;
+	s=arc-20240116; t=1768470760; c=relaxed/simple;
+	bh=ie3TmYI5cr3rUG7dAH0RXadAUzvgEe3WDQN3llnpLt0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rQk1g3oj2D/6XssKPkvdieYa6iLaeannWOYQOwMd2tZsTpUZzN3Wl1KVf1NmAwg/w2VQL/mU+96LckZjtw7Id1JQECdEwArD22l7vw16tG51APCYFHKYJWcnwkX12XodG1D1AHmJxPkWhGP30Bt74xY4FG7pABbQwt95k+440pU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FEnl69bU; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0E39C16AAE;
-	Thu, 15 Jan 2026 09:36:26 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=s4BJkwa/lJEvVw936VqKeuL3KiN8ZYdFfMTYbLyKc4UZv7+0Uti8aaZp5rZm5bf+H6D3UqionIg46859uZe71dIObu8kzSfxYBgqVG//8TW+1mbrOZwY3AIqnthpUrGn/GV2Bvpe9eoWEWJSXGrsOXD+W9fwqBZCwpqStJ3IoAQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Wv0/ls4Q; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F21F5C116D0;
+	Thu, 15 Jan 2026 09:52:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768469787;
-	bh=f72U/wCXjwulYI3pBGU7Hk+ytVTUHLWM8EJRa8rHwBA=;
+	s=k20201202; t=1768470760;
+	bh=ie3TmYI5cr3rUG7dAH0RXadAUzvgEe3WDQN3llnpLt0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FEnl69bUOneJ/FW0jcRXCFsSALd3zjMODhVcPOR5EyQF7bOibWjSTzSnLDe7F5qcQ
-	 /AQFoBE+pv3aNxKTAAedhaOj6PeR+FxJISfOZK6ckkhUII0iTvneBmkIVafE+lMeug
-	 IscaR6XwCpHvk75kaJZUaumlwGW6drMD8qfvy1wfaN3887TooFUwvTEetprzUYlhNO
-	 wIP+BthV9DZREPLHoJdTAZNSY/tf7JfNDi/41PUhPy/Xs+leAoLufTIlDr2LQH8EZh
-	 GCoV+ADrdCCQgmgQXqWdQHQT5V7emomQC6q0wuXmD1v2gr1l5H4UxZGwH/5m90U/Q5
-	 lxJ1c5g9WVsFQ==
-Date: Thu, 15 Jan 2026 10:36:24 +0100
+	b=Wv0/ls4QVoGKTVjl9268gU38Fsq3tsRrW5GWkUjGCnYiQEA6OOSlCDnor4N/1VZEn
+	 TOVOvR2UEvVOVTMfIkJr5P7gnDHwIRlyMupn+fwLDzB84tt9UHqvHnkV3rw/3dmSwD
+	 g+XSboVVh3kQdvS3fpkH++ASC7+f00PZZ7rXkrAQgt2ubr4Fsep1nDGhiz8YVkgp/o
+	 7ke7bJu+9IIPRBfauFviJDV0QZ3nHX84SAUtb145+/zizpJh5OFylc176G/LveiZqA
+	 bj/WsD57BqxTCGX76yNkW/cJnScyv28Q75bwZ6A5SGe6JbRQO1skknqev2S46mkPjA
+	 gydloRM32hoiQ==
+Date: Thu, 15 Jan 2026 10:52:37 +0100
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: "Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v7 6/9] pwm: tiehrpwm: factor out AQ force codes and
- polarity presets
-Message-ID: <sxdlmeurozq4laahoe2aonkw5jzpjxleafg7o7iji3cp6rlfea@6h4w2vcn55lh>
-References: <20251128003634.247529-1-rafael.v.volkmer@gmail.com>
- <20251128003634.247529-7-rafael.v.volkmer@gmail.com>
+To: Biju <biju.das.au@gmail.com>
+Cc: Biju Das <biju.das.jz@bp.renesas.com>, linux-pwm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, 
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+Subject: Re: [PATCH v4] pwm: rzg2l-gpt: Implementation of the waveform
+ callbacks
+Message-ID: <elf2i3oefpflkcxup3howpikgwko6uvm5rkimqwyzhq35nwowk@vtdbe6ad4rkw>
+References: <20251128103431.161591-1-biju.das.jz@bp.renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -55,212 +56,130 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="2s2z7wmxi2jlp5ad"
+	protocol="application/pgp-signature"; boundary="limlu64r62pyvpna"
 Content-Disposition: inline
-In-Reply-To: <20251128003634.247529-7-rafael.v.volkmer@gmail.com>
+In-Reply-To: <20251128103431.161591-1-biju.das.jz@bp.renesas.com>
 
 
---2s2z7wmxi2jlp5ad
+--limlu64r62pyvpna
 Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v7 6/9] pwm: tiehrpwm: factor out AQ force codes and
- polarity presets
+Subject: Re: [PATCH v4] pwm: rzg2l-gpt: Implementation of the waveform
+ callbacks
 MIME-Version: 1.0
 
-On Thu, Nov 27, 2025 at 09:36:31PM -0300, Rafael V. Volkmer wrote:
-> Introduce named constants for the Action-Qualifier force action codes
-> and use them to build the CAU/CAD/CBU/CBD/PRD/ZRO bitfield helpers
-> instead of repeating hard-coded numeric values in each field.
->=20
-> While at it, split the channel polarity presets into explicit up-count
-> and down-count variants for both channels. This keeps the resulting
-> AQCTL programming unchanged but makes the configuration easier to read
-> and extend.
->=20
-> No functional change intended.
->=20
-> Signed-off-by: Rafael V. Volkmer <rafael.v.volkmer@gmail.com>
-> ---
->  drivers/pwm/pwm-tiehrpwm.c | 85 +++++++++++++++++++++++++++++---------
->  1 file changed, 65 insertions(+), 20 deletions(-)
->=20
-> diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
-> index 41af1bf74cbb..e8bcf1ffa770 100644
-> --- a/drivers/pwm/pwm-tiehrpwm.c
-> +++ b/drivers/pwm/pwm-tiehrpwm.c
-> @@ -52,33 +52,78 @@
->  #define TIEHRPWM_AQSFRC				0x1A
->  #define TIEHRPWM_AQCSFRC			0x1C
-> =20
-> +/* Action-Qualifier force action codes (per 2-bit field) */
-> +#define TIEHRPWM_AQCTL_FRCLOW			0x1
-> +#define TIEHRPWM_AQCTL_FRCHIGH			0x2
-> +#define TIEHRPWM_AQCTL_FRCTOGGLE		0x3
+Hello Biju,
 
-while renaming the constants, and given that there are to AQCTL
-registers (AQCTLA and AQCTLB), I suggest to use AQCTLx as register
-identifier.
-
-> +/* Action-Qualifier bitfields for compare/period/zero events */
->  #define TIEHRPWM_AQCTL_CBU_MASK			GENMASK(9, 8)
-> -#define TIEHRPWM_AQCTL_CBU_FRCLOW		FIELD_PREP(TIEHRPWM_AQCTL_CBU_MASK, 1)
-> -#define TIEHRPWM_AQCTL_CBU_FRCHIGH		FIELD_PREP(TIEHRPWM_AQCTL_CBU_MASK, =
-2)
-> -#define TIEHRPWM_AQCTL_CBU_FRCTOGGLE		FIELD_PREP(TIEHRPWM_AQCTL_CBU_MASK=
-, 3)
-> +#define TIEHRPWM_AQCTL_CBU_FRCLOW		FIELD_PREP(TIEHRPWM_AQCTL_CBU_MASK, \
-> +						TIEHRPWM_AQCTL_FRCLOW)
-
-I think it's fine to skip the linebreak here and yield lines >80 char.
-If you want to keep the linebreak, please align the continuing line to
-the opening (.
-
-> +#define TIEHRPWM_AQCTL_CBU_FRCHIGH		FIELD_PREP(TIEHRPWM_AQCTL_CBU_MASK, \
-> +						TIEHRPWM_AQCTL_FRCHIGH)
-> +#define TIEHRPWM_AQCTL_CBU_FRCTOGGLE		FIELD_PREP(TIEHRPWM_AQCTL_CBU_MASK=
-, \
-> +						TIEHRPWM_AQCTL_FRCTOGGLE)
+On Fri, Nov 28, 2025 at 10:34:29AM +0000, Biju wrote:
+> -/* Caller holds the lock while calling rzg2l_gpt_config() */
+> -static int rzg2l_gpt_config(struct pwm_chip *chip, struct pwm_device *pw=
+m,
+> -			    const struct pwm_state *state)
+> +static int rzg2l_gpt_round_waveform_tohw(struct pwm_chip *chip,
+> +					 struct pwm_device *pwm,
+> +					 const struct pwm_waveform *wf,
+> +					 void *_wfhw)
 > +
-> +#define TIEHRPWM_AQCTL_CBD_MASK			GENMASK(11, 10)
-> +#define TIEHRPWM_AQCTL_CBD_FRCLOW		FIELD_PREP(TIEHRPWM_AQCTL_CBD_MASK, \
-> +						TIEHRPWM_AQCTL_FRCLOW)
-> +#define TIEHRPWM_AQCTL_CBD_FRCHIGH		FIELD_PREP(TIEHRPWM_AQCTL_CBD_MASK, \
-> +						TIEHRPWM_AQCTL_FRCHIGH)
-> +#define TIEHRPWM_AQCTL_CBD_FRCTOGGLE		FIELD_PREP(TIEHRPWM_AQCTL_CBD_MASK=
-, \
-> +						TIEHRPWM_AQCTL_FRCTOGGLE)
-> =20
->  #define TIEHRPWM_AQCTL_CAU_MASK			GENMASK(5, 4)
-> -#define TIEHRPWM_AQCTL_CAU_FRCLOW		FIELD_PREP(TIEHRPWM_AQCTL_CAU_MASK, 1)
-> -#define TIEHRPWM_AQCTL_CAU_FRCHIGH		FIELD_PREP(TIEHRPWM_AQCTL_CAU_MASK, =
-2)
-> -#define TIEHRPWM_AQCTL_CAU_FRCTOGGLE		FIELD_PREP(TIEHRPWM_AQCTL_CAU_MASK=
-, 3)
-> +#define TIEHRPWM_AQCTL_CAU_FRCLOW		FIELD_PREP(TIEHRPWM_AQCTL_CAU_MASK, \
-> +						TIEHRPWM_AQCTL_FRCLOW)
-> +#define TIEHRPWM_AQCTL_CAU_FRCHIGH		FIELD_PREP(TIEHRPWM_AQCTL_CAU_MASK, \
-> +						TIEHRPWM_AQCTL_FRCHIGH)
-> +#define TIEHRPWM_AQCTL_CAU_FRCTOGGLE		FIELD_PREP(TIEHRPWM_AQCTL_CAU_MASK=
-, \
-> +						TIEHRPWM_AQCTL_FRCTOGGLE)
+>  {
+>  	struct rzg2l_gpt_chip *rzg2l_gpt =3D to_rzg2l_gpt_chip(chip);
+> -	u8 sub_ch =3D rzg2l_gpt_subchannel(pwm->hwpwm);
+> +	struct rzg2l_gpt_waveform *wfhw =3D _wfhw;
+> +	bool is_small_second_period =3D false;
+>  	u8 ch =3D RZG2L_GET_CH(pwm->hwpwm);
+>  	u64 period_ticks, duty_ticks;
+>  	unsigned long pv, dc;
+> -	u8 prescale;
 > +
-> +#define TIEHRPWM_AQCTL_CAD_MASK			GENMASK(7, 6)
-> +#define TIEHRPWM_AQCTL_CAD_FRCLOW		FIELD_PREP(TIEHRPWM_AQCTL_CAD_MASK, \
-> +						TIEHRPWM_AQCTL_FRCLOW)
-> +#define TIEHRPWM_AQCTL_CAD_FRCHIGH		FIELD_PREP(TIEHRPWM_AQCTL_CAD_MASK, \
-> +						TIEHRPWM_AQCTL_FRCHIGH)
-> +#define TIEHRPWM_AQCTL_CAD_FRCTOGGLE		FIELD_PREP(TIEHRPWM_AQCTL_CAD_MASK=
-, \
-> +						TIEHRPWM_AQCTL_FRCTOGGLE)
-> =20
->  #define TIEHRPWM_AQCTL_PRD_MASK			GENMASK(3, 2)
-> -#define TIEHRPWM_AQCTL_PRD_FRCLOW		FIELD_PREP(TIEHRPWM_AQCTL_PRD_MASK, 1)
-> -#define TIEHRPWM_AQCTL_PRD_FRCHIGH		FIELD_PREP(TIEHRPWM_AQCTL_PRD_MASK, =
-2)
-> -#define TIEHRPWM_AQCTL_PRD_FRCTOGGLE		FIELD_PREP(TIEHRPWM_AQCTL_PRD_MASK=
-, 3)
-> +#define TIEHRPWM_AQCTL_PRD_FRCLOW		FIELD_PREP(TIEHRPWM_AQCTL_PRD_MASK, \
-> +						TIEHRPWM_AQCTL_FRCLOW)
-> +#define TIEHRPWM_AQCTL_PRD_FRCHIGH		FIELD_PREP(TIEHRPWM_AQCTL_PRD_MASK, \
-> +						TIEHRPWM_AQCTL_FRCHIGH)
-> +#define TIEHRPWM_AQCTL_PRD_FRCTOGGLE		FIELD_PREP(TIEHRPWM_AQCTL_PRD_MASK=
-, \
-> +						TIEHRPWM_AQCTL_FRCTOGGLE)
-> =20
->  #define TIEHRPWM_AQCTL_ZRO_MASK			GENMASK(1, 0)
-> -#define TIEHRPWM_AQCTL_ZRO_FRCLOW		FIELD_PREP(TIEHRPWM_AQCTL_ZRO_MASK, 1)
-> -#define TIEHRPWM_AQCTL_ZRO_FRCHIGH		FIELD_PREP(TIEHRPWM_AQCTL_ZRO_MASK, =
-2)
-> -#define TIEHRPWM_AQCTL_ZRO_FRCTOGGLE		FIELD_PREP(TIEHRPWM_AQCTL_ZRO_MASK=
-, 3)
-> +#define TIEHRPWM_AQCTL_ZRO_FRCLOW		FIELD_PREP(TIEHRPWM_AQCTL_ZRO_MASK, \
-> +						TIEHRPWM_AQCTL_FRCLOW)
-> +#define TIEHRPWM_AQCTL_ZRO_FRCHIGH		FIELD_PREP(TIEHRPWM_AQCTL_ZRO_MASK, \
-> +						TIEHRPWM_AQCTL_FRCHIGH)
-> +#define TIEHRPWM_AQCTL_ZRO_FRCTOGGLE		FIELD_PREP(TIEHRPWM_AQCTL_ZRO_MASK=
-, \
-> +						TIEHRPWM_AQCTL_FRCTOGGLE)
+> +	guard(mutex)(&rzg2l_gpt->lock);
+> +	if (wf->period_length_ns =3D=3D 0) {
+> +		*wfhw =3D (struct rzg2l_gpt_waveform){
+> +			.gtpr =3D 0,
+> +			.gtccr =3D 0,
+> +			.prescale =3D 0,
+> +		};
 > +
-> +/* Action-Qualifier polarity presets for up-count mode */
-> +#define TIEHRPWM_AQCTL_CHA_UP_POLNORMAL		(TIEHRPWM_AQCTL_CAU_FRCLOW | \
-> +						TIEHRPWM_AQCTL_ZRO_FRCHIGH)
-> +#define TIEHRPWM_AQCTL_CHA_UP_POLINVERSE	(TIEHRPWM_AQCTL_CAU_FRCHIGH | \
-> +						TIEHRPWM_AQCTL_ZRO_FRCLOW)
-> +#define TIEHRPWM_AQCTL_CHB_UP_POLNORMAL		(TIEHRPWM_AQCTL_CBU_FRCLOW | \
-> +						TIEHRPWM_AQCTL_ZRO_FRCHIGH)
-> +#define TIEHRPWM_AQCTL_CHB_UP_POLINVERSE	(TIEHRPWM_AQCTL_CBU_FRCHIGH | \
-> +						TIEHRPWM_AQCTL_ZRO_FRCLOW)
+> +		return 0;
+> +	}
 > =20
-> -#define TIEHRPWM_AQCTL_CHANA_POLNORMAL		(TIEHRPWM_AQCTL_CAU_FRCLOW | \
-> +/* Action-Qualifier polarity presets for down-count mode */
-> +#define TIEHRPWM_AQCTL_CHA_DN_POLNORMAL		(TIEHRPWM_AQCTL_CAU_FRCLOW | \
->  						TIEHRPWM_AQCTL_ZRO_FRCHIGH)
-> -#define TIEHRPWM_AQCTL_CHANA_POLINVERSED	(TIEHRPWM_AQCTL_CAU_FRCHIGH | \
-> +#define TIEHRPWM_AQCTL_CHA_DN_POLINVERSE	(TIEHRPWM_AQCTL_CAU_FRCHIGH | \
->  						TIEHRPWM_AQCTL_ZRO_FRCLOW)
-> -#define TIEHRPWM_AQCTL_CHANB_POLNORMAL		(TIEHRPWM_AQCTL_CBU_FRCLOW | \
-> +#define TIEHRPWM_AQCTL_CHB_DN_POLNORMAL		(TIEHRPWM_AQCTL_CBU_FRCLOW | \
->  						TIEHRPWM_AQCTL_ZRO_FRCHIGH)
-> -#define TIEHRPWM_AQCTL_CHANB_POLINVERSED	(TIEHRPWM_AQCTL_CBU_FRCHIGH | \
-> +#define TIEHRPWM_AQCTL_CHB_DN_POLINVERSE	(TIEHRPWM_AQCTL_CBU_FRCHIGH | \
->  						TIEHRPWM_AQCTL_ZRO_FRCLOW)
+>  	/* Limit period/duty cycle to max value supported by the HW */
+> -	period_ticks =3D mul_u64_u64_div_u64(state->period, rzg2l_gpt->rate_khz=
+, USEC_PER_SEC);
+> +	period_ticks =3D mul_u64_u64_div_u64(wf->period_length_ns, rzg2l_gpt->r=
+ate_khz, USEC_PER_SEC);
+>  	if (period_ticks > RZG2L_MAX_TICKS)
+>  		period_ticks =3D RZG2L_MAX_TICKS;
+>  	/*
+> @@ -278,21 +273,25 @@ static int rzg2l_gpt_config(struct pwm_chip *chip, =
+struct pwm_device *pwm,
+>  	if (rzg2l_gpt->channel_request_count[ch] > 1) {
+>  		u8 sibling_ch =3D rzg2l_gpt_sibling(pwm->hwpwm);
 > =20
->  #define TIEHRPWM_AQSFRC_RLDCSF_MASK		GENMASK(7, 6)
-> @@ -262,9 +307,9 @@ static int ehrpwm_pwm_config(struct pwm_chip *chip, s=
-truct pwm_device *pwm,
->  		aqctl_mask =3D TIEHRPWM_AQCTL_CBU_MASK;
+> -		if (rzg2l_gpt_is_ch_enabled(rzg2l_gpt, sibling_ch)) {
+> +		if (rzg2l_gpt_is_ch_enabled(rzg2l_gpt, sibling_ch, NULL)) {
+>  			if (period_ticks < rzg2l_gpt->period_ticks[ch])
+> -				return -EBUSY;
+> +				is_small_second_period =3D true;
 > =20
->  		if (polarity =3D=3D PWM_POLARITY_INVERSED)
-> -			aqctl_val =3D TIEHRPWM_AQCTL_CHANB_POLINVERSED;
-> +			aqctl_val =3D TIEHRPWM_AQCTL_CHB_UP_POLINVERSE;
+>  			period_ticks =3D rzg2l_gpt->period_ticks[ch];
+>  		}
+>  	}
+> =20
+> -	prescale =3D rzg2l_gpt_calculate_prescale(rzg2l_gpt, period_ticks);
+> -	pv =3D rzg2l_gpt_calculate_pv_or_dc(period_ticks, prescale);
+> +	wfhw->prescale =3D rzg2l_gpt_calculate_prescale(rzg2l_gpt, period_ticks=
+);
+> +	pv =3D rzg2l_gpt_calculate_pv_or_dc(period_ticks, wfhw->prescale);
+> +	wfhw->gtpr =3D pv;
+> +	if (is_small_second_period)
+> +		return 1;
 
-When I worked on the driver I wondered if these constants are really
-helpful or if explicit spelling out would be more readable, i.e.
+Why don't you need to set .gtccr in this case? I think it's wrong, but
+even if 0 is ok, please initialize the value explicitly.
 
-	aqctl_val =3D TIEHRPWM_AQCTL_CBU_FRCHIGH | TIEHRPWM_AQCTL_ZRO_FRCLOW;
+> -	duty_ticks =3D mul_u64_u64_div_u64(state->duty_cycle, rzg2l_gpt->rate_k=
+hz, USEC_PER_SEC);
+> +	duty_ticks =3D mul_u64_u64_div_u64(wf->duty_length_ns, rzg2l_gpt->rate_=
+khz, USEC_PER_SEC);
+>  	if (duty_ticks > period_ticks)
+>  		duty_ticks =3D period_ticks;
 
->  		else
-> -			aqctl_val =3D TIEHRPWM_AQCTL_CHANB_POLNORMAL;
-> +			aqctl_val =3D TIEHRPWM_AQCTL_CHB_UP_POLNORMAL;
-> =20
->  		/* if duty_cycle is big, don't toggle on CBU */
->  		if (duty_cycles > period_cycles)
-> @@ -278,9 +323,9 @@ static int ehrpwm_pwm_config(struct pwm_chip *chip, s=
-truct pwm_device *pwm,
->  		aqctl_mask =3D TIEHRPWM_AQCTL_CAU_MASK;
-> =20
->  		if (polarity =3D=3D PWM_POLARITY_INVERSED)
-> -			aqctl_val =3D TIEHRPWM_AQCTL_CHANA_POLINVERSED;
-> +			aqctl_val =3D TIEHRPWM_AQCTL_CHA_UP_POLINVERSE;
->  		else
-> -			aqctl_val =3D TIEHRPWM_AQCTL_CHANA_POLNORMAL;
-> +			aqctl_val =3D TIEHRPWM_AQCTL_CHA_UP_POLNORMAL;
-> =20
->  		/* if duty_cycle is big, don't toggle on CAU */
->  		if (duty_cycles > period_cycles)
-> --=20
-> 2.43.0
+Orthogonal to this patch: The if condition can only become true if
 
-Apart from the comments, I think the patch is an improvement.
+	if (period_ticks > RZG2L_MAX_TICKS)
+		period_ticks =3D RZG2L_MAX_TICKS;
+
+triggered above, right? So maybe it's more natural to do
+
+	if (duty_ticks > RZG2L_MAX_TICKS)
+		duty_ticks =3D RZG2L_MAX_TICKS;
+
+here, too?
+
+> -	dc =3D rzg2l_gpt_calculate_pv_or_dc(duty_ticks, prescale);
+> +	dc =3D rzg2l_gpt_calculate_pv_or_dc(duty_ticks, wfhw->prescale);
+> +	wfhw->gtccr =3D dc;
+> =20
+>  	/*
+>  	 * GPT counter is shared by multiple channels, we cache the period ticks
 
 Best regards
 Uwe
 
---2s2z7wmxi2jlp5ad
+--limlu64r62pyvpna
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmlotRYACgkQj4D7WH0S
-/k4VhwgAtgMa3Bm4730z846YvYBvrLGbdAwyalyV0Yiu6WayEx2ya1nKZf/zvbGv
-ATti2yE2MUemaowislUUvPAcitH4WCLY4hMb8eWiRuMviYFP7Kgl028KgobHNqEn
-CotYrRSeRyfbBTccvMHPwHk0WcaCFTWy0UWDS9Bmzmks+LjpqzGfZ5PGMV01J0BC
-L4x4cwxbJcPEycwg27wQYxbTZ7owMnHv3SzOBP4AqtaUP9xZuWJEh+gTHPzrqlAN
-fmsmiVgwuc8KIz2AE9F8hKL0RFGpVWVZq2neWNQG+SrRDiHK0A6Rj4FLgUI3APB/
-tbEPvuoVEVOtrIHK0pRzgz1zGmo03g==
-=iYSx
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmlouOMACgkQj4D7WH0S
+/k6WJggArcDzWQgtRNk1bcgE5jTydUMbFwfJL+pJQpP23c5j5AV1LBE51i50ZWG1
+e88gTlaBUf/KxpKbskpwtuJfmQ5IIxPLLQFLoekVEanWGK4mCv5LnZM40ZWHwbYC
+x7giKZkMqDsfEzz2wGQyI6hWCyXvDAWbLyXXP3rLZgqsODCsOMk7f0nnspPNbRfT
+VxBY9dOgNV4c6tGN0yAu7KEaVmfMk/gMAcwaB3YqPgqhOu45Ros7oBslKF2Mulia
+d/yHyqLaqPm8pU5AmvIKJDawBiQoKoLI+UHaEuE4aKa0cCTmPPEDTAjBLWg3HFJL
+OoovaotpQqJr8sUoSUpy8hrV8oO5Dg==
+=6r58
 -----END PGP SIGNATURE-----
 
---2s2z7wmxi2jlp5ad--
+--limlu64r62pyvpna--
 
