@@ -1,171 +1,278 @@
-Return-Path: <linux-pwm+bounces-7924-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7927-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 02B20D3A98F
-	for <lists+linux-pwm@lfdr.de>; Mon, 19 Jan 2026 13:54:56 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id CCAC8D3A9A3
+	for <lists+linux-pwm@lfdr.de>; Mon, 19 Jan 2026 13:57:36 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 57DC63002B9E
-	for <lists+linux-pwm@lfdr.de>; Mon, 19 Jan 2026 12:54:55 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id E6A8330019D7
+	for <lists+linux-pwm@lfdr.de>; Mon, 19 Jan 2026 12:57:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B170736166F;
-	Mon, 19 Jan 2026 12:54:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E748D362128;
+	Mon, 19 Jan 2026 12:57:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mc9IqOtl"
+	dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b="ZjrNGAua"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from CWXP265CU009.outbound.protection.outlook.com (mail-ukwestazon11021122.outbound.protection.outlook.com [52.101.100.122])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161CE326954
-	for <linux-pwm@vger.kernel.org>; Mon, 19 Jan 2026 12:54:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3C16361DB1;
+	Mon, 19 Jan 2026 12:57:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.100.122
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768827292; cv=pass; b=KLeOrror24Ua+lUpjGYShhk5FfQdbaHneCAUcZkIgUaXhtcJ9TWMEJ0jXV8yOvul5FvIPmjILSIIXXSwJRPKiF58ywehFBC9sa7Z8xBeSh1EOWnlaX9wLzvge+i+GiB0AepO1tNe4cWmHsyHxE4+LlllvjNY59AkF9MuPrIO3Mc=
+	t=1768827446; cv=fail; b=jgGDYnomieYYGG7wBVbiaI/4+wMF6j6Uwdyw7wAIpbtiaRx6DFLM+XgzuGsvTnwfJ3XFgfkFkrNnROqiYkJ6dUlbFbhBTGa6tCXb1xVSExNfoCA1y9/x3ofbRZ1xB6WwTwrw2C39TAsaZLo/rY+l/3Alr5ZTh7L0FxG7+KD42J8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768827292; c=relaxed/simple;
-	bh=IkKYKGBczUCc6iecBFNUGNFccawVKBJFo/hayrkeNZ0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U6c0Ywhu9rgJeiAYgA7mFmJbPXXuBscvsGSbAgcNsjOKGY1w+opF8C/809982gQ9FpKHuPj97KY6+OR+vah45NmV9nJ5fPXl6UNauI6RrNK8QSQb754kKga41wViiE4jiC+7QFRBgzvyuNBSFHqyROqDRVXHZTh7MIMOAN9pqeI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mc9IqOtl; arc=pass smtp.client-ip=209.85.208.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-382fb6d38f7so29946721fa.3
-        for <linux-pwm@vger.kernel.org>; Mon, 19 Jan 2026 04:54:50 -0800 (PST)
-ARC-Seal: i=1; a=rsa-sha256; t=1768827289; cv=none;
-        d=google.com; s=arc-20240605;
-        b=fUW/HkCnPl8uqZZnlV7551KaQG7bFJ65tO8RWqP17ravTc1s8jtsU74XHnGO9gd+hc
-         0vU9WcMTaK1BbpGgeRVc0go2vzmT0L5uhjJWCAw8l1fUwcug8F7CXgsWrMRh8Reldl5D
-         +PBXcQ89EX6cP6F3G/mXrvugjxBZ8rftPAqonVsOEFg0cvUujsUArq709KV0iZQsIkeS
-         2jdOQEQ56yJR0CDXoab/RWdNCX0LF1E3pgGCnB6K5jIB63V9FSW8YDykJLaiZsfu9fNH
-         +JT1M5cK72DkHSINHOmm/HHwVOiQxoAaD2TJgnY+18JoRgVHtrkUWLuwPEv7vsLDZHhK
-         nkuQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=qGur8UDGGcBE3Hmocy7dgLQOrypMFPCEL+jwBXmsi0Y=;
-        fh=0enAhcHHuRjVzlnuTh+75RcMdT0zTl2HNdICIDBVBhM=;
-        b=ICKxYLg/9bxvBmSUubpvNDz8ES6jJmB26iXyzV46h+t7v2S435lwAnxRAVrGQY+Eyz
-         ComJga7NsnNPXQXj5ZUNxfl69GtpLnHjs3Vpf1/d6SQxA4HK7eBAOsgebZcu79mXzHzr
-         ZQurh9QfDG2nIh4jHPxv3ijP3fcxpr6mdELzmsQy0zTQB9IQs3N9Rl14E3UXGzfBDmm5
-         Yvtk0TpdNG5N5fT0JNbBrXCBRrIPCkJVO8LNzT8POAH68SobTYImsLgZkm+W5oNcwdcC
-         0ezy1/MEIIPtuEYwJ2VabKlgjA9UIP92YjNNASV+yfZpNRsQMPB3SpoZxppQJvkjqRfS
-         9h8A==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1768827289; x=1769432089; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qGur8UDGGcBE3Hmocy7dgLQOrypMFPCEL+jwBXmsi0Y=;
-        b=mc9IqOtlkn/IL3YKyUShxHqm9fvpV2shFOmy4YOozzrWEDkPUl/GHeT0vNGfBV7YS2
-         4kmGZKeX2eU6zk57TMDvc0IfK3bewVF+yVFXD6fF9hjCblvzwaU1+r+d8IlHf4nib/9X
-         XrFoV7gb4ydSmZyclg1ZO02jWzhVvQ5rYoFJSRpZaGu5oYW3GGr2Ie60v/wm2JRICIZ/
-         arkhMFCtSxZOP+J3HGDdSDc6qn60/ZddUTS4dMcJAogAg3Lbrdm1eirDVVJmiz2ylnFI
-         FeH3ACfFnHgxkJJQlgU97PU9eM/2wuPOK+vHRpDLA+He38XnfStKQa80D/N9d3rlWIPe
-         qJUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768827289; x=1769432089;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=qGur8UDGGcBE3Hmocy7dgLQOrypMFPCEL+jwBXmsi0Y=;
-        b=pu33Nwox7bS6DXnP80kJejv157Bis98ZGWzf0/Es2qrnQmTbqyRllv5o6bvBQql8D9
-         saWCCht12TBZRwL/pkp6umeEKWfcRNvcJmbfa73wACqpH8qSXbTHh0ef0gj3+VJu75f2
-         HyeP8bDtyJ29LnojXc108Gm0u8V1hEkSarNXtHNITeUYEEJaSide3RZAOA8L79cpT4+t
-         crKOfdGhp4Y8cVhd3/n70wiqZoRbIJev2ANL9eXak4nKuu26hIertI7BRHjo0QGUz88S
-         fpHNtRRcJ70GSFofNtCB2EGuVo61OITPy9gU61EhKL9n282M16dA2+lj0t4ezHl1owpP
-         jbvA==
-X-Forwarded-Encrypted: i=1; AJvYcCUzTe9JT8iJRwVSqYR1u36F5YQrg1uDAyTNlyEF0AT6/6Zrn9ZOCyxd3i2lNgKAlFlwyXCiI/XJ/xU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzmhzbNuGjQbSRJF6emdHUoI33skNIimxtYElQFPUo1xMl3PCzc
-	9B5jkHJWBpd0FGOnEZDOtaJNoh5p/AzsfmKUkPxTpOLZ1uK+yKpB/7/qxySKU7Axb6JIV92tmVk
-	hqeZV9GHhYE9cRSFMrvci/c2Yx8sds2k=
-X-Gm-Gg: AY/fxX5O7CL67YQV/keBke1XoAKsV8cgL1ITXKyAxqKP0P/WY36wtH4PL4WCOEr7E12
-	J8tYIey4tyuQQhe9PTY5Wq/4ALjE39LOksUEUWorphYJGZj9Vyzv19AcHX3fCO3V6+zVfIuosKG
-	hGW2DErtdEOWD4AifRInqIqaN67BWh5GR+knL/smWiOiNkSF/a8olXzO1mjm107YK4c/u2nMBmA
-	bZp5pek+VZ0Avsoouf5rAAWDntfKuO33dbv5ye/NDXlIuy+eGd2t3fUvdkW4P1fziaLpqVIXhqO
-	EgjUBIrx740dhLtLxAgzpc6tcVhXPuS4xVTip2k5+a8NR19RHfBhLO//ClmxRog5EH+CTn9c9vF
-	KiE44bzdg3ZzsI7Y1kxxP4FMevrDrXlkAUD63pvUkRw==
-X-Received: by 2002:a05:651c:508:b0:383:5482:b853 with SMTP id
- 38308e7fff4ca-383842bcaeemr36918321fa.21.1768827288971; Mon, 19 Jan 2026
- 04:54:48 -0800 (PST)
+	s=arc-20240116; t=1768827446; c=relaxed/simple;
+	bh=5MnCksHOqQsTHOViy88g/fp0UC+fbtByEKNw6T508j4=;
+	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
+	 In-Reply-To:MIME-Version; b=YwSKB5kll0pN2FxXLCfpADl0nC1u/wlVlFZNpJHcVzEdbB8s01zU0WXGudsaPftZ05drd3X7IJk0140ckf+DyW59fPi7ZpaeJBLGrOberQsvrZN9rYVzOElAsiJx5tordpBfVSJ4nzSdtaoWGSm4CeockMHjHLhNmvU1qfkhiBo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=ZjrNGAua; arc=fail smtp.client-ip=52.101.100.122
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=garyguo.net
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=zHUWIMhi0Lrtg5E+eotxnf0GHedCfeH11u5Xm90VswATWT6GhfkNAunWQKOJ8dWzd7dAFk81f8ML8LVwMFQlZdXLVILzGaCF1SxOxp5gubuQlSPrLQCUyUu7DkSyAb6xjRR9k+SoJevHvuF5mR7GpdRYr84U8EoVH9NwIkvCvdJwxa7WOmxevL6oK7T/KHGyXJO2mT3U8AwPYxL+o/FZ8ta8+uqKVsLVuaYh3oz/k6vlbTtFqqpHeFqkN+f5MQQXmFvP8RJ5bUbfJloCJb2jw9445MJ8/2KLvDNJSRDsQa6kY+9uo0WUvENvCNGXN2wtxIOxZoBm/NRmGM2nOwSj5w==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=PvFRwoVvr0grXxd3hRdGcj7Dj1HtmdQ6CJ0HayQ7kK4=;
+ b=sXoEqYLdFfnbfEyEFKm9GUAN2mgSbGiEViXz8mykje2G+eaKP4DoluGjOuNZksqKMSGv2ftscmXmrHnYBdl7Z+K9XLD79LK5qoSUEQNpB1iRXI0sdgNIwRea6k3iMH0rmxtNMzVUphRVgkGrPZ01Gxzos/PI32RdV6B2nxstEbA0rW5pm3gCnFUpMJZu7sprce+2kJRcLWampzI14h5i5nUZbB7wzKXQgpmNLleOhX4LoZMk08X/4OFe0CXD4vkxNNYxP71ZY7sGyUDXcfYZElaMnA+cdDOW+OOabrmcvL05XAYADHayBMfwPVId4syg23wdZqzno0+Zp/YOjHmusQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=garyguo.net; dmarc=pass action=none header.from=garyguo.net;
+ dkim=pass header.d=garyguo.net; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garyguo.net;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PvFRwoVvr0grXxd3hRdGcj7Dj1HtmdQ6CJ0HayQ7kK4=;
+ b=ZjrNGAuar1N3ddCFc2tPIRM0RXPWGwhxCdTULXkeaD+xkQjBXJa+rjdCUy2SGTLzgvZLsSm3IreS+lFvz8ZMjExD+JEJ6MwtDPNIHu6Uw3BtpyhPf4E5Qoe1AUFANhooYiKQJE/l+PVVpiZSn6iSxEu7RsJslgBvslhQPCIjfRs=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=garyguo.net;
+Received: from LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:488::16)
+ by LO2P265MB5744.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:270::12) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.12; Mon, 19 Jan
+ 2026 12:57:20 +0000
+Received: from LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::1c3:ceba:21b4:9986]) by LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::1c3:ceba:21b4:9986%5]) with mapi id 15.20.9520.011; Mon, 19 Jan 2026
+ 12:57:20 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 19 Jan 2026 12:57:19 +0000
+Message-Id: <DFSKZW10CRAW.1547Q71WU0B0U@garyguo.net>
+Cc: "Daniel Almeida" <daniel.almeida@collabora.com>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Viresh Kumar" <viresh.kumar@linaro.org>, "Danilo
+ Krummrich" <dakr@kernel.org>, "Maarten Lankhorst"
+ <maarten.lankhorst@linux.intel.com>, "Thomas Zimmermann"
+ <tzimmermann@suse.de>, "David Airlie" <airlied@gmail.com>, "Simona Vetter"
+ <simona@ffwll.ch>, "Drew Fustini" <fustini@kernel.org>, "Guo Ren"
+ <guoren@kernel.org>, "Fu Wei" <wefu@redhat.com>,
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael
+ Turquette" <mturquette@baylibre.com>, "Stephen Boyd" <sboyd@kernel.org>,
+ "Miguel Ojeda" <ojeda@kernel.org>, "Boqun Feng" <boqun.feng@gmail.com>,
+ "Gary Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <lossin@kernel.org>, "Andreas
+ Hindborg" <a.hindborg@kernel.org>, "Trevor Gross" <tmgross@umich.edu>,
+ <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <dri-devel@lists.freedesktop.org>, <linux-riscv@lists.infradead.org>,
+ <linux-pwm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>
+Subject: Re: [PATCH v3 1/3] rust: clk: use the type-state pattern
+From: "Gary Guo" <gary@garyguo.net>
+To: "Alice Ryhl" <aliceryhl@google.com>, "Maxime Ripard"
+ <mripard@kernel.org>
+X-Mailer: aerc 0.21.0
+References: <20260107-clk-type-state-v3-0-77d3e3ee59c2@collabora.com>
+ <20260107-clk-type-state-v3-1-77d3e3ee59c2@collabora.com>
+ <20260108-delectable-fennec-of-sunshine-ffca19@houat>
+ <98CD0BF6-3350-40B9-B8A9-F569AE3E3220@collabora.com>
+ <20260119-thundering-tested-robin-4be817@houat>
+ <aW4lCfUyumOKRRJm@google.com>
+In-Reply-To: <aW4lCfUyumOKRRJm@google.com>
+X-ClientProxiedBy: LO4P265CA0316.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:390::20) To LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:488::16)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20251222-cstr-pwm-v1-1-e8916d976f8d@gmail.com> <CAJ-ks9mrpcLaeiGjBcXNqTUwo00Y2MhhHWnWauou6exU1y920Q@mail.gmail.com>
-In-Reply-To: <CAJ-ks9mrpcLaeiGjBcXNqTUwo00Y2MhhHWnWauou6exU1y920Q@mail.gmail.com>
-From: Tamir Duberstein <tamird@gmail.com>
-Date: Mon, 19 Jan 2026 07:54:12 -0500
-X-Gm-Features: AZwV_Qix7Aukya090jJW0kiXMssAD-LNF3xuSuIb8jpVn4bil5K-YxfJFOSV4PI
-Message-ID: <CAJ-ks9=LNe_STYSEJj7tvFNFzLsfEBKd+=Nbft4Kj-7+RbU99w@mail.gmail.com>
-Subject: Re: [PATCH] drivers: pwm: replace `kernel::c_str!` with C-Strings
-To: Drew Fustini <fustini@kernel.org>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
-	Danilo Krummrich <dakr@kernel.org>
-Cc: linux-riscv@lists.infradead.org, linux-pwm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LOVP265MB8871:EE_|LO2P265MB5744:EE_
+X-MS-Office365-Filtering-Correlation-Id: 9e8c6cba-2724-4494-c0ca-08de575a486c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|366016|10070799003|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?d0JHdVppOVcwRWh1bmczcHpDdXlDMGFaN3Z6ZnZtYlR2L1kycTFWaVV6bkt0?=
+ =?utf-8?B?d3BGZkIxNG1yKzg2U3ZxeWhkMkxJdUpMMVg3bXVzKzFleVlHTjlPeFFGcXA2?=
+ =?utf-8?B?ZmNBM0dabUljUHVnNnhHUDMzRHc2eTErZFVmb3dicW5wdFZIbHRTbEVJNnZQ?=
+ =?utf-8?B?NDN5TGpEQmhIR3o1OExmYjdoZ3BSY0tjdEZwOFA3TWxEQkMyL1VFRUQ2M1JV?=
+ =?utf-8?B?YXBmK2JGRW8zdTI2dW8wb25Mbjc5UU1LbzVnL09XTlRUZFdqaVQ5SHBpSkZa?=
+ =?utf-8?B?cndxUnlkK2pTL2RvMDNSNmFrNThpYnNnUEtYeTNWR3pDNzJJVHRyUWJ2bm1H?=
+ =?utf-8?B?c2xkM3l3S0didCtoK2RBRzVPb1dRU0g2N3U1Q1R2SEJscDBCR1YzanY1cEZ4?=
+ =?utf-8?B?WnczSnhTSHg3czVvZGNBSjJFdlgwU3lSRjVjVDFtTHFBWmpLL01Gd1V6YTl5?=
+ =?utf-8?B?dGVTNlJwR0F3TVRpN3JUZm1iVUlYMzVPbGNTcHRIQ1ZPVVA0dWtORTNSMDlt?=
+ =?utf-8?B?ZGZiMEYvNEN2blRWU3diYlNkMk9Idy9EVlIrRWZsTEE0eGdQK1hZRVpGYUZV?=
+ =?utf-8?B?VzJoYlRRbXNtVy9oSDBZYjFQQVFyQTZnWEdJQlZXeVp5azlQenl5Sll4S2VJ?=
+ =?utf-8?B?NWowenAyZHpQYWtvZE00Si9rMTI1Z1JuRWkvM1dRbG5OYlN1c0VJOXQ2YWpo?=
+ =?utf-8?B?TTdmekFla3NZSGRJRWpSVVBCTXNNa3hrOTJEMURTQ3FwUmg0QjJGZkc5VS95?=
+ =?utf-8?B?am1Pa2xsdE5GRVhOaTBGVExSNGhNeERhLzMrVGxqNFRINXN5d2R1TmlRYXZC?=
+ =?utf-8?B?OWhzL2VJWEVPM3pFeWdRTkpMMkNlVVFXTHZMUzhOWERydU8wbXFKMTlTd25H?=
+ =?utf-8?B?TlRFeVlCRVh1YW9Zb3NwYUhDb29BTHlZRlNkTFMzeXFkVWZBekVRMlBiYmxv?=
+ =?utf-8?B?SGxuY1NpUWl6V3FKdFFkYm1CeXdrQk1HYXIwWW55Yzl4ZWRjMVgwMWdGWHhu?=
+ =?utf-8?B?bFdKZGJ0YTJkR1J5UWMvbmsyYURCZmg2TkRaNmpaNzloQVVpSTFRZ2lGZ3Bl?=
+ =?utf-8?B?RlVNbFlJSXZYWWt3K2JHVStISW5UUit2UDJBZkRSMi9PdHRoRDhqcXI4bG1k?=
+ =?utf-8?B?bTVxaHJ6S1h1WkRBcStYZHYzcTJMMWFxUWJJSnZmRXFHeTMxMURicVlhRnpY?=
+ =?utf-8?B?dHRWQWRrT3l1ZTB6bkF2MGxuZ3pWc2lxNXYzVmVRNmVGL21mNG9PTU1UR241?=
+ =?utf-8?B?UU1yWGl0NHJ6akVtQzhFd09kNTA1MTI2RHZHZGhRTS81OTkrVkhtSmdlVlpU?=
+ =?utf-8?B?SzFOTWIxYW1KL09CdFVYR2pUZWhrUFR3T0RtNlI2TjhXektMUW9zaGJFTjJI?=
+ =?utf-8?B?ejlWMUxyREpyOWJ6UnZkZUEyalp3eXM1R3VhUTlCTHBoSUUxdXZLMTNBakdu?=
+ =?utf-8?B?emJFQ0pncm1HZElHNFFhNUFhU0x6MUdFbncwTCtUa2FxTm11dEg5TUNJeVdW?=
+ =?utf-8?B?SWpPRzlNRVhVWDBPVG9HRHlNTWxJRWd3NXVSMHNrNnpudWYvNVRRVUdyc2Rr?=
+ =?utf-8?B?bHRpaHplWW81bFZxdThBeU9rVHlhNTFORVQ2R3J2QUxZZDljWkdNcUJLWHFG?=
+ =?utf-8?B?dWFxN2Z2czl5eU9RbVZSRm01RFdFaW5VdjhWUkt0ellHS0tPZ3pZbU9zV3Fu?=
+ =?utf-8?B?VmNqWm9SaXROdzdVWFA4bm9vTUl0MndVZ1hWS0V0OHF1R2NCNFhBZk8xMkRi?=
+ =?utf-8?B?V3VDbTc2ODdVeVEyNHNYVmpTSEpsN1hjeE9ueUlkZElpcytnVGdxbkIxNGpy?=
+ =?utf-8?B?MmFMcU1RRTZPa3lkVXREUTdURzArb3RvNVZqdXJKcjVSc1lLY1NteWplTFY0?=
+ =?utf-8?B?SnVNamtidEpWRTNQam0ra3lDUDN0bEdxYmZlSHRmaUtJb0tTUlNndVFzNDV5?=
+ =?utf-8?B?STRCblNSQXBTVldnc3FxTW8yMjdRRk8rUGp3SU5LU3ZCUkRKY1VNVFBTV0RF?=
+ =?utf-8?B?RTNjTEtFNUNja3hTWCt2eGtyaHJFN29UZWlVekVpNktBdGpScWxOekwyZ2I0?=
+ =?utf-8?B?TlRIVGlnYzRJQktYVFlFMWhyRWY4SkxGTERERG9MS2RDd2ZRakQvU08yQzZR?=
+ =?utf-8?Q?2Taw=3D?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(366016)(10070799003)(1800799024);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?UmRiVExxR2IvWTh4N0lHdDlibURKMzkxdEdHZElyVUh2ZkFWaDBaUFlOSFl1?=
+ =?utf-8?B?bGkvRmtmcUZ1VXBjZXIwRnZUbDhvM2o1aXFwRXk4RzRGdWE3UStBNVVVLyto?=
+ =?utf-8?B?V2NzNElyak9ENmllbldCUkVyZUREZHBVU2pqMDI2cFozYmNLb2tMVlZORlJa?=
+ =?utf-8?B?ZUkwVWVZdFd3a0REa2EvaUVQTDZ1THNmVUt1RGhKenorMjJEa2tiM1o2QXZo?=
+ =?utf-8?B?Yk4xdFgwc2dwaHVUZkFpb2NJZWFiYWlzYmlUbTAwUW10TDIzcU9ldEJvMEdV?=
+ =?utf-8?B?ZDUrc1R4M3plR2x1d01vVlorZlgwaFJ3SkgwODNhaDJIeTkxN1l1aERRUVZQ?=
+ =?utf-8?B?MUFTV2NqNkhJWUhBVW5RbmtVaWlrYzk3L2NGRkhsQkpTV0w5TGZyd0ZUdWFa?=
+ =?utf-8?B?aU9hMG9yUDBWbjJxZnNLZ0oyVlEyeG54VmdhNXVMMVJXZVFvZlhKbGZDS0lx?=
+ =?utf-8?B?MUNYSnhpaUhicHBSRWQzRlRqdzhWUVNSVjk0YmZtU3lnaGtuQ1VIanltUngr?=
+ =?utf-8?B?VjBreEVGRjZ1L1lWdElZdlR5VytSY1NTVHZSWEpuTm5naDhZR0xPd1hJSlJm?=
+ =?utf-8?B?eEdaYnovaFgrZkMyVU51OG9MVkl3U2dVeTNnZTFaSWhRQWxWdStSNGtZSDhN?=
+ =?utf-8?B?MGZlNCs1eG1MczNVdksvcWpNRWNxYjBSTjQwU1VMcjlINHdvQUErOWZsdVlT?=
+ =?utf-8?B?WEdSTjJmUWlKUzhSMThGZXRFb2cyYWNhRjRKNUNOaFhRd21aSUp2VS9QNFhj?=
+ =?utf-8?B?ZkQ0TWt2Ti95MU82OWtWejJqckU5VGgvZlZjRzlwUFgrRnNCRTlRcWZMek00?=
+ =?utf-8?B?UnhYVXhjVUhjdnhZVkFtSDJuRHk1OW05RjBCbTlWZFRmNW9Ka0I4dXFXdkJi?=
+ =?utf-8?B?RFhuSUQyVVVxbitSY2x1S1U0ZG1yMWNxUjNTM01GMSt6V3BzVDJ0Y0RWMU9T?=
+ =?utf-8?B?dGtQNk85ZHloU0RWd204T0tFVjJYV3hhM1VNRzN4bno2WjlxcHovUGpFWEFN?=
+ =?utf-8?B?RzRpSjd1Tk1BVmk1dTRTeXlKTW5Uc3JHOGR1RlIxMFNGMkUvV2VGMmtaOXhT?=
+ =?utf-8?B?VENoNEJEWjFBNnNLbWhxdlYwUldJVm52SGdnVmN4UXUzS2l0RG9qaW1MYzhK?=
+ =?utf-8?B?SDdtaXVKY0dsSDIzUFhMQkNvcGRabms0OWpIeXRBUVFTUEc2YU93d0ltN2l4?=
+ =?utf-8?B?Tm9OZ0w5ampxMmZqRUNiZ3ZsaUw2R1RRQTJDak5EQ3hZZHJ2bWc0YTdFaGJz?=
+ =?utf-8?B?Y2pmMHIyZW12VUM3Wmdab3RxenphdW9wdWZEWXBMN0E4MjZzaW1SdEJ4NVBp?=
+ =?utf-8?B?SWZKblNYc05sVzJOakI2b0RTUENzS2d2Wml5cE9sRWV5bjNHenNKNlM5b3dz?=
+ =?utf-8?B?OUYxeVFDK2wyc3dxVDVUSm5QdkU3RzZHNE5kUlVvS3J5REpRMVFKbWVXTFY5?=
+ =?utf-8?B?Mlhncm5YRVYvRjBLd0UyQllIY2IrVHA5dTZMY2dlYzJzSTdCMCtwTmZDcmVw?=
+ =?utf-8?B?ZHdPcUg4WS8zM3pCZVFyOGJ2dzFjL2cxS0tRb1BwMG5FVFJHeGpqVHg5K3Q4?=
+ =?utf-8?B?NDFhQ21HaUQ1ck1xOXRGV2NwOUxZM01kTVdZWjdVVlhPRU41aXpuMGdReEJJ?=
+ =?utf-8?B?dW90L0kvemNiQUt1SnBvQ3JYSGwyTWQ0bXdocTlFNEJReE01UUZWR3g2TThl?=
+ =?utf-8?B?SmJPelcwVVdnb0ZVZmxZbFNNRVZ2V3hIYVEvOVVDaVk3QzJML3I0c3RZWVdD?=
+ =?utf-8?B?N3FhYnVoU2lWSEFCdFRsbmZ0YktzWEJUdTU0bm1xQlJwNmY5cXVKZjgva2ZD?=
+ =?utf-8?B?S0tKL0FKQU1UT0YrVGtab09FZUJMWTA3bk1SeXNRS1pvWmx3eTJ1TWVaV21H?=
+ =?utf-8?B?Z1lRZXJDREk0YWU1ZzAvblZvY2FERFFuUGhPRHloZVV2eHJKYVVhcGk2VTBx?=
+ =?utf-8?B?cnNRdklTem9SeGdCcTZ4Um1LRHk3Snh6K25iL3hnQjdOa25PYk5qN1Rndjl2?=
+ =?utf-8?B?YWh1OUVES2N0b3ZBNUZRamgxSlVyM1k5SVI4QWRnU2N0WUI5WjlxRUtIMkhY?=
+ =?utf-8?B?QnB0aC9WM09ZckFBeEFoZjZFNHdzelJvVFBOeUg4QmhpRk02RTVlQUtPNUsy?=
+ =?utf-8?B?TjlnUU9rU2hzQ1I4QVdybkIyWDJTRTBCTjVJSlYyTnVCWUk4RDl5NVE5L09H?=
+ =?utf-8?B?T05YUlJuTjg0KzZ3Ymt0YkpWcHpKUDNtM2JRdW1JUFlNaHBrSTZjYWRXMGdp?=
+ =?utf-8?B?NWtSbHhDdC82bTMrRGI3QnZRRTVVS3B4RzNaaW1wcm1Kb0dmRmNuYk1hcG8y?=
+ =?utf-8?B?SzFNTWVqdFZKOE9ZbGkvbkt0Nno4K01HL3RnUG85bnRxLzNYSE9hQT09?=
+X-OriginatorOrg: garyguo.net
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9e8c6cba-2724-4494-c0ca-08de575a486c
+X-MS-Exchange-CrossTenant-AuthSource: LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2026 12:57:20.7695
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: bbc898ad-b10f-4e10-8552-d9377b823d45
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nxg1T0i2ArR1B+5rh6SbG0iPigXbP1k1KIaqwLupA6zy3iYyhbiSwXFZCGyIru9Z/F4t7N1jLIXDz1UyzqRWJw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO2P265MB5744
 
-On Sat, Jan 3, 2026 at 9:30=E2=80=AFPM Tamir Duberstein <tamird@gmail.com> =
-wrote:
+On Mon Jan 19, 2026 at 12:35 PM GMT, Alice Ryhl wrote:
+> On Mon, Jan 19, 2026 at 11:45:57AM +0100, Maxime Ripard wrote:
+>> On Thu, Jan 08, 2026 at 11:14:37AM -0300, Daniel Almeida wrote:
+>> > > For example, it's quite typical to have (at least) one clock for the=
+ bus
+>> > > interface that drives the register, and one that drives the main
+>> > > component logic. The former needs to be enabled only when you're
+>> > > accessing the registers (and can be abstracted with
+>> > > regmap_mmio_attach_clk for example), and the latter needs to be enab=
+led
+>> > > only when the device actually starts operating.
+>> > >=20
+>> > > You have a similar thing for the prepare vs enable thing. The differ=
+ence
+>> > > between the two is that enable can be called into atomic context but
+>> > > prepare can't.
+>> > >=20
+>> > > So for drivers that would care about this, you would create your dev=
+ice
+>> > > with an unprepared clock, and then at various times during the drive=
+r
+>> > > lifetime, you would mutate that state.
 >
-> On Mon, Dec 22, 2025 at 7:24=E2=80=AFAM Tamir Duberstein <tamird@kernel.o=
-rg> wrote:
-> >
-> > From: Tamir Duberstein <tamird@gmail.com>
-> >
-> > C-String literals were added in Rust 1.77. Replace instances of
-> > `kernel::c_str!` with C-String literals where possible.
-> >
-> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
-> > ---
-> >  drivers/pwm/pwm_th1520.rs | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/pwm/pwm_th1520.rs b/drivers/pwm/pwm_th1520.rs
-> > index e3b7e77356fc..8ae8f852ec02 100644
-> > --- a/drivers/pwm/pwm_th1520.rs
-> > +++ b/drivers/pwm/pwm_th1520.rs
-> > @@ -22,7 +22,6 @@
-> >
-> >  use core::ops::Deref;
-> >  use kernel::{
-> > -    c_str,
-> >      clk::Clk,
-> >      device::{Bound, Core, Device},
-> >      devres,
-> > @@ -327,7 +326,7 @@ fn drop(self: Pin<&mut Self>) {
-> >      OF_TABLE,
-> >      MODULE_OF_TABLE,
-> >      <Th1520PwmPlatformDriver as platform::Driver>::IdInfo,
-> > -    [(of::DeviceId::new(c_str!("thead,th1520-pwm")), ())]
-> > +    [(of::DeviceId::new(c"thead,th1520-pwm"), ())]
-> >  );
-> >
-> >  impl platform::Driver for Th1520PwmPlatformDriver {
-> >
-> > ---
-> > base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
-> > change-id: 20251222-cstr-pwm-c9b9a4701157
-> >
-> > Best regards,
-> > --
-> > Tamir Duberstein <tamird@gmail.com>
-> >
+> The case where you're doing it only while accessing registers is
+> interesting, because that means the Enable bit may be owned by a local
+> variable. We may imagine an:
 >
-> @Uwe could you please have a look?
+>     let enabled =3D self.prepared_clk.enable_scoped();
+>     ... use registers
+>     drop(enabled);
 >
-> Cheers.
-> Tamir
+> Now ... this doesn't quite work with the current API - the current
+> Enabled stated owns both a prepare and enable count, but the above keeps
+> the prepare count in `self` and the enabled count in a local variable.
+> But it could be done with a fourth state, or by a closure method:
+>
+>     self.prepared_clk.with_enabled(|| {
+>         ... use registers
+>     });
+>
+> All of this would work with an immutable variable of type Clk<Prepared>.
+>
+>> > > AFAIU, encoding the state of the clock into the Clk type (and thus
+>> > > forcing the structure that holds it) prevents that mutation. If not,=
+ we
+>> > > should make it clearer (by expanding the doc maybe?) how such a patt=
+ern
+>> > > can be supported.
+>> > >=20
+>> > > Maxime
+>> >=20
+>> > IIUC, your main point seems to be about mutating the state at runtime?=
+ This is
+>> > possible with this code. You can just have an enum, for example:
+>> >=20
+>> > enum MyClocks {
+>> >     Unprepared(Clk<Unprepared>),
+>> >     Prepared(Clk<Prepared>),
+>> >     Enabled(Clk<Enabled>),=20
+>> > }
+>
+> I believe you need an extra state if the state is not bound to the scope
+> of a function:
+>
+> enum MyClocks {
+>     Unprepared(Clk<Unprepared>),
+>     Prepared(Clk<Prepared>),
+>     Enabled(Clk<Enabled>),=20
+>     Transitioning,
+> }
+>
+> since mem::replace() needs a new value before you can take ownership of
+> the existing Clk value.
 
-Drew, Guo, or Fu: could you please take this through your tree, or
-would you be OK with it going through rust-next?
+We can provide `replace_with` in the kernel, it's fine as we don't have
+unwinding panics.
+
+Best,
+Gary
 
