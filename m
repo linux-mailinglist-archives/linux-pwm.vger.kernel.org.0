@@ -1,131 +1,285 @@
-Return-Path: <linux-pwm+bounces-7932-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7933-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AC44AD3AC1F
-	for <lists+linux-pwm@lfdr.de>; Mon, 19 Jan 2026 15:35:45 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 82779D3AC2C
+	for <lists+linux-pwm@lfdr.de>; Mon, 19 Jan 2026 15:36:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 9D1A4301934E
-	for <lists+linux-pwm@lfdr.de>; Mon, 19 Jan 2026 14:28:23 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id C9CF4304293B
+	for <lists+linux-pwm@lfdr.de>; Mon, 19 Jan 2026 14:34:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C5A437F0EA;
-	Mon, 19 Jan 2026 14:27:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9FCE137F8DA;
+	Mon, 19 Jan 2026 14:33:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y0YobgaC"
+	dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b="W36J7M6/"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from LO3P265CU004.outbound.protection.outlook.com (mail-uksouthazon11020141.outbound.protection.outlook.com [52.101.196.141])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 265F137C0F0;
-	Mon, 19 Jan 2026 14:27:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768832850; cv=none; b=XNzyR0MWRfluXBjrsbGcegkWUiWzWLdkgBuo9+MxfY9ONroALUwHZzJwaWwFiPXYcE49YcRxfoS2BA3A/G+l0kp79UkgfCKAC5dB+MqXbDyJaLchB/+EjUys7ROxvcxdxom4CtI1sR4SRMea44SWRHzX/QfkWozOh1hES3UvSMg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768832850; c=relaxed/simple;
-	bh=gx2WRxdeeQ0ApxHAc8QAhCvgVAmIdfItFxqRTPicb30=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mc7Vf1bB0fRcax9Vi3/FzCcBjcegwcVihaAK6ekrHulO7UEU3vVaNtW1Gh9QgwSlJ+I0gI3Po42v1Av0g/UQPOa3gIgEj3aK9kahCzCa13fxUs23eBxqk+F17bnhstuCKj+lWB3NDNnImbXFfsJd8kFnZNm03eNwQLWRIpN5+Go=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y0YobgaC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A39AC19423;
-	Mon, 19 Jan 2026 14:27:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768832849;
-	bh=gx2WRxdeeQ0ApxHAc8QAhCvgVAmIdfItFxqRTPicb30=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y0YobgaC/lfQHCT14JJ8zGU/UTkp4fC2ZbfrAHz5NccX4FWT9hJuf7IdnMD2gg7V1
-	 i7gNPkGRiuXbYPdK9MSK5hwkZLpbBjO2XCyVTanwPvXxLCZfF0DzT7ypyT/6kJm4Mv
-	 1mOMaEDqK4kN/X4C8wGP0/wwEG+ae8rEDzsA9YU+bX8sre5jLvuRRm86oOHL5fdlnA
-	 PIxeaeRzD4RNwAuC2uX7UwVSKHo9WgRgTNF7eYHnUEcpbxcOI6qDw3m+ka23ylP2DD
-	 InEprL9tHxMbn1Fy5Y3V4K0KeBLbVqGhhHnl9T/7TMLcIXpP+N7dXUpvX65ERVgLTB
-	 5ndOywM0ujl4w==
-Date: Mon, 19 Jan 2026 15:27:27 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Daniel Almeida <daniel.almeida@collabora.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Drew Fustini <fustini@kernel.org>, Guo Ren <guoren@kernel.org>, 
-	Fu Wei <wefu@redhat.com>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-riscv@lists.infradead.org, 
-	linux-pwm@vger.kernel.org, linux-clk@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] rust: clk: use the type-state pattern
-Message-ID: <20260119-tall-proficient-quetzal-e5e3ad@houat>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F146F37F8A6;
+	Mon, 19 Jan 2026 14:33:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.196.141
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768833223; cv=fail; b=ixKN6pBNGJ6aLP9UnucLjtkNS8XdunLw1k4tbAilt/7++7hzdxyLJkGai29Fvu7IPqm3EVZpQDmAB3TsG3p+eZQTHMWZiHaOI5nQXxRZtGG7LwvTT13LR7VqPVO1cz0fFbaWp5KSEI/t4WZ4fLlz0/qSbh4SUPTAL/8GvuimWMA=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768833223; c=relaxed/simple;
+	bh=w9Vr8d9PsthiWnuvOi2khDINxlrbmR0uv1BIVgVJ1Tk=;
+	h=Content-Type:Date:Message-Id:Subject:From:To:Cc:References:
+	 In-Reply-To:MIME-Version; b=k6AWaa8jkQWdbyaTP9ArRdcbV3gA47zSc0eWsgjMdxE6IOjN91vkz2OambPtGWOad/otCb5lGlAMXSwZJEgZv93rseZifpNmNsRAoxS+gvUmroaKdh+zKtSJ/W/vLuCSC+kv/6Euu/7X/ZNsSs2ONEVaeWCOnWIdRTSYh970AuE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=W36J7M6/; arc=fail smtp.client-ip=52.101.196.141
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=garyguo.net
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=nAJQYUfO+yo1UZnID3gF0zmQo2xhzVc255MEBb66aXUx5KtDRRhUP/fSzPiBs0eqCQyO/Iq+50Cli9otL6sm+x4wvM/EflFWsaHrxcy9dGlWQ5y8W7DsFOAnOttLRDOV/Xp2UkJNXildt9hgqnonUT8ZhR7pDTmjaMpvg1ZGK3VdT1Cd3UngrDN9StO8tR1dQjzU7sHvu6ucmcAMQn0bfFgblHY8PPCeJbMdDK1dAMfoDovAV46zxdE6szNyx2ybl/6c9ZhUQY9hIfT6HUGOdgu/t0l1BlgyRQBJP8i4PbxmmEWUN1/FTOrdfDGwvjabplcav75A24WCm+GD1Q2svg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=WTnE/OMQCcf5TZmK2xsispFblgHqg4Meo+lA6ue4gxk=;
+ b=PnDckmNjYvZLhdNBNa2bBpxUI45Lrl5vv2/tc1VLv1znNaTc2kZ6Ku2PmplHqTvKyLdD9S4REWBVzFM4ieacwYiHWQD2cS9Y/l8L7RwPC86qKTj9R2JDOVSDsBRFLSOGcttpyS6iBoxB9LDnH1OoyEEPfyRFdiTY9W4b6GyQMc5brfAc83jY+O8EestJ+Qo0O/cItyQcRm+KJIoQEr9niEawcbz24ttC3Mlx2p9heZyTu1aSGJfokt3i4PmzFzCKrGa4X3Dm/IQ29twTKGdKgVtNnlgTAnyBZHjmhV73io11KbqY3NriFhFULtdOcR7pcCMI4M1We40D8xRKndHZ6Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=garyguo.net; dmarc=pass action=none header.from=garyguo.net;
+ dkim=pass header.d=garyguo.net; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garyguo.net;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=WTnE/OMQCcf5TZmK2xsispFblgHqg4Meo+lA6ue4gxk=;
+ b=W36J7M6/be+6I2bUHeiUqruK2jh32zneNSkSZZwUGbRRCmtP39taIKi7DJw6N43sfVQfYML1bSUgw/IbX/731oomX1NvmxVopMy+zWBLwrmhIDyf3Gq/CzoErsfHvAyeS4jV34CfPfK5VFUBtvBB7QX+WyzXOKsR0qiv3hHaZKQ=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=garyguo.net;
+Received: from LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:488::16)
+ by LO7P265MB8702.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:4a9::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9520.12; Mon, 19 Jan
+ 2026 14:33:38 +0000
+Received: from LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::1c3:ceba:21b4:9986]) by LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::1c3:ceba:21b4:9986%5]) with mapi id 15.20.9520.011; Mon, 19 Jan 2026
+ 14:33:38 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Mon, 19 Jan 2026 14:33:37 +0000
+Message-Id: <DFSN1M7NPLHX.20PQDYA5DU7RM@garyguo.net>
+Subject: Re: [PATCH v3 2/3] rust: clk: add devres-managed clks
+From: "Gary Guo" <gary@garyguo.net>
+To: "Daniel Almeida" <daniel.almeida@collabora.com>, "Rafael J. Wysocki"
+ <rafael@kernel.org>, "Viresh Kumar" <viresh.kumar@linaro.org>, "Danilo
+ Krummrich" <dakr@kernel.org>, "Alice Ryhl" <aliceryhl@google.com>, "Maarten
+ Lankhorst" <maarten.lankhorst@linux.intel.com>, "Maxime Ripard"
+ <mripard@kernel.org>, "Thomas Zimmermann" <tzimmermann@suse.de>, "David
+ Airlie" <airlied@gmail.com>, "Simona Vetter" <simona@ffwll.ch>, "Drew
+ Fustini" <fustini@kernel.org>, "Guo Ren" <guoren@kernel.org>, "Fu Wei"
+ <wefu@redhat.com>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ "Michael Turquette" <mturquette@baylibre.com>, "Stephen Boyd"
+ <sboyd@kernel.org>, "Miguel Ojeda" <ojeda@kernel.org>, "Boqun Feng"
+ <boqun.feng@gmail.com>, "Gary Guo" <gary@garyguo.net>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
+ <lossin@kernel.org>, "Andreas Hindborg" <a.hindborg@kernel.org>, "Trevor
+ Gross" <tmgross@umich.edu>
+Cc: <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <dri-devel@lists.freedesktop.org>, <linux-riscv@lists.infradead.org>,
+ <linux-pwm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>
+X-Mailer: aerc 0.21.0
 References: <20260107-clk-type-state-v3-0-77d3e3ee59c2@collabora.com>
- <20260107-clk-type-state-v3-1-77d3e3ee59c2@collabora.com>
- <20260108-delectable-fennec-of-sunshine-ffca19@houat>
- <98CD0BF6-3350-40B9-B8A9-F569AE3E3220@collabora.com>
- <20260119-thundering-tested-robin-4be817@houat>
- <aW4lCfUyumOKRRJm@google.com>
+ <20260107-clk-type-state-v3-2-77d3e3ee59c2@collabora.com>
+In-Reply-To: <20260107-clk-type-state-v3-2-77d3e3ee59c2@collabora.com>
+X-ClientProxiedBy: LO4P302CA0024.GBRP302.PROD.OUTLOOK.COM
+ (2603:10a6:600:2c1::10) To LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:488::16)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="e4pmavt6pzvm3wrg"
-Content-Disposition: inline
-In-Reply-To: <aW4lCfUyumOKRRJm@google.com>
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LOVP265MB8871:EE_|LO7P265MB8702:EE_
+X-MS-Office365-Filtering-Correlation-Id: dd1920ab-cbef-4fc0-88c4-08de5767bc24
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|1800799024|10070799003|366016|921020|7053199007;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?UmtSUnkzcS9zYkt4TUtERFBkYmVtaUNuM1FWemRZK1B3SFkzcjJYdVpjVndS?=
+ =?utf-8?B?blFXMjZQMzRTb3ZPb3NKd1lNM0Z6ZElQTC9tT01TaEN0S3BZeXVHSmJZSndo?=
+ =?utf-8?B?eWNRV1JlWDlkUUtPVWRWMFVNTGVjVjRLZUtURWk3eElrWWtvNVRhTmQwN0t3?=
+ =?utf-8?B?TTJ6UXBIVllhay9rOS9RY2kxSWVBMUdCZkRGVzFhZEpWWUg2VGZOSVNJWEVl?=
+ =?utf-8?B?ZDVVZFRBUnVmMXRZNUhFbTJXL2Ewc0o4dTlvV0JxNVZSZ1p1TFRPZ043YnFQ?=
+ =?utf-8?B?NEJIM1ZVZVE4MkR1WWNFUmRCMlNZNzlhR2g2cVdDcDM1UWZmQ1RudVZwZW95?=
+ =?utf-8?B?M0UrUDBZcnBGbkROV2pablAxbEVVckRyaktsVDFkQmhaQ2V2VnN4aWRBZWRC?=
+ =?utf-8?B?K01nUENLbjd0TGNLVDZmUW45NnlHaFpLVjFHdExxTWFST290cjB6Yk9JMGov?=
+ =?utf-8?B?czh3ekpKZXoyQzMvbVZEZlpQNUUxTnBzZC9HMmxQbjdvSkNVMyttUjkxK3BB?=
+ =?utf-8?B?bjA4SmJDMGRGQWJrYzZpUEMzTTIvSmJYN1FsbDA2NVBaaWtrQzRDWHRxK0tu?=
+ =?utf-8?B?eXhIOGlBLzdXa3RaQzBSTFdRNFNQZmxPTXZVeWdmakxoaC8xbEl5cDZZL2Nj?=
+ =?utf-8?B?Mndyb2lWV0N1SWJoWnRjODRybFBZanRnNFBFRkNMZ1VVdEtxMEZPSmY5bUZh?=
+ =?utf-8?B?V3YrdzRYbkNpdU9KK21aemZZVDdQZFlCeFphaHBzNXJDN0lZOUV6UGNxMlk2?=
+ =?utf-8?B?d0NPaCtPaE4vQkxsdndyYnJQUHBsMUg4UjhKYU9nZXNDcktoS29NYTU0dGRT?=
+ =?utf-8?B?NDAvQWRlRkp2dGVnKzBvVE9pd3BOM1B1Q3JnNTg3YlEvcGZPV1E3N3dFZWM3?=
+ =?utf-8?B?NVM2M2t6eWE5OVBONUtVYk1ybktkOGRzY2Mxem1GNGdINFp1bmZTQkc3c2RU?=
+ =?utf-8?B?ZlRCUFQxZlRTTGlrWm5NRlJCUEZoTVBiQ0RkNy80ZkhZTkdoMnJVWTRTWENN?=
+ =?utf-8?B?eUhlZURkU0tHdndlbkFBY0M0bWhVQzZ3OS8vaElPcnhMdC90NlE1a3dMaXRT?=
+ =?utf-8?B?bjgvdncraWhKQU1jOHBsS1BtanFWRlRGbHcvZGtjSTQ3WUtJL1RveFNGejJY?=
+ =?utf-8?B?QU9oMnBsYTBxTVF3ZzJKUkpTWEhiSSthdlNTczNlVHFabUZpelY1VE5nV3ZF?=
+ =?utf-8?B?ZERLQjBFRXVEMDhnc3pwL2Q0MUtvenphbU45dTdGaXBydTRQeFMvaG1FUGhF?=
+ =?utf-8?B?cS9FbGgxaFFlNXU4eng0dFBSd09GV0hyUk13NmNUcE5LbWJ4QjVhRWVTS0R5?=
+ =?utf-8?B?cDl2MjhVVUJqV0RZMjk0aU9oU042Z3grTEc4MXBZdVV4Z01OQkRxKzN5eGNG?=
+ =?utf-8?B?VXNDRWJDeGVFM1JaYkRadzk2aWNjRVEwVG5FclpUZExGV3dkYWtCczBwRlNP?=
+ =?utf-8?B?eGFoOXh4MHJoMk1aZWtnd2kyMUtJYXMvNTErMUlsMEZENkplbzdxMmdkV2RQ?=
+ =?utf-8?B?dkdMU21oWmtrZFZ6UkF5ekpxSW5Ya2VEVHFpRS9pbUdMbFRMREZ5REpHUFB5?=
+ =?utf-8?B?dW5oQ1U3c2xCNmxSWUVXVWNoS1NqemR3MDJIRUYxYmszUEVIZ2JuMWRPOHk0?=
+ =?utf-8?B?UkdjZTFRQW1ncEhyTExjQ092TTBjY3d6NU9CcEhZeUNUNFE3bEZjN2t3R1RW?=
+ =?utf-8?B?ejAvZ04yV1l2OUxFc3pSVUlmUytlalhhRTdPamc4S1hiSkxLeThlc1ByN2ky?=
+ =?utf-8?B?R3N4bTF5ME5KWXRjSDVHQWRzRmxvVGljL05JOURobUtxc1BDMFN4NUdWaXVu?=
+ =?utf-8?B?aWtFdTZEek5nY2hNZUlvZjRSUENiK0dsdmxReVAzSlFpME9iS09BLzM5a25M?=
+ =?utf-8?B?dFY4UWlrRUloT0NvTHg1eWY1SXIwR0Z6MEJpdlJTZjJ1ZWl2K3BGNG1YbDNi?=
+ =?utf-8?B?T1BadVhqeFFheDdzRUVQT3FObDR5L2QzUmlwKzJ3USs1L016OVBTYVZsWlJN?=
+ =?utf-8?B?cERrZUlCajRIc1lXTnIrbWJQMmtmKzFEYVlQSGs4cnQ4emw4TTNVYUgwaFFJ?=
+ =?utf-8?B?eFRrR2gwUUxUVGNPWE5leHdUbkNFTUZIdmhBTGQ4U1I1Y2hweDQ5b21ETkxm?=
+ =?utf-8?B?aU1WRWhFc3FxSUQ5cHFUamUzU1pUNElRa0ZnUU1aV0pXRE0wN0syclEvcmhV?=
+ =?utf-8?B?UXc9PQ==?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(1800799024)(10070799003)(366016)(921020)(7053199007);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?ZEVNUUJNelVnNnlJbnR1OWJyUjJBMnZ6YTc2ckVNZVkwK09vYnZMZUJFNldj?=
+ =?utf-8?B?K29ZWUxaM2tKejlCV05VcEk0L0FsRHhsTTFpcDVQTUdPUUY2Tm8raHhEcU54?=
+ =?utf-8?B?bDlGUWZUTjk3c1pTYmoyS1ZpS0JWbEFmTmlES2pTNCtRU1dEVmtWbWR2b3dn?=
+ =?utf-8?B?SkVDbFdhQlZ6eW9xTG9VelhkMHcvUDJlUitqdnJraEUxSWpoUkRXUXpYSWxC?=
+ =?utf-8?B?eWM5RDl6NDkvNHRDbmhPajFXWDVieDFaajhHUEIxZ2RoemtHOTcxWktzVzJm?=
+ =?utf-8?B?ZmJhTWxQalMrSVlvajBYQzRNbzJFcUVnYi9nWVZkWGtKYzNUT2UvbmJHTVZC?=
+ =?utf-8?B?bVFUS0RjOGJ1RUNGa1I4N1ZSTWNzazByNk1qQTVrY1I4UVFCWDNYb1JIblVL?=
+ =?utf-8?B?TEN4eUtWTXF4YW5kVmVGTWl0QzlNbE51SFViOWV5MFhDNko3UFZ4MTJZU29u?=
+ =?utf-8?B?bHhZUHZEQ3I1N2lGYUNzMHNLRk1rdjFJMFBaTFZZdTNvYnRhWWtWYlBPdWtq?=
+ =?utf-8?B?a0l1YmtISEczMjlLaGhjbFJmVStTMUNnN1l3c2hsdWVtNVhYWlVkMTRPU3Nz?=
+ =?utf-8?B?RkdYVjFmSExqRUpnVWxxNXVobFRmNUJyajFmVmZFSnRDeUN4SEkxZ3FHbUNv?=
+ =?utf-8?B?aTNTMFlBY2ZlQ0dRUXcramF4bDEwZll2MDFzSGJnR2oxb05RL0xYYzFzWno1?=
+ =?utf-8?B?Uk9tT2NkU2pBRDRRNVNTVXU5bVgvYVZWN3AzaWE2L3J4eERHbGF5dlFaWnds?=
+ =?utf-8?B?djNMbFI3WHhMSGNTb21GRVMzc2UvcTU4OWdOLzdhNkt4Qk9ObkVvN0FJOFpo?=
+ =?utf-8?B?WjhWUU9TQjFrWjdicEVmZVZhd1ZFVDd1ZGJLMm95T0IvR2ZsY1JYMDN2dTM0?=
+ =?utf-8?B?WFR4d1BMcDh5SElmL3BZU3dOUmQvU2oyZlhkd2JUOVd4OHpMcE9maFN5SVNr?=
+ =?utf-8?B?MjM3UjNNNElvTndjU1FMN0FpUUx0aGxxSnRxNENRYThZRHgzREpaMitIa2R2?=
+ =?utf-8?B?NUtYWmRKRStXN0owakhKZnhpSkJDRHlsSHRycFp2dHBBQzEyUHd6WEoyTWo5?=
+ =?utf-8?B?VWpkRnE4QkpEdEpuTkkwZGpCQkt2U3NNU3R3cWE3b2F1dXVVNkV6NkNZVEIy?=
+ =?utf-8?B?Q2ZHbVFmdU9MTjI2a2prbEtxc0FxNWZ6azVTL0RhNkNnY1U5TzRWME1RZ1lk?=
+ =?utf-8?B?U1NwaXd4VEhFYzdDaEUranpCS3NMWmhnb2FsTENiMXpkWTRtb0JzSEtEamdG?=
+ =?utf-8?B?RE5jUE94UWVHckFXTFIxWlUyWGlCYzQ4Qi9sR0h6d2dUZkRKV1ZKV2Rmb1pG?=
+ =?utf-8?B?VWJnQUJDZUFmeWZwTFNtcCtFdFVtR3NxSFhOdFhkTVFBRGRDU2lvdWYrWTNv?=
+ =?utf-8?B?Zm9GaUhPbVROWUhkY0Zaa3Z4L0FiQkpRSG9xUjdkUkY0TTZXOFo2TmpkaDQx?=
+ =?utf-8?B?UnFndmFJU3JtMU5HYnNOSnBiTTFJTE5vWnBaVlBBSE9nS3liNUJ4TlVXMDBS?=
+ =?utf-8?B?VVdLSlllUTVyeTJqMHRTZVRnVkFpMnNRR3RVLyt4b1FXTmNHZWtIL2pmLyta?=
+ =?utf-8?B?dk5IVVREZ2YwbU1XWXQwQTFnK01hczZaYUsveVBNRW9jRnk5SFZvZmh5bEhQ?=
+ =?utf-8?B?cFdCcWo1b2pMZWNDSlFHYjJyOGRDdlNBQWVYTHk0dlVmN0cybEVyWFB0SEVz?=
+ =?utf-8?B?aitLY3prWFBsMHQvM0JQY1c1OVNSZGdQMm5QYTN3SzdBQnYxR3gzcWlnUnNp?=
+ =?utf-8?B?bHhqaXJaZnBlcm5hekVDQ1V0cW1tV1daUEhlL2pzQ3dRVGF2RU5MOWRMMTBT?=
+ =?utf-8?B?VXd3SWtFcmh5MVFNaGRMMGhvM0wveFBDL1FuTGhzbjJ5ZnErY0N6QlBBVVVw?=
+ =?utf-8?B?c3NHOVFub0JQZFNCUEtURVg2TnFGUFpLNU43WkFQaHArT2lwcC9hcHd3R0N3?=
+ =?utf-8?B?RmRsbXFlQVBxa25USU92bkI5TWd6WlUxdk5jVVkrL0I5Rk5EM21yR2JvU05X?=
+ =?utf-8?B?TUErVDFBbVVvbUx6MTZKSTNvMy9HY3ZGdHQvZEtDSWRLZHJ6Ukg1aVlwWWtH?=
+ =?utf-8?B?eXFERUU2UjNNcVQ4TVUxcXFZS29aQTNZTEJQZUhnQUIrbmN6TUhZTlI3UTB1?=
+ =?utf-8?B?NGhSemZkSHBwWGtRc2dMblZEc1JlRURUQUpuUEhXZlEzRE84WDZXN2pFeUl4?=
+ =?utf-8?B?R3dFY2hZOU9WWjBvaWJlMHhYNHFsUkNHV3MxR1dPN0o3RW9EdXhVOHhlTUFM?=
+ =?utf-8?B?OVJ5WnpFS2d1VFV5ak9iMitDNXhqcFBad3g1cUs3aUJNditXK3c1bE42eDhi?=
+ =?utf-8?B?L1VjeGpwS2xWV2huOHU0bXg5QmE4eWxkbHpzQXRGdUFpN0ZTeDdpUT09?=
+X-OriginatorOrg: garyguo.net
+X-MS-Exchange-CrossTenant-Network-Message-Id: dd1920ab-cbef-4fc0-88c4-08de5767bc24
+X-MS-Exchange-CrossTenant-AuthSource: LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 Jan 2026 14:33:38.3692
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: bbc898ad-b10f-4e10-8552-d9377b823d45
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: eRuxPCtRLzmYArR322SSSvd8GS8gdTi481jXHeE4w/umyUT3R4UYxBJzvbToIwOxDT5Z7ObqOmMJ117adBWLgQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO7P265MB8702
 
+On Wed Jan 7, 2026 at 3:09 PM GMT, Daniel Almeida wrote:
+> The clk API allows fine-grained control, but some drivers might be
+> more interested in a "set and forget" API.
+>
+> Expand the current API to support this. The clock will automatically be
+> disabled, unprepared and freed when the device is unbound from the bus
+> without further intervention by the driver.
+>
+> Signed-off-by: Daniel Almeida <daniel.almeida@collabora.com>
+> ---
+>  rust/kernel/clk.rs | 43 +++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+>
+> diff --git a/rust/kernel/clk.rs b/rust/kernel/clk.rs
+> index 6323b40dc7ba..e840e7c20af7 100644
+> --- a/rust/kernel/clk.rs
+> +++ b/rust/kernel/clk.rs
+> @@ -95,6 +95,49 @@ impl Sealed for super::Prepared {}
+>          impl Sealed for super::Enabled {}
+>      }
+> =20
+> +    /// Obtains and enables a [`devres`]-managed [`Clk`] for a bound dev=
+ice.
+> +    ///
+> +    /// [`devres`]: crate::devres::Devres
+> +    pub fn devm_enable(dev: &Device<Bound>, name: Option<&CStr>) -> Resu=
+lt {
+> +        let name =3D name.map_or(ptr::null(), |n| n.as_char_ptr());
+> +
+> +        // SAFETY: It is safe to call [`devm_clk_get_enabled`] with a va=
+lid
+> +        // device pointer.
+> +        from_err_ptr(unsafe { bindings::devm_clk_get_enabled(dev.as_raw(=
+), name) })?;
+> +        Ok(())
+> +    }
 
---e4pmavt6pzvm3wrg
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 1/3] rust: clk: use the type-state pattern
-MIME-Version: 1.0
+Would it make sense to have them as assoc functions instead of standalone?
 
-On Mon, Jan 19, 2026 at 12:35:21PM +0000, Alice Ryhl wrote:
-> > > In fact, I specifically wanted to ensure that this was possible when =
-writing
-> > > these patches, as it=E2=80=99s needed by drivers. If you want to, I c=
-an cover that in
-> > > the examples, no worries.
-> >=20
-> > Yes, that would be great. I do wonder though if it wouldn't make sense
-> > to turn it the other way around. It creates a fair share of boilerplate
-> > for a number of drivers. Can't we keep Clk the way it is as a
-> > lower-level type, and crate a ManagedClk (or whatever name you prefer)
-> > that drivers can use, and would be returned by higher-level helpers, if
-> > they so choose?
-> >=20
-> > That way, we do have the typestate API for whoever wants to, without
-> > creating too much boilerplate for everybody else.
->=20
-> I think that if you still want an API where you just call enable/disable
-> directly on it with no protection against unbalanced calls, then that
-> should be the special API. Probably called RawClk and functions marked
-> unsafe. Unbalanced calls seem really dangerous and use should not be
-> encouraged.
+Regardless, the code looks correct to me.
 
-Sure, that makes sense to me.
+Reviewed-by: Gary Guo <gary@garyguo.net>
 
-> The current type-state based API is the least-boilerplate option for
-> drivers that exist today.
+Best,
+Gary
 
-I wasn't saying that we should add boilerplate to the typestate API
-either. I was saying that the non-typestated API was common enough that
-we probably didn't want boilerplate for it either if possible.
+> +
+> +    /// Obtains and enables a [`devres`]-managed [`Clk`] for a bound dev=
+ice.
+> +    ///
+> +    /// This does not print any error messages if the clock is not found=
+.
+> +    ///
+> +    /// [`devres`]: crate::devres::Devres
+> +    pub fn devm_enable_optional(dev: &Device<Bound>, name: Option<&CStr>=
+) -> Result {
+> +        let name =3D name.map_or(ptr::null(), |n| n.as_char_ptr());
+> +
+> +        // SAFETY: It is safe to call [`devm_clk_get_optional_enabled`] =
+with a
+> +        // valid device pointer.
+> +        from_err_ptr(unsafe { bindings::devm_clk_get_optional_enabled(de=
+v.as_raw(), name) })?;
+> +        Ok(())
+> +    }
+> +
+> +    /// Same as [`devm_enable_optional`], but also sets the rate.
+> +    pub fn devm_enable_optional_with_rate(
+> +        dev: &Device,
+> +        name: Option<&CStr>,
+> +        rate: Hertz,
+> +    ) -> Result {
+> +        let name =3D name.map_or(ptr::null(), |n| n.as_char_ptr());
+> +
+> +        // SAFETY: It is safe to call
+> +        // [`devm_clk_get_optional_enabled_with_rate`] with a valid devi=
+ce
+> +        // pointer.
+> +        from_err_ptr(unsafe {
+> +            bindings::devm_clk_get_optional_enabled_with_rate(dev.as_raw=
+(), name, rate.as_hz())
+> +        })?;
+> +        Ok(())
+> +    }
+> +
+>      /// A trait representing the different states that a [`Clk`] can be =
+in.
+>      pub trait ClkState: private::Sealed {
+>          /// Whether the clock should be disabled when dropped.
 
-Maxime
-
---e4pmavt6pzvm3wrg
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaW4/TgAKCRAnX84Zoj2+
-dg10AYD4zWgs/7eRIJtlCax2uq/sdQN3w1GgVoB7yY3F2f40tVh6viWKHe6iI5S+
-hXYgcpYBgJnQ8uMYTat5QqX9A4ksqRvFgnMi0nsmNwRrr55Co/PrhcL05GjFWVWk
-EtTgYHeV5A==
-=s6QT
------END PGP SIGNATURE-----
-
---e4pmavt6pzvm3wrg--
 
