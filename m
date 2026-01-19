@@ -1,119 +1,151 @@
-Return-Path: <linux-pwm+bounces-7918-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7919-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0BB3FD30917
-	for <lists+linux-pwm@lfdr.de>; Fri, 16 Jan 2026 12:43:13 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 061A9D39CA0
+	for <lists+linux-pwm@lfdr.de>; Mon, 19 Jan 2026 03:55:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 329EA30AB17F
-	for <lists+linux-pwm@lfdr.de>; Fri, 16 Jan 2026 11:39:45 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 7C64830011AF
+	for <lists+linux-pwm@lfdr.de>; Mon, 19 Jan 2026 02:55:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A15E379990;
-	Fri, 16 Jan 2026 11:39:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37E4E235BE2;
+	Mon, 19 Jan 2026 02:55:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GTSpyPE/"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KFMZR/HJ"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dl1-f52.google.com (mail-dl1-f52.google.com [74.125.82.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4497C379983
-	for <linux-pwm@vger.kernel.org>; Fri, 16 Jan 2026 11:39:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4D311E5B70
+	for <linux-pwm@vger.kernel.org>; Mon, 19 Jan 2026 02:55:38 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=74.125.82.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768563566; cv=none; b=oQyQtTEQ1SwSHxhpqMKI5URMaVVnWYmqcBVVl6Ik8+MDBirs37slVt7ajOODGp1ENg5ITVEdKZHmXHw0lF/82v8iDHuO7YxmI6D1vGntW0QfjN0h/KQxoysJqlyhuimz/R4k/yCqte5uyKyvANDYQxpLSPOwkNbbFxhcRt23FFg=
+	t=1768791340; cv=none; b=EKKJHA8oInROFUJXYAHFlDroF0KIyryAjlQePLMhRzHefhabcwLwJ8wjbVi/CBrxOPKhUiXKJaFobvRRHVRwIpNOGdNpu+JAvMzJwD7J6UHbEBm1LgMQK6MRZj0JVIbjx/5env2VFCPniUnXYRV9EoKqIrCxd4Y6qNOhfNOLXBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768563566; c=relaxed/simple;
-	bh=CXQQOwA/eEzIPCuqAzSZiZzBLITSZmnC2lVuqjTxJ44=;
-	h=From:In-Reply-To:MIME-Version:References:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=S9mAePcIvmy6iArcuRkvLCAFDzohlRh2oISmHl0CZmNOWqy+iB+eQcR6/1SfMWX7JNjWwRcohCUKezZs5uuIFwFu2ElIF7vnUe6MTNujgDoFmy2SYARy/ukGbADFPo/TSgsAJlo0989cTWYPlrf9hfNeI+zq/l3FukmOoTwReiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GTSpyPE/; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA6B6C19421
-	for <linux-pwm@vger.kernel.org>; Fri, 16 Jan 2026 11:39:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768563566;
-	bh=CXQQOwA/eEzIPCuqAzSZiZzBLITSZmnC2lVuqjTxJ44=;
-	h=From:In-Reply-To:References:Date:Subject:To:Cc:From;
-	b=GTSpyPE/Z0vG+qpaXeXy6xpn7K7Sel0/nS09s97bvXm2kNNLtDTsH2pbf4enpXt4+
-	 Ihq8tuLMT94C7OHsaobf/d4MONtHzF31/L2V5l10aElB3gvuXInX+43H2PjneqKiUH
-	 iCOS09YrSMa9I+KRHId2J3/sKKSmQ3wXytxNh1BRdZyUm3qpQJIA+/1chQSY/rg504
-	 h1bzqCawKa1rueYaMOrAuRVKiTd2rbqUeA635KB7VRQccL/77p1mrgoGPxkEUPPPav
-	 QOnfaRaTtjdKO/bGLT++ns8/mUwf54h0aOGPsuZNQziY2RCo1C0vmsSSc93UmRp+qv
-	 uLi41fqEGVSpQ==
-Received: by mail-lf1-f41.google.com with SMTP id 2adb3069b0e04-59b6f04cae6so1995413e87.2
-        for <linux-pwm@vger.kernel.org>; Fri, 16 Jan 2026 03:39:25 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUAEznJL3qLo/bWE7+noNEO3IB4P3gqEVIyhUDLJDjnGvFSJUpo8fiHdSWhRxxyb5flet6ZArTPNFE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzvrGnyD52T6/a9uT4JWAdvwVJt3w7d2zfr0fXqEAZD/72AOxOo
-	dRzX80JmP2LQ6YBMvyIuw3rSk+x6pvkF+4yUo8wiU2ZyQfeRtJLCz4QDawc1OCEX4pTTLt4tayo
-	fKCNq3TDcQNFa8Lq1oKuK2eNvANyQ/+ron5q0rvfMiQ==
-X-Received: by 2002:a05:6512:3192:b0:59b:6ff4:195a with SMTP id
- 2adb3069b0e04-59baef0063fmr793808e87.43.1768563564596; Fri, 16 Jan 2026
- 03:39:24 -0800 (PST)
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Fri, 16 Jan 2026 11:39:22 +0000
-Received: from 969154062570 named unknown by gmailapi.google.com with
- HTTPREST; Fri, 16 Jan 2026 11:39:22 +0000
-From: Bartosz Golaszewski <brgl@kernel.org>
-In-Reply-To: <20260115165055.1739004-2-ukleinek@kernel.org>
+	s=arc-20240116; t=1768791340; c=relaxed/simple;
+	bh=JISZLytz4Pt6Fme8H2Z+L3YsYrinkK3R852fMWxaq5I=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=I1gBVtIIrG7jQRaG16fMmOhtKvIp3WcUYaeovkYkrq7R2Uw3JbupTdJSbX5/XP9XnRkfjDXXTDUPsFv7kIOM/MFUlvY6v1D6UTicVsP4RdTLmae95wfpTzzHmOcAX5HIFFDCaaiH5cDYuZNgqH6exwXBxU0Xhw42bp8JI2Fcxqs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KFMZR/HJ; arc=none smtp.client-ip=74.125.82.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-dl1-f52.google.com with SMTP id a92af1059eb24-12336f33098so2727262c88.0
+        for <linux-pwm@vger.kernel.org>; Sun, 18 Jan 2026 18:55:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768791338; x=1769396138; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PBu6D8bYwlSbhTzZMxyYo+wT+D+xqFcl/ZzNREhx89Y=;
+        b=KFMZR/HJvRlEfqhG7h706d6Ggs2XlOiqmvwTmC3qXW5WOGPRT0wnKZiGx4uR2ec7dU
+         1/rDZufWvFJvK63Fr5KFMFAJYGK8t3RRA2Jy6k66oCWmLkFZzPcHh/qUSfwBN8/PbNy1
+         BBlf7nHyFBnyRz4y/KbziknFkwd+fwT7969/rDSqYMgbS8RtrIFcuOGeTwsV31rUBK88
+         DoTf7WDzL3tGmYEEauMLsQnswSyVxnleNXb7oTOQwJTqaahBU1IgmO17krmJ1vviAaiW
+         KycdC8eEn9YGdWNZXOuTIMEz/IadqFH/eeouo+383YJzx69k72e/ouyRue694F/YVt6P
+         oxKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768791338; x=1769396138;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=PBu6D8bYwlSbhTzZMxyYo+wT+D+xqFcl/ZzNREhx89Y=;
+        b=JZd36rt11uyIaACcKCWsIVESW7c9CZfw6+yYoAigTIh8gRTIBaUOby0nTbFiN0pWq9
+         OCzFvoodrwpCTx5I9Hi0+qaZpLYc0B2tLBwfQTYGOjzn5PdP/mfEg6qeJb584FWY6Kr9
+         VIo54OsMWpG42t0nd1tdmCCUIrXXNT3sVDJ0yjwJp+HpF1NQ2SflrrmnT1OLD0wk5o4U
+         BtrQ20R2INNG151SpKJfuVe/qxzhP7lfmPnaozlfVbPtKqgAAX3lR2BDKFkNTWjPV7+w
+         DQdHPSI01MyS6YADJb9TO39/HzTPr6r/6ytyVWB3sjPk7q0zAw9WvaC9R3DDzwguvvvo
+         pLeQ==
+X-Forwarded-Encrypted: i=1; AJvYcCXVLz7gIiXKv/H4ejafasSRSnfGml0CfeRS6FE7CXUT0PAeejsP/bf7HkJdm/fBt+F3GLRSSuVVPnE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyRyfNDo2LyY4OTWXkmv9uPNUfR1tbHpi53UbDG5JX64cXxHUhs
+	iIkTZOCH8FaxUD2IbVEP1vzMHMWqaYAtxj1JDE7048SCMUusevhy9Rrs
+X-Gm-Gg: AY/fxX44RWQ5MR2Fh2oLUkaQ69dzkCX2djCWB9HjeIIAi9lHDfeTmvl3rYOrWUjZz86
+	8kIl3yZ6+91m9glOUuwpqXS7AMqPoPvPwIrpHirX1wneAwP7PzImuhvOJthPx/U5Wn4YFjk8pVt
+	OYsI8CZ3XejtQOBEgqIXHw/o5JODb1vU+6tciVbI2/Q5ZrbOF1EulfCREUbO1BOuSV8FTQvkfkH
+	UCZ1bfmQKszW91Brwd4i5ETwDogzY/v2ukdOdEsXwqZNXDyIDuu5AmW/joUZyqo+/JY56uFtejE
+	6ooy6U5pUqp+bSlg/pbM/V3cPAALtvOA2fYknuP4Rep78717vzDiRwlO0+VfpHg7hw/Iuh5lPRb
+	8LeTg6ZZBeiGSwDbnkMljrwQMOPe+Gei56ORiB1CCnXOGw5boqYmh5emyF2VPZnzZTcU++/Uo2/
+	sSA+fgFcnNq2mN1f0zBGXF7XT50I47SliFmQKS2z6O+ot5R789z+cVuqrIN1o0b6v/TnUXxTJXf
+	4L5c4tf1NYMhFC5OsF5bNyZkRSK8Mmaun6X/A==
+X-Received: by 2002:a05:7022:b8f:b0:11d:fc4a:c4f7 with SMTP id a92af1059eb24-1244b307e3fmr7398972c88.4.1768791337890;
+        Sun, 18 Jan 2026 18:55:37 -0800 (PST)
+Received: from ParadiseLost.localdomain (lohr.com.br. [177.69.253.233])
+        by smtp.gmail.com with ESMTPSA id 5a478bee46e88-2b6b3696f40sm11100722eec.35.2026.01.18.18.55.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 18 Jan 2026 18:55:37 -0800 (PST)
+From: "Rafael V. Volkmer" <rafael.v.volkmer@gmail.com>
+To: ukleinek@kernel.org
+Cc: g-praveen@ti.com,
+	j-keerthy@ti.com,
+	linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	n-francis@ti.com,
+	rafael.v.volkmer@gmail.com,
+	u-kumar1@ti.com
+Subject: Re: [PATCH v2] pwm: tiehrpwm: Enable EHRPWM controller before setting configuration
+Date: Sun, 18 Jan 2026 23:55:04 -0300
+Message-ID: <20260119025521.26212-1-rafael.v.volkmer@gmail.com>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <xdj2ceubkss3ingkxdvc64zqrcd3wzz2uxa6wqwgvilu2ykukc@hbn6tt2gnxj5>
+References: <xdj2ceubkss3ingkxdvc64zqrcd3wzz2uxa6wqwgvilu2ykukc@hbn6tt2gnxj5>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260115165055.1739004-2-ukleinek@kernel.org>
-Date: Fri, 16 Jan 2026 11:39:22 +0000
-X-Gmail-Original-Message-ID: <CAMRc=MeZmROA5E+X0eHXnFuDqG+fiRBddJFCS3kRndJ+sZLuag@mail.gmail.com>
-X-Gm-Features: AZwV_QgHn3Bgp42Zs07ODYXzLhE6d627qXzY16pFTZhBrCnGBRlTiCDDTXaHCms
-Message-ID: <CAMRc=MeZmROA5E+X0eHXnFuDqG+fiRBddJFCS3kRndJ+sZLuag@mail.gmail.com>
-Subject: Re: [PATCH] pwm: Update MAINTAINER entry
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Lee Jones <lee@kernel.org>, 
-	Daniel Thompson <danielt@kernel.org>, Jingoo Han <jingoohan1@gmail.com>, linux-gpio@vger.kernel.org, 
-	dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, 15 Jan 2026 17:50:54 +0100, "Uwe Kleine-K=C3=B6nig"
-<ukleinek@kernel.org> said:
-> There is little sense in having gpio-mvebu and pwm-backlight explicitly
-> listed in the PWM entry. Drop these and add the keywords that actually
-> identify a driver as PWM related.
->
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <ukleinek@kernel.org>
-> ---
->  MAINTAINERS | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 5b11839cba9d..1ab3b6a2c29b 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -21070,16 +21070,14 @@ L:	linux-pwm@vger.kernel.org
->  S:	Maintained
->  Q:	https://patchwork.ozlabs.org/project/linux-pwm/list/
->  T:	git https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.gi=
-t
-> -F:	Documentation/devicetree/bindings/gpio/gpio-mvebu.yaml
->  F:	Documentation/devicetree/bindings/pwm/
->  F:	Documentation/driver-api/pwm.rst
-> -F:	drivers/gpio/gpio-mvebu.c
->  F:	drivers/pwm/
-> -F:	drivers/video/backlight/pwm_bl.c
->  F:	include/dt-bindings/pwm/
->  F:	include/linux/pwm.h
-> -F:	include/linux/pwm_backlight.h
->  K:	pwm_(config|apply_might_sleep|apply_atomic|ops)
-> +K:	(devm_)?pwmchip_(add|alloc|remove)
-> +K:	pwm_(round|get|set)_waveform
->
->  PWM SUBSYSTEM BINDINGS [RUST]
->  M:	Michal Wilczynski <m.wilczynski@samsung.com>
->
-> base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
-> --
-> 2.47.3
->
->
-
-Reviewed-by: Bartosz Golaszewski <bartosz.golaszewski@oss.qualcomm.com>
+Hello Uwe, Gokul,=0D
+=0D
+Sorry for the late response, I was on vacation and away from my setup.=0D
+=0D
+On Fri, 9 Jan 2026 23:53:22 +0100, Uwe Kleine-K=C3=B6nig wrote:=0D
+> That makes me think the problem isn't understood well yet and needs more=
+=0D
+> research. @Rafael, does the problem reproduce for you with Gokul's=0D
+> recipe? (Or did you try that already? I understood your reply as "I=0D
+> didn't encounter the issue but also didn't test specifically for that.")=
+=0D
+=0D
+Right, my previous reply meant I hadn't explicitly targeted this issue yet.=
+=0D
+I have now re-tested using Gokul's sysfs configuration sequence, but I stil=
+l=0D
+cannot reproduce it on my setup.=0D
+=0D
+> As I cannot reproduce the issue, can you please check if adding=0D
+>=0D
+>       pm_runtime_get_sync(pwmchip_parent(chip));=0D
+>=0D
+> to the probe function makes the problem disappear? Also please boot with=
+=0D
+>=0D
+>       trace_event=3Dpwm=0D
+>=0D
+> on the command line and provide the content of=0D
+> /sys/kernel/debug/tracing/trace after reproducing the problem.=0D
+=0D
+Since I cannot reproduce the issue here, I can't validate whether adding=0D
+pm_runtime_get_sync() changes the behavior, and I don't have a failing=0D
+trace to share.=0D
+=0D
+For reference, I ran the tests on an AM62P EVM using TI's default SDK=0D
+userspace, with a custom kernel on top, and U-Boot from the SDK. The=0D
+board was booted from SD card.=0D
+=0D
+I used pwm1 instead of pwm0, since the PWM pin routed to the EVM 40-pin=0D
+header is ball B21 (SPI0_CLK / EHRPWM1_A). The signal was verified with a=0D
+logic analyzer at 24 MHz sampling rate.=0D
+=0D
+This makes me suspect the behavior Gokul observed might depend on another=0D
+configuration interacting in parallel.=0D
+=0D
+If possible, could Gokul try the same recipe on an AM62 EVM using TI's=0D
+default images and confirm whether the issue reproduces there? That is the=
+=0D
+platform I am currently working with. This should either match the AM62P=0D
+results or help identify a relevant configuration difference.=0D
+=0D
+Best regards,=0D
+Rafael V. Volkmer=0D
 
