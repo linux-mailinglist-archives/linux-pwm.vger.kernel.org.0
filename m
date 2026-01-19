@@ -1,236 +1,171 @@
-Return-Path: <linux-pwm+bounces-7925-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7924-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id A6A4AD3A993
-	for <lists+linux-pwm@lfdr.de>; Mon, 19 Jan 2026 13:55:24 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 02B20D3A98F
+	for <lists+linux-pwm@lfdr.de>; Mon, 19 Jan 2026 13:54:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id DCEF7302DB25
-	for <lists+linux-pwm@lfdr.de>; Mon, 19 Jan 2026 12:55:00 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 57DC63002B9E
+	for <lists+linux-pwm@lfdr.de>; Mon, 19 Jan 2026 12:54:55 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 265D7361DD1;
-	Mon, 19 Jan 2026 12:54:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B170736166F;
+	Mon, 19 Jan 2026 12:54:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="R4MWI0V3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mc9IqOtl"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C60136164E;
-	Mon, 19 Jan 2026 12:54:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 161CE326954
+	for <linux-pwm@vger.kernel.org>; Mon, 19 Jan 2026 12:54:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.177
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768827297; cv=pass; b=ogeDdbX3cYqyKjEyk5d/UMkfw94VOFA7yFVy9PRPbIP1zcqxfcwomEiugIM/dQHh8a8/WW1ORUGa3J5LuSsPW6KutKStWO4Sa7FEkWpxeMSbRgww2xaNjAcFLDHyCJMrbNtKsaQ9mmLEW7GNUyVJdS9lTUii50tTHS9SnibUSj8=
+	t=1768827292; cv=pass; b=KLeOrror24Ua+lUpjGYShhk5FfQdbaHneCAUcZkIgUaXhtcJ9TWMEJ0jXV8yOvul5FvIPmjILSIIXXSwJRPKiF58ywehFBC9sa7Z8xBeSh1EOWnlaX9wLzvge+i+GiB0AepO1tNe4cWmHsyHxE4+LlllvjNY59AkF9MuPrIO3Mc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768827297; c=relaxed/simple;
-	bh=3Q4kAu5N7NP4BEvDuZpcTOpqQnVfNkUqcwDHY6Ed4OM=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=dbCbe6NuQypNRad/4KHupClAlSaMupQqFhMSuOgdhcg5eScoNaa1+y4TDR7hWGzHHeXy9VBc3nNM2asMTsQKtEHOiV8C0lzpRV3xe3JmQTMgNHfJqS8XlvtlSx//v+FdbNurqojRohR1hqDgzAErRYtRgBLscAYqXivVlpitIhw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=R4MWI0V3; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1768827273; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=EMz8U/slnbqZVwl92w3iqz0shk9k0y/WL1n4Htr0AfZoktCSU5Zn2K/B6CnCFrrc9d6+/HFPvpmxX8rA/xcsSKodl2lTrrHK9qDyE4QOUpOcFw6O+4ImOfsARRtC6sPthf005IKkfRFZH/io0om/gAaUyjIzngjBGg5Jur98t94=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1768827273; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=zLDnJZLgAOrpoEGFnBjgHoA0s4migwFpwVUCiQLiYbE=; 
-	b=auuDHlGY39i8UFoY2S3ax0Ylo3TMvo/gCo8Ydo+0OembHXTR86/6E4pnwWPkDsEKL9KRxX74cIxpKPpo4tuJUwu3ADAT2EQIaUJOW+LqGXakCFnPJJJjBbShQyJH3mCRJD8xRYOO2M7VG2EaqSDqK3jtsJWkSVDyI2kr7zugf7s=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1768827273;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=zLDnJZLgAOrpoEGFnBjgHoA0s4migwFpwVUCiQLiYbE=;
-	b=R4MWI0V3IEJiVaX8Hq9T9sxTQcgm9LF2HJ0ECpjnvRIG7s4E4c2DlRzP2kCq2vZt
-	vxIbkTXjyOlGqjskS0iuccLwzIKp8dRdbmkrLrmlBjWafvqM8YlWU3GlUj+sR0rs3N4
-	HzPR0YjucxiEXXyp95gt6LvlwbYSs8Hmlcc5DVS4=
-Received: by mx.zohomail.com with SMTPS id 176882727146931.323097316967164;
-	Mon, 19 Jan 2026 04:54:31 -0800 (PST)
-Content-Type: text/plain;
-	charset=utf-8
+	s=arc-20240116; t=1768827292; c=relaxed/simple;
+	bh=IkKYKGBczUCc6iecBFNUGNFccawVKBJFo/hayrkeNZ0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=U6c0Ywhu9rgJeiAYgA7mFmJbPXXuBscvsGSbAgcNsjOKGY1w+opF8C/809982gQ9FpKHuPj97KY6+OR+vah45NmV9nJ5fPXl6UNauI6RrNK8QSQb754kKga41wViiE4jiC+7QFRBgzvyuNBSFHqyROqDRVXHZTh7MIMOAN9pqeI=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mc9IqOtl; arc=pass smtp.client-ip=209.85.208.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-382fb6d38f7so29946721fa.3
+        for <linux-pwm@vger.kernel.org>; Mon, 19 Jan 2026 04:54:50 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1768827289; cv=none;
+        d=google.com; s=arc-20240605;
+        b=fUW/HkCnPl8uqZZnlV7551KaQG7bFJ65tO8RWqP17ravTc1s8jtsU74XHnGO9gd+hc
+         0vU9WcMTaK1BbpGgeRVc0go2vzmT0L5uhjJWCAw8l1fUwcug8F7CXgsWrMRh8Reldl5D
+         +PBXcQ89EX6cP6F3G/mXrvugjxBZ8rftPAqonVsOEFg0cvUujsUArq709KV0iZQsIkeS
+         2jdOQEQ56yJR0CDXoab/RWdNCX0LF1E3pgGCnB6K5jIB63V9FSW8YDykJLaiZsfu9fNH
+         +JT1M5cK72DkHSINHOmm/HHwVOiQxoAaD2TJgnY+18JoRgVHtrkUWLuwPEv7vsLDZHhK
+         nkuQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=qGur8UDGGcBE3Hmocy7dgLQOrypMFPCEL+jwBXmsi0Y=;
+        fh=0enAhcHHuRjVzlnuTh+75RcMdT0zTl2HNdICIDBVBhM=;
+        b=ICKxYLg/9bxvBmSUubpvNDz8ES6jJmB26iXyzV46h+t7v2S435lwAnxRAVrGQY+Eyz
+         ComJga7NsnNPXQXj5ZUNxfl69GtpLnHjs3Vpf1/d6SQxA4HK7eBAOsgebZcu79mXzHzr
+         ZQurh9QfDG2nIh4jHPxv3ijP3fcxpr6mdELzmsQy0zTQB9IQs3N9Rl14E3UXGzfBDmm5
+         Yvtk0TpdNG5N5fT0JNbBrXCBRrIPCkJVO8LNzT8POAH68SobTYImsLgZkm+W5oNcwdcC
+         0ezy1/MEIIPtuEYwJ2VabKlgjA9UIP92YjNNASV+yfZpNRsQMPB3SpoZxppQJvkjqRfS
+         9h8A==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1768827289; x=1769432089; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=qGur8UDGGcBE3Hmocy7dgLQOrypMFPCEL+jwBXmsi0Y=;
+        b=mc9IqOtlkn/IL3YKyUShxHqm9fvpV2shFOmy4YOozzrWEDkPUl/GHeT0vNGfBV7YS2
+         4kmGZKeX2eU6zk57TMDvc0IfK3bewVF+yVFXD6fF9hjCblvzwaU1+r+d8IlHf4nib/9X
+         XrFoV7gb4ydSmZyclg1ZO02jWzhVvQ5rYoFJSRpZaGu5oYW3GGr2Ie60v/wm2JRICIZ/
+         arkhMFCtSxZOP+J3HGDdSDc6qn60/ZddUTS4dMcJAogAg3Lbrdm1eirDVVJmiz2ylnFI
+         FeH3ACfFnHgxkJJQlgU97PU9eM/2wuPOK+vHRpDLA+He38XnfStKQa80D/N9d3rlWIPe
+         qJUA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768827289; x=1769432089;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=qGur8UDGGcBE3Hmocy7dgLQOrypMFPCEL+jwBXmsi0Y=;
+        b=pu33Nwox7bS6DXnP80kJejv157Bis98ZGWzf0/Es2qrnQmTbqyRllv5o6bvBQql8D9
+         saWCCht12TBZRwL/pkp6umeEKWfcRNvcJmbfa73wACqpH8qSXbTHh0ef0gj3+VJu75f2
+         HyeP8bDtyJ29LnojXc108Gm0u8V1hEkSarNXtHNITeUYEEJaSide3RZAOA8L79cpT4+t
+         crKOfdGhp4Y8cVhd3/n70wiqZoRbIJev2ANL9eXak4nKuu26hIertI7BRHjo0QGUz88S
+         fpHNtRRcJ70GSFofNtCB2EGuVo61OITPy9gU61EhKL9n282M16dA2+lj0t4ezHl1owpP
+         jbvA==
+X-Forwarded-Encrypted: i=1; AJvYcCUzTe9JT8iJRwVSqYR1u36F5YQrg1uDAyTNlyEF0AT6/6Zrn9ZOCyxd3i2lNgKAlFlwyXCiI/XJ/xU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzmhzbNuGjQbSRJF6emdHUoI33skNIimxtYElQFPUo1xMl3PCzc
+	9B5jkHJWBpd0FGOnEZDOtaJNoh5p/AzsfmKUkPxTpOLZ1uK+yKpB/7/qxySKU7Axb6JIV92tmVk
+	hqeZV9GHhYE9cRSFMrvci/c2Yx8sds2k=
+X-Gm-Gg: AY/fxX5O7CL67YQV/keBke1XoAKsV8cgL1ITXKyAxqKP0P/WY36wtH4PL4WCOEr7E12
+	J8tYIey4tyuQQhe9PTY5Wq/4ALjE39LOksUEUWorphYJGZj9Vyzv19AcHX3fCO3V6+zVfIuosKG
+	hGW2DErtdEOWD4AifRInqIqaN67BWh5GR+knL/smWiOiNkSF/a8olXzO1mjm107YK4c/u2nMBmA
+	bZp5pek+VZ0Avsoouf5rAAWDntfKuO33dbv5ye/NDXlIuy+eGd2t3fUvdkW4P1fziaLpqVIXhqO
+	EgjUBIrx740dhLtLxAgzpc6tcVhXPuS4xVTip2k5+a8NR19RHfBhLO//ClmxRog5EH+CTn9c9vF
+	KiE44bzdg3ZzsI7Y1kxxP4FMevrDrXlkAUD63pvUkRw==
+X-Received: by 2002:a05:651c:508:b0:383:5482:b853 with SMTP id
+ 38308e7fff4ca-383842bcaeemr36918321fa.21.1768827288971; Mon, 19 Jan 2026
+ 04:54:48 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.700.81\))
-Subject: Re: [PATCH v3 1/3] rust: clk: use the type-state pattern
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <aW4lCfUyumOKRRJm@google.com>
-Date: Mon, 19 Jan 2026 09:54:10 -0300
-Cc: Maxime Ripard <mripard@kernel.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>,
- Danilo Krummrich <dakr@kernel.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>,
- Drew Fustini <fustini@kernel.org>,
- Guo Ren <guoren@kernel.org>,
- Fu Wei <wefu@redhat.com>,
- =?utf-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>,
- Miguel Ojeda <ojeda@kernel.org>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <lossin@kernel.org>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Trevor Gross <tmgross@umich.edu>,
- linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org,
- linux-riscv@lists.infradead.org,
- linux-pwm@vger.kernel.org,
- linux-clk@vger.kernel.org,
- rust-for-linux@vger.kernel.org
+MIME-Version: 1.0
+References: <20251222-cstr-pwm-v1-1-e8916d976f8d@gmail.com> <CAJ-ks9mrpcLaeiGjBcXNqTUwo00Y2MhhHWnWauou6exU1y920Q@mail.gmail.com>
+In-Reply-To: <CAJ-ks9mrpcLaeiGjBcXNqTUwo00Y2MhhHWnWauou6exU1y920Q@mail.gmail.com>
+From: Tamir Duberstein <tamird@gmail.com>
+Date: Mon, 19 Jan 2026 07:54:12 -0500
+X-Gm-Features: AZwV_Qix7Aukya090jJW0kiXMssAD-LNF3xuSuIb8jpVn4bil5K-YxfJFOSV4PI
+Message-ID: <CAJ-ks9=LNe_STYSEJj7tvFNFzLsfEBKd+=Nbft4Kj-7+RbU99w@mail.gmail.com>
+Subject: Re: [PATCH] drivers: pwm: replace `kernel::c_str!` with C-Strings
+To: Drew Fustini <fustini@kernel.org>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>
+Cc: linux-riscv@lists.infradead.org, linux-pwm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <518D8B09-B9A1-4DB4-85CD-37A2DD3D5FB1@collabora.com>
-References: <20260107-clk-type-state-v3-0-77d3e3ee59c2@collabora.com>
- <20260107-clk-type-state-v3-1-77d3e3ee59c2@collabora.com>
- <20260108-delectable-fennec-of-sunshine-ffca19@houat>
- <98CD0BF6-3350-40B9-B8A9-F569AE3E3220@collabora.com>
- <20260119-thundering-tested-robin-4be817@houat> <aW4lCfUyumOKRRJm@google.com>
-To: Alice Ryhl <aliceryhl@google.com>
-X-Mailer: Apple Mail (2.3826.700.81)
-X-ZohoMailClient: External
 
+On Sat, Jan 3, 2026 at 9:30=E2=80=AFPM Tamir Duberstein <tamird@gmail.com> =
+wrote:
+>
+> On Mon, Dec 22, 2025 at 7:24=E2=80=AFAM Tamir Duberstein <tamird@kernel.o=
+rg> wrote:
+> >
+> > From: Tamir Duberstein <tamird@gmail.com>
+> >
+> > C-String literals were added in Rust 1.77. Replace instances of
+> > `kernel::c_str!` with C-String literals where possible.
+> >
+> > Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> > ---
+> >  drivers/pwm/pwm_th1520.rs | 3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/pwm/pwm_th1520.rs b/drivers/pwm/pwm_th1520.rs
+> > index e3b7e77356fc..8ae8f852ec02 100644
+> > --- a/drivers/pwm/pwm_th1520.rs
+> > +++ b/drivers/pwm/pwm_th1520.rs
+> > @@ -22,7 +22,6 @@
+> >
+> >  use core::ops::Deref;
+> >  use kernel::{
+> > -    c_str,
+> >      clk::Clk,
+> >      device::{Bound, Core, Device},
+> >      devres,
+> > @@ -327,7 +326,7 @@ fn drop(self: Pin<&mut Self>) {
+> >      OF_TABLE,
+> >      MODULE_OF_TABLE,
+> >      <Th1520PwmPlatformDriver as platform::Driver>::IdInfo,
+> > -    [(of::DeviceId::new(c_str!("thead,th1520-pwm")), ())]
+> > +    [(of::DeviceId::new(c"thead,th1520-pwm"), ())]
+> >  );
+> >
+> >  impl platform::Driver for Th1520PwmPlatformDriver {
+> >
+> > ---
+> > base-commit: 8f0b4cce4481fb22653697cced8d0d04027cb1e8
+> > change-id: 20251222-cstr-pwm-c9b9a4701157
+> >
+> > Best regards,
+> > --
+> > Tamir Duberstein <tamird@gmail.com>
+> >
+>
+> @Uwe could you please have a look?
+>
+> Cheers.
+> Tamir
 
-
-> On 19 Jan 2026, at 09:35, Alice Ryhl <aliceryhl@google.com> wrote:
->=20
-> On Mon, Jan 19, 2026 at 11:45:57AM +0100, Maxime Ripard wrote:
->> On Thu, Jan 08, 2026 at 11:14:37AM -0300, Daniel Almeida wrote:
->>>> For example, it's quite typical to have (at least) one clock for =
-the bus
->>>> interface that drives the register, and one that drives the main
->>>> component logic. The former needs to be enabled only when you're
->>>> accessing the registers (and can be abstracted with
->>>> regmap_mmio_attach_clk for example), and the latter needs to be =
-enabled
->>>> only when the device actually starts operating.
->>>>=20
->>>> You have a similar thing for the prepare vs enable thing. The =
-difference
->>>> between the two is that enable can be called into atomic context =
-but
->>>> prepare can't.
->>>>=20
->>>> So for drivers that would care about this, you would create your =
-device
->>>> with an unprepared clock, and then at various times during the =
-driver
->>>> lifetime, you would mutate that state.
->=20
-> The case where you're doing it only while accessing registers is
-> interesting, because that means the Enable bit may be owned by a local
-> variable. We may imagine an:
->=20
->    let enabled =3D self.prepared_clk.enable_scoped();
->    ... use registers
->    drop(enabled);
-
-
-Not sure I understand. You can get a Clk<Enabled>, do what you need, and =
-then
-consume Clk<Enabled> to go back to Clk<Prepared>. I think I added this, =
-but if
-I didn=E2=80=99t, it=E2=80=99s a trivial thing to do.
-
->=20
-> Now ... this doesn't quite work with the current API - the current
-> Enabled stated owns both a prepare and enable count, but the above =
-keeps
-> the prepare count in `self` and the enabled count in a local variable.
-> But it could be done with a fourth state, or by a closure method:
->=20
->    self.prepared_clk.with_enabled(|| {
->        ... use registers
->    });
->=20
-> All of this would work with an immutable variable of type =
-Clk<Prepared>.
->=20
->>>> AFAIU, encoding the state of the clock into the Clk type (and thus
->>>> forcing the structure that holds it) prevents that mutation. If =
-not, we
->>>> should make it clearer (by expanding the doc maybe?) how such a =
-pattern
->>>> can be supported.
->>>>=20
->>>> Maxime
->>>=20
->>> IIUC, your main point seems to be about mutating the state at =
-runtime? This is
->>> possible with this code. You can just have an enum, for example:
->>>=20
->>> enum MyClocks {
->>>    Unprepared(Clk<Unprepared>),
->>>    Prepared(Clk<Prepared>),
->>>    Enabled(Clk<Enabled>),=20
->>> }
->=20
-> I believe you need an extra state if the state is not bound to the =
-scope
-> of a function:
->=20
-> enum MyClocks {
->    Unprepared(Clk<Unprepared>),
->    Prepared(Clk<Prepared>),
->    Enabled(Clk<Enabled>),=20
->    Transitioning,
-> }
->=20
-> since mem::replace() needs a new value before you can take ownership =
-of
-> the existing Clk value.
-
-Right, I need to update the docs to account for this, as they imply that =
-you
-can do this with only two states.
-
->=20
->>> In fact, I specifically wanted to ensure that this was possible when =
-writing
->>> these patches, as it=E2=80=99s needed by drivers. If you want to, I =
-can cover that in
->>> the examples, no worries.
->>=20
->> Yes, that would be great. I do wonder though if it wouldn't make =
-sense
->> to turn it the other way around. It creates a fair share of =
-boilerplate
->> for a number of drivers. Can't we keep Clk the way it is as a
->> lower-level type, and crate a ManagedClk (or whatever name you =
-prefer)
->> that drivers can use, and would be returned by higher-level helpers, =
-if
->> they so choose?
->>=20
->> That way, we do have the typestate API for whoever wants to, without
->> creating too much boilerplate for everybody else.
->=20
-> I think that if you still want an API where you just call =
-enable/disable
-> directly on it with no protection against unbalanced calls, then that
-> should be the special API. Probably called RawClk and functions marked
-> unsafe. Unbalanced calls seem really dangerous and use should not be
-> encouraged.
-
-I think we should discourage RawClk if at all possible. But if the =
-consensus
-is that we *really* need this easily-abused thing, I can provide a =
-follow-up.
-
->=20
-> The current type-state based API is the least-boilerplate option for
-> drivers that exist today.
->=20
-> Alice
-
+Drew, Guo, or Fu: could you please take this through your tree, or
+would you be OK with it going through rust-next?
 
