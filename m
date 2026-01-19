@@ -1,31 +1,31 @@
-Return-Path: <linux-pwm+bounces-7926-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7925-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3824ED3A991
-	for <lists+linux-pwm@lfdr.de>; Mon, 19 Jan 2026 13:55:20 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id A6A4AD3A993
+	for <lists+linux-pwm@lfdr.de>; Mon, 19 Jan 2026 13:55:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 4275B300E066
-	for <lists+linux-pwm@lfdr.de>; Mon, 19 Jan 2026 12:55:05 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id DCEF7302DB25
+	for <lists+linux-pwm@lfdr.de>; Mon, 19 Jan 2026 12:55:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7D4F036212C;
-	Mon, 19 Jan 2026 12:54:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 265D7361DD1;
+	Mon, 19 Jan 2026 12:54:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
 	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="R4MWI0V3"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8B43326954;
-	Mon, 19 Jan 2026 12:54:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C60136164E;
+	Mon, 19 Jan 2026 12:54:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768827298; cv=pass; b=dpFRlI2d2pANTuxNleiK0VQY7SU71cGdBq4WnbXap8F2HghSF25AKu/HcIm0WE76/OzrnfyhRePQbKK5DHyUIDCEE4mqYNK8UIWMP0vRv010eYk9Oh8c21eM2ZKl8mbfeoDDoK4VbKUWDBy0ydXpbQfYqWkRzvOvZ/U9U4jzfxQ=
+	t=1768827297; cv=pass; b=ogeDdbX3cYqyKjEyk5d/UMkfw94VOFA7yFVy9PRPbIP1zcqxfcwomEiugIM/dQHh8a8/WW1ORUGa3J5LuSsPW6KutKStWO4Sa7FEkWpxeMSbRgww2xaNjAcFLDHyCJMrbNtKsaQ9mmLEW7GNUyVJdS9lTUii50tTHS9SnibUSj8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768827298; c=relaxed/simple;
+	s=arc-20240116; t=1768827297; c=relaxed/simple;
 	bh=3Q4kAu5N7NP4BEvDuZpcTOpqQnVfNkUqcwDHY6Ed4OM=;
 	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=UiHv6Uaar/boF9g8GQ5ZX1OysKpLy06z8MaHZbrMagKzr1t3hqJG8u2govvGI49mDcsQ9UjBYAVxSkoxYKkAFeE2O81DiHG2Pl3R741GsZ8DXCDewbJDPwRI7TVPqV1Z0ok7CrDCmnQnAqbm/ykqxreSu6K2FQdoV0tTn563Vv4=
+	 Message-Id:References:To; b=dbCbe6NuQypNRad/4KHupClAlSaMupQqFhMSuOgdhcg5eScoNaa1+y4TDR7hWGzHHeXy9VBc3nNM2asMTsQKtEHOiV8C0lzpRV3xe3JmQTMgNHfJqS8XlvtlSx//v+FdbNurqojRohR1hqDgzAErRYtRgBLscAYqXivVlpitIhw=
 ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=R4MWI0V3; arc=pass smtp.client-ip=136.143.188.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
@@ -47,8 +47,8 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1768827273;
 	b=R4MWI0V3IEJiVaX8Hq9T9sxTQcgm9LF2HJ0ECpjnvRIG7s4E4c2DlRzP2kCq2vZt
 	vxIbkTXjyOlGqjskS0iuccLwzIKp8dRdbmkrLrmlBjWafvqM8YlWU3GlUj+sR0rs3N4
 	HzPR0YjucxiEXXyp95gt6LvlwbYSs8Hmlcc5DVS4=
-Received: by mx.zohomail.com with SMTPS id 1768827272041656.4115222452002;
-	Mon, 19 Jan 2026 04:54:32 -0800 (PST)
+Received: by mx.zohomail.com with SMTPS id 176882727146931.323097316967164;
+	Mon, 19 Jan 2026 04:54:31 -0800 (PST)
 Content-Type: text/plain;
 	charset=utf-8
 Precedence: bulk
