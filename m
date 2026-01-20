@@ -1,84 +1,88 @@
-Return-Path: <linux-pwm+bounces-7963-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7979-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KE8yLlxXcGlvXQAAu9opvQ
-	(envelope-from <linux-pwm+bounces-7963-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Wed, 21 Jan 2026 05:34:36 +0100
+	id SMBPAkE5cGmgXAAAu9opvQ
+	(envelope-from <linux-pwm+bounces-7979-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Wed, 21 Jan 2026 03:26:09 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2BE9851119
-	for <lists+linux-pwm@lfdr.de>; Wed, 21 Jan 2026 05:34:36 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id EC0164FBD6
+	for <lists+linux-pwm@lfdr.de>; Wed, 21 Jan 2026 03:26:08 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 56FA38A9423
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jan 2026 13:47:11 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 4C4039AFD5B
+	for <lists+linux-pwm@lfdr.de>; Wed, 21 Jan 2026 02:24:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEC3843C053;
-	Tue, 20 Jan 2026 13:45:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3297E338F45;
+	Wed, 21 Jan 2026 02:24:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="hK7YGx3r"
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="K7EDIs8D"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mout-p-202.mailbox.org (mout-p-202.mailbox.org [80.241.56.172])
+Received: from mout-p-101.mailbox.org (mout-p-101.mailbox.org [80.241.56.151])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31326345CC2;
-	Tue, 20 Jan 2026 13:45:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A075C2E5D17;
+	Wed, 21 Jan 2026 02:24:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.151
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768916716; cv=none; b=b+lib1/biWivsTILJPIXYF4h2FFd/mI1sgnzWpV2D/LLYLnel4Ecu7w1kPLcG3nwA6gjjrMZZ0Dt54Q4S+pu6tjiLoVPxmjHx6oJVxg4ZFyaiIvgkt7Ebz9px8k1n0ApFCWWdA+ODc0GWRkAuMb6nxKqbaLMrBrSZW5qOo7ifJo=
+	t=1768962249; cv=none; b=Ce4mB8oYb5CFq+fheVmHahXhYfJQ0RJoqCCtC8NUlyn1ZsrglZfKqkOWgevClSCV0ZyX7op2/nyXYEM9rFeQ4c6h0J04ClOrmKs7QVQtx+gN3IsX5xkvDjK3s2BcQkd/8Skw2CxEWceQYW9F99L/YtOE1A5EAWtyJhDKMgrpDSw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768916716; c=relaxed/simple;
-	bh=+vXHyUJgSDEcnPi6EZ+EUoqKYfKwW0OABkD2K8PFze4=;
+	s=arc-20240116; t=1768962249; c=relaxed/simple;
+	bh=v/yj/kp8r9CBfpaudev5cN6BVipUza/iUdEnMW0awj4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iMG/c+oIbengUzeuin7csUv1PsP17XQDuHA15hOqv1GDy6Jk7Wy7Y9babERcjrUnYV/RW+Pov0wDcdwxwpsR4ykhuCv3WdW0ex351AqtRofHWy+1IfWtWqgvLQc1wiNjyFJWltErFexIp32dxnQv1XA6TzS1mDGJ5qWR5YHunbQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=hK7YGx3r; arc=none smtp.client-ip=80.241.56.172
+	 In-Reply-To:Content-Type; b=QPHycjm5oZrSNWNaRmkGKsWwZocJ0eHCawqk2kv7+SzjdRbQIDF0TizztYAb5XTu9LZ4TV+MdTfLdUmf9UtkoluC+6z2Kvd/q3WkdCB7rCpfm7qjH+hcuEr9zInWsXqs1SeTpMd2TDF8I1i93HjNUK6N1tKp1veZEIHnWrGCnu0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=K7EDIs8D; arc=none smtp.client-ip=80.241.56.151
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:b231:465::2])
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:b231:465::1])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-202.mailbox.org (Postfix) with ESMTPS id 4dwT934Cgqz9t8w;
-	Tue, 20 Jan 2026 14:45:11 +0100 (CET)
+	by mout-p-101.mailbox.org (Postfix) with ESMTPS id 4dwp0Y0kbGz9t8q;
+	Wed, 21 Jan 2026 03:23:57 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1768916711;
+	t=1768962237;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=BI8mu4T4VqyqrbAlgLAivShp9lKVjxOQSYnza3RctDg=;
-	b=hK7YGx3rXKB7Knfyo3AV7em21Lb5Jlo6BCeyN4OGKZjXEl/pYRlZspxRLMeCeNSjPkbb+X
-	w+autHexXjrNCaEtDIlYSOgCCc9gz+7K4fwDpV4FoX6Ib2aJA39yY5n1CdyWlONc6CrIdl
-	YHZ4GV+AMaGE6Y4moPSQwgOoWGZMGNCzUPmhZnHQ3nWIb8DotBEgqxpNxqUSwP113zZYaC
-	HuF8z4OA08T3tV3MT+I9AYtX05bJXpmU11PAT1tkNw/CqlqefHs8kxmIYw1tcK1uES/u1b
-	wMQ1yywUR0SRG1+6sM8qgkWf+m7HMwF+bgL8kMv/G5kHWwPXLdF1yb1jTbbtfA==
-Message-ID: <832e0533-39db-4b27-870a-9530ecd046cb@mailbox.org>
-Date: Tue, 20 Jan 2026 14:45:09 +0100
+	bh=QGOYN9i1zWuHV83sK2qXtAETrwGCzCkpmZLOBbcMgNQ=;
+	b=K7EDIs8DwVpZ9GZg7hQT4yKuGXRxpm3M+xYjzmYWX8ZnPb0GvaDG4QzwCLXVqjMpCKgN9R
+	gT1URbbqXuZ85hfi88ElEf+zR3jnhJC1R6hVyAq06KOJfVtCxi18D93WldN6Zm9leFa1Vn
+	a4nwH5Mw3lIHp8e8aEmb5WVCfkI6HoHfYjYQITelyY19pz5oONPuX3ERjMVtdffPAwUrZq
+	Gk7LyiYFT41087XvjEYhtZBwb2nWQNs5GiAepWBI8AHfA0A0SEu1yW4YUwL73xBTs39qdP
+	lM7GMQWrNl+OECQ4dgbrVQ7Frk+VBVf5KCsN3vXSAt4wmsP2ZY2SHqPv7tI3/w==
+Message-ID: <f833d3b6-6a0f-4094-a3ff-7945447a4ecb@mailbox.org>
+Date: Tue, 20 Jan 2026 16:55:45 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2] regulator: rpi-panel-v2: Convert to new PWM waveform
+Subject: Re: [PATCH v3] regulator: rpi-panel-v2: Convert to new PWM waveform
  ops
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: linux-pwm@vger.kernel.org, Dave Stevenson
- <dave.stevenson@raspberrypi.com>, Liam Girdwood <lgirdwood@gmail.com>,
+To: Dave Stevenson <dave.stevenson@raspberrypi.com>
+Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ linux-pwm@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
  Mark Brown <broonie@kernel.org>, linux-renesas-soc@vger.kernel.org
-References: <20250904210604.186893-1-marek.vasut+renesas@mailbox.org>
- <qdqla4f5nfccqg2vdwkshzo6znwfizqizsyhfs7ksp6znja7uv@u4uwzvx7pgn6>
- <05bf0e18-68dd-4eab-b4d2-05af5f8d1ef7@mailbox.org>
- <ygyirj7jqkivztwgpwzskmleyvscywl2yjfjhfcawmlsgkkohe@dzsahribiqid>
+References: <20260104194224.41245-1-marek.vasut+renesas@mailbox.org>
+ <x25kxyh4t4u6c3ilj7nxp6sywab5dsar46b2foesrwfux2l4b2@d5iwqqcpdhlm>
+ <797047eb-e422-4a8b-80eb-ab130066c1d7@mailbox.org>
+ <xsjwvmlqclctnf6dgwyuoi7zits27is2s7r7taprb2w2lhsf7i@uiljd7o3ivbk>
+ <855e5015-98c8-48f6-9320-ca8163591940@mailbox.org>
+ <CAPY8ntACxpoZV2_8-9028AaA1mBScUOuK06a6x-XwdSeobiauw@mail.gmail.com>
+ <6f2b7a15-5d43-4a63-b374-6a452d1ccba7@mailbox.org>
+ <CAPY8ntD0Z39aC3j+mpZ-9uF3AysHFBNo4ckuexKRuuLUk+8TcA@mail.gmail.com>
 Content-Language: en-US
 From: Marek Vasut <marek.vasut@mailbox.org>
-In-Reply-To: <ygyirj7jqkivztwgpwzskmleyvscywl2yjfjhfcawmlsgkkohe@dzsahribiqid>
+In-Reply-To: <CAPY8ntD0Z39aC3j+mpZ-9uF3AysHFBNo4ckuexKRuuLUk+8TcA@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-MBO-RS-META: ie7hcygo9ni3tnsbaec6ke7fakheau1s
-X-MBO-RS-ID: 7d1ef0484ffb3ec0bfe
+X-MBO-RS-META: o57fgsckpqjgjrgbyfkdn9bzyxjpqrzq
+X-MBO-RS-ID: 76d0d27a89d2d32716f
 X-Spamd-Result: default: False [-1.96 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
@@ -86,8 +90,8 @@ X-Spamd-Result: default: False [-1.96 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[vger.kernel.org,raspberrypi.com,gmail.com,kernel.org];
-	TAGGED_FROM(0.00)[bounces-7963-lists,linux-pwm=lfdr.de];
+	FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,gmail.com];
+	TAGGED_FROM(0.00)[bounces-7979-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -102,24 +106,58 @@ X-Spamd-Result: default: False [-1.96 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[marek.vasut@mailbox.org,linux-pwm@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:7979, ipnet:2605:f480::/32, country:US];
+	ASN(0.00)[asn:7979, ipnet:2a01:60a::/32, country:US];
 	TAGGED_RCPT(0.00)[linux-pwm];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mailbox.org:mid,mailbox.org:dkim,dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo]
-X-Rspamd-Queue-Id: 2BE9851119
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mailbox.org:mid,mailbox.org:dkim,ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo]
+X-Rspamd-Queue-Id: EC0164FBD6
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 1/15/26 7:09 PM, Uwe Kleine-König wrote:
+On 1/20/26 4:23 PM, Dave Stevenson wrote:
 
-Hello Uwe,
+Hello Dave,
 
->> I'll send a V3 now, but even revisiting it at this point, the waveform API
->> does not seem to be the right fit for this device.
+>>>>> On Thu, Jan 15, 2026 at 02:14:15PM +0100, Marek Vasut wrote:
+>>>>>> On 1/15/26 11:12 AM, Uwe Kleine-König wrote:
+>>>>>>> On Sun, Jan 04, 2026 at 08:41:43PM +0100, Marek Vasut wrote:
+>>>>>>>> -  struct regmap *regmap = pwmchip_get_drvdata(chip);
+>>>>>>>> -  unsigned int duty;
+>>>>>>>> +  u8 *wfhw = _wfhw;
+>>>>>>>> +
+>>>>>>>> +  if (wf->duty_length_ns > wf->period_length_ns)
+>>>>>>>> +          *wfhw = PWM_BL_MASK;
+>>>>>>>> +  else
+>>>>>>>> +          *wfhw = mul_u64_u64_div_u64(wf->duty_length_ns, PWM_BL_MASK, wf->period_length_ns);
+>>>>>>>
+>>>>>>> This is wrong. There was already a discussion about this in reply to v2.
+>>>>>>> I'll discard this patch from my queue and continue the v2 thread.
+>>>>>>
+>>>>>> Instead of resuscitating the old thread, could you please tell me how to
+>>>>>> make the conversion, so it won't break with existing bindings and the result
+>>>>>> would work as well as the current code ?
+>>>>>
+>>>>> the only way you can do this correctly is to measure or research the
+>>>>> actual period length of the device. As this seems hard, the function I
+>>>>> suggested in v2 works for me, too.
+>>>>
+>>>> Sadly, that does not work on the board I use , which is the one below.
+>>>>
+>>>> I was also hoping that Dave might have some input on the PWM frequency
+>>>> of this display.
+>>>
+>>> Sorry, I don't have that information, which is part of the reason why
+>>> I originally wrote the driver as a backlight driver rather than PWM.
+>> Is there someone you can ask by any chance? Is this hardware made by
+>> waveshare ? Maybe they would know ?
 > 
-> If you consider the waveform API worse than the .apply() callback,
-> please expand on the reasons.
-What I meant to convey was, maybe this should have been a backlight 
-driver instead of a pwm driver. But then, we would lose the ability to 
-bind pwm backlight to it, and the code reuse would decrease.
+> It's made by a 3rd party we work with. It's not Waveshare.
+> I can ask the question,
+
+That would be nice if you could do that.
+
+> although I don't really see the gain in having
+> to insert pwm-backlight into the chain when you don't have full
+> control over the PWM device.
+Because we could reuse the pwm-backlight code, that's the only reason.
 
