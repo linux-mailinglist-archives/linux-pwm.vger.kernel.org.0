@@ -1,63 +1,60 @@
-Return-Path: <linux-pwm+bounces-7971-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7973-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UIJNMFrbb2n8RwAAu9opvQ
-	(envelope-from <linux-pwm+bounces-7971-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jan 2026 20:45:30 +0100
+	id CAczBBvXb2mgMQAAu9opvQ
+	(envelope-from <linux-pwm+bounces-7973-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jan 2026 20:27:23 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6DF464AABE
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jan 2026 20:45:30 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id B6FD54A580
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jan 2026 20:27:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 0453D887198
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jan 2026 18:00:26 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 1FBE282E313
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jan 2026 18:07:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F76D44A707;
-	Tue, 20 Jan 2026 17:59:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 122B644A717;
+	Tue, 20 Jan 2026 18:06:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aK1PfLxV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WQkpfi0O"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1273132C33D;
-	Tue, 20 Jan 2026 17:59:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBE6B43634B;
+	Tue, 20 Jan 2026 18:06:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768931978; cv=none; b=mgfAYQ2K9ZmK1kENtHN7m8wwBlH10/m605CmARXpXEta11NHurjp6tt6n0drJ9Av/oKLS5LqTiv1VI3r/xQqdb5RyBfdkCKSI3je1WTXDlXp79jpc3IYrjA6yEClMcuNB4N1rNBkoW3qhzP9DxFx5cwRXfDpHUr/DdE2xu8PEFQ=
+	t=1768932410; cv=none; b=MCDPJ0NdDCBF9WRLQ85X8q7r2Mk0WFnfXNUrz8ihMHWHE7SyunZ8IiStN8Nl63pmOSZwBb4OWnde61kX6noB7c5YvMsHkeKIsZHnoHaDLE6enmqyHs6tZteRmzmwDo9A9yTn64+JvDIxxpmKZPPseP2U5ydApFtKzXO7Gt/nfzM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768931978; c=relaxed/simple;
-	bh=im6rTGdtAHVoo9gMGfLRhHqPzagovRFiPRrkny9SMiM=;
+	s=arc-20240116; t=1768932410; c=relaxed/simple;
+	bh=7noY7dwvdtPUFXP+TRLnQO+n09UhiDtPbUSAVkbiet0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BOYKPETiMBGxJY6UR8mbmvp10iHE04eVrTNYDnIf3AyRDkH7qNxZh94JgD5QAuPYfwdR5IEl3Qagcqd2BDGd5t5hQDIKIvC+RRxXErWRiFLriW+IqMIkBtJfMbhlSdFy9T19xwTjqln2Lf557D4+kgHjhltQYNn3+2va5eR+5Ao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aK1PfLxV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A76DC16AAE;
-	Tue, 20 Jan 2026 17:59:37 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=JbNdgKyPWTD5IBbGLmGUdQSGgBtajHsmZUkTM16GMqr5fm1GaIbaopmMpWH8Z4rnXd+rpKYbI/UxmAXR2nmUNhxEcgFVTA7ocq9jvXgKTQTtQCVpvCFmz8uI3teE2z8PO7ME/ruZVNxo7ZD9VYbDm6Aj3t2SWX96Lu/pjjkJQVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WQkpfi0O; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBCE7C19422;
+	Tue, 20 Jan 2026 18:06:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768931977;
-	bh=im6rTGdtAHVoo9gMGfLRhHqPzagovRFiPRrkny9SMiM=;
+	s=k20201202; t=1768932409;
+	bh=7noY7dwvdtPUFXP+TRLnQO+n09UhiDtPbUSAVkbiet0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=aK1PfLxVNKN1Ua0nUF6yXjbvl3bTts6+0P3a7FwemeqYInCPOqLMe7egQMKlgbamx
-	 jT0re+ddTMJQgS5KCw6K2n7fXjEhOQkpKKa9vlCB5ojDJv9D1C/L4BNg0PxsRo0xYK
-	 Dyz35tJWDs3fL6E+r5qBynAYWCGKSBzddr0Yne+MK0e3sLlpkw3rimWL92hHjZNRWL
-	 xiOGokhX5tSM0xxdKY3flR4dWii61ZPfK3Z1kGl/bteabDPKbZ/EVCdNm6UnzKpxbS
-	 4FE2Y1Z9/W3Dg9aBlM6qa7swT/o+nmgD1SI6FKvAYOdgDqBBowaFng7Q1zXMc+DSBO
-	 +S3hrb2+x56Nw==
-Date: Tue, 20 Jan 2026 18:59:35 +0100
+	b=WQkpfi0OPLvOKJ/yAeKm3nJgUQ97DjOmFq8hBGZfHVEDqjoh2Y7LKSeJ8L5vYZwUh
+	 LVQiGBzhtrAKLEgbAElUxLL+yoYqJiRfXhUoHUrzhYtj1gZjuaszjkIvRSVOibMm8/
+	 YT4Z8io5nER4X5UmCndJDBlMOAnRm8hn4D3C2tNjWjDnkRqw2u1B8Iq+6ckaUAghnh
+	 kwxdLES+JeupHTokklIlIybAvj/r8WyNGJNVESdEQxi2vToWdxATkTd4KgRYzPVuMh
+	 Ulqe2QOUmzSnar9l+ks+aypt5NCYlhSy+vnxcLKvQUHKavOzDci4jiF5SD+vM+1y+d
+	 U4DZqG6iNMZWw==
+Date: Tue, 20 Jan 2026 19:06:46 +0100
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Kari Argillander <kari.argillander@gmail.com>
-Cc: Michal Wilczynski <m.wilczynski@samsung.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, linux-pwm@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] rust: pwm: Fix init error handling and tidy style
-Message-ID: <6fwrwklfywcofk3pb7cn6fllk2ndekcrrfyifrb55u2dt4tzuw@zlpbxgs7lhak>
-References: <20260102-pwm-rust-v2-0-2702ce57d571@gmail.com>
+To: linux-pwm@vger.kernel.org
+Cc: Linus Walleij <linusw@kernel.org>, 
+	Bartosz Golaszewski <brgl@kernel.org>, Lee Jones <lee@kernel.org>, Daniel Thompson <danielt@kernel.org>, 
+	Jingoo Han <jingoohan1@gmail.com>, linux-gpio@vger.kernel.org, dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH] pwm: Update MAINTAINER entry
+Message-ID: <vxft2haumyobyfq2kmvtisplvdw6bwuriw7ngghbrtbczewknl@bnc2ou553xm2>
+References: <20260115165055.1739004-2-ukleinek@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -65,12 +62,11 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="muncmzujuwzhebe7"
+	protocol="application/pgp-signature"; boundary="ij2vdvowd2uioibd"
 Content-Disposition: inline
-In-Reply-To: <20260102-pwm-rust-v2-0-2702ce57d571@gmail.com>
-X-Spamd-Result: default: False [-2.06 / 15.00];
+In-Reply-To: <20260115165055.1739004-2-ukleinek@kernel.org>
+X-Spamd-Result: default: False [-3.56 / 15.00];
 	SIGNED_PGP(-2.00)[];
-	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
@@ -78,75 +74,69 @@ X-Spamd-Result: default: False [-2.06 / 15.00];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-7971-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-7973-lists,linux-pwm=lfdr.de];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,vger.kernel.org,lists.freedesktop.org];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[14];
+	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
 	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	FREEMAIL_CC(0.00)[samsung.com,kernel.org,gmail.com,garyguo.net,protonmail.com,google.com,umich.edu,vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	R_SPF_SOFTFAIL(0.00)[~all];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	R_SPF_SOFTFAIL(0.00)[~all:c];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[ukleinek@kernel.org,linux-pwm@vger.kernel.org];
-	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
-	TAGGED_RCPT(0.00)[linux-pwm];
-	ASN(0.00)[asn:7979, ipnet:2a01:60a::/32, country:US];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	TAGGED_RCPT(0.00)[linux-pwm];
+	ASN(0.00)[asn:7979, ipnet:213.196.21.0/24, country:US];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo]
-X-Rspamd-Queue-Id: 6DF464AABE
+X-Rspamd-Queue-Id: B6FD54A580
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 
---muncmzujuwzhebe7
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+--ij2vdvowd2uioibd
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 0/2] rust: pwm: Fix init error handling and tidy style
+Subject: Re: [PATCH] pwm: Update MAINTAINER entry
 MIME-Version: 1.0
 
-On Fri, Jan 02, 2026 at 09:51:40AM +0200, Kari Argillander wrote:
-> This series contains two small updates to the Rust PWM bindings.
->=20
-> The first patch fixes a potential memory leak on an error path during PWM
-> chip initialization. Someone needs to decide if this goes to stable.
->=20
-> The second patch is just style-only cleanup.
->=20
-> Signed-off-by: Kari Argillander <kari.argillander@gmail.com>
+Hello,
 
-I applied these with Michal's Ack to
+On Thu, Jan 15, 2026 at 05:50:54PM +0100, Uwe Kleine-K=F6nig wrote:
+> There is little sense in having gpio-mvebu and pwm-backlight explicitly
+> listed in the PWM entry. Drop these and add the keywords that actually
+> identify a driver as PWM related.
+>=20
+> Signed-off-by: Uwe Kleine-K=F6nig <ukleinek@kernel.org>
+
+Applied to
 	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for=
 -next
-=2E
-
-For now I don't intend to send the first patch to Linus for 6.19 and
-queued both for the next merge window. Please convince me otherwise if
-you think this to be wrong.
+with Bartosz's Ack for the next merge window.
 
 Best regards
 Uwe
 
---muncmzujuwzhebe7
+--ij2vdvowd2uioibd
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmlvwoQACgkQj4D7WH0S
-/k6JswgAmWFOKTXa0Hy6P8v8S4w1IF6Y4/KJ5gc9noW2QnhlGY0DESZ2/1QOEbmt
-02ZxTWc8NDukwoM+/b+hFa/RsrWYATA3yfbdLVd5/0MtQHcbHjCfmWfRGA+VnUou
-rIrZzaF+Ocflpa7mzcVxQ/AdXuT2Dp7ggLM6AduDqy3ZeLzlUhhnLBoWQPioq9j2
-5yU95K2nrzPaELGArWRRjwJYkAuLsCsIoTUvzwP5kY4PvQbG8pVmRpuoWq5Zol5O
-whk4T7/i3H6Q2j6eYrVIORhPRePGiCSe+4Xarnl5J4nAGi2+OJ9By0h1WxrpInPF
-ZxMmULoi7gSa2lCQ6Od5nTS/KRVLgg==
-=mJu7
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmlvxDQACgkQj4D7WH0S
+/k7OUAgAhsA97vWW9OMqru4+/CWnSRIx0z7mYpFmCjbyGSnc9v1j9A7ADXB3qjh5
+jwf15dvx7kHwzOaoeJ4qPexFFHpliT6lBMUZwHizPXwBnSOT5a/QPNp8TDbcee1U
+oZZMhRtv0edJ/wFm9YQU44sK2guyYiBurH+CbniL1qDTyEkWJna0hjEjV1M8l215
+2kkTw5nqa1SVJvNHhlEGgwgNQKDTKeuTuT9Y8r+2qNsTjle7EJ3oZLAPSAA55OhP
+kHHAEH4IsHVQWSBQyXZKllsamvCD4vdQdq8HFLaUAMkNPSMFlprevLZRwWNrixnI
+HAsQ0zHOaLM7hfKnyHcK6C33BgR9Zw==
+=YD/i
 -----END PGP SIGNATURE-----
 
---muncmzujuwzhebe7--
+--ij2vdvowd2uioibd--
 
