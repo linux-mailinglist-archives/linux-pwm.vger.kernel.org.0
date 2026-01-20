@@ -1,195 +1,185 @@
-Return-Path: <linux-pwm+bounces-7962-lists+linux-pwm=lfdr.de@vger.kernel.org>
-X-Original-To: lists+linux-pwm@lfdr.de
+Return-Path: <linux-pwm+bounces-7964-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 619D3D3C511
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jan 2026 11:24:25 +0100 (CET)
+Received: from mail.lfdr.de
+	by lfdr with LMTP
+	id 8LWuCuaqb2lmEwAAu9opvQ
+	(envelope-from <linux-pwm+bounces-7964-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jan 2026 17:18:46 +0100
+X-Original-To: lists+linux-pwm@lfdr.de
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 983214749C
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jan 2026 17:18:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 43DA958272C
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jan 2026 10:17:06 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 4EA2986AB95
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jan 2026 13:51:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D43E73DA7F9;
-	Tue, 20 Jan 2026 10:16:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BF3342EECD;
+	Tue, 20 Jan 2026 13:50:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b="EKc6PLGP";
-	dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b="V0DhxWCe"
+	dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b="fS7jlfXh"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx0b-0031df01.pphosted.com (mx0b-0031df01.pphosted.com [205.220.180.131])
+Received: from mout-p-103.mailbox.org (mout-p-103.mailbox.org [80.241.56.161])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9FB53A6405
-	for <linux-pwm@vger.kernel.org>; Tue, 20 Jan 2026 10:16:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=205.220.180.131
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 855F63D2FF5;
+	Tue, 20 Jan 2026 13:50:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=80.241.56.161
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768904219; cv=none; b=U01EsnCnOC0u/sHthay8VgS7tv9yWPTXB6qy67/DN+FWr2wNTMUOfQox9CYiCgXGyEOSCudwiIrK5j+9X2KmSByAz6fLmEgCygIeyIq7Vpwt+gli0M+YOCOoy6JXxtUBXR+7WnM5V+yydf+G6eFnqZBW7qra6AJwW0GM4K811CE=
+	t=1768917022; cv=none; b=er78fxY5mnEzbJZwB84U0avuXPAUg+N7NPb5U7Yxx3Yk+0FVGmYdeH/mM2AYufuy31ILGwAPaBLfQVvTyn8Cx7BzaJk/Si5yzEd5QbrtD9OcTgCFMAGoFcsRTQWfDh4YxTFvLf8mA8W+NyrleQcZm0L3OlhyJ2ezJ/9OdykanFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768904219; c=relaxed/simple;
-	bh=CvlO20OSyoM8Tnhyj6PEZqcry7+kKIT9zO3j42HEp+s=;
+	s=arc-20240116; t=1768917022; c=relaxed/simple;
+	bh=tb/mZBgWelT7j440LDyIqgNZGwJvvBU1c5q/Dag7OWk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Y6PrVpJ8yuEh4n6EgkWrdFvxsXg1KTQYAY5reqBcLWmBtBqcrl6a7YjdMS4LpiahjZoZMrIC3Z6vmOGaWZhlmXqRr/60akeGM/gRdnV2EUxA+Wc96tup42Ng/5bXTAaKJtw3/VXr8nR0wMnhvassW+80tzEFZ0FcnlLoO15I7ug=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com; spf=pass smtp.mailfrom=oss.qualcomm.com; dkim=pass (2048-bit key) header.d=qualcomm.com header.i=@qualcomm.com header.b=EKc6PLGP; dkim=pass (2048-bit key) header.d=oss.qualcomm.com header.i=@oss.qualcomm.com header.b=V0DhxWCe; arc=none smtp.client-ip=205.220.180.131
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=oss.qualcomm.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=oss.qualcomm.com
-Received: from pps.filterd (m0279871.ppops.net [127.0.0.1])
-	by mx0a-0031df01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 60K99rFB3256429
-	for <linux-pwm@vger.kernel.org>; Tue, 20 Jan 2026 10:16:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qualcomm.com; h=
-	cc:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=qcppdkim1; bh=
-	7N8RG+tUW8NNzGfEAlGjkHiP86krQss+z5W6DrKfQ7A=; b=EKc6PLGPKhMgDZ5c
-	BpzD5lVJbCyZDd7CPp2fRZawg7A0V/xbhV1jOMEIoKdJpQ7qtrH8bSWUsQnFMk3Z
-	i+dWgHL+22KjJ/1HZehEkPCU0hwr9oi8Sh+O0ORzVXtbMA3nEGfeMc8jIFFPdR5G
-	gueXA7Nuk8Ii0nZY0GAQjU5FbPqQP0dwATN8uYOWcWRWf9y+Z22UVyprnTMfb3GK
-	rXFOQiRhAVY4s27XE36V1iKtEibL3/lxwXW5MUK9lj4KnazR2CIQCgm/QtNeprCA
-	dn+oxfG/2azl0W0LADPtC7F7hz5CdPeCMjqLJLnjxuxmYNpeweHOfUDFyygSlvOQ
-	hQRIAg==
-Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com [209.85.160.197])
-	by mx0a-0031df01.pphosted.com (PPS) with ESMTPS id 4bt6u7r6gf-1
-	(version=TLSv1.3 cipher=TLS_AES_128_GCM_SHA256 bits=128 verify=NOT)
-	for <linux-pwm@vger.kernel.org>; Tue, 20 Jan 2026 10:16:56 +0000 (GMT)
-Received: by mail-qt1-f197.google.com with SMTP id d75a77b69052e-501476535f8so17729201cf.3
-        for <linux-pwm@vger.kernel.org>; Tue, 20 Jan 2026 02:16:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=oss.qualcomm.com; s=google; t=1768904216; x=1769509016; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7N8RG+tUW8NNzGfEAlGjkHiP86krQss+z5W6DrKfQ7A=;
-        b=V0DhxWCebagTu65OgrBajQ45WqIG4Mt6D4EGl0lVAawy+6owSmbEBV2NkqSXKs8IGI
-         TaEJer78HJxHdKhuxqwo8Yaf4d+XlMUnziksCM6xZGcMeEGJC0MfAPWYXBAYynw1gXBK
-         YQOchQ8jCnxPF7IDbBlSc8cFG07Onzl2abCdUn+g0pUiX6KCItcldJ5GoQBQChJ9nXHQ
-         1LngR2sg1tszF20Np0465aX8+z7rK6jOA0D6AvgiXf7wC8uKKW9+b2UMCaHUk7exMy6R
-         Hdr+/hK9tLGCExT1ewWsdczqtgzsTti9irPtu3y1/a+ihCabRA36NnrOf5/9wXQ6tqmz
-         7tCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768904216; x=1769509016;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=7N8RG+tUW8NNzGfEAlGjkHiP86krQss+z5W6DrKfQ7A=;
-        b=Y31Qk2DfOtMnubYBjxL46BgqeMtqjiTYwN4hvx40xEAKHR+a9M1jx8iITjloslZwCc
-         VdoaSKz5tSLt/p3V4HTpyFUvLvg3tUCBkDmGJFWkVp5GCThGSBp1aV2f4IBMbg8krwK/
-         +UTk8VB/5Ko6cPyTnUJgr3toGgMNgVwFpzX0LUvTTu5xvH7qIQE/iXqnZTuaGkWyp+1x
-         feuMG6++YMyYNeImGQt5ilFMqGHmr6e/Gi95OdBqaqLt5k9dx4+Viw9xO3t/ljo42Fyp
-         D0vwd9XRP1WXvzCGxnrx1hsk5FarrG9zkCnhyvlXj6S41D9o0MvBcMwrQYrQ5OZXBpp3
-         O5pA==
-X-Forwarded-Encrypted: i=1; AJvYcCVe3huJmciddgDO4zivoOSLyNHwFLGRx16hvnsZd6kQWdrVWudtGADF8Y350Fbo3/9GWDmLH7e4p10=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyLOwScPnuO5z6BkJK5P7vosHGKDvV1LS1Sbq7wiJsij8Dbpq6l
-	Str+gWgq5PCecxFyPh5ydk5jOb8dtVdMN5oLWmS0D2IyvDkws/cyG7vIU8yD3j3hBpD6ga+inVz
-	a2BRLUMmPg8FPWmeHNzr8cmn3vnkYBQvc6d5YnRHavoPEX+b6XJMb1zmVcgC6fuA=
-X-Gm-Gg: AY/fxX6mxg1PA+ddZC2mmPuY7b3Ey0O0LYdSbNqbBg2c29UYNzlRwZ0pDwaUtgS1jjS
-	LLtOUlLWogM49A6Vbf9guwa6LvRamS8RH7dCKRvA/RatLrXj/XnKw6jjXI16CYjihTtfheWrkFO
-	VBzMlWjgcuBljXntidvNT8aGq6ma8ExqLBrz2aVZloAuVOm/ayHH9zMbhbT6NlwZbh80xwsI/Ip
-	Vd5bc5sOKNdaEdI2PutSFCIt+sbCjIUikpq2azoIZhlczmzj84sx/T6CYVbcPtUklETBYwwy9qe
-	ewZt5DYpkPHt2FWRejnljUpcguHtyPN+7tXDjIpSaUJ65pjSy5Zrae5jY3UJWH7d4WV8LdHxrn2
-	wx84qSA4+CSLef0H9jQGP5xsp3b0SkIJh9EF8UIuLMe7a2VpjNHdzIFiOlR6WZkpPbbE=
-X-Received: by 2002:a05:622a:1488:b0:502:8820:6dc2 with SMTP id d75a77b69052e-502a179b2c2mr165887571cf.8.1768904216176;
-        Tue, 20 Jan 2026 02:16:56 -0800 (PST)
-X-Received: by 2002:a05:622a:1488:b0:502:8820:6dc2 with SMTP id d75a77b69052e-502a179b2c2mr165887391cf.8.1768904215711;
-        Tue, 20 Jan 2026 02:16:55 -0800 (PST)
-Received: from [192.168.119.254] (078088045245.garwolin.vectranet.pl. [78.88.45.245])
-        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-654533cc5d6sm12760178a12.22.2026.01.20.02.16.54
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 20 Jan 2026 02:16:55 -0800 (PST)
-Message-ID: <3be97993-eace-4b27-92f8-3789e58061e7@oss.qualcomm.com>
-Date: Tue, 20 Jan 2026 11:16:53 +0100
+	 In-Reply-To:Content-Type; b=NsB8n+iVzFSFUsQY256D1G6OAAvqqfb6Kvy/6vlYiyY127wS9RTqULDfpj15rxMbsZ+DXudk/KcORcO6p9UAZCslVURO7IsbQbx9ldYq2qxCn+o1k6rxSjtek3iydCWxhDJR18Yvyepx6KspNg2hpq899tKi+/2zWqXk0ZV9i2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=fS7jlfXh; arc=none smtp.client-ip=80.241.56.161
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=mailbox.org
+Received: from smtp102.mailbox.org (smtp102.mailbox.org [IPv6:2001:67c:2050:b231:465::102])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mout-p-103.mailbox.org (Postfix) with ESMTPS id 4dwTGw4kmLz9v0r;
+	Tue, 20 Jan 2026 14:50:16 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
+	t=1768917016;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LjI1ZwWChctZwvG2XgbtTRcxw9ddO25I8Lmr6l/5/e8=;
+	b=fS7jlfXhs6Z2n/X93O/cUS4hJgRz37us6HWwX/GdCLSRxIT8/nYKhwDu1i/3VR7wNoJ77L
+	mwNmvcLnF0E6DQNM/WaUDXv802TXuaqswWxgvINiAsrQQP2U40f0me0d2GCvvYV50yuA3A
+	sfIXfBUY1979EdvffPTs0Az+B2eLjMmc0l1Pg9IV/LadouH1iffJNgoM+l0nMO5pRWxuYC
+	CprKCgR/7jE8R3OT2zKpnoQmliHxDve2PQ5rYTtlqmUB0xguRbwJJAhmAaent25n6nhGzO
+	RwYSY2pbd9wPE1p5oIeiL2XPZxLVyaDGQnYDgbOJ+MHO73tB3z/7yiWWuffc8Q==
+Message-ID: <855e5015-98c8-48f6-9320-ca8163591940@mailbox.org>
+Date: Tue, 20 Jan 2026 14:50:03 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v19 1/6] dt-bindings: pwm: add IPQ6018 binding
+Subject: Re: [PATCH v3] regulator: rpi-panel-v2: Convert to new PWM waveform
+ ops
 To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-        "Rob Herring (Arm)" <robh@kernel.org>
-Cc: George Moussalem <george.moussalem@outlook.com>,
-        Konrad Dybcio <konradybcio@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org,
-        Devi Priya <quic_devipriy@quicinc.com>,
-        Conor Dooley <conor+dt@kernel.org>,
-        Bjorn Andersson <andersson@kernel.org>,
-        Krzysztof Kozlowski <krzk+dt@kernel.org>,
-        Baruch Siach <baruch.siach@siklu.com>,
-        Krzysztof Kozlowski
- <krzk@kernel.org>, devicetree@vger.kernel.org,
-        Baruch Siach <baruch@tkos.co.il>
-References: <20251128-ipq-pwm-v19-0-13bc704cc6a5@outlook.com>
- <20251128-ipq-pwm-v19-1-13bc704cc6a5@outlook.com>
- <176432871822.1774259.10260811586771769913.robh@kernel.org>
- <ysbuuhn7cdndv5ieae4uaeylxe7d3iuqqehkdtcvhr7xs5wxsi@rcfqzbxn3lqf>
+ Dave Stevenson <dave.stevenson@raspberrypi.com>
+Cc: linux-pwm@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, linux-renesas-soc@vger.kernel.org
+References: <20260104194224.41245-1-marek.vasut+renesas@mailbox.org>
+ <x25kxyh4t4u6c3ilj7nxp6sywab5dsar46b2foesrwfux2l4b2@d5iwqqcpdhlm>
+ <797047eb-e422-4a8b-80eb-ab130066c1d7@mailbox.org>
+ <xsjwvmlqclctnf6dgwyuoi7zits27is2s7r7taprb2w2lhsf7i@uiljd7o3ivbk>
 Content-Language: en-US
-From: Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>
-In-Reply-To: <ysbuuhn7cdndv5ieae4uaeylxe7d3iuqqehkdtcvhr7xs5wxsi@rcfqzbxn3lqf>
-Content-Type: text/plain; charset=UTF-8
+From: Marek Vasut <marek.vasut@mailbox.org>
+In-Reply-To: <xsjwvmlqclctnf6dgwyuoi7zits27is2s7r7taprb2w2lhsf7i@uiljd7o3ivbk>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Authority-Analysis: v=2.4 cv=P/w3RyAu c=1 sm=1 tr=0 ts=696f5618 cx=c_pps
- a=EVbN6Ke/fEF3bsl7X48z0g==:117 a=FpWmc02/iXfjRdCD7H54yg==:17
- a=IkcTkHD0fZMA:10 a=vUbySO9Y5rIA:10 a=s4-Qcg_JpJYA:10
- a=VkNPw1HP01LnGYTKEx00:22 a=VwQbUJbxAAAA:8 a=COk6AnOGAAAA:8 a=KKAkSRfTAAAA:8
- a=Lh10uZTOAAAA:8 a=UqCG9HQmAAAA:8 a=nIMUTuB_En8j_GReBHAA:9 a=3ZKOabzyN94A:10
- a=QEXdDO2ut3YA:10 a=a_PwQJl-kcHnX1M80qC6:22 a=TjNXssC_j7lpFel5tvFf:22
- a=cvBusfyB2V15izCimMoJ:22 a=h7PWpkqlkWt1jHQZSjMD:22
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMTIwMDA4NSBTYWx0ZWRfXwJpcm2+S+GRT
- EfddL2tf+FUtjDfftdS5nb2Eab23CTXeKeTYNSjfm/rSi3qappyTy7xzocc0sUDU8G1YNLdKJd8
- BNkvgzk2hwewYWgjwN75Z1X9QgRH3j/M0B55EjYbjEBoCqTNxZVVp8pwFpDSuKGvXMT24V64c2l
- j6iQS+bAd3YJFLF4SRoJchatWu897l8VGzZZTYljlywqzC8aluM0E3g8Cq2V1ASrb2avV97Hhmn
- ao+m5H7aBrs6EzN33iazJEpZyd0qDcQVyjcYQMnHax37z9Q61mQaHwC8jJzgMhwfjPwFUrObD3o
- sDIlQq6We2gR5jJFs1BXV5M/tw3AIG9UmMvoAMIjPLgcNZk0K3hyR0pu3wO5kmhAABpDu9OWVhj
- ukENPFOZPl3cp9YeuLeIS6+TEGjsuHNj611ro7O4ZzSoEkbyC+s7SEuxo6/CumwOIHm659kNbms
- AwMH2kfx+9o9Hr1WV/w==
-X-Proofpoint-ORIG-GUID: v_cTiMmkbpij21cI8ZxU0c4Ftnqe_jWf
-X-Proofpoint-GUID: v_cTiMmkbpij21cI8ZxU0c4Ftnqe_jWf
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1121,Hydra:6.1.9,FMLib:17.12.100.49
- definitions=2026-01-20_02,2026-01-19_03,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- malwarescore=0 suspectscore=0 bulkscore=0 lowpriorityscore=0 adultscore=0
- clxscore=1011 spamscore=0 phishscore=0 impostorscore=0 priorityscore=1501
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2601150000 definitions=main-2601200085
+X-MBO-RS-META: rrce844ya4hmwrc668xzwr3cn8aiwzjh
+X-MBO-RS-ID: c9cf938311497a81b56
+X-Spamd-Result: default: False [-1.96 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
+	R_DKIM_ALLOW(-0.20)[mailbox.org:s=mail20150812];
+	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
+	HAS_LIST_UNSUB(-0.01)[];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com,kernel.org];
+	TAGGED_FROM(0.00)[bounces-7964-lists,linux-pwm=lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	DMARC_POLICY_ALLOW(0.00)[mailbox.org,reject];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_COUNT_THREE(0.00)[4];
+	DKIM_TRACE(0.00)[mailbox.org:+];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	R_SPF_SOFTFAIL(0.00)[~all:c];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[marek.vasut@mailbox.org,linux-pwm@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_PROHIBIT(0.00)[0.0.0.45:email];
+	TAGGED_RCPT(0.00)[linux-pwm];
+	MID_RHS_MATCH_FROM(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:7979, ipnet:142.0.200.0/24, country:US];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo,mailbox.org:mid,mailbox.org:dkim]
+X-Rspamd-Queue-Id: 983214749C
+X-Rspamd-Action: no action
+X-Rspamd-Server: lfdr
 
-On 1/19/26 5:35 PM, Uwe Kleine-König wrote:
-> Hello,
+On 1/15/26 5:37 PM, Uwe Kleine-König wrote:
+
+Hello Uwe,
+
+> On Thu, Jan 15, 2026 at 02:14:15PM +0100, Marek Vasut wrote:
+>> On 1/15/26 11:12 AM, Uwe Kleine-König wrote:
+>>> On Sun, Jan 04, 2026 at 08:41:43PM +0100, Marek Vasut wrote:
+>>>> -	struct regmap *regmap = pwmchip_get_drvdata(chip);
+>>>> -	unsigned int duty;
+>>>> +	u8 *wfhw = _wfhw;
+>>>> +
+>>>> +	if (wf->duty_length_ns > wf->period_length_ns)
+>>>> +		*wfhw = PWM_BL_MASK;
+>>>> +	else
+>>>> +		*wfhw = mul_u64_u64_div_u64(wf->duty_length_ns, PWM_BL_MASK, wf->period_length_ns);
+>>>
+>>> This is wrong. There was already a discussion about this in reply to v2.
+>>> I'll discard this patch from my queue and continue the v2 thread.
+>>
+>> Instead of resuscitating the old thread, could you please tell me how to
+>> make the conversion, so it won't break with existing bindings and the result
+>> would work as well as the current code ?
 > 
-> On Fri, Nov 28, 2025 at 05:18:38AM -0600, Rob Herring (Arm) wrote:
->> On Fri, 28 Nov 2025 14:29:13 +0400, George Moussalem wrote:
->>> From: Devi Priya <quic_devipriy@quicinc.com>
->>>
->>> DT binding for the PWM block in Qualcomm IPQ6018 SoC.
->>>
->>> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->>> Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
->>> Co-developed-by: Baruch Siach <baruch.siach@siklu.com>
->>> Signed-off-by: Baruch Siach <baruch.siach@siklu.com>
->>> Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
->>> Signed-off-by: George Moussalem <george.moussalem@outlook.com>
->>> ---
->>>  .../devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml  | 51 ++++++++++++++++++++++
->>>  1 file changed, 51 insertions(+)
->>>
->>
->> My bot found errors running 'make dt_binding_check' on your patch:
->>
->> yamllint warnings/errors:
->>
->> dtschema/dtc warnings/errors:
->> Documentation/devicetree/bindings/thermal/thermal-sensor.example.dtb: /example-0/soc/thermal-sensor@c263000: failed to match any schema with compatible: ['qcom,sdm845-tsens', 'qcom,tsens-v2']
->> Documentation/devicetree/bindings/thermal/thermal-sensor.example.dtb: /example-0/soc/thermal-sensor@c263000: failed to match any schema with compatible: ['qcom,sdm845-tsens', 'qcom,tsens-v2']
->> Documentation/devicetree/bindings/thermal/thermal-sensor.example.dtb: /example-0/soc/thermal-sensor@c265000: failed to match any schema with compatible: ['qcom,sdm845-tsens', 'qcom,tsens-v2']
->> Documentation/devicetree/bindings/thermal/thermal-sensor.example.dtb: /example-0/soc/thermal-sensor@c265000: failed to match any schema with compatible: ['qcom,sdm845-tsens', 'qcom,tsens-v2']
+> the only way you can do this correctly is to measure or research the
+> actual period length of the device. As this seems hard, the function I
+> suggested in v2 works for me, too.
+
+Sadly, that does not work on the board I use , which is the one below.
+
+I was also hoping that Dave might have some input on the PWM frequency 
+of this display.
+
+> The specified binding is unaffected by that. The only dts I found using
+> this device
+> (arch/arm64/boot/dts/renesas/r8a779g3-sparrow-hawk-rpi-display-2.dtsi)
+> has
 > 
-> I admit I didn't try to reproduce that, but the patch in question
-> creates Documentation/devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml and
-> isn't about temperature stuff at all. So I don't understand where
-> thermal-sensor and tsens comes into play here. Bot bug?
+> 	backlight {
+> 		compatible = "pwm-backlight";
+> 		pwms = <&mcu 0 255 0>;
+> 	};
+> 
+> 	mcu: gpio@45 {
+>                  compatible = "raspberrypi,touchscreen-panel-regulator-v2";
+> 		...
+> 	};
+> 
+> . Given that the dt specifies something made up and the driver was
+> written in a way that is wrong but does the right thing in combination
+> with the made up .dts, you cannot fix the driver to be a correct PWM
+> driver without having to adapt the invented values in the .dts, too.
 
-IIRC this was the cause
+I think this is what this V3 does. Would that be an option here ?
 
-https://lore.kernel.org/lkml/20251203152437.3751325-1-robh@kernel.org/
-
-Konrad
+> (An option would be to adapt the pwm-backlight driver to ignore the
+> provided period, but I think that isn't sensible and badly affects many
+> other machines that have a working PWM driver. Or assume the PWM's
+> period is 255 ns which is probably wrong, but so is 100 ms (the latter
+> probably to a lesser extend).)
+> 
+> Maybe the lesson to take away here is: if a driver implements a PWM, Cc:
+> the linux-pwm list and the pwm maintainer on the submission. And let me
+> point out that even get-maintainers.pl knows about that:
+> 
+> 	$ git format-patch -1 --stdout d49305862fdc4d9ff1b1093b4ed7d8e0cb9971b4 | scripts/get_maintainer.pl
+> 	...
+> 	"Uwe Kleine-König" <ukleinek@kernel.org> (maintainer:PWM SUBSYSTEM:Keyword:pwm_(config|apply_might_sleep|apply_atomic|ops))
+> 	...
+> 	linux-pwm@vger.kernel.org (open list:PWM SUBSYSTEM:Keyword:pwm_(config|apply_might_sleep|apply_atomic|ops))
+> 	...
+I do use get_maintainer to CC people when sending patches, hmmmm.
 
