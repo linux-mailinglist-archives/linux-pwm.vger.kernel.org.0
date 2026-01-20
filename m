@@ -1,92 +1,65 @@
-Return-Path: <linux-pwm+bounces-7972-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7974-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KHyBKmjHb2mgMQAAu9opvQ
-	(envelope-from <linux-pwm+bounces-7972-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jan 2026 19:20:24 +0100
+	id YDnLLEjUb2mgMQAAu9opvQ
+	(envelope-from <linux-pwm+bounces-7974-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jan 2026 20:15:20 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3344B49564
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jan 2026 19:20:24 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 452D34A1DF
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jan 2026 20:15:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 1679A6CC24C
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jan 2026 18:03:21 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id D674CA6260F
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jan 2026 18:10:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BBC4344CAF0;
-	Tue, 20 Jan 2026 18:02:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 01A3644BCBC;
+	Tue, 20 Jan 2026 18:10:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Ep6vB2aS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mb9RRNfJ"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f41.google.com (mail-wr1-f41.google.com [209.85.221.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4D6F44B69F
-	for <linux-pwm@vger.kernel.org>; Tue, 20 Jan 2026 18:02:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA124314A9D;
+	Tue, 20 Jan 2026 18:10:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768932137; cv=none; b=TeVXRIOxobYsB908haGitPMI4mIDDTzzPQC8f5k4dK+XnMJuGMxMyDmvM6WmDeInuovBFeatqbUpfMGSYLIQ3I97RIgmxApgt0J0evxAFZI0+15urIYD7FcW22EYi/qvMeRDFCZtqaysJH1+hMNCYn7osk1ukbOqtk2UNhWMNZQ=
+	t=1768932633; cv=none; b=ElbZCt+bBI7vtWLjJeM4vgVrRj8zvXXFJbV1+EZjfQCwEugVebe7Bf3vVO7WYeGf2ej0th4uT/0dA5mxhdSG+N3/GZkhkTnP4EFToD8BgFoaYXMKjqKyY+BioCjmUjrr11XoGA3xfSfxYkWWdrHNa9EYoD1d3zCbpKQUhQW+A0Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768932137; c=relaxed/simple;
-	bh=1feF74p1hZuJuzZ/zjxof/doJAtUR/T5sZ3KS8Yscfw=;
+	s=arc-20240116; t=1768932633; c=relaxed/simple;
+	bh=z4qhv19x14mJR2BlyaLHoajY1A4AII07YFtQh1gYJc4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=OPQ3LcLV8wfSFbUuc/BbuLGGZQioyIldy3CDKSEX3sU5LfR9lIm6FBnT6bVpAnJQ+2OilAXA5Moe2O3IKpgBqbyGPnyB9TFgZ7pvTjxjQK3G8diWfSqWfCXoBVxZ3rU/eNyEi7iVxFltvDrLL0deLEZ0839CKOERZ8sfk27F810=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Ep6vB2aS; arc=none smtp.client-ip=209.85.221.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wr1-f41.google.com with SMTP id ffacd0b85a97d-42fb6ce71c7so4986577f8f.1
-        for <linux-pwm@vger.kernel.org>; Tue, 20 Jan 2026 10:02:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1768932131; x=1769536931; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=JbQTjruPv+79bC7NXUKMnpFpvOUvYwvd8LHHgIF12mQ=;
-        b=Ep6vB2aSYaZy/IZdbrgU+uaRbpqvP/9b42BsiXEBt99zuGXKP5n/1P9tTrxG7rPg/X
-         nJPi8tWZK/mmHHxaa8Sagbk/BmdNTSYCTDD1ceOgpufgMfnWYOfjnFovOAycqDzq9TQK
-         MHxrz+DsvEA7kVF3eYjS9ZrP/90+XKJGlVEnS1SDL4+C4xg9hnH9FY/hu10wzqqO5gMT
-         bAuhFmoV4n9G28CctrANHpoXVUHiokIeFzVe52POVPI09vFczq+4zoTSVqko1uU94xYr
-         FZAwuaL5cSAXdiSrnOCtOL4RTKmXXOr0493Ph86n+JgUxSUQduCWPWilKbb0n10KidPB
-         F0rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1768932131; x=1769536931;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=JbQTjruPv+79bC7NXUKMnpFpvOUvYwvd8LHHgIF12mQ=;
-        b=djrE4hxv0UesCu9pTEiaqZ3gpBfeohA/wZfsXyjevSlTJi/H6zyp+I2SKvlN9alD/k
-         ARVYalNblhFJRakCtwTmoQ/S7QUEb8LUW6tRhgkzW+ZR8PMsaVHShEkijnwAXK6RgpPi
-         sNY+hGC9xWIPcCEQ4rH6NeiYMFBvV3y7OzOlJbrPMjHJkx7QW5r2KZXPzQ07stFzqFEj
-         5A+XP+DJLgM57IcN5nOC1GJjETTJcBugCaxJAmokcZLfRGDuwl2BfdqC14cTO5znOn9d
-         ubB6jDQh6q0gRjPn5E+NmxwHb/OK2lhxh/M/UuDsNEvmp9DJtq1Gv8w/tuCb20bDxpsS
-         Rb+A==
-X-Forwarded-Encrypted: i=1; AJvYcCX5kowPO5btlEPaoATPzKJFfTkxAS/BToGx0HC8p/BzLPAnL1i+yukFaPg56o09z9Z/Al5YaX8obhk=@vger.kernel.org
-X-Gm-Message-State: AOJu0YySdbGfolBOy97smfz4XCYwzloqn4NoTN2oGoz007j/3NQVBaej
-	pc5wDZR+FHbIPvV2Z67/CnEDQr2d8k/rTvD6ssGuSsRMcw6x5XYxlrgtn9z8pdmcYvM=
-X-Gm-Gg: AZuq6aIRR8AOj2zza4D7RuefaXYHakLdvnjS+gAuovo+66nZ36cJVJMSiZrjnB4+Cmm
-	L638/AiQoJg4CsThfoQf5gB76torcYm66nhk7ZkO/Bp9XIz8RLFBYkRUqZsA88Sj4eopN+7JF1p
-	8RVB9fYIu9cQHUUowFhdlszhEfA6xR/9ZKmbNp1lEDGb7anVHVfrf1AEAOxPds3fcd6MMPFF2JT
-	5zo5S8yRvbaUUbKahOGp6qvjmf6rPKuWjQqXwczdjou+VpQJFM3xNZqqJnPuvy+2IOfErXuXew/
-	Pu0T2sVWno2R1rsEUmyKfxE2oQ2S6zQS7U+0AJWpF1NRliENVuXdWfkDb7pZmqj7O3TV73QBgZr
-	DIPa91nZ1J2aO16xFI7eENPTFdr54bZML6YRB0eX3qJ6nTGVlLD4SyTwu1pv8UrUxtJGGVY6yrE
-	Law6QkF00C3CJl3/z+AFE2jjN0C3AyTGizdvu8LTfBlczfGGHkI3g+ZeD1Swajlh8hBg4XznT/T
-	zo=
-X-Received: by 2002:a05:6000:bce:b0:435:8aa0:a30c with SMTP id ffacd0b85a97d-4358aa0a34dmr5194709f8f.48.1768932130909;
-        Tue, 20 Jan 2026 10:02:10 -0800 (PST)
-Received: from localhost (p200300f65f20eb0448044bf769fbb982.dip0.t-ipconnect.de. [2003:f6:5f20:eb04:4804:4bf7:69fb:b982])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-43596291e0asm2105352f8f.15.2026.01.20.10.02.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 20 Jan 2026 10:02:10 -0800 (PST)
-Date: Tue, 20 Jan 2026 19:02:08 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Michal Wilczynski <m.wilczynski@samsung.com>, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v2 14/27] rust: pwm: add __rust_helper to helpers
-Message-ID: <ejdtzcvxpz5iih7o5ppgpdo6npdjut6utofacdgrwkdntvurhs@vgiuagsrzo6b>
-References: <20260105-define-rust-helper-v2-0-51da5f454a67@google.com>
- <20260105-define-rust-helper-v2-14-51da5f454a67@google.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=tixF7bf4/v/TUNkaa0ZXFrscZkG2XTU5y/78VCSdSk3e+sC2MsKUdFFmvfvN5QcYl3FyedgMXOySDHEN8ATWc7CUXuqClnwUw9dRn4Am148pZIw67eFE/KCHpMO2niiIuKAoI/T/TBkOxDoZc1KJxM2i/hRNs4Atd52SNtmzqtU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mb9RRNfJ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED289C16AAE;
+	Tue, 20 Jan 2026 18:10:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768932632;
+	bh=z4qhv19x14mJR2BlyaLHoajY1A4AII07YFtQh1gYJc4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Mb9RRNfJjyLzKjUI+XE6tHgNWbzbonmZ5QYGFcUdZzQnvC/RY/e19MfQaUgxhk4g7
+	 sBGlUtufESyYxhFpuyB1h1IydMzrTULYsg/rZKSjW/rHKBn0iij8MRHFKUfq3dIyoZ
+	 kpH2KgoUTipvxYCZOYT3oYO1/b0jK6RHFhyhsMGD6gVPHFYH0Xo91ilJQpnboEdjB2
+	 hjd+FaeFC62PL1duTxbwjH0dRzRmrRG0r33w4fyETblshDJVpdAkF7jeuoIWJDkRiq
+	 q2WcmTvUiPpdaH0epXI16mQPlwYLlXjqvjT8epRDh3bquK3RFunEeT6mi02nLm6wob
+	 6fOdEybrMVxRA==
+Date: Tue, 20 Jan 2026 19:10:30 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Vladimir Zapolskiy <vz@mleia.com>
+Cc: Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Frank Li <Frank.Li@nxp.com>, 
+	Piotr Wojtaszczyk <piotr.wojtaszczyk@timesys.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 1/2] dt-bindings: pwm: nxp,lpc32xx-pwm: Add optional
+ Motor Control PWM interrupt
+Message-ID: <b3r6azklrc2p5v7eb22hjh6uivxfm3uevrfvalmgz5ijrzeqgp@c2rfbscdhaij>
+References: <20260110014524.3379187-1-vz@mleia.com>
+ <20260110014524.3379187-2-vz@mleia.com>
+ <20260112-garnet-axolotl-of-acceptance-3978fd@quoll>
+ <20bd5723-212b-474d-84ea-52dec73a5333@mleia.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -94,80 +67,122 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="b724s7lxgfngeqjj"
+	protocol="application/pgp-signature"; boundary="amfavhcheyxo4tm4"
 Content-Disposition: inline
-In-Reply-To: <20260105-define-rust-helper-v2-14-51da5f454a67@google.com>
-X-Spamd-Result: default: False [-3.06 / 15.00];
+In-Reply-To: <20bd5723-212b-474d-84ea-52dec73a5333@mleia.com>
+X-Spamd-Result: default: False [-2.06 / 15.00];
 	SIGNED_PGP(-2.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
 	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[baylibre-com.20230601.gappssmtp.com:s=20230601];
 	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	HAS_LIST_UNSUB(-0.01)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DMARC_NA(0.00)[baylibre.com];
-	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-7974-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
 	MIME_TRACE(0.00)[0:+,1:+,2:~];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-7972-lists,linux-pwm=lfdr.de];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	R_SPF_SOFTFAIL(0.00)[~all:c];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[u.kleine-koenig@baylibre.com,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[baylibre-com.20230601.gappssmtp.com:+];
-	RCVD_COUNT_FIVE(0.00)[5];
-	ASN(0.00)[asn:7979, ipnet:2a01:60a::/32, country:US];
-	TAGGED_RCPT(0.00)[linux-pwm];
-	RCPT_COUNT_FIVE(0.00)[5];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo,samsung.com:email,baylibre-com.20230601.gappssmtp.com:dkim]
-X-Rspamd-Queue-Id: 3344B49564
+	FROM_NEQ_ENVFROM(0.00)[ukleinek@kernel.org,linux-pwm@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	ASN(0.00)[asn:7979, ipnet:2605:f480::/32, country:US];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo]
+X-Rspamd-Queue-Id: 452D34A1DF
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 
---b724s7lxgfngeqjj
+--amfavhcheyxo4tm4
 Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 14/27] rust: pwm: add __rust_helper to helpers
+Subject: Re: [PATCH 1/2] dt-bindings: pwm: nxp,lpc32xx-pwm: Add optional
+ Motor Control PWM interrupt
 MIME-Version: 1.0
 
 Hello,
 
-On Mon, Jan 05, 2026 at 12:42:27PM +0000, Alice Ryhl wrote:
-> This is needed to inline these helpers into Rust code.
+On Mon, Jan 12, 2026 at 12:14:39PM +0200, Vladimir Zapolskiy wrote:
+> On 1/12/26 11:10, Krzysztof Kozlowski wrote:
+> > On Sat, Jan 10, 2026 at 03:45:23AM +0200, Vladimir Zapolskiy wrote:
+> > > NXP LPC32xx Motor Control PWM has an interrupt line shared with TIMER=
+4,
+> > > and the interrupt may be used to report events from programmable coun=
+ters
+> > > e.g. timer counter limit (period), match counter (pulse-width), or fr=
+om
+> > > counters on input lines of PWM channels.
+> > >=20
+> > > As a reference and for more details see NXP LPC32xx User Manual, tabl=
+e 595.
+> > >=20
+> > > Signed-off-by: Vladimir Zapolskiy <vz@mleia.com>
+> > > ---
+> > >   .../devicetree/bindings/pwm/nxp,lpc3220-pwm.yaml       | 10 +++++++=
++++
+> > >   1 file changed, 10 insertions(+)
+> > >=20
+> > > diff --git a/Documentation/devicetree/bindings/pwm/nxp,lpc3220-pwm.ya=
+ml b/Documentation/devicetree/bindings/pwm/nxp,lpc3220-pwm.yaml
+> > > index cdd83ac29caf..53520f005acb 100644
+> > > --- a/Documentation/devicetree/bindings/pwm/nxp,lpc3220-pwm.yaml
+> > > +++ b/Documentation/devicetree/bindings/pwm/nxp,lpc3220-pwm.yaml
+> > > @@ -32,6 +32,16 @@ required:
+> > >   allOf:
+> > >     - $ref: pwm.yaml#
+> > > +  - if:
+> > > +      properties:
+> > > +        compatible:
+> > > +          contains:
+> > > +            enum:
+> > > +              - nxp,lpc3220-motor-pwm
+> > > +    then:
+> > > +      properties:
+> > > +        interrupts:
+> > > +          maxItems: 1
+> >=20
+> > Properties must be defined in top-level. You only narrow constraints or
+> > disallow them :false per variant in if:then: blocks.
 >=20
-> Signed-off-by: Alice Ryhl <aliceryhl@google.com>
-> ---
-> Cc: Michal Wilczynski <m.wilczynski@samsung.com>
-> Cc: linux-pwm@vger.kernel.org
+> It makes sense. In this case would it be better to split the schema file
+> into two, one for each PWM type? Two described PWM types are too unsimila=
+r,
+> apparently it was wrong to merge them under a single .yaml file in the co=
+mmit
+> 4cd2f417a0ac ("dt-bindings: pwm: Convert lpc32xx-pwm.txt to yaml format").
 
-Applied this patch to
-	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for=
--next
-as merge window material.
+No strong feeling either way from my side. I marked this patch as
+"changes requested" in patchwork and drop if from my mailbox.
 
 Best regards
 Uwe
 
---b724s7lxgfngeqjj
+--amfavhcheyxo4tm4
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmlvwx4ACgkQj4D7WH0S
-/k7S9Af8Df5IfayQwO2CKCypBfDYh3ig8BbcsVXk1PrCDqs4gsZ/tsbSTUwWoYgI
-Id+1r1kUyJ7ssv7Jsh4IBW6Yu46TKFKVUtzDVKveNKFlL+aYn9zdipnYr8xH53u5
-ibLNg7n6CnI7hP2oYb1+nnZpCWdOBufQXm9zapjIMkTXl0bMrndlHyVZI+gz+bWD
-f8fhMKfKiHPp9Oq5wBMO3tAhAqt6EO1XJnVyM9EoJG8gx5cX8E4oclQun92XzR0h
-eR/RdRi7aMeX3WOolRzH8EWeb1ZSFyfOPltbocl3wAvQw4Ojc4Sx14xTXr6IH+Y/
-1I56LvvHrlkqyRoflNIHFXAy0fO0Nw==
-=a+NJ
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmlvxRMACgkQj4D7WH0S
+/k7LjQgArQ9OG0El4KPIYCalTIisTIEIwv4joOjv55eqJE0bjoWhg6KaFm9l59Sw
+WNLOOAT5qSrdCtehO6+D3We5OEFUvS85BSvpB1Kgd9Ka4Uk4/M98zxrJILTEw6/s
+5ZrgxvBb/5fPg2XWueaZ43KWCxPPe5QQa3k4/0AJluJd8azKAVKI0BROw8dzHEt6
++BdT12rgpYzVPpzmqPPlYJMcCscXrkMtAq+8zMUACcw4Ufgv57+nU4aMzqRJwvgP
+CK6Iv7bxhMOpMyngWfg8EKFduZeGd6MuJBgPY+UQl7HXcvb1/GfKKSORhMk8qznC
+Mn+DpQ607KeYZH7phzglWRKALeMucw==
+=Znar
 -----END PGP SIGNATURE-----
 
---b724s7lxgfngeqjj--
+--amfavhcheyxo4tm4--
 
