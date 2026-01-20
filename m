@@ -1,60 +1,91 @@
-Return-Path: <linux-pwm+bounces-7976-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7977-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mILuAN7Vb2mgMQAAu9opvQ
-	(envelope-from <linux-pwm+bounces-7976-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jan 2026 20:22:06 +0100
+	id AGWBALDVb2mgMQAAu9opvQ
+	(envelope-from <linux-pwm+bounces-7977-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jan 2026 20:21:20 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
-	by mail.lfdr.de (Postfix) with ESMTPS id BFCCF4A335
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jan 2026 20:22:05 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 629334A30A
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jan 2026 20:21:19 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 1DA068A3084
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jan 2026 18:19:50 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 313FA96FF30
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jan 2026 18:28:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2E541345753;
-	Tue, 20 Jan 2026 18:17:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B40374418D2;
+	Tue, 20 Jan 2026 18:24:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LpN8kU6G"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="0xMSADJE"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 085AC31A072;
-	Tue, 20 Jan 2026 18:17:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57BC4436361
+	for <linux-pwm@vger.kernel.org>; Tue, 20 Jan 2026 18:24:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768933023; cv=none; b=dB8neEkqrBbIzaV9lAeNrfaimrlCwm/h7uPVZnkoce1MUrDe/CWSfX4kRAnSejzE06vNlZLtL4fCNX+4IOn7hIyy5D5fRhhqOJRggvGl4iYwbw/zsNhgeO0pJISo9zmu3b7cJ5t8BZoULiTxKw3EFFeNAgvqK0BfYy9CcpytdOg=
+	t=1768933475; cv=none; b=f4barii9NSoumu9awXUmERq8MxINzI5kt6buFD5qeijJR4hAgwUXawv7OQR2EEIPBXNJoU8n95RuLCvRp3MyMTLcqrp8Tj/SSKPkCdGo78JIU8pLBTi5ArAUDizRivD3pfZLPXI1OoDaAicPKHnsJpDLWId3qcOXbkdtR+AJvDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768933023; c=relaxed/simple;
-	bh=hSixSc/nGLi4+2kgvpet2/D3yoPhwni66/5BODlQHGs=;
+	s=arc-20240116; t=1768933475; c=relaxed/simple;
+	bh=Y/hbkF63DHzS8v7oINnsZdqK81IfExep0UtNbytNrFI=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=dRetTRpDfwineJN+ateAfRDX5IXO32gfkT7WC3qjs0Y0fPYHHfcsd0gyJ5Aaxo/fRZiYvB7yPLpVU8YA/TJs9gD1Pbx7d8k0IMMYo2ObOkJif+aw+jJxpKm2DfxEKuY4CYB+CgEPeaFTRLgrgpYjVQvz4JqRx5cPas7RIN61rLs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LpN8kU6G; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37140C16AAE;
-	Tue, 20 Jan 2026 18:17:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768933022;
-	bh=hSixSc/nGLi4+2kgvpet2/D3yoPhwni66/5BODlQHGs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LpN8kU6GE1NQ0OgoT2CrICFe+ZxZwytkSGtOeDrU+NMsbpI5oC1WyoUafMTVUYqtd
-	 AP+O12ogGnolQmFST/uWdOxeGN4mEmrjgs/S1Q1qdhHYioQHFXyeBvHEFVWd6T6cF3
-	 ns3U3WBk+CR7gGbC5XUH1VSRXLr55irjquKySKYO3JDexMfED2ki6QOqsjJjTUvNnb
-	 A+dYn0Ekv5L3bB5KIQG2gaozqWIAeFT58ruX/cUvNtf7dH8USKaKCn/8XfPGFPmEX8
-	 B5G/lLMOjQVToxNoGxpt03BEp7gxK+mSAvciEEFdi3J1InwIPD70t//KH4EGHQl33K
-	 QSLqi2FtCWzUg==
-Date: Tue, 20 Jan 2026 19:17:00 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Gokul Praveen <g-praveen@ti.com>
-Cc: j-keerthy@ti.com, linux-pwm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, u-kumar1@ti.com, n-francis@ti.com
-Subject: Re: [PATCH v3] pwm: tiehrpwm: Enable EHRPWM controller before
- setting configuration
-Message-ID: <uge7sfrlkyqr7wclrps3o6wyod7rmndewwtm5bspkjyw5tadvs@qgqyoi7xnnoh>
-References: <20260120091922.71947-1-g-praveen@ti.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Y8e1grsEKGIfYj99kt5WiNYHbLERu5AcJ07A0DEpzX1uAokVEfqcCr8VOYESa/bWQ84/+a1PS159VCMUNMD7v1l3f/kamCM21WSwJ8nSIeAU64De2UMNaeAALGMt3SL2MHK7AU+MhLLQYrJ5PPpkOoG1YnA3KPtP8NuYruph5RE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=0xMSADJE; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-47ee301a06aso53858965e9.0
+        for <linux-pwm@vger.kernel.org>; Tue, 20 Jan 2026 10:24:33 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1768933471; x=1769538271; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=kAfH4J2MMujA9aR++g3pNjBmasACHAT+NgH7tqn+Aww=;
+        b=0xMSADJE8NbkA/NOV6+DqcZT+gfEiqo1h17BrKyf2hODTIU5DuMKkAVDzWY1RRf2Y4
+         AiP9pecKxLw5i3tcvNBEVFdXn8rGYu5NG76gek6ReQnZrG3M1/kjlqKNCTQ0PmWo/fw7
+         85GHetzSPRn3oqpuTEoXnZMqQjnb1aDGuO0XAnyRiqLwkuyIkaX3SGboTW1GZNuLm28h
+         iNMwdyUDf5BqZdSWEEjR5Ew7FWsgW9ApwVvyQ4wCH8cbqNARz3oGCMRMflQYilbtYQVq
+         BmnmM7voZnKi3hxHHiVWWndwY317YNJRy8YTrmx6MUvI/m8Ii7b76uLLgHUqWg0Inzoq
+         GMJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1768933471; x=1769538271;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=kAfH4J2MMujA9aR++g3pNjBmasACHAT+NgH7tqn+Aww=;
+        b=otaPNBNjQTkYq7eljT4DhYI+Pkgjt5ulkHrdo0d1jw3fgV7fr0eKVTc4cjI27jct/h
+         ktbLkQHD8UmVtv4aqA7bCX3oSD+MrKa5wMiXu/Q6u8YTTz82RJShLEePOrsrVi4TPovX
+         4ABCeKk8LbtV/TZg4iMbcw007mQuaXDT4sU2dnpOe9lYVFtixKqJAy5mHtMOt+YuU5/C
+         DK9CjoIkepenFletkdRuoEcTCBtUhy9N+y+vD/4R2lAKfGAQGf7gEZEdh6H2QI2hTNCA
+         iAa07rgv5UXV3Y/uqU+YJ5DsEg+SjkY67klH3TNNJlCd4AT1LlXUpDuNJ503elvuI2gd
+         Jdww==
+X-Gm-Message-State: AOJu0YzYSWW1YWGt+i3wnj24JJS1J7ja4FJHx9QfTu9k3WOmv1zKvzWG
+	pNp+3sHG8PT5vFow7OCfV3UPVKqvZRWzMgZQ0b3Y+a5nDfc2IZ3nIp3sSGaTllonRo4=
+X-Gm-Gg: AY/fxX7yNA9Hxzhsby46RRgK3c69hGPmHVbepr3y31jBMz7fjCZNWseHmNu9hK1k6su
+	KZday42zrw7Gp7nEm8g+yJRf/h2J3rTESlAu/T7ZZTN+J2m6ayXzJ4aXBefZd5s2G2OliG66jZG
+	dakT/f7bo5HqeLHQvjqLXF/eV+OB6BMbI0+iBs53q72hlih033MOFgv9dq65wvUUDuvKi0EaVcj
+	vXkxEyKUw2Lt6HwWudfkseOMJ1dUBfPV+wZN5ZcqXUTAKCffp0AgHYc7aWryDjrpXddRRuKCh1q
+	N4qmGWledS41FjNIPLet8FZ3vGgKzlZcdj7v4o5WajlRjtgbSzqo5tJ6/q7XmNZwAkXWec9iRSF
+	xy4rQ8iwJ58GX+tiKHljH+dZgc482KJiuQyIEc8rFV1p2qof+JrjuydRudIoBhEIAgnqeXLd+Kc
+	syz/siNUPepo7N/+6mbxaU98gkO4XqXHwyKGxdd2lnUuen1daIgtTdhHtlizO/Y2iAdIO9eOQST
+	MY=
+X-Received: by 2002:a05:600c:198e:b0:477:9976:9e1a with SMTP id 5b1f17b1804b1-4801eaadc94mr185200225e9.6.1768933471540;
+        Tue, 20 Jan 2026 10:24:31 -0800 (PST)
+Received: from localhost (p200300f65f20eb0448044bf769fbb982.dip0.t-ipconnect.de. [2003:f6:5f20:eb04:4804:4bf7:69fb:b982])
+        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-43569921da2sm30827776f8f.1.2026.01.20.10.24.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 20 Jan 2026 10:24:30 -0800 (PST)
+Date: Tue, 20 Jan 2026 19:24:29 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Michal Wilczynski <m.wilczynski@samsung.com>, Richard Genoud <richard.genoud@bootlin.com>
+Subject: Re: [GIT PULL] pwm: Two fixes and a maintainer update
+Message-ID: <3u2dfdn56wqqxcn2bcrl3s7x5gbwpbx5cmvszwhgv3ioluqcct@fel5x6sqomnw>
+References: <ahytfwrx6d7nvddjviqt6wyit6f7flh5vmiuuzdet44unjdbwp@cktsraaj56au>
+ <CAHk-=wga8Qu0-OSE9VZbviq9GuqwhPhLUXeAt-S7_9+fMCLkKg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -62,145 +93,84 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="kbn4rop7dmb2ym3a"
+	protocol="application/pgp-signature"; boundary="zsp4dyfbktt6kfba"
 Content-Disposition: inline
-In-Reply-To: <20260120091922.71947-1-g-praveen@ti.com>
-X-Spamd-Result: default: False [-3.56 / 15.00];
+In-Reply-To: <CAHk-=wga8Qu0-OSE9VZbviq9GuqwhPhLUXeAt-S7_9+fMCLkKg@mail.gmail.com>
+X-Spamd-Result: default: False [-3.06 / 15.00];
 	SIGNED_PGP(-2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
 	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_DKIM_ALLOW(-0.20)[baylibre-com.20230601.gappssmtp.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-7976-lists,linux-pwm=lfdr.de];
-	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	RCVD_COUNT_THREE(0.00)[4];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	DMARC_NA(0.00)[baylibre.com];
 	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	TAGGED_FROM(0.00)[bounces-7977-lists,linux-pwm=lfdr.de];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	R_SPF_SOFTFAIL(0.00)[~all:c];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ukleinek@kernel.org,linux-pwm@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[u.kleine-koenig@baylibre.com,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[baylibre-com.20230601.gappssmtp.com:+];
+	RCVD_COUNT_FIVE(0.00)[5];
+	ASN(0.00)[asn:7979, ipnet:2605:f480::/32, country:US];
 	TAGGED_RCPT(0.00)[linux-pwm];
-	ASN(0.00)[asn:7979, ipnet:213.196.21.0/24, country:US];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo]
-X-Rspamd-Queue-Id: BFCCF4A335
+	RCPT_COUNT_FIVE(0.00)[5];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo,baylibre.com:email,baylibre-com.20230601.gappssmtp.com:dkim]
+X-Rspamd-Queue-Id: 629334A30A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 
---kbn4rop7dmb2ym3a
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+--zsp4dyfbktt6kfba
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3] pwm: tiehrpwm: Enable EHRPWM controller before
- setting configuration
+Subject: Re: [GIT PULL] pwm: Two fixes and a maintainer update
 MIME-Version: 1.0
 
-Hello,
+Hello Linus,
 
-On Tue, Jan 20, 2026 at 02:49:22PM +0530, Gokul Praveen wrote:
-> The period and duty cycle configurations does not get reflected
-> after setting them using sysfs nodes. This is because at the
-> end of ehrpwm_pwm_config function, the put_sync function is
-> called which resets the hardware.
-
-I'd like to have the text account for not all machines (SoCs?) suffering
-=66rom that problem. Also the subject is wrong, as you enable the parent
-of the PWM controller and not the controller itself?!
-=20
-> Fix it by preventing the pwm controller from going into
-> low-power mode.
-
-Please make this:
-
-	Hold the PWM controller out of low-power mode during .apply() to
-	make sure it accepts the writes to its registers.
-
-	This renders the calls to pm_runtime_get_sync() and
-	pm_runtime_put_sync() in ehrpwm_pwm_config() into no-ops, so
-	these can be dropped.
-
-as your sentence is wrong in general.
-
-> Fixes: 5f027d9b83db("pwm: tiehrpwm: Implement .apply() callback")
-> Signed-off-by: Gokul Praveen <g-praveen@ti.com>
-> ---
-> v3 <=3D=3D> v2
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> * Simplified the logic by adding guard function for runtime power=20
->   management.
+On Tue, Jan 20, 2026 at 10:11:27AM -0800, Linus Torvalds wrote:
+> On Tue, 20 Jan 2026 at 01:32, Uwe Kleine-K=F6nig
+> <u.kleine-koenig@baylibre.com> wrote:
+> >
+> >    You might argue that this is an ABI change [..]
 >=20
-> v2 <=3D=3D> v1
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> * Removed space between Fixes and Signed-off tag
+> [...]
 >=20
->  drivers/pwm/pwm-tiehrpwm.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/pwm/pwm-tiehrpwm.c b/drivers/pwm/pwm-tiehrpwm.c
-> index 7a86cb090f76..2533c95b0ba9 100644
-> --- a/drivers/pwm/pwm-tiehrpwm.c
-> +++ b/drivers/pwm/pwm-tiehrpwm.c
-> @@ -237,8 +237,6 @@ static int ehrpwm_pwm_config(struct pwm_chip *chip, s=
-truct pwm_device *pwm,
->  	if (period_cycles < 1)
->  		period_cycles =3D 1;
-> =20
-> -	pm_runtime_get_sync(pwmchip_parent(chip));
-> -
->  	/* Update clock prescaler values */
->  	ehrpwm_modify(pc->mmio_base, TBCTL, TBCTL_CLKDIV_MASK, tb_divval);
-> =20
-> @@ -290,8 +288,6 @@ static int ehrpwm_pwm_config(struct pwm_chip *chip, s=
-truct pwm_device *pwm,
->  	if (!(duty_cycles > period_cycles))
->  		ehrpwm_write(pc->mmio_base, cmp_reg, duty_cycles);
-> =20
-> -	pm_runtime_put_sync(pwmchip_parent(chip));
-> -
->  	return 0;
->  }
-> =20
-> @@ -378,6 +374,8 @@ static int ehrpwm_pwm_apply(struct pwm_chip *chip, st=
-ruct pwm_device *pwm,
->  	int err;
->  	bool enabled =3D pwm->state.enabled;
-> =20
-> +	guard(pm_runtime_active)(pwmchip_parent(chip));
-> +
->  	if (state->polarity !=3D pwm->state.polarity) {
->  		if (enabled) {
->  			ehrpwm_pwm_disable(chip, pwm);
+> This one looks entirely benign, but I wanted to point out that if it
+> breaks some program - however unlikely that is - it just needs to be
+> reverted, and it doesn't matter what the change is called.
 
-The patch is excellent :-D
+Thanks for your feedback, that matches what I think. I just thought it a
+good idea to motivate the change well, given it's that late in the
+development cycle and I didn't want you to yell at me for trying to hide
+something :-D
 
 Best regards
 Uwe
 
---kbn4rop7dmb2ym3a
+--zsp4dyfbktt6kfba
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmlvxpkACgkQj4D7WH0S
-/k58ngf8D112LKCuTm2YcIR+u8hEeIPvtOoozsT9MOdt2LmJDEHwqmWgMpKxU4ja
-/APxy00xRrxpgh2BBooULH12xOgPc4V0zUsjDeuAt5ARG35s8k87UE7Dh6WD7gfw
-SgvsMBtqQ91CJCXeU7zm3ooAbZJ4cRPx3QJO/+OWPAibzUpQ/GR/eLTOsSEu7/XV
-w6O5KqaW3ozMVGeYQP/l+902FliPpo3Z6sdwIFHMecod6rqkIQz5nHFcjshlcyEG
-jTv0ZSuXJb0Jm+MlyZULdKTOYBDleuc6IXuSHJQnHtfVJq4LRr0gVGpDVdH34I4N
-5qm+HEMszlPn6BGMlSfOvtIQxQrWhg==
-=DjB6
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmlvyFsACgkQj4D7WH0S
+/k4EFwf/eE7DLn1jNTM7x55LP3HdUu0PNiMSzi8r58cKADzGMGdVH+kdZyVHP2oA
+8m7UrgQ5ycAt7JWHeU06Z1bIs3ZGt/1GAqhMxfj+Vw9EjXgg8/P7Z9QbGLX7jUbn
+wUCvl90kXHwODv/tb+dEqplLceueBBb3FMQP5KuiCipeHeBzARYybhD+0DOs7DLV
+IIfDgxsXY3TMkRJQa/h0Cxy5FKxBQqurF2KlCAobi+ii7OJDWG0DSdYWfB/mDDqm
+8EakjuZIHpyf+8tYw2p8gIBhkPadiZ1uVEvuoeT56QQy3Cvgmq10DjUD1Q/xTUqK
+1Dfg8vsG8ZBT8glpkgnaobj21HxX4Q==
+=CUNZ
 -----END PGP SIGNATURE-----
 
---kbn4rop7dmb2ym3a--
+--zsp4dyfbktt6kfba--
 
