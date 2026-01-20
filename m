@@ -1,61 +1,67 @@
-Return-Path: <linux-pwm+bounces-7958-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7959-lists+linux-pwm=lfdr.de@vger.kernel.org>
 X-Original-To: lists+linux-pwm@lfdr.de
 Delivered-To: lists+linux-pwm@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75135D3C27B
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jan 2026 09:47:54 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [213.196.21.55])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6BBD7D3C2B0
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jan 2026 09:56:49 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id CE899646E82
-	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jan 2026 08:39:20 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 0ED464E0A01
+	for <lists+linux-pwm@lfdr.de>; Tue, 20 Jan 2026 08:48:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5976C3559CA;
-	Tue, 20 Jan 2026 08:39:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D48543B8BBB;
+	Tue, 20 Jan 2026 08:48:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PliWaud5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A0xfAzWF"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2332E2EB5AF;
-	Tue, 20 Jan 2026 08:39:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1BB6363C60;
+	Tue, 20 Jan 2026 08:48:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768898356; cv=none; b=M+AtgYtpA5Yn/hAv1viVdBaw6f12TRVnN6oV2vevUc4CEOWO7pAKlzFaK6fdvTkRKYFzgHxlVFUTwe0KNgBJpUsVLu7HKTnwqYoOKfTTzCUdDFlR+LQFfUXXJkviD0nTOsMjebupsCGctovxn0Pc4B+AMmGYDigmJ/3fD5AAMHw=
+	t=1768898932; cv=none; b=rSDouCRkuFSgGbnC1zS040VMHLNfOeC642SlWGDSZNzjhF8X3xsNU9/rq+SMQCZKVBSykTJhVjaOVkFWACDmTwlp8HTyrmN+Qok3zfv5Q7iG/DltG0BpyZXX88CYBGSUnFCwEi3hv62CrmZMqj5C8LnefiSMYthk86w8RJLt5W4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768898356; c=relaxed/simple;
-	bh=4BsRuPSOnjDi5faQkQXbt5AD6hpnYNqK4kLb4+PdhXQ=;
+	s=arc-20240116; t=1768898932; c=relaxed/simple;
+	bh=P2f5VRfQXjNxJlBuPknRTMHoXdQiUEDYr/NdKY8/GZ4=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=BJ94vl8alF2LLzaqSjCg3qpPklU1dP0hfVLHdNyCDw6c6nga80rn2zpxLMdHCclCjqai1/B8s2HsDrsYz71jFWGOPFlgIH7Fec/vU4OfgrsSiDATItMkXhPR5tpii17VB07YsMDg9t2iXKcDnaJ8ctMArXMhOWmOEURs2bjDydg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PliWaud5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35B8EC16AAE;
-	Tue, 20 Jan 2026 08:39:14 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=uTB688q+X33f6/d3mec6lv2QGTM033goLXXckCzKxukh8W1olMONgMftdd0QHApX1JI2vUDkMui6ZmRHdJOwkj5fpbXOuxjZB0YCI11alY6o8a4d9hV2/yi9puKqbyT7AD694JT7UgrMnkQeXGDdfseTsgyECnfUQe+DUi1/d1Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A0xfAzWF; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE962C16AAE;
+	Tue, 20 Jan 2026 08:48:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1768898355;
-	bh=4BsRuPSOnjDi5faQkQXbt5AD6hpnYNqK4kLb4+PdhXQ=;
+	s=k20201202; t=1768898932;
+	bh=P2f5VRfQXjNxJlBuPknRTMHoXdQiUEDYr/NdKY8/GZ4=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PliWaud5nG5JDjIa2ujDTKQkmmSdPKaDi2LsIIIrUEef+84M0282Vj1Pqoc4BRb5E
-	 RvewXuQMlaJywVGAMjuRxDzwm3Whcg3i/tFt/NhPm+2Pxg3Ug1l+sA5GWLDaSEDmpL
-	 r0JqA9hRctC4IKP5Df8Sw8ZXpkooQBLGnbBRa8oQ/c+xeZov/eHliLxFPGHoaIFFQE
-	 3auUCdqtxvNF7aZW1OUwHi6EW/ShYTHpQTzOd7gLbVjWH/tbBHAA5UwLCpjZyjmTJ9
-	 ePv2Y3b/fH4CN3zMt/dlFO7g6R/4KQbV8V14tFrVWqD5d4b8hBB6fv+snRv2RzfJAY
-	 MxODOH0pm2BuQ==
-Date: Tue, 20 Jan 2026 09:39:12 +0100
+	b=A0xfAzWFO1LjHkQA5H5Nr/oMPHlXF4oL00eDIkgCyAtz78Mi0JXQ0IuWGsgqFifWE
+	 4F1d7sT2HuwS5bbjfLR4PFMbDJeVuuZlqILz3c0dOILh4MOt3U5H+nUsabUa11Ofal
+	 leEltVrKocV4WrDzgYGjNWltKE2Uf/lZTRgbtwCfFoKohR7EBiNlkLKKygIfXQombv
+	 bS/uPTmMQZp2/QKU2PKfzlaFzGq24/X5p97uj4RpKmL+dqPwLovkZt0s+5uMEJpRs3
+	 V9/GKE74f3gWpgz/I0ZPijttLMTf7GV2i1IXeX2NMD16FUFmQFf7uUDiU7/XKxz0UY
+	 07AL/IEW7RY4w==
+Date: Tue, 20 Jan 2026 09:48:48 +0100
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Tamir Duberstein <tamird@kernel.org>
-Cc: Drew Fustini <fustini@kernel.org>, Guo Ren <guoren@kernel.org>, 
-	Fu Wei <wefu@redhat.com>, Miguel Ojeda <ojeda@kernel.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	linux-riscv@lists.infradead.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org, Tamir Duberstein <tamird@gmail.com>, 
+To: Stephen Boyd <sboyd@kernel.org>, 
 	Michal Wilczynski <m.wilczynski@samsung.com>
-Subject: Re: [PATCH] drivers: pwm: replace `kernel::c_str!` with C-Strings
-Message-ID: <o4uvwymm73wnehs5zb7lqgv3mjv235jpprfqrsb6oxscxhmmjh@25u7wrb7yo2i>
-References: <20251222-cstr-pwm-v1-1-e8916d976f8d@gmail.com>
+Cc: Alice Ryhl <aliceryhl@google.com>, 
+	Michael Turquette <mturquette@baylibre.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+	Maxime Ripard <mripard@kernel.org>, Drew Fustini <fustini@kernel.org>, Guo Ren <guoren@kernel.org>, 
+	Fu Wei <wefu@redhat.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
+	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, Daniel Almeida <daniel.almeida@collabora.com>, 
+	linux-clk@vger.kernel.org, rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v4 3/3] pwm: th1520: remove impl Send/Sync for
+ Th1520PwmDriverData
+Message-ID: <3cfeounnaphhezvjpz5igswml6iu3b6jhwhjn2g4ziimjdoefi@ge4ezxx6jxlr>
+References: <20260113-clk-send-sync-v4-0-712bc7d94a79@google.com>
+ <CGME20260113151335eucas1p157cd966c5f0f4e477fb11272810a0ae8@eucas1p1.samsung.com>
+ <20260113-clk-send-sync-v4-3-712bc7d94a79@google.com>
+ <90657b83-1cff-4c7d-adde-9b560c2be7c2@samsung.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -63,76 +69,60 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ed7x3rrm3oecwey2"
+	protocol="application/pgp-signature"; boundary="nwsg2exzzhgvomkd"
 Content-Disposition: inline
-In-Reply-To: <20251222-cstr-pwm-v1-1-e8916d976f8d@gmail.com>
+In-Reply-To: <90657b83-1cff-4c7d-adde-9b560c2be7c2@samsung.com>
 
 
---ed7x3rrm3oecwey2
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
+--nwsg2exzzhgvomkd
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] drivers: pwm: replace `kernel::c_str!` with C-Strings
+Subject: Re: [PATCH v4 3/3] pwm: th1520: remove impl Send/Sync for
+ Th1520PwmDriverData
 MIME-Version: 1.0
 
 Hello,
 
-On Mon, Dec 22, 2025 at 01:24:46PM +0100, Tamir Duberstein wrote:
-> From: Tamir Duberstein <tamird@gmail.com>
+On Mon, Jan 19, 2026 at 10:45:56PM +0100, Michal Wilczynski wrote:
+> On 1/13/26 16:12, Alice Ryhl wrote:
+> > Now that clk implements Send and Sync, we no longer need to manually
+> > implement these traits for Th1520PwmDriverData. Thus remove the
+> > implementations.
 >=20
-> C-String literals were added in Rust 1.77. Replace instances of
-> `kernel::c_str!` with C-String literals where possible.
+> I thought this was already merged :-).
 >=20
-> Signed-off-by: Tamir Duberstein <tamird@gmail.com>
+> Reviewed-by: Michal Wilczynski <m.wilczynski@samsung.com>
 
-Applied to
+If I understand correctly this patch 3 depends on the first patch of
+this series so I cannot pick it up via the pwm tree *now*. There is
+another patch pending for the th1520 PWM driver, but as of now git seems
+to cope well when merging the pwm's tree for-next with this patch.  So
+it's fine for me if the series is picked up for 6.20-rc1 via the clock
+tree.
 
-	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for=
--next
+Acked-by: Uwe Kleine-K=F6nig <ukleinek@kernel.org>
 
-as merge window material with the R-b tags by Michal Wilczynski and
-Daniel Almeida.
+(Nitpick: If it was me who picked up patch 3 I would have capitalized
+the "remove" in the Subject for consistency.)
 
-(Side note, b4 told me:
-
-	  =E2=9C=97 No key: openssh/tamird@gmail.com
-
-=2E It's not clear to me how to verify this signature. My experiments
-include:
-
-	$ b4 kr --show-keys 20251222-cstr-pwm-v1-1-e8916d976f8d@gmail.com
-	---
-	No keys found in the thread.
-
-and looking at
-https://lore.kernel.org/linux-pwm/20251222-cstr-pwm-v1-1-e8916d976f8d@gmail=
-=2Ecom/raw
-where I see
-
-	X-Developer-Key: i=3Dtamird@gmail.com; a=3Dopenssh; fpr=3DSHA256:264rPmnnr=
-b+ERkS7DDS3tuwqcJss/zevJRzoylqMsbc
-
-which IIUC isn't enough to verify the next mail signed with the same
-key. Am I missing something? I very appreciate signing your work, but if
-there is no way for me (or anyone else) to verify it, there is no gain.)
-
-Thanks
+Best regards
 Uwe
 
---ed7x3rrm3oecwey2
+--nwsg2exzzhgvomkd
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmlvPy4ACgkQj4D7WH0S
-/k4GUwf/cN2KMOHwQlXBx5q3HyGl20R3D0ZA5lcodFAP7JPSuZLpaUAMcWqtI2Um
-+RQ7fBlZd3QOmA8yJrJEo5cIY6BKELFVn3kmg1COT7FxfuVnNCCn7jMD946ods/m
-JLBlWWGDyvxDJeTQD+qvRrV0Y/VrRTrfUCRv88S/TUgpUAojzQ23KpeXjlL/HWCg
-j6KhzEPjIxCK/6CrfDD1Yp1KY4OiYofzRvIUbn6MPX4aomj0OYtltKs/8U/+2kxh
-ijbc25GyCDCG6No+T8Q7qy+u5InV3Y1SIX9hIlkfQCdp8lKdwesS6AMPd4NFSjH7
-qb3ni9RcUxP2B++oySqxJD96lrlyHg==
-=w+Dz
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmlvQW4ACgkQj4D7WH0S
+/k4CswgAqYG9PEeOEysrNpuhGW5U3OIozAveU6uV7f/WsAm8r9/z/awUrqqx9SsI
+UuqhYcm/NXXK3TnrKeYfcU/03QiTBuwoZfyWVjwe2ZcJM0WRz0WcjRI65hmWgAIH
+sG5NN32/KLyj1ITpCXRCSPEps5R1ucJYuzjRLTaTwrAzQDXT0OlEVd8vUVeHJjxW
+DKuIm4QF/nBLtIq1JXv17rOqaU1mFQO3kZqYWu26GE50N5HwDDmJCflDeFVBmGpv
+snGBFWLlwvMYCF+GnBxXeOQ8Of394Tt9EUP5YZhC6cktDl1zN5Y4H9DfhVgj26Rh
+ZNbjBoDVXVZUlcwkA02YvTfmJcVzvw==
+=Dmu0
 -----END PGP SIGNATURE-----
 
---ed7x3rrm3oecwey2--
+--nwsg2exzzhgvomkd--
 
