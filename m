@@ -1,239 +1,188 @@
-Return-Path: <linux-pwm+bounces-7984-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7985-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id MNThBYGxcGmKZAAAu9opvQ
-	(envelope-from <linux-pwm+bounces-7984-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Wed, 21 Jan 2026 11:59:13 +0100
+	id WIZbG5W1cGndZAAAu9opvQ
+	(envelope-from <linux-pwm+bounces-7985-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Wed, 21 Jan 2026 12:16:37 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
-	by mail.lfdr.de (Postfix) with ESMTPS id 93B7D559D0
-	for <lists+linux-pwm@lfdr.de>; Wed, 21 Jan 2026 11:59:12 +0100 (CET)
+Received: from ams.mirrors.kernel.org (ams.mirrors.kernel.org [IPv6:2a01:60a::1994:3:14])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4D51755DB8
+	for <lists+linux-pwm@lfdr.de>; Wed, 21 Jan 2026 12:16:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 328C588212A
-	for <lists+linux-pwm@lfdr.de>; Wed, 21 Jan 2026 10:49:16 +0000 (UTC)
+	by ams.mirrors.kernel.org (Postfix) with ESMTPS id 9CAF6688301
+	for <lists+linux-pwm@lfdr.de>; Wed, 21 Jan 2026 11:07:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15E9C3D647D;
-	Wed, 21 Jan 2026 10:49:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0268947ECCB;
+	Wed, 21 Jan 2026 11:05:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="R5yACOFt"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HtaVkvCU"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from SA9PR02CU001.outbound.protection.outlook.com (mail-southcentralusazon11013038.outbound.protection.outlook.com [40.93.196.38])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 871753246EC;
-	Wed, 21 Jan 2026 10:49:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.93.196.38
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1768992554; cv=fail; b=rbzj+E4Jnl/pIUsEIAuFgIMyYW807yNWCeejcaCy3/yaAxruHRIW42RcrRc1R5C458wkjEuxFs0C1F5sGvCJb12g1LgrA/fBPfo/e3QZjkOeeuFg/3fWYcBo6F1SF0XxRYdzh/DqzLgY+JE6aCg8XkqlQkREaMxp01qxE115j2A=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1768992554; c=relaxed/simple;
-	bh=haO9f5MhnJd0Lbu7ID2UTtkPWLh/bEGwETpgdcRyu7Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=HHSwb23mJzb8wfBI3xsp3z01YWxd7aAGji40Okr2Rxx+WIS8k6UXO9XWTFkeZJH4gEh+MYbOTPLayiM0Q8sacyyH4Oij9nBSwMMGYOtuk9jNwkXBoxbbQJBwLoHBA85TRKlMkja3KH+5tDLzqZRovBPZkpj60BfPFfNttN1Qmuc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=R5yACOFt; arc=fail smtp.client-ip=40.93.196.38
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=ZNoG6hRT25ViDgZiECyrmfYTiivm4jFjE3i/MFaK39NUz4vB5M0kIgV8XyDH9vK++TwFiVq1LzbrhhzL4SxoO7TpDzeg7Hsf42xxIQT9FPYu3IuNb4dT1tQaadRGpAwwaPAIBNryYhgaPhLX7mKXggZA8eyNYR4LC/BO54+vUmto0oH1Gx+ppSKFyl8KjhE9VfnosBbIGYoDfMBTXSL9nc7cQ27iyd7VSEcst/MHDll0rIzgi/mZdVYgqWdBzakoLl8NkiFM6ashM9ygPKKc31AVrKVQySCsW4IXuwWXnYmgGkl1ND5u0aDx95/KxIf9DuCSkozvxOBHunWRKmDR7w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=kf1JLnszaN1GcNhPZ9m/n2fmbeeZ4bWWVzTg9qsxMvQ=;
- b=UwjLqE6BlgO86tPkvZTHbH0o3j4FLKi7GtMLubkAZKOo7wqELdjdj16JMIVuUBVx+r54Wg4VwJ8N8ed1YvRSRALkGamjhpsy78a2KlkaF3Ycuc59pgoA2s5lb/uW03T02+R0oHWgI2aWmZEyIsldXevvf3BVMo3GN9nwDgyjhAD+Kk0SGqqpApdo1nbldYP/R2TqRVkLOLSWLS0BjtQK+ExXg95dGMn7Fdds6zeH9mv1Alxj0542DtguW1SS6uHOnJ6WY7HBUhRJTLD0ZD9KXKwEYAyIZdE9hnagX4k5E0IM7aH/hxoFNTLWSE2h9/udkxDXmEMNIFJLAnx2D2tUww==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 198.47.23.195) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=ti.com;
- dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=ti.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=kf1JLnszaN1GcNhPZ9m/n2fmbeeZ4bWWVzTg9qsxMvQ=;
- b=R5yACOFtGq9rdx9PQVWdVEZqi5gCL3Dm2mRFXRqNm9tyg1UiVqHcwiMhhUTdi9tr/nOGN+0nElp6ZaO4L16fKD/LsDGsb0qM0s9nQkfm43e6hlxwlhz9XvS4L8Ot9CRoPMF+DD2ck6TbecUslIiI0XZohHz6gFAJKhYz/NTqOsM=
-Received: from BL1PR13CA0311.namprd13.prod.outlook.com (2603:10b6:208:2c1::16)
- by PH7PR10MB6132.namprd10.prod.outlook.com (2603:10b6:510:1f4::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9542.9; Wed, 21 Jan
- 2026 10:49:08 +0000
-Received: from BL02EPF00021F69.namprd02.prod.outlook.com
- (2603:10b6:208:2c1:cafe::23) by BL1PR13CA0311.outlook.office365.com
- (2603:10b6:208:2c1::16) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9542.9 via Frontend Transport; Wed,
- 21 Jan 2026 10:49:03 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.23.195)
- smtp.mailfrom=ti.com; dkim=none (message not signed) header.d=none;dmarc=pass
- action=none header.from=ti.com;
-Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
- 198.47.23.195 as permitted sender) receiver=protection.outlook.com;
- client-ip=198.47.23.195; helo=lewvzet201.ext.ti.com; pr=C
-Received: from lewvzet201.ext.ti.com (198.47.23.195) by
- BL02EPF00021F69.mail.protection.outlook.com (10.167.249.5) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9542.4 via Frontend Transport; Wed, 21 Jan 2026 10:49:07 +0000
-Received: from DLEE207.ent.ti.com (157.170.170.95) by lewvzet201.ext.ti.com
- (10.4.14.104) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Wed, 21 Jan
- 2026 04:49:07 -0600
-Received: from DLEE213.ent.ti.com (157.170.170.116) by DLEE207.ent.ti.com
- (157.170.170.95) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Wed, 21 Jan
- 2026 04:49:07 -0600
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DLEE213.ent.ti.com
- (157.170.170.116) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
- Transport; Wed, 21 Jan 2026 04:49:07 -0600
-Received: from [172.24.233.104] (a0507176-hp-z2-tower-g9-workstation-desktop-pc.dhcp.ti.com [172.24.233.104])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 60LAn4Kk2879529;
-	Wed, 21 Jan 2026 04:49:05 -0600
-Message-ID: <7081d6d7-d2d9-4364-9df2-48961d465474@ti.com>
-Date: Wed, 21 Jan 2026 16:19:03 +0530
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3DEE47D92D;
+	Wed, 21 Jan 2026 11:05:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1768993558; cv=none; b=WiLFqx5EWYak2Ku3oRcua8Yh2XkR4x5IfRhHkV99Yg7MrwL4n2h5tauGpp3RDR21ahJCD8nvHGXmOw/5NFutAZgVimFjgofvd15Ht6NKWbsttJWOQSR9ZWqI36R3rGUADZ7C2M75yMcI1Y97M4+C65bHufOHiyRdxS/80y61Aks=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1768993558; c=relaxed/simple;
+	bh=OSBeBnGHkX8xyHUtAxcxKCNGZMo/j2CMejwl6KhZ23w=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=UjCmiJNQCpxcWQYtZI7GU0qr0mzsxHoKk9drKwtFNxc+0TYRFdMJL3zlKQMQOx3PCf5Qyl2h0eqNjYmar+/O/7cJ6Saeb1UxvsIHKLAVnyHd2wop0aIvTm1n/wblJ80qPRaq/oI1M6XHzJIZk0/ljDxzkhBflrgLsu3F0oUUn8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HtaVkvCU; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1613C116D0;
+	Wed, 21 Jan 2026 11:05:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1768993558;
+	bh=OSBeBnGHkX8xyHUtAxcxKCNGZMo/j2CMejwl6KhZ23w=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=HtaVkvCUkTJnXsfAIybqc+b/a3zDn4yIkCyeK9ytM0M8Tg0vTUCSFP0EkDHoVy/7/
+	 Hm5v8hDwkb3XkdYa4WpG+SCkOtBPiSuqG+1VAlfRLWESP8hWSOSt8FidC3JdxahHRU
+	 yzXeP0ixTB44o4Hm0hjBwdiblq98fBl5aIVjdnMJtqPpaFEJBZawJnxfgdLxLXzt8w
+	 oPYB2Zah2d7JszhNGOx2ognrzb7m90iMMa/2nBvcPFtTizAH9AIEiBVHsx+lkDcitF
+	 PuB6sCPoMoUTyHtjRHvZB6lL8DIJW9Nv3rAruqI8zdHw4PM/fSOY7/Ah8WSw+QuZcE
+	 4inyE8zHQfnbw==
+Date: Wed, 21 Jan 2026 12:05:55 +0100
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Tamir Duberstein <tamird@kernel.org>
+Cc: Drew Fustini <fustini@kernel.org>, Guo Ren <guoren@kernel.org>, 
+	Fu Wei <wefu@redhat.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	linux-riscv@lists.infradead.org, linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, Michal Wilczynski <m.wilczynski@samsung.com>
+Subject: Re: [PATCH] drivers: pwm: replace `kernel::c_str!` with C-Strings
+Message-ID: <jmdkabxocbq7grui7qvepuymmrygmfps3pcb65wxflnbo75whc@dtvypglu7o4m>
+References: <20251222-cstr-pwm-v1-1-e8916d976f8d@gmail.com>
+ <o4uvwymm73wnehs5zb7lqgv3mjv235jpprfqrsb6oxscxhmmjh@25u7wrb7yo2i>
+ <CAJ-ks9=USrGECVS1qMqs+iCKUqvOdfcjA6phAjaF0wfcTkQt_g@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] pwm: tiehrpwm: Enable pwmchip's parent device before
- setting configuration
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-CC: <j-keerthy@ti.com>, <linux-pwm@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <u-kumar1@ti.com>, <n-francis@ti.com>, "Gokul
- Praveen" <g-praveen@ti.com>
-References: <20260121061134.15466-1-g-praveen@ti.com>
- <3ck3abtfdqzmatsvfqcbp7bxu7ydy7u37hfkke4xvpatpcg5uk@wfnya5hxrplo>
-Content-Language: en-US
-From: Gokul Praveen <g-praveen@ti.com>
-In-Reply-To: <3ck3abtfdqzmatsvfqcbp7bxu7ydy7u37hfkke4xvpatpcg5uk@wfnya5hxrplo>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL02EPF00021F69:EE_|PH7PR10MB6132:EE_
-X-MS-Office365-Filtering-Correlation-Id: acee3ce4-fb4d-4dd3-26bc-08de58dab40e
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|1800799024|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?YU5LZzFnZnZKdnd1Y2k5bWZQU1RiNlF3cGZFTmtVdFZxNGEzVmhqTGlOSUNq?=
- =?utf-8?B?V0RzUmZxdDRjclkwTERmRHBzZUVvVlFoOHZ0SSsxTnNINFJIS3psdSt2WlIy?=
- =?utf-8?B?NDBDcU9nRzFGdW5PZG5nUWI1TXJjR1oveW5XOVZ0SldBQmxZRXdQT3BnaGpG?=
- =?utf-8?B?akJBa2w1TndyS2VwZkdYd1JTTm1aRlh3WHM3Ui92WTRZcjM0T1ZHRTYvZjA4?=
- =?utf-8?B?ZHlrcFQ0RlhVVUNlOG5ET3pPd3FPNlZ0UDY4eEQvemRMVTVoSHFEcFV2Nkg5?=
- =?utf-8?B?OWRXOG9nMFJZUnczRVJ1cmZNQmRvU1I2T3Q0VER2L3NPdFo3eVJWVnhqTDla?=
- =?utf-8?B?aTdnMGdQQnJzUTFBZWtVRW5ZT2dPTnZDTFJzcDVmQzc5eWhEaDBpNk1HaWQx?=
- =?utf-8?B?d3hlUFZ0OHlNZ3hmQXR6Ynplc29mUEZRU1dQcGVkTm53QkU5Q25OV2EvTFJ5?=
- =?utf-8?B?aGt2a2pUcmI1Q3NxRjRIMkYyUVFnQXI0UkU5aWpTLzVVMDViVjd3SmlERWcv?=
- =?utf-8?B?R1VoTmZ5SUNKTmU3bkdqTTd3aElRQXlNb3hHUEl4RVBqQStiQnlra1pvUFox?=
- =?utf-8?B?UTMyMUg3ektJc1NxRVBQaG9HU2dnWk5WOXNrTzI0Wnl0KzQ5NDhISTFONWJa?=
- =?utf-8?B?UFhXdzNxeEx1TnRSelliNnVZNmlVbnQxUlUvRXcwc24ybndNS1MvV292MU1a?=
- =?utf-8?B?NmVFQm5vbW5WRk5JTENxOHdCcHpHa3Yza0E4QWJWcXhlNzdKUnVkREFxbnJw?=
- =?utf-8?B?VWZHZ0lnTHBTWTIwUnhGbUZPR0xHZDdNS3VnQ3V0TVpWenhKZE0ycG51a1dJ?=
- =?utf-8?B?NlhDaURSVGZZSlQ4aklLbGRqWG9jVVJ3ZkRCYUVTMDliOUlqbEg3ek0ya3Vu?=
- =?utf-8?B?WFhZT0RBajBhM2lYemI1NC9xUW9lSm1iQW45RzB5N2tBQk1tazd5Q2hSUTdK?=
- =?utf-8?B?ZVdGS1p4Q3NTS0E2bnROcjJSQ0c2N2VnUWNwcXk0cnVkazJGclc0dU5LWjI3?=
- =?utf-8?B?VGU0Zk9GeHRpR1g3dCtRaHBCbXZlVU5iRW83eVI1aTNMU3paWVNqaStWTWtQ?=
- =?utf-8?B?NUFpSDl0YmdWNGNsVGloa0U1bjJLcXp5QnBMOWJjNkRUNU4vVVoxa2FWemtT?=
- =?utf-8?B?VDBIZnRBdkppaUR4cHZZSW9iL25ndDRXcUplL0dlMlFIa3JhQ3o4cGhKdERp?=
- =?utf-8?B?UmdPeU9Ib01QVTFxMDRNTVgrb0Q1bVVyZGJRK1J0U1hmWlRIeHhMTlcwTlJ6?=
- =?utf-8?B?UjVjdnZudkl3akd4MzFUa2lWR0pUT0ovaXVVRHRJQlZDbzloRUJHVVVzYnI5?=
- =?utf-8?B?dUR6N25CTG0xcm9jeUlZTExieVgwSHExRVZTTkF5UzdrMEh4ZXA4NDdQV0sr?=
- =?utf-8?B?WWtvL05qdjUzTEVBTzY2NERBQzRhOGY2OHdSL1ZyMlljNEh2WFdTNnhaWGl5?=
- =?utf-8?B?a2NoWlBWdlM0UTdXR0lQNk9XTzlFdFBUb2sxVWhXalAvdVpLeTdxa05hTHBJ?=
- =?utf-8?B?U3dqamVkMXFxNTEwbG5LNjY5NnJaN3N6VGZEK1lpNDZHZmQwZUtDQ3N0N0dK?=
- =?utf-8?B?NzViRWtTMjlrQ3l3cXhHRVpjaDBlLzVLMnJKT3VKK3Z3VTEwNXJRbXhieS91?=
- =?utf-8?B?VHJaamxNNUxaOGZ4QXpsRWZmK0NpSkRYL2Z4WGJucjQ1Q2NRZCswQXk0OWVM?=
- =?utf-8?B?TTQxWEZoaFlZK0tkR3RJeXdhN3ZiN3JHSTFHbzhGWXM3elljRytmdnpDZW9C?=
- =?utf-8?B?ZEg5cktNQTMwY2ZrNjFFNkg4djU2LzVMU3kzakNOalZGMGV4aVMveHoxdm9h?=
- =?utf-8?B?czkvU2JLT3AvVHpwdTliSGdHY2tUNWhJUEc1Q1JxWElKNUgyUFYva1JMS3ZQ?=
- =?utf-8?B?OVZweG1RZkJibk1MZG5qemVESHl2OXBqZ0g3NnRLK0E0V01JZFU1OGtteXpj?=
- =?utf-8?B?R3ZQLzdOa2thMTBPVEFicEdyUUtLZmgyNFJTL1YrLzdEMC8vV2JwYXlWLy9t?=
- =?utf-8?B?U2FndVc4bnYvRHo5QzVtOUI1aEtaQzQ2RXlRc1QyWVlrYjk5bEY5aXhrYlJz?=
- =?utf-8?B?S3h0ekIzN1h4MjZQdE1VRGU4bTl2aTNCLzFXaEJqUUY5YUFjOW5TY3VEc21n?=
- =?utf-8?B?SW84ZHpnb0kwVkR3NWREYkNpalZoV3RySExyckg4TzMvWWx1UG1CbVBEdTZU?=
- =?utf-8?B?bUl3dDk2ZGNFQ1dGeC8reHN6K3pJNGFqR2NzVDFmOXcwdDBYQVQyVmVhWWp6?=
- =?utf-8?B?VVNGZFlIcSsvUWZjT1dPSCtmYWhnPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:198.47.23.195;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:lewvzet201.ext.ti.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(376014)(82310400026)(1800799024)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: ti.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 Jan 2026 10:49:07.8976
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: acee3ce4-fb4d-4dd3-26bc-08de58dab40e
-X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.23.195];Helo=[lewvzet201.ext.ti.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	BL02EPF00021F69.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR10MB6132
-X-Spamd-Result: default: False [0.04 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="gkkdphhfqabbpivp"
+Content-Disposition: inline
+In-Reply-To: <CAJ-ks9=USrGECVS1qMqs+iCKUqvOdfcjA6phAjaF0wfcTkQt_g@mail.gmail.com>
+X-Spamd-Result: default: False [-2.06 / 15.00];
+	SIGNED_PGP(-2.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
-	R_DKIM_ALLOW(-0.20)[ti.com:s=selector1];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DMARC_POLICY_ALLOW(0.00)[ti.com,quarantine];
-	DKIM_TRACE(0.00)[ti.com:+];
-	TAGGED_FROM(0.00)[bounces-7984-lists,linux-pwm=lfdr.de];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[dfw.mirrors.kernel.org:rdns,dfw.mirrors.kernel.org:helo,ti.com:email,ti.com:dkim,ti.com:mid];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-7985-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:7979, ipnet:142.0.200.0/24, country:US];
-	TAGGED_RCPT(0.00)[linux-pwm];
-	FROM_NEQ_ENVFROM(0.00)[g-praveen@ti.com,linux-pwm@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	SUBJECT_HAS_EXCLAIM(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	FREEMAIL_CC(0.00)[kernel.org,redhat.com,gmail.com,garyguo.net,protonmail.com,google.com,umich.edu,lists.infradead.org,vger.kernel.org,samsung.com];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	R_SPF_SOFTFAIL(0.00)[~all:c];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	RCVD_COUNT_SEVEN(0.00)[10]
-X-Rspamd-Queue-Id: 93B7D559D0
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ukleinek@kernel.org,linux-pwm@vger.kernel.org];
+	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
+	TAGGED_RCPT(0.00)[linux-pwm];
+	ASN(0.00)[asn:7979, ipnet:2a01:60a::/32, country:US];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ams.mirrors.kernel.org:rdns,ams.mirrors.kernel.org:helo]
+X-Rspamd-Queue-Id: 4D51755DB8
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hello Uwe,
 
-On 21/01/26 15:48, Uwe Kleine-König wrote:
-> Hello Gokul,
-> 
-> On Wed, Jan 21, 2026 at 11:41:34AM +0530, Gokul Praveen wrote:
->> The period and duty cycle configurations on J7200 and J784S4 SoCs
->> does not get reflected after setting them using sysfs nodes.
->> This is because at the end of ehrpwm_pwm_config function,
->> the put_sync function is called which resets the hardware.
->>
->> Hold the PWM controller out of low-power mode during .apply() to
->> make sure it accepts the writes to its registers.
->>
->> This renders the calls to pm_runtime_get_sync() and
->> pm_runtime_put_sync() in ehrpwm_pwm_config() into no-ops, so
->> these can be dropped.
->>
->> Fixes: 5f027d9b83db("pwm: tiehrpwm: Implement .apply() callback")
->> Signed-off-by: Gokul Praveen <g-praveen@ti.com>
-> 
-> I applied this patch to
-> 
-> 	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for-next
-> 
-> and will send it during the next merge window. The problem is old
-> (v5.18-rc1~54^2~29 from 2021) and it's late in the development cycle, so
-> I won't bother Linus with it for 6.19.
-> 
+--gkkdphhfqabbpivp
+Content-Type: text/plain; protected-headers=v1; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] drivers: pwm: replace `kernel::c_str!` with C-Strings
+MIME-Version: 1.0
 
-Thank you for your continued support on this issue as well as for 
-accepting the patch.
+On Tue, Jan 20, 2026 at 11:15:56AM -0500, Tamir Duberstein wrote:
+> On Tue, Jan 20, 2026 at 3:39=E2=80=AFAM Uwe Kleine-K=C3=B6nig <ukleinek@k=
+ernel.org> wrote:
+> > (Side note, b4 told me:
+> >
+> >           =E2=9C=97 No key: openssh/tamird@gmail.com
+> >
+> > . It's not clear to me how to verify this signature. My experiments
+> > include:
+> >
+> >         $ b4 kr --show-keys 20251222-cstr-pwm-v1-1-e8916d976f8d@gmail.c=
+om
+> >         ---
+> >         No keys found in the thread.
+> >
+> > and looking at
+> > https://lore.kernel.org/linux-pwm/20251222-cstr-pwm-v1-1-e8916d976f8d@g=
+mail.com/raw
+> > where I see
+> >
+> >         X-Developer-Key: i=3Dtamird@gmail.com; a=3Dopenssh; fpr=3DSHA25=
+6:264rPmnnrb+ERkS7DDS3tuwqcJss/zevJRzoylqMsbc
+> >
+> > which IIUC isn't enough to verify the next mail signed with the same
+> > key. Am I missing something? I very appreciate signing your work, but if
+> > there is no way for me (or anyone else) to verify it, there is no gain.)
+>=20
+> Yep, you are right to call this out. My usual setup uses SSH keys for
+> commit signing, which are not part of the kernel web of trust. I
+> promise to start signing kernel work with my GPG key soon :)
 
-Best Regards
-Gokul Praveen
-> Best regards
-> Uwe
+While I notice that the trend goes to using ssh-keys, I still prefer
+OpenPGP. So +1 on your plan.
+=20
+> In the meantime if you trust Github you can verify my signature
+> against https://github.com/tamird.keys.
 
+OK, for the record:
+
+	$ curl --create-dirs -o ~/.local/share/b4/keyring/openssh/gmail.com/tamird=
+/default https://github.com/tamird.keys
+
+makes `b4 am
+CAJ-ks9=3DUSrGECVS1qMqs+iCKUqvOdfcjA6phAjaF0wfcTkQt_g@mail.gmail.com`
+emit:
+
+	  =E2=9C=93 Signed: openssh/tamird@gmail.com (From: tamird@kernel.org)
+
+This looks a bit strange (because there is gmail and kernel.org), but
+better than before.
+
+Best regards
+Uwe
+
+--gkkdphhfqabbpivp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmlwsxEACgkQj4D7WH0S
+/k6vvwf9E8mLZeboBuVh8CdCIfb5AMi5+tIcVmJ5hPOx4Tr+sZI9ATfYiWXV75oI
+UGyBCcZm2n05j1KHBmZpKANCtBTPxFIRW/H5nViualdUjNSTUerWw7s5SK3NcQTt
+JSEGjjTK4/JpX0kTO4dUGs57xkegcr300fp4nAJqUdaJx+QhlWw3uIl5GbabrAYs
+120Zd3xFlPjIh2TksByMeh1R55sRhv6vQi/r5Isen7CYqMK7pFS2h5DLZvSibldm
+JscOK/sTW2ZcV0o6v/ElFRH4noxet9qskBNhoUfrZurdXGwjHnzrgnBXt2oruaTU
+OSGhDhKnShDIu6kc1t05ZH8agT9JSw==
+=L/eL
+-----END PGP SIGNATURE-----
+
+--gkkdphhfqabbpivp--
 
