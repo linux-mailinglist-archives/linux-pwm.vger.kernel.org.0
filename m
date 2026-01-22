@@ -1,197 +1,216 @@
-Return-Path: <linux-pwm+bounces-7989-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7990-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id OLk8J7FgcmnbjAAAu9opvQ
-	(envelope-from <linux-pwm+bounces-7989-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Thu, 22 Jan 2026 18:38:57 +0100
+	id YPsKK/ZncmmrjwAAu9opvQ
+	(envelope-from <linux-pwm+bounces-7990-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Thu, 22 Jan 2026 19:09:58 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4004D6B800
-	for <lists+linux-pwm@lfdr.de>; Thu, 22 Jan 2026 18:38:57 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id F02C76C06C
+	for <lists+linux-pwm@lfdr.de>; Thu, 22 Jan 2026 19:09:57 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 7ECDD30F250E
-	for <lists+linux-pwm@lfdr.de>; Thu, 22 Jan 2026 17:07:36 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F2FD53009F90
+	for <lists+linux-pwm@lfdr.de>; Thu, 22 Jan 2026 18:08:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4C24E3915C1;
-	Thu, 22 Jan 2026 16:43:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9994B34EF1C;
+	Thu, 22 Jan 2026 18:08:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b="coUXOZgI"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from leonov.paulk.fr (leonov.paulk.fr [185.233.101.22])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F145E2877F7;
-	Thu, 22 Jan 2026 16:43:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.233.101.22
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E75AB324B0C
+	for <linux-pwm@vger.kernel.org>; Thu, 22 Jan 2026 18:08:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769100230; cv=none; b=ocjq/lK5snEodl2rDqio5NNZVrSae0UjiTrNqTj/m6d5JGDEMJhc6DvRvlc7vpsfnaQBxkeAn9BTykWB+xeZzjqB+bLx766GfHyJ2nHtG3MIAPvbyjED+pIpTcqxKBcMgY/5s3rmcjsWBDyqhnSZC+RR77YoAEXbweAK9OyNOgE=
+	t=1769105307; cv=none; b=Yoa9gsfXhyOgi5Ie70ZnSAsL+89dS2E4K1tkOlN0eYZnx3jLssj9fQoibO2/KjL1/TZSnrUTDPiY9kQuM53XGJJyl0o9eT5A8peG9eW4AzI6ijycyNtR+er/DbHV/eo/tIJGUU3zejxVO7e4YuZaQNckcbAZMjDjK5ljyUG7rU4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769100230; c=relaxed/simple;
-	bh=lOOGgXNAcV5Kj7qstozfHh4KfxndROOrlFnru7vLM7s=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AKwfh+DG9rU2Tny22vhzhq9NenikNm5BZPqw59qOY1O++60YapqSHKg/0hxclsCLbcXJD0PDmFZZgYxcZR+3GWJB4hk1gccW3Ljn1RjB2oxjcuWpg3l1JA3GagPmvCcIWIgPQJVxmbQ3r8y+ZpaMFqOhoQRe5EeGn1R1kGHF1eQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io; spf=pass smtp.mailfrom=sys-base.io; arc=none smtp.client-ip=185.233.101.22
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=sys-base.io
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sys-base.io
-Received: from laika.paulk.fr (12.234.24.109.rev.sfr.net [109.24.234.12])
-	by leonov.paulk.fr (Postfix) with ESMTPS id BB4CB1F8004F;
-	Thu, 22 Jan 2026 16:43:31 +0000 (UTC)
-Received: by laika.paulk.fr (Postfix, from userid 65534)
-	id B82FCB1BB88; Thu, 22 Jan 2026 16:43:28 +0000 (UTC)
-X-Spam-Level: 
-Received: from shepard (unknown [192.168.1.1])
-	by laika.paulk.fr (Postfix) with ESMTPSA id 4E8C9B1BB7B;
-	Thu, 22 Jan 2026 16:43:26 +0000 (UTC)
-Date: Thu, 22 Jan 2026 17:43:23 +0100
-From: Paul Kocialkowski <paulk@sys-base.io>
-To: Aleksandr Shubin <privatesub2@gmail.com>
-Cc: linux-kernel@vger.kernel.org,
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-	Jernej Skrabec <jernej.skrabec@gmail.com>,
-	Samuel Holland <samuel@sholland.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>, Alexandre Ghiti <alex@ghiti.fr>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Cheo Fusi <fusibrandon13@gmail.com>, linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-	linux-sunxi@lists.linux.dev, linux-riscv@lists.infradead.org
-Subject: Re: [PATCH v12 0/3] Add support for Allwinner PWM on D1/T113s/R329
- SoCs
-Message-ID: <aXJTqzZaBrCMnTvv@shepard>
-References: <20250427142500.151925-1-privatesub2@gmail.com>
+	s=arc-20240116; t=1769105307; c=relaxed/simple;
+	bh=Y6q60xrn1CY3EIrBDvVdSfsuadY5DTdYGS1Z4YfJ44s=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=sPug1EFbHuXg5coj1oRccHdCg5mA7jdpLIPJj0ppWOm4k1AxN5lfweEJe7pZQ/rbTxlG+6xYEM6uwIGbnauFR4vqU/SeqYsCS00qBjeCpA8yc+xR8PJqzy4rj7UoMGP/0p7eFampDlRTlrdym34G9sFEh4hiaBQPVy/p4Z254m4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linux-foundation.org header.i=@linux-foundation.org header.b=coUXOZgI; arc=none smtp.client-ip=209.85.218.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-foundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-b885a18f620so18700566b.3
+        for <linux-pwm@vger.kernel.org>; Thu, 22 Jan 2026 10:08:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google; t=1769105294; x=1769710094; darn=vger.kernel.org;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=n4LWbSRpoTfx8DbYtRKRbrlwN5G2PUa5SlyEf1trkTU=;
+        b=coUXOZgI0vzq1RqOHvrfd3imTP5MYaxX3nnIxs/m2s9w8BWsraEqhHiKph94VfHq53
+         5OofxRCZhvSsBfJFDbMTQoAyAiNHpoyYFsnE5rlahkOcf+suM5J0IPL2Lsg89lr4N4Sw
+         g6zzAijvkqJXvTw98gh23LIxEAK8jyEE81sYk=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769105294; x=1769710094;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=n4LWbSRpoTfx8DbYtRKRbrlwN5G2PUa5SlyEf1trkTU=;
+        b=Pp+8XTKQwnFiitGgpJkBte2QnTXjMDCMK8HWC1XI1b5+5X2LfvohQFyO1VF6lPvl0C
+         c+0zj9I+tC91mWQ6sSLWq3YtPoj4c0/Kp/QMlToBYEf1S1HgNJ2gO9V9qmkDdXLMqq2y
+         5B1Q2796WZdZz4bgs3nAhJJqtmRF7pKiIH541pW8fWqaRLB0TCvkPAtpJ5fd24X0qhua
+         cg71e8D8ZYpVtykizcnBftbgObaviIQVSmiQ6oCum9nPiEAJdH4vlvwLq6KtbbZ4EPc6
+         l1JW1uAhtFjDNbW79Ndsv5d7A5/I3+lj/0YYVJO+J/5TTob6+7N7H8DjEh7Xb5Ck4Tm0
+         IVWw==
+X-Forwarded-Encrypted: i=1; AJvYcCW+gCEYwdWsvgXxtFe/OgmlIfirQavYBpWdqC3XXTThZ1kNSPLpX697kqoMzFsnx4QEYQvdpm/dzl4=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyJiagfMNI6U3KUJyq2igb6Ic06TYIN1McrHA/Y06C18Z/CEfAL
+	B9K6nQ0GQ5XaeKupJZxitVHzfXFdpcLxh0owXEkdKnRRBrAgiRTZxz4N3RweQLtCPT+WugrkBGn
+	2Z4lbLqA=
+X-Gm-Gg: AZuq6aIcwdmc6K8L5SHMQgqdKdymgkURCZn3bwGv4k5GqC3+cQXKNZK3uVWRkgMmnSB
+	gg31R2HBDcGBL/ExzXTi0DKPCqQw7l1jKFq653rRM5Mp3I+5MCog7oVFrw8v4jWjsauQKW09zrh
+	+gWDO+dijzy70n+XLcn5agTNNQQ9Nc4RiCpuPgwQNtx46OvMZ6PLTnhDTjCqtgBEk2JNurgfcyp
+	XGTHoqURIRCFqcnb4kKfnMJxkhlDxoVC+AzlzDqRSNaUzgB6BZ2Lcqvg1ph7RNzi1xGl9n3eXVO
+	ZaXn9W8OedltVpGlmiOHf2iMapiR2s2yMu8/IML8j6fKNf8PSgQpCHY1vv9IR+PhCSNN2yl36xK
+	QdAmmRg+FYDJyQ/mq3/crM3N0r8k2WwFehs5VncoRUVHPaPD2moHuSlobzWgOz5cacjBwT28ECk
+	/xIEP3iAW1BZtyHq5E+w9tL1taBcOeY+7N2KgSu/RUepKIpNr9kIyR44+NvQ/NRv0VS9CQxMY=
+X-Received: by 2002:a17:907:3f17:b0:b87:117f:b6ed with SMTP id a640c23a62f3a-b885acca601mr11111666b.21.1769105294330;
+        Thu, 22 Jan 2026 10:08:14 -0800 (PST)
+Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com. [209.85.218.47])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-6584b955523sm64644a12.26.2026.01.22.10.08.13
+        for <linux-pwm@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 22 Jan 2026 10:08:13 -0800 (PST)
+Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-b86f3e88d4dso167958566b.0
+        for <linux-pwm@vger.kernel.org>; Thu, 22 Jan 2026 10:08:13 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCU28vLYXxZgRt2Ob6gPGqtIAUjbc1wOA+D+Iiv2sSpCdJ9B7znwIuPtdwhNT0c9QWC0sDayeCS01O0=@vger.kernel.org
+X-Received: by 2002:a17:907:2d92:b0:b87:3174:9bbe with SMTP id
+ a640c23a62f3a-b885af0890cmr7212866b.61.1769105292900; Thu, 22 Jan 2026
+ 10:08:12 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="8kvUD8u6sGarMbR3"
-Content-Disposition: inline
-In-Reply-To: <20250427142500.151925-1-privatesub2@gmail.com>
+References: <ahytfwrx6d7nvddjviqt6wyit6f7flh5vmiuuzdet44unjdbwp@cktsraaj56au>
+ <CAHk-=wga8Qu0-OSE9VZbviq9GuqwhPhLUXeAt-S7_9+fMCLkKg@mail.gmail.com> <20260122-bold-sticky-wapiti-1dffa2@houat>
+In-Reply-To: <20260122-bold-sticky-wapiti-1dffa2@houat>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Thu, 22 Jan 2026 10:07:56 -0800
+X-Gmail-Original-Message-ID: <CAHk-=wheQNiW_WtHGO7bKkT7Uib-p+ai2JP9M+z+FYcZ6CAxYA@mail.gmail.com>
+X-Gm-Features: AZwV_QhnXIhWoEMDJsEBbAYKmsqgpZOb7D77FthmHx6jj6F7jevftC5yxdhucSk
+Message-ID: <CAHk-=wheQNiW_WtHGO7bKkT7Uib-p+ai2JP9M+z+FYcZ6CAxYA@mail.gmail.com>
+Subject: Re: [GIT PULL] pwm: Two fixes and a maintainer update
+To: Maxime Ripard <mripard@redhat.com>
+Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
+	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Michal Wilczynski <m.wilczynski@samsung.com>, Richard Genoud <richard.genoud@bootlin.com>
+Content-Type: text/plain; charset="UTF-8"
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.56 / 15.00];
-	SIGNED_PGP(-2.00)[];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_DKIM_ALLOW(-0.20)[linux-foundation.org:s=google];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-7989-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-7990-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
+	DMARC_NA(0.00)[linux-foundation.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DMARC_NA(0.00)[sys-base.io];
-	RCPT_COUNT_TWELVE(0.00)[20];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	FREEMAIL_CC(0.00)[vger.kernel.org,kernel.org,csie.org,gmail.com,sholland.org,sifive.com,dabbelt.com,eecs.berkeley.edu,ghiti.fr,pengutronix.de,lists.infradead.org,lists.linux.dev];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DKIM_TRACE(0.00)[linux-foundation.org:+];
+	TO_DN_SOME(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCPT_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[torvalds@linux-foundation.org,linux-pwm@vger.kernel.org];
 	MISSING_XM_UA(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[paulk@sys-base.io,linux-pwm@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.987];
-	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	R_DKIM_NA(0.00)[];
-	TO_DN_SOME(0.00)[];
+	TAGGED_RCPT(0.00)[linux-pwm];
+	NEURAL_HAM(-0.00)[-0.995];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sys-base.io:url,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,ozlabs.org:url,paulk.fr:url]
-X-Rspamd-Queue-Id: 4004D6B800
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux-foundation.org:dkim,mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: F02C76C06C
 X-Rspamd-Action: no action
 
+On Thu, 22 Jan 2026 at 06:39, Maxime Ripard <mripard@redhat.com> wrote:
+>
+> >
+> > Obviously some changes are more likely to be user-visible than others,
+> > so people should take that into account in how careful you need to be
+> > about a patch.
+>
+> Where do we draw the line then, if there's any?
 
---8kvUD8u6sGarMbR3
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Users complaining is the only real line in the end.
 
-Hi Aleksandr,
+So something like a test-suite complaining is then often a *very* good
+indication that maybe users will hit some problem, and test suite
+issues should be taken very seriously just because they might be the
+first sign of upcoming trouble, and the earlier something is caught
+and fixed, the easier it's going to be.
 
-On Sun 27 Apr 25, 17:24, Aleksandr Shubin wrote:
-> Aleksandr Shubin (3):
->   dt-bindings: pwm: Add binding for Allwinner D1/T113-S3/R329 PWM
->     controller
->   pwm: Add Allwinner's D1/T113-S3/R329 SoCs PWM support
->   riscv: dts: allwinner: d1: Add pwm node
->=20
->  .../bindings/pwm/allwinner,sun20i-pwm.yaml    |  84 ++++
->  .../boot/dts/allwinner/sunxi-d1s-t113.dtsi    |  12 +
->  drivers/pwm/Kconfig                           |  10 +
->  drivers/pwm/Makefile                          |   1 +
->  drivers/pwm/pwm-sun20i.c                      | 379 ++++++++++++++++++
->  5 files changed, 486 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/allwinner,sun20=
-i-pwm.yaml
->  create mode 100644 drivers/pwm/pwm-sun20i.c
+But a test-suite error isn't necessarily where you have to draw the
+line - it's a big red flag, but it *could* be something like "the
+error checking was done in a different order, and the error number
+changed in some situations, but it doesn't actually change behavior
+except for the error message that is printed".
 
-Thanks for your work on this driver!
+So then a test suite failure is a "let's ignore it, but keep an eye on
+it in case some program really did care about that *particular* error
+number".
 
-For context, this PWM controller seems to be a second-generation design from
-Allwinner, which is found in the following chips: V5, A50, H616, V536, T7, =
-A133,
-V833, R329, D1/T113, R128, V851, A523 and A733.
+But a user complaining should basically result in an immediate fix -
+possibly a "revert and rethink".
 
-I've tested your driver on A133, which works fine too. It seems that H616 u=
-ses
-a similar (but slightly different) register layout.
+So a user complaining about some kernel change breaking their flow is
+when you don't even start arguing. The issue is over and done, and the
+change needs to be undone.
 
-In case you've missed it, there's a follow-up series adding H616 support at:
-https://patchwork.ozlabs.org/project/linux-pwm/list/?series=3D409036&archiv=
-e=3Dboth&state=3D*
+There are _very_ few exceptions to that rule, the main one being "the
+problem was a fundamental huge and gaping security issue and we *had*
+to make that change, and we couldn't even make your limited use-case
+just continue to work".
 
-And there's also a standalone effort (which I've redirected to your series)=
- at:
-https://patchwork.ozlabs.org/project/linux-pwm/list/?series=3D485644&archiv=
-e=3Dboth&state=3D*
+The other exception is "the problem was reported years after it was
+introduced, and now most people rely on the new behavior".
 
-Now given that the new controller was introduced with the V5 (sun8iw12) from
-2018, I think it would be a bit confusing to keep the sun20i-pwm name.
+But starting to argue about users reporting breaking changes is
+basically the final line for me. I have a couple of people that I have
+in my spam block-list and refuse to have anything to do with, and they
+have generally been about exactly that.
 
-How about renaming the driver to sun8i-pwm instead? That would be more
-consistent with how other second generation designs from Allwinner are usua=
-lly
-called in Linux and makes it more clear that it also targets sun8i and sun5=
-0i
-chips, in addition to sun20i.
+Note how it's not about making mistakes and _causing_ the regression.
+That's normal. That's development. But then arguing about it is a
+no-no.
 
-All the best,
+So in the kernel tree, we don't argue about regressions. We fix them.
+That's basically the only really hard rule I have.
 
-Paul
+Almost everything else is "just explain it, we have various rules for
+development, but rules are meant to be broken". Not the user-reported
+regression one.
 
---=20
-Paul Kocialkowski,
+> Should we just consider those drivers "wrong", treat it as a bugfix, and
+> expect userspace applications to request the format they actually rely
+> on? Or should we continue what we've tried to do and try to support the
+> right format, and the old format for backward compatibility?
 
-Independent contractor - sys-base - https://www.sys-base.io/
-Free software developer - https://www.paulk.fr/
+If it used to work, and people relied on it, you add a new "right"
+format, and keep the old one around. Possibly with some hack to only
+affect some particular special case, with the hope that the special
+case and hack can be removed.
 
-Expert in multimedia, graphics and embedded hardware support with Linux.
+Now, if it's one or two users and you can just get them to recompile,
+that's one thing. Niche hardware and odd use-cases can sometimes be
+solved that way, and regressions can sometimes be fixed by handholding
+every single reporter if the reporter is willing and able to change
+his or her workflow.
 
---8kvUD8u6sGarMbR3
-Content-Type: application/pgp-signature; name=signature.asc
+But the basic rule is: be so good about backwards compatibility that
+users never have to worry about upgrading. They should absolutely feel
+confident that any kernel-reported problem will either be solved, or
+have an easy solution that is appropriate for *them* (ie a
+non-technical user shouldn't be expected to be able to do a lot).
 
------BEGIN PGP SIGNATURE-----
+Because the last thing we want is people holding back from trying new kernels.
 
-iQIzBAEBCgAdFiEEAbcMXZQMtj1fphLChP3B6o/ulQwFAmlyU6sACgkQhP3B6o/u
-lQzLzw/7BSyJlA0VQWydAMnYMSXVRR1nWvDgL2BacWvoFGeQZLvkPIS+bS0Y1oje
-CuoZsMChx9onTi+/OKOGwqLUfKtA7nmvp2LLJhelqIKfX1fMRmbXU7BnhoH4jqUc
-Tnr0UHIUSXP6rzcY+/4bevCUC+iHKf4jJceuGZTFsHF0LZi8c62oOrXNBMTNia+/
-joy6c/9RN5N4RxfbcEfBqmUc0cu88EErW17t8FhALQ6oEftzsNCju3gsOQ4S7lUB
-SRH6ffY/o8LqXPZ/kqGDC5ipyFPJyuORXK3xS9zh1xDz+OSvmRh8v2hBsU0V4jxS
-99oGXAOXJGljK1415Ush1uRcMKa+YXuF2deG9qJAfEaDq+kRhp2gXdzvN1/0HCgN
-rQnyICWywvjX/oznc6j7gt1i+nzKofeXvVyT+Ym/Uk+2K4V2kZmUIGkO9vAgCb7d
-KAZNs7Yf79OcoCNZBXAqec7tO2jS0ihWjQ3vSwhzlFa8EcF/nTQJJDgiu3JLPZtQ
-Lu2PLgsmNarnKGk9AX8m7EirKdMJduYk5G7oyBxeGXeqNkf9nWf99WqH2cmzDz4o
-GhVyfKf2rBfQv9MKU0Qz2CBRXA/rZl21s+kZ9NZEG6RHqGaGTfjOJgRjQo9SS07f
-67gd5SFjE8HJPruOtaZrwhBq+ZLF1vGsCwlmvLRJLABl2NY7a8o=
-=mx2z
------END PGP SIGNATURE-----
-
---8kvUD8u6sGarMbR3--
+                  Linus
 
