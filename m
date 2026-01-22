@@ -1,78 +1,109 @@
-Return-Path: <linux-pwm+bounces-7986-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7987-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QI2gBXk5cmmadwAAu9opvQ
-	(envelope-from <linux-pwm+bounces-7986-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Thu, 22 Jan 2026 15:51:37 +0100
+	id 0C2ZHWlCcmnpfAAAu9opvQ
+	(envelope-from <linux-pwm+bounces-7987-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Thu, 22 Jan 2026 16:29:45 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [IPv6:2605:f480:58:1:0:1994:3:14])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6D4E268275
-	for <lists+linux-pwm@lfdr.de>; Thu, 22 Jan 2026 15:51:36 +0100 (CET)
+Received: from dfw.mirrors.kernel.org (dfw.mirrors.kernel.org [142.0.200.124])
+	by mail.lfdr.de (Postfix) with ESMTPS id 13E3768D63
+	for <lists+linux-pwm@lfdr.de>; Thu, 22 Jan 2026 16:29:45 +0100 (CET)
 Received: from smtp.subspace.kernel.org (relay.kernel.org [52.25.139.140])
 	(using TLSv1.2 with cipher ECDHE-ECDSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id 07D9A8E4131
-	for <lists+linux-pwm@lfdr.de>; Thu, 22 Jan 2026 13:44:55 +0000 (UTC)
+	by dfw.mirrors.kernel.org (Postfix) with ESMTPS id CA5008AC1C7
+	for <lists+linux-pwm@lfdr.de>; Thu, 22 Jan 2026 14:39:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 96E9331A072;
-	Thu, 22 Jan 2026 13:44:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D93DB34106F;
+	Thu, 22 Jan 2026 14:39:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MiijZP2P"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YO4HnkaD";
+	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="KPUZ9xPj"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60FEC26A0A7;
-	Thu, 22 Jan 2026 13:44:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1242F1F8AC8
+	for <linux-pwm@vger.kernel.org>; Thu, 22 Jan 2026 14:39:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769089492; cv=none; b=A7FhzhOB1NTTfL2F7mm2cdUuSyn1SBKMy/IaQQS2yABEjFpeubxD+Tgu9j2Rez3NkyG/zmlgaxmSxx8Ykk5LvbgPRdT2utMtPxunsV196nk5gBNrU/zbfrZsBEHc3zllSVlSLlwQqIcHTE55Zjsj8uBvuqsQ2+5P6+ItzRXaKqw=
+	t=1769092781; cv=none; b=cfs9Cu6uEkDOG/jimilMVIo+M6coVTdpf/a7THJsViUJJj8S0z+2OD4mPfPRpjZlkz9wBX9QEaDlPpgPLF2gpTvyTNSFbv5zumE1xHCO9iIuqTY2L/NHZw0veEcsFO6f4nJcYhsc/NOcfzQhBvaJr7gdIjDZSbE/0zqcohYj2lw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769089492; c=relaxed/simple;
-	bh=j8JEqlvIFnXt9gGEm0Oheoh75nKbbz8Bdg2iudx4Y8w=;
+	s=arc-20240116; t=1769092781; c=relaxed/simple;
+	bh=AyBx9ppTx2BOTSfVtDmCqmRyEQ5NyXpywR5T7qhsqCk=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=eAW7eew5ggT9JIpyjSfqUoSgtpc6bbJhLGct0kz6kUsdnqShdLQkV7OLVz22c5QVDkvn5MdrPq6+ZBgy1OPV7w8lzvh9B5TRbXrL3HOmzkMHVyJjIpJEDndHnN5/jZtxUCXHvoX4f996H3gqgantmq2fX/Om+NZBW5X2yOes/Xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MiijZP2P; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C125C116C6;
-	Thu, 22 Jan 2026 13:44:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769089491;
-	bh=j8JEqlvIFnXt9gGEm0Oheoh75nKbbz8Bdg2iudx4Y8w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MiijZP2PgQ7cWwM/BrL4/aHqDuWgWt7buVDitzOLLgQdCeGQbRri9VRoWsknB6BOs
-	 MW4NXW6W74RdY0fAsK6Bdd8gp3rRRx5EUSq74/zd+Y3DQk3JDvoomz7nvfQXW4sYLt
-	 5NK4v3hzZ1ozM6HXvxIyYNRKjNtql6nEd8fORfMN3aJ57Fm0fNPpqIpF07lBZJNEqe
-	 bh1lrnUZrr3xfZB+VMQmhgzNd1DvOX4XxCozUKLJsUOQjxjF4TFLjOaa5sReHLH4/Q
-	 rdTHw5qscsZCtb4v7dlQUXKGr6CN30WBw/AIPOWvt9r6gzUfBUhamrC89amGEuE/MZ
-	 erbPngC11saWw==
-Date: Thu, 22 Jan 2026 14:44:49 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: Daniel Almeida <daniel.almeida@collabora.com>, 
-	Alice Ryhl <aliceryhl@google.com>, "Rafael J. Wysocki" <rafael@kernel.org>, 
-	Viresh Kumar <viresh.kumar@linaro.org>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
-	Thomas Zimmermann <tzimmermann@suse.de>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Drew Fustini <fustini@kernel.org>, Guo Ren <guoren@kernel.org>, 
-	Fu Wei <wefu@redhat.com>, Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-riscv@lists.infradead.org, 
-	linux-pwm@vger.kernel.org, linux-clk@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] rust: clk: use the type-state pattern
-Message-ID: <20260122-majestic-masterful-jaguarundi-d0abde@houat>
-References: <20260107-clk-type-state-v3-0-77d3e3ee59c2@collabora.com>
- <20260107-clk-type-state-v3-1-77d3e3ee59c2@collabora.com>
- <20260108-delectable-fennec-of-sunshine-ffca19@houat>
- <98CD0BF6-3350-40B9-B8A9-F569AE3E3220@collabora.com>
- <20260119-thundering-tested-robin-4be817@houat>
- <aW4lCfUyumOKRRJm@google.com>
- <518D8B09-B9A1-4DB4-85CD-37A2DD3D5FB1@collabora.com>
- <DFSLCI9U4NCW.2HI2UPUI7G134@kernel.org>
- <20260119-weightless-pelican-of-anger-190db0@houat>
- <DFSN4FDCYHMW.3J3237PEBV2ZP@kernel.org>
+	 Content-Type:Content-Disposition:In-Reply-To; b=P9hkXqRkRdxrsPaeOXZU/KpITm+4ylbC3fwk1MLNh6LYRNAADogMs2H2OU+4d/ldXCpbbDOSReQhTYpRoQuiXD4uy4mQt7JxNvDRPT92QjU8US7TtQLY7DvU7bhnAq25mQynKlBuEAE+YxZdLekep1f9RIFncO0HoaO87aMitT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=YO4HnkaD; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=KPUZ9xPj; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1769092779;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=AczRkdluSYBOb5Po7BaEkCw/6UsPxAzciCTctPOT6H8=;
+	b=YO4HnkaDTV41JmrBbHppMJ+piOG7p07SbTA6i1hUObxabMhZP6x/V4lxYiIGjQWiCjwjcA
+	KGMBf54Jl18ZhoH+8F0wvM8WVhctm8c098T2npWsjwVqHhEsigwq1plqtUyKfEHqynluXL
+	Ajmy3h9bQkf4Xa2UxpMp5BACI/rJaNw=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-675-Rv1yEsMiMzGW5fZxLICptA-1; Thu, 22 Jan 2026 09:39:36 -0500
+X-MC-Unique: Rv1yEsMiMzGW5fZxLICptA-1
+X-Mimecast-MFC-AGG-ID: Rv1yEsMiMzGW5fZxLICptA_1769092775
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4801c1056c7so7794945e9.2
+        for <linux-pwm@vger.kernel.org>; Thu, 22 Jan 2026 06:39:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=redhat.com; s=google; t=1769092775; x=1769697575; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=AczRkdluSYBOb5Po7BaEkCw/6UsPxAzciCTctPOT6H8=;
+        b=KPUZ9xPjAls+M+TsDjS85T0+OPCLVHQlqfgSluR/1rPjx8i5Otps+dvdSptbh2eAS3
+         7OFOaM1f06KA4isS05QEGOP5VvITrR4C9nCdBXiLDJxxWulNJXW7uCt/dQ+HmB79wv9M
+         Rxjs/hWFa2DM1idkmzUyuWFeDrLIzppr2lzvdVm7O6w/3urPxANLTaKe8NKLL9MlIyiJ
+         h0SYDLhiWm5qG2Udy3ltkqDgFI16eSbmFCT3VmJUcSulTmzQbvKaGUlIttf+toqVnIyQ
+         39zsWyBgqtQr5LNTwgFcOFMn3p681sDQFPYAYKLtn43i7fd1SkTue0fOkU8NYrdRmJ27
+         hsuQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769092775; x=1769697575;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=AczRkdluSYBOb5Po7BaEkCw/6UsPxAzciCTctPOT6H8=;
+        b=wc3rJQ7fOCss5utWJBx6mv27tr2lsb/Dev3oFxL1VjmqKG4K94AZVsqJRQW/Mj7Qk0
+         Hcp+tQk3gvy/qvM7yFPA62/F6H9iZ3WvcqPpYnVpFb8PulK9clOfz1MIakh+nmO/m/rU
+         3Ayi6KdIeN5U6zFMPoqTsF9wajDtbrhghYBVMt2jvlOHZzYYtoa9ceMX4+fV7JDHA/83
+         w/gg+HNghoLUbFYGdPXpRnHQk5AdPJGtKKgJgm4o4NYwuWT/n5HGi1zUz3ZjGnUSm5xL
+         EVtKwbs+JcOrUugh3L0S0rTW5YEJDIzh3lZd0vaxo6y44I/DM3rIP35iyKn+Ssugor+J
+         E5bg==
+X-Forwarded-Encrypted: i=1; AJvYcCWy9C/+/HXg9mbml0jhPojR74dA0/4LumdjbEps4UNgW8D4IAozxqly8JNpVKj7pi0IULtKDuncmmI=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgwnnfVPufVo/jIV7sCg2mXibXfAQHDSaJckyHWLu3Ubxt7aj5
+	XAw5gTbjNSv1tehPJdyjy+TwG0QKFKUAyR8+HiF1VIRWQrzxFkAM9j+uG/19Mn02oS1hRTiDtdB
+	LMnYzFIGBGgSsNYXYP4dleh2hfVXsKA87LbekinUoJj7AmR0lOfbkbFd14CgAwA==
+X-Gm-Gg: AZuq6aJKiT6xLBdamO+eEOlfYhJVCDsisYrl1gcBriRWhRZzngAukUvrTBqnXw83lYv
+	IdkLvlO6cFsnX/nfwr2MlmDXwT82UKr5xrn3KCColfcQR4LkQykRbAHDhYHb4dM6abPl67+IlSB
+	5VnFZseHs0dfYXEGlt/T0Vk3xKLEOoq+FL9LF/7SKiRbbKlE8y8YxVju7UgIAtzfThJ9QgZUcyV
+	ETinTdIRUvlaBlipN6HG2yurdMyGhZhW5SqoP4/uzejVH5HrWSYeaJ/DWUyiMeJrV0L2WebL+ZM
+	k0n1BFzzocrW7cOn8Unk2mYxmTP48tbxojyMdz3IWU5DzGcMGXn7DG6otInMPg==
+X-Received: by 2002:a05:600c:6388:b0:477:9a28:b0a4 with SMTP id 5b1f17b1804b1-4803e713cc2mr134483005e9.0.1769092775251;
+        Thu, 22 Jan 2026 06:39:35 -0800 (PST)
+X-Received: by 2002:a05:600c:6388:b0:477:9a28:b0a4 with SMTP id 5b1f17b1804b1-4803e713cc2mr134482615e9.0.1769092774800;
+        Thu, 22 Jan 2026 06:39:34 -0800 (PST)
+Received: from localhost ([2a01:e0a:b25:f902::ff])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4804704b712sm69536185e9.8.2026.01.22.06.39.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 22 Jan 2026 06:39:34 -0800 (PST)
+Date: Thu, 22 Jan 2026 15:39:33 +0100
+From: Maxime Ripard <mripard@redhat.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
+	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Michal Wilczynski <m.wilczynski@samsung.com>, Richard Genoud <richard.genoud@bootlin.com>
+Subject: Re: [GIT PULL] pwm: Two fixes and a maintainer update
+Message-ID: <20260122-bold-sticky-wapiti-1dffa2@houat>
+References: <ahytfwrx6d7nvddjviqt6wyit6f7flh5vmiuuzdet44unjdbwp@cktsraaj56au>
+ <CAHk-=wga8Qu0-OSE9VZbviq9GuqwhPhLUXeAt-S7_9+fMCLkKg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -80,124 +111,137 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="zgoq7kx6iu4jzgjw"
+	protocol="application/pgp-signature"; boundary="tviorlllw7c6qgpe"
 Content-Disposition: inline
-In-Reply-To: <DFSN4FDCYHMW.3J3237PEBV2ZP@kernel.org>
+In-Reply-To: <CAHk-=wga8Qu0-OSE9VZbviq9GuqwhPhLUXeAt-S7_9+fMCLkKg@mail.gmail.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.06 / 15.00];
+X-Spamd-Result: default: False [-3.56 / 15.00];
 	SIGNED_PGP(-2.00)[];
-	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW_WITH_FAILURES(-0.50)[];
 	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
 	MAILLIST(-0.15)[generic];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-7987-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-7986-lists,linux-pwm=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DMARC_POLICY_ALLOW(0.00)[redhat.com,quarantine];
 	MIME_TRACE(0.00)[0:+,1:+,2:~];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[29];
-	FREEMAIL_CC(0.00)[collabora.com,google.com,kernel.org,linaro.org,linux.intel.com,suse.de,gmail.com,ffwll.ch,redhat.com,baylibre.com,garyguo.net,protonmail.com,umich.edu,vger.kernel.org,lists.freedesktop.org,lists.infradead.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	DKIM_TRACE(0.00)[redhat.com:+];
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
 	R_SPF_SOFTFAIL(0.00)[~all:c];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mripard@kernel.org,linux-pwm@vger.kernel.org];
-	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
-	TAGGED_RCPT(0.00)[linux-pwm];
-	ASN(0.00)[asn:7979, ipnet:2605:f480::/32, country:US];
+	FROM_NEQ_ENVFROM(0.00)[mripard@redhat.com,linux-pwm@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	TAGGED_RCPT(0.00)[linux-pwm];
+	ASN(0.00)[asn:7979, ipnet:142.0.200.0/24, country:US];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[dfw.mirrors.kernel.org:helo,dfw.mirrors.kernel.org:rdns]
-X-Rspamd-Queue-Id: 6D4E268275
+X-Rspamd-Queue-Id: 13E3768D63
 X-Rspamd-Action: no action
 
 
---zgoq7kx6iu4jzgjw
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
+--tviorlllw7c6qgpe
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 1/3] rust: clk: use the type-state pattern
+Subject: Re: [GIT PULL] pwm: Two fixes and a maintainer update
 MIME-Version: 1.0
 
-On Mon, Jan 19, 2026 at 03:37:17PM +0100, Danilo Krummrich wrote:
-> On Mon Jan 19, 2026 at 3:18 PM CET, Maxime Ripard wrote:
-> > On Mon, Jan 19, 2026 at 02:13:48PM +0100, Danilo Krummrich wrote:
-> >> On Mon Jan 19, 2026 at 1:54 PM CET, Daniel Almeida wrote:
-> >> >> On 19 Jan 2026, at 09:35, Alice Ryhl <aliceryhl@google.com> wrote:
-> >> >> I think that if you still want an API where you just call enable/di=
-sable
-> >> >> directly on it with no protection against unbalanced calls, then th=
-at
-> >> >> should be the special API. Probably called RawClk and functions mar=
-ked
-> >> >> unsafe. Unbalanced calls seem really dangerous and use should not be
-> >> >> encouraged.
-> >>=20
-> >> +1; and unless there is a use-case that requires otherwise, it should =
-not even
-> >> be possible to do this at all -- at least for driver code.
+Hi,
+
+Going a bit off topic here, sorry.
+
+On Tue, Jan 20, 2026 at 10:11:27AM -0800, Linus Torvalds wrote:
+> On Tue, 20 Jan 2026 at 01:32, Uwe Kleine-K=F6nig
+> <u.kleine-koenig@baylibre.com> wrote:
 > >
-> > I mean, it's great, it's safe, etc. but it's also suboptimal from a PM
-> > perspective on many platforms. It's totally fine to provide nice, safe,
-> > ergonomic wrappers for the drivers that don't care (or can't, really),
-> > but treating a legitimate optimisation as something we should consider
-> > impossible to do is just weird to me.
+> >    You might argue that this is an ABI change [..]
 >=20
-> I said that an unsafe API with potentially unbalanced calls is something =
-we
-> should clearly avoid for drivers. This is *not* equivalent to "treating a
-> legitimate optimisation as something we should consider impossible".
+> Pretty much any change can be an ABI change - even totally new
+> interfaces change behavior in that something that didn't use to do
+> anything now does something.
 >=20
-> If we discover use-cases where the current API doesn't work well, we can
-> invenstigate further.
-
-I'm not sure I'm following what you're saying, sorry. I've pointed out
-such a use-case already.
-
-> >> > I think we should discourage RawClk if at all possible. But if the c=
-onsensus
-> >> > is that we *really* need this easily-abused thing, I can provide a f=
-ollow-up.
-> >>=20
-> >> I think we should only do this if there are use-case with no alternati=
-ve, so far
-> >> there haven't been any AFAIK.
-> >
-> > I don't really care about which alternative we come up with, but look at
-> > devm_regmap_init_mmio_clk for example. It is a valid use-case that
-> > already exists today, and has had for more than a decade at this point.
+> And we've actually very much have had things like that happen too,
+> when broken user space did something odd, and adding a completely new
+> file in /proc (or something like that) just broke broken user space.
 >=20
-> I don't see the issue with devm_regmap_init_mmio_clk()? It takes a refere=
-nce
-> count of the clock and prepares it when called and unprepares the clk in =
-drops
-> its reference in regmap_mmio_free_context() called from the devres callba=
-ck.
+> And any bugfix that changes visible behavior is also an "ABI change",
+> and so there is no practical meaning to the whole otion.
 >=20
-> That something we can easily do with the current API, no?
+> So I absolutely detest the whole notion of "ABI changes". It's a
+> meaningless concept, and I hate it with a passion, because it then
+> results in the "opposite" situation where some projects seem to think
+> that ABI changes are perfectly fine as long as they go along with
+> version number changes.
+>=20
+> The Linux rule for regressions is basically based on the philosophical
+> question of "If a tree falls in the forest, and nobody is around to
+> hear it, does it make a sound?".
+>=20
+> So the only thing that matters is if something breaks user-*conscious* be=
+havior.
+>=20
+> And when that happens, the distinction between "bug fix" and "new
+> feature" and "ABI change" matters not one whit, and the change needs
+> to be done differently.
+>=20
+> Anyway, I agree that the whole "return proper -EFAULT on user copy
+> failures" is clearly the right thing to do, and I do not disagree with
+> the patch at all.
+>=20
+> I just wanted to point out that the argument about whether it's an ABI
+> change or not is irrelevant. If it turns out that some program - not a
+> test script, but something with relevance to conscious user
+> expectations - depended on the old broken behavior, then it needs to
+> be done some other way.
+>=20
+> So whether somebody "argues" that the change is an ABI change or not
+> is simply not relevant to anything.
+>=20
+> Obviously some changes are more likely to be user-visible than others,
+> so people should take that into account in how careful you need to be
+> about a patch.
 
-The current one, yes. Doing that in the API suggested here would involve
-some boilerplate in all those drivers they don't have right now.
+Where do we draw the line then, if there's any?
 
+I have a particular example in mind with v4l2. With some drivers, and
+because pixel order naming is confusing and inconsistent in the media
+industry as a whole, we ended up with drivers capturing framebuffers
+with the wrong pixel order (blue and red inverted) compared to
+documented order for the format they were requesting. And rejecting the
+format with the "right" order.
+
+We've been tip-toeing about this to fix it in order to avoid any
+regression in some tools.
+
+Should we just consider those drivers "wrong", treat it as a bugfix, and
+expect userspace applications to request the format they actually rely
+on? Or should we continue what we've tried to do and try to support the
+right format, and the old format for backward compatibility?
+
+Thanks!
 Maxime
 
---zgoq7kx6iu4jzgjw
+--tviorlllw7c6qgpe
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaXIp0AAKCRAnX84Zoj2+
-dv/rAX9htC+v4VP6TU5rtpJ5yxn/5pIK0gwosc19iO/daFXAUH7fxYosU1HBuveb
-KxjMgb8BgMuQtaOp2idk6EzXwAecWf/CAQ08Ci5MNA2QR6rNT2nYPbr8TNKaiLWq
-nIzGXz2HvQ==
-=cTWW
+iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaXI2ngAKCRAnX84Zoj2+
+dgJ7AYDpbQJxEMpzWS8HBtJ8aMqO/SOUizvQJyLMA2h9iEHAeYvCFgPMXEGbiBmQ
+fIcsr+4Bf39X6wSz5IqJRFOuob8+hzIldI2nbbd9973I69pvV5eiv21BytycP/Is
+LQove+Vwug==
+=LsnN
 -----END PGP SIGNATURE-----
 
---zgoq7kx6iu4jzgjw--
+--tviorlllw7c6qgpe--
+
 
