@@ -1,175 +1,237 @@
-Return-Path: <linux-pwm+bounces-8000-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8001-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yFmVL5y3c2ncyAAAu9opvQ
-	(envelope-from <linux-pwm+bounces-8000-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Fri, 23 Jan 2026 19:02:04 +0100
+	id 2BCQLK3Sc2kCywAAu9opvQ
+	(envelope-from <linux-pwm+bounces-8001-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Fri, 23 Jan 2026 20:57:33 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id F1C3B7951F
-	for <lists+linux-pwm@lfdr.de>; Fri, 23 Jan 2026 19:02:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B9C67A63F
+	for <lists+linux-pwm@lfdr.de>; Fri, 23 Jan 2026 20:57:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id BB38930011A2
-	for <lists+linux-pwm@lfdr.de>; Fri, 23 Jan 2026 18:01:43 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id E9ACA3004CAC
+	for <lists+linux-pwm@lfdr.de>; Fri, 23 Jan 2026 19:57:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0527B199FAB;
-	Fri, 23 Jan 2026 18:01:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 643F12C3768;
+	Fri, 23 Jan 2026 19:57:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SKAUSqfW"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="mOwfXG22"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6387A55;
-	Fri, 23 Jan 2026 18:01:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D632A1E5B68;
+	Fri, 23 Jan 2026 19:57:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.16
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769191301; cv=none; b=RrcaiAwmv2HRXOV546SvLw8pfsByRSlY8U7S9anB1SyqdGeiS9RnuiVITYdZIJ9SkS6OqF8lW+l1bwfP8l+vgc+Rd/Cv/4cv4KUUgRkOHZVRQrwABqEEq8fRvHxaIgXmu+XDgOO7umqQafpAk7yATPDsrobN/F79InlPDKD0RRo=
+	t=1769198247; cv=none; b=A9fTryHJtz2907Pc7kWSk/hRfSizhzvui88hZNWS5ZsoxNOTXBJ93QlrGI/cxfiRru3bXOApYPt/HsO3QIa8AxUjmk7TE+ZQ1wDR+TG88fqdWECFBbSyLOFaI58PUgF/uPmg4rnUzzjG2rL4UUwBRAGVOjzZxCrFGbAX1gAgPGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769191301; c=relaxed/simple;
-	bh=xqZ5eXWpHP1ZMEiJ8jRzqZ6mXJXc07TRqPQhe+P1DkE=;
+	s=arc-20240116; t=1769198247; c=relaxed/simple;
+	bh=ltOq6SCjupE7BLOIATjhL+BWeHyh5Ngusu9gTtz8HpE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Yqpv/tu5n0ZQx3GEk6JdnHCWbtMOrW5bA8e/ZJkimNINfHRhPZF1tKTZAJjvL9xg8tu5px2eBkgMidAQrqvVWmicfAQcJ39m/NA1yKZLAz2ng8v9QNnVMJqU37Pd+3agc1rkKscKBV6jJvFQt4Ts/RI2NLE/juGDcYIG7YPht2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SKAUSqfW; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 275E7C4CEF1;
-	Fri, 23 Jan 2026 18:01:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769191301;
-	bh=xqZ5eXWpHP1ZMEiJ8jRzqZ6mXJXc07TRqPQhe+P1DkE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SKAUSqfWdnuHNVsTmpRRoYJ3liJwd2otYOcWOELpMWP9JQl52t4K8GOHYvf3bOlTz
-	 Qwi2oDe7DxpY6XMs6WxHuNv456ohZOT4pqiVsnOM1wLUsVeQwAJYrVmYXJOk/B+8N3
-	 xC2/WZf06hkNFNNti+dPxesqpR0WRjRwHOwKP9aKF/p7DpOCM4Kwoi7DaPKJnaPr9z
-	 iX70qLfmPOaEi8kg9zyVSACgol14m5AUWma/7zzGAsZo3U1hpKZd9uYn0GofuwbviL
-	 J5aaaxyQy3jbZPzY74Rxvfaxa5dxLyONhnUtfwHkimz16gSY2PoCD9C1oLNOPayT6H
-	 T4gkOOIi3jNvw==
-Date: Fri, 23 Jan 2026 19:01:38 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: "Kumar, Udit" <u-kumar1@ti.com>
-Cc: Gokul Praveen <g-praveen@ti.com>, j-keerthy@ti.com, 
-	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, n-francis@ti.com
-Subject: Re: [PATCH v4] pwm: tiehrpwm: Enable pwmchip's parent device before
- setting configuration
-Message-ID: <d773qlfhifbtn6xtkuowdu3l3h6em7hrk2etsg3n5umuiuhfu7@yuetzfci7pni>
-References: <20260121061134.15466-1-g-praveen@ti.com>
- <3ck3abtfdqzmatsvfqcbp7bxu7ydy7u37hfkke4xvpatpcg5uk@wfnya5hxrplo>
- <7081d6d7-d2d9-4364-9df2-48961d465474@ti.com>
- <2b13ec3e-767f-454a-b344-87b7f1bfafb3@ti.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=UxEh9plXG0c1dfwzWCsPF0eCdMCygRM8fgsq6Q/+t+cpLu1s7A2omIpvgLt32thccdhRvx3AXFxXkG24Fx0M76+ZefNLrZIdJKS87M9UEvU9CO9AYAYe+IZOJOpHyvpNeBGdtvNnNuCuvw0xgCikButgcDUFBy6+DHwW9IsAPPs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=mOwfXG22; arc=none smtp.client-ip=198.175.65.16
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1769198246; x=1800734246;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=ltOq6SCjupE7BLOIATjhL+BWeHyh5Ngusu9gTtz8HpE=;
+  b=mOwfXG22i4sSU20WzBNlf+xEIixSNgYx5ukDXqlBwVxGuEzLMvIzH09U
+   GpQ8Q/sF9a3uyog/hvQbd0I0Z0g+sHMgwF4ZbkPQEPC/Rgumx9tJCAxcL
+   7ofQZbY16yDHbRRCDQ8yfwdXFd24oDnU5YJ/Rs3GWiRPkcEOF6g+hkvFa
+   rxBU6SOJn8g66yxwfH0H/B457fZAPNZKunxlfbodQbogJ5aY+UoKG0fkJ
+   M3oSRfcmRucsxBSHVVfkKVPp6YUfn4p0U3afLs8y2aHMCRmR6/UjSYNhr
+   MC1NIkRFEGNcPUT4zYqy2BGXrWmnlY68pDcp1HI3wraJl1aXRUNmhLFVo
+   g==;
+X-CSE-ConnectionGUID: AbsoPM5CRAqdH+v0yoUFLw==
+X-CSE-MsgGUID: yG/cPy1IQL6phL1kRpSj4g==
+X-IronPort-AV: E=McAfee;i="6800,10657,11680"; a="70621899"
+X-IronPort-AV: E=Sophos;i="6.21,248,1763452800"; 
+   d="scan'208";a="70621899"
+Received: from orviesa001.jf.intel.com ([10.64.159.141])
+  by orvoesa108.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 23 Jan 2026 11:57:25 -0800
+X-CSE-ConnectionGUID: eDHf0z5qT4K4NYlUNgWJEA==
+X-CSE-MsgGUID: hEhj3cZ7RfOGQf1SGFtXBw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,248,1763452800"; 
+   d="scan'208";a="244728318"
+Received: from lkp-server01.sh.intel.com (HELO 765f4a05e27f) ([10.239.97.150])
+  by orviesa001.jf.intel.com with ESMTP; 23 Jan 2026 11:57:20 -0800
+Received: from kbuild by 765f4a05e27f with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1vjNHS-00000000UP4-1mM9;
+	Fri, 23 Jan 2026 19:57:18 +0000
+Date: Sat, 24 Jan 2026 03:56:21 +0800
+From: kernel test robot <lkp@intel.com>
+To: Richard Genoud <richard.genoud@bootlin.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@baylibre.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>
+Cc: oe-kbuild-all@lists.linux.dev, Paul Kocialkowski <paulk@sys-base.io>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Richard Genoud <richard.genoud@bootlin.com>
+Subject: Re: [PATCH v3 2/4] pwm: sun50i: Add H616 PWM support
+Message-ID: <202601240328.Lv73l3dC-lkp@intel.com>
+References: <20260123093322.1327389-3-richard.genoud@bootlin.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ysvkxvhq6nes3p42"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <2b13ec3e-767f-454a-b344-87b7f1bfafb3@ti.com>
+In-Reply-To: <20260123093322.1327389-3-richard.genoud@bootlin.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-3.76 / 15.00];
-	SIGNED_PGP(-2.00)[];
+X-Spamd-Result: default: False [0.34 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
 	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8001-lists,linux-pwm=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8000-lists,linux-pwm=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_TO(0.00)[bootlin.com,baylibre.com,kernel.org,csie.org,gmail.com,sholland.org,pengutronix.de];
 	FROM_HAS_DN(0.00)[];
 	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ukleinek@kernel.org,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-pwm];
+	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[intel.com:+];
+	NEURAL_HAM(-0.00)[-0.999];
 	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[6];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,ti.com:email]
-X-Rspamd-Queue-Id: F1C3B7951F
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: 9B9C67A63F
 X-Rspamd-Action: no action
 
+Hi Richard,
 
---ysvkxvhq6nes3p42
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v4] pwm: tiehrpwm: Enable pwmchip's parent device before
- setting configuration
-MIME-Version: 1.0
+kernel test robot noticed the following build warnings:
 
-Hello,
+[auto build test WARNING on 9ace4753a5202b02191d54e9fdf7f9e3d02b85eb]
 
-On Fri, Jan 23, 2026 at 08:28:48PM +0530, Kumar, Udit wrote:
-> On 1/21/2026 4:19 PM, Gokul Praveen wrote:
-> > Hello Uwe,
-> >=20
-> > On 21/01/26 15:48, Uwe Kleine-K=F6nig wrote:
-> > > Hello Gokul,
-> > >=20
-> > > On Wed, Jan 21, 2026 at 11:41:34AM +0530, Gokul Praveen wrote:
-> > > > The period and duty cycle configurations on J7200 and J784S4 SoCs
-> > > > does not get reflected after setting them using sysfs nodes.
-> > > > This is because at the end of ehrpwm_pwm_config function,
-> > > > the put_sync function is called which resets the hardware.
-> > > >=20
-> > > > Hold the PWM controller out of low-power mode during .apply() to
-> > > > make sure it accepts the writes to its registers.
-> > > >=20
-> > > > This renders the calls to pm_runtime_get_sync() and
-> > > > pm_runtime_put_sync() in ehrpwm_pwm_config() into no-ops, so
-> > > > these can be dropped.
-> > > >=20
-> > > > Fixes: 5f027d9b83db("pwm: tiehrpwm: Implement .apply() callback")
-> > > > Signed-off-by: Gokul Praveen <g-praveen@ti.com>
-> > >=20
-> > > I applied this patch to
-> > >=20
-> > > =A0=A0=A0=A0https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/=
-linux.git
-> > > pwm/for-next
-> > >=20
-> > > and will send it during the next merge window. The problem is old
-> > > (v5.18-rc1~54^2~29 from 2021) and it's late in the development cycle,=
- so
-> > > I won't bother Linus with it for 6.19.
-> > >=20
-> >=20
-> fyi,
->=20
-> We are hitting compilation error with this patch
->=20
-> https://gist.github.com/uditkumarti/d23bc9ee1886bfce70cc76e4b19fbb59
+url:    https://github.com/intel-lab-lkp/linux/commits/Richard-Genoud/dt-bindings-pwm-allwinner-add-h616-pwm-compatible/20260123-174342
+base:   9ace4753a5202b02191d54e9fdf7f9e3d02b85eb
+patch link:    https://lore.kernel.org/r/20260123093322.1327389-3-richard.genoud%40bootlin.com
+patch subject: [PATCH v3 2/4] pwm: sun50i: Add H616 PWM support
+config: arc-allyesconfig (https://download.01.org/0day-ci/archive/20260124/202601240328.Lv73l3dC-lkp@intel.com/config)
+compiler: arc-linux-gcc (GCC) 15.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260124/202601240328.Lv73l3dC-lkp@intel.com/reproduce)
 
-I assume you tried to compile this patch on top of a tree that doesn't
-also has commit 9a0abc39450a3123fd52533a662fbd37e0d1508c?
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202601240328.Lv73l3dC-lkp@intel.com/
 
-Best regards
-Uwe
+All warnings (new ones prefixed by >>):
 
---ysvkxvhq6nes3p42
-Content-Type: application/pgp-signature; name="signature.asc"
+   drivers/pwm/pwm-sun50i-h616.c: In function 'h616_add_composite_clk':
+>> drivers/pwm/pwm-sun50i-h616.c:720:28: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+     720 |                 mux->reg = (u64)mux->reg + reg;
+         |                            ^
+   drivers/pwm/pwm-sun50i-h616.c:730:29: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+     730 |                 gate->reg = (u64)gate->reg + reg;
+         |                             ^
+   drivers/pwm/pwm-sun50i-h616.c:740:29: warning: cast from pointer to integer of different size [-Wpointer-to-int-cast]
+     740 |                 rate->reg = (u64)rate->reg + reg;
+         |                             ^
 
------BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmlzt4AACgkQj4D7WH0S
-/k42iAgAjBMxwzGpvcvyIbNNbwYRQs6xhbBZ1hAVred5CyRzwe/4aBcc+rxvX3p7
-Pihgce0cJlZBncrsoJRrhM34wkpbUsjaoUzBebb1S8dWJPFmrV7xGtE1sG/h9pOV
-gck+gUnbIIlV6Xk2KTLxx9/sSHqS0iKEhUtvlfkQlRc2407penlDVWx1lUEK6R0A
-2xngFNJlSB27GbzGDKZrjSxcKC8j/EJRMXKwsyvsFGojZxvPvB9aXpcjlbEPvUN4
-5uFlF/n/MTHNbgf0EWZpL+4Z9D/Rjfp2f7mOG8sr6YS3I3/6tfv1QeB43dUJZr3C
-2dbjT26aj0mvhUr4h6c/TSeNyrSO0Q==
-=s3F5
------END PGP SIGNATURE-----
+vim +720 drivers/pwm/pwm-sun50i-h616.c
 
---ysvkxvhq6nes3p42--
+   704	
+   705	static int h616_add_composite_clk(struct clk_pwm_data *data,
+   706					  void __iomem *reg, spinlock_t *lock,
+   707					  struct device *dev, struct clk_hw **hw)
+   708	{
+   709		const struct clk_ops *mux_ops = NULL, *gate_ops = NULL, *rate_ops = NULL;
+   710		struct clk_hw *mux_hw = NULL, *gate_hw = NULL, *rate_hw = NULL;
+   711		struct device_node *node = dev->of_node;
+   712	
+   713		if (data->mux_hw) {
+   714			struct clk_mux *mux;
+   715	
+   716			mux_hw = data->mux_hw;
+   717			mux = to_clk_mux(mux_hw);
+   718			mux->lock = lock;
+   719			mux_ops = mux_hw->init->ops;
+ > 720			mux->reg = (u64)mux->reg + reg;
+   721		}
+   722	
+   723		if (data->gate_hw) {
+   724			struct clk_gate *gate;
+   725	
+   726			gate_hw = data->gate_hw;
+   727			gate = to_clk_gate(gate_hw);
+   728			gate->lock = lock;
+   729			gate_ops = gate_hw->init->ops;
+   730			gate->reg = (u64)gate->reg + reg;
+   731		}
+   732	
+   733		if (data->rate_hw) {
+   734			struct clk_divider *rate;
+   735	
+   736			rate_hw = data->rate_hw;
+   737			rate = to_clk_divider(rate_hw);
+   738			rate_ops = rate_hw->init->ops;
+   739			rate->lock = lock;
+   740			rate->reg = (u64)rate->reg + reg;
+   741	
+   742			if (rate->table) {
+   743				const struct clk_div_table *clkt;
+   744				int table_size = 0;
+   745	
+   746				for (clkt = rate->table; clkt->div; clkt++)
+   747					table_size++;
+   748				rate->width = order_base_2(table_size);
+   749			}
+   750		}
+   751	
+   752		/*
+   753		 * Retrieve the parent clock names from DTS for pwm-clk-srcxy
+   754		 */
+   755		if (!data->parent_names) {
+   756			data->num_parents = of_clk_get_parent_count(node);
+   757			if (data->num_parents == 0)
+   758				return -ENOENT;
+   759	
+   760			data->parent_names = devm_kzalloc(dev,
+   761							  sizeof(*data->parent_names),
+   762							  GFP_KERNEL);
+   763			for (unsigned int i = 0; i < data->num_parents; i++)
+   764				data->parent_names[i] = of_clk_get_parent_name(node, i);
+   765		}
+   766	
+   767		*hw = clk_hw_register_composite(dev, data->name, data->parent_names,
+   768						data->num_parents, mux_hw,
+   769						mux_ops, rate_hw, rate_ops,
+   770						gate_hw, gate_ops, data->flags);
+   771	
+   772		return PTR_ERR_OR_ZERO(*hw);
+   773	}
+   774	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
