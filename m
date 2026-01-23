@@ -1,238 +1,244 @@
-Return-Path: <linux-pwm+bounces-7991-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-7993-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kMkvJkjBcmmxpAAAu9opvQ
-	(envelope-from <linux-pwm+bounces-7991-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Fri, 23 Jan 2026 01:31:04 +0100
+	id UG9nBldBc2mWtwAAu9opvQ
+	(envelope-from <linux-pwm+bounces-7993-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Fri, 23 Jan 2026 10:37:27 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id F38736ECAF
-	for <lists+linux-pwm@lfdr.de>; Fri, 23 Jan 2026 01:31:03 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7D8AD7376A
+	for <lists+linux-pwm@lfdr.de>; Fri, 23 Jan 2026 10:37:26 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AF4013008D3D
-	for <lists+linux-pwm@lfdr.de>; Fri, 23 Jan 2026 00:31:02 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 5D93E3046DCD
+	for <lists+linux-pwm@lfdr.de>; Fri, 23 Jan 2026 09:33:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 33ECD3254A8;
-	Fri, 23 Jan 2026 00:31:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD94234AB16;
+	Fri, 23 Jan 2026 09:33:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="JFVN7vr2"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="YzdpXDuf"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B77212F532C;
-	Fri, 23 Jan 2026 00:30:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769128261; cv=pass; b=n7iqrceOGbH0PKpQUO8RLISLbocVzYPhZkA1M0m/ufI6F3Pgp9eGj0VoOR6ITwKO2AysWdjWDK91AoeT3x3DAiXSoTcJI/eFSkqEovrPA5FLufkg/+5lPzzjyS3wlXUvEivDy04AZ77kT6ftE/jJPStEveqEiUlvXQGvGzxbzuA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769128261; c=relaxed/simple;
-	bh=/yeziewaw15H86mUs/MvNCnEniIqbrsf9kqGH0zpSXc=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=uRy5ei4hkKdj9NG7KYSons7fNu7uQVkC8V9oKkZaQz2ICPkWJmzwH6ey8UmRoNSsPE/Iq3RPTxshDuotQ+XP79jcFzpiY60OUUbO22FUVU+t+imPN7DPNX42oc9mD8tHqxvNVP5k11GmYpLA0nr3U6cd2XK5KRMmznHYzVwQ3Z8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=JFVN7vr2; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1769128221; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=IZX+1LsCpQQ+Rl7KDSFtZgqKtr0PFsWoY/u+das8x/TXSxh+Ln1Hk9x+LvhBnMOhhD04WoVYYpE5cQ7UuNgeA7XlHCsKB5IjjWyZ1BvfungO69wQ/8scKUuKaVt01w89ed8KawoVYjMdgiGCZoTubcf9rarqe8R+8TI2Y8+77dc=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1769128221; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=/yeziewaw15H86mUs/MvNCnEniIqbrsf9kqGH0zpSXc=; 
-	b=Tt3GOU/H/cyscwd7myazOyzRW77JnO56/aqYeAt/Zkpoe1vOTJYpVVs//RrL8nLiVC50uAxu8dPVbEFPFncY3Zi8ScUHJFG/fTrevf7PE1rmXyegT6LtmAMu7xKcFSitHRUUDmxCOgHUfHdefBNj9kz+/maGAMxgCUlPa0Xryes=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1769128221;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=/yeziewaw15H86mUs/MvNCnEniIqbrsf9kqGH0zpSXc=;
-	b=JFVN7vr2V3WZMOROff8QAPjioTjWXyMphmAFlpev66SuROF3067M31vA00BA9Qdv
-	9k2102LwLuyRGbUhXPt7+F8xLhnysIan5A9yTTYnFciNuqWiFEWVWPUEbWV9s4yDnMX
-	8Y0Hf0auyWwWFoUrq7zk34PewHnWOptInla8L9JM=
-Received: by mx.zohomail.com with SMTPS id 1769128219741646.6810529308862;
-	Thu, 22 Jan 2026 16:30:19 -0800 (PST)
-Content-Type: text/plain;
-	charset=utf-8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA31369211
+	for <linux-pwm@vger.kernel.org>; Fri, 23 Jan 2026 09:33:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1769160833; cv=none; b=pFxdwwiq3Mc5esmlv/+MgvcYrgXIHGOHiOQRtChtwMSnxe4HYD8u4xCjwDPctQ5vpOh65YTE1gRQbAwrhNLsWiHRcruZkQ0tUi7d07ITQY/0OlWvUdSSzq0FfuIXqlcuTQMFzF8t3hohRWPIRYVyAstPbKJEx+oMKHV74pcmQQI=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1769160833; c=relaxed/simple;
+	bh=Q3KgYH1et7yzKHhxlTEp8DKlkaoAYWa09JPpPFM34fo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Or8GPX8VNtRgdwQGps6nREZYLjOIeYGUCMZbQgPkLAhRXdKWL8tyI4oCRf4XfO6KHd5MdUzv8Ci/C5DuQ+yPIAtVyxiUKcQWSJvWTGgjX+rgaTpH2aQzOb+mXHSDalJlNZya+U+9EtCT4QGhNh9BR5FB947br4pLx/pdR+GR4iM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=YzdpXDuf; arc=none smtp.client-ip=185.246.84.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-02.galae.net (Postfix) with ESMTPS id CED4F1A2AFD;
+	Fri, 23 Jan 2026 09:33:44 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id A2C4C6070A;
+	Fri, 23 Jan 2026 09:33:44 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 57F01119A879C;
+	Fri, 23 Jan 2026 10:33:40 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1769160823; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding; bh=bcTSIzzObYHGP+bOM+AF+A6/sK8M6EvG+S57bVAeGEY=;
+	b=YzdpXDufAdR1RpKSzpOR81fXvRGbimJiIwt47r6/FHFleuR5ZonWB9JJE/nnlXj5WN/Kic
+	2djjgtKm0Uu18xpaVQsLKow+DGP9zwCzQA8x+7BBAz9O/HFLa/wgVMgsgKvRjR6RdNaAiW
+	FHLX2LpWcUbR13ekdUEux+fYJCFiqcGNilw1ssrtEsqKMQxImUyYO9FbqSVlER5+r2SnFz
+	lDvqhAxHMzvTseVj6IH1hfRk1b7fB+bbWoH62BZ1vBmnkWxxT2AW8KkhXgz/wKY4Bw7e0G
+	BorrsVpaXR/OF5h8xdSiumfzN7GSx/gYCC6OuAomNd5nrUUsiN6XWTUH0YR8yg==
+From: Richard Genoud <richard.genoud@bootlin.com>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Paul Kocialkowski <paulk@sys-base.io>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Richard Genoud <richard.genoud@bootlin.com>
+Subject: [PATCH v3 0/4] Introduce Allwinner H616 PWM controller
+Date: Fri, 23 Jan 2026 10:33:18 +0100
+Message-ID: <20260123093322.1327389-1-richard.genoud@bootlin.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.700.81\))
-Subject: Re: [PATCH v3 1/3] rust: clk: use the type-state pattern
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <20260122-majestic-masterful-jaguarundi-d0abde@houat>
-Date: Thu, 22 Jan 2026 21:29:30 -0300
-Cc: Danilo Krummrich <dakr@kernel.org>,
- Alice Ryhl <aliceryhl@google.com>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Viresh Kumar <viresh.kumar@linaro.org>,
- Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
- Thomas Zimmermann <tzimmermann@suse.de>,
- David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>,
- Drew Fustini <fustini@kernel.org>,
- Guo Ren <guoren@kernel.org>,
- Fu Wei <wefu@redhat.com>,
- =?utf-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Michael Turquette <mturquette@baylibre.com>,
- Stephen Boyd <sboyd@kernel.org>,
- Miguel Ojeda <ojeda@kernel.org>,
- Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <lossin@kernel.org>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Trevor Gross <tmgross@umich.edu>,
- linux-pm@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- dri-devel@lists.freedesktop.org,
- linux-riscv@lists.infradead.org,
- linux-pwm@vger.kernel.org,
- linux-clk@vger.kernel.org,
- rust-for-linux@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <2F3D3A40-6EF9-46FC-A769-E5A3AAF67E65@collabora.com>
-References: <20260107-clk-type-state-v3-0-77d3e3ee59c2@collabora.com>
- <20260107-clk-type-state-v3-1-77d3e3ee59c2@collabora.com>
- <20260108-delectable-fennec-of-sunshine-ffca19@houat>
- <98CD0BF6-3350-40B9-B8A9-F569AE3E3220@collabora.com>
- <20260119-thundering-tested-robin-4be817@houat> <aW4lCfUyumOKRRJm@google.com>
- <518D8B09-B9A1-4DB4-85CD-37A2DD3D5FB1@collabora.com>
- <DFSLCI9U4NCW.2HI2UPUI7G134@kernel.org>
- <20260119-weightless-pelican-of-anger-190db0@houat>
- <DFSN4FDCYHMW.3J3237PEBV2ZP@kernel.org>
- <20260122-majestic-masterful-jaguarundi-d0abde@houat>
-To: Maxime Ripard <mripard@kernel.org>
-X-Mailer: Apple Mail (2.3826.700.81)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [0.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[collabora.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
-	R_DKIM_ALLOW(-0.20)[collabora.com:s=zohomail];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-7991-lists,linux-pwm=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_TO(0.00)[baylibre.com,kernel.org,csie.org,gmail.com,sholland.org,pengutronix.de];
+	RCPT_COUNT_TWELVE(0.00)[16];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,google.com,linaro.org,linux.intel.com,suse.de,gmail.com,ffwll.ch,redhat.com,baylibre.com,garyguo.net,protonmail.com,umich.edu,vger.kernel.org,lists.freedesktop.org,lists.infradead.org];
-	RCPT_COUNT_TWELVE(0.00)[29];
+	TAGGED_FROM(0.00)[bounces-7993-lists,linux-pwm=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[daniel.almeida@collabora.com,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[collabora.com:+];
-	NEURAL_HAM(-0.00)[-0.992];
-	TAGGED_RCPT(0.00)[linux-pwm];
-	APPLE_MAILER_COMMON(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,collabora.com:mid,collabora.com:dkim]
-X-Rspamd-Queue-Id: F38736ECAF
+	FROM_NEQ_ENVFROM(0.00)[richard.genoud@bootlin.com,linux-pwm@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[bootlin.com:+];
+	RCVD_COUNT_FIVE(0.00)[6];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[bootlin.com:mid,bootlin.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 7D8AD7376A
 X-Rspamd-Action: no action
 
+Allwinner H616 PWM controller is quite different from the A10 one.
+
+It can drive 6 PWM channels, and like for the A10, each channel has a
+bypass that permits to output a clock, bypassing the PWM logic, when
+enabled.
+
+But, the channels are paired 2 by 2, sharing a first set of
+MUX/prescaler/gate.
+Then, for each channel, there's another prescaler (that will be bypassed
+if the bypass is enabled for this channel).
+
+It looks like that:
+            _____      ______      ________
+OSC24M --->|     |    |      |    |        |
+APB1 ----->| Mux |--->| Gate |--->| /div_m |-----> PWM_clock_src_xy
+           |_____|    |______|    |________|
+                          ________
+                         |        |
+                      +->| /div_k |---> PWM_clock_x
+                      |  |________|
+                      |    ______
+                      |   |      |
+                      +-->| Gate |----> PWM_bypass_clock_x
+                      |   |______|
+PWM_clock_src_xy -----+   ________
+                      |  |        |
+                      +->| /div_k |---> PWM_clock_y
+                      |  |________|
+                      |    ______
+                      |   |      |
+                      +-->| Gate |----> PWM_bypass_clock_y
+                          |______|
+
+Where xy can be 0/1, 2/3, 4/5
+
+PWM_clock_x/y serve for the PWM purpose.
+PWM_bypass_clock_x/y serve for the clock-provider purpose.
+The common clock framework has been used to manage those clocks.
+
+This PWM driver serves as a clock-provider for PWM_bypass_clocks.
+This is needed for example by the embedded AC300 PHY which clock comes
+from PMW5 pin (PB12).
+
+Usually, to get a clock from a PWM driver, we use the pwm-clock driver
+so that the PWM driver doesn't need to be a clk-provider itself.
+While this works in most cases, here it just doesn't.
+That's because the pwm-clock request a period from the PWM driver,
+without any clue that it actually wants a clock at a specific frequency,
+and not a PWM signal with duty cycle capability.
+So, the PWM driver doesn't know if it can use the bypass or not, it
+doesn't even have the real accurate frequency information (23809524 Hz
+instead of 24MHz) because PWM drivers only deal with periods.
+
+With pwm-clock, we loose a precious information along the way (that we
+actually want a clock and not a PWM signal).
+That's ok with simple PWM drivers that don't have multiple input clocks,
+but in this case, without this information, we can't know for sure which
+clock to use.
+And here, for instance, if we ask for a 24MHz clock, pwm-clock will
+requests 42ns (assigned-clocks doesn't help for that matter). The logic
+is to select the highest clock (100MHz) with no prescaler and a duty
+cycle value of 2/4 => we have 25MHz instead of 24MHz.
+And that's a perfectly fine choice for a PMW, because we still can
+change the duty cycle in the range [0-4]/4.
+But obviously for a clock, we don't care about the duty cycle, but more
+about the clock accuracy.
+
+And actually, this PWM is really a PWM AND a real clock when the bypass
+is set.
+
+This series is based onto v6.19-rc4
+
+NB: checkpatch is not happy with patch 2, but it's a false positive.
+It doesn't detect that PWM_XY_SRC_MUX/GATE/DIV are structures, but as
+it's more readable like that, I prefer keeping it that way.
+
+NB2: for geopolitical reasons, I didn't re-use the old series that Paul
+was referring to.
+
+Changes since v2:
+
+- use U32_MAX instead of defining UINT32_MAX
+- add a comment on U32_MAX usage in clk_round_rate()
+- change clk_table_div_m (use macros)
+- fix formatting (double space, superfluous comma, extra line feed)
+- fix the parent clock order
+- simplify code by using scoped_guard()
+- add missing const in to_h616_pwm_chip() and rename to
+h616_pwm_from_chip()
+- add/remove missing/superflous error messages
+- rename cnt->period_ticks, duty_cnt->duty_ticks
+- fix PWM_PERIOD_MAX
+- add .remove() callback
+- fix DIV_ROUND_CLOSEST_ULL->DIV_ROUND_UP_ULL
+- add H616_ prefix
+- protect _reg in macros
+- switch to waveforms instead of apply/get_state
+- shrink struct h616_pwm_channel
+- rebase on v6.19-rc4
+
+Changes since v1:
+- rebase onto v6.19-rc1
+- add missing headers
+- remove MODULE_ALIAS (suggested by Krzysztof)
+- use sun4i-pwm binding instead of creating a new one (suggested by Krzysztof)
+- retrieve the parent clocks from the devicetree
+- switch num_parents to unsigned int
 
 
-> On 22 Jan 2026, at 10:44, Maxime Ripard <mripard@kernel.org> wrote:
->=20
-> On Mon, Jan 19, 2026 at 03:37:17PM +0100, Danilo Krummrich wrote:
->> On Mon Jan 19, 2026 at 3:18 PM CET, Maxime Ripard wrote:
->>> On Mon, Jan 19, 2026 at 02:13:48PM +0100, Danilo Krummrich wrote:
->>>> On Mon Jan 19, 2026 at 1:54 PM CET, Daniel Almeida wrote:
->>>>>> On 19 Jan 2026, at 09:35, Alice Ryhl <aliceryhl@google.com> =
-wrote:
->>>>>> I think that if you still want an API where you just call =
-enable/disable
->>>>>> directly on it with no protection against unbalanced calls, then =
-that
->>>>>> should be the special API. Probably called RawClk and functions =
-marked
->>>>>> unsafe. Unbalanced calls seem really dangerous and use should not =
-be
->>>>>> encouraged.
->>>>=20
->>>> +1; and unless there is a use-case that requires otherwise, it =
-should not even
->>>> be possible to do this at all -- at least for driver code.
->>>=20
->>> I mean, it's great, it's safe, etc. but it's also suboptimal from a =
-PM
->>> perspective on many platforms. It's totally fine to provide nice, =
-safe,
->>> ergonomic wrappers for the drivers that don't care (or can't, =
-really),
->>> but treating a legitimate optimisation as something we should =
-consider
->>> impossible to do is just weird to me.
->>=20
->> I said that an unsafe API with potentially unbalanced calls is =
-something we
->> should clearly avoid for drivers. This is *not* equivalent to =
-"treating a
->> legitimate optimisation as something we should consider impossible".
->>=20
->> If we discover use-cases where the current API doesn't work well, we =
-can
->> invenstigate further.
->=20
-> I'm not sure I'm following what you're saying, sorry. I've pointed out
-> such a use-case already.
->=20
->>>>> I think we should discourage RawClk if at all possible. But if the =
-consensus
->>>>> is that we *really* need this easily-abused thing, I can provide a =
-follow-up.
->>>>=20
->>>> I think we should only do this if there are use-case with no =
-alternative, so far
->>>> there haven't been any AFAIK.
->>>=20
->>> I don't really care about which alternative we come up with, but =
-look at
->>> devm_regmap_init_mmio_clk for example. It is a valid use-case that
->>> already exists today, and has had for more than a decade at this =
-point.
->>=20
->> I don't see the issue with devm_regmap_init_mmio_clk()? It takes a =
-reference
->> count of the clock and prepares it when called and unprepares the clk =
-in drops
->> its reference in regmap_mmio_free_context() called from the devres =
-callback.
->>=20
->> That something we can easily do with the current API, no?
->=20
-> The current one, yes. Doing that in the API suggested here would =
-involve
-> some boilerplate in all those drivers they don't have right now.
->=20
-> Maxime
+Richard Genoud (4):
+  dt-bindings: pwm: allwinner: add h616 pwm compatible
+  pwm: sun50i: Add H616 PWM support
+  arm64: dts: allwinner: h616: add PWM controller
+  MAINTAINERS: Add entry on Allwinner H616 PWM driver
 
-Maxime, I know you=E2=80=99ve already pointed out a use-case, but I =
-think the
-confusion stems from why you seem to think that the current solution =
-cannot
-cater to the API you mentioned in a clean way. You seem to imply that =
-there
-will be a lot of boilerplate involved, but we (or I) cannot see this. =
-Perhaps
-it would help if you highlighted how exactly the type state solution =
-would be
-verbose using some pseudocode. I guess that would make your point =
-clearer for
-us.
+ .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml |  19 +-
+ MAINTAINERS                                   |   5 +
+ .../arm64/boot/dts/allwinner/sun50i-h616.dtsi |  47 +
+ drivers/pwm/Kconfig                           |  12 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-sun50i-h616.c                 | 959 ++++++++++++++++++
+ 6 files changed, 1042 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/pwm/pwm-sun50i-h616.c
 
-=E2=80=94 Daniel
 
+base-commit: 9ace4753a5202b02191d54e9fdf7f9e3d02b85eb
+-- 
+2.47.3
 
 
