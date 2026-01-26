@@ -1,255 +1,199 @@
-Return-Path: <linux-pwm+bounces-8002-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8003-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UCjDCjBRdGk94gAAu9opvQ
-	(envelope-from <linux-pwm+bounces-8002-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Sat, 24 Jan 2026 05:57:20 +0100
+	id cFjNHs/2dmkvZwEAu9opvQ
+	(envelope-from <linux-pwm+bounces-8003-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Mon, 26 Jan 2026 06:08:31 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3FF8D7C854
-	for <lists+linux-pwm@lfdr.de>; Sat, 24 Jan 2026 05:57:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 1C98384203
+	for <lists+linux-pwm@lfdr.de>; Mon, 26 Jan 2026 06:08:31 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E4239300DE2F
-	for <lists+linux-pwm@lfdr.de>; Sat, 24 Jan 2026 04:57:17 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 692E13013D66
+	for <lists+linux-pwm@lfdr.de>; Mon, 26 Jan 2026 05:08:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37FC5314B97;
-	Sat, 24 Jan 2026 04:57:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A3B81F7916;
+	Mon, 26 Jan 2026 05:08:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="wM4E3CTM"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k9kfJBC+"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from PH8PR06CU001.outbound.protection.outlook.com (mail-westus3azon11012061.outbound.protection.outlook.com [40.107.209.61])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f182.google.com (mail-dy1-f182.google.com [74.125.82.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CB72145355;
-	Sat, 24 Jan 2026 04:57:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.209.61
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4135E224AF9
+	for <linux-pwm@vger.kernel.org>; Mon, 26 Jan 2026 05:08:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.182
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769230637; cv=fail; b=SadplS0xLl3B7oUXfFSvyXTux/V3Vk+dMqLHnHWBw9+HXlWnGN/Kdn/UJd43HUb+5sWJNf0htXKqeLNZqi7Oo47wWd3JohHPSiIqkl370fNC0GC/jZOeIfXuLkAz3Ah/b8SPhMVof7OzmWq5nIb9mdNzFSvi/gc31cb80kA3uBA=
+	t=1769404101; cv=pass; b=Ft6nORFWftVORlM9AEkAuXaY3+p8+J587Cf19c9vcrbh+JtD8Kay83FOUUEd7f9aSaa224T8oorZe9ter5muAD+u87v/V2ikDNkHEkikkYdLaVXjLkH+hkvmUJsNsjrgFj2XN4aPRQWkK9S5S6cWPpfY5RpwfiTYkPNPOFfu5SE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769230637; c=relaxed/simple;
-	bh=/0PDY394BRl//31xgwAnqLzNC1CLy4LkxBAt2CQxp4Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=d4DNTMzniyqcHlXyPuipKsM1RO4cIlZAOWVzRBubBc6ce6uDWSTSjuS6nqnoGVME9wKq2vfv5RfKLln8oYv6PP5e5/TCPfrMWTAC4EgmBYKlLMmy7ASgZg+0bnV9d7d7XwDqzVBU2vJKBUG7QN4qfXZwqJV6GisBByP1akQwcpE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com; spf=pass smtp.mailfrom=ti.com; dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b=wM4E3CTM; arc=fail smtp.client-ip=40.107.209.61
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=ti.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ti.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=iBsffemaI8vvadKH7bYXF4VlwThcVwYFCqZqD2/4fstXYwHI8PQNvRWOsSpAVqr7NUSOOhI+FHbruRIS8hpY6oDIGrhNQNhzUKYmg+Njfe545i6XDpD/4lGDesk20EifOIeSNrjrGPOTAypzzKpSITj6aBB1otTDaQFC3+bPPnEu4PXQ5ZILXr7SiDPh4NfsTjYm3Ezo2DkeBTWQMnJqe82BN38mvi9FlkufDMBCY8BF9XYL+WM+VFgYxE+5uLiWFHtCwfrUVNORzXT7FxONG8F2MgasPLJKKPIS2tYtshjOQXKwCnh+TsZn5dBjhZlx4ytBmflmbn4nAO6LbB/SQQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=pqrlgFEr5GoA16bv0aacWixQxKvmImV05fF8wc6L9pU=;
- b=y7nmWLtpVwrM86w2b94bYojyolOCAMve893qfYkseBvZXLpkQNwVpNMjO43mjMw7HTyGLv9dBjkITZQ8kabwi7IpM0Tm0PjjbI29vwd8rJeIMPnfFZgnOmNNJmk71prrBAwQ3Bf6vBPPlKgxnqLSgBS000iV5FU+DWSMVOcgSf5kVJUS3zcXYVKNR92nAh8yBihRc3oLrxRpx8YHiEWy7WVqgfk3pNblVb3n+yxSz5hT0uJdSHgZOcugZJATvv9gsQ7tPiKwVEPmwRS9tsfZSdZIAbgp7IME/nKhDFrBKopt7y8l8N78qtFoRcxn127Ea+bTDLRGmzNvhrjblLGFLQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 198.47.21.194) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=ti.com;
- dmarc=pass (p=quarantine sp=none pct=100) action=none header.from=ti.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pqrlgFEr5GoA16bv0aacWixQxKvmImV05fF8wc6L9pU=;
- b=wM4E3CTMTfmkGX0lvN1eVyvWSN86Gn12iI+fdDRbnvxFBXVZ5ED7Pnr4JUoP2QdZKfUbaumeS9pOAVYO6IYHG8ppbhSsse8Hv/So9GwFccO6Y6Hue6M6XrPxjDvgi6BNhNTsbTWBKPdh4ZlSZL4+rsi/QNivAOKZnDtdcBV+idA=
-Received: from SA0PR11CA0045.namprd11.prod.outlook.com (2603:10b6:806:d0::20)
- by SA1PR10MB6342.namprd10.prod.outlook.com (2603:10b6:806:255::5) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9542.11; Sat, 24 Jan
- 2026 04:57:12 +0000
-Received: from SA2PEPF0000150A.namprd04.prod.outlook.com
- (2603:10b6:806:d0:cafe::bc) by SA0PR11CA0045.outlook.office365.com
- (2603:10b6:806:d0::20) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9542.10 via Frontend Transport; Sat,
- 24 Jan 2026 04:56:50 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 198.47.21.194)
- smtp.mailfrom=ti.com; dkim=none (message not signed) header.d=none;dmarc=pass
- action=none header.from=ti.com;
-Received-SPF: Pass (protection.outlook.com: domain of ti.com designates
- 198.47.21.194 as permitted sender) receiver=protection.outlook.com;
- client-ip=198.47.21.194; helo=flwvzet200.ext.ti.com; pr=C
-Received: from flwvzet200.ext.ti.com (198.47.21.194) by
- SA2PEPF0000150A.mail.protection.outlook.com (10.167.242.42) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9564.3 via Frontend Transport; Sat, 24 Jan 2026 04:57:11 +0000
-Received: from DFLE200.ent.ti.com (10.64.6.58) by flwvzet200.ext.ti.com
- (10.248.192.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Fri, 23 Jan
- 2026 22:57:11 -0600
-Received: from DFLE203.ent.ti.com (10.64.6.61) by DFLE200.ent.ti.com
- (10.64.6.58) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20; Fri, 23 Jan
- 2026 22:57:11 -0600
-Received: from lelvem-mr05.itg.ti.com (10.180.75.9) by DFLE203.ent.ti.com
- (10.64.6.61) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.20 via Frontend
- Transport; Fri, 23 Jan 2026 22:57:11 -0600
-Received: from [10.249.141.75] ([10.249.141.75])
-	by lelvem-mr05.itg.ti.com (8.18.1/8.18.1) with ESMTP id 60O4v7L83439064;
-	Fri, 23 Jan 2026 22:57:08 -0600
-Message-ID: <11f86b32-8bdb-4abe-8acc-30938b405275@ti.com>
-Date: Sat, 24 Jan 2026 10:27:05 +0530
+	s=arc-20240116; t=1769404101; c=relaxed/simple;
+	bh=ZBsVD6kxKzurT7H7DtCLfcoGufza6/gI7cdcVlj4q0M=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=FCMcHDxUuHya2oRNvS3gWURscMwGHN7+Zq7lHo8RNBwZotIKGSxq0LkC3zbEZblwZW90vkhQd3pUd1lQzUA9OCh1cQp1dRJUI1qydovtOIaxiskmwbrAiNGP3ZxYWq11mYbWClx6aaVIjYSI6lHMf2RYWqwlMnBf2yAhZW7pqAw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=k9kfJBC+; arc=pass smtp.client-ip=74.125.82.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-dy1-f182.google.com with SMTP id 5a478bee46e88-2b1769fda0eso431219eec.3
+        for <linux-pwm@vger.kernel.org>; Sun, 25 Jan 2026 21:08:19 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1769404098; cv=none;
+        d=google.com; s=arc-20240605;
+        b=dMHoVnWsHs9OR6g+fE79FDyGL+3VHDrt7L5S8uAB7pcqr9XLZaMiBL0Z+gC8eK8ksh
+         7h9D9YNhAGsc9TsazNm0vkv3G5tDEsBNHTI6R+DrJEX5yejS8jN5OIJgq32xwlTqFnrm
+         uytIdXNSO+vdyRUke+mNyyOOvNd/csLgzbf4YFznF3PuLo4cuZ+KzT3XZtp+QZsqx8VR
+         ZYxKAaAfV2zCZDt+YxtitURi0KE2C1uy8Dr/yoYWH7tswX5sBRtFeE5GVgSB46hhLxce
+         6jp4X/fY8ASm/E+eJq9gDR2AGlWYJizVwlsv3GGFlSlgo2whtLVvOc/h+lAN9dg1C9pM
+         X2ow==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=bsbA3S4vvXnWg6PVwhDAv4/t5NunrqZ0yk7Z9wsyNZU=;
+        fh=leSbWPoDhieDAZJXeLiYgugQzY1Eupjs0whtF8OHsiI=;
+        b=MvZVyIn2TSR4p4yYmSDmEBjUKdfuB9jDrKWarC9iidMPcLiycWOvqTxK+iDMlFhOmC
+         bWyB2EgPwZ4iZ8wCjiqtLPNHEK5l/0kyxeXkzEn6rk0DPtjT/ySZ28CaGP0w1WQvx1Ln
+         OmN4An+1wM0vXoaQthtutnQl7IAXj0W4aQsP0OEeU9KYaN0SpfCuTSeUrLyQ8lzRd02n
+         NQSmDk4hoiKwg9U90TfeHuwDTR/HEOxXGlUU5TuKlEBgBL9HCboSEF2jMZ2HTQ5S4wr6
+         7M8EP/VoFugliOMWiguOW4z2ZgT3xC0IyZwDApahstV7jHGyjl2nPIU9Sd0i9AgRuTE1
+         rl4Q==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1769404098; x=1770008898; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bsbA3S4vvXnWg6PVwhDAv4/t5NunrqZ0yk7Z9wsyNZU=;
+        b=k9kfJBC+ldCHGEir2hpwOAhElO6egoRCIxzj0IKfTEqmro2/yY4nV/+ZWVpPnASaL2
+         +mKMYxEvPEWQ3mA0MifDdWsjJxAV9WDFd60bga1tQmEuwjCMbcYXGnmdKnOy0gkl2ch2
+         Mwj8Ks7ue/Tv0fi0t1I2FGHTzLLGzLT7EpWkOR1/bqd5u34W9Lgxxo6NypTHOKYsnB2Z
+         KCh6L7ducVKh/8PXfUb+iHCyyPnIdAB5ON83DnVEVnBfpqvtvEurIJrSHBLvIkSub/iU
+         dCIDy2cliqsDj+61/J2ss/bUZVs3zCGOy2Q26lc2sW5MOSWlOjMrzV8iWQUqiUi0YrGB
+         4lrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1769404098; x=1770008898;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=bsbA3S4vvXnWg6PVwhDAv4/t5NunrqZ0yk7Z9wsyNZU=;
+        b=mJ5pyLKbWnEdpZ+0VmqnN1UkWoJjdibJnCNIrKlajwR2VL96re6eXyXJNuWYxtOmIT
+         smWxrjCZ7fd0a1bmJKibBocAC1718sRLsr+v6KcsGPRp1hJRRCCBAWHokrz8VYjNBWR2
+         8V2a9fPMg/9A4n1zhu3uMzi35st0DqnHDbcEfYX+Hn96vqmglztNwYpt6lHypAj7uDkc
+         byHBuTZ8Kzgb5Oqj71sFruIjzUpl0awMmbn6d3pfjiM4UajoLIyFJViQmfLuJfA4kmZy
+         +ZR/dPtpw0GFQPxU/bViLQLv6HjArbHNC0kGnkhuFP1NQwKn5Vl0AJrFf4KyCd/O+v0Y
+         omHw==
+X-Forwarded-Encrypted: i=1; AJvYcCVwTshBBzYlozTlcJLdrusgUn7RWT2OL6Yo/xK4F7DgjDmv5Vko+Ox/KG62fWDEXBuCre/+wQl2NbA=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykXzbR0KcXnh3/fm4sz5SEFKT4uyUpoSVpMfF497u6vR7HC7ul
+	xZMnuIZaoVfAExg/dFm0nI0CavWBaNjYNgI+5laGvuRYBtl1ha8t6JoZRD8DmGbHbtG9Bh127Qu
+	CnND4W75t9xlWmi7xZ99yk5XKZf5wzx0=
+X-Gm-Gg: AZuq6aJrsi9/l67Nkgyair7hT/gJwsElMtlo9QXLnnuZJGf2X84nlXHTBnYaIzWOYCT
+	+gPt8RgZtxqxWlafCYcD0dd53elZbQoPc2/OwL9XawYZ6PrRRLLxa7Gpjtq8S1/y+bbCyMmv4dh
+	/IrxNpgtdB+gG4vVxbTf+bO+KBqmkvWc1Xoe5SbLdrUiQjPNSIrFGCOB+JyxTkS9HOjXd0+xTT/
+	Cm0n63tFVvEkuM3n3BCBYs0pKIMgmvYjMKoRSa/1V70CQPdHtawU0tn4czHTWsaMVHr8zZLz+9H
+	34h9QUIFSoaAPEte7lweKABr5Bqv8LEk+K6Pqbs+AtAYaqe4e/ezEESAIaU3/wk/YUt0Q9Vmao0
+	ouEH2uY8A7UHi
+X-Received: by 2002:a05:7301:3d10:b0:2ae:5b8c:324a with SMTP id
+ 5a478bee46e88-2b7644f41dbmr855051eec.4.1769404098278; Sun, 25 Jan 2026
+ 21:08:18 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4] pwm: tiehrpwm: Enable pwmchip's parent device before
- setting configuration
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-CC: Gokul Praveen <g-praveen@ti.com>, <j-keerthy@ti.com>,
-	<linux-pwm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<n-francis@ti.com>, <u-kumar1@ti.com>
-References: <20260121061134.15466-1-g-praveen@ti.com>
- <3ck3abtfdqzmatsvfqcbp7bxu7ydy7u37hfkke4xvpatpcg5uk@wfnya5hxrplo>
- <7081d6d7-d2d9-4364-9df2-48961d465474@ti.com>
- <2b13ec3e-767f-454a-b344-87b7f1bfafb3@ti.com>
- <d773qlfhifbtn6xtkuowdu3l3h6em7hrk2etsg3n5umuiuhfu7@yuetzfci7pni>
-Content-Language: en-US
-From: "Kumar, Udit" <u-kumar1@ti.com>
-In-Reply-To: <d773qlfhifbtn6xtkuowdu3l3h6em7hrk2etsg3n5umuiuhfu7@yuetzfci7pni>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-C2ProcessedOrg: 333ef613-75bf-4e12-a4b1-8e3623f5dcea
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SA2PEPF0000150A:EE_|SA1PR10MB6342:EE_
-X-MS-Office365-Filtering-Correlation-Id: c922e4b7-573c-4ca7-e2ea-08de5b05090b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|82310400026|1800799024|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?VkVGZkpIT2N5WUJyUCtlckVQK21ZUVBMT2dXVWs2NlNISCtpZlRycUN1dXlS?=
- =?utf-8?B?d2N3L2lOMElOUHYxL3dwUDV1VGc2b0d4K3dFdFRsRTg5aGRZNHllWGNEcXRo?=
- =?utf-8?B?ZmdWYiswQmtMd2hzL1hKMnRpRmw4ZW1mU1VEVGNEdzBoNHVES092ZFBZNU9i?=
- =?utf-8?B?UXdQVkhWZ0oyb2xWV1JkY1AzS3U2RThxQWZjV2drc0EzaWZENGJpOEk4ZHdZ?=
- =?utf-8?B?Zkc1YWRCbVpxOE9uNittTHQxK1R4aU8vbGFNdkVIekNndVE1d3E1OHpHakZa?=
- =?utf-8?B?a2JzU0RHZStIb0pOOVdjYVE5SjZLRWoxZXRkbE5tWDZQZkFGbUZESUFNM1dm?=
- =?utf-8?B?K0xzU3ROdEt6bHFVRUtoSHVWREcxYlBMbkFKTXp0S0lHeDlPWmhGZG5OVEEr?=
- =?utf-8?B?YTFPeTU0bG5wM2pCeDFnSDZhUHNvdjdDbE5wMzRjdTcyamhLMVlHZE1XMlpF?=
- =?utf-8?B?azJWOXhLcjV2eGZBV0hRV2ljWVowQmJ3Mm9TMG1QNW00SW9lUisxRWxJTVY0?=
- =?utf-8?B?U3RyVm9vNXhJL1VCcTRWSml0d01xb1BlbUowdXRxUE9FazFBZm82MVRDZmpl?=
- =?utf-8?B?Q25LZm5yUURwYW9jdnBOYW1LcG9hWDY1blBadDdpQUwyanNuTVNzaXZkWHZ0?=
- =?utf-8?B?Ty92UGJ4M3VwSDVmM1pNWEJoc3Y3QVFqTyt3MW1PSkVhSEQvZ2VURDJ0ZFZJ?=
- =?utf-8?B?ZTAxbk1IWm10Z1M2dSs5dmJYaGl5dFNrSDhlei9uRElwM2JHVkxMZllYbUhs?=
- =?utf-8?B?WlcxUVppRlJ2aGVPT1hPNnRPR1M1MmdMaW9CM2tTQ2g1eGV3czlBUEI2bWg3?=
- =?utf-8?B?N1NyN0hMZHhlbEdiWXdndmZJTkRoUHlYUGh4dU5jYWx6d3ltYXdDZnNKS093?=
- =?utf-8?B?aDBBc3BjVFdNQk1MUk9wSmlHazhBTEJkVm10MStjcUR4Sy9Yc0FZQU9rbDFQ?=
- =?utf-8?B?TU1uM21KTHY3MlZobk1kdzhWY0d5OW9uUXFWajhpZ3RFemExVGFvcHdTTG81?=
- =?utf-8?B?ZlVSVnZYTXk4QnNtNlM1S0poTkZ2eEluS1JuK2hmVWFRYWVkRlZmSzNIWmpD?=
- =?utf-8?B?eXBmaXVZWDQ1ZnByNEhRaVZ1bWovbExrT3FjeG56Vm5COUQvNWNRVExjTDVh?=
- =?utf-8?B?b2ZnL0M2YlFjRWdYT0F5QzdmVXM3N1BNaVFyWjAxR0p3N0J6Q0hrcTJpbm0x?=
- =?utf-8?B?b3ZhM1kwbEJFUEtteDBsWUcrZXd2R3RoVi9SNWRQa3pDWHpyM0U0M2FUVW9C?=
- =?utf-8?B?WDk0TzgvdVc3ZUlPK0VDMVJFd0V1RzRhWi92emRUeEpycVNpS29XS1hKb1lP?=
- =?utf-8?B?Sk1sVVc3SzdVTGxjRDhsUTZGYXFJUXUzTnljQ0x5L2dtLzJ4ZVhsQ0xnQkxF?=
- =?utf-8?B?cnZvVEFaY1ZnZjU4WnVia3dsYjdkZEVDNlV5Vkp4d3VMT2F3U3RsVFdGUjRX?=
- =?utf-8?B?NFdLVkI4VFp1Y3c3UGVqK2xuU0drUnJhOGNpalI0MU00ckFSZXRXRHZ1UTdk?=
- =?utf-8?B?Q0doQ256TXpVT0JQZ1N6VTl0bUlRRnZFL3RTQmIyYUIzbGVuTW5nY1RIWUlD?=
- =?utf-8?B?SnBxUHQ4UUgzOWE0Ny9EL0JESlpMdmtxUjdOelp6S2ZyZFgzcTdRSm9hYmhi?=
- =?utf-8?B?eWIycENYbXdlMHpKNjRSZDVWQzR3RnltbFlLN3B6SGowd1lHVFZEa1B6RWFv?=
- =?utf-8?B?SjdhUHE0U1hwazM4NjNUU2RzTjZKYy9adm0vZlVBSFhZTFU4TkFpeEltWEhr?=
- =?utf-8?B?cERPVE95UWQ1bmJkSWovYW0vNzhic0d1WTVrODllNlkrTUNUWWJGTVZyVURk?=
- =?utf-8?B?eEpWUUg0OEIxN3dGVTRxZmZ5M3ZWNDJleHg1TUFnaHNBOTBXTXFzdlYwVzlD?=
- =?utf-8?B?elZUcnJjM3JCa3BncEozV25ISmJUSG02cEEyc3hURVAvVHRZWUlUdk0xbUZ0?=
- =?utf-8?B?WGlham9tRmpuMHN5TTd4VkVMVG5ESTY3dWQ0RWlBc0NqMzJmdmQvcmxVeG8w?=
- =?utf-8?B?NjQ3ME9VNXdDSE04b29iZkdrSVVVbUp4STBLWWhQa3JUK1lQRERDY0VyVUYw?=
- =?utf-8?B?a1RqMVpDbmNlaXJpTWVjRE5NOXhhMTBwSHFzVnQzNm4wNFE4Nlg0VG54MURK?=
- =?utf-8?B?R1BlWUNJVzJzREJVdXRWTVduM0k2UC9uNGRrazgwczBCWjN1eW1YVjBHR2ln?=
- =?utf-8?B?ZmFyS3NBUDduOHRMQ3lXU3pQNmpLbmxVZWY1TnZSZzErdFh1OGZHVDEvY1dw?=
- =?utf-8?B?N3RZeXBWbjZYMEFBKzFmNm9RamVBPT0=?=
-X-Forefront-Antispam-Report:
-	CIP:198.47.21.194;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:flwvzet200.ext.ti.com;PTR:ErrorRetry;CAT:NONE;SFS:(13230040)(376014)(82310400026)(1800799024)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: ti.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Jan 2026 04:57:11.7247
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: c922e4b7-573c-4ca7-e2ea-08de5b05090b
-X-MS-Exchange-CrossTenant-Id: e5b49634-450b-4709-8abb-1e2b19b982b7
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=e5b49634-450b-4709-8abb-1e2b19b982b7;Ip=[198.47.21.194];Helo=[flwvzet200.ext.ti.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	SA2PEPF0000150A.namprd04.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR10MB6342
+References: <20260105-define-rust-helper-v2-0-51da5f454a67@google.com>
+In-Reply-To: <20260105-define-rust-helper-v2-0-51da5f454a67@google.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Mon, 26 Jan 2026 06:08:03 +0100
+X-Gm-Features: AZwV_QjC45jcqbNpvCzRgWaUDtcYZvulw1uksmCYv_NCU9WJD69mYzMDZ_yhpJo
+Message-ID: <CANiq72m4hBinKM4jRrkpZ5nM_wraQ8FMsYtjgKRkNDmK5sS8dw@mail.gmail.com>
+Subject: Re: [PATCH v2 00/27] Allow inlining C helpers into Rust when using LTO
+To: Alice Ryhl <aliceryhl@google.com>
+Cc: rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	Peter Zijlstra <peterz@infradead.org>, Elle Rhumsaa <elle@weathered-steel.dev>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, linux-block@vger.kernel.org, 
+	FUJITA Tomonori <fujita.tomonori@gmail.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org, 
+	Benno Lossin <lossin@kernel.org>, Danilo Krummrich <dakr@kernel.org>, 
+	Thomas Gleixner <tglx@linutronix.de>, Paul Moore <paul@paul-moore.com>, 
+	Serge Hallyn <sergeh@kernel.org>, linux-security-module@vger.kernel.org, 
+	Josh Poimboeuf <jpoimboe@kernel.org>, Jason Baron <jbaron@akamai.com>, 
+	Steven Rostedt <rostedt@goodmis.org>, Ard Biesheuvel <ardb@kernel.org>, 
+	Andrew Ballance <andrewjballance@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, 
+	"Liam R. Howlett" <Liam.Howlett@oracle.com>, maple-tree@lists.infradead.org, 
+	linux-mm@kvack.org, Lorenzo Stoakes <lorenzo.stoakes@oracle.com>, 
+	Uladzislau Rezki <urezki@gmail.com>, Vitaly Wool <vitaly.wool@konsulko.se>, 
+	Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, 
+	Daniel Almeida <daniel.almeida@collabora.com>, Michal Wilczynski <m.wilczynski@samsung.com>, 
+	linux-pwm@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>, rcu@vger.kernel.org, 
+	Will Deacon <will@kernel.org>, Fiona Behrens <me@kloenk.dev>, 
+	Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Vlastimil Babka <vbabka@suse.cz>, 
+	Christoph Lameter <cl@gentwo.org>, David Rientjes <rientjes@google.com>, Ingo Molnar <mingo@redhat.com>, 
+	Waiman Long <longman@redhat.com>, Mitchell Levy <levymitchell0@gmail.com>, 
+	Frederic Weisbecker <frederic@kernel.org>, Lyude Paul <lyude@redhat.com>, 
+	Anna-Maria Behnsen <anna-maria@linutronix.de>, John Stultz <jstultz@google.com>, linux-usb@vger.kernel.org, 
+	Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, 
+	Matthew Wilcox <willy@infradead.org>, Tamir Duberstein <tamird@gmail.com>, linux-fsdevel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[ti.com,quarantine];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[ti.com:s=selector1];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-8002-lists,linux-pwm=lfdr.de];
-	DKIM_TRACE(0.00)[ti.com:+];
+	TAGGED_FROM(0.00)[bounces-8003-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[vger.kernel.org,gmail.com,garyguo.net,infradead.org,weathered-steel.dev,kernel.org,baylibre.com,linutronix.de,paul-moore.com,akamai.com,goodmis.org,linux-foundation.org,oracle.com,lists.infradead.org,kvack.org,konsulko.se,collabora.com,samsung.com,kloenk.dev,linuxfoundation.org,suse.cz,gentwo.org,google.com,redhat.com];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[u-kumar1@ti.com,linux-pwm@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[58];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[miguelojedasandonis@gmail.com,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-pwm];
-	RCVD_COUNT_SEVEN(0.00)[10]
-X-Rspamd-Queue-Id: 3FF8D7C854
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 1C98384203
 X-Rspamd-Action: no action
 
-
-On 1/23/2026 11:31 PM, Uwe Kleine-König wrote:
-> Hello,
+On Mon, Jan 5, 2026 at 1:42=E2=80=AFPM Alice Ryhl <aliceryhl@google.com> wr=
+ote:
 >
-> On Fri, Jan 23, 2026 at 08:28:48PM +0530, Kumar, Udit wrote:
->> On 1/21/2026 4:19 PM, Gokul Praveen wrote:
->>> Hello Uwe,
->>>
->>> On 21/01/26 15:48, Uwe Kleine-König wrote:
->>>> Hello Gokul,
->>>>
->>>> On Wed, Jan 21, 2026 at 11:41:34AM +0530, Gokul Praveen wrote:
->>>>> The period and duty cycle configurations on J7200 and J784S4 SoCs
->>>>> does not get reflected after setting them using sysfs nodes.
->>>>> This is because at the end of ehrpwm_pwm_config function,
->>>>> the put_sync function is called which resets the hardware.
->>>>>
->>>>> Hold the PWM controller out of low-power mode during .apply() to
->>>>> make sure it accepts the writes to its registers.
->>>>>
->>>>> This renders the calls to pm_runtime_get_sync() and
->>>>> pm_runtime_put_sync() in ehrpwm_pwm_config() into no-ops, so
->>>>> these can be dropped.
->>>>>
->>>>> Fixes: 5f027d9b83db("pwm: tiehrpwm: Implement .apply() callback")
->>>>> Signed-off-by: Gokul Praveen <g-praveen@ti.com>
->>>> I applied this patch to
->>>>
->>>>      https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git
->>>> pwm/for-next
->>>>
->>>> and will send it during the next merge window. The problem is old
->>>> (v5.18-rc1~54^2~29 from 2021) and it's late in the development cycle, so
->>>> I won't bother Linus with it for 6.19.
->>>>
->> fyi,
->>
->> We are hitting compilation error with this patch
->>
->> https://gist.github.com/uditkumarti/d23bc9ee1886bfce70cc76e4b19fbb59
-> I assume you tried to compile this patch on top of a tree that doesn't
-> also has commit 9a0abc39450a3123fd52533a662fbd37e0d1508c?
+>       rust: bug: add __rust_helper to helpers
+>       rust: err: add __rust_helper to helpers
+>       rust: maple_tree: add __rust_helper to helpers
+>       rust: mm: add __rust_helper to helpers
+>       rust: of: add __rust_helper to helpers
+>       rust: rbtree: add __rust_helper to helpers
+>       rust: slab: add __rust_helper to helpers
+>       rust: uaccess: add __rust_helper to helpers
+>       rust: workqueue: add __rust_helper to helpers
 
+Applied these to `rust-next` -- thanks everyone!
 
-Thanks for pointing to this , I just cherry-pick only patch of Gokul,
+If someone did not intend for me to take it even if the Acked-by is
+there (e.g. perhaps Andrew wanted to pick those nevertheless?), then
+please shout.
 
-after picking 9a0abc39450a3123fd52533a662fbd37e0d1508c, compile is ok 
-for me .
+With this, and if I didn't miss any message (plus looking at
+linux-next where I see Greg picked usb), then only clk and jump_label
+remain (plus any new incoming one).
 
+Let's see if we can get them done next cycle then.
 
->
-> Best regards
-> Uwe
+Cheers,
+Miguel
 
