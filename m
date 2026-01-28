@@ -1,263 +1,285 @@
-Return-Path: <linux-pwm+bounces-8004-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8005-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GGS4FhvoeWkF1AEAu9opvQ
-	(envelope-from <linux-pwm+bounces-8004-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Wed, 28 Jan 2026 11:42:35 +0100
+	id KD25GBcDemku1gEAu9opvQ
+	(envelope-from <linux-pwm+bounces-8005-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Wed, 28 Jan 2026 13:37:43 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id BCBDF9F9F7
-	for <lists+linux-pwm@lfdr.de>; Wed, 28 Jan 2026 11:42:34 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE245A1576
+	for <lists+linux-pwm@lfdr.de>; Wed, 28 Jan 2026 13:37:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 56B8E30082A0
-	for <lists+linux-pwm@lfdr.de>; Wed, 28 Jan 2026 10:42:33 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6D62C302D5F3
+	for <lists+linux-pwm@lfdr.de>; Wed, 28 Jan 2026 12:33:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BC9C52D5410;
-	Wed, 28 Jan 2026 10:42:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1222D2EA151;
+	Wed, 28 Jan 2026 12:33:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="J8Rbfl6v";
-	dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b="O77F5XTI"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G1YyseJn"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33DD929B78F
-	for <linux-pwm@vger.kernel.org>; Wed, 28 Jan 2026 10:42:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1112290D81
+	for <linux-pwm@vger.kernel.org>; Wed, 28 Jan 2026 12:33:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769596952; cv=none; b=gg9MmMbcJ+XYWgeCvd6EruW+WoOt/JjqLhUaSAWSp6HzdILUKKQulsXC5XWgwTRKYU6tSvHqI614bF6hOO9yftg4jayPlcZ7XQKOCHN2g8SKKhT6/r3WirxYveOFsGAnY/EkFabSdhbA56DXD8Ovl0tZiY7ycx81lnK2tUs6g6U=
+	t=1769603592; cv=none; b=fzovczxu3HFudgwJKpw1luHFL5k4TEI3rcs6OOqBqfJRHMCjLxZYYOmcffHpM0+juaP59v3+FrLfKf4iTar7ksI+nm5z5KxDdHVqHBtsi+KFL/OiArzIkYcL5ht/MR9v2uUofTzOM0m/Y0ChBC9/Cc+cY7iP9Tks7yL7U+eTae8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769596952; c=relaxed/simple;
-	bh=apf4mXXoipjS56AP9r5S3+Twz60FbazGZRWn7KRqwHM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pWp7CEvu9R4evTrNkVcXsCfV6WfSmlbUe1xSjZ1QpT5HzmfdjtfJWfY+EMsGBH0nGb21SEgA/dKC+lrr5unB9RZNoZ6rQOJB7Eb4S6UcVJ0JUHmTxuWwiJbEPKPkOmoNCU/T71T1PTC6CZ9Abc6bAWSCV6SI5svJhyrvKiyGeGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=J8Rbfl6v; dkim=pass (2048-bit key) header.d=redhat.com header.i=@redhat.com header.b=O77F5XTI; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1769596950;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=apf4mXXoipjS56AP9r5S3+Twz60FbazGZRWn7KRqwHM=;
-	b=J8Rbfl6vWSNuY7THsUuC60hpMh+UTX4uTkWXjsepSfjm3bHKCWWTzv/28j5/ycyYTupSKW
-	E9cAfQ2kb1HLjgcCF+sH5xBr6V6kj7pVp8zNltIBSCR/0ziS4iWwFthNzxsg78m+SdE0b4
-	uf/DizDHMUV9s0Y36AvmFcGltZGgKY4=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-170-E8er6AeqOxuDMGnKjhAGCg-1; Wed, 28 Jan 2026 05:42:28 -0500
-X-MC-Unique: E8er6AeqOxuDMGnKjhAGCg-1
-X-Mimecast-MFC-AGG-ID: E8er6AeqOxuDMGnKjhAGCg_1769596946
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-4803e8b6007so49212505e9.0
-        for <linux-pwm@vger.kernel.org>; Wed, 28 Jan 2026 02:42:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=redhat.com; s=google; t=1769596946; x=1770201746; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=apf4mXXoipjS56AP9r5S3+Twz60FbazGZRWn7KRqwHM=;
-        b=O77F5XTI8sYyzpN/m35Axr3F3tCstgI9hYX8W/wM5MJ92N4/VcVM9m0vjeq+44jFPX
-         jmdqXCBQ/eccT73HITfPPUDMcP55ZLgoc24NRuJIBR7lUHSf4jtfMIErinhjq8O2ksaG
-         pBnSpCaHPQCEDDTKVaO20n91c/6CPwXvJ+90hfgAikfOQkfiH6vMsBVIp5f3HkvjWeCH
-         0Gjrqf8GTlarUngr2hFexE62/ouLvclccC7aGKIo1WvKa25Y9wcYtyqD6o8DrQucgNv/
-         cU3Gaok2cKBRswk2BSfU1Rw46IXnwSsrf7SAsC0XDzgLBMgIl3yJU9Zr9rNbQiHe5g+a
-         Sgsg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1769596946; x=1770201746;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=apf4mXXoipjS56AP9r5S3+Twz60FbazGZRWn7KRqwHM=;
-        b=W28CDfDPkks3s7awZn+iqqjH5a4SOwOjQS/Z1mx3KbVz2t8l+lkAZlekMtZ3qPFKG6
-         5Lc2LRWVP2aVEv5kiCk95b09Gzxx3MLnwCDsDamDZXOmXP6f54LN+9iTCbExPqCcuc/t
-         BnZRPP1hFEpt1NSxjvdjdlzT4SHmv3XVSL2UH3ye3IpWz3gNNs0z9uVzaAxTT9cWBt4+
-         FCzGQ6VaDJfMrek3ighmwHl73101x9bvyMAialRUdVgOnMeznWeYaBC8PhW7/zxr7ejR
-         X3XZmnCU3KAAASCTBuCd2JUSMiaP0OxW9hMVm9UILK+iMf36zvcwsiFcBCTBs4ZYaRJc
-         cZsQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVW7ER9vJ+w8qgADcQ+VY15orqL8BgqMDTiw+pHPptooyCTpHqeAgnCdwy8IicZ2tl3c/d3Pl0z3Xo=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yw9iwMqfukMO9vrRD5DXGFco/ynX8qi8EzKF1HlYdVKSNEuni9L
-	ltMo3mvTGJ/QwdmmKcnFb5u8SnerBuTfoeD/nUCaJ+wnBH65fq3wG+wHdpYL3pJrN2DNp2aqsAe
-	wzu3PJgdB0pc+pJG8bkY4tsZYgj+RFgcF6rOAJ6ieoRJC2CSh6g7lMM7a+ualPQ==
-X-Gm-Gg: AZuq6aKIWsdhpiSGAigYbCBZxnZZMABRtRLrF/+cxu83po+nLEs3M5evmZ3suO9ue0t
-	fu08dGBduqeBuefShFUjb/ORtMy4KIhKOMjP4fDywm9DJJi5Lurf08xQOKOFSq5S5+gSlvOP89f
-	FzI+vsxA1LKhuGlYFuO0Tr0AL3HzydwRQAU30A+MM23nRojEHT3YBPs155DaYglZyPv6HkVoMTQ
-	sUtDdH2ZA38HlIsugfhJrtKppRTv7ZIHJ608MAwKaw699hSngFiq6WkgI1qBb0n63ljimYF6Y5M
-	wK96b48LyhVQUAsoZcoSifrSaCcletEha8kCbRJvY0YYlZDedVCo0nKrcvzi0A==
-X-Received: by 2002:a05:600c:871a:b0:47d:8479:78d5 with SMTP id 5b1f17b1804b1-4806c00bf4bmr47198635e9.7.1769596946168;
-        Wed, 28 Jan 2026 02:42:26 -0800 (PST)
-X-Received: by 2002:a05:600c:871a:b0:47d:8479:78d5 with SMTP id 5b1f17b1804b1-4806c00bf4bmr47198185e9.7.1769596945495;
-        Wed, 28 Jan 2026 02:42:25 -0800 (PST)
-Received: from localhost ([2a01:e0a:b25:f902::ff])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4806cd8fadfsm51703425e9.0.2026.01.28.02.42.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 28 Jan 2026 02:42:24 -0800 (PST)
-Date: Wed, 28 Jan 2026 11:42:24 +0100
-From: Maxime Ripard <mripard@redhat.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
-	linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	Michal Wilczynski <m.wilczynski@samsung.com>, Richard Genoud <richard.genoud@bootlin.com>
-Subject: Re: [GIT PULL] pwm: Two fixes and a maintainer update
-Message-ID: <20260128-splendid-complex-mouflon-8f3dff@houat>
-References: <ahytfwrx6d7nvddjviqt6wyit6f7flh5vmiuuzdet44unjdbwp@cktsraaj56au>
- <CAHk-=wga8Qu0-OSE9VZbviq9GuqwhPhLUXeAt-S7_9+fMCLkKg@mail.gmail.com>
- <20260122-bold-sticky-wapiti-1dffa2@houat>
- <CAHk-=wheQNiW_WtHGO7bKkT7Uib-p+ai2JP9M+z+FYcZ6CAxYA@mail.gmail.com>
+	s=arc-20240116; t=1769603592; c=relaxed/simple;
+	bh=jmuMIS9wtX/dZfFDJahTmMCs3yg9HN6+ZtD9s0KTwRs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=rOQ0UXaLSRI79qKxX/p2AnqoB2ubPPtixiWNSsI4B8y4JhGxYG4ndkeA4M6HSqma7r6JDIUmji9xT6IiBO9hWqq1SIWuXrTT/6DmWRQcc62a82RMDIpBW52WPhETpO/JtTjK+p5LRwPduRg4psJGd6qVbvexaB9KzZ5yuxicRFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G1YyseJn; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DF0FC4CEF1
+	for <linux-pwm@vger.kernel.org>; Wed, 28 Jan 2026 12:33:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1769603591;
+	bh=jmuMIS9wtX/dZfFDJahTmMCs3yg9HN6+ZtD9s0KTwRs=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=G1YyseJny3uvkryklZtQjbMt1Vz+oheZYebYiLCFR+FO9avv4ER7I6vpsW4VEQLDk
+	 K04NBuyTqEstOr5DioJ9zLZJw8Jbm5WEhbYNNf1hZih5Q5EOBrCusQIIhropu2YPB8
+	 TnEbIY/uXU9ZA6BWJsnheRNxRi6JsN9S4ZJH3oP8Tnyeu52AmtngGmjMR8YcmoGfG2
+	 fPeMoITbsKrnvcz78b3YqIA2dUPMDCOl8Eku8xOOhe27hwUvRyyV3WqaQTo2mYu7ET
+	 jMYbEiCHL5eqZglXUzNhV+Pfpz9yAPN+yXeNuVhhzSZ6gzedw6GY7oNv2NUe3rC4xd
+	 FcdJkuKxrMY4Q==
+Received: by mail-yx1-f54.google.com with SMTP id 956f58d0204a3-6446c924f9eso5920985d50.1
+        for <linux-pwm@vger.kernel.org>; Wed, 28 Jan 2026 04:33:11 -0800 (PST)
+X-Forwarded-Encrypted: i=1; AJvYcCXeG151G92iSQWOOkPp22Okr2kjh9/TYhc7twP4JEtqZMG0osYiG9peXHlqkwH/GOk54RzBzzDORvg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzzgALKZEsL33e6T4sx/M8c4yU1yJ8/wDtIodVyzMAxEb1/7euu
+	FDdrWyWnCFlZcgIWQs0SBA5QlLyRr1jeicjv9uByzeRO2rcSaw6sMDftgTgKoIGRKxTtxn022eN
+	CuOzqPhjcoAxa+nWB2zxpiX3EaJcwFmM=
+X-Received: by 2002:a05:690e:1918:b0:649:4f65:bff9 with SMTP id
+ 956f58d0204a3-6498fbf9856mr3287591d50.42.1769603590902; Wed, 28 Jan 2026
+ 04:33:10 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="feuizyhgjj4dalgk"
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wheQNiW_WtHGO7bKkT7Uib-p+ai2JP9M+z+FYcZ6CAxYA@mail.gmail.com>
+References: <20260128033936.27642-1-eleanor.lin@realtek.com> <20260128033936.27642-6-eleanor.lin@realtek.com>
+In-Reply-To: <20260128033936.27642-6-eleanor.lin@realtek.com>
+From: Linus Walleij <linusw@kernel.org>
+Date: Wed, 28 Jan 2026 13:33:00 +0100
+X-Gmail-Original-Message-ID: <CAD++jL=445wx467ZKE3-qm_BaVzKYXE-7zmReTFZA0KUAaSNyw@mail.gmail.com>
+X-Gm-Features: AZwV_QgfOnd-isQn6MnRkv3cGqrLlmsh0nRuYAlXYLsiWZlNo-_cZBDGdLVdJVw
+Message-ID: <CAD++jL=445wx467ZKE3-qm_BaVzKYXE-7zmReTFZA0KUAaSNyw@mail.gmail.com>
+Subject: Re: [PATCH 5/8] dt-bindings: pinctrl: realtek: add RTD1625 pinctrl binding
+To: Yu-Chun Lin <eleanor.lin@realtek.com>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	linux-pwm@vger.kernel.org
+Cc: robh@kernel.org, krzk+dt@kernel.org, conor+dt@kernel.org, brgl@kernel.org, 
+	james.tai@realtek.com, cy.huang@realtek.com, stanley_chang@realtek.com, 
+	tychang@realtek.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-3.76 / 15.00];
-	SIGNED_PGP(-2.00)[];
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[redhat.com,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[redhat.com:s=mimecast20190719,redhat.com:s=google];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8004-lists,linux-pwm=lfdr.de];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_FROM(0.00)[bounces-8005-lists,linux-pwm=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[redhat.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mripard@redhat.com,linux-pwm@vger.kernel.org];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-pwm];
-	RCPT_COUNT_FIVE(0.00)[6];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: BCBDF9F9F7
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[linusw@kernel.org,linux-pwm@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	RCPT_COUNT_SEVEN(0.00)[11];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,mail.gmail.com:mid]
+X-Rspamd-Queue-Id: AE245A1576
 X-Rspamd-Action: no action
 
+Hi Yu-Chun,
 
---feuizyhgjj4dalgk
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [GIT PULL] pwm: Two fixes and a maintainer update
-MIME-Version: 1.0
+thanks for your patch!
 
-Hi,
+[Uwe, can you check this a bit down!]
 
-On Thu, Jan 22, 2026 at 10:07:56AM -0800, Linus Torvalds wrote:
-> On Thu, 22 Jan 2026 at 06:39, Maxime Ripard <mripard@redhat.com> wrote:
-> >
-> > >
-> > > Obviously some changes are more likely to be user-visible than others,
-> > > so people should take that into account in how careful you need to be
-> > > about a patch.
-> >
-> > Where do we draw the line then, if there's any?
->=20
-> Users complaining is the only real line in the end.
->=20
-> So something like a test-suite complaining is then often a *very* good
-> indication that maybe users will hit some problem, and test suite
-> issues should be taken very seriously just because they might be the
-> first sign of upcoming trouble, and the earlier something is caught
-> and fixed, the easier it's going to be.
->=20
-> But a test-suite error isn't necessarily where you have to draw the
-> line - it's a big red flag, but it *could* be something like "the
-> error checking was done in a different order, and the error number
-> changed in some situations, but it doesn't actually change behavior
-> except for the error message that is printed".
->=20
-> So then a test suite failure is a "let's ignore it, but keep an eye on
-> it in case some program really did care about that *particular* error
-> number".
->=20
-> But a user complaining should basically result in an immediate fix -
-> possibly a "revert and rethink".
->=20
-> So a user complaining about some kernel change breaking their flow is
-> when you don't even start arguing. The issue is over and done, and the
-> change needs to be undone.
->=20
-> There are _very_ few exceptions to that rule, the main one being "the
-> problem was a fundamental huge and gaping security issue and we *had*
-> to make that change, and we couldn't even make your limited use-case
-> just continue to work".
->=20
-> The other exception is "the problem was reported years after it was
-> introduced, and now most people rely on the new behavior".
->=20
-> But starting to argue about users reporting breaking changes is
-> basically the final line for me. I have a couple of people that I have
-> in my spam block-list and refuse to have anything to do with, and they
-> have generally been about exactly that.
->=20
-> Note how it's not about making mistakes and _causing_ the regression.
-> That's normal. That's development. But then arguing about it is a
-> no-no.
->=20
-> So in the kernel tree, we don't argue about regressions. We fix them.
-> That's basically the only really hard rule I have.
->=20
-> Almost everything else is "just explain it, we have various rules for
-> development, but rules are meant to be broken". Not the user-reported
-> regression one.
+On Wed, Jan 28, 2026 at 4:39=E2=80=AFAM Yu-Chun Lin <eleanor.lin@realtek.co=
+m> wrote:
+
+> From: Tzuyi Chang <tychang@realtek.com>
 >
-> > Should we just consider those drivers "wrong", treat it as a bugfix, and
-> > expect userspace applications to request the format they actually rely
-> > on? Or should we continue what we've tried to do and try to support the
-> > right format, and the old format for backward compatibility?
->=20
-> If it used to work, and people relied on it, you add a new "right"
-> format, and keep the old one around. Possibly with some hack to only
-> affect some particular special case, with the hope that the special
-> case and hack can be removed.
->=20
-> Now, if it's one or two users and you can just get them to recompile,
-> that's one thing. Niche hardware and odd use-cases can sometimes be
-> solved that way, and regressions can sometimes be fixed by handholding
-> every single reporter if the reporter is willing and able to change
-> his or her workflow.
->=20
-> But the basic rule is: be so good about backwards compatibility that
-> users never have to worry about upgrading. They should absolutely feel
-> confident that any kernel-reported problem will either be solved, or
-> have an easy solution that is appropriate for *them* (ie a
-> non-technical user shouldn't be expected to be able to do a lot).
->=20
-> Because the last thing we want is people holding back from trying new
-> kernels.
+> Add device tree bindings for RTD1625.
+>
+> Signed-off-by: Tzuyi Chang <tychang@realtek.com>
+> Co-developed-by: Yu-Chun Lin <eleanor.lin@realtek.com>
+> Signed-off-by: Yu-Chun Lin <eleanor.lin@realtek.com>
 
-Ack, thanks a lot for your answer. We'll keep working on
-backward-compatible version then :)
+Overall this looks good!
 
-Maxime
+> +      power-source:
+> +        description: |
+> +          Valid arguments are described as below:
+> +          0: power supply of 1.8V
+> +          1: power supply of 3.3V
+> +        enum: [0, 1]
 
---feuizyhgjj4dalgk
-Content-Type: application/pgp-signature; name="signature.asc"
+OK...
 
------BEGIN PGP SIGNATURE-----
+> +      slew-rate:
+> +        description: |
+> +          Valid arguments are described as below:
+> +            0: ~1ns falling time
+> +            1: ~10ns falling time
+> +            2: ~20ns falling time
+> +            3: ~30ns falling time
+> +        enum: [0, 1, 2, 3]
 
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaXnoCwAKCRAnX84Zoj2+
-dgWpAX4qRYZrIRntzPOrPSpAw7kAd/ZPYumEXm6uqC5hdPmy/O/Kh5wKnocu5aVV
-TG8AL5oBfR1DX7rI0Hp9bUCb5ckCVjTV6Veup+ifBDa+ZrNV2jmqssNd42SyP+Yq
-TSB4QDDyEg==
-=j21N
------END PGP SIGNATURE-----
+Slew rate is usually something like volts/second in SI units, I would
+expect that this differs depending on which power-source is selected?
+I.e. are these values for 1.8V or 3.3V?
 
---feuizyhgjj4dalgk--
+> +      realtek,drive-strength-p:
+> +        description: |
+> +          Some of pins can be driven using the P-MOS and N-MOS transisto=
+r to
+> +          achieve finer adjustments.
 
+Finer compared to what? Compared to the overall setting for slew-rate or
+drive-strength, or both?
+
+> The block-diagram representation is as
+> +          follows:
+> +                         VDD
+> +                          |
+> +                      ||--+
+> +               +-----o||     P-MOS-FET
+> +               |      ||--+
+> +          IN --+          +----- out
+> +               |      ||--+
+> +               +------||     N-MOS-FET
+> +                      ||--+
+> +                          |
+> +                         GND
+
+Nice picture!
+
+> +          The driving strength of the P-MOS/N-MOS transistors impacts th=
+e
+> +          waveform's rise/fall times. Greater driving strength results i=
+n
+> +          shorter rise/fall times. Each P-MOS and N-MOS transistor offer=
+s
+> +          8 configurable levels (0 to 7), with higher values indicating
+> +          greater driving strength, contributing to achieving the desire=
+d
+> +          speed.
+> +
+> +          The realtek,drive-strength-p is used to control the driving st=
+rength
+> +          of the P-MOS output.
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        minimum: 0
+> +        maximum: 7
+> +
+> +      realtek,drive-strength-n:
+> +        description: |
+> +          Similar to the realtek,drive-strength-p, the realtek,drive-str=
+ength-n
+> +          is used to control the driving strength of the N-MOS output.
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        minimum: 0
+> +        maximum: 7
+
+These two are really interesting. But what do these settings represent?
+
+I would *guess* it represents the number of transistors used, simply,
+so 0 means just one P/N transistor is driving and 7 means 8 transistors
+are driving.
+
+Can you provide details here?
+
+In this case, maybe we want a generalized property such as
+drive-stages-p =3D <n>;
+drive-stages-n =3D <n>;
+
+in the generic bindings, if this will appear from more vendors?
+
+> +      realtek,duty-cycle:
+> +        description: |
+> +          An integer describing the level to adjust output duty cycle,
+> +          controlling the proportion of positive and negative waveforms =
+in
+> +          nanoseconds.
+> +          Valid arguments are described as below:
+> +          0: 0ns
+> +          2: + 0.25ns
+> +          3: + 0.5ns
+> +          4: -0.25ns
+> +          5: -0.5ns
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        enum: [0, 2, 3, 4, 5]
+
+This is a bit dubious.
+
+Isn't this one of those cases where you should be using the PWM
+bindings, directly in this node? Just slam in #pwm-cells =3D <...> etc,
+I think this is what you really want.
+
+Please consult/reference:
+Documentation/devicetree/bindings/pwm/pwm.yaml
+consumers would not use pinctrl phandles but something like
+pwms =3D <&pwm ....>;
+
+It's maybe a bit trixy to use two generic bindings in the
+node but it should be just fine.
+
+I don't feel confident mergeing this without Uwe Kleine-K=C3=B6nig's review=
+.
+
+> +      realtek,input-voltage:
+> +        description: |
+> +          Select the input receiver voltage domain for the pin (1.8V or =
+3.3V).
+> +          This defines the reference for VIH/VIL and must match the exte=
+rnal
+> +          signal level.
+> +
+> +          This does not control the output drive voltage, which is handl=
+ed by
+> +          the standard generic 'power-source' property.
+> +
+> +          Valid arguments are described as below:
+> +          0: 1.8V input logic level
+> +          1: 3.3V input logic level
+> +        $ref: /schemas/types.yaml#/definitions/uint32
+> +        enum: [0, 1]
+
+This looks very generic. Can you please just add input-voltage to
+pincfg-node.yaml with a custom format and reference that?
+
+> +      realtek,high-vil:
+> +        type: boolean
+> +        description: |
+> +          Select the input receiver with a higher LOW recognition thresh=
+old
+> +          (VIL) to improve detection for sources with weak pull-down or =
+slow
+> +          falling edges.
+
+Isn't this supposed to be input-schmitt-microvolt?
+
+Or is this something else than a schmitt trigger?
+
+In either case, try to figure out the typical recognition threshold in micr=
+ovolt
+and use that, please.
+
+Yours,
+Linus Walleij
 
