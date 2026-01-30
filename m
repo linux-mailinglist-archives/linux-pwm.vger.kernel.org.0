@@ -1,60 +1,59 @@
-Return-Path: <linux-pwm+bounces-8024-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8025-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qMbTHJw2fWkuQwIAu9opvQ
-	(envelope-from <linux-pwm+bounces-8024-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Fri, 30 Jan 2026 23:54:20 +0100
+	id EFj0ESs4fWlMQwIAu9opvQ
+	(envelope-from <linux-pwm+bounces-8025-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Sat, 31 Jan 2026 00:00:59 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D8AE7BF3DC
-	for <lists+linux-pwm@lfdr.de>; Fri, 30 Jan 2026 23:54:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B7E2BF490
+	for <lists+linux-pwm@lfdr.de>; Sat, 31 Jan 2026 00:00:58 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 48B623004F73
-	for <lists+linux-pwm@lfdr.de>; Fri, 30 Jan 2026 22:54:04 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id DB18D3011590
+	for <lists+linux-pwm@lfdr.de>; Fri, 30 Jan 2026 23:00:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8430335A95A;
-	Fri, 30 Jan 2026 22:54:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 783EF35CBB6;
+	Fri, 30 Jan 2026 23:00:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tQuQ/Wcu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nyXhbl4V"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E629358D38;
-	Fri, 30 Jan 2026 22:54:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5352C35CB64;
+	Fri, 30 Jan 2026 23:00:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769813643; cv=none; b=r8CMJFSF03RUI+gvqbA9i4vDRPRkpynhlbRwMW6ndqwzA1e7xGiD4MwYO53t0whHrgi50sCcYHfISZzUM60U8ANRjCwUE/QTzWKPbgJJJIyth0ryDzLHpcXiRKupD9d4ETNdo/IY+fN6QjYNrE4CCBAW/ehL4Lf8iI5Jr+qrevw=
+	t=1769814005; cv=none; b=ndMD6aZkUdUVcuu6ODUXvOzwzLtdelCZkJhPjmbDwrt4FFvGbVCs92JtmfU7S8+EzsHbevYL2qfxdMLRnTDXbBs/0hOTqFBi9PVpyS9wNoDToGXl0lEV8L8YM5Dtc8AO8fPQ/rbSb4K8yKJLc0s4DVSYnVz5dEcjfNldgjVEaYg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769813643; c=relaxed/simple;
-	bh=BC9YUeb9WKTkaJYQAKVMGEgmblMkguJiuXzL58qwZdo=;
+	s=arc-20240116; t=1769814005; c=relaxed/simple;
+	bh=GBzpXsnsK2Cyxpu5Z14dtX7F4paagl1xkilH19uLH+0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=qLPdgmerT49qM0zm+0bByVg9AN1UBMcVzQQlHVaK0SbgYJOS0x/DWDStVSFcjHE1c9IZNnJJ98NnRMDceNe9dvpsPupynElRh+0UOy5iI0xKv09Icvy2Ax9fGUft+dBC5cWzdHWz8t4Lan8x3pnQ7s+OceHXVHLuJl5Bh1B2imo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tQuQ/Wcu; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95264C4CEF7;
-	Fri, 30 Jan 2026 22:54:02 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=tbv/ByFYzztCUgE6pY0u+tUd6F6yYp2oAFxVwnpEnXkAidR2DGTC6RJXpXIg+WX58d5h3cBzsHJHPBo7UaTgxxaMk7anNg64Vwy6qVfCvLG33e262eTEUStkQR+nVWYWPcWxoHmZu+ViVRr6ufh4+jDTAF5xqYnq2+fmUF2VXqk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nyXhbl4V; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A7EBC4CEF7;
+	Fri, 30 Jan 2026 23:00:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1769813643;
-	bh=BC9YUeb9WKTkaJYQAKVMGEgmblMkguJiuXzL58qwZdo=;
+	s=k20201202; t=1769814005;
+	bh=GBzpXsnsK2Cyxpu5Z14dtX7F4paagl1xkilH19uLH+0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=tQuQ/WcumE1JiQ//1BD6xkMbC7920ppd98IUaxn07imyq6dlfHJoBd6f7/urcHey/
-	 hINeibsZzFMxfIhdTUmecKzDRv/4rrVMjIj+aEhIu7eqObigZ6K9oXzGOhBSvIaTeZ
-	 GC+nN9ylQumoJi6pqJCwsB0h8E9T3OWnWUG4fOy7WGTvWJatWL1UFuatOrQNGbIYsf
-	 Ja+2WDWHqaIzVv89lrJnH36fTI4dUNQH65b7WWtr5UG/N9QqQsYarLXz7xRfjhsjux
-	 IwjEa0erbNQKHWkM5xQVuZfH873ncLYwBhGLLz89JPaQ2d7z82gnP0FSc8b4Y9mNUt
-	 owqXJzO7UbZBw==
-Date: Fri, 30 Jan 2026 23:54:00 +0100
+	b=nyXhbl4VXI1lm1QPv0+uz/7kz0F7sLvf7W5tMuWj/CH/lcUlXBOoGgoiKI/aV3vbw
+	 rRwtbiud1B17Rg5m7GwSHMqBCPAmm7GPl6iL2QFt+qarYysv0ktSXfIbXC1mimMdhu
+	 NuuhgHVfUNAYpxjU3VqkyYQmBWqchZIJAk5RXefKDjjPEsX63Uw8ITRZbdrUvecXJ7
+	 8pmjBROil7CQtTIrhOEd6LxF9eOlDBjVcMaHQxLgZZ7GNnr5unNIAVpE+fyulFkrvU
+	 u4dwz6HexOHK/SmRIvlQKL48sa8YKl//9jnjE8Rt9mzLDcqMMeWIxvxAi+E0VrRCU4
+	 UDkyrvMKiuhYg==
+Date: Sat, 31 Jan 2026 00:00:02 +0100
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Frank Li <Frank.li@nxp.com>
-Cc: "Viorel Suman (OSS)" <viorel.suman@oss.nxp.com>, 
-	Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, 
-	Fabio Estevam <festevam@gmail.com>, linux-pwm@vger.kernel.org, imx@lists.linux.dev, 
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: "Viorel Suman (OSS)" <viorel.suman@oss.nxp.com>
+Cc: Frank Li <Frank.Li@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>, 
+	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-pwm@vger.kernel.org, 
+	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] pwm: imx-tpm: keep channel state instead of counting
-Message-ID: <hgq3sqxuav3z3fgxyighfgqan6hliu2bev7bthgrmzlwsjecmv@7bxor6zucgct>
+Message-ID: <sqpcohdky6m2kz5o7izoclr7k4wi2s72mi4ojrdhr2kbogtfbt@v6y5raizg2n5>
 References: <20260130143720.778514-1-viorel.suman@oss.nxp.com>
- <aXztQkefafsgFJvN@lizhi-Precision-Tower-5810>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -62,9 +61,9 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ywia3zssrqv4e5f3"
+	protocol="application/pgp-signature"; boundary="7xvp3kdixsnpt4an"
 Content-Disposition: inline
-In-Reply-To: <aXztQkefafsgFJvN@lizhi-Precision-Tower-5810>
+In-Reply-To: <20260130143720.778514-1-viorel.suman@oss.nxp.com>
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-3.76 / 15.00];
 	SIGNED_PGP(-2.00)[];
@@ -76,8 +75,8 @@ X-Spamd-Result: default: False [-3.76 / 15.00];
 	MIME_GOOD(-0.20)[multipart/signed,text/plain];
 	MAILLIST(-0.15)[generic];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[oss.nxp.com,pengutronix.de,gmail.com,vger.kernel.org,lists.linux.dev,lists.infradead.org];
-	TAGGED_FROM(0.00)[bounces-8024-lists,linux-pwm=lfdr.de];
+	FREEMAIL_CC(0.00)[nxp.com,pengutronix.de,gmail.com,vger.kernel.org,lists.linux.dev,lists.infradead.org];
+	TAGGED_FROM(0.00)[bounces-8025-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -95,52 +94,100 @@ X-Spamd-Result: default: False [-3.76 / 15.00];
 	TAGGED_RCPT(0.00)[linux-pwm];
 	TO_DN_SOME(0.00)[];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: D8AE7BF3DC
+X-Rspamd-Queue-Id: 9B7E2BF490
 X-Rspamd-Action: no action
 
 
---ywia3zssrqv4e5f3
+--7xvp3kdixsnpt4an
 Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 Subject: Re: [PATCH] pwm: imx-tpm: keep channel state instead of counting
 MIME-Version: 1.0
 
-On Fri, Jan 30, 2026 at 12:41:22PM -0500, Frank Li wrote:
-> On Fri, Jan 30, 2026 at 04:37:20PM +0200, Viorel Suman (OSS) wrote:
-> > @@ -166,6 +166,10 @@ static int pwm_imx_tpm_get_state(struct pwm_chip *=
-chip,
-> >
-> >  	/* get channel status */
-> >  	state->enabled =3D FIELD_GET(PWM_IMX_TPM_CnSC_ELS, val) ? true : fals=
-e;
-> > +	if (state->enabled)
-> > +		tpm->enabled_channels |=3D BIT(pwm->hwpwm);
-> > +	else
-> > +		tpm->enabled_channels &=3D ~BIT(pwm->hwpwm);
->=20
-> Do you have lock for RMW? or you should atomic_or() and atomic_and()
+Hello,
 
-=2Eget_state() is called under the chip lock, so the locking should be
-fine.
+On Fri, Jan 30, 2026 at 04:37:20PM +0200, Viorel Suman (OSS) wrote:
+> diff --git a/drivers/pwm/pwm-imx-tpm.c b/drivers/pwm/pwm-imx-tpm.c
+> index 5b399de16d60..0f8643f4a70b 100644
+> --- a/drivers/pwm/pwm-imx-tpm.c
+> +++ b/drivers/pwm/pwm-imx-tpm.c
+> @@ -62,7 +62,7 @@ struct imx_tpm_pwm_chip {
+>  	void __iomem *base;
+>  	struct mutex lock;
+>  	u32 user_count;
+> -	u32 enable_count;
+> +	u32 enabled_channels;
+>  	u32 real_period;
+>  };
+> =20
+> @@ -166,6 +166,10 @@ static int pwm_imx_tpm_get_state(struct pwm_chip *ch=
+ip,
+> =20
+>  	/* get channel status */
+>  	state->enabled =3D FIELD_GET(PWM_IMX_TPM_CnSC_ELS, val) ? true : false;
+> +	if (state->enabled)
+> +		tpm->enabled_channels |=3D BIT(pwm->hwpwm);
+> +	else
+> +		tpm->enabled_channels &=3D ~BIT(pwm->hwpwm);
+
+I'm not sure about this being the right approach, feels like the driver
+sells the pwm core down the river resulting in something the might work
+now but isn't robust.
+
+If I understand it right, keeping the enable count balanced depends on
+=2Eget_state() being called.
+
+The usual and robust approach is that .probe() checks the device state
+and initializes enable counts and the like accordingly.
+=20
+>  	return 0;
+>  }
+> @@ -282,15 +286,19 @@ static int pwm_imx_tpm_apply_hw(struct pwm_chip *ch=
+ip,
+>  	}
+>  	writel(val, tpm->base + PWM_IMX_TPM_CnSC(pwm->hwpwm));
+> =20
+> -	/* control the counter status */
+> +	/* control the channel state */
+>  	if (state->enabled !=3D c.enabled) {
+>  		val =3D readl(tpm->base + PWM_IMX_TPM_SC);
+>  		if (state->enabled) {
+> -			if (++tpm->enable_count =3D=3D 1)
+> +			if (tpm->enabled_channels =3D=3D 0) {
+>  				val |=3D PWM_IMX_TPM_SC_CMOD_INC_EVERY_CLK;
+> +			}
+
+No { } for one line blocks please.
+
+> +			tpm->enabled_channels |=3D BIT(pwm->hwpwm);
+>  		} else {
+> -			if (--tpm->enable_count =3D=3D 0)
+> +			tpm->enabled_channels &=3D ~BIT(pwm->hwpwm);
+> +			if (tpm->enabled_channels =3D=3D 0) {
+>  				val &=3D ~PWM_IMX_TPM_SC_CMOD;
+> +			}
+>  		}
+>  		writel(val, tpm->base + PWM_IMX_TPM_SC);
+>  	}
 
 Best regards
 Uwe
 
---ywia3zssrqv4e5f3
+--7xvp3kdixsnpt4an
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAml9NnAACgkQj4D7WH0S
-/k4HZAgAgpYz3BG+3flQ7e8bEdfouy6v7sOSUJ7IDh3f9w/p8HjkSIFaQbbRCsKf
-vMlD3WQf2bD87YysBuN/oSDlUI/L3qUWRS4PerGgeBAR1kWwMuY/g7E5mVz/OdxV
-kSGVkvBhTVsjE3M3R1XHX0AlKzFR1hGPkZxw18ggECdtwj81QhxS8ZUWmUJaZxle
-w9mFBvYt75QBvXG/am97eJ9hyVv9Br0R1yUYbJazN53Pw0dvWR2ZpL6SFPCscVKX
-EUz+UK6Bj2grSG4/T6jJHJ2B0I/bqhBrn/7jEuY5/x9vLCLm8uLBSihQgDwMg16D
-Ex8i2jdJutn4q67nVavlxs5sjCEerw==
-=coeH
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAml9N+8ACgkQj4D7WH0S
+/k76nAgAn8xLKTNmCc/Rl13FIw2HubBJdNbWuOQ7ASbK49bL/CHl69Q6rhlTDiHH
+7XQD0ngk8c4+NRVnTx7uetLD71ZmWh8daSGg1n80MlRjlQxU1oR/II01FwMGj9tt
+P1tobD+As9HklTNatNg0cKyLKFsCEpB30Lew/KcsBcyu1nchbxUnGJJ9Gp5hP659
+wH4icYh4Y828hfuw8ckuoAXZkGe3wYiS8WFel0xEKmEhIex/EuJAyQuzIAJez+Qe
+LtIL2XTiCQd+DhctVGqo5/aRi+Rd9X0xXEymrh0RwTPIn9CMbbFoxhthLC30/8Er
+OOpYm6Vo+WNti3tgEx3Xx5VuwFNUUQ==
+=eAkP
 -----END PGP SIGNATURE-----
 
---ywia3zssrqv4e5f3--
+--7xvp3kdixsnpt4an--
 
