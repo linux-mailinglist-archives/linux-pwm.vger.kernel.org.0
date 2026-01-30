@@ -1,42 +1,42 @@
-Return-Path: <linux-pwm+bounces-8019-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8020-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aJUdJomjfGmMOAIAu9opvQ
-	(envelope-from <linux-pwm+bounces-8019-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Fri, 30 Jan 2026 13:26:49 +0100
+	id GG46CMijfGmMOAIAu9opvQ
+	(envelope-from <linux-pwm+bounces-8020-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Fri, 30 Jan 2026 13:27:52 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id C2952BA7DA
-	for <lists+linux-pwm@lfdr.de>; Fri, 30 Jan 2026 13:26:48 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id AAEACBA814
+	for <lists+linux-pwm@lfdr.de>; Fri, 30 Jan 2026 13:27:51 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id B172130152F8
-	for <lists+linux-pwm@lfdr.de>; Fri, 30 Jan 2026 12:25:25 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 0197E302DF48
+	for <lists+linux-pwm@lfdr.de>; Fri, 30 Jan 2026 12:25:35 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2D5E537AA8E;
-	Fri, 30 Jan 2026 12:25:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AEB77378D8A;
+	Fri, 30 Jan 2026 12:25:11 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B4C1F3793DA;
-	Fri, 30 Jan 2026 12:25:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86F91378810;
+	Fri, 30 Jan 2026 12:25:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769775907; cv=none; b=ZK1IrubF6lLq0MQsM9TO8SwXLmrjPJkWwjdoesinvtramnSgmMy/dDSMjucrxtpMqznWEhJDhg/yhXHu2eufLRluv5MVoOfWUCzOsH+tUW0oltMcYMPnK+c90AILZFEE02L7q6EIYw8xr50OBxSMyQMgCkJVnW6DruU+Vo3+k0s=
+	t=1769775911; cv=none; b=N0GocKFFAbJFju0q6VdnWucKBE6K0i6MOtupvRDXvUw/hG6ylSjrEM2JFlNNASrnTseP17pijANeC+9QjURNJdNyccrTnp/lnNNbkROUzg7xp43aV7bHOwuRt8dLdNjEVJs/u1umnKOU7+v/wZldaiJleBkKk/8jgTQxgVSjdpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769775907; c=relaxed/simple;
-	bh=aWxSqyUwGAOoEHpdWB2kVArbfiZoKhA+/2A39gDK1eQ=;
+	s=arc-20240116; t=1769775911; c=relaxed/simple;
+	bh=xhmPVXoMDCu27t4fzv10/A0dd5EUYSmW7DlIX7IuBis=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=meRASec7BTxUf3Kt1SYTpCHhGonL1pv2c+J4DG94Agsi8DTUxm9FF6LzKxe1R8iYIc1ibg/O2g5lR4avRBAoVLJ7VaZlP3vhyjnWbTvTAjNSM1pFjRnoCKoXca64KwEG97J99l3MlgmMsb+KzHawgTtWFvkjFQ0lpmS69+ZcYzo=
+	 MIME-Version; b=dFV/qsodaF+euR+OJWa1BfNSVnstGCGhW7mDSBJvkFTuMFTJojzUsCkjJ4i5O9WbycTXeN2MUkaL1lX0BIhZT6eLOnrdVWGdWrWvKgxC/SPbKjfdZmwwI48smQGmebyoEaN9SHgicfbHfUI6lFlG6SI+4TdTAnjSDo+FNCSqPr8=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.171
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
-X-CSE-ConnectionGUID: Q9ShKTg3QuC0RJlV7XeW1Q==
-X-CSE-MsgGUID: BBud2CgoRF+3ZKjE0NjVxg==
+X-CSE-ConnectionGUID: 4kL42DtVQM+HTyQ2uqJ0Ww==
+X-CSE-MsgGUID: 2sbEYGBaRJ2+U+YnQiScmA==
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 30 Jan 2026 21:25:03 +0900
+  by relmlie5.idc.renesas.com with ESMTP; 30 Jan 2026 21:25:09 +0900
 Received: from demon-pc.localdomain (unknown [10.226.92.78])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 629954190888;
-	Fri, 30 Jan 2026 21:25:00 +0900 (JST)
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 044F84177CAA;
+	Fri, 30 Jan 2026 21:25:04 +0900 (JST)
 From: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
 To: Biju Das <biju.das.jz@bp.renesas.com>,
 	William Breathitt Gray <wbg@kernel.org>,
@@ -49,9 +49,9 @@ Cc: linux-iio@vger.kernel.org,
 	linux-pwm@vger.kernel.org,
 	Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>,
 	stable@vger.kernel.org
-Subject: [PATCH 3/5] pwm: rz-mtu3: correctly enable HW channel 4 and 7
-Date: Fri, 30 Jan 2026 14:23:51 +0200
-Message-ID: <20260130122353.2263273-4-cosmin-gabriel.tanislav.xa@renesas.com>
+Subject: [PATCH 4/5] counter: rz-mtu3-cnt: prevent counter from being toggled multiple times
+Date: Fri, 30 Jan 2026 14:23:52 +0200
+Message-ID: <20260130122353.2263273-5-cosmin-gabriel.tanislav.xa@renesas.com>
 X-Mailer: git-send-email 2.52.0
 In-Reply-To: <20260130122353.2263273-1-cosmin-gabriel.tanislav.xa@renesas.com>
 References: <20260130122353.2263273-1-cosmin-gabriel.tanislav.xa@renesas.com>
@@ -68,20 +68,20 @@ X-Spamd-Result: default: False [1.64 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	DMARC_POLICY_SOFTFAIL(0.10)[renesas.com : SPF not aligned (relaxed), No valid DKIM,none];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8019-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8020-lists,linux-pwm=lfdr.de];
 	FREEMAIL_TO(0.00)[bp.renesas.com,kernel.org,gmail.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FROM_NEQ_ENVFROM(0.00)[cosmin-gabriel.tanislav.xa@renesas.com,linux-pwm@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	R_DKIM_NA(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_COUNT_FIVE(0.00)[5];
@@ -89,118 +89,73 @@ X-Spamd-Result: default: False [1.64 / 15.00];
 	TO_DN_SOME(0.00)[];
 	TAGGED_RCPT(0.00)[linux-pwm];
 	PRECEDENCE_BULK(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[renesas.com:mid,renesas.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: C2952BA7DA
+	DBL_BLOCKED_OPENRESOLVER(0.00)[renesas.com:mid,renesas.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: AAEACBA814
 X-Rspamd-Action: no action
 
-HW channels 4 and 7 require an additional bit to be set in the TOER{A,B}
-registers in order to enable PWM output.
+Runtime PM counter is incremented / decremented each time the sysfs
+enable file is written to.
 
-Add the necessary logic to update these bits when enabling or disabling
-PWM on these channels.
+If user writes 0 to the sysfs enable file multiple times, runtime PM
+usage count underflows, generating the following message.
+
+rz-mtu3-counter rz-mtu3-counter.0: Runtime PM usage count underflow!
+
+At the same time, hardware registers end up being accessed with clocks
+off in rz_mtu3_terminate_counter() to disable an already disabled
+channel.
+
+If user writes 1 to the sysfs enable file multiple times, runtime PM
+usage count will be incremented each time, requiring the same number of
+0 writes to get it back to 0.
+
+If user writes 0 to the sysfs enable file while PWM is in progress, PWM
+is stopped without counter being the owner of the underlying MTU3
+channel.
+
+Check against the cached count_is_enabled value and exit if the user
+is trying to set the same enable value.
 
 Cc: stable@vger.kernel.org
-Fixes: 254d3a727421 ("pwm: Add Renesas RZ/G2L MTU3a PWM driver")
+Fixes: 0be8907359df ("counter: Add Renesas RZ/G2L MTU3a counter driver")
 Signed-off-by: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
 ---
- drivers/pwm/pwm-rz-mtu3.c   | 40 +++++++++++++++++++++++++++++++++++--
- include/linux/mfd/rz-mtu3.h |  2 ++
- 2 files changed, 40 insertions(+), 2 deletions(-)
+ drivers/counter/rz-mtu3-cnt.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pwm/pwm-rz-mtu3.c b/drivers/pwm/pwm-rz-mtu3.c
-index 7558e28f4786..ed5fbc4015aa 100644
---- a/drivers/pwm/pwm-rz-mtu3.c
-+++ b/drivers/pwm/pwm-rz-mtu3.c
-@@ -226,10 +226,37 @@ static void rz_mtu3_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
- 	mutex_unlock(&rz_mtu3_pwm->lock);
+diff --git a/drivers/counter/rz-mtu3-cnt.c b/drivers/counter/rz-mtu3-cnt.c
+index e755d54dfece..a4a8ef2d88f0 100644
+--- a/drivers/counter/rz-mtu3-cnt.c
++++ b/drivers/counter/rz-mtu3-cnt.c
+@@ -499,21 +499,25 @@ static int rz_mtu3_count_enable_write(struct counter_device *counter,
+ 	struct rz_mtu3_cnt *const priv = counter_priv(counter);
+ 	int ret = 0;
+ 
++	mutex_lock(&priv->lock);
++
++	if (priv->count_is_enabled[count->id] == enable)
++		goto exit;
++
+ 	if (enable) {
+-		mutex_lock(&priv->lock);
+ 		pm_runtime_get_sync(ch->dev);
+ 		ret = rz_mtu3_initialize_counter(counter, count->id);
+ 		if (ret == 0)
+ 			priv->count_is_enabled[count->id] = true;
+-		mutex_unlock(&priv->lock);
+ 	} else {
+-		mutex_lock(&priv->lock);
+ 		rz_mtu3_terminate_counter(counter, count->id);
+ 		priv->count_is_enabled[count->id] = false;
+ 		pm_runtime_put(ch->dev);
+-		mutex_unlock(&priv->lock);
+ 	}
+ 
++exit:
++	mutex_unlock(&priv->lock);
++
+ 	return ret;
  }
- 
-+static void rz_mtu3_pwm_set_toer_bit(struct rz_mtu3_pwm_chip *rz_mtu3_pwm,
-+				     struct rz_mtu3_pwm_channel *priv,
-+				     bool is_primary, bool set)
-+{
-+	u8 bitpos;
-+	u16 reg;
-+
-+	/*
-+	 * HW channels 4 and 7 require an additional register write to enable
-+	 * PWM output.
-+	 */
-+	if (priv->mtu->channel_number == RZ_MTU3_CHAN_4)
-+		reg = RZ_MTU3_TOERA;
-+	else if (priv->mtu->channel_number == RZ_MTU3_CHAN_7)
-+		reg = RZ_MTU3_TOERB;
-+	else
-+		return;
-+
-+	if (is_primary)
-+		bitpos = 1;
-+	else
-+		bitpos = 4;
-+
-+	rz_mtu3_shared_reg_update_bit(priv->mtu, reg, bitpos, set);
-+}
-+
- static int rz_mtu3_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
- {
- 	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = to_rz_mtu3_pwm_chip(chip);
- 	struct rz_mtu3_pwm_channel *priv;
-+	bool is_primary;
- 	u32 ch;
- 	u8 val;
- 	int rc;
-@@ -240,10 +267,15 @@ static int rz_mtu3_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
- 
- 	priv = rz_mtu3_get_channel(rz_mtu3_pwm, pwm->hwpwm);
- 	ch = priv - rz_mtu3_pwm->channel_data;
-+	is_primary = priv->map->base_pwm_number == pwm->hwpwm;
-+
- 	val = RZ_MTU3_TIOR_OC_IOB_TOGGLE | RZ_MTU3_TIOR_OC_IOA_H_COMP_MATCH;
- 
- 	rz_mtu3_8bit_ch_write(priv->mtu, RZ_MTU3_TMDR1, RZ_MTU3_TMDR1_MD_PWMMODE1);
--	if (priv->map->base_pwm_number == pwm->hwpwm)
-+
-+	rz_mtu3_pwm_set_toer_bit(rz_mtu3_pwm, priv, is_primary, true);
-+
-+	if (is_primary)
- 		rz_mtu3_8bit_ch_write(priv->mtu, RZ_MTU3_TIORH, val);
- 	else
- 		rz_mtu3_8bit_ch_write(priv->mtu, RZ_MTU3_TIORL, val);
-@@ -262,17 +294,21 @@ static void rz_mtu3_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
- {
- 	struct rz_mtu3_pwm_chip *rz_mtu3_pwm = to_rz_mtu3_pwm_chip(chip);
- 	struct rz_mtu3_pwm_channel *priv;
-+	bool is_primary;
- 	u32 ch;
- 
- 	priv = rz_mtu3_get_channel(rz_mtu3_pwm, pwm->hwpwm);
- 	ch = priv - rz_mtu3_pwm->channel_data;
-+	is_primary = priv->map->base_pwm_number == pwm->hwpwm;
- 
- 	/* Disable output pins of MTU3 channel */
--	if (priv->map->base_pwm_number == pwm->hwpwm)
-+	if (is_primary)
- 		rz_mtu3_8bit_ch_write(priv->mtu, RZ_MTU3_TIORH, RZ_MTU3_TIOR_OC_RETAIN);
- 	else
- 		rz_mtu3_8bit_ch_write(priv->mtu, RZ_MTU3_TIORL, RZ_MTU3_TIOR_OC_RETAIN);
- 
-+	rz_mtu3_pwm_set_toer_bit(rz_mtu3_pwm, priv, is_primary, false);
-+
- 	mutex_lock(&rz_mtu3_pwm->lock);
- 	rz_mtu3_pwm->enable_count[ch]--;
- 	if (!rz_mtu3_pwm->enable_count[ch])
-diff --git a/include/linux/mfd/rz-mtu3.h b/include/linux/mfd/rz-mtu3.h
-index 8421d49500bf..37da5f7bb83a 100644
---- a/include/linux/mfd/rz-mtu3.h
-+++ b/include/linux/mfd/rz-mtu3.h
-@@ -10,6 +10,8 @@
- #include <linux/mutex.h>
- 
- /* 8-bit shared register offsets macros */
-+#define RZ_MTU3_TOERA	0x00A /* Timer output master enable register A */
-+#define RZ_MTU3_TOERB	0x80A /* Timer output master enable register B */
- #define RZ_MTU3_TSTRA	0x080 /* Timer start register A */
- #define RZ_MTU3_TSTRB	0x880 /* Timer start register B */
  
 -- 
 2.52.0
