@@ -1,41 +1,42 @@
-Return-Path: <linux-pwm+bounces-8016-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8017-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gNM7NEOjfGmMOAIAu9opvQ
-	(envelope-from <linux-pwm+bounces-8016-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Fri, 30 Jan 2026 13:25:39 +0100
+	id AFzBAHGjfGmMOAIAu9opvQ
+	(envelope-from <linux-pwm+bounces-8017-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Fri, 30 Jan 2026 13:26:25 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 591F9BA771
-	for <lists+linux-pwm@lfdr.de>; Fri, 30 Jan 2026 13:25:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 6A250BA7AB
+	for <lists+linux-pwm@lfdr.de>; Fri, 30 Jan 2026 13:26:24 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id F3C1C30300EC
-	for <lists+linux-pwm@lfdr.de>; Fri, 30 Jan 2026 12:25:03 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E47C73040332
+	for <lists+linux-pwm@lfdr.de>; Fri, 30 Jan 2026 12:25:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 416573783CE;
-	Fri, 30 Jan 2026 12:24:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6510379999;
+	Fri, 30 Jan 2026 12:25:03 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from relmlie5.idc.renesas.com (relmlor1.renesas.com [210.160.252.171])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3880036B05C;
-	Fri, 30 Jan 2026 12:24:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.171
+Received: from relmlie6.idc.renesas.com (relmlor2.renesas.com [210.160.252.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F2C1627703E;
+	Fri, 30 Jan 2026 12:25:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.160.252.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1769775898; cv=none; b=PNTm4qLOM7Pwf0aJH0uGc0B7EcZg8b0Je8EjmCy2xElN8su4p0tt/g7sPEkEtyVS8ULfLG5kb7z7EcIFPMq4hyFnu7XEZnMlhawNFPmW4eCU40BTERv9DQEfjYZ4dVZsmNM2SI0Bo0RmbD3OqyDDgtN/jVCSEP9mFzTdEjKIAC0=
+	t=1769775903; cv=none; b=p8WU5XUtWga9xYvY3A8Xs8LHtTpz308cD+18ESuPrZ55Zxppv7IaDRskdxbXqQrKYaM7Nc3UvEX9X5lkYqAuzr5BRZdq8LPXhlEikcnO0NZhubmZOlDAdYKPdg0nk9iKg9wEpOWeLphdDvA+EMPQIuwUugSuKNV8WAugTfG7uZE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1769775898; c=relaxed/simple;
-	bh=Pu/D/MqAtuCra0f6cMUDlK7OdIThQPfoBXULNMCwseE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=V27swykVJXY6UgkIyefSuhDEwzPJWdEGsx8/ieWnP9fcWgHWdQQDnxFfKEhVjB7s1uMh3S7IdeUO+TL+jjvQdB5v9NOBguok2ARGYTaSsF1UdLhWjobvQb2VIZ/ivObeCgAE+8SCTp/MGCAhgdu1o5h/c136uIMgCjkZMBEcpu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.171
+	s=arc-20240116; t=1769775903; c=relaxed/simple;
+	bh=UCnersT8IzdlengUOQCVxr4bmPM5TvftAlC9gzv+n9Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=AeEVT52kjYuqWf6kAim4+39d2cxhhe/2whu/KvbWoMeWu8S00jPLvaoXBQYu/KXRODL0jjwWvfD8f5vkIvyuQ0ceZ8f8O8GNx4wXxZ2FTiU+a8vw9fyhOi6ss6B6faDN/HrJLddGPg/b1R7JEu+5fkBeENNVtJ/VqbPX+uSEg2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; arc=none smtp.client-ip=210.160.252.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
-X-CSE-ConnectionGUID: nX8ZW6YtRiKWK2Wj8EbUAA==
-X-CSE-MsgGUID: BKHOHriOTaW2RkA2WX91Ug==
+X-CSE-ConnectionGUID: DuDAgcJJQ9WiR5gqxtAtRQ==
+X-CSE-MsgGUID: 0QgbC7VoTISaoYFjLhwfJw==
 Received: from unknown (HELO relmlir6.idc.renesas.com) ([10.200.68.152])
-  by relmlie5.idc.renesas.com with ESMTP; 30 Jan 2026 21:24:48 +0900
+  by relmlie6.idc.renesas.com with ESMTP; 30 Jan 2026 21:24:54 +0900
 Received: from demon-pc.localdomain (unknown [10.226.92.78])
-	by relmlir6.idc.renesas.com (Postfix) with ESMTP id 162454190888;
-	Fri, 30 Jan 2026 21:24:44 +0900 (JST)
+	by relmlir6.idc.renesas.com (Postfix) with ESMTP id C799C419087D;
+	Fri, 30 Jan 2026 21:24:50 +0900 (JST)
 From: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
 To: Biju Das <biju.das.jz@bp.renesas.com>,
 	William Breathitt Gray <wbg@kernel.org>,
@@ -46,11 +47,14 @@ Cc: linux-iio@vger.kernel.org,
 	linux-renesas-soc@vger.kernel.org,
 	linux-kernel@vger.kernel.org,
 	linux-pwm@vger.kernel.org,
-	Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
-Subject: [PATCH 0/5] Renesas MTU3 PWM / counter fixes
-Date: Fri, 30 Jan 2026 14:23:48 +0200
-Message-ID: <20260130122353.2263273-1-cosmin-gabriel.tanislav.xa@renesas.com>
+	Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>,
+	stable@vger.kernel.org
+Subject: [PATCH 1/5] pwm: rz-mtu3: fix prescale check when enabling 2nd channel
+Date: Fri, 30 Jan 2026 14:23:49 +0200
+Message-ID: <20260130122353.2263273-2-cosmin-gabriel.tanislav.xa@renesas.com>
 X-Mailer: git-send-email 2.52.0
+In-Reply-To: <20260130122353.2263273-1-cosmin-gabriel.tanislav.xa@renesas.com>
+References: <20260130122353.2263273-1-cosmin-gabriel.tanislav.xa@renesas.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -70,7 +74,7 @@ X-Spamd-Result: default: False [1.64 / 15.00];
 	DMARC_POLICY_SOFTFAIL(0.10)[renesas.com : SPF not aligned (relaxed), No valid DKIM,none];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8016-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8017-lists,linux-pwm=lfdr.de];
 	FREEMAIL_TO(0.00)[bp.renesas.com,kernel.org,gmail.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
@@ -81,143 +85,100 @@ X-Spamd-Result: default: False [1.64 / 15.00];
 	R_DKIM_NA(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_COUNT_FIVE(0.00)[5];
-	RCPT_COUNT_SEVEN(0.00)[10];
+	RCPT_COUNT_SEVEN(0.00)[11];
 	TO_DN_SOME(0.00)[];
 	TAGGED_RCPT(0.00)[linux-pwm];
 	PRECEDENCE_BULK(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[renesas.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 591F9BA771
+	DBL_BLOCKED_OPENRESOLVER(0.00)[renesas.com:mid,renesas.com:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 6A250BA7AB
 X-Rspamd-Action: no action
 
-The Renesas MTU3 PWM and counter drivers have some issues which have
-been observed while adding support for the Renesas RZ/T2H and RZ/N2H
-SoCs.
+enable_count is only incremented after rz_mtu3_pwm_config() is called
+for the current PWM channel, causing prescale to not be checked if one
+PWM channel is enabled and we're enabling the second PWM channel of the
+same HW channel.
 
-This series fixes the most important issues which prevent normal
-functioning of the driver, while other less important issues will be
-handled in a future series.
+To handle this edge case, if the user_count of the HW channel is larger
+than 1 and the sibling PWM channel is enabled, check that the new
+prescale is not smaller than the sibling's prescale.
 
-Questions for the PWM maintainer:
+If the new prescale is larger than the sibling's prescale, use the
+sibling's prescale.
 
-1)
+The user_count check is ensures that we are indeed dealing with a HW
+channel that has two IOs.
 
-The handling introduced in patches 1 and 2 is similar to the approach
-taken in commits [1] and [2].
+Cc: stable@vger.kernel.org
+Fixes: 254d3a727421 ("pwm: Add Renesas RZ/G2L MTU3a PWM driver")
+Signed-off-by: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
+---
+ drivers/pwm/pwm-rz-mtu3.c | 24 +++++++++++++++++++-----
+ 1 file changed, 19 insertions(+), 5 deletions(-)
 
-Is this the right approach?
-
-This code snippet below extracted from drivers/pwm/pwm-rzg2l-gpt.c
-entirely prevents the period ticks from changing at all when two PWM
-channels backed by the same HW channel are in use.
-
-if (rzg2l_gpt->channel_request_count[ch] > 1) {
-  u8 sibling_ch = rzg2l_gpt_sibling(pwm->hwpwm);
-
-  if (rzg2l_gpt_is_ch_enabled(rzg2l_gpt, sibling_ch)) {
-    if (period_ticks < rzg2l_gpt->period_ticks[ch])
-      return -EBUSY;
-
-    period_ticks = rzg2l_gpt->period_ticks[ch];
-  }
-}
-
-Same logic has been imposed in patches 1 and 2 as the HW limitation is
-similar.
-
-Based on the logic here, a second channel can be enabled as long as its
-period is larger than the period of the first enabled channel, and the
-period and duty cycle will be adjusted to be <= to the period of the
-first enabled channel.
-
-But once the second channel is enabled, there's no way to adjust the
-period of either channels anymore.
-
-Wouldn't a better solution be that the smallest period between the two
-channels is used, so that adjustment is still possible dynamically?
-
-Here is an example.
-
-echo 0 > /sys/class/pwm/pwmchip0/export
-echo 1 > /sys/class/pwm/pwmchip0/export
-echo 0xFFF000 > /sys/class/pwm/pwmchip0/pwm0/period
-echo 0x7FF800 > /sys/class/pwm/pwmchip0/pwm0/duty_cycle
-echo 0xFFF000 > /sys/class/pwm/pwmchip0/pwm1/period
-echo 0x7FF800 > /sys/class/pwm/pwmchip0/pwm1/duty_cycle
-echo 1 > /sys/class/pwm/pwmchip0/pwm0/enable
-echo 1 > /sys/class/pwm/pwmchip0/pwm1/enable
-
-Now both LEDs are on, let's increase the period.
-
-echo 0xFFFF000 > /sys/class/pwm/pwmchip0/pwm0/period
-echo 0x7FFF800 > /sys/class/pwm/pwmchip0/pwm0/duty_cycle
-
-The effective period did not change.
-
-echo 0xFFFF000 > /sys/class/pwm/pwmchip0/pwm1/period
-echo 0x7FFF800 > /sys/class/pwm/pwmchip0/pwm1/duty_cycle
-
-The effective period didn't change now either.
-
-echo 0 > /sys/class/pwm/pwmchip0/pwm0/enable
-echo 0 > /sys/class/pwm/pwmchip0/pwm1/enable
-
-echo 1 > /sys/class/pwm/pwmchip0/pwm0/enable
-echo 1 > /sys/class/pwm/pwmchip0/pwm1/enable
-
-After turning the PWMs off and on again, the effective period is
-updated.
-
-If we were to change the period dynamically to the smallest one, the
-LEDs would have changed their effective period without needing to be
-turned off and on again.
-
-Would this approach be better than the current approach? I can see that
-other drivers just refuse updating the period entirely when the PWM
-channels must share the same period.
-
-
-2)
-
-Another issue that I've encountered is that PWM is left enabled even if
-the channel is unexported.
-
-Here is an example.
-
-echo 0 > /sys/class/pwm/pwmchip0/export
-echo 0xFFFF000 > /sys/class/pwm/pwmchip0/pwm0/period
-echo 0x7FFF800 > /sys/class/pwm/pwmchip0/pwm0/duty_cycle
-echo 1 > /sys/class/pwm/pwmchip0/pwm0/enable
-echo 0 > /sys/class/pwm/pwmchip0/unexport
-
-The connected LED is kept blinking as 0 was not written to enable.
-
-Is this intended? Or should the PWM turn off on unexport?
-
-
-3)
-
-Should the .get_state() ops read the period and duty cycle from the
-hardware if the PWM is not enabled?
-
-Currently the MTU3 driver guards reading period and duty cycle based on
-whether the PWM is enabled.
-
-[1]: e373991eb9ff ("pwm: rzg2l-gpt: Accept requests for too high period length")
-[2]: fae00ea9f003 ("pwm: rzg2l-gpt: Allow checking period_tick cache value only if sibling channel is enabled")
-
-Cosmin Tanislav (5):
-  pwm: rz-mtu3: fix prescale check when enabling 2nd channel
-  pwm: rz-mtu3: impose period restrictions
-  pwm: rz-mtu3: correctly enable HW channel 4 and 7
-  counter: rz-mtu3-cnt: prevent counter from being toggled multiple
-    times
-  counter: rz-mtu3-cnt: do not use struct rz_mtu3_channel's dev member
-
- drivers/counter/rz-mtu3-cnt.c | 67 +++++++++++++-----------
- drivers/pwm/pwm-rz-mtu3.c     | 99 ++++++++++++++++++++++++++++-------
- include/linux/mfd/rz-mtu3.h   |  2 +
- 3 files changed, 117 insertions(+), 51 deletions(-)
-
+diff --git a/drivers/pwm/pwm-rz-mtu3.c b/drivers/pwm/pwm-rz-mtu3.c
+index ab39bd37edaf..f6073be1c2f8 100644
+--- a/drivers/pwm/pwm-rz-mtu3.c
++++ b/drivers/pwm/pwm-rz-mtu3.c
+@@ -142,6 +142,14 @@ rz_mtu3_get_channel(struct rz_mtu3_pwm_chip *rz_mtu3_pwm, u32 hwpwm)
+ 	return priv;
+ }
+ 
++static u32 rz_mtu3_sibling_hwpwm(u32 hwpwm, bool is_primary)
++{
++	if (is_primary)
++		return hwpwm + 1;
++	else
++		return hwpwm - 1;
++}
++
+ static bool rz_mtu3_pwm_is_ch_enabled(struct rz_mtu3_pwm_chip *rz_mtu3_pwm,
+ 				      u32 hwpwm)
+ {
+@@ -322,6 +330,7 @@ static int rz_mtu3_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	struct rz_mtu3_pwm_channel *priv;
+ 	u64 period_cycles;
+ 	u64 duty_cycles;
++	bool is_primary;
+ 	u8 prescale;
+ 	u16 pv, dc;
+ 	u8 val;
+@@ -329,6 +338,7 @@ static int rz_mtu3_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 
+ 	priv = rz_mtu3_get_channel(rz_mtu3_pwm, pwm->hwpwm);
+ 	ch = priv - rz_mtu3_pwm->channel_data;
++	is_primary = priv->map->base_pwm_number == pwm->hwpwm;
+ 
+ 	period_cycles = mul_u64_u32_div(state->period, rz_mtu3_pwm->rate,
+ 					NSEC_PER_SEC);
+@@ -340,11 +350,15 @@ static int rz_mtu3_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	 * different settings. Modify prescalar if other PWM is off or handle
+ 	 * it, if current prescale value is less than the one we want to set.
+ 	 */
+-	if (rz_mtu3_pwm->enable_count[ch] > 1) {
+-		if (rz_mtu3_pwm->prescale[ch] > prescale)
+-			return -EBUSY;
++	if (rz_mtu3_pwm->user_count[ch] > 1) {
++		u32 sibling_hwpwm = rz_mtu3_sibling_hwpwm(pwm->hwpwm, is_primary);
+ 
+-		prescale = rz_mtu3_pwm->prescale[ch];
++		if (rz_mtu3_pwm_is_ch_enabled(rz_mtu3_pwm, sibling_hwpwm)) {
++			if (rz_mtu3_pwm->prescale[ch] > prescale)
++				return -EBUSY;
++
++			prescale = rz_mtu3_pwm->prescale[ch];
++		}
+ 	}
+ 
+ 	pv = rz_mtu3_pwm_calculate_pv_or_dc(period_cycles, prescale);
+@@ -371,7 +385,7 @@ static int rz_mtu3_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	if (rz_mtu3_pwm->prescale[ch] != prescale && rz_mtu3_pwm->enable_count[ch])
+ 		rz_mtu3_disable(priv->mtu);
+ 
+-	if (priv->map->base_pwm_number == pwm->hwpwm) {
++	if (is_primary) {
+ 		rz_mtu3_8bit_ch_write(priv->mtu, RZ_MTU3_TCR,
+ 				      RZ_MTU3_TCR_CCLR_TGRA | val);
+ 		rz_mtu3_pwm_write_tgr_registers(priv, RZ_MTU3_TGRA, pv,
 -- 
 2.52.0
 
