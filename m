@@ -1,59 +1,59 @@
-Return-Path: <linux-pwm+bounces-8035-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8036-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wOU2Dy76gWmhNQMAu9opvQ
-	(envelope-from <linux-pwm+bounces-8035-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Tue, 03 Feb 2026 14:37:50 +0100
+	id 6GODJmD7gWk7NQMAu9opvQ
+	(envelope-from <linux-pwm+bounces-8036-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Tue, 03 Feb 2026 14:42:56 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6F30D9F97
-	for <lists+linux-pwm@lfdr.de>; Tue, 03 Feb 2026 14:37:49 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3A335DA0A3
+	for <lists+linux-pwm@lfdr.de>; Tue, 03 Feb 2026 14:42:56 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D1D6D306466A
-	for <lists+linux-pwm@lfdr.de>; Tue,  3 Feb 2026 13:36:13 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id C845B31299B9
+	for <lists+linux-pwm@lfdr.de>; Tue,  3 Feb 2026 13:38:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3C3A239E18E;
-	Tue,  3 Feb 2026 13:36:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2BDF63A0B38;
+	Tue,  3 Feb 2026 13:38:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="D29dbryw"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b="gqfrGukE"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from sender4-pp-g124.zoho.com (sender4-pp-g124.zoho.com [136.143.188.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C23DF346AD7;
-	Tue,  3 Feb 2026 13:36:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 816083921C3;
+	Tue,  3 Feb 2026 13:38:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.124
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770125773; cv=pass; b=SiVFCr5nCsWe+DRqGgaJLVJFbHIVfBFiW6Hlz3CFmEDvNnY1Tj+KwBugxQEIBLYb+1gyqfRpJOEjQ2ynJ4i1T8gdi+Y71ID0pKt2dBGIr02ayyS9KqFQERH9ZCLVY5CJTugKOkqA2mfu1c4lCrhMPwMvPEvWiNcevdtgDaw96Fw=
+	t=1770125883; cv=pass; b=WtamMTEDsl0b7De0SvY81RvmXe21GDMVCX7z9krx4oswHZiHGb+cOTcHhJ9x5c/MtcsjxZ0rvyjPAVDMll2+SrWkrABZqVpemTJvbCoSFaoDx1YQLPDX72kihovRLDqRzIHIC6R3YVb14ZrqwT+2bO8jtd+3/HY9pINaFQhzYkA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770125773; c=relaxed/simple;
-	bh=vTZs6N7T0f8GD00ot6DQ4pjIEZF2g+msILs5OHkvDuM=;
+	s=arc-20240116; t=1770125883; c=relaxed/simple;
+	bh=X6U2N3bNtIcr7AfTMV2vFpFdNwcBvRkjDtNnsnmHxxg=;
 	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=c6W7mJdGrbPwW+71DEgKQi8nOPlQ2hagXG5/jk+up59piP0/3zZMG9wROO8prg3rTNgIzQTyJEFiV8BC6OQubmLr25BO6r4H7VOch5QaWQC6shNLbLxCk8+CrtBqkExmITKlmyfyrj7y+gA4GSq+4MxQ1K7PdzhOJM2Gi4HH4fI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=D29dbryw; arc=pass smtp.client-ip=136.143.188.112
+	 Message-Id:References:To; b=e8iEbSvrRNSc5TJk9q88wwVPQroRgvKXGBfiML2EJYCRNY17W2mkRjt2WDXx0ZdvgMWPhm7oC1e1W/xzMcrHDBalQoT+AG7tm2al2gH9BCKDmIBkf2/VrjgmUgR30Ga78LNAErD4MXLskEVVxE+8+hOenQcCvCZIHl2ycmeTykY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=gqfrGukE; arc=pass smtp.client-ip=136.143.188.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1770125742; cv=none; 
+ARC-Seal: i=1; a=rsa-sha256; t=1770125858; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=NRtDZYrDtG+Qo6TQ6bHGL1iKjJNQwFHS9aGPrnY2taQmU2ygNnd43sIP/YND9vKwNWfnA5+kzEt1epU4CbWKzRHWlplgfv4AvnOEbxMdVKv0Iad7w4eoOhNKqpWV6TBEoK0Awftzly6wqWHLuhXCixuXKha7blt9SgpXPtDKcvg=
+	b=jyI4meaWQ7AMWPlr3ocZeP4a8Leb/wZOp6iLnXi41aC7iUIHpQuEGlDlwkLwa+f7H4TLTJisCBJT8Clo30XcZi5xvOAlCWZabHyL+2GXK8GUTG3qHYqcjUoH412VFP4nasbIC6Kiak7FB1NMfNpgh4KHyQcxxNOZSx4ADoGRBvs=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1770125742; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=HP8JuP4ZZCylaDagLho2pSOiJ0oq/o6LUgghhG4awbc=; 
-	b=UL60gkPGuWwziImQ3DXJd1OyZy4CIH77KYNToI8bnqCQODB7z5bZGNAB+HDk76HzwMHi2sY/ULGT+Sbdtonp+aQBBxkBR+oi1mCsMjKQaczQv9stKMmIsmN9z4EYiA1gbkRHUjNfKcYw+vqIoYkNTawKqsM1/yfeHaMEmmf/aMM=
+	t=1770125858; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=cJJwZPpkNEwlLug5p0tuaBK7xgapljD5Xt4JXpkrlyw=; 
+	b=MRa59Jwa7oNC5AYrn5rgeKyRz6HAyygP+X1pqE9EynAdArLENNm1NR9e1tzJDLNO0C8ksqvfvTbgeSWc+PnCPC1m7BccbXw7NUq/MPayX4XJWouUPdopkDonMkq1r5s8ZS4Z1Th/AVTqNqRU5hAQ7g4JfB+x1u3+My0hD0Ci/vw=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
 	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1770125742;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1770125858;
 	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
 	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=HP8JuP4ZZCylaDagLho2pSOiJ0oq/o6LUgghhG4awbc=;
-	b=D29dbrywcjyDlJoFsJig9167NPWoCvvR8G3w5TDJ1TyWO4fARp+KWxE2r+SPluVH
-	5wsZLXfE+MX0EI1KRM6A/4ZsSj6hSP0hkYMPyTH6/3HW+Vc++fxUt922D075Lj4WL6x
-	NtzpfqxhwHMSw86kdTTTffq5ikFKRb5ZUtV6AjDM=
-Received: by mx.zohomail.com with SMTPS id 1770125741199133.148611143052;
-	Tue, 3 Feb 2026 05:35:41 -0800 (PST)
+	bh=cJJwZPpkNEwlLug5p0tuaBK7xgapljD5Xt4JXpkrlyw=;
+	b=gqfrGukEUbepacr6QOMH1Ji7Ud533J90A6PfT/bryn8vRrSuE+XWziJoQwD5x0SU
+	ThakrPXNSrs/P4CkGg9JH5P4MyVAK7qNv2ESK8H9PHp8yhOgXJiyjuyTerOjgPYnxN3
+	YEjh6zBSDKCrzpLDwMuk0dpA9fMfPm7FItPtVY3Y=
+Received: by mx.zohomail.com with SMTPS id 1770125856001677.2359332250752;
+	Tue, 3 Feb 2026 05:37:36 -0800 (PST)
 Content-Type: text/plain;
 	charset=utf-8
 Precedence: bulk
@@ -64,9 +64,10 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.700.81\))
 Subject: Re: [PATCH v3 1/3] rust: clk: use the type-state pattern
 From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <20260203101726.2cec1050@fedora>
-Date: Tue, 3 Feb 2026 10:35:22 -0300
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
+In-Reply-To: <20260203100913.6d224657@fedora>
+Date: Tue, 3 Feb 2026 10:37:15 -0300
+Cc: Gary Guo <gary@garyguo.net>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
  Viresh Kumar <viresh.kumar@linaro.org>,
  Danilo Krummrich <dakr@kernel.org>,
  Alice Ryhl <aliceryhl@google.com>,
@@ -83,7 +84,6 @@ Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
  Stephen Boyd <sboyd@kernel.org>,
  Miguel Ojeda <ojeda@kernel.org>,
  Boqun Feng <boqun.feng@gmail.com>,
- Gary Guo <gary@garyguo.net>,
  =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
  Benno Lossin <lossin@kernel.org>,
  Andreas Hindborg <a.hindborg@kernel.org>,
@@ -96,10 +96,11 @@ Cc: "Rafael J. Wysocki" <rafael@kernel.org>,
  linux-clk@vger.kernel.org,
  rust-for-linux@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <399B3E13-1ED1-49C2-B5E6-6B6FAA8019D5@collabora.com>
+Message-Id: <E786E2B1-E233-45D3-923D-A2DBA54BB166@collabora.com>
 References: <20260107-clk-type-state-v3-0-77d3e3ee59c2@collabora.com>
  <20260107-clk-type-state-v3-1-77d3e3ee59c2@collabora.com>
- <20260203101726.2cec1050@fedora>
+ <DFSMRQFIYQPO.1A38Y84XZ1GZO@garyguo.net> <20260202171038.10e51e18@fedora>
+ <20260203100913.6d224657@fedora>
 To: Boris Brezillon <boris.brezillon@collabora.com>
 X-Mailer: Apple Mail (2.3826.700.81)
 X-ZohoMailClient: External
@@ -108,16 +109,16 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
 	DMARC_POLICY_ALLOW(-0.50)[collabora.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[collabora.com:s=zohomail];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8035-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8036-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,linaro.org,google.com,linux.intel.com,suse.de,gmail.com,ffwll.ch,redhat.com,baylibre.com,garyguo.net,protonmail.com,umich.edu,vger.kernel.org,lists.freedesktop.org,lists.infradead.org];
+	FREEMAIL_CC(0.00)[garyguo.net,kernel.org,linaro.org,google.com,linux.intel.com,suse.de,gmail.com,ffwll.ch,redhat.com,baylibre.com,protonmail.com,umich.edu,vger.kernel.org,lists.freedesktop.org,lists.infradead.org];
 	RCPT_COUNT_TWELVE(0.00)[30];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
@@ -130,109 +131,87 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-pwm];
 	APPLE_MAILER_COMMON(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[collabora.com:email,collabora.com:dkim,collabora.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: B6F30D9F97
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[collabora.com:email,collabora.com:dkim,collabora.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 3A335DA0A3
 X-Rspamd-Action: no action
 
-Hi Boris,
 
-> On 3 Feb 2026, at 06:17, Boris Brezillon =
+
+> On 3 Feb 2026, at 06:09, Boris Brezillon =
 <boris.brezillon@collabora.com> wrote:
 >=20
 > Hello Daniel,
 >=20
-> On Wed, 07 Jan 2026 12:09:52 -0300
-> Daniel Almeida <daniel.almeida@collabora.com> wrote:
+> On Mon, 2 Feb 2026 17:10:38 +0100
+> Boris Brezillon <boris.brezillon@collabora.com> wrote:
 >=20
->> -        /// Disable and unprepare the clock.
->> +    impl Clk<Enabled> {
->> +        /// Gets [`Clk`] corresponding to a bound [`Device`] and a =
-connection id
->> +        /// and then prepares and enables it.
->>         ///
->> -        /// Equivalent to calling [`Clk::disable`] followed by =
-[`Clk::unprepare`].
->> +        /// Equivalent to calling [`Clk::get`], followed by =
-[`Clk::prepare`],
->> +        /// followed by [`Clk::enable`].
->>         #[inline]
->> -        pub fn disable_unprepare(&self) {
->> -            // SAFETY: By the type invariants, self.as_raw() is a =
-valid argument for
->> -            // [`clk_disable_unprepare`].
->> -            unsafe { bindings::clk_disable_unprepare(self.as_raw()) =
-};
->> +        pub fn get(dev: &Device<Bound>, name: Option<&CStr>) -> =
-Result<Clk<Enabled>> {
->> +            Clk::<Prepared>::get(dev, name)?
->> +                .enable()
->> +                .map_err(|error| error.error)
->> +        }
->> +
->> +        /// Behaves the same as [`Self::get`], except when there is =
-no clock
->> +        /// producer. In this case, instead of returning [`ENOENT`], =
-it returns
->> +        /// a dummy [`Clk`].
->> +        #[inline]
->> +        pub fn get_optional(dev: &Device<Bound>, name: =
-Option<&CStr>) -> Result<Clk<Enabled>> {
->> +            Clk::<Prepared>::get_optional(dev, name)?
->> +                .enable()
->> +                .map_err(|error| error.error)
->> +        }
->> +
->> +        /// Attempts to disable the [`Clk`] and convert it to the =
-[`Prepared`]
->> +        /// state.
->> +        #[inline]
->> +        pub fn disable(self) -> Result<Clk<Prepared>, =
-Error<Enabled>> {
->> +            // We will be transferring the ownership of our =
-`clk_get()` and
->> +            // `clk_enable()` counts to `Clk<Prepared>`.
->> +            let clk =3D ManuallyDrop::new(self);
->> +
->> +            // SAFETY: By the type invariants, `self.0` is a valid =
-argument for
->> +            // [`clk_disable`].
->> +            unsafe { bindings::clk_disable(clk.as_raw()) };
->> +
->> +            Ok(Clk {
->> +                inner: clk.inner,
->> +                _phantom: PhantomData,
->> +            })
->>         }
+>>>> -#[pin_data(PinnedDrop)]
+>>>> +#[pin_data]
+>>>> pub(crate) struct TyrData {
+>>>>     pub(crate) pdev: ARef<platform::Device>,
+>>>>=20
+>>>> @@ -92,13 +92,9 @@ fn probe(
+>>>>         pdev: &platform::Device<Core>,
+>>>>         _info: Option<&Self::IdInfo>,
+>>>>     ) -> impl PinInit<Self, Error> {
+>>>> -        let core_clk =3D Clk::get(pdev.as_ref(), =
+Some(c_str!("core")))?;
+>>>> -        let stacks_clk =3D OptionalClk::get(pdev.as_ref(), =
+Some(c_str!("stacks")))?;
+>>>> -        let coregroup_clk =3D OptionalClk::get(pdev.as_ref(), =
+Some(c_str!("coregroup")))?;
+>>>> -
+>>>> -        core_clk.prepare_enable()?;
+>>>> -        stacks_clk.prepare_enable()?;
+>>>> -        coregroup_clk.prepare_enable()?;
+>>>> +        let core_clk =3D Clk::<Enabled>::get(pdev.as_ref(), =
+Some(c_str!("core")))?;   =20
+>>>=20
+>>> Ah, more turbofish.. I'd really want to avoid them if possible.
+>>>=20
+>>> Any disadvantage on just ask the user to chain =
+`.get().prepare_enable()?`? This
+>>> way it is also clear that some action is performed. =20
 >>=20
->>         /// Get clock's rate.
+>> I've just disc
 >=20
-> Dunno if this has been mentioned already, but I belive the rate
-> getter/setter should be in the generic implementation. Indeed, it's
-> quite common for clock users to change the rate when the clk is
-> disabled to avoid unstable transitional state. The usual pattern for
-> that is:
+> Sorry, I've hit the reply button before I had finished writing my
+> answer. So I was about to say that I had started writing something
+> similar without knowing this series existed, and I feel like we'd =
+don't
+> really need those prepare_enable() shortcuts that exist in C. We might
+> has well just go:
 >=20
-> - clk_set_parent(my_clk, secondary_parent)
-> - clk_disable[_unprepare](primary_parent) // (usually a PLL)
-> - clk_set_rate(primary_parent)
-> - clk[_prepare]_enable(primary_parent)
-> - clk_set_parent(my_clk, primary_parent)
+> Clk::get(dev, Some(c_str!("core"))).prepare()?.enable()?;
 >=20
-> The case where the clk rate is changed while the clk is active is also
-> valid (usually fine when it's just a divider that's changed, because
-> there's no stabilization period).
+> and have the following variant-specofoc functions
 >=20
->> @@ -252,83 +429,31 @@ pub fn set_rate(&self, rate: Hertz) -> Result {
->>         }
->>     }
+> - Clk<Unprepared>::get[_optional]() (no get on Prepared and Enabled
+>  variants)
+> - Clk<Unprepared>::prepare()
+> - Clk<Prepared>::{enable,unprepare}()
+> - Clk<Enabled>::{disable}()
+>=20
+> Regards,
+>=20
+> Boris
+>=20
 >=20
 
 
-I=E2=80=99m ok with this. I just assumed that these operations were only =
-valid on enabled clks.
+I don=E2=80=99t understand how is this better than the turbofish we =
+currently have.
 
-Will change this in the next version.
+In other words, how is this:
 
-=E2=80=94 Daniel=
+Clk::get(dev, Some(c_str!("core"))).prepare()?.enable()?;
+
+Better than this:
+
+Clk::<Enabled>::get(/*=E2=80=A6*/);
+
+=E2=80=94 Daniel
+
+
 
