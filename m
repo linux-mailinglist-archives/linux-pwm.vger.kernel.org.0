@@ -1,47 +1,47 @@
-Return-Path: <linux-pwm+bounces-8055-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8056-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yCmeGtsggmlIPgMAu9opvQ
-	(envelope-from <linux-pwm+bounces-8055-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Tue, 03 Feb 2026 17:22:51 +0100
+	id sAz/Kp4fgmmhPQMAu9opvQ
+	(envelope-from <linux-pwm+bounces-8056-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Tue, 03 Feb 2026 17:17:34 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id CB53EDBDC3
-	for <lists+linux-pwm@lfdr.de>; Tue, 03 Feb 2026 17:22:50 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 259A8DBC73
+	for <lists+linux-pwm@lfdr.de>; Tue, 03 Feb 2026 17:17:34 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E906230C6C4C
-	for <lists+linux-pwm@lfdr.de>; Tue,  3 Feb 2026 16:15:51 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 085C13007674
+	for <lists+linux-pwm@lfdr.de>; Tue,  3 Feb 2026 16:17:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2A563B8D6C;
-	Tue,  3 Feb 2026 16:15:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83BEF3B961B;
+	Tue,  3 Feb 2026 16:17:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="QrFnAl22"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="K7PxGaVp"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 861792DCBE3;
-	Tue,  3 Feb 2026 16:15:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E62E22B594;
+	Tue,  3 Feb 2026 16:17:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770135350; cv=none; b=OrvsmT3Mb6dodrLrDsqZVzziNp81IUk72zqOILS8rAGftyrub/XZQL7IeLRFZPOts95UqrtpCQcLXlUMmx1GGcAm+lNxOxjYYhASWMcn8R5j9Aj1TLL+sw18qh+tKBJ3kw7dn6eb0bROTmTdkiSU2+NGgBagR19emureCL8Dw8Q=
+	t=1770135452; cv=none; b=OIi4aVmn7zoIlkXzJjEOBPyZMPbmYNIANTDBOVl1yLA4rBlm27TaIQKwGWi9cxR6gVRRng6xkJlMou6fYcXgSo4CDkzXGBCT+WtMXoMUkmrLiw7r6XO4nu6/OsvOdQjb96TVbMaxMqoITpZRHFr3O2RCBdRi5CEvuwqjzR/P5Zk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770135350; c=relaxed/simple;
-	bh=fuZTQUH+E/78sks20xJ2HF7aFknTSvUQsFwJrThJ3gc=;
+	s=arc-20240116; t=1770135452; c=relaxed/simple;
+	bh=Y5GCQ53SPa0Arre4QKWM7rqqfYEk92SpOKdkmzkB/sA=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=havRIm7ICFYZMrgoQWo0qDGjKBneeJ1DHBuX/AAdnIujPV4ZF7l+120AtzWVHK1Yn8efHEg/ZZ669XXmWgtM/0Wqnegk3vvPWd+p8+I5TUyJ+C2aQa/NQRR7rAqFuMQBphNNFA68METbDeQJ0jdPhDkIQRgDihaDCi+5AW8p6m8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=QrFnAl22; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B790C116D0;
-	Tue,  3 Feb 2026 16:15:49 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=cf6up5o0mEkwXqWTMc66R0GWuoZtdWMWDY+focy6EEuJTOMPWfLEZVYRicCQEgtQ06UxkyV02S2Cv3xpzTKSq6qnaVdT4SXeTwgl0Ma8SZENSIAgy5n05lCg0k58lPoLbiVShFcyUuueUE0THvUFkRWckks6YbJzSdTgGWC/bQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=K7PxGaVp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47725C116D0;
+	Tue,  3 Feb 2026 16:17:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1770135350;
-	bh=fuZTQUH+E/78sks20xJ2HF7aFknTSvUQsFwJrThJ3gc=;
+	s=korg; t=1770135451;
+	bh=Y5GCQ53SPa0Arre4QKWM7rqqfYEk92SpOKdkmzkB/sA=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=QrFnAl22X7lYs06a6hrCFhyaANXh43lqo8vktQBJ3h1n88G8BFDp75OmIxPeS80FM
-	 86N9tHQ8o20QpJQdU8ggc9wWpanGeD99+dQF9ro4tJTKzfxgTIkgQeozXDfla2roxv
-	 d7PNmpOwrb/ip9ssPKXKdsmVXSVioEg7xBndPJLY=
-Date: Tue, 3 Feb 2026 17:15:47 +0100
+	b=K7PxGaVpkAZn7aly4ZMsjZhSYTnF4SyjU8VoRi2Vhbpg881m+qfI1FT4LJo8z9XiC
+	 D44AcpGlVQa/p93cPsgwNmjTs5KKQuUdWvGW9iSA8uxUDz5/0huFWLGZ6OjELXvkoa
+	 NEG4D3mW7+IFrkRCQpGqDfd7X5vWtHVHaGpPnzAc=
+Date: Tue, 3 Feb 2026 17:17:28 +0100
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To: Matthew Maurer <mmaurer@google.com>
 Cc: Bjorn Andersson <andersson@kernel.org>,
@@ -65,7 +65,7 @@ Cc: Bjorn Andersson <andersson@kernel.org>,
 	driver-core@lists.linux.dev, dri-devel@lists.freedesktop.org,
 	linux-pwm@vger.kernel.org
 Subject: Re: [PATCH v2 3/6] rust: device: Support testing devices for equality
-Message-ID: <2026020315-flop-wiry-f1be@gregkh>
+Message-ID: <2026020338-gratitude-overplay-98b0@gregkh>
 References: <20260203-qcom-socinfo-v2-0-d6719db85637@google.com>
  <20260203-qcom-socinfo-v2-3-d6719db85637@google.com>
 Precedence: bulk
@@ -85,12 +85,12 @@ X-Spamd-Result: default: False [3.84 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[linuxfoundation.org,none];
 	MID_RHS_NOT_FQDN(0.50)[];
 	R_DKIM_ALLOW(-0.20)[linuxfoundation.org:s=korg];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8055-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8056-lists,linux-pwm=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
@@ -104,22 +104,25 @@ X-Spamd-Result: default: False [3.84 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[gregkh@linuxfoundation.org,linux-pwm@vger.kernel.org];
 	DKIM_TRACE(0.00)[linuxfoundation.org:+];
 	TAGGED_RCPT(0.00)[linux-pwm];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linuxfoundation.org:dkim]
-X-Rspamd-Queue-Id: CB53EDBDC3
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linuxfoundation.org:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 259A8DBC73
 X-Rspamd-Action: no action
 
 On Tue, Feb 03, 2026 at 03:46:32PM +0000, Matthew Maurer wrote:
 > This allows device drivers to check if, for example, an auxiliary
 > devices is one of its children by comparing the parent field, or
 > checking if a device parameter is its own device.
+> 
+> Also convert existing `.as_raw() != .as_raw()` to  use this new
+> implementation.
 
-Ok, but why?  This says what it does, but I have no context as to why
-this would be needed.
+Ah, ok, I can see how getting rid of the as_raw() calls here is a "good
+thing", but overall it's just the same code paths :)
 
-What driver wants to know this?
+And I don't see what patch in this series uses this, am I missing it?
 
 thanks,
 
