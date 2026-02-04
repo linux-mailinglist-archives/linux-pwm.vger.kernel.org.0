@@ -1,55 +1,55 @@
-Return-Path: <linux-pwm+bounces-8086-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8087-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id SBH9F64sg2kwjAMAu9opvQ
-	(envelope-from <linux-pwm+bounces-8086-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Wed, 04 Feb 2026 12:25:34 +0100
+	id WOvtLbIsg2kwjAMAu9opvQ
+	(envelope-from <linux-pwm+bounces-8087-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Wed, 04 Feb 2026 12:25:38 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id ADB26E50F1
-	for <lists+linux-pwm@lfdr.de>; Wed, 04 Feb 2026 12:25:33 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id DE52DE50F9
+	for <lists+linux-pwm@lfdr.de>; Wed, 04 Feb 2026 12:25:37 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id C1B393003809
-	for <lists+linux-pwm@lfdr.de>; Wed,  4 Feb 2026 11:25:17 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 18502300863E
+	for <lists+linux-pwm@lfdr.de>; Wed,  4 Feb 2026 11:25:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4085D3ECBC0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 498E93ECBC6;
 	Wed,  4 Feb 2026 11:25:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J26tiq+L"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WGUCMoYx"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 148C63E9F8D;
-	Wed,  4 Feb 2026 11:25:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1653D3E9F8E;
+	Wed,  4 Feb 2026 11:25:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770204314; cv=none; b=ID+dLhbg86Vn+alytSjJt6qbVWS+gnQboBBupAoVXSR11SiEF4VCWC4TkvFOfJaPAC1+XPjFCXT+3lJDvMT6oEu/0XAC18/DTOrgEvMYYuc6SMBTc4M3PrKDVH6s7/QAsmG7n/YdudP9KtI4yCYNXPD7USjaqeNxokCb020QomM=
+	t=1770204314; cv=none; b=G3d0Ri0xw7F/u2rUoaF2eprL1ihrTvDSfCszkp2ciK2Y+UB3YSBt1K9D5nrbQw3bG1mHFZSO34nH/NZUQUoP97w8cJNILcVALgdGNfpM1vdDsKcRjomVZOvJi5sTvm2qnS4gIzL5DhybGv6UMOPcMrPM4TyZjpnvnJyWo9twGXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1770204314; c=relaxed/simple;
-	bh=fNS3C2NaCK+go2nQNBlkD9EyrNNHIb0CZcl2LNOQBmE=;
+	bh=DlyTmDysGY1XB33v65FxlGZh2bVxvGJcWBwNBttMHy4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RFCX6/7rVL6Ng8mJ3Lrk81rI0DGwZkRDcI3fgwn3IGc9mWgQ0QOeix+I79jbSMZ7rvK2sePQYgfY/xx4FZGxUnBzEoAP/2VxXr0PhIsAjjc6VvRQImPAn9TRvwnT3dTF7KpYwPuHZ4R/rIhEgSO/kJSTSElL8TwLXAul3OPDt3k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J26tiq+L; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id ACD12C19422;
+	 In-Reply-To:To:Cc; b=oscy1mdUqAhot2KYVVHi6uWkqWGm1fzDdZJUn82fx79nITsOMMaDBwep6Ra0KSpsxVMrI0KvqGJf5Aa68+YmcJpXOGKERtXl98pFEsTsnHR8ofyWZ5r2lR8Xiojdk3aCWuj3pkgi61p9TwpvAsXI4eZU0JoqNv2Ty8HO6hF2+cI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WGUCMoYx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id C1097C2BCAF;
 	Wed,  4 Feb 2026 11:25:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1770204313;
-	bh=fNS3C2NaCK+go2nQNBlkD9EyrNNHIb0CZcl2LNOQBmE=;
+	bh=DlyTmDysGY1XB33v65FxlGZh2bVxvGJcWBwNBttMHy4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=J26tiq+Ljb3AtXnNJB99YITZHZg9fjBDCPv3EQLSfedawieZD3XoHG1S2zHFcCyDM
-	 2vSZdWg6p/0yABhN7OCv82gJtvecdRjOoU3PrUXhfEHC9cavMzrmKPXpDDTX5liiw/
-	 Q9Os3AV+RfX/1M7/F3XGUX6jcQfpQpbFp1o0FP57Ukjsv3Ib4BFjLIkfd+YKuWHqyn
-	 197W+RVZpv3u8IHt7fGhfFAMYwC4mCvdlOm2yyk/8KjX0O6bbcXpBtoJiwrmkxX6mW
-	 vyX94eTTxS2R0IKS4nyOWG+WJDIP3UL7g7sGWTQ20gxGF36FiM681OmtPKZvWxK3mT
-	 /bM9vGabtcd1Q==
+	b=WGUCMoYxqwybcHrn+vGBd5QHaN5JxKMe0VHNxaeZmtbFd0vYZ3BwJ8m5hAjyRZ0eD
+	 2JIVvL9CxJeb48YIWZL8Hp49Ofp7FboBk7Q31N1+sBMQOC74MJNfvnFS9aMDNmTwJc
+	 /vWoridD8Vn4Nj7bwQyhMAkreL54siL8bGUwW32yihFKR1AztlfhSE8roX72luaGMc
+	 ALHuZzPPpCZFC4ZQ55PvaDHDAdBAplA3bVN0hcawiL/9jlpNiFoFsNHNOSmYgbkxIH
+	 KW9GymmfG5d9cinrJZ2EThR1WDiIs41hnH1ijcK7vMMG3L6LoXzyIrjZo973bSp+oB
+	 H5T79DAQ5KXZA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9815CE95387;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AABE3E95389;
 	Wed,  4 Feb 2026 11:25:13 +0000 (UTC)
 From: George Moussalem via B4 Relay <devnull+george.moussalem.outlook.com@kernel.org>
-Date: Wed, 04 Feb 2026 15:25:07 +0400
-Subject: [PATCH v20 1/6] dt-bindings: pwm: add IPQ6018 binding
+Date: Wed, 04 Feb 2026 15:25:08 +0400
+Subject: [PATCH v20 2/6] pwm: driver for qualcomm ipq6018 pwm block
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -58,7 +58,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260204-ipq-pwm-v20-1-91733011a3d1@outlook.com>
+Message-Id: <20260204-ipq-pwm-v20-2-91733011a3d1@outlook.com>
 References: <20260204-ipq-pwm-v20-0-91733011a3d1@outlook.com>
 In-Reply-To: <20260204-ipq-pwm-v20-0-91733011a3d1@outlook.com>
 To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
@@ -70,15 +70,13 @@ Cc: linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
  George Moussalem <george.moussalem@outlook.com>, 
  Devi Priya <quic_devipriy@quicinc.com>, 
- Baruch Siach <baruch.siach@siklu.com>, 
- Bjorn Andersson <andersson@kernel.org>, 
- Krzysztof Kozlowski <krzk@kernel.org>
+ Baruch Siach <baruch.siach@siklu.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1770204310; l=2042;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1770204310; l=9677;
  i=george.moussalem@outlook.com; s=20250321; h=from:subject:message-id;
- bh=8ayVJ9z0kZoRdShrug1dJ1pjUonk4k9SO1yJzG93fMg=;
- b=Xjogr+JBgSkj89dNR4lbs5wwt6nsNiNMDvn77RW9Yq0JwjKTIcdlGeTUm+BDrkRqR9AbDA8fu
- Kl+vV+XspZnDtLSaskiEusMKhlrcWkFb9Dp6t0Rq7/3x+E1nCRvaS/P
+ bh=lqVC0W9FHdaTi1eT81frsdr/MvrSo0xMFV72k7YrO7I=;
+ b=mcjrEkuzodOMpsOdLZkQ609EXbJZFxJ8sU8yRwppwYWMDGETj4y5NtRIMVLi7GxOiU0zqcWls
+ CZHLZJaNDRaCaTzN1DMBfmpBhwkY/Hu+GKk+Nh9uBfpU2UxvCU4SSmG
 X-Developer-Key: i=george.moussalem@outlook.com; a=ed25519;
  pk=/PuRTSI9iYiHwcc6Nrde8qF4ZDhJBlUgpHdhsIjnqIk=
 X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20250321
@@ -91,107 +89,335 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8086-lists,linux-pwm=lfdr.de,george.moussalem.outlook.com];
+	TAGGED_FROM(0.00)[bounces-8087-lists,linux-pwm=lfdr.de,george.moussalem.outlook.com];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	TO_DN_SOME(0.00)[];
 	FREEMAIL_REPLYTO(0.00)[outlook.com];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	FREEMAIL_CC(0.00)[vger.kernel.org,outlook.com,quicinc.com,siklu.com,kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	HAS_REPLYTO(0.00)[george.moussalem@outlook.com];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
-	DBL_PROHIBIT(0.00)[0.29.158.18:email];
+	NEURAL_HAM(-0.00)[-0.946];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,linux-pwm@vger.kernel.org];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	NEURAL_HAM(-0.00)[-0.971];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	FREEMAIL_CC(0.00)[vger.kernel.org,outlook.com,quicinc.com,siklu.com];
 	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[devicetree.org:url,outlook.com:replyto,outlook.com:email,outlook.com:mid,siklu.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: ADB26E50F1
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	HAS_REPLYTO(0.00)[george.moussalem@outlook.com];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[outlook.com:replyto,outlook.com:email,outlook.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,siklu.com:email]
+X-Rspamd-Queue-Id: DE52DE50F9
 X-Rspamd-Action: no action
 
 From: Devi Priya <quic_devipriy@quicinc.com>
 
-DT binding for the PWM block in Qualcomm IPQ6018 SoC.
+Driver for the PWM block in Qualcomm IPQ6018 line of SoCs. Based on
+driver from downstream Codeaurora kernel tree. Removed support for older
+(V1) variants because I have no access to that hardware.
 
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@linaro.org>
+Tested on IPQ5018 and IPQ6010 based hardware.
+
 Co-developed-by: Baruch Siach <baruch.siach@siklu.com>
 Signed-off-by: Baruch Siach <baruch.siach@siklu.com>
 Signed-off-by: Devi Priya <quic_devipriy@quicinc.com>
+Reviewed-by: Bjorn Andersson <andersson@kernel.org>
 Signed-off-by: George Moussalem <george.moussalem@outlook.com>
 ---
- .../devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml  | 51 ++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
+---
+ drivers/pwm/Kconfig   |  12 +++
+ drivers/pwm/Makefile  |   1 +
+ drivers/pwm/pwm-ipq.c | 239 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 252 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml b/Documentation/devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml
+diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+index 6f3147518376a04b6e890c4bf31e06e1af04054e..e8886a9b64d9689d86920cc0d897231a1cfc06cc 100644
+--- a/drivers/pwm/Kconfig
++++ b/drivers/pwm/Kconfig
+@@ -347,6 +347,18 @@ config PWM_INTEL_LGM
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called pwm-intel-lgm.
+ 
++config PWM_IPQ
++	tristate "IPQ PWM support"
++	depends on ARCH_QCOM || COMPILE_TEST
++	depends on HAVE_CLK && HAS_IOMEM
++	help
++	  Generic PWM framework driver for IPQ PWM block which supports
++	  4 pwm channels. Each of the these channels can be configured
++	  independent of each other.
++
++	  To compile this driver as a module, choose M here: the module
++	  will be called pwm-ipq.
++
+ config PWM_IQS620A
+ 	tristate "Azoteq IQS620A PWM support"
+ 	depends on MFD_IQS62X || COMPILE_TEST
+diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+index 0dc0d2b69025dbd27013285cd335d3cb1ca2ab3f..5630a521a7cffeb83ff8c8960e15eb23ddb1c9f8 100644
+--- a/drivers/pwm/Makefile
++++ b/drivers/pwm/Makefile
+@@ -29,6 +29,7 @@ obj-$(CONFIG_PWM_IMX1)		+= pwm-imx1.o
+ obj-$(CONFIG_PWM_IMX27)		+= pwm-imx27.o
+ obj-$(CONFIG_PWM_IMX_TPM)	+= pwm-imx-tpm.o
+ obj-$(CONFIG_PWM_INTEL_LGM)	+= pwm-intel-lgm.o
++obj-$(CONFIG_PWM_IPQ)		+= pwm-ipq.o
+ obj-$(CONFIG_PWM_IQS620A)	+= pwm-iqs620a.o
+ obj-$(CONFIG_PWM_JZ4740)	+= pwm-jz4740.o
+ obj-$(CONFIG_PWM_KEEMBAY)	+= pwm-keembay.o
+diff --git a/drivers/pwm/pwm-ipq.c b/drivers/pwm/pwm-ipq.c
 new file mode 100644
-index 0000000000000000000000000000000000000000..f9f1f652e7527bc8fb3d5fad51b0057ea53b3766
+index 0000000000000000000000000000000000000000..b944ecb456d59ecef1f59eb865cc3cc90cd82244
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml
-@@ -0,0 +1,51 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pwm/qcom,ipq6018-pwm.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
++++ b/drivers/pwm/pwm-ipq.c
+@@ -0,0 +1,239 @@
++// SPDX-License-Identifier: BSD-3-Clause OR GPL-2.0
++/*
++ * Copyright (c) 2016-2017, 2020 The Linux Foundation. All rights reserved.
++ *
++ * Hardware notes / Limitations:
++ * - The PWM controller has no publicly available datasheet.
++ * - Each of the four channels is programmed via two 32-bit registers
++ *   (REG0 and REG1 at 8-byte stride).
++ * - Period and duty-cycle reconfiguration is fully atomic: new divider,
++ *   pre-divider, and high-duration values are latched by setting the
++ *   UPDATE bit (bit 30 in REG1). The hardware applies the new settings
++ *   at the beginning of the next period without disabling the output,
++ *   so the currently running period is always completed.
++ * - On disable (clearing the ENABLE bit 31 in REG1), the hardware
++ *   finishes the current period before stopping the output. The pin
++ *   is then driven to the inactive (low) level.
++ * - Upon disabling, the hardware resets the pre-divider (PRE_DIV) and divider
++ *   fields (PWM_DIV) in REG0 and REG1 to 0x0000 and 0x0001 respectively.
++ * - Only normal polarity is supported.
++ */
 +
-+title: Qualcomm IPQ6018 PWM controller
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/pwm.h>
++#include <linux/clk.h>
++#include <linux/io.h>
++#include <linux/of.h>
++#include <linux/math64.h>
++#include <linux/of_device.h>
++#include <linux/bitfield.h>
++#include <linux/units.h>
 +
-+maintainers:
-+  - George Moussalem <george.moussalem@outlook.com>
++/* The frequency range supported is 1 Hz to clock rate */
++#define IPQ_PWM_MAX_PERIOD_NS	((u64)NSEC_PER_SEC)
 +
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+          - enum:
-+              - qcom,ipq5018-pwm
-+              - qcom,ipq5332-pwm
-+              - qcom,ipq9574-pwm
-+          - const: qcom,ipq6018-pwm
-+      - const: qcom,ipq6018-pwm
++/*
++ * Two 32-bit registers for each PWM: REG0, and REG1.
++ * Base offset for PWM #i is at 8 * #i.
++ */
++#define IPQ_PWM_REG0			0
++#define IPQ_PWM_REG0_PWM_DIV		GENMASK(15, 0)
++#define IPQ_PWM_REG0_HI_DURATION	GENMASK(31, 16)
 +
-+  reg:
-+    maxItems: 1
++#define IPQ_PWM_REG1			4
++#define IPQ_PWM_REG1_PRE_DIV		GENMASK(15, 0)
 +
-+  clocks:
-+    maxItems: 1
++/*
++ * The max value specified for each field is based on the number of bits
++ * in the pwm control register for that field (16-bit)
++ */
++#define IPQ_PWM_MAX_DIV			FIELD_MAX(IPQ_PWM_REG0_PWM_DIV)
 +
-+  "#pwm-cells":
-+    const: 3
++/*
++ * Enable bit is set to enable output toggling in pwm device.
++ * Update bit is set to trigger the change and is unset automatically
++ * to reflect the changed divider and high duration values in register.
++ */
++#define IPQ_PWM_REG1_UPDATE		BIT(30)
++#define IPQ_PWM_REG1_ENABLE		BIT(31)
 +
-+required:
-+  - compatible
-+  - reg
-+  - clocks
-+  - "#pwm-cells"
++struct ipq_pwm_chip {
++	void __iomem *mem;
++	unsigned long clk_rate;
++};
 +
-+additionalProperties: false
++static struct ipq_pwm_chip *ipq_pwm_from_chip(struct pwm_chip *chip)
++{
++	return pwmchip_get_drvdata(chip);
++}
 +
-+examples:
-+  - |
-+    #include <dt-bindings/clock/qcom,gcc-ipq6018.h>
++static unsigned int ipq_pwm_reg_read(struct pwm_device *pwm, unsigned int reg)
++{
++	struct ipq_pwm_chip *ipq_chip = ipq_pwm_from_chip(pwm->chip);
++	unsigned int off = 8 * pwm->hwpwm + reg;
 +
-+    pwm: pwm@1941010 {
-+        compatible = "qcom,ipq6018-pwm";
-+        reg = <0x01941010 0x20>;
-+        clocks = <&gcc GCC_ADSS_PWM_CLK>;
-+        assigned-clocks = <&gcc GCC_ADSS_PWM_CLK>;
-+        assigned-clock-rates = <100000000>;
-+        #pwm-cells = <3>;
-+    };
++	return readl(ipq_chip->mem + off);
++}
++
++static void ipq_pwm_reg_write(struct pwm_device *pwm, unsigned int reg,
++			      unsigned int val)
++{
++	struct ipq_pwm_chip *ipq_chip = ipq_pwm_from_chip(pwm->chip);
++	unsigned int off = 8 * pwm->hwpwm + reg;
++
++	writel(val, ipq_chip->mem + off);
++}
++
++static int ipq_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
++			 const struct pwm_state *state)
++{
++	struct ipq_pwm_chip *ipq_chip = ipq_pwm_from_chip(chip);
++	unsigned int pre_div, pwm_div;
++	u64 period_ns, duty_ns;
++	unsigned long val = 0;
++	unsigned long hi_dur;
++
++	if (state->polarity != PWM_POLARITY_NORMAL)
++		return -EINVAL;
++
++	if (!ipq_chip->clk_rate)
++		return -EINVAL;
++
++	if (state->period < DIV64_U64_ROUND_UP(NSEC_PER_SEC,
++					       ipq_chip->clk_rate))
++		return -ERANGE;
++
++	period_ns = min(state->period, IPQ_PWM_MAX_PERIOD_NS);
++	duty_ns = min(state->duty_cycle, period_ns);
++
++	pwm_div = IPQ_PWM_MAX_DIV - 1;
++	pre_div = mul_u64_u64_div_u64(period_ns, ipq_chip->clk_rate,
++				      (u64)NSEC_PER_SEC * (pwm_div + 1));
++	pre_div = (pre_div > 0) ? pre_div - 1 : 0;
++
++	if (pre_div > IPQ_PWM_MAX_DIV)
++		pre_div = IPQ_PWM_MAX_DIV;
++
++	/*
++	 * high duration = pwm duty * (pwm div + 1)
++	 * pwm duty = duty_ns / period_ns
++	 */
++	hi_dur = mul_u64_u64_div_u64(duty_ns, ipq_chip->clk_rate,
++				     (u64)(pre_div + 1) * NSEC_PER_SEC);
++
++	val = FIELD_PREP(IPQ_PWM_REG0_HI_DURATION, hi_dur) |
++		FIELD_PREP(IPQ_PWM_REG0_PWM_DIV, pwm_div);
++	ipq_pwm_reg_write(pwm, IPQ_PWM_REG0, val);
++
++	val = FIELD_PREP(IPQ_PWM_REG1_PRE_DIV, pre_div);
++	ipq_pwm_reg_write(pwm, IPQ_PWM_REG1, val);
++
++	/* PWM enable toggle needs a separate write to REG1 */
++	val |= IPQ_PWM_REG1_UPDATE;
++	if (state->enabled)
++		val |= IPQ_PWM_REG1_ENABLE;
++	ipq_pwm_reg_write(pwm, IPQ_PWM_REG1, val);
++
++	return 0;
++}
++
++static int ipq_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
++			     struct pwm_state *state)
++{
++	struct ipq_pwm_chip *ipq_chip = ipq_pwm_from_chip(chip);
++	unsigned int pre_div, pwm_div, hi_dur;
++	u64 effective_div, hi_div;
++	u32 reg0, reg1;
++
++	reg1 = ipq_pwm_reg_read(pwm, IPQ_PWM_REG1);
++	state->enabled = reg1 & IPQ_PWM_REG1_ENABLE;
++
++	if (!state->enabled)
++		return 0;
++
++	reg0 = ipq_pwm_reg_read(pwm, IPQ_PWM_REG0);
++
++	state->polarity = PWM_POLARITY_NORMAL;
++
++	pwm_div = FIELD_GET(IPQ_PWM_REG0_PWM_DIV, reg0);
++	hi_dur = FIELD_GET(IPQ_PWM_REG0_HI_DURATION, reg0);
++	pre_div = FIELD_GET(IPQ_PWM_REG1_PRE_DIV, reg1);
++
++	effective_div = (u64)(pre_div + 1) * (pwm_div + 1);
++	state->period = DIV64_U64_ROUND_UP(effective_div * NSEC_PER_SEC,
++					   ipq_chip->clk_rate);
++
++	hi_div = hi_dur * (pre_div + 1);
++	state->duty_cycle = DIV64_U64_ROUND_UP(hi_div * NSEC_PER_SEC,
++					       ipq_chip->clk_rate);
++
++	/*
++	 * ensure a valid config is passed back to PWM core in case duty_cycle
++	 * is > period (>100%)
++	 */
++	state->duty_cycle = min(state->duty_cycle, state->period);
++
++	return 0;
++}
++
++static const struct pwm_ops ipq_pwm_ops = {
++	.apply = ipq_pwm_apply,
++	.get_state = ipq_pwm_get_state,
++};
++
++static int ipq_pwm_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct ipq_pwm_chip *pwm;
++	struct pwm_chip *chip;
++	struct clk *clk;
++	int ret;
++
++	chip = devm_pwmchip_alloc(dev, 4, sizeof(*pwm));
++	if (IS_ERR(chip))
++		return PTR_ERR(chip);
++	pwm = ipq_pwm_from_chip(chip);
++
++	pwm->mem = devm_platform_ioremap_resource(pdev, 0);
++	if (IS_ERR(pwm->mem))
++		return dev_err_probe(dev, PTR_ERR(pwm->mem),
++				     "Failed to acquire resource\n");
++
++	clk = devm_clk_get_enabled(dev, NULL);
++	if (IS_ERR(clk))
++		return dev_err_probe(dev, PTR_ERR(clk),
++				     "Failed to get clock\n");
++
++	ret = devm_clk_rate_exclusive_get(dev, clk);
++	if (ret)
++		return dev_err_probe(dev, ret, "Failed to lock clock rate\n");
++
++	pwm->clk_rate = clk_get_rate(clk);
++
++	chip->ops = &ipq_pwm_ops;
++
++	ret = devm_pwmchip_add(dev, chip);
++	if (ret < 0)
++		return dev_err_probe(dev, ret, "Failed to add pwm chip\n");
++
++	return 0;
++}
++
++static const struct of_device_id pwm_ipq_dt_match[] = {
++	{ .compatible = "qcom,ipq6018-pwm", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, pwm_ipq_dt_match);
++
++static struct platform_driver ipq_pwm_driver = {
++	.driver = {
++		.name = "ipq-pwm",
++		.of_match_table = pwm_ipq_dt_match,
++	},
++	.probe = ipq_pwm_probe,
++};
++
++module_platform_driver(ipq_pwm_driver);
++
++MODULE_LICENSE("GPL");
 
 -- 
 2.52.0
