@@ -1,223 +1,211 @@
-Return-Path: <linux-pwm+bounces-8101-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8102-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eKNJDm9Zg2mJlQMAu9opvQ
-	(envelope-from <linux-pwm+bounces-8101-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Wed, 04 Feb 2026 15:36:31 +0100
+	id OC+uA9FviGn4pQQAu9opvQ
+	(envelope-from <linux-pwm+bounces-8102-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Sun, 08 Feb 2026 12:13:21 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A165FE7311
-	for <lists+linux-pwm@lfdr.de>; Wed, 04 Feb 2026 15:36:30 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B593B108801
+	for <lists+linux-pwm@lfdr.de>; Sun, 08 Feb 2026 12:13:20 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B5CD1300F1A1
-	for <lists+linux-pwm@lfdr.de>; Wed,  4 Feb 2026 14:34:33 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 1ED2330010E1
+	for <lists+linux-pwm@lfdr.de>; Sun,  8 Feb 2026 11:13:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3590410D3E;
-	Wed,  4 Feb 2026 14:34:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 25F60346761;
+	Sun,  8 Feb 2026 11:13:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gx/BQ7ev"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aey0x/Sg"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f174.google.com (mail-dy1-f174.google.com [74.125.82.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEEC03ED10B;
-	Wed,  4 Feb 2026 14:34:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770215671; cv=none; b=MlJkZoemx3H+pvdHZXkNXiHeHKeo0x7J3yRm9JNpjKAvhErC4ewr0w0xsZ10XNCrv29Wwc8mP2OJtQJ3zqxRkKR2ocyMQ1cpZFP/eNeIY5tZEB4be7tsvr1HUNgZ4ForXzfh1VTdAfyiqJhVTmwtn/2AqckkJZqh5UmQMtUwDpQ=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770215671; c=relaxed/simple;
-	bh=qwW0E3km7Imz+Ih8y6CvkTb1Tgc1MA3d/Qg0OSOn85k=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=e4sFaJhob7sDWEWp0zjsYFdVJyhFj7Xu43bmxW466I2rlgIPrWyL29Hji055SSOexNUzq7YqyzYX1aO6Xco7UVsUItqWSWNJ4oF/0I5zcwBDlRSFMXMzrQBc9h6P+eJDrLs+wRx8G6bFekFq9OEuX5YmLKgvz8g2rormeocKK+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gx/BQ7ev; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8E2AC4CEF7;
-	Wed,  4 Feb 2026 14:34:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770215671;
-	bh=qwW0E3km7Imz+Ih8y6CvkTb1Tgc1MA3d/Qg0OSOn85k=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=gx/BQ7evxp6zGTeDdYoeq3cHPDxwjrQbY50Ss5ol6uWNa+m6MGxM9SEfyVAjON7T4
-	 iwKsc/t0UJOg4gYwqSRE9ScZwhNIgNZZrSTVUsEwEKrpQ3tDKLF0LFaGYdKLU/mCQQ
-	 ibCvVC4jzkyf+i3JTkD+wqYf33swZRh3fZWbrqJZ2nB6S9TvL8EWJlV2qDzisdv5VT
-	 LRrEeWKgxTGv+UnV12pBS94uB6vmZZbEnBNazaqkB6dxHGK67rJZOfYuDOW8cOaZdb
-	 JvBaq6akDKJuCavqkeSkUmbXjrUkL7aP6dDrNmkMQaSxRwqi54I9vUJBj8EpYlqyGw
-	 6DdWz+yJivXRg==
-Date: Wed, 4 Feb 2026 15:34:29 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Daniel Almeida <daniel.almeida@collabora.com>
-Cc: Danilo Krummrich <dakr@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Drew Fustini <fustini@kernel.org>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-riscv@lists.infradead.org, 
-	linux-pwm@vger.kernel.org, linux-clk@vger.kernel.org, rust-for-linux@vger.kernel.org
-Subject: Re: [PATCH v3 1/3] rust: clk: use the type-state pattern
-Message-ID: <20260204-angelic-vermilion-beagle-fd1507@houat>
-References: <20260119-thundering-tested-robin-4be817@houat>
- <aW4lCfUyumOKRRJm@google.com>
- <518D8B09-B9A1-4DB4-85CD-37A2DD3D5FB1@collabora.com>
- <DFSLCI9U4NCW.2HI2UPUI7G134@kernel.org>
- <20260119-weightless-pelican-of-anger-190db0@houat>
- <DFSN4FDCYHMW.3J3237PEBV2ZP@kernel.org>
- <20260122-majestic-masterful-jaguarundi-d0abde@houat>
- <2F3D3A40-6EF9-46FC-A769-E5A3AAF67E65@collabora.com>
- <20260204-nickel-seal-of-poetry-8fdefb@houat>
- <91A92D84-1F2E-45F3-82EC-6A97D32E2A78@collabora.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD24833D517
+	for <linux-pwm@vger.kernel.org>; Sun,  8 Feb 2026 11:13:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.174
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770549198; cv=pass; b=LswaM8V/dXdG3PVh+EJWpSSm9smMBR7pySYF7ZERTU4N00QSo9C9ALAfkWneFBcJeMVDW5kQgVBPZTlMijuGYtOo9ffoN4HGLG7klww+jmeXLmnz53/ddeq9qD4ClcXxmoY9Q9CDiUKs5fHwJyNT1BC1nQSJZbNnLQr2vXCAWQQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770549198; c=relaxed/simple;
+	bh=C9SBYY850XHrUUtc1B5YS3Igfe60vCJ1wBm7vYcA2pE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=aDBZHU7/7hlltkD7+FZ6I6J8xI3AUYvGWeV77a0jvAyVStZFp/6INvlry+wDST6WCDlNu0vFpXPI5ag/8owt8eteu0haA2Nk+CtCLn3zR23KFNak4ByBQRDfMuUTEFO33dKW/lVOepdqFABIvnoFUhW4cl+eujbQePQ2b3cA7Do=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aey0x/Sg; arc=pass smtp.client-ip=74.125.82.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-dy1-f174.google.com with SMTP id 5a478bee46e88-2ba716126f5so3113eec.3
+        for <linux-pwm@vger.kernel.org>; Sun, 08 Feb 2026 03:13:17 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770549197; cv=none;
+        d=google.com; s=arc-20240605;
+        b=kXcYu0kCUsOXEUIh2h8awx4bkeKOZugH4RRVlp0H0q4abf6Cuv3+8/SBA8akE6NThO
+         r2/Ip6KeomzScGOHNsr52FIiV/fn3wj503vmrQkBaTW3Ow23Q45TSOyyIe3nr+Np1nTu
+         QZlxEUgvyoXU5e57AtHDYlyesTFIM1hhrPOH8QzwbAEhPQLqAGBdMTI3ma0Om2dl7nYe
+         dIZg242I35MSYfr7es7xQxldOFs3Wg+Is8IzErzAQBydLgBqagN4CPNToNJCn3MCY3Jr
+         HYJ+MnLIPUZjlF1xT1szSLivLFtNjOjURoJQUevBtHeStHYIPiMI2Tbo0BXs3aY48fmN
+         FrOg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=lusxgIyHsqL2VssGqd2bQqPX3H3isWm6id7LVqrFB0s=;
+        fh=PlkU55WIBqV9bzo5nCsaG5reO4UFShcor2whg2oGkAs=;
+        b=NAb0vhmo2Wiw8UGKNFnhaUyAFOjSTvj/3eWT1z/c46H28sC4MSrvUW+OBXnSHWJqkA
+         QR5cEfpZwrXq1epEnUtb+ZID0OU67GrGoBsKDarj/kQWw4kyPp3/bpOiw6cpxTxVOFpa
+         sCTlbADNUtiyueHwqgSNPr+sAbQNMY5kwUXe0aWBwGnnzJ84Mm6/qWUd2VZ53Au2UalI
+         QWFOPK/Ptv19b5+C5oMruXD6qjnadq9K6+u4FCVlvOd9uHtc8Wdos8UTU2UP7ZCHhFjg
+         a2y5gnHYg9obhTB+/R+YQ4AosSi0IySVJAUxP4p4LGKrULXyUcdRmedhtp3NDidabyQl
+         Jmbw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1770549197; x=1771153997; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lusxgIyHsqL2VssGqd2bQqPX3H3isWm6id7LVqrFB0s=;
+        b=aey0x/SgJCt0DyYTwn3/wQepj7a/Va1yuH6fwVsOekLrw1KvBjaD4fdmo9UAeEQJJ8
+         EFFY9ZBLklkHhGHH5q02KVlO/wFUVk/TF1l2k3esTiN7mscXxF+kHFZMoJyOmFyIRkRR
+         e+0osuO2ALnZX7HFuIfL0iEAmnAE4779jIw+CezesuNYfnS3GSguYyvWyVmPFDzH5iBg
+         jZBq8FHemd+pgwwiK3y7RqkPKr/nj+lZ2KlFab5C6KmA1i1AE21sssfRr/JiNW/OJk2F
+         zMPv+rADkutTZ+InHp6PlWUU0yChNxhcxV+KKV1lSXJmiAE5SJdCD/YfBZEbHyj9oQhs
+         qHRQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1770549197; x=1771153997;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=lusxgIyHsqL2VssGqd2bQqPX3H3isWm6id7LVqrFB0s=;
+        b=r3lr4ZjmTlI6dzzGJ82FT6andjrlmgROiY2FjXl5XQgCaooV2bdBDc0JFPc4AaFv2Q
+         8hrRb0vzupgudTr87Era2GbqbZNYS3jXULpz5fyWMRJYEYJENwAUL0QSV7HUFQ/YIlNV
+         v4fIWC10/zdWfkGth1B3Z0QC/6bCnGKRhhtEUsFrXNiO0Wn/L0wlF6W8k4UAbRu3l3N9
+         1wxSvLx1ZKBy2eXrfbBlwDEruLHweu7KaQNYBS8OYRNKdzcpj5YChnjguVFisdSNjPmB
+         W9Sf3RGjtR3sPaUefQCuhtv7hXA0Du42gpbGd3jdOgPzNVk/VrTi2qSWfnjNrALWhVJV
+         Z49A==
+X-Forwarded-Encrypted: i=1; AJvYcCUeuahBeXWZv9wGGDdmajKZFqRPKp1qtJS0SPB1xhGC8gFksbUHUNTTBqRVzsPLfgdFj8ydY0pXaaQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yyb7yQabvH5jU46iC/C9Wk+1KvwOt/Z909O/8mbCCxssokUV55h
+	c6p9YUiglIuCSrroQCKEmFV+N9e6cxABOlyAovIUiQvbkYWSH2RtZkimVgqODJF4YstYWxGfaD/
+	G6sFBZqwtuDMakhOGtgzvyCnbTnSJcFFlIcnd
+X-Gm-Gg: AZuq6aIhsGoAbpZZ32tDOyI7yONNMN8naxvV/Gh5VWZJweWd0y6Cs4dAtvdp0Cx6+iV
+	s4XNA62Z9dhfKUSpdbAXmMd6xB4CcMkbYqTL0yDj4QJs3yd6+uhsqis71WwkhFeeKQN9h+4cpRs
+	P2Jyo4T5KNo2K5VYlm89/Vb8IA/nYlvJ1BYMn7b+kPLWCjxCeOMFmXIbTOez1gmtntfVtA1OIHq
+	E/agBfD70+83eAXbKsNTkXFcWHfCe8whfXagdHtk9cRv5UYOu/nLcIEkIvmPad1HSzwSVBPEscr
+	EtHP0exHvZewqxFH3M/HV0aWDTWpIXLzytMUeGk4vRoPMjLO2zrW0OfvzpL2A7tI6x4yNc/qRsZ
+	yl0dVS7+IJf+4
+X-Received: by 2002:a05:693c:3117:b0:2b7:2f29:64a7 with SMTP id
+ 5a478bee46e88-2b856400b99mr1820149eec.2.1770549196977; Sun, 08 Feb 2026
+ 03:13:16 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="qsblwuvkhfiyygwy"
-Content-Disposition: inline
-In-Reply-To: <91A92D84-1F2E-45F3-82EC-6A97D32E2A78@collabora.com>
+References: <20260121183719.71659-1-ojeda@kernel.org>
+In-Reply-To: <20260121183719.71659-1-ojeda@kernel.org>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Sun, 8 Feb 2026 12:13:03 +0100
+X-Gm-Features: AZwV_Qhuy65TaUeSv9KkNVGrPf0KNHqDONqd5x0zvd51P_7nd1tMK7wVtHr8VgU
+Message-ID: <CANiq72=Nd7S2HXOpUeW+EyY4G1E-1a5-bAuD6TYa_6fONt6F+Q@mail.gmail.com>
+Subject: Re: [PATCH] pwm: th1520: fix `CLIPPY=1` warning
+To: Miguel Ojeda <ojeda@kernel.org>, Michal Wilczynski <m.wilczynski@samsung.com>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>
+Cc: Drew Fustini <fustini@kernel.org>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
+	linux-riscv@lists.infradead.org, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>, 
+	Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	Mark Brown <broonie@kernel.org>, linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.26 / 15.00];
-	SIGNED_PGP(-2.00)[];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8101-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8102-lists,linux-pwm=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[29];
-	FREEMAIL_CC(0.00)[kernel.org,google.com,linaro.org,linux.intel.com,suse.de,gmail.com,ffwll.ch,redhat.com,baylibre.com,garyguo.net,protonmail.com,umich.edu,vger.kernel.org,lists.freedesktop.org,lists.infradead.org];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[18];
+	FREEMAIL_CC(0.00)[kernel.org,redhat.com,lists.infradead.org,gmail.com,garyguo.net,protonmail.com,google.com,umich.edu,vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	NEURAL_HAM(-0.00)[-0.998];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mripard@kernel.org,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FROM_NEQ_ENVFROM(0.00)[miguelojedasandonis@gmail.com,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-pwm];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: A165FE7311
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,mail.gmail.com:mid,rust-for-linux.com:url]
+X-Rspamd-Queue-Id: B593B108801
 X-Rspamd-Action: no action
 
-
---qsblwuvkhfiyygwy
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 1/3] rust: clk: use the type-state pattern
-MIME-Version: 1.0
-
-On Wed, Feb 04, 2026 at 09:43:55AM -0300, Daniel Almeida wrote:
-> > I'm probably missing something then, but let's assume you have a driver
-> > that wants its clock prepared and enabled in an hypothetical enable()
-> > callback, and disabled / unprepared in a disable() callback.
-> >=20
-> > From a PM management perspective, this usecase makes total sense, is a
-> > valid usecase, is widely used in the kernel, and is currently supported
-> > by both the C and Rust clk APIs.
-> >=20
-> > The only solution to this you suggested so far (I think?) to implement
-> > this on top of the new clk API you propose is to have a driver specific
-> > enum that would store each of the possible state transition.
->=20
-> Yes, you need an enum _if_ you want to model transitions at runtime. IIUC=
- you
-> only need two variants to implement the pattern you described. I do not
-> consider this  =E2=80=9Cboilerplate=E2=80=9D, but rather a small cost to =
-pay.
-
-A maintenance cost to pay by every driver is kind of the textbook
-definition of boilerplate to me.
-
-> I would understand if this was some elaborate pattern that had to be
-> implemented by all drivers, but a two-variant enum is as
-> straightforward as it gets.
-
-And yet, that framework has dozens of helpers that do not remove
-anything from drivers but a couple of lines. So surely its users must
-find value in reducing that boilerplate as much as possible. And you do
-implement some of them, so you must find value in that too.
-
-> > That's the boilerplate I'm talking about. If every driver wanting to
-> > implement that pattern has to make such an enum, with all the relevant
-> > traits implementation that might come with it, we go from an API where
-> > everything works at no-cost from a code-size perspective to a situation
-> > where every driver has to develop and maintain that enum.
+On Wed, Jan 21, 2026 at 7:37=E2=80=AFPM Miguel Ojeda <ojeda@kernel.org> wro=
+te:
 >
-> There are no "traits that come with it". It's just an enum, with two
-> variants.
->=20
-> > API where everything works at no-cost
->=20
-> The previous API was far from =E2=80=9Ceverything works=E2=80=9D. It was =
-fundamentally
-> broken by design in multiple ways, i.e.:
+> The Rust kernel code should be kept `CLIPPY=3D1`-clean [1].
+>
+> Clippy reports:
+>
+>     error: this pattern reimplements `Option::unwrap_or`
+>       --> drivers/pwm/pwm_th1520.rs:64:5
+>        |
+>     64 | /     (match ns.checked_mul(rate_hz) {
+>     65 | |         Some(product) =3D> product,
+>     66 | |         None =3D> u64::MAX,
+>     67 | |     }) / NSEC_PER_SEC_U64
+>        | |______^ help: replace with: `ns.checked_mul(rate_hz).unwrap_or(=
+u64::MAX)`
+>        |
+>        =3D help: for further information visit https://rust-lang.github.i=
+o/rust-clippy/rust-1.92.0/index.html#manual_unwrap_or
+>        =3D note: `-D clippy::manual-unwrap-or` implied by `-D warnings`
+>        =3D help: to override `-D warnings` add `#[allow(clippy::manual_un=
+wrap_or)]`
+>
+> Applying the suggestion then triggers:
+>
+>     error: manual saturating arithmetic
+>       --> drivers/pwm/pwm_th1520.rs:64:5
+>        |
+>     64 |     ns.checked_mul(rate_hz).unwrap_or(u64::MAX) / NSEC_PER_SEC_U=
+64
+>        |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: consider u=
+sing `saturating_mul`: `ns.saturating_mul(rate_hz)`
+>        |
+>        =3D help: for further information visit https://rust-lang.github.i=
+o/rust-clippy/rust-1.92.0/index.html#manual_saturating_arithmetic
+>        =3D note: `-D clippy::manual-saturating-arithmetic` implied by `-D=
+ warnings`
+>        =3D help: to override `-D warnings` add `#[allow(clippy::manual_sa=
+turating_arithmetic)]`
+>
+> Thus fix it by using saturating arithmatic, which simplifies the code
+> as well.
+>
+> Link: https://rust-for-linux.com/contributing#submit-checklist-addendum [=
+1]
+> Fixes: e03724aac758 ("pwm: Add Rust driver for T-HEAD TH1520 SoC")
+> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
 
-Out of context and not what I meant, but ok.
+Pinging about this...
 
-> > a) It only keeps track of a count to clk_get(), which means that users =
-have
-> > to manually call disable() and unprepare(), or a variation of those, li=
-ke
-> > disable_unprepare().
-> >=20
-> > b) It allows repeated calls to prepare() or enable(), but it keeps no t=
-rack
-> > of how often these were called, i.e., it's currently legal to write the
-> > following:
-> >=20
-> > clk.prepare();
-> > clk.prepare();
-> > clk.enable();
-> > clk.enable();
-> >=20
-> > And nothing gets undone on drop().
->=20
-> IMHO, what we have here is an improvement that has been long overdue.
+Adding Michal and Uwe to Cc in case it helps (the driver is under
+"RISC-V THEAD SoC SUPPORT" so they don't get paged).
 
-Nothing is absolute. It is indeed an improvement on the refcounting side
-of things and general safety of the API for the general case. I don't
-think I ever questionned that.
+Thanks!
 
-However, for the use-cases we've been discussing (and dozens of drivers
-implementing it), it also comes with a regression in the amount of code
-to create and maintain. They used to be able to only deal with the Clk
-structure, and now they can't anymore.
-
-You might find that neglible, you might have a plan to address that in
-the future, etc. and that's fine, but if you can't acknowledge that it's
-indeed happening, there's no point in me raising the issue and
-continuing the discussion.
-
-Maxime
-
---qsblwuvkhfiyygwy
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaYNY7AAKCRAnX84Zoj2+
-dse/AXsGeJch3I0bMyx52I9cEf+Sxmls2zkB6ONfE0zIrOQMV2G4Snz3Z01b1itP
-KS0DtvABgNL1o1ryYS9P8eHOi2y4d6qYsbQfxCQ0B9xEbJpvTbkBm30967SOJrBI
-4I9o9NicZA==
-=izfb
------END PGP SIGNATURE-----
-
---qsblwuvkhfiyygwy--
+Cheers,
+Miguel
 
