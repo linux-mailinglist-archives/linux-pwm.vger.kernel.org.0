@@ -1,217 +1,208 @@
-Return-Path: <linux-pwm+bounces-8104-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8105-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4P1nMlWiiWlU/wQAu9opvQ
-	(envelope-from <linux-pwm+bounces-8104-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Mon, 09 Feb 2026 10:01:09 +0100
+	id eKtlF8KhiWlU/wQAu9opvQ
+	(envelope-from <linux-pwm+bounces-8105-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Mon, 09 Feb 2026 09:58:42 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 78E9410D4D1
-	for <lists+linux-pwm@lfdr.de>; Mon, 09 Feb 2026 10:01:04 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0EDDD10D492
+	for <lists+linux-pwm@lfdr.de>; Mon, 09 Feb 2026 09:58:42 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3480830541F8
-	for <lists+linux-pwm@lfdr.de>; Mon,  9 Feb 2026 08:56:26 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 7707930041E9
+	for <lists+linux-pwm@lfdr.de>; Mon,  9 Feb 2026 08:58:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EB32332572C;
-	Mon,  9 Feb 2026 08:56:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A3A96326947;
+	Mon,  9 Feb 2026 08:58:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="Hm28XDGZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="NhiJO4jS"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+Received: from mail-wr1-f53.google.com (mail-wr1-f53.google.com [209.85.221.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A44E325726
-	for <linux-pwm@vger.kernel.org>; Mon,  9 Feb 2026 08:56:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770627385; cv=none; b=XwWeK8v0/fKLJ2ikCWhhkeStiKGiF1z7SWfyqoGhTNQv1aZOleRroEFWsAJrrQ/YaFPmjCkF+Tkmi9v8YBw+4UZF+7KxQx96MpjJmaiL9WDiYcft9tcCaj8z0JGgeNuZFrfaTON9Wgej+9rqApbXEP+YYnlvc9aqwhuEk7M3zqY=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770627385; c=relaxed/simple;
-	bh=345KCBHXVz0ZEx4i499l02tPXQld7swNF78syM+F1Y4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gKZ/4Gz+YO3HSyKe7lys+eElUzMsbi8IJgPK7Sj3vAarg2mKAJuyuWikaI0KXnfr2iUCBwmzcjwsBlHexZ6JzN/ks2jUma9//ctXFgPWGSCssY2ZpHrZxLph5D1qWLDo3aDl4Z0dLLggxDslXz6i4uqCrM5HT6FDU9HcesF9dio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=Hm28XDGZ; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-48334ee0aeaso9967205e9.1
-        for <linux-pwm@vger.kernel.org>; Mon, 09 Feb 2026 00:56:25 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46B45326943
+	for <linux-pwm@vger.kernel.org>; Mon,  9 Feb 2026 08:58:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.221.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1770627519; cv=pass; b=oOW4PQrTEajMwL0MSyKnWtCbaed5TNtn8v68nOzUoH9jyQYGJtqbllQI6YGK2XvFytgO5Cd35+zPBUQnt9PjND/gJ7JaMAMiY0sg0ApO9Md7Oem/ZmVPbZIAw3PD0nUVYFh+llUGdaysE9M58guZceRvAzvcwvsS/OjlpORUbkk=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1770627519; c=relaxed/simple;
+	bh=sZF8QioVPx66S52+o1qVUemA5DYc+9Uk6M8KZF1VQAg=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=TdaZl8us2mPNcZYPvKuiTjY1xeBfXr2QxABcmTkGIHgT+igte2OTrXMKZb86W6ajWY6V4Gd2Nm7lFdJcHaZLMzNaskLTbcl8z352Z2yuk+ZQHkiHI4oti+fKJKGU6B/biswUFtVZD2Wg5BcbXBrbx/b7oDrhwAmSw2lsSh+bChw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=NhiJO4jS; arc=pass smtp.client-ip=209.85.221.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-wr1-f53.google.com with SMTP id ffacd0b85a97d-43284ed32a0so2774381f8f.3
+        for <linux-pwm@vger.kernel.org>; Mon, 09 Feb 2026 00:58:39 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1770627518; cv=none;
+        d=google.com; s=arc-20240605;
+        b=QcWi7hzIF0rc8r3Uys3Iqci1u2qF4H1zsEJrXbEWQLNWLJOaWuqG5El3uMjWRRXT1u
+         0ibRCuxUR94CoosE0HRzF68e1/d8iARRyYZwy2d0mffGl7XYwRTEomk1Gl443WDu6aVP
+         OQoI++eCpVYVWlOmO6TRUpv4TSFj2lA4FhCyABWSzP7ZjKkz1+XJQkr0EZk+oOoDyz/b
+         Y7RqgTBWw8dXK4e6ltttUQH+g9Q1kRZ/E1FawvnF41NROOnPzGd0uNqBCgvq4WSUsCFw
+         2gUNqNQF3AYIYb2aDu74z5bg7Zp55OVMyqJ3Xh2eQpRYuroCpK4adEyNV47qHXEsA+3X
+         iIYQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=ep1Ke8qT73X8duJEqzvT5xFlLYeklNidWaAFB1OordM=;
+        fh=ZjXWzU9T4YClI27qwQz0zJVzAUErPCWclIq1kUpsvzU=;
+        b=YovAGfQIxAGPCjLo8XtRtz7KkYHBdP9A/9dFBpEEUSVpDjE000SGJsrWkTSjJETyov
+         i3p51DHET0tUlGnF7ZJY3CiP5hw/EiRqqBrzglWFPUEqS95ybxmOk/Q8EgYxK4uwSFqZ
+         CRe8+ZqsLu38CciQ3RM/rIz/U+vr38p4JA8hcbSAfS7A7xGS7SO5S5Z/vL5ghRcB4er4
+         LHpEXwbTE3e9AH5aGaR8s3US3tpQda+jJZ1fOe/Z5i1oAcrILOrmLugnTP5MVYnjF5ft
+         rKVpbiD70pgknQxyJTOtv5hJS8IKVPf4DRL/ILGgOdgFOJGkftApDyc1eqMq4HHvnE0e
+         6YeA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1770627384; x=1771232184; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=jU1e6cGfVovzfgBd9x95W/1mOj66I3de/7vGBXXyBSg=;
-        b=Hm28XDGZmnpAayfYirrKHLg1QZBqBufymRvPBD1qjIFmhtZvmUnUQqAiSSB0n3rDgD
-         QWG/OsM5hpxWUO3jeoBYDYECHznEyM3BCliangxoXtIXKCHokBNp3NXsqI86RLfJnxk8
-         NCrXSwtR07nKoNIfW1V7Iq6KV7FJrMZK/cJT8IM11DvZtqeS1CFjgS3892EEx1ga0/l/
-         m0O56SYcBjwDBr/0KoXFIxIvcpFPrW39aYBAWrCN4rvRhQHWifUTlsvsc6fQxG1U+2u8
-         2qDbR1bU8q6GRSRSw6S9Ye8Fh2hgyFMDmxh8NLl2q6Jh9KOOxAzItiy0SevGxwIjdNQe
-         dKqw==
+        d=google.com; s=20230601; t=1770627518; x=1771232318; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ep1Ke8qT73X8duJEqzvT5xFlLYeklNidWaAFB1OordM=;
+        b=NhiJO4jSywbvNigbjXvWXF7o2yVlEKcYX3sHTf29i0QcjC57wYSAePLgnuStTfwDLU
+         o2RUpD/VeHB+A1ZwY2Rexs1FulVKuUwTjcQ/6MdP+xqdWgHd8BFEiQXBmFJBwwxeA0/Q
+         ns//tRa0qUSsy4drXsY/d1pSwB+z7Tt4/06FsjZSYXluueZfjNnvvLCoDi82KU7VRYr+
+         6Kwou991CH1mNJa7NHCHXJLHtVWkfcdKZQMtOhQXU6I9VCP7O8bm+ACY9FyLk0DQdJOo
+         fID0N3g+22rWlWFNH/6FKPJdB+N5flWCMz9a9V72HZAuZG0ghju/G8Fw1v1t1++sWNVP
+         q9kA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1770627384; x=1771232184;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jU1e6cGfVovzfgBd9x95W/1mOj66I3de/7vGBXXyBSg=;
-        b=uMC19S2UcwwUDjj9J1qfAVa+kzYjNMjiTAwz82+uzSt7PLH/JsPMPbJMJRLMTxptYZ
-         sLSQS09S3V0JUZuJNZopLEkVBw/kA6Ur6pubvxk0QxrbCYySe44jW5P7uQ2yB3AEDzam
-         OFxKDoQfArilxxZw74O49O2olMXa4LtW2+gau2VLjkMskI7nnwV89sU3BOaZFjB88mTZ
-         2/1pjgrdd7LucLHTTS++2JxX3y1397fLdA9o9YM/5DDcQJJ5WzSAKXKieDxZkAHmOFZm
-         rog6HWsb/EKv6GjnJ4ZZ9Qtow6sU7cLv1nPSEqdPGKxAAkpEhzrJUliGz/3LVUFqDUZP
-         NcDg==
-X-Forwarded-Encrypted: i=1; AJvYcCUZtKnY6OQnImX3mOwN+9VvU4HfLHC4uyXhq0Mwrmxh+VyrsCxtrOABG6q+REXb6kkmsn/xxQiahGY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzGwzsbb3QsQjvSGBpLq8Zt+srR9EgwLjFqa9RWUm2XnCN0CmJD
-	hdltus/OSngTdmipvFDLPwUTMIz06PUp0s8xKRRB0ussChJQHyNvubQj0MS//vUDhCI=
-X-Gm-Gg: AZuq6aJoxDvSQHjdNiI1QVnHovmTdvcVeQUsab8W6fpzCK+lgB2CoJhpjZmXIv8SmJi
-	2CJXAB04LXy/395BJCZIEv6DROMqt9Xv59GBh4S9OnkFVknroKVELfNlbRT3FXpnaEbACHjV2b/
-	RzgzCbj7dmZBi4x6Kpd1bShp39yA4ucuTxtn7ss/ngJ4H11fG0qJL4+h44VXVk6WZvGaPXhVnox
-	nLK6qgJmhhmnf/kK7HK1PMG5XCmA0FFvpdj9M2I7bu+KX10HpU4mNhXbMoafdiET4tvOuq6SO2A
-	S4ikwRlPNYQrTfIMb4tZ+64e9a50+vv3iPr3HnbbqqzlwXfcX5g+Vvhde67P3D8gK25mABhSq6l
-	uw7fN0d2w4fdLk1BTxmnqi5f9C66eM3PV1bIDUk0cuPGtg4dex/UAkkyvChnFaxO7+Z4+HixgJr
-	u87nAHq0/PkiwmbMSzNveC4aOnmpOOxwSJ7Bzpwx4GrjWGN0ml59lmgqR6sg0EKBsD3Q6XeZoqU
-	zI=
-X-Received: by 2002:a05:600c:3b23:b0:47f:8c05:786b with SMTP id 5b1f17b1804b1-4832021eae9mr148505945e9.28.1770627383577;
-        Mon, 09 Feb 2026 00:56:23 -0800 (PST)
-Received: from localhost (p200300f65f20eb04869299441cec46c1.dip0.t-ipconnect.de. [2003:f6:5f20:eb04:8692:9944:1cec:46c1])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-436296bd1c9sm24833439f8f.15.2026.02.09.00.56.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Feb 2026 00:56:22 -0800 (PST)
-Date: Mon, 9 Feb 2026 09:56:22 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Miguel Ojeda <ojeda@kernel.org>, 
-	Michal Wilczynski <m.wilczynski@samsung.com>
-Cc: Drew Fustini <fustini@kernel.org>, Guo Ren <guoren@kernel.org>, 
-	Fu Wei <wefu@redhat.com>, linux-riscv@lists.infradead.org, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	rust-for-linux@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH] pwm: th1520: fix `CLIPPY=1` warning
-Message-ID: <aYmgjEWaLrdsubKM@monoceros>
-References: <20260121183719.71659-1-ojeda@kernel.org>
+        d=1e100.net; s=20230601; t=1770627518; x=1771232318;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ep1Ke8qT73X8duJEqzvT5xFlLYeklNidWaAFB1OordM=;
+        b=w8Hpaaptp2Hr567iTl6bAhnA7iB3VZVpviEjc50CfAmsrUQWtDcvg3GLUyTiYUbcAQ
+         q0K09CZeG+FWRDxJtxVJVvH4wAkLnMYHyuZssmsIVu+gTQiRKw/hGrEzLFSjhk1JF4C2
+         fqMjbFW+psYT7KVn6D884+1BYaxr8KlN3wVByuvMHCul2MygQJgbVVSiBjY80NjNJh56
+         SoDjNiufaqwfxlylPGE/CV6Ogfrc694r4vShyabY8yimHIdbj2NWz6h5zISzvh/7mWuU
+         LqQ158TOVv0XARw/bA8F/vD0XtevXSWsBr8YmGGsdUlruoWPTXWp4dci+oyK4xmoYz0f
+         yS0w==
+X-Forwarded-Encrypted: i=1; AJvYcCWggu8IaiOO2pwS30aVF8Q/o9UaN/w0XvXlzjIhmPdhfmRHSzmiuGKLGE1uxlgw2XU+Qqao94S29b8=@vger.kernel.org
+X-Gm-Message-State: AOJu0YzgEZpLsJK8Tpv/uKz/OMNqkX/XPAgTM5PO5p6kzNwcH4VgXyzR
+	4izuXKxxFA+rPJhYMmYqUMS9b1QQmhl/W0fZQJCHDifAC6nAqm+lZSyEuiCGSe13vSKTS64AAH4
+	mw0Rw1j1fnMpstCcSTkJeB17GQXLSWea7vxUXtpuA
+X-Gm-Gg: AZuq6aKuNgP43ECseRPweB3P6oFWvm5J1QkAD25lbKPCnwpv57FY4VJ0D2CooayVgKN
+	O2W/Y7KkUKI8zVG97HZ3Z9KkgoDJsuQiPWhFyP0ft0UdjGvhiQga6hMvREE/vvCQgkmqeGWk5nb
+	vDlogkpeMd4iNyBHl9DKLRSeHWMmjqSAGRbd9/MA8Bu7fhMOcmLAlibyrMVOOHGq/k8P4Bw1mQT
+	f21nYbIW1Wx/8ETSp79DC6ZvjUJVGitVJUlKhXRC4tZXyl2MPbXoCmsFxaADHv0fG+IyVLq2dyG
+	OGB+xtrRepcTkH6KV4/hJHYG9itQTSo9ZAEhEVH3ESG0Pw8B8gk2d4A4Mg==
+X-Received: by 2002:a05:6000:2889:b0:436:1116:fea0 with SMTP id
+ ffacd0b85a97d-436293b267dmr13879681f8f.59.1770627517365; Mon, 09 Feb 2026
+ 00:58:37 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ry77kcf6b3keyw4r"
-Content-Disposition: inline
-In-Reply-To: <20260121183719.71659-1-ojeda@kernel.org>
+References: <20260121183719.71659-1-ojeda@kernel.org> <aYmgjEWaLrdsubKM@monoceros>
+In-Reply-To: <aYmgjEWaLrdsubKM@monoceros>
+From: Alice Ryhl <aliceryhl@google.com>
+Date: Mon, 9 Feb 2026 09:58:24 +0100
+X-Gm-Features: AZwV_QhznCYpnYoMY4YW_2SZsrqqWinsdT88yHc01cus7270kufkaww3dM4cdl8
+Message-ID: <CAH5fLghHM7Wfe6n0FsOyEm2oHLUdLOf+OpZiXWnS+yRH4kJdCg@mail.gmail.com>
+Subject: Re: [PATCH] pwm: th1520: fix `CLIPPY=1` warning
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Miguel Ojeda <ojeda@kernel.org>, Michal Wilczynski <m.wilczynski@samsung.com>, 
+	Drew Fustini <fustini@kernel.org>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
+	linux-riscv@lists.infradead.org, Boqun Feng <boqun.feng@gmail.com>, 
+	Gary Guo <gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, rust-for-linux@vger.kernel.org, 
+	Mark Brown <broonie@kernel.org>, linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.76 / 15.00];
-	SIGNED_PGP(-2.00)[];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[baylibre-com.20230601.gappssmtp.com:s=20230601];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_DKIM_ALLOW(-0.20)[google.com:s=20230601];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-8105-lists,linux-pwm=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8104-lists,linux-pwm=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DMARC_NA(0.00)[baylibre.com];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	FREEMAIL_CC(0.00)[kernel.org,redhat.com,lists.infradead.org,gmail.com,garyguo.net,protonmail.com,google.com,umich.edu,vger.kernel.org];
-	RSPAMD_EMAILBL_FAIL(0.00)[ojeda.kernel.org:query timed out];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_CC(0.00)[kernel.org,samsung.com,redhat.com,lists.infradead.org,gmail.com,garyguo.net,protonmail.com,umich.edu,vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[u.kleine-koenig@baylibre.com,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[baylibre-com.20230601.gappssmtp.com:+];
-	NEURAL_HAM(-0.00)[-0.997];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TAGGED_RCPT(0.00)[linux-pwm];
 	RCPT_COUNT_TWELVE(0.00)[17];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[aliceryhl@google.com,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[google.com:+];
+	NEURAL_HAM(-0.00)[-0.998];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-pwm];
 	MISSING_XM_UA(0.00)[];
 	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 78E9410D4D1
+X-Rspamd-Queue-Id: 0EDDD10D492
 X-Rspamd-Action: no action
 
+On Mon, Feb 9, 2026 at 9:56=E2=80=AFAM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@baylibre.com> wrote:
+>
+> Hello Miguel,
+>
+> On Wed, Jan 21, 2026 at 07:37:19PM +0100, Miguel Ojeda wrote:
+> > The Rust kernel code should be kept `CLIPPY=3D1`-clean [1].
+> >
+> > Clippy reports:
+> >
+> >     error: this pattern reimplements `Option::unwrap_or`
+> >       --> drivers/pwm/pwm_th1520.rs:64:5
+> >        |
+> >     64 | /     (match ns.checked_mul(rate_hz) {
+> >     65 | |         Some(product) =3D> product,
+> >     66 | |         None =3D> u64::MAX,
+> >     67 | |     }) / NSEC_PER_SEC_U64
+> >        | |______^ help: replace with: `ns.checked_mul(rate_hz).unwrap_o=
+r(u64::MAX)`
+> >        |
+> >        =3D help: for further information visit https://rust-lang.github=
+.io/rust-clippy/rust-1.92.0/index.html#manual_unwrap_or
+> >        =3D note: `-D clippy::manual-unwrap-or` implied by `-D warnings`
+> >        =3D help: to override `-D warnings` add `#[allow(clippy::manual_=
+unwrap_or)]`
+> >
+> > Applying the suggestion then triggers:
+> >
+> >     error: manual saturating arithmetic
+> >       --> drivers/pwm/pwm_th1520.rs:64:5
+> >        |
+> >     64 |     ns.checked_mul(rate_hz).unwrap_or(u64::MAX) / NSEC_PER_SEC=
+_U64
+> >        |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: consider=
+ using `saturating_mul`: `ns.saturating_mul(rate_hz)`
+> >        |
+> >        =3D help: for further information visit https://rust-lang.github=
+.io/rust-clippy/rust-1.92.0/index.html#manual_saturating_arithmetic
+> >        =3D note: `-D clippy::manual-saturating-arithmetic` implied by `=
+-D warnings`
+> >        =3D help: to override `-D warnings` add `#[allow(clippy::manual_=
+saturating_arithmetic)]`
+> >
+> > Thus fix it by using saturating arithmatic, which simplifies the code
+> > as well.
+> >
+> > Link: https://rust-for-linux.com/contributing#submit-checklist-addendum=
+ [1]
+> > Fixes: e03724aac758 ("pwm: Add Rust driver for T-HEAD TH1520 SoC")
+> > Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
+> > ---
+>
+> Looks good to me. I'll wait for Michal to add his blessing and then when
+> picking it up tend to drop the Fixes line. Or do we also care about
+> CLIPPY-cleanness in stable?
 
---ry77kcf6b3keyw4r
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] pwm: th1520: fix `CLIPPY=1` warning
-MIME-Version: 1.0
+I think we do care about that.
 
-Hello Miguel,
-
-On Wed, Jan 21, 2026 at 07:37:19PM +0100, Miguel Ojeda wrote:
-> The Rust kernel code should be kept `CLIPPY=3D1`-clean [1].
->=20
-> Clippy reports:
->=20
->     error: this pattern reimplements `Option::unwrap_or`
->       --> drivers/pwm/pwm_th1520.rs:64:5
->        |
->     64 | /     (match ns.checked_mul(rate_hz) {
->     65 | |         Some(product) =3D> product,
->     66 | |         None =3D> u64::MAX,
->     67 | |     }) / NSEC_PER_SEC_U64
->        | |______^ help: replace with: `ns.checked_mul(rate_hz).unwrap_or(=
-u64::MAX)`
->        |
->        =3D help: for further information visit https://rust-lang.github.i=
-o/rust-clippy/rust-1.92.0/index.html#manual_unwrap_or
->        =3D note: `-D clippy::manual-unwrap-or` implied by `-D warnings`
->        =3D help: to override `-D warnings` add `#[allow(clippy::manual_un=
-wrap_or)]`
->=20
-> Applying the suggestion then triggers:
->=20
->     error: manual saturating arithmetic
->       --> drivers/pwm/pwm_th1520.rs:64:5
->        |
->     64 |     ns.checked_mul(rate_hz).unwrap_or(u64::MAX) / NSEC_PER_SEC_U=
-64
->        |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ help: consider u=
-sing `saturating_mul`: `ns.saturating_mul(rate_hz)`
->        |
->        =3D help: for further information visit https://rust-lang.github.i=
-o/rust-clippy/rust-1.92.0/index.html#manual_saturating_arithmetic
->        =3D note: `-D clippy::manual-saturating-arithmetic` implied by `-D=
- warnings`
->        =3D help: to override `-D warnings` add `#[allow(clippy::manual_sa=
-turating_arithmetic)]`
->=20
-> Thus fix it by using saturating arithmatic, which simplifies the code
-> as well.
->=20
-> Link: https://rust-for-linux.com/contributing#submit-checklist-addendum [=
-1]
-> Fixes: e03724aac758 ("pwm: Add Rust driver for T-HEAD TH1520 SoC")
-> Signed-off-by: Miguel Ojeda <ojeda@kernel.org>
-> ---
-
-Looks good to me. I'll wait for Michal to add his blessing and then when
-picking it up tend to drop the Fixes line. Or do we also care about
-CLIPPY-cleanness in stable?
-
-Best regards
-Uwe
-
---ry77kcf6b3keyw4r
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmmJoTMACgkQj4D7WH0S
-/k4zeAf/XYGAKk/eo6iDxvksTOmu3h5TkJUmEfcgxwPtvFEjikx0NKtlrbr5z5Pg
-FPa/A+qSRAoxsR8Igwk8Y266YgdRS+4EwmmeKUupEY+SJFcfb+AVXx1q/Upy0B2E
-jh5VCVD3VYDDM0gbaX7oEndU2edusd/Thag3PVdz8UoIpk1rEQPCV1Jz/NcCGoLU
-uAw2lwAWG5YUSufm9QUCd1nu+4iH+rgGXr8844D3wK7B+6JJ91wJaFHWjFfXpNTA
-wPJLf004PxvX3aVVGZVZk/jtMHKIVE+0rOKdnoPbUyu3flk4W+qJaXtV+jYZ32BT
-xpbO4ij+bh7NNur4IAy8OSBPnEk+cQ==
-=5cZO
------END PGP SIGNATURE-----
-
---ry77kcf6b3keyw4r--
+Alice
 
