@@ -1,67 +1,80 @@
-Return-Path: <linux-pwm+bounces-8122-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8123-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yB2rLdXXjWng7wAAu9opvQ
-	(envelope-from <linux-pwm+bounces-8122-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Thu, 12 Feb 2026 14:38:29 +0100
+	id KFBZJF3djWna8AAAu9opvQ
+	(envelope-from <linux-pwm+bounces-8123-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Thu, 12 Feb 2026 15:02:05 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id CCD4312DDD9
-	for <lists+linux-pwm@lfdr.de>; Thu, 12 Feb 2026 14:38:28 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 07EDE12E0D3
+	for <lists+linux-pwm@lfdr.de>; Thu, 12 Feb 2026 15:02:04 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 3FB753009F0D
-	for <lists+linux-pwm@lfdr.de>; Thu, 12 Feb 2026 13:38:26 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id ECD083009000
+	for <lists+linux-pwm@lfdr.de>; Thu, 12 Feb 2026 14:01:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4221C35B63D;
-	Thu, 12 Feb 2026 13:38:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A02D283FEA;
+	Thu, 12 Feb 2026 14:01:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dkvdZmwM"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IhB2vmVh"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1ADC22253FF;
-	Thu, 12 Feb 2026 13:38:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 325623EBF1F;
+	Thu, 12 Feb 2026 14:01:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1770903504; cv=none; b=tI3TxwL19LQ+4bN6HCjWAPqJpBPS3UI2hAtZV/TqxXDhkV7T35kcLl9GYjIyrwqqz+YFwsB1GzaoMAogxtbJpvE++ttINRj6ekJmMit6HznHX+Bq0+VThgvwmEH3rbWvpI/l6v2/7u+4EMfRifK55jb1pZKbkev2F5XJUWYeyaE=
+	t=1770904899; cv=none; b=nL1yv9+zeRlnCJdI4a5FtuemqSsTbativaygAwloPGuyYCYBJJHk6a0Qy2K3C7n2CvRPVfgKyya/mrgme17gVzHmnCoO7Q8zReuhoSKM9L1c5vcn+1nubYJTzW4ZWhI5xDuW6DGLcrqVy24XP9pfafgWphDVqQi4bRjzLW0nt4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1770903504; c=relaxed/simple;
-	bh=rllsvS5vCvLouAChQEOMtRmUwKUDPEURx2urJ+uvPlY=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jsCZJP3+YP1lHT7VqfwFE7j4yIrNzvCwp3v47EalbH4u7yXGEYZPRzMAGpKrSFrwX3/ELAZZWjKUnx9yraQ/BQ3X/voVg4qXQTxYctM38lcdrNwuPFlqqcT4+FQk+0kMWAocWW+qYylSafeegSTX3eCoBsDh3UivCslgJ9CsA+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dkvdZmwM; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33C76C4CEF7;
-	Thu, 12 Feb 2026 13:38:23 +0000 (UTC)
+	s=arc-20240116; t=1770904899; c=relaxed/simple;
+	bh=q255LW2NGXZnwgvkPm1VB5LcqPE0iLSjOErv9KPVwLg=;
+	h=Mime-Version:Content-Type:Date:Message-Id:To:From:Subject:Cc:
+	 References:In-Reply-To; b=qIsgKvJzXZBCCNB/J8zG/KzudnqnL9TseE6LMf834R54iGtAVmeEC9+U4c5avlrI5/zHA2zV0WIxwcciq5iXrrllz7OAz8W15rqjxfVZ6VCUjBLOZunybCKT6EN2GmwfCkeUO48sBfNDE4DH1FYSgrsATpTrSNVZtmzJeDZ6U1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IhB2vmVh; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 816CDC4CEF7;
+	Thu, 12 Feb 2026 14:01:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1770903503;
-	bh=rllsvS5vCvLouAChQEOMtRmUwKUDPEURx2urJ+uvPlY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=dkvdZmwMXBcBLaDqhrvu5KUcJ+JYQqpgg3sgFG+oGJeT7Adm+RMikI/+UKfn4xr+4
-	 72u7NAh2eFOOL+ZwVSRtIL+cksx5baiKTWNH197JEW0XnKvoCpzjsV/A5uDekKqHhb
-	 e2DpXAosQE5kKHUym/sNk1Y6evumdwGveIqZnJFbSPohj1fV1JxAlZvrcJtKrop9tP
-	 jr3OtAwdWZ/CNfjiiDUM6dyuPfeDfOF2UXMOu3mX0qp2vrxbT9y9w4a6hgf5KdfiCe
-	 6B+fKnUuMApKQk3XFo+tWM/gS8n9223P30NhMdU0H0ilMDospXdcKn3wpSkMiFPDtp
-	 KnYddVCDt5rNw==
-Date: Thu, 12 Feb 2026 14:38:20 +0100
-From: Maxime Ripard <mripard@kernel.org>
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Boris Brezillon <boris.brezillon@collabora.com>, 
-	Daniel Almeida <daniel.almeida@collabora.com>, Danilo Krummrich <dakr@kernel.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Thomas Zimmermann <tzimmermann@suse.de>, 
-	David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
-	Drew Fustini <fustini@kernel.org>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
-	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Michael Turquette <mturquette@baylibre.com>, 
-	Stephen Boyd <sboyd@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Trevor Gross <tmgross@umich.edu>, linux-pm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-riscv@lists.infradead.org, 
-	linux-pwm@vger.kernel.org, linux-clk@vger.kernel.org, rust-for-linux@vger.kernel.org
+	s=k20201202; t=1770904898;
+	bh=q255LW2NGXZnwgvkPm1VB5LcqPE0iLSjOErv9KPVwLg=;
+	h=Date:To:From:Subject:Cc:References:In-Reply-To:From;
+	b=IhB2vmVh93ZzFpYfLyXgfCB1XI973SeOPjXHCjdMvT2tc/eMxFyIfieVCzaYm9z17
+	 phvUwl525/GGPCwGxxssIVFbsLg9YhPKbEE3Q8vslSuE05Ax1ZJpEJPzzXHKmhnDjz
+	 GnNQ/5wPMCZA72tf8pP0BZ818qNi1T/mtVUVSj99ln+pejsM4nmFLFGEZLZffsvtb8
+	 D1hs/Pcb5sezJw9Zk+jcqSLGODjIaeyrlE3lG7EIw7afLqgzfunbQPgLoxpUamwnjH
+	 wYtae+6pWDPbVZD80Fzzap5GAkaWR8AxZZWF6V0PBAZT/zqdZ+13TP1yt0RK5k96Bo
+	 sxC/eW4sbF2Zg==
+Precedence: bulk
+X-Mailing-List: linux-pwm@vger.kernel.org
+List-Id: <linux-pwm.vger.kernel.org>
+List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
+List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 12 Feb 2026 15:01:31 +0100
+Message-Id: <DGD1E42JOSQ3.28RPL84IP5R9I@kernel.org>
+To: "Maxime Ripard" <mripard@kernel.org>
+From: "Danilo Krummrich" <dakr@kernel.org>
 Subject: Re: [PATCH v3 1/3] rust: clk: use the type-state pattern
-Message-ID: <20260212-lumpy-uptight-petrel-cac725@houat>
+Cc: "Boris Brezillon" <boris.brezillon@collabora.com>, "Daniel Almeida"
+ <daniel.almeida@collabora.com>, "Alice Ryhl" <aliceryhl@google.com>,
+ "Rafael J. Wysocki" <rafael@kernel.org>, "Viresh Kumar"
+ <viresh.kumar@linaro.org>, "Maarten Lankhorst"
+ <maarten.lankhorst@linux.intel.com>, "Thomas Zimmermann"
+ <tzimmermann@suse.de>, "David Airlie" <airlied@gmail.com>, "Simona Vetter"
+ <simona@ffwll.ch>, "Drew Fustini" <fustini@kernel.org>, "Guo Ren"
+ <guoren@kernel.org>, "Fu Wei" <wefu@redhat.com>,
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Michael
+ Turquette" <mturquette@baylibre.com>, "Stephen Boyd" <sboyd@kernel.org>,
+ "Miguel Ojeda" <ojeda@kernel.org>, "Boqun Feng" <boqun.feng@gmail.com>,
+ "Gary Guo" <gary@garyguo.net>, =?utf-8?q?Bj=C3=B6rn_Roy_Baron?=
+ <bjorn3_gh@protonmail.com>, "Benno Lossin" <lossin@kernel.org>, "Andreas
+ Hindborg" <a.hindborg@kernel.org>, "Trevor Gross" <tmgross@umich.edu>,
+ <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+ <dri-devel@lists.freedesktop.org>, <linux-riscv@lists.infradead.org>,
+ <linux-pwm@vger.kernel.org>, <linux-clk@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>
 References: <20260119-weightless-pelican-of-anger-190db0@houat>
  <DFSN4FDCYHMW.3J3237PEBV2ZP@kernel.org>
  <20260122-majestic-masterful-jaguarundi-d0abde@houat>
@@ -71,312 +84,64 @@ References: <20260119-weightless-pelican-of-anger-190db0@houat>
  <20260204-angelic-vermilion-beagle-fd1507@houat>
  <20260209105047.693f2515@fedora>
  <20260211-flawless-feathered-boar-0b87ad@houat>
- <CAH5fLgiQE7mJBpAxv6xTVKKFWadg2GdVe31hRM6gNk3Vah61MA@mail.gmail.com>
-Precedence: bulk
-X-Mailing-List: linux-pwm@vger.kernel.org
-List-Id: <linux-pwm.vger.kernel.org>
-List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
-List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha384;
-	protocol="application/pgp-signature"; boundary="txoc7rlouq7hrwvr"
-Content-Disposition: inline
-In-Reply-To: <CAH5fLgiQE7mJBpAxv6xTVKKFWadg2GdVe31hRM6gNk3Vah61MA@mail.gmail.com>
+ <DGCAAE4YEDLO.299F5M641E90B@kernel.org>
+ <20260212-obedient-faithful-koel-d8aaf6@houat>
+ <DGCVH2B2OSFR.1C912TO7G7DGL@kernel.org>
+In-Reply-To: <DGCVH2B2OSFR.1C912TO7G7DGL@kernel.org>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.26 / 15.00];
-	SIGNED_PGP(-2.00)[];
+X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
+	MV_CASE(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[30];
-	TAGGED_FROM(0.00)[bounces-8122-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8123-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	URIBL_MULTI_FAIL(0.00)[sin.lore.kernel.org:server fail];
 	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[collabora.com,google.com,kernel.org,linaro.org,linux.intel.com,suse.de,gmail.com,ffwll.ch,redhat.com,baylibre.com,garyguo.net,protonmail.com,umich.edu,vger.kernel.org,lists.freedesktop.org,lists.infradead.org];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TO_DN_SOME(0.00)[];
-	TAGGED_RCPT(0.00)[linux-pwm];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mripard@kernel.org,linux-pwm@vger.kernel.org];
-	FREEMAIL_CC(0.00)[collabora.com,kernel.org,linaro.org,linux.intel.com,suse.de,gmail.com,ffwll.ch,redhat.com,baylibre.com,garyguo.net,protonmail.com,umich.edu,vger.kernel.org,lists.freedesktop.org,lists.infradead.org];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: CCD4312DDD9
+	MID_RHS_MATCH_FROM(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dakr@kernel.org,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[linux-pwm];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[30];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: 07EDE12E0D3
 X-Rspamd-Action: no action
 
+On Thu Feb 12, 2026 at 10:23 AM CET, Danilo Krummrich wrote:
+> In particular, I don't think we need an unsafe API until we see a concret=
+e
+> example where the proposed safe API does not work (and no other safe API =
+would
+> work either).
 
---txoc7rlouq7hrwvr
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v3 1/3] rust: clk: use the type-state pattern
-MIME-Version: 1.0
+One additional note for clarification, I'm not saying that I'm against an u=
+nsafe
+API if it is necessary.
 
-Hi Alice,
+In fact, I have added an unsafe API for drivers myself with the dma::Device
+trait [1]. This was not an easy decision and I discussed this back and fort=
+h
+with a lot of people and, unfortunately, we had to come to the conclusion t=
+hat
+any attempt to make this safe from the Rust side of things would cause
+unreasonable overhead and can't be considered an overall improvement.
 
-On Thu, Feb 12, 2026 at 09:16:51AM +0100, Alice Ryhl wrote:
-> On Wed, Feb 11, 2026 at 5:37=E2=80=AFPM Maxime Ripard <mripard@kernel.org=
-> wrote:
-> > On Mon, Feb 09, 2026 at 10:50:47AM +0100, Boris Brezillon wrote:
-> > > On Wed, 4 Feb 2026 15:34:29 +0100
-> > > Maxime Ripard <mripard@kernel.org> wrote:
-> > >
-> > > > On Wed, Feb 04, 2026 at 09:43:55AM -0300, Daniel Almeida wrote:
-> > > > > > I'm probably missing something then, but let's assume you have =
-a driver
-> > > > > > that wants its clock prepared and enabled in an hypothetical en=
-able()
-> > > > > > callback, and disabled / unprepared in a disable() callback.
-> > > > > >
-> > > > > > From a PM management perspective, this usecase makes total sens=
-e, is a
-> > > > > > valid usecase, is widely used in the kernel, and is currently s=
-upported
-> > > > > > by both the C and Rust clk APIs.
-> > > > > >
-> > > > > > The only solution to this you suggested so far (I think?) to im=
-plement
-> > > > > > this on top of the new clk API you propose is to have a driver =
-specific
-> > > > > > enum that would store each of the possible state transition.
-> > > > >
-> > > > > Yes, you need an enum _if_ you want to model transitions at runti=
-me. IIUC you
-> > > > > only need two variants to implement the pattern you described. I =
-do not
-> > > > > consider this  =E2=80=9Cboilerplate=E2=80=9D, but rather a small =
-cost to pay.
-> > > >
-> > > > A maintenance cost to pay by every driver is kind of the textbook
-> > > > definition of boilerplate to me.
-> > > >
-> > > > > I would understand if this was some elaborate pattern that had to=
- be
-> > > > > implemented by all drivers, but a two-variant enum is as
-> > > > > straightforward as it gets.
-> > > >
-> > > > And yet, that framework has dozens of helpers that do not remove
-> > > > anything from drivers but a couple of lines. So surely its users mu=
-st
-> > > > find value in reducing that boilerplate as much as possible. And yo=
-u do
-> > > > implement some of them, so you must find value in that too.
-> > > >
-> > > > > > That's the boilerplate I'm talking about. If every driver wanti=
-ng to
-> > > > > > implement that pattern has to make such an enum, with all the r=
-elevant
-> > > > > > traits implementation that might come with it, we go from an AP=
-I where
-> > > > > > everything works at no-cost from a code-size perspective to a s=
-ituation
-> > > > > > where every driver has to develop and maintain that enum.
-> > > > >
-> > > > > There are no "traits that come with it". It's just an enum, with =
-two
-> > > > > variants.
-> > > > >
-> > > > > > API where everything works at no-cost
-> > > > >
-> > > > > The previous API was far from =E2=80=9Ceverything works=E2=80=9D.=
- It was fundamentally
-> > > > > broken by design in multiple ways, i.e.:
-> > > >
-> > > > Out of context and not what I meant, but ok.
-> > > >
-> > > > > > a) It only keeps track of a count to clk_get(), which means tha=
-t users have
-> > > > > > to manually call disable() and unprepare(), or a variation of t=
-hose, like
-> > > > > > disable_unprepare().
-> > > > > >
-> > > > > > b) It allows repeated calls to prepare() or enable(), but it ke=
-eps no track
-> > > > > > of how often these were called, i.e., it's currently legal to w=
-rite the
-> > > > > > following:
-> > > > > >
-> > > > > > clk.prepare();
-> > > > > > clk.prepare();
-> > > > > > clk.enable();
-> > > > > > clk.enable();
-> > > > > >
-> > > > > > And nothing gets undone on drop().
-> > > > >
-> > > > > IMHO, what we have here is an improvement that has been long over=
-due.
-> > > >
-> > > > Nothing is absolute. It is indeed an improvement on the refcounting=
- side
-> > > > of things and general safety of the API for the general case. I don=
-'t
-> > > > think I ever questionned that.
-> > > >
-> > > > However, for the use-cases we've been discussing (and dozens of dri=
-vers
-> > > > implementing it), it also comes with a regression in the amount of =
-code
-> > > > to create and maintain. They used to be able to only deal with the =
-Clk
-> > > > structure, and now they can't anymore.
-> > > >
-> > > > You might find that neglible, you might have a plan to address that=
- in
-> > > > the future, etc. and that's fine, but if you can't acknowledge that=
- it's
-> > > > indeed happening, there's no point in me raising the issue and
-> > > > continuing the discussion.
-> > >
-> > >
-> > > Okay, let's see if I can sum-up the use case you'd like to support. Y=
-ou
-> > > have some PM hooks, which I'm assuming are (or will be) written in
-> > > rust. It will probably take the form of some Device{Rpm,Pm} trait to
-> > > implement for your XxxDeviceData (Xxx being the bus under which is
-> > > device is) object (since I've only recently joined the R4L effort, I
-> > > wouldn't be surprised if what I'm describing already exists or is
-> > > currently being proposed/reviewed somewhere, so please excuse my
-> > > ignorance if that's the case :-)).
-> > >
-> > > The way I see it, rather than having one enum per clk/regulator/xxx
-> > > where we keep track of each state individually, what we could have is=
- a
-> > >
-> > > trait DevicePm {
-> > >       type ResumedState;
-> > >       type SuspendedState;
-> > >
-> > >       fn resume(&self, state: SuspendedState) -> Result<ResumedState,=
- Error<SuspendedState>>;
-> > >       fn suspend(&self, state: SuspendedState) -> Result<SuspendedSta=
-te, Error<ResumedState>>;
-> > > };
-> > >
-> > > enum DeviceState<T: DevicePm> {
-> > >       Resumed(T::ResumedState),
-> > >       Suspended(T::SuspendedState),
-> > > };
-> > >
-> > > and then in your driver:
-> > >
-> > > MySuspendedDeviceResources {
-> > >       xxx_clk: Clk<Unprepared>,
-> > > };
-> > >
-> > > MyResumedDeviceResources {
-> > >       xxx_clk: Clk<Enabled>,
-> > > };
-> > >
-> > > implem DevicePm for MyDevice {
-> > >       type ResumedState =3D MyResumedDeviceResources;
-> > >       type SuspendedState =3D MySuspendedDeviceResources;
-> > >
-> > >       fn resume(&self, state: SuspendedState) -> Result<ResumedState,=
- Error<SuspendedState>> {
-> > >               // FIXME: error propagation not handled
-> > >               let enabled_clk =3D state.xxx_clk.clone().prepare()?.en=
-able()?;
-> > >
-> > >               Ok(ResumedState {
-> > >                       xxx_clk: enabled_clk,
-> > >               });
-> > >       }
-> > >
-> > >       fn suspend(&self, state: ResumedState) -> Result<SuspendedState=
-, Error<ResumedState>> {
-> > >               // FIXME: error propagation not handled
-> > >               let unprep_clk =3D state.xxx_clk.clone().disable().unpr=
-epare();
-> > >
-> > >               Ok(SuspendedState {
-> > >                       xxx_clk: unprep_clk,
-> > >               });
-> > >       }
-> > > };
-> >
-> > I'm not sure we need to associate this with the suspend/resume state ei=
-ther.
-> >
-> > > With this model, I don't think Daniel's refactor goes in the way of m=
-ore
-> > > generalization at the core level, it's just expressed differently than
-> > > it would be if it was written in C. And I say that as someone who str=
-uggles
-> > > with his C developer bias every time I'm looking at or trying to write
-> > > rust code.
-> > >
-> > > As others have said in this thread (Danilo and Gary), and after having
-> > > played myself with both approaches in Tyr, I do see this shift from m=
-anual
-> > > prepare/enable to an RAII approach as an improvement, so I hope we can
-> > > find a middle-ground where every one is happy.
-> >
-> > I do think we can find a compromise though. Miguel suggested for example
-> > to make the current enable/prepare/disable/unprepare function unsafe,
-> > and that's totally reasonable to me.
-> >
-> > Then we can implement the "managed" clock version on that unsafe API,
-> > and we would end up with a "raw", unsafe, version kind of equivalent to
-> > the one we have today, and where callers would have to justify why their
-> > usage of the API is actually safe, or the new, managed, variant that is
-> > safe and can be easily used by most drivers.
-> >
-> > And we can call these RawClk vs Clk, or Clk vs ManagedClk, or whatever.
-> >
-> > How does that sound?
->=20
-> If you make the raw API unsafe, then that's okay but any use of an
-> unsafe API from a driver will receive very hard scrutiny.
+But as I said, I am convinced that need clear evidence that an unsafe API i=
+s
+actually needed and that there is no reasonable alternative.
 
-And that's totally fair to me. If drivers want to have a more optimal
-but potentially unsafe use of the API, then it should be flagged,
-documented and scrutinized.
-
-> Yes, there are occasionally good reasons to use unsafe from drivers,
-> but the entire point of this Rust exercise is to isolate unsafe code
-> outside of drivers as much as possible.
-
-So, aside from the risk of fuckups, are you concerned about something
-here? Do you expect that scrutiny to be constly on the maintenance side
-of things?
-
-I guess what I'm asking is: except for the obvious "review" cost
-associated with it, why would that be a probleme if we have, say, a few
-dozen drivers using that unsafe API?
-
-> If Daniel's proposal is inconvenient for some drivers, it would be far
-> better to have a third API that is both safe and convenient for those
-> drivers.
-
-Yeah, I guess I was expecting that one to come after we have a few
-unsafe drivers using it and we do need to consolidate / make it safe.
-
-Anyway, thanks for your answer,
-Maxime
-
---txoc7rlouq7hrwvr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iJUEABMJAB0WIQTkHFbLp4ejekA/qfgnX84Zoj2+dgUCaY3XyAAKCRAnX84Zoj2+
-dlsCAX9YhXML2BwaihExT0HPvJLXsg7BkixgzooQn3BNo99C/1mpiA9oVlfe7oN6
-WtWXkFUBgNp/U2OwfFwHtXpmeiv3x4zUulob7WSFkpPuLmDcuRD2SCrprKpMjAff
-ouyyljoqFw==
-=j/VR
------END PGP SIGNATURE-----
-
---txoc7rlouq7hrwvr--
+[1] https://rust.docs.kernel.org/kernel/dma/trait.Device.html
 
