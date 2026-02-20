@@ -1,187 +1,264 @@
-Return-Path: <linux-pwm+bounces-8134-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8135-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kE8PDNo9mGkWDwMAu9opvQ
-	(envelope-from <linux-pwm+bounces-8134-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Fri, 20 Feb 2026 11:56:26 +0100
+	id GOhZN8w+mGneDwMAu9opvQ
+	(envelope-from <linux-pwm+bounces-8135-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Fri, 20 Feb 2026 12:00:28 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 818AF16712C
-	for <lists+linux-pwm@lfdr.de>; Fri, 20 Feb 2026 11:56:25 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 82F761671EA
+	for <lists+linux-pwm@lfdr.de>; Fri, 20 Feb 2026 12:00:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1B12F30036C5
-	for <lists+linux-pwm@lfdr.de>; Fri, 20 Feb 2026 10:51:53 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id E71EC300335A
+	for <lists+linux-pwm@lfdr.de>; Fri, 20 Feb 2026 11:00:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A230F325738;
-	Fri, 20 Feb 2026 10:51:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4A3DD340D8C;
+	Fri, 20 Feb 2026 11:00:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H6YBjiUN"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="aCjiRx0O"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C92A7478;
-	Fri, 20 Feb 2026 10:51:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 60DBD2F3C26;
+	Fri, 20 Feb 2026 11:00:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771584712; cv=none; b=kFdpoNqKqjBcP4/R3utzvALi0NZrm5cpreY2YmUdIaX9BDK4N2t5XDmVEHCWiDxg33ecFHOK8Vyl1h1iHxmGSBtuk7+7zpvRzMD6MpPNrXUGIeyfL1gpSzqIR7iwHgtaDC2U0siWJ1I9Fp5bZ3qa74WwxZCTMZTswc0/zyH6Ey4=
+	t=1771585226; cv=none; b=fqk2ZS35c1Gi0EeFgA5LSv4kzKM7vGV+mRFeQBCLHBKhwjJvR3h06jG0oUK1W/LUNoXcpTfYzghK+F/1qo/W3+H03T3dKjodgyn2T6BLDU2R234rNc5MCJ5LmWWzVxwcNPTUQtXv/rMk4loOx4QAhPyqgE2SJPX2GZU1tV0mzFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771584712; c=relaxed/simple;
-	bh=JSisQMD3kKXu77sl1IcU2jv3ZqU8zKfW02TMTGHQeEo=;
+	s=arc-20240116; t=1771585226; c=relaxed/simple;
+	bh=iNcKUhcDBC7DS7fLtdCAgJUwplE3Xzy+e6JHVWqEix0=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gE0Fy9SZznHu1kjHCqQoUv/uUzPKhvx7jqRxNprbU6+aQauz6BVQIzGXeaoO1mu2DJ2cmECEHzyyOc3DjFkHeukYqHTrgI/u6j0TynARIp5nyeAqpTXKARUUsDBQLNdRyNUP4NP3Y8tyqE8+B3aZfLlWdRriAs4/WvB4ZvMucCE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H6YBjiUN; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F4B6C116C6;
-	Fri, 20 Feb 2026 10:51:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1771584712;
-	bh=JSisQMD3kKXu77sl1IcU2jv3ZqU8zKfW02TMTGHQeEo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=H6YBjiUNlrxm/aAI6APhInHGXg766TIcXzvDjXgn/U71qK6a0Wq0dDXrBmyID7s1K
-	 TEppkJNgxDo7MZNUmq797awROHBrpxd81SCD1Lkuot3HgYvBAo+u8EC15XM9EmGxzv
-	 EONLeW7cnDlar2am/j/5lw8coF2LphDLQ57KMpCA0RBtoH4dg8E6GvjOJ18jK5AHJS
-	 YwOwPSSdS6eKoqv4lZMkROo3DgVTxW4Mj65YyMTDk0HvLTtBVJ3VESdQbYvZkTkjYP
-	 qFJgIN5X/arQCZXoJQAIlMjwAtGwhImgsLOopogaJZDF6r8pMgj7THgkcZ78lRD2J8
-	 Ef/+RHAriLHJw==
-Date: Fri, 20 Feb 2026 11:51:49 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Alexis Czezar Torreno <alexisczezar.torreno@analog.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, 
-	Michael Hennerich <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
-	David Lechner <dlechner@baylibre.com>, Nuno =?utf-8?B?U8Oh?= <nuno.sa@analog.com>, 
-	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-iio@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=fnjHWqXveYpryRoQd/mm3Q8n3oTP/4dTTrLGNQnbHFQ5ziCvKdAMKqu4P1v9EHQ3p9cL4cqIybNbqBIMlu3uuI27ULMnpvWFzfJrjxk7d0ZbhV4520MfyC6jTKJBoTlaFiC0lg4ZKF4W4VvAoIvaRj3vb4nNK4Flu546P0d+iI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=aCjiRx0O; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1771585224; x=1803121224;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:content-transfer-encoding:in-reply-to;
+  bh=iNcKUhcDBC7DS7fLtdCAgJUwplE3Xzy+e6JHVWqEix0=;
+  b=aCjiRx0Oc7kmWU5E0W3vzxGxOkNDxeRLJ/BymmKhmM3HZ8sM5MwV/bIJ
+   joDlXs/s28V38l8fXl6phqIpJBx3TH+gJ2F66Kdl8F+UNvr25cYoSbSJL
+   Ot6hbDfiTNZRzIipt1QwGUTvueQDZaTHc/BxckSCw3eGLeF99iPhIpmrg
+   V9EJdUOOsgWRpW6WSpqsqzhUrzGQkQKnKxBl+nsyxZV7u6GjIdNhJOvlK
+   9eq20sOAuHXbKfRUJEq5I28bkQfDkPRgDg3Y4DNMXlQ2vWmLnhsNy8rcp
+   F050JLIm/l8E6Wh3kyuJk6UtI03qbUb2L+R59NfIgn+/94ylLRGyk6hTg
+   A==;
+X-CSE-ConnectionGUID: 7p5DaA+0SD+nuYT56020ng==
+X-CSE-MsgGUID: mf+CM1ZWSJ6tgErxpBvYjg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11706"; a="72582542"
+X-IronPort-AV: E=Sophos;i="6.21,301,1763452800"; 
+   d="scan'208";a="72582542"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2026 03:00:24 -0800
+X-CSE-ConnectionGUID: l+ZxE1JySnKLY4z/9cj1GA==
+X-CSE-MsgGUID: yGRs53IUSDWisLQCTbALXQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.21,301,1763452800"; 
+   d="scan'208";a="218955283"
+Received: from pgcooper-mobl3.ger.corp.intel.com (HELO localhost) ([10.245.245.25])
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 Feb 2026 03:00:16 -0800
+Date: Fri, 20 Feb 2026 13:00:14 +0200
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: Nuno =?iso-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
+Cc: Alexis Czezar Torreno <alexisczezar.torreno@analog.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org
 Subject: Re: [PATCH 2/3] iio: dac: ad5706r: Add support for AD5706R DAC
-Message-ID: <aZg51rcxck6AyYUm@monoceros>
+Message-ID: <aZg-vtenBU2rKKX_@smile.fi.intel.com>
 References: <20260220-dev_ad5706r-v1-0-7253bbd74889@analog.com>
  <20260220-dev_ad5706r-v1-2-7253bbd74889@analog.com>
+ <4fd329ed6416fd2f8e2a72adfa5a77f73107948b.camel@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="jxpwguxmcbdpqpxt"
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20260220-dev_ad5706r-v1-2-7253bbd74889@analog.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <4fd329ed6416fd2f8e2a72adfa5a77f73107948b.camel@gmail.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.26 / 15.00];
-	SIGNED_PGP(-2.00)[];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-8135-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8134-lists,linux-pwm=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	FROM_HAS_DN(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[intel.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ukleinek@kernel.org,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,linux-pwm@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	NEURAL_HAM(-0.00)[-0.999];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 818AF16712C
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[smile.fi.intel.com:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,intel.com:dkim]
+X-Rspamd-Queue-Id: 82F761671EA
 X-Rspamd-Action: no action
 
+On Fri, Feb 20, 2026 at 10:48:59AM +0000, Nuno Sá wrote:
+> On Fri, 2026-02-20 at 16:02 +0800, Alexis Czezar Torreno wrote:
 
---jxpwguxmcbdpqpxt
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [PATCH 2/3] iio: dac: ad5706r: Add support for AD5706R DAC
-MIME-Version: 1.0
+...
 
-Hello,
+> > +static void ad5706r_debugs_init(struct iio_dev *indio_dev)
+> > +{
+> > +	struct dentry *d = iio_get_debugfs_dentry(indio_dev);
+> 
+> It should have:
+> 
+> if (!IS_ENABLED(CONFIG_DEBUGFS))
+> 	return
 
-On Fri, Feb 20, 2026 at 04:02:57PM +0800, Alexis Czezar Torreno wrote:
-> +static int _set_pwm_duty_cycle(struct ad5706r_state *st, int duty_cycle)
-> +{
-> +	struct pwm_state ldacb_pwm_state;
-> +	int ret;
-> +
-> +	pwm_get_state(st->ldacb_pwm, &ldacb_pwm_state);
-> +
-> +	ldacb_pwm_state.duty_cycle = duty_cycle == 0 ? 0 :
-> +		DIV_ROUND_CLOSEST_ULL(NANO, st->sampling_frequency * 100 / duty_cycle);
+But why? The debugfs is a stub when disabled, nobody should do that
+in the cases when the main purpose is not the debugfs code.
 
-This being integer math it would benefit when simplifying that to
+> > +	debugfs_create_file_unsafe("streaming_addr", 0600, d,
+> > +				   indio_dev, &ad5706r_streaming_addr_fops);
+> > +	debugfs_create_file_unsafe("streaming_len", 0600, d,
+> > +				   indio_dev, &ad5706r_streaming_len_fops);
+> > +	debugfs_create_file_unsafe("streaming_data", 0600, d,
+> > +				   indio_dev, &ad5706r_streaming_data_fops);
+> > +	debugfs_create_file_unsafe("streaming_reg_access", 0600, d,
+> > +				   indio_dev, &ad5706r_streaming_reg_access_fops);
+> > +	debugfs_create_file_unsafe("spi_speed_hz_write", 0600, d,
+> > +				   indio_dev, &ad5706r_spi_speed_write_fops);
+> > +	debugfs_create_file_unsafe("spi_speed_hz_read", 0600, d,
+> > +				   indio_dev, &ad5706r_spi_speed_read_fops);
+> > +}
 
-	10000000 * duty_cycle / st->sampling_frequency
+...
 
-. Consider st->sampling_frequency = 667 and duty_cycle = 99:
+> > +	/* Find which index has this register value */
+> > +	for (i = 0; i < ARRAY_SIZE(mux_out_sel_reg_values); i++) {
 
-	NANO / (st->sampling_frequency * 100 / duty_cycle) = 1484257.8710644676
-	DIV_ROUND_CLOSEST_ULL(NANO, st->sampling_frequency * 100 / duty_cycle) = 1485884
-	DIV_ROUND_CLOSEST_ULL(10000000 * duty_cycle, st->sampling_frequency) = 1484258
+	for (size_t i...)
 
-With duty_cycle <= 100 this doesn't even overflow.
+> > +		if (mux_out_sel_reg_values[i] == reg_byte) {
+> > +			st->mux_out_sel = i;
+> > +			return i;  /* Return index, not register value */
+> > +		}
+> > +	}
 
-> +	ret = pwm_apply_might_sleep(st->ldacb_pwm, &ldacb_pwm_state);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-> +
-> +/* Device Attributes */
-> +static ssize_t ad5706r_dev_addr_write(struct iio_dev *indio_dev,
-> +				      uintptr_t private, const struct iio_chan_spec *chan,
-> +				      const char *buf, size_t len)
-> +{
-> +	struct ad5706r_state *st = iio_priv(indio_dev);
-> +	unsigned int reg_val;
-> +	int ret;
-> +
-> +	ret = kstrtou32(buf, 10, &reg_val);
-> +	if (ret)
-> +		return ret;
-> +
-> +	st->dev_addr = AD5706R_MASK_DEV_ADDR(reg_val);
-> +
-> +	return ret ? ret : len;
+...
 
-This can be written as:
+> > +	return ret ? ret : len;
+
+Use Elvis operator
 
 	return ret ?: len;
 
-It's a matter of taste which one you like better.
+...
 
-> +}
-> +
 
-Best regards
-Uwe
+> > +	{},
 
---jxpwguxmcbdpqpxt
-Content-Type: application/pgp-signature; name="signature.asc"
+IIO has a style for terminator entry, along with confusing trailing comma.
+If it's a sentinel, it must be one even at a compile time.
 
------BEGIN PGP SIGNATURE-----
+> > +};
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmmYPMIACgkQj4D7WH0S
-/k6/2Qf/ZoeFt0oZ8oUHV/quWMjmAlY6txvcb8uIRJNUFfT7BbSpJTAtes3Zb/oB
-gBrJsNjZPUoQvb8keCb79a/mpCwwwEr+aWlBpo/0wPR2jiJhtXsvVHvps7tlU2V+
-U766+NNYuIHWy8hN9SYMyEHPPKkiyrvN1ivtKyZiCq1lypE237J5RwSMQ+KSUjE8
-9tmpwr+Twf/fsebHhW3jfm+z9ce+6NJleayD25JJBY39AduPTzUZvOH83hrOrVot
-hO3UDiInBM2g5SY7lB6T2xSqvJGUyp/Nam6ma2+YgUFhF/1626zVvk5NAE7pd6QL
-7q5jO2q4kn3YwXsOtQIJAQKxHSHs0w==
-=hQTe
------END PGP SIGNATURE-----
+...
 
---jxpwguxmcbdpqpxt--
+> > +	st->debug_spi_speed_hz_write = 10000000;
+> > +	st->debug_spi_speed_hz_read = 10000000;
+
+units.h and other headers for your help
+
+10 * HZ_PER_MHZ
+
+...
+
+> > +	st->sampling_frequency = 1000000;
+
+In the similar way.
+
+...
+
+> > +	st->reference_volts = 2500;
+
+2.5kV?! I think you mistakenly put volts where should be _mV
+
+...
+
+> > +	for (i = 0; i < 4; i++) {
+
+Magic 4.
+
+> > +		st->hw_active_edge[i] = HW_ACTIVE_EDGE_RISING_EDGE;
+> > +		st->range_sel[i] = RANGE_SEL_50;
+> > +		st->output_state[i] = OUTPUT_STATE_NORMAL_SW;
+> > +		st->ldac_trigger_chn[i] = LDAC_TRIGGER_CHN_HW_TRIGGER;
+> > +		st->toggle_trigger_chn[i] = TOGGLE_TRIGGER_CHN_HW_TRIGGER;
+> > +		st->dither_trigger_chn[i] = DITHER_TRIGGER_CHN_HW_TRIGGER;
+> > +		st->multi_dac_sel_ch[i] = MULTI_DAC_SEL_CH_EXCLUDE;
+
+Hmm... Perhaps memsetXX()? But original loop with the defined iterator will be
+okay:
+
+	for (unsigned int i = 0; i < $MAGIC_CONST; i++) {
+
+> > +	}
+
+...
+
+> > +	st->resetb_gpio = devm_gpiod_get_optional(dev, "dac-resetb", GPIOD_OUT_LOW);
+> > +	if (IS_ERR(st->resetb_gpio)) {
+> > +		return dev_err_probe(dev, PTR_ERR(st->resetb_gpio),
+> > +				     "Failed to get RESET_B GPIO\n");
+> > +	}
+
+> > +	st->shdn_gpio = devm_gpiod_get_optional(dev, "dac-shdn", GPIOD_OUT_HIGH);
+> > +	if (IS_ERR(st->shdn_gpio)) {
+> > +		return dev_err_probe(dev, PTR_ERR(st->shdn_gpio),
+> > +				     "Failed to get SHDN GPIO\n");
+> > +	}
+
+The {} are not needed when the body is a single call.
+
+...
+
+> > +static const struct of_device_id ad5706r_of_match[] = {
+> > +	{ .compatible = "adi,ad5706r" },
+> > +	{ },
+
+See above about terminator entry style.
+
+> > +};
+
+-- 
+With Best Regards,
+Andy Shevchenko
+
+
 
