@@ -1,178 +1,234 @@
-Return-Path: <linux-pwm+bounces-8153-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8154-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QMEqM2konGl1AAQAu9opvQ
-	(envelope-from <linux-pwm+bounces-8153-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Feb 2026 11:14:01 +0100
+	id 2iUTEDW1nGkNKAQAu9opvQ
+	(envelope-from <linux-pwm+bounces-8154-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Feb 2026 21:14:45 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7B501174A4E
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Feb 2026 11:14:01 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 93E9D17CC62
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Feb 2026 21:14:44 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 8BCFB3067A91
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Feb 2026 10:10:01 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 30DBB30420B7
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Feb 2026 20:14:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A6CF735B62C;
-	Mon, 23 Feb 2026 10:09:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C8E96376BCA;
+	Mon, 23 Feb 2026 20:14:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YaZ5atst"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="EZjkfbf5"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 469743596E1
-	for <linux-pwm@vger.kernel.org>; Mon, 23 Feb 2026 10:09:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1771841380; cv=none; b=TVOjSi7joppvjbqVvBN1voaXnNau4y16YuGJnHWgPlQoZIEybUDJgj+3Ne1agFOKR0RBPCMR92r2LhS5wvIZflOCwI94FDoQXWfubEev3OEILBH+CNuO+kQW0LPINXoXH43yQ8dSbUVrcj869gs4s+LFoGuLpFwWwDS4TibUBoU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1771841380; c=relaxed/simple;
-	bh=Ky3jcIBbGAp358Kb7hZKDppR/DA4Xry1FogPtt3x2sE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=FMYnk9OESCm1BzmGj9lXjZCueR9z9M74hJ6lPecwS50gfZfUjmyD1fo49RyRNE2+2bTrJARnYWKUQ/kh0hNIYptVFlLAZNj1jlM54k65nqWGWC4BTHshHOH+QYizKk2WTWf3alN+12gqGt9tf9fUxY7a0xoEBEtcVcxJBz/YO00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YaZ5atst; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-4806f3fc50bso46764695e9.0
-        for <linux-pwm@vger.kernel.org>; Mon, 23 Feb 2026 02:09:39 -0800 (PST)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C9D8322A1F
+	for <linux-pwm@vger.kernel.org>; Mon, 23 Feb 2026 20:14:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.218.53
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1771877681; cv=pass; b=PQdAQA4+7hwtiP9u8v1c95E1DwLtskLGSTrleuBxpmH5LSppEJttnIX7rRT5hyXYzbSjgd4vzAZHc3/hhcsb0S88UWqAcQfUSrMmBdsz7+V6sczPbMw7wiEA8FWF2m6hMzDa1WuLtQkF20CeWu3heOlBIaf4YPkrbDSCyF3TU/U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1771877681; c=relaxed/simple;
+	bh=nA16AXtOAnzAMKQXT0kCHh4QEsWPir743Z8UnTfui7Y=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=OkQifRdn1mw065fNBctq+ZqmuYfwdaeupF5AMvwo56/O+Cu3y0n5Gs7FmxqdzK86G5ECcDXS7MFgWM2U/rML4ki7io7zvs37i/UBTzvtr9Oa3sBHbvi+Vx0+3+sFx1UdNIpQmbiqxoMFBEmpdGpkAy/nqL5Pf8/Da9g175Y2Tps=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=EZjkfbf5; arc=pass smtp.client-ip=209.85.218.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-b8fbe5719ceso789471766b.1
+        for <linux-pwm@vger.kernel.org>; Mon, 23 Feb 2026 12:14:40 -0800 (PST)
+ARC-Seal: i=1; a=rsa-sha256; t=1771877678; cv=none;
+        d=google.com; s=arc-20240605;
+        b=SbbDZk7CmB/P+J9y607viyyIP+6t67PLybf9EpoveVIFuGtCDwKaktjLnEUhpEWZJ4
+         90gSLuaZxCgPqaOvCXQ8gW78/HLk3iCeyFAVLoEFBRw/nw3cFBoV/qRuPuFNebLltoGG
+         8KXIchccoADdyrzGpQf3SAueF2dXyYD5SE/0lC6/wkxzIC7uqHraC9lFIJj6PVqNP+kZ
+         DSczl0HFhS//Z8phB5ZKWaJDh0T1EKz9mmGTYLpy9GU0VgMBeg8F+DH+lIdoMvSsaEhH
+         ikuNt4Dwk8Jgp4Y0o091kAfG/xVSBY/nxxnQN2MnKUKZ8wG0DJ2lTzXAsQZn1ZJdeRjJ
+         NOSQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=s5RZgQiN9LRRPBUwx9tg90lOISfa/rsQmb3YEFiGi18=;
+        fh=Yyr8q11B5Aa1WSmWuiO9DMLqvmPfn6PkbJsUNGhslU8=;
+        b=CnvkWV27MdyfltFolaNsEC7cpNySObGz3AkO5SNfVaS71HUHDpakHMjaeV149RB4wd
+         C9eDQt5ZKL6LUFrzXRCfshpgYMs93I4MH8IfjCvq0bwtY5wMeX8oDqUsf2+VSvMpgIMw
+         /xOfT99qLJ/IMq4wW9imbb+Io88GU9k0Hw0DHlZhs7YiBol+eMknhM56qBnwQF86ATzL
+         FDY9irfzBON8zHKvvqR9HnCCSOAarnjKrA/9+tQmyMrR3iuDS6yiF6yVa0iw0bbC6FhO
+         f/lRxpJ7cZfm2qfumdst/S7IOKEXbYbyP7jkN8UpzjSmUwfUFvozLdWeSEU7lOLlYWLD
+         iYJA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1771841378; x=1772446178; darn=vger.kernel.org;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:from:to:cc:subject
-         :date:message-id:reply-to;
-        bh=Y3U0wiZ1PaLP9HKufniCA3p+26o0xtDqndh6mBEwyx0=;
-        b=YaZ5atstiuyyX/KZ4RGNr8CAywUBCCig5Wo62ckOMjU3Ar02DldYn69p7x3kgXyS0S
-         gWClepkcbbcupsiVSlusldMOEVWNxCTcN6V7W7LvwAmasazxHXvic6YyJJf6ATOSOzur
-         bh0SWGvIh7B+pKF+1P3iKhXN0GiCgsOfbpgkLKWi4C8P1XO1X0G0IXlIB71KZk8RiDq0
-         IhuGbODNEdkycFjdKIHlKTmNnebWIBRc7Syt9Mw2ntlYUmsi3F4Q7a9ODtnf4M2YiULq
-         IHde9fhM018Mc3nNuiz+UgvI7DMmj22TrusJmUPSppNC+uqz62pqIWuW6Gr120WqPufw
-         tLNg==
+        d=google.com; s=20230601; t=1771877678; x=1772482478; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=s5RZgQiN9LRRPBUwx9tg90lOISfa/rsQmb3YEFiGi18=;
+        b=EZjkfbf5ie7gGdN8vlEJxwWW5bGdGtsH2NXZayCUJfyOSqdfEGREHFl2CbTkFuCU+7
+         Fxtk1VJWxZc0FVKPZtvLtsAeuDL8eFzrxcvxH7vE1DGcT+pbJwtYs1raaXcK5mgvNaMW
+         Y+j7/98iAnL9xEo3ENsPb4uYzfGbMCEFf3v3/FxEJmhnX9gfNc6HE4Loi/6MbsmBSk6H
+         M9YU+Xcr+2G3xt2yPL6V3f4IEIX7JQGPoT9AbHAh2i6F4IkdCatvLhq2IjBDvMyAV8Hf
+         RnlkiMuKeJibnDh4/bDpu8I4NxmThfSzKfPYhnIWKc0ZrK3YaaecwNxEuCtslNFbEdif
+         nl+g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1771841378; x=1772446178;
-        h=mime-version:user-agent:content-transfer-encoding:references
-         :in-reply-to:date:cc:to:from:subject:message-id:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Y3U0wiZ1PaLP9HKufniCA3p+26o0xtDqndh6mBEwyx0=;
-        b=cNljj0xoB/msZb9DJ2oACZkHCVSE2Y7DlfpoSrPnrJJHTteVPX/oOG2ZdWGUSGWND2
-         UJQolHqZtYb7TWuNqYV+M5TyvEMceEmlshqsI+dC0ij+eebkohrS9Llo5C3bwEBQuMVn
-         UDAUpZ4E45vgSI/tyktqH/KpuQs33TTXHtjhoiJXQNXDQlQPHL4afukw4lkPuB+cjzuW
-         kD/+J6Yui1cOiWXkSEXP9bLmzO8jKdnR8jJMyOQ6mluPL5QrkYGO9IjN5ymQzQ7748PT
-         zBWOjD5RAATFwkNbbhe9Ms4+EicBEk4Fsd47A7FGty0hxHtPuHG+sYTDTlqqLeFjQPlP
-         xjDQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXqTtxFoMVoq7htJtf9wIT0EQ+3FU7ZnBNI9ymPEo7Eu78P3HOPnw/94PTCfxJUKAJ8KCbC431bT80=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx0jzq1vIW/JFgFJgMj2zKj5ei8Z6daLvriybxVPpCtVQ+aD4yy
-	RFOQhMc8QNn0q7zl7aT64CKTPjaM6FaoUrG1ct+pi4JTiYUSPrFViC6n
-X-Gm-Gg: AZuq6aJi8ASyZmrqoc579GeHcKY8/h5bLYBiXPN6xEts+6A+hT/pozR9V3/PwjnElmS
-	pQt4FuFPswEvjKHCYcRgS0c8wuGNMZW5d0MhXydY9NJREjwuO0Uk4o1xuQ4oA8CTGQ94Ah0PaIO
-	qvwFXDsgygaOiOxBHSq5bwmdiRSsstNwa7Yr/LOSGh5Mz+XQRaFPN5u8ldUFmYUynR39Kv1i0ZO
-	p1N+5jg44R/AMqwvWTdmMU/khXCjwrfblxmpks3COccnC3F7tPllFh5aGnk91/ipEp8mPVTuAZs
-	zF/kCdimNUvj6SphPtbB03JlTdQXoHjoUDMMS+IL82DuSrUPecpm59glYAzal9lbST8O/XyTifu
-	1IzWDfZe1Bv9SBHUmvuxGHVk+M9ZLr5yH1/yLrj4KT7Rws94OURO/5YoFTjNnxDFBE788QfMEBI
-	I7hAGDaoQ9fYpHXpgI5jVXaZfZPaU1BWZwwqLaJFiiyQ==
-X-Received: by 2002:a05:600c:34d3:b0:47a:975b:e3e6 with SMTP id 5b1f17b1804b1-483a962e175mr136244295e9.18.1771841377468;
-        Mon, 23 Feb 2026 02:09:37 -0800 (PST)
-Received: from [192.168.1.187] ([148.63.225.166])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-483a31bc068sm245815725e9.4.2026.02.23.02.09.36
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 23 Feb 2026 02:09:37 -0800 (PST)
-Message-ID: <d1a1f8af14fd515409805f1071c051fb51206b1d.camel@gmail.com>
-Subject: Re: [PATCH 2/3] iio: dac: ad5706r: Add support for AD5706R DAC
-From: Nuno =?ISO-8859-1?Q?S=E1?= <noname.nuno@gmail.com>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc: Alexis Czezar Torreno <alexisczezar.torreno@analog.com>, Lars-Peter
- Clausen <lars@metafoo.de>, Michael Hennerich
- <Michael.Hennerich@analog.com>, Jonathan Cameron	 <jic23@kernel.org>, David
- Lechner <dlechner@baylibre.com>, Nuno =?ISO-8859-1?Q?S=E1?=	
- <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring	
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley	
- <conor+dt@kernel.org>, Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?=
- <ukleinek@kernel.org>, 	linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, 	linux-kernel@vger.kernel.org,
- linux-pwm@vger.kernel.org
-Date: Mon, 23 Feb 2026 10:10:20 +0000
-In-Reply-To: <aZiSVSvCOS4MvcGt@smile.fi.intel.com>
-References: <20260220-dev_ad5706r-v1-0-7253bbd74889@analog.com>
-	 <20260220-dev_ad5706r-v1-2-7253bbd74889@analog.com>
-	 <4fd329ed6416fd2f8e2a72adfa5a77f73107948b.camel@gmail.com>
-	 <aZg-vtenBU2rKKX_@smile.fi.intel.com>
-	 <a6a2fc3ebb45fa4d7b379d552196d56eb13fa8d3.camel@gmail.com>
-	 <aZiSVSvCOS4MvcGt@smile.fi.intel.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.58.3 
+        d=1e100.net; s=20230601; t=1771877678; x=1772482478;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=s5RZgQiN9LRRPBUwx9tg90lOISfa/rsQmb3YEFiGi18=;
+        b=awCce1Lmn40F4dQOVyX75iE6ydWASjS2MYhWV3MMOAnnVkgf4O1bGiH0fl6I6gptc/
+         1NC2AKDPX0T1E9jSjm9F4cp1lZb4aQhQaOa/oc2IXAOc6BPEEDHW8nT1QJbGaXLOW0Tz
+         MUjOBwrbZTFd+0uckATo+rAN1lhTOW+xA9p7IgU67ID7LEyLG3nt+vaR+E2Q0m5wqTG/
+         QqcxR4DmAux1gf53EvvOF5C+GUzuZL7Ww2xbyJeCFKTikV4ApAW4tqWkFvWl5EAuqkor
+         O0vGc7sFqJ/l23u8oRZS9EqiN9H/YmvU+BqVfMbmhLop6TqiSVMSxzzB9kiCMqGa7Ryq
+         7oWw==
+X-Forwarded-Encrypted: i=1; AJvYcCWTg+Cfo0cNqh59XZgfFrNABa/M9sY/fVOiA4/xsBz5llUXzAoAg8EujzzjNc/ZQrN4BYW52FashJ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yym4ol0S9ypjt3yTK4EyioQypbIFMuj2Zaj6IXOAPT7s6wzQR6c
+	9XsF+lVBB/jLB2WRF4Dh0iYi5j0tGL/TcF6TmLJOAhKIRaJfABeu04MpJT0I6HAAznpW4S7335d
+	7VtSiE9CRMA4PwTiahqCEW7kZ+IHugSj1lrzIrtw=
+X-Gm-Gg: AZuq6aII4tYCz9Xv2soAbg0N+SwRH/EZT71tNNNC8MWK0oAyIBqwcRo3+6CNXXe7sse
+	HW+EY5eOiZd4czjlzpyG8BF0DWHE0o1vz4LfdEW0WwWRQ6S6Df1hOanaKCtP8U5QcQqZnzJo6Pl
+	PsIGws7pvVmpPzI2LhY7BHTMNu6dhKQ3wSq2UAeiWZxpXx7nHTLamZj0DxyivNjj4Od19P0TmUY
+	NgcLMvB5mDcqG98FoSlfqz4gTRDHTaTkfYnPeg/KrCqFSNlrqwYoZdDoQ8Pi75rOJr1+cXIqKpz
+	wop5JDFpNf5vcdbDLa/uqh24qYJvdarKV+3M
+X-Received: by 2002:a17:906:eec4:b0:b91:949a:721 with SMTP id
+ a640c23a62f3a-b91949a077emr32138766b.50.1771877678105; Mon, 23 Feb 2026
+ 12:14:38 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+References: <20260123093322.1327389-1-richard.genoud@bootlin.com>
+In-Reply-To: <20260123093322.1327389-1-richard.genoud@bootlin.com>
+From: John Stultz <jstultz@google.com>
+Date: Mon, 23 Feb 2026 12:14:26 -0800
+X-Gm-Features: AaiRm50Ga4oMdcVdPVuyNBi2IGP1JlBI-F2cv9ZWk5n7MHWt5lEEKQ1itdDrDwA
+Message-ID: <CANDhNCrSjp1F0PifJXmxrAbRiTC=d_ZXeiiT5kGuM=gNke7ebA@mail.gmail.com>
+Subject: Re: [PATCH v3 0/4] Introduce Allwinner H616 PWM controller
+To: Richard Genoud <richard.genoud@bootlin.com>
+Cc: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>, 
+	Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Chen-Yu Tsai <wens@csie.org>, Jernej Skrabec <jernej.skrabec@gmail.com>, 
+	Samuel Holland <samuel@sholland.org>, Philipp Zabel <p.zabel@pengutronix.de>, 
+	Paul Kocialkowski <paulk@sys-base.io>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, 
+	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[google.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[google.com:s=20230601];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8153-lists,linux-pwm=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	TAGGED_FROM(0.00)[bounces-8154-lists,linux-pwm=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[16];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[nonamenuno@gmail.com,linux-pwm@vger.kernel.org];
+	FREEMAIL_CC(0.00)[baylibre.com,kernel.org,csie.org,gmail.com,sholland.org,pengutronix.de,sys-base.io,bootlin.com,vger.kernel.org,lists.infradead.org,lists.linux.dev];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jstultz@google.com,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[google.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 7B501174A4E
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,bootlin.com:email]
+X-Rspamd-Queue-Id: 93E9D17CC62
 X-Rspamd-Action: no action
 
-On Fri, 2026-02-20 at 18:56 +0200, Andy Shevchenko wrote:
-> On Fri, Feb 20, 2026 at 03:02:37PM +0000, Nuno S=C3=A1 wrote:
-> > On Fri, 2026-02-20 at 13:00 +0200, Andy Shevchenko wrote:
-> > > On Fri, Feb 20, 2026 at 10:48:59AM +0000, Nuno S=C3=A1 wrote:
-> > > > On Fri, 2026-02-20 at 16:02 +0800, Alexis Czezar Torreno wrote:
->=20
-> ...
->=20
-> > > > > +static void ad5706r_debugs_init(struct iio_dev *indio_dev)
-> > > > > +{
-> > > > > +	struct dentry *d =3D iio_get_debugfs_dentry(indio_dev);
-> > > >=20
-> > > > It should have:
-> > > >=20
-> > > > if (!IS_ENABLED(CONFIG_DEBUGFS))
-> > > > 	return
-> > >=20
-> > > But why? The debugfs is a stub when disabled, nobody should do that
-> > > in the cases when the main purpose is not the debugfs code.
-> >=20
-> > Because the compiler can then optimize away all of the above code...
->=20
-> How is it different to the code elimination part that is inside in each o=
-f
-> the below calls?
+On Fri, Jan 23, 2026 at 1:33=E2=80=AFAM Richard Genoud
+<richard.genoud@bootlin.com> wrote:
+>
+> Allwinner H616 PWM controller is quite different from the A10 one.
+>
+> It can drive 6 PWM channels, and like for the A10, each channel has a
+> bypass that permits to output a clock, bypassing the PWM logic, when
+> enabled.
+>
+> But, the channels are paired 2 by 2, sharing a first set of
+> MUX/prescaler/gate.
+> Then, for each channel, there's another prescaler (that will be bypassed
+> if the bypass is enabled for this channel).
+>
+> It looks like that:
+>             _____      ______      ________
+> OSC24M --->|     |    |      |    |        |
+> APB1 ----->| Mux |--->| Gate |--->| /div_m |-----> PWM_clock_src_xy
+>            |_____|    |______|    |________|
+>                           ________
+>                          |        |
+>                       +->| /div_k |---> PWM_clock_x
+>                       |  |________|
+>                       |    ______
+>                       |   |      |
+>                       +-->| Gate |----> PWM_bypass_clock_x
+>                       |   |______|
+> PWM_clock_src_xy -----+   ________
+>                       |  |        |
+>                       +->| /div_k |---> PWM_clock_y
+>                       |  |________|
+>                       |    ______
+>                       |   |      |
+>                       +-->| Gate |----> PWM_bypass_clock_y
+>                           |______|
+>
+> Where xy can be 0/1, 2/3, 4/5
+>
+> PWM_clock_x/y serve for the PWM purpose.
+> PWM_bypass_clock_x/y serve for the clock-provider purpose.
+> The common clock framework has been used to manage those clocks.
+>
+> This PWM driver serves as a clock-provider for PWM_bypass_clocks.
+> This is needed for example by the embedded AC300 PHY which clock comes
+> from PMW5 pin (PB12).
+>
+> Usually, to get a clock from a PWM driver, we use the pwm-clock driver
+> so that the PWM driver doesn't need to be a clk-provider itself.
+> While this works in most cases, here it just doesn't.
+> That's because the pwm-clock request a period from the PWM driver,
+> without any clue that it actually wants a clock at a specific frequency,
+> and not a PWM signal with duty cycle capability.
+> So, the PWM driver doesn't know if it can use the bypass or not, it
+> doesn't even have the real accurate frequency information (23809524 Hz
+> instead of 24MHz) because PWM drivers only deal with periods.
+>
+> With pwm-clock, we loose a precious information along the way (that we
+> actually want a clock and not a PWM signal).
+> That's ok with simple PWM drivers that don't have multiple input clocks,
+> but in this case, without this information, we can't know for sure which
+> clock to use.
+> And here, for instance, if we ask for a 24MHz clock, pwm-clock will
+> requests 42ns (assigned-clocks doesn't help for that matter). The logic
+> is to select the highest clock (100MHz) with no prescaler and a duty
+> cycle value of 2/4 =3D> we have 25MHz instead of 24MHz.
+> And that's a perfectly fine choice for a PMW, because we still can
+> change the duty cycle in the range [0-4]/4.
+> But obviously for a clock, we don't care about the duty cycle, but more
+> about the clock accuracy.
+>
+> And actually, this PWM is really a PWM AND a real clock when the bypass
+> is set.
 
-Clearly none :). For some reason I thought it would matter. Maybe I was mis=
-taken by
-some old code that had #ifdef guards on the debug code.
+During my free/personal time this weekend I was tinkering with Orange
+Pi Zero 2w and was able to use this patch series (along with an
+hdmi-phy patch and some dts changes) to get HDMI working on the
+device.
+I'm eager to see these land!
 
-Any ways, I might send some patches cleaning some places where I added the =
-above so
-people do not copy it around.
+Tested-by: John Stultz <jstultz@google.com>
 
-- Nuno S=C3=A1
->=20
+thanks
+-john
 
