@@ -1,512 +1,322 @@
-Return-Path: <linux-pwm+bounces-8159-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8160-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0LNANq/wnmnoXwQAu9opvQ
-	(envelope-from <linux-pwm+bounces-8159-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Wed, 25 Feb 2026 13:53:03 +0100
+	id WLxLMR06n2m5ZQQAu9opvQ
+	(envelope-from <linux-pwm+bounces-8160-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Wed, 25 Feb 2026 19:06:21 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5ED96197A7F
-	for <lists+linux-pwm@lfdr.de>; Wed, 25 Feb 2026 13:53:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 39E8519BFFC
+	for <lists+linux-pwm@lfdr.de>; Wed, 25 Feb 2026 19:06:21 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A5A2C301C89E
-	for <lists+linux-pwm@lfdr.de>; Wed, 25 Feb 2026 12:52:24 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D5B7030ABF7D
+	for <lists+linux-pwm@lfdr.de>; Wed, 25 Feb 2026 18:03:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4BC5E3A1D0F;
-	Wed, 25 Feb 2026 12:52:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91FED2D6401;
+	Wed, 25 Feb 2026 18:03:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ji+qU+Ba"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from lithops.sigma-star.at (mailout.nod.at [116.203.167.152])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9EF139902C;
-	Wed, 25 Feb 2026 12:52:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=116.203.167.152
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E6472C15BA
+	for <linux-pwm@vger.kernel.org>; Wed, 25 Feb 2026 18:03:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772023944; cv=none; b=USmhyDGiXAtumQxJNMMfYQ7yOMXvxn1aMhG9SpANte5v8WhfMDfAAXwhoFd3lpMyPeUHxOHlV/psk00RU+qVWcp23qU1f8yQmHevyI5KF75AWPPSi39W0bV8uE2poYy/IemyVig8IWLjiS8epeHJ52CEuycpgn1sAseK/DnvLaQ=
+	t=1772042621; cv=none; b=R9e4rVplKOJ2hjKxh4vMyHpSAq//txDqofEp/B5Gnbj7TRUUSDnhqvtcxF2AXJ/Gu6R3rMoD7O+1O/pdm61qXSD4vmGwgLGG2TYCOiyl3S3HKBkFAvEC3MC0WNUR5VtO+Z4y4xAWglVOzLG2AYi4VAj0aMgaCv/YIuIcLl8Xhy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772023944; c=relaxed/simple;
-	bh=R5MwjWSydbdyQue8I2dgG91hyACCSZpNi8sAhk1mnS0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iPumFbydklRpv4BH9sOpMIRq8/f6c8A8HuwL0nLGmQl+SfOXSkFFIfPRA7IcMUUyAAFMwWxxvO+dZfGSg5HKZ6lTK2snSVES52VANz+Qny1N6L3W4GHLzo3Qluiyzns023ERa66Rz2cq6Tl17Fh1ViPOyiS3JFJA6NFEKopKiBY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at; spf=fail smtp.mailfrom=nod.at; arc=none smtp.client-ip=116.203.167.152
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=nod.at
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nod.at
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 6ED1329ABCA;
-	Wed, 25 Feb 2026 13:52:12 +0100 (CET)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10032)
-	with ESMTP id qwRo6-6h9Zeo; Wed, 25 Feb 2026 13:52:11 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-	by lithops.sigma-star.at (Postfix) with ESMTP id 3D5ED29ABD6;
-	Wed, 25 Feb 2026 13:52:11 +0100 (CET)
-Received: from lithops.sigma-star.at ([127.0.0.1])
-	by localhost (lithops.sigma-star.at [127.0.0.1]) (amavisd-new, port 10026)
-	with ESMTP id hS1Cfun_JASb; Wed, 25 Feb 2026 13:52:11 +0100 (CET)
-Received: from foxxylove.corp.sigma-star.at (unknown [82.150.214.1])
-	by lithops.sigma-star.at (Postfix) with ESMTPSA id DEEB929ABCA;
-	Wed, 25 Feb 2026 13:52:10 +0100 (CET)
-From: Richard Weinberger <richard@nod.at>
-To: linux-kernel@vger.kernel.org
-Cc: linux-pwm@vger.kernel.org,
-	linux-hwmon@vger.kernel.org,
-	ukleinek@kernel.org,
-	linux@roeck-us.net,
-	julian.friedrich@frequentis.com,
-	Richard Weinberger <richard@nod.at>
-Subject: [PATCH] [RFC] hwmon: nct6775: Register fan PWMs as PWM chip
-Date: Wed, 25 Feb 2026 13:51:59 +0100
-Message-ID: <20260225125159.20822-1-richard@nod.at>
-X-Mailer: git-send-email 2.51.0
+	s=arc-20240116; t=1772042621; c=relaxed/simple;
+	bh=tjI/17jbAsUhi8wOGSErCgeg5cVy/WV9eTUDfdv7nVI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=pT4ByHowbUSWS3oaQ41JONyYJKtTdzzRMnPl3KqSXhVyjpHUOH+RIbcwgKdf9lo7kl4SB59XFPCB6Q9Y3mbsqxQHYuKhzIyMQwAaeObN6xJV+CqcUKEcluPQnjBCBwYmcBy2PZiJDCREpqLMcS/RVoN/ecfLpllydSjLM2f0Vtc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ji+qU+Ba; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB0CCC116D0;
+	Wed, 25 Feb 2026 18:03:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1772042621;
+	bh=tjI/17jbAsUhi8wOGSErCgeg5cVy/WV9eTUDfdv7nVI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ji+qU+BaY/fHEuLmjqYGJbK4up2UjTL+Yf58Yavl3/T00cqKn0wz77dbrasKE32Ox
+	 XnDnG1q/niN1fX/aP6pSllzSOl9ZAt20CcgofJBUrYshq2rZPU8yR9UStCzRP1LX4S
+	 oXghvhKtA54j1ReOQmfXsAsJkUGGG5jpAGxKU4HSmXUwZWYyY6aQdTOJgT2V3hcX9x
+	 N06w4+MmQj5R+fL9zf0yMbmCIWOHh61QsgW4FFJDt2Fx5sg9wxg8JrleTA4AoSbyv5
+	 ABFP0MZhgNBpql3TEL/YOqN2aRzQl8Miom44ad7i1meF3Bb4opA/0xLm7GQSIEVgYe
+	 ZCfXdAGqQLtCw==
+Date: Wed, 25 Feb 2026 18:03:36 +0000
+From: Conor Dooley <conor@kernel.org>
+To: Linus Walleij <linusw@kernel.org>
+Cc: Yu-Chun Lin <eleanor.lin@realtek.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-pwm@vger.kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, brgl@kernel.org, james.tai@realtek.com,
+	cy.huang@realtek.com, stanley_chang@realtek.com,
+	tychang@realtek.com
+Subject: Re: [PATCH 5/8] dt-bindings: pinctrl: realtek: add RTD1625 pinctrl
+ binding
+Message-ID: <20260225-reconvene-troubling-947eb972cef8@spud>
+References: <20260128033936.27642-1-eleanor.lin@realtek.com>
+ <20260128033936.27642-6-eleanor.lin@realtek.com>
+ <CAD++jL=445wx467ZKE3-qm_BaVzKYXE-7zmReTFZA0KUAaSNyw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="/cVZ3ZprakcW3CWN"
+Content-Disposition: inline
+In-Reply-To: <CAD++jL=445wx467ZKE3-qm_BaVzKYXE-7zmReTFZA0KUAaSNyw@mail.gmail.com>
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.04 / 15.00];
+X-Spamd-Result: default: False [-3.76 / 15.00];
+	SIGNED_PGP(-2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8159-lists,linux-pwm=lfdr.de];
-	RCVD_COUNT_SEVEN(0.00)[8];
 	RCVD_TLS_LAST(0.00)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8160-lists,linux-pwm=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
 	FROM_HAS_DN(0.00)[];
-	DMARC_NA(0.00)[nod.at];
-	MIME_TRACE(0.00)[0:+];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[richard@nod.at,linux-pwm@vger.kernel.org];
+	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	R_DKIM_NA(0.00)[];
-	NEURAL_HAM(-0.00)[-0.998];
+	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	TO_DN_SOME(0.00)[];
-	TAGGED_RCPT(0.00)[linux-pwm];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nod.at:mid,nod.at:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 5ED96197A7F
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 39E8519BFFC
 X-Rspamd-Action: no action
 
-The Nuvoton 6775 chip family also offers PWM functionality to control
-various fans. Depending on the hardware design, the PWM can also be
-used for other purposes, such as controlling a display backlight.
 
-Historically, the driver implemented its own sysfs-based interface to
-control the PWMs. This made it impossible to use the PWM as a backend
-for other drivers, such as pwm-backlight.
+--/cVZ3ZprakcW3CWN
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This patch registers the PWM functionality as a PWM chip within the
-PWM subsystem. Since the Nuvoton chip has non-trivial control logic,
-the following constraints exist:
+On Wed, Jan 28, 2026 at 01:33:00PM +0100, Linus Walleij wrote:
+> Hi Yu-Chun,
+>=20
+> thanks for your patch!
+>=20
+> [Uwe, can you check this a bit down!]
+>=20
+> On Wed, Jan 28, 2026 at 4:39=E2=80=AFAM Yu-Chun Lin <eleanor.lin@realtek.=
+com> wrote:
+>=20
+> > From: Tzuyi Chang <tychang@realtek.com>
+> >
+> > Add device tree bindings for RTD1625.
+> >
+> > Signed-off-by: Tzuyi Chang <tychang@realtek.com>
+> > Co-developed-by: Yu-Chun Lin <eleanor.lin@realtek.com>
+> > Signed-off-by: Yu-Chun Lin <eleanor.lin@realtek.com>
+>=20
+> Overall this looks good!
 
- - Exporting a PWM for external use is only allowed when the fan mode
-   is set to manual or off.
- - As soon as a PWM is exported, changing its configuration is no
-   longer possible through the hwmon sysfs interface, reading is
-   still allowed.
- - Changing the PWM period is not supported. IMHO, it is too risky
-   since the PWMs usually control system fans and similar components.
- - Reading and decoding the current PWM period is only supported for
-   one chip variant so far, for all other chips, a fixed period of
-   100ms is assumed.
+Where can I find the binding patch? What this is in-reply-to does not
+exist:
+https://lore.kernel.org/all/CAD++jL=3D445wx467ZKE3-qm_BaVzKYXE-7zmReTFZA0KU=
+AaSNyw@mail.gmail.com/
+Nor can I find anything else from Eleanor that would appear to be what
+this is:
+https://lore.kernel.org/all/?q=3Df%3Aeleanor.lin%40realtek.com
 
-Signed-off-by: Richard Weinberger <richard@nod.at>
----
- drivers/hwmon/nct6775-core.c | 249 +++++++++++++++++++++++++++++++++--
- drivers/hwmon/nct6775.h      |   3 +
- 2 files changed, 238 insertions(+), 14 deletions(-)
+>=20
+> > +      power-source:
+> > +        description: |
+> > +          Valid arguments are described as below:
+> > +          0: power supply of 1.8V
+> > +          1: power supply of 3.3V
+> > +        enum: [0, 1]
+>=20
+> OK...
+>=20
+> > +      slew-rate:
+> > +        description: |
+> > +          Valid arguments are described as below:
+> > +            0: ~1ns falling time
+> > +            1: ~10ns falling time
+> > +            2: ~20ns falling time
+> > +            3: ~30ns falling time
+> > +        enum: [0, 1, 2, 3]
+>=20
+> Slew rate is usually something like volts/second in SI units, I would
+> expect that this differs depending on which power-source is selected?
+> I.e. are these values for 1.8V or 3.3V?
+>=20
+> > +      realtek,drive-strength-p:
+> > +        description: |
+> > +          Some of pins can be driven using the P-MOS and N-MOS transis=
+tor to
+> > +          achieve finer adjustments.
+>=20
+> Finer compared to what? Compared to the overall setting for slew-rate or
+> drive-strength, or both?
+>=20
+> > The block-diagram representation is as
+> > +          follows:
+> > +                         VDD
+> > +                          |
+> > +                      ||--+
+> > +               +-----o||     P-MOS-FET
+> > +               |      ||--+
+> > +          IN --+          +----- out
+> > +               |      ||--+
+> > +               +------||     N-MOS-FET
+> > +                      ||--+
+> > +                          |
+> > +                         GND
+>=20
+> Nice picture!
+>=20
+> > +          The driving strength of the P-MOS/N-MOS transistors impacts =
+the
+> > +          waveform's rise/fall times. Greater driving strength results=
+ in
+> > +          shorter rise/fall times. Each P-MOS and N-MOS transistor off=
+ers
+> > +          8 configurable levels (0 to 7), with higher values indicating
+> > +          greater driving strength, contributing to achieving the desi=
+red
+> > +          speed.
+> > +
+> > +          The realtek,drive-strength-p is used to control the driving =
+strength
+> > +          of the P-MOS output.
+> > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > +        minimum: 0
+> > +        maximum: 7
+> > +
+> > +      realtek,drive-strength-n:
+> > +        description: |
+> > +          Similar to the realtek,drive-strength-p, the realtek,drive-s=
+trength-n
+> > +          is used to control the driving strength of the N-MOS output.
+> > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > +        minimum: 0
+> > +        maximum: 7
+>=20
+> These two are really interesting. But what do these settings represent?
+>=20
+> I would *guess* it represents the number of transistors used, simply,
+> so 0 means just one P/N transistor is driving and 7 means 8 transistors
+> are driving.
+>=20
+> Can you provide details here?
+>=20
+> In this case, maybe we want a generalized property such as
+> drive-stages-p =3D <n>;
+> drive-stages-n =3D <n>;
+>=20
+> in the generic bindings, if this will appear from more vendors?
+>=20
+> > +      realtek,duty-cycle:
+> > +        description: |
+> > +          An integer describing the level to adjust output duty cycle,
+> > +          controlling the proportion of positive and negative waveform=
+s in
+> > +          nanoseconds.
+> > +          Valid arguments are described as below:
+> > +          0: 0ns
+> > +          2: + 0.25ns
+> > +          3: + 0.5ns
+> > +          4: -0.25ns
+> > +          5: -0.5ns
+> > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > +        enum: [0, 2, 3, 4, 5]
+>=20
+> This is a bit dubious.
+>=20
+> Isn't this one of those cases where you should be using the PWM
+> bindings, directly in this node? Just slam in #pwm-cells =3D <...> etc,
+> I think this is what you really want.
+>=20
+> Please consult/reference:
+> Documentation/devicetree/bindings/pwm/pwm.yaml
+> consumers would not use pinctrl phandles but something like
+> pwms =3D <&pwm ....>;
+>=20
+> It's maybe a bit trixy to use two generic bindings in the
+> node but it should be just fine.
+>=20
+> I don't feel confident mergeing this without Uwe Kleine-K=C3=B6nig's revi=
+ew.
 
-diff --git a/drivers/hwmon/nct6775-core.c b/drivers/hwmon/nct6775-core.c
-index 79bc67ffb9986..bc3b0fb505c39 100644
---- a/drivers/hwmon/nct6775-core.c
-+++ b/drivers/hwmon/nct6775-core.c
-@@ -56,6 +56,7 @@
- #include <linux/bitops.h>
- #include <linux/nospec.h>
- #include <linux/regmap.h>
-+#include <linux/pwm.h>
- #include "lm75.h"
- #include "nct6775.h"
-=20
-@@ -770,6 +771,7 @@ static const u16 NCT6106_FAN_PULSE_SHIFT[] =3D { 0, 2=
-, 4 };
- static const u8 NCT6106_REG_PWM_MODE[] =3D { 0xf3, 0xf3, 0xf3, 0, 0 };
- static const u8 NCT6106_PWM_MODE_MASK[] =3D { 0x01, 0x02, 0x04, 0, 0 };
- static const u16 NCT6106_REG_PWM_READ[] =3D { 0x4a, 0x4b, 0x4c, 0xd8, 0x=
-d9 };
-+static const u16 NCT6106_REG_PWM_FREQ[] =3D { 0xf0, 0xf1, 0xf2 };
- static const u16 NCT6106_REG_FAN_MODE[] =3D { 0x113, 0x123, 0x133 };
- static const u16 NCT6106_REG_TEMP_SOURCE[] =3D {
- 	0xb0, 0xb1, 0xb2, 0xb3, 0xb4, 0xb5 };
-@@ -2482,6 +2484,9 @@ store_pwm_mode(struct device *dev, struct device_at=
-tribute *attr,
- 	int err;
- 	u16 reg;
-=20
-+	if (data->pwm_exported[nr])
-+		return -EBUSY;
-+
- 	err =3D kstrtoul(buf, 10, &val);
- 	if (err < 0)
- 		return err;
-@@ -2510,13 +2515,8 @@ store_pwm_mode(struct device *dev, struct device_a=
-ttribute *attr,
- 	return err ? : count;
- }
-=20
--static ssize_t
--show_pwm(struct device *dev, struct device_attribute *attr, char *buf)
-+static int read_pwm(struct nct6775_data *data, int nr, int index)
- {
--	struct nct6775_data *data =3D nct6775_update_device(dev);
--	struct sensor_device_attribute_2 *sattr =3D to_sensor_dev_attr_2(attr);
--	int nr =3D sattr->nr;
--	int index =3D sattr->index;
- 	int err;
- 	u16 pwm;
-=20
-@@ -2535,18 +2535,87 @@ show_pwm(struct device *dev, struct device_attrib=
-ute *attr, char *buf)
- 		pwm =3D data->pwm[index][nr];
- 	}
-=20
--	return sprintf(buf, "%d\n", pwm);
-+	return pwm;
-+}
-+
-+static u64 nct6106d_calc_period(u8 val)
-+{
-+	/*
-+	 * Case 1: Bit 7 is set
-+	 * --------------------
-+	 *
-+	 * frequency f in kHz is 92.5 / (val[6:0] + 1)
-+	 * persiod_ns =3D 1000000 / (92.5 / (val[6:0] + 1))
-+	 * ...rearrange
-+	 * persiod_ns =3D (1000000 * (val[6:0] + 1)) / 92.5
-+	 * ...eleminate decimals places by muliplying with 2 / 2
-+	 * persiod_ns =3D (2000000 * (val[6:0] + 1)) / 185
-+	 *
-+	 * Case 2: Bit 7 is unset
-+	 * ----------------------
-+	 *
-+	 * frequency f in Hz is 1008 / (val[3:0] + 1)
-+	 * persiod_ns =3D 1000000000 / (1008 / (val[3:0] + 1))
-+	 * ...rearrange
-+	 * persiod_ns =3D (1000000000 * (val[3:0] + 1)) / 1008
-+	 */
-+	if (val & 0x80)
-+		return DIV_ROUND_CLOSEST_ULL(2000000ULL * ((val & 0x7F) + 1), 185);
-+	else
-+		return DIV_ROUND_CLOSEST_ULL(1000000000ULL * ((val & 0x0F) + 1), 1008)=
-;
-+}
-+
-+static int get_pwm_period(struct nct6775_data *data, int nr, u64 *period=
-)
-+{
-+	int err;
-+	u16 val;
-+
-+	if (!data->REG_PWM_FREQ) {
-+		/*
-+		 * Use 100ms period if PWM frequency can't be obtained.
-+		 */
-+		*period =3D 100000000ULL;
-+		return 0;
-+	}
-+
-+	if (!data->pwm_freq[nr]) {
-+		err =3D nct6775_read_value(data, data->REG_PWM_FREQ[nr], &val);
-+		if (err)
-+			return err;
-+
-+		data->pwm_freq[nr] =3D val & 0xFF;
-+	}
-+
-+	switch (data->kind) {
-+	case nct6106:
-+		*period =3D nct6106d_calc_period(data->pwm_freq[nr]);
-+		break;
-+	default:
-+		WARN_ONCE(1, "REG_PWM_FREQ configured but no calc function");
-+		return -EINVAL;
-+	}
-+
-+	return 0;
- }
-=20
- static ssize_t
--store_pwm(struct device *dev, struct device_attribute *attr, const char =
-*buf,
--	  size_t count)
-+show_pwm(struct device *dev, struct device_attribute *attr, char *buf)
- {
--	struct nct6775_data *data =3D dev_get_drvdata(dev);
-+	struct nct6775_data *data =3D nct6775_update_device(dev);
- 	struct sensor_device_attribute_2 *sattr =3D to_sensor_dev_attr_2(attr);
- 	int nr =3D sattr->nr;
- 	int index =3D sattr->index;
--	unsigned long val;
-+	u16 pwm;
-+
-+	pwm =3D read_pwm(data, nr, index);
-+	if (pwm < 0)
-+		return pwm;
-+
-+	return sprintf(buf, "%d\n", pwm);
-+}
-+
-+static int write_pwm(struct nct6775_data *data, int nr, int index, unsig=
-ned long val)
-+{
- 	int minval[7] =3D { 0, 1, 1, data->pwm[2][nr], 0, 0, 0 };
- 	int maxval[7]
- 	  =3D { 255, 255, data->pwm[3][nr] ? : 255, 255, 255, 255, 255 };
-@@ -2560,9 +2629,6 @@ store_pwm(struct device *dev, struct device_attribu=
-te *attr, const char *buf,
- 	if (index =3D=3D 0 && data->pwm_enable[nr] > manual)
- 		return -EBUSY;
-=20
--	err =3D kstrtoul(buf, 10, &val);
--	if (err < 0)
--		return err;
- 	val =3D clamp_val(val, minval[index], maxval[index]);
-=20
- 	mutex_lock(&data->update_lock);
-@@ -2581,6 +2647,28 @@ store_pwm(struct device *dev, struct device_attrib=
-ute *attr, const char *buf,
- 	}
- out:
- 	mutex_unlock(&data->update_lock);
-+
-+	return 0;
-+}
-+
-+static ssize_t
-+store_pwm(struct device *dev, struct device_attribute *attr, const char =
-*buf,
-+	  size_t count)
-+{
-+	struct sensor_device_attribute_2 *sattr =3D to_sensor_dev_attr_2(attr);
-+	struct nct6775_data *data =3D dev_get_drvdata(dev);
-+	unsigned long val;
-+	int err;
-+
-+	if (data->pwm_exported[sattr->nr])
-+		return -EBUSY;
-+
-+	err =3D kstrtoul(buf, 10, &val);
-+	if (err < 0)
-+		return err;
-+
-+	err =3D write_pwm(data, sattr->nr, sattr->index, val);
-+
- 	return err ? : count;
- }
-=20
-@@ -2681,6 +2769,9 @@ store_pwm_enable(struct device *dev, struct device_=
-attribute *attr,
- 	int err;
- 	u16 reg;
-=20
-+	if (data->pwm_exported[nr])
-+		return -EBUSY;
-+
- 	err =3D kstrtoul(buf, 10, &val);
- 	if (err < 0)
- 		return err;
-@@ -3501,6 +3592,131 @@ static int add_temp_sensors(struct nct6775_data *=
-data, const u16 *regp,
- 	return 0;
- }
-=20
-+static int nct6775_pwm_round_waveform_fromhw(struct pwm_chip *chip,
-+					     struct pwm_device *pwm,
-+					     const void *_wfhw,
-+					     struct pwm_waveform *wf)
-+{
-+	struct nct6775_data *data =3D pwmchip_get_drvdata(chip);
-+	const u8 *wfhw =3D _wfhw;
-+
-+	if (get_pwm_period(data, pwm->hwpwm, &wf->period_length_ns))
-+		return 1;
-+
-+	wf->duty_length_ns =3D mul_u64_u64_div_u64(*wfhw, wf->period_length_ns,=
- 255);
-+	wf->duty_offset_ns =3D 0;
-+
-+	return 0;
-+}
-+
-+static int nct6775_pwm_round_waveform_tohw(struct pwm_chip *chip,
-+					   struct pwm_device *pwm,
-+					   const struct pwm_waveform *wf,
-+					   void *_wfhw)
-+{
-+	struct nct6775_data *data =3D pwmchip_get_drvdata(chip);
-+	u8 *wfhw =3D _wfhw;
-+	u64 cur_period;
-+
-+	if (wf->period_length_ns =3D=3D 0) {
-+		*wfhw =3D 0;
-+		return 0;
-+	}
-+
-+	if (get_pwm_period(data, pwm->hwpwm, &cur_period))
-+		return 1;
-+
-+	if (wf->duty_length_ns >=3D cur_period)
-+		*wfhw =3D 255;
-+	else
-+		*wfhw =3D mul_u64_u64_div_u64(wf->duty_length_ns, 255, wf->period_leng=
-th_ns);
-+
-+	if (wf->period_length_ns !=3D cur_period)
-+		return 1;
-+
-+	return 0;
-+}
-+
-+
-+static int nct6775_pwm_write_waveform(struct pwm_chip *chip,
-+				      struct pwm_device *pwm,
-+				      const void *_wfhw)
-+{
-+	struct nct6775_data *data =3D pwmchip_get_drvdata(chip);
-+	const u8 *wfhw =3D _wfhw;
-+
-+	return write_pwm(data, pwm->hwpwm, 0, *wfhw);
-+}
-+
-+static int nct6775_pwm_read_waveform(struct pwm_chip *chip,
-+				     struct pwm_device *pwm,
-+				     void *_wfhw)
-+{
-+	struct nct6775_data *data =3D nct6775_update_device(pwmchip_parent(chip=
-));
-+	u8 *wfhw =3D _wfhw;
-+	int val;
-+
-+	val =3D read_pwm(data, pwm->hwpwm, 0);
-+	if (val < 0)
-+		return val;
-+
-+	*wfhw =3D (u8)val;
-+
-+	return 0;
-+}
-+
-+static int nct6775_pwm_request(struct pwm_chip *chip, struct pwm_device =
-*pwm)
-+{
-+	struct nct6775_data *data =3D pwmchip_get_drvdata(chip);
-+
-+	if (data->pwm_enable[pwm->hwpwm] > manual)
-+		return -EBUSY;
-+
-+	data->pwm_exported[pwm->hwpwm] =3D true;
-+
-+	return 0;
-+}
-+
-+static void nct6775_pwm_free(struct pwm_chip *chip, struct pwm_device *p=
-wm)
-+{
-+	struct nct6775_data *data =3D pwmchip_get_drvdata(chip);
-+
-+	data->pwm_exported[pwm->hwpwm] =3D false;
-+}
-+
-+static const struct pwm_ops nct6775_pwm_ops =3D {
-+	.sizeof_wfhw =3D sizeof(u8),
-+	.request =3D nct6775_pwm_request,
-+	.free =3D nct6775_pwm_free,
-+	.round_waveform_fromhw =3D nct6775_pwm_round_waveform_fromhw,
-+	.round_waveform_tohw =3D nct6775_pwm_round_waveform_tohw,
-+	.write_waveform =3D nct6775_pwm_write_waveform,
-+	.read_waveform =3D nct6775_pwm_read_waveform,
-+};
-+
-+static int nct6775_register_pwm_chip(struct device *dev, struct nct6775_=
-data *data)
-+{
-+	struct pwm_chip *chip;
-+	int ret;
-+
-+	if (data->pwm_num < 1)
-+		return 0;
-+
-+	chip =3D devm_pwmchip_alloc(dev, data->pwm_num, 0);
-+	if (IS_ERR(chip))
-+		return PTR_ERR(chip);
-+
-+	chip->ops =3D &nct6775_pwm_ops;
-+	pwmchip_set_drvdata(chip, data);
-+
-+	ret =3D devm_pwmchip_add(dev, chip);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Could not add PWM chip\n");
-+
-+
-+	return 0;
-+}
-+
- int nct6775_probe(struct device *dev, struct nct6775_data *data,
- 		  const struct regmap_config *regmapcfg)
- {
-@@ -3563,6 +3779,7 @@ int nct6775_probe(struct device *dev, struct nct677=
-5_data *data,
- 		data->REG_PWM[6] =3D NCT6106_REG_WEIGHT_DUTY_BASE;
- 		data->REG_PWM_READ =3D NCT6106_REG_PWM_READ;
- 		data->REG_PWM_MODE =3D NCT6106_REG_PWM_MODE;
-+		data->REG_PWM_FREQ =3D NCT6106_REG_PWM_FREQ;
- 		data->PWM_MODE_MASK =3D NCT6106_PWM_MODE_MASK;
- 		data->REG_AUTO_TEMP =3D NCT6106_REG_AUTO_TEMP;
- 		data->REG_AUTO_PWM =3D NCT6106_REG_AUTO_PWM;
-@@ -4379,6 +4596,10 @@ int nct6775_probe(struct device *dev, struct nct67=
-75_data *data,
- 	if (err)
- 		return err;
-=20
-+	err =3D nct6775_register_pwm_chip(dev, data);
-+	if (err)
-+		return err;
-+
- 	if (data->have_tsi_temp) {
- 		tsi_temp_tg.templates =3D nct6775_tsi_temp_template;
- 		tsi_temp_tg.is_visible =3D nct6775_tsi_temp_is_visible;
-diff --git a/drivers/hwmon/nct6775.h b/drivers/hwmon/nct6775.h
-index 296eff99d0038..2032962f980f7 100644
---- a/drivers/hwmon/nct6775.h
-+++ b/drivers/hwmon/nct6775.h
-@@ -65,6 +65,7 @@ struct nct6775_data {
- 				 * [5]=3Dweight_duty_step, [6]=3Dweight_duty_base
- 				 */
- 	const u16 *REG_PWM_READ;
-+	const u16 *REG_PWM_FREQ;
-=20
- 	const u16 *REG_CRITICAL_PWM_ENABLE;
- 	u8 CRITICAL_PWM_ENABLE_MASK;
-@@ -137,6 +138,8 @@ struct nct6775_data {
- 				 * [3]=3Dpwm_max, [4]=3Dpwm_step,
- 				 * [5]=3Dweight_duty_step, [6]=3Dweight_duty_base
- 				 */
-+	u8 pwm_freq[NUM_FAN];
-+	bool pwm_exported[NUM_FAN];
-=20
- 	u8 target_temp[NUM_FAN];
- 	u8 target_temp_mask;
---=20
-2.51.0
+This does sound like a pwm to me too, but I can't see the rest of the
+series to comment.
 
+
+> > +      realtek,input-voltage:
+> > +        description: |
+> > +          Select the input receiver voltage domain for the pin (1.8V o=
+r 3.3V).
+> > +          This defines the reference for VIH/VIL and must match the ex=
+ternal
+> > +          signal level.
+> > +
+> > +          This does not control the output drive voltage, which is han=
+dled by
+> > +          the standard generic 'power-source' property.
+> > +
+> > +          Valid arguments are described as below:
+> > +          0: 1.8V input logic level
+> > +          1: 3.3V input logic level
+> > +        $ref: /schemas/types.yaml#/definitions/uint32
+> > +        enum: [0, 1]
+>=20
+> This looks very generic. Can you please just add input-voltage to
+> pincfg-node.yaml with a custom format and reference that?
+
+Why a custom format, rather than input-voltage-microvolt or w/e?
+
+Cheers,
+Conor.
+
+>=20
+> > +      realtek,high-vil:
+> > +        type: boolean
+> > +        description: |
+> > +          Select the input receiver with a higher LOW recognition thre=
+shold
+> > +          (VIL) to improve detection for sources with weak pull-down o=
+r slow
+> > +          falling edges.
+>=20
+> Isn't this supposed to be input-schmitt-microvolt?
+>=20
+> Or is this something else than a schmitt trigger?
+>=20
+> In either case, try to figure out the typical recognition threshold in mi=
+crovolt
+> and use that, please.
+>=20
+> Yours,
+> Linus Walleij
+
+--/cVZ3ZprakcW3CWN
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaZ85eAAKCRB4tDGHoIJi
+0pCJAQCOgynGYTPPfulsHK5QnaiaeM/j3cYU0OluS0Hk1UYTwwEAw8d2OoCS4PS2
+Ttva4ReaeiOzhVvejjR4ftjomjh5CQg=
+=OsoX
+-----END PGP SIGNATURE-----
+
+--/cVZ3ZprakcW3CWN--
 
