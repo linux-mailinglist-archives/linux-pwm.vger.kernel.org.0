@@ -1,322 +1,213 @@
-Return-Path: <linux-pwm+bounces-8160-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8161-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WLxLMR06n2m5ZQQAu9opvQ
-	(envelope-from <linux-pwm+bounces-8160-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Wed, 25 Feb 2026 19:06:21 +0100
+	id MAw2LvILoGnbfQQAu9opvQ
+	(envelope-from <linux-pwm+bounces-8161-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Thu, 26 Feb 2026 10:01:38 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 39E8519BFFC
-	for <lists+linux-pwm@lfdr.de>; Wed, 25 Feb 2026 19:06:21 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 919C61A30E7
+	for <lists+linux-pwm@lfdr.de>; Thu, 26 Feb 2026 10:01:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D5B7030ABF7D
-	for <lists+linux-pwm@lfdr.de>; Wed, 25 Feb 2026 18:03:41 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 131223019E02
+	for <lists+linux-pwm@lfdr.de>; Thu, 26 Feb 2026 08:53:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 91FED2D6401;
-	Wed, 25 Feb 2026 18:03:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37D9A396B8E;
+	Thu, 26 Feb 2026 08:52:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ji+qU+Ba"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="ceyG5wRz"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E6472C15BA
-	for <linux-pwm@vger.kernel.org>; Wed, 25 Feb 2026 18:03:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA1A0396B67;
+	Thu, 26 Feb 2026 08:52:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772042621; cv=none; b=R9e4rVplKOJ2hjKxh4vMyHpSAq//txDqofEp/B5Gnbj7TRUUSDnhqvtcxF2AXJ/Gu6R3rMoD7O+1O/pdm61qXSD4vmGwgLGG2TYCOiyl3S3HKBkFAvEC3MC0WNUR5VtO+Z4y4xAWglVOzLG2AYi4VAj0aMgaCv/YIuIcLl8Xhy0=
+	t=1772095976; cv=none; b=QvcsuvTQKNTiuwD7jWvEXYnYEEtsVihbbwetrXhS0aPVmnUOstSIboTKUPgBxx/dNG6/721DkaumVKlYilLOKrpCMgKDFQzgOe7gcgWdiSA0qCN1Mhu3W1wQ1/U4+kDfIUVT3mVhYGJjRfYz1OS5eCPrZ1NW6JCVosMF5pC6xQA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772042621; c=relaxed/simple;
-	bh=tjI/17jbAsUhi8wOGSErCgeg5cVy/WV9eTUDfdv7nVI=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=pT4ByHowbUSWS3oaQ41JONyYJKtTdzzRMnPl3KqSXhVyjpHUOH+RIbcwgKdf9lo7kl4SB59XFPCB6Q9Y3mbsqxQHYuKhzIyMQwAaeObN6xJV+CqcUKEcluPQnjBCBwYmcBy2PZiJDCREpqLMcS/RVoN/ecfLpllydSjLM2f0Vtc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ji+qU+Ba; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB0CCC116D0;
-	Wed, 25 Feb 2026 18:03:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772042621;
-	bh=tjI/17jbAsUhi8wOGSErCgeg5cVy/WV9eTUDfdv7nVI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ji+qU+BaY/fHEuLmjqYGJbK4up2UjTL+Yf58Yavl3/T00cqKn0wz77dbrasKE32Ox
-	 XnDnG1q/niN1fX/aP6pSllzSOl9ZAt20CcgofJBUrYshq2rZPU8yR9UStCzRP1LX4S
-	 oXghvhKtA54j1ReOQmfXsAsJkUGGG5jpAGxKU4HSmXUwZWYyY6aQdTOJgT2V3hcX9x
-	 N06w4+MmQj5R+fL9zf0yMbmCIWOHh61QsgW4FFJDt2Fx5sg9wxg8JrleTA4AoSbyv5
-	 ABFP0MZhgNBpql3TEL/YOqN2aRzQl8Miom44ad7i1meF3Bb4opA/0xLm7GQSIEVgYe
-	 ZCfXdAGqQLtCw==
-Date: Wed, 25 Feb 2026 18:03:36 +0000
-From: Conor Dooley <conor@kernel.org>
-To: Linus Walleij <linusw@kernel.org>
-Cc: Yu-Chun Lin <eleanor.lin@realtek.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-pwm@vger.kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, brgl@kernel.org, james.tai@realtek.com,
-	cy.huang@realtek.com, stanley_chang@realtek.com,
-	tychang@realtek.com
-Subject: Re: [PATCH 5/8] dt-bindings: pinctrl: realtek: add RTD1625 pinctrl
- binding
-Message-ID: <20260225-reconvene-troubling-947eb972cef8@spud>
-References: <20260128033936.27642-1-eleanor.lin@realtek.com>
- <20260128033936.27642-6-eleanor.lin@realtek.com>
- <CAD++jL=445wx467ZKE3-qm_BaVzKYXE-7zmReTFZA0KUAaSNyw@mail.gmail.com>
+	s=arc-20240116; t=1772095976; c=relaxed/simple;
+	bh=6LepYetcEvvYeNsMc1g2YwHGOaL/4U001M8haNVtWRA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Kcv9CfHZ5+kSgXnvqGy/+Q5n28EG9Qm/+sZixlBeNRI/1A0r1TcxH76QAXuMymL0J/jxTvgM0U0iaeodQtpSPC1hxq08m5YVnU2aML4k9gajCzDLmt77yHwT1L9wMepOfLgErnZDRIWolIGa9dTvs0D//RjYjb8yRgLpZOmfaHY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=ceyG5wRz; arc=none smtp.client-ip=185.246.84.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-02.galae.net (Postfix) with ESMTPS id E4EDD1A13A9;
+	Thu, 26 Feb 2026 08:52:50 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id B0D955FDEB;
+	Thu, 26 Feb 2026 08:52:50 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id D60A9103686A8;
+	Thu, 26 Feb 2026 09:52:44 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1772095969; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:content-language:in-reply-to:references;
+	bh=cqoaeSOvXhitA2HXEQSMccZTdcMAnAelkKxEfxzuAyU=;
+	b=ceyG5wRzBUSZDZJd8vq7QFyD7UyDmJWfbAJfQwYXtJD5prIhqEEhLjgfJAd91y1drMc6ok
+	5joGS6f7f7IZw+nshB+ezUhebo+tXOx9SWIMOZzgHJy4iT0fgqjqq6xW9JcuWTQ0m//H+S
+	rs0bxqV8/j1NBG7vicb5BdxG7z3LOTnrhB4jL1kVWwXm0xbaoRkMoCY7S8X+CwWL08o9Im
+	IIho6/U9V1KZ1GhuS8YjOT2lPxuIVXxfTseoQMd+fODg52SyC+8/MgPXm8w+7xWcA8e2pA
+	7oVSpwrAYVkmsDZgVFn/tlXtI71scFC9fhjX6bEwIDlFn/fBzfXZtgFhNGXkog==
+Message-ID: <11efec54-6d13-4ca1-a11b-f91da9e1306b@bootlin.com>
+Date: Thu, 26 Feb 2026 09:52:43 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="/cVZ3ZprakcW3CWN"
-Content-Disposition: inline
-In-Reply-To: <CAD++jL=445wx467ZKE3-qm_BaVzKYXE-7zmReTFZA0KUAaSNyw@mail.gmail.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v3 0/4] Introduce Allwinner H616 PWM controller
+To: John Stultz <jstultz@google.com>
+Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>, Philipp Zabel
+ <p.zabel@pengutronix.de>, Paul Kocialkowski <paulk@sys-base.io>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-pwm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20260123093322.1327389-1-richard.genoud@bootlin.com>
+ <CANDhNCrSjp1F0PifJXmxrAbRiTC=d_ZXeiiT5kGuM=gNke7ebA@mail.gmail.com>
+From: Richard GENOUD <richard.genoud@bootlin.com>
+Content-Language: en-US, fr
+Organization: Bootlin
+In-Reply-To: <CANDhNCrSjp1F0PifJXmxrAbRiTC=d_ZXeiiT5kGuM=gNke7ebA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-3.76 / 15.00];
-	SIGNED_PGP(-2.00)[];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
+	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_CC(0.00)[baylibre.com,kernel.org,csie.org,gmail.com,sholland.org,pengutronix.de,sys-base.io,bootlin.com,vger.kernel.org,lists.infradead.org,lists.linux.dev];
+	TAGGED_FROM(0.00)[bounces-8161-lists,linux-pwm=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8160-lists,linux-pwm=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	RSPAMD_URIBL_FAIL(0.00)[bootlin.com:query timed out];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	HAS_ORG_HEADER(0.00)[];
+	DKIM_TRACE(0.00)[bootlin.com:+];
+	RSPAMD_EMAILBL_FAIL(0.00)[richard.genoud.bootlin.com:query timed out,jstultz.google.com:query timed out];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 39E8519BFFC
+	PRECEDENCE_BULK(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
+	FROM_NEQ_ENVFROM(0.00)[richard.genoud@bootlin.com,linux-pwm@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.997];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,bootlin.com:mid,bootlin.com:dkim,bootlin.com:url,bootlin.com:email]
+X-Rspamd-Queue-Id: 919C61A30E7
 X-Rspamd-Action: no action
 
+Le 23/02/2026 à 21:14, John Stultz a écrit :
+> On Fri, Jan 23, 2026 at 1:33 AM Richard Genoud
+> <richard.genoud@bootlin.com> wrote:
+>>
+>> Allwinner H616 PWM controller is quite different from the A10 one.
+>>
+>> It can drive 6 PWM channels, and like for the A10, each channel has a
+>> bypass that permits to output a clock, bypassing the PWM logic, when
+>> enabled.
+>>
+>> But, the channels are paired 2 by 2, sharing a first set of
+>> MUX/prescaler/gate.
+>> Then, for each channel, there's another prescaler (that will be bypassed
+>> if the bypass is enabled for this channel).
+>>
+>> It looks like that:
+>>              _____      ______      ________
+>> OSC24M --->|     |    |      |    |        |
+>> APB1 ----->| Mux |--->| Gate |--->| /div_m |-----> PWM_clock_src_xy
+>>             |_____|    |______|    |________|
+>>                            ________
+>>                           |        |
+>>                        +->| /div_k |---> PWM_clock_x
+>>                        |  |________|
+>>                        |    ______
+>>                        |   |      |
+>>                        +-->| Gate |----> PWM_bypass_clock_x
+>>                        |   |______|
+>> PWM_clock_src_xy -----+   ________
+>>                        |  |        |
+>>                        +->| /div_k |---> PWM_clock_y
+>>                        |  |________|
+>>                        |    ______
+>>                        |   |      |
+>>                        +-->| Gate |----> PWM_bypass_clock_y
+>>                            |______|
+>>
+>> Where xy can be 0/1, 2/3, 4/5
+>>
+>> PWM_clock_x/y serve for the PWM purpose.
+>> PWM_bypass_clock_x/y serve for the clock-provider purpose.
+>> The common clock framework has been used to manage those clocks.
+>>
+>> This PWM driver serves as a clock-provider for PWM_bypass_clocks.
+>> This is needed for example by the embedded AC300 PHY which clock comes
+>> from PMW5 pin (PB12).
+>>
+>> Usually, to get a clock from a PWM driver, we use the pwm-clock driver
+>> so that the PWM driver doesn't need to be a clk-provider itself.
+>> While this works in most cases, here it just doesn't.
+>> That's because the pwm-clock request a period from the PWM driver,
+>> without any clue that it actually wants a clock at a specific frequency,
+>> and not a PWM signal with duty cycle capability.
+>> So, the PWM driver doesn't know if it can use the bypass or not, it
+>> doesn't even have the real accurate frequency information (23809524 Hz
+>> instead of 24MHz) because PWM drivers only deal with periods.
+>>
+>> With pwm-clock, we loose a precious information along the way (that we
+>> actually want a clock and not a PWM signal).
+>> That's ok with simple PWM drivers that don't have multiple input clocks,
+>> but in this case, without this information, we can't know for sure which
+>> clock to use.
+>> And here, for instance, if we ask for a 24MHz clock, pwm-clock will
+>> requests 42ns (assigned-clocks doesn't help for that matter). The logic
+>> is to select the highest clock (100MHz) with no prescaler and a duty
+>> cycle value of 2/4 => we have 25MHz instead of 24MHz.
+>> And that's a perfectly fine choice for a PMW, because we still can
+>> change the duty cycle in the range [0-4]/4.
+>> But obviously for a clock, we don't care about the duty cycle, but more
+>> about the clock accuracy.
+>>
+>> And actually, this PWM is really a PWM AND a real clock when the bypass
+>> is set.
+> 
+> During my free/personal time this weekend I was tinkering with Orange
+> Pi Zero 2w and was able to use this patch series (along with an
+> hdmi-phy patch and some dts changes) to get HDMI working on the
+> device.
+> I'm eager to see these land!
+> 
+> Tested-by: John Stultz <jstultz@google.com>
 
---/cVZ3ZprakcW3CWN
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That's great, thanks for testing!
 
-On Wed, Jan 28, 2026 at 01:33:00PM +0100, Linus Walleij wrote:
-> Hi Yu-Chun,
->=20
-> thanks for your patch!
->=20
-> [Uwe, can you check this a bit down!]
->=20
-> On Wed, Jan 28, 2026 at 4:39=E2=80=AFAM Yu-Chun Lin <eleanor.lin@realtek.=
-com> wrote:
->=20
-> > From: Tzuyi Chang <tychang@realtek.com>
-> >
-> > Add device tree bindings for RTD1625.
-> >
-> > Signed-off-by: Tzuyi Chang <tychang@realtek.com>
-> > Co-developed-by: Yu-Chun Lin <eleanor.lin@realtek.com>
-> > Signed-off-by: Yu-Chun Lin <eleanor.lin@realtek.com>
->=20
-> Overall this looks good!
-
-Where can I find the binding patch? What this is in-reply-to does not
-exist:
-https://lore.kernel.org/all/CAD++jL=3D445wx467ZKE3-qm_BaVzKYXE-7zmReTFZA0KU=
-AaSNyw@mail.gmail.com/
-Nor can I find anything else from Eleanor that would appear to be what
-this is:
-https://lore.kernel.org/all/?q=3Df%3Aeleanor.lin%40realtek.com
-
->=20
-> > +      power-source:
-> > +        description: |
-> > +          Valid arguments are described as below:
-> > +          0: power supply of 1.8V
-> > +          1: power supply of 3.3V
-> > +        enum: [0, 1]
->=20
-> OK...
->=20
-> > +      slew-rate:
-> > +        description: |
-> > +          Valid arguments are described as below:
-> > +            0: ~1ns falling time
-> > +            1: ~10ns falling time
-> > +            2: ~20ns falling time
-> > +            3: ~30ns falling time
-> > +        enum: [0, 1, 2, 3]
->=20
-> Slew rate is usually something like volts/second in SI units, I would
-> expect that this differs depending on which power-source is selected?
-> I.e. are these values for 1.8V or 3.3V?
->=20
-> > +      realtek,drive-strength-p:
-> > +        description: |
-> > +          Some of pins can be driven using the P-MOS and N-MOS transis=
-tor to
-> > +          achieve finer adjustments.
->=20
-> Finer compared to what? Compared to the overall setting for slew-rate or
-> drive-strength, or both?
->=20
-> > The block-diagram representation is as
-> > +          follows:
-> > +                         VDD
-> > +                          |
-> > +                      ||--+
-> > +               +-----o||     P-MOS-FET
-> > +               |      ||--+
-> > +          IN --+          +----- out
-> > +               |      ||--+
-> > +               +------||     N-MOS-FET
-> > +                      ||--+
-> > +                          |
-> > +                         GND
->=20
-> Nice picture!
->=20
-> > +          The driving strength of the P-MOS/N-MOS transistors impacts =
-the
-> > +          waveform's rise/fall times. Greater driving strength results=
- in
-> > +          shorter rise/fall times. Each P-MOS and N-MOS transistor off=
-ers
-> > +          8 configurable levels (0 to 7), with higher values indicating
-> > +          greater driving strength, contributing to achieving the desi=
-red
-> > +          speed.
-> > +
-> > +          The realtek,drive-strength-p is used to control the driving =
-strength
-> > +          of the P-MOS output.
-> > +        $ref: /schemas/types.yaml#/definitions/uint32
-> > +        minimum: 0
-> > +        maximum: 7
-> > +
-> > +      realtek,drive-strength-n:
-> > +        description: |
-> > +          Similar to the realtek,drive-strength-p, the realtek,drive-s=
-trength-n
-> > +          is used to control the driving strength of the N-MOS output.
-> > +        $ref: /schemas/types.yaml#/definitions/uint32
-> > +        minimum: 0
-> > +        maximum: 7
->=20
-> These two are really interesting. But what do these settings represent?
->=20
-> I would *guess* it represents the number of transistors used, simply,
-> so 0 means just one P/N transistor is driving and 7 means 8 transistors
-> are driving.
->=20
-> Can you provide details here?
->=20
-> In this case, maybe we want a generalized property such as
-> drive-stages-p =3D <n>;
-> drive-stages-n =3D <n>;
->=20
-> in the generic bindings, if this will appear from more vendors?
->=20
-> > +      realtek,duty-cycle:
-> > +        description: |
-> > +          An integer describing the level to adjust output duty cycle,
-> > +          controlling the proportion of positive and negative waveform=
-s in
-> > +          nanoseconds.
-> > +          Valid arguments are described as below:
-> > +          0: 0ns
-> > +          2: + 0.25ns
-> > +          3: + 0.5ns
-> > +          4: -0.25ns
-> > +          5: -0.5ns
-> > +        $ref: /schemas/types.yaml#/definitions/uint32
-> > +        enum: [0, 2, 3, 4, 5]
->=20
-> This is a bit dubious.
->=20
-> Isn't this one of those cases where you should be using the PWM
-> bindings, directly in this node? Just slam in #pwm-cells =3D <...> etc,
-> I think this is what you really want.
->=20
-> Please consult/reference:
-> Documentation/devicetree/bindings/pwm/pwm.yaml
-> consumers would not use pinctrl phandles but something like
-> pwms =3D <&pwm ....>;
->=20
-> It's maybe a bit trixy to use two generic bindings in the
-> node but it should be just fine.
->=20
-> I don't feel confident mergeing this without Uwe Kleine-K=C3=B6nig's revi=
-ew.
-
-This does sound like a pwm to me too, but I can't see the rest of the
-series to comment.
+> 
+> thanks
+> -john
+> 
 
 
-> > +      realtek,input-voltage:
-> > +        description: |
-> > +          Select the input receiver voltage domain for the pin (1.8V o=
-r 3.3V).
-> > +          This defines the reference for VIH/VIL and must match the ex=
-ternal
-> > +          signal level.
-> > +
-> > +          This does not control the output drive voltage, which is han=
-dled by
-> > +          the standard generic 'power-source' property.
-> > +
-> > +          Valid arguments are described as below:
-> > +          0: 1.8V input logic level
-> > +          1: 3.3V input logic level
-> > +        $ref: /schemas/types.yaml#/definitions/uint32
-> > +        enum: [0, 1]
->=20
-> This looks very generic. Can you please just add input-voltage to
-> pincfg-node.yaml with a custom format and reference that?
-
-Why a custom format, rather than input-voltage-microvolt or w/e?
-
-Cheers,
-Conor.
-
->=20
-> > +      realtek,high-vil:
-> > +        type: boolean
-> > +        description: |
-> > +          Select the input receiver with a higher LOW recognition thre=
-shold
-> > +          (VIL) to improve detection for sources with weak pull-down o=
-r slow
-> > +          falling edges.
->=20
-> Isn't this supposed to be input-schmitt-microvolt?
->=20
-> Or is this something else than a schmitt trigger?
->=20
-> In either case, try to figure out the typical recognition threshold in mi=
-crovolt
-> and use that, please.
->=20
-> Yours,
-> Linus Walleij
-
---/cVZ3ZprakcW3CWN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaZ85eAAKCRB4tDGHoIJi
-0pCJAQCOgynGYTPPfulsHK5QnaiaeM/j3cYU0OluS0Hk1UYTwwEAw8d2OoCS4PS2
-Ttva4ReaeiOzhVvejjR4ftjomjh5CQg=
-=OsoX
------END PGP SIGNATURE-----
-
---/cVZ3ZprakcW3CWN--
+-- 
+Richard Genoud, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
