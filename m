@@ -1,85 +1,58 @@
-Return-Path: <linux-pwm+bounces-8170-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8171-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kPgwKFxUoWk+sQQAu9opvQ
-	(envelope-from <linux-pwm+bounces-8170-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Fri, 27 Feb 2026 09:22:52 +0100
+	id YBM2OMTEoWkVwQQAu9opvQ
+	(envelope-from <linux-pwm+bounces-8171-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Fri, 27 Feb 2026 17:22:28 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 185401B4774
-	for <lists+linux-pwm@lfdr.de>; Fri, 27 Feb 2026 09:22:52 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 88E511BAC1A
+	for <lists+linux-pwm@lfdr.de>; Fri, 27 Feb 2026 17:22:28 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 673CC3102588
-	for <lists+linux-pwm@lfdr.de>; Fri, 27 Feb 2026 08:17:22 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id E634E301BAA1
+	for <lists+linux-pwm@lfdr.de>; Fri, 27 Feb 2026 16:22:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3726D38BF7B;
-	Fri, 27 Feb 2026 08:17:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7FF0F44B676;
+	Fri, 27 Feb 2026 16:22:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iJIq7ZKu"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="rswczSH1"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA073806B3
-	for <linux-pwm@vger.kernel.org>; Fri, 27 Feb 2026 08:17:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B735F44A723
+	for <linux-pwm@vger.kernel.org>; Fri, 27 Feb 2026 16:22:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772180226; cv=none; b=GKmJiC8RnHyw05tE27UO8kv9NpeOSMq4CYN0xvGpyUL9x/dG0MXowPfaL1U61ROLFP+LDdNaT7MRlAJ3Ju/boNPgCXKdKztQ0ODZlM6pG4vK6mawhu4xzHixnaxIvn2w3bfFJlsP1d20ZVpBJPNi6rjC/UmslUwQ+SG+zbOxwus=
+	t=1772209347; cv=none; b=dQHylSry4lnqByxsQkeuqbQr+cNrDeyUhHCYeMc6w4py/eZtPxfIFOb+G0s7NyhmioLG/h0W32KvLFqPkcsn5DGzi3oJBV4PGYx4loseYsQZkMwVKz5SYG2BlorAEIg47s2Z4IbMeZFOoJqveV82imq/wUSj/q0/vpffduxxrfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772180226; c=relaxed/simple;
-	bh=NsnXR732HR9l2oml/8CObM0jr3+sZuVFltQ6q3u+bbU=;
+	s=arc-20240116; t=1772209347; c=relaxed/simple;
+	bh=kYPUvF4UEQ6LF3Cfn1dMvg5ZhqaE6uddWpC2I5dOrE4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pndh3CFqDCLqi0GGxkfMCI3xq7AnfytFo385Hkat6tj3cbThg9RA9caMHqxRdO6dgFUUTc4F2PsKObcuox4k8qEOhhWKU7Mozzjxfft36l9Ki7ltqE1qPIERIH6RRn00x3p9r92ArEzPJbGXTJNUj6yG9dIiMZ68Tijg/7yHAFk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iJIq7ZKu; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-2aaf5d53eaaso12473685ad.0
-        for <linux-pwm@vger.kernel.org>; Fri, 27 Feb 2026 00:17:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1772180224; x=1772785024; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:from:to:cc:subject:date:message-id:reply-to;
-        bh=LuyVLLrSQcNLZs9Zxojz4eiomlcsRYNEFiNRapTyc2o=;
-        b=iJIq7ZKu2axQ58MqA3zpNuViuXI+tEu1Sp0d8U7Os3YcPfcOLtvyW/y24azzYRNVHn
-         QQEKVTbwVPd45LW//WSz/iWV5LSaVmpjTXlr7USGf3k5WVx2V25g3o6GeOz1KAYHNIzW
-         nKQoMz5rP5HCmf2r4JwnC4TL3XtENon8UXBvZK83V67YYgqYprrVtNUtlyHmkeOrmBWj
-         OKYO7kBBuVqUaqaApCB1Tua36M4tIg/1b2n3d8e3WfNI4NWENlwYY17OEtzlfHiHwcUG
-         kbX7y7zzKDlEL5cmwgBGbxhiRm9liitiP4s8x017XMXIocksp7w9jBJUGCWZQq4TS3nd
-         WaSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1772180224; x=1772785024;
-        h=content-transfer-encoding:in-reply-to:autocrypt:from
-         :content-language:references:cc:to:subject:user-agent:mime-version
-         :date:message-id:sender:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LuyVLLrSQcNLZs9Zxojz4eiomlcsRYNEFiNRapTyc2o=;
-        b=V4tYTfQgGVX4vI6nzkgcHshpkDtBK+YbFq94ecEmNcTQTqdExFhrckz2Tvvk2Bp0TJ
-         nP8N8fcgFLOKYAKkCGOdyKATIXR2ZJ8izxcdXPJnccOzNS/06ioXilO8LJ1UAEKRkKAe
-         PNxhqkvE606NGXgzteP7vijjBzzAHseoVxZDYNd5mZbHyCYo+hjo/Ju5o5i15IU7iCCZ
-         nl7BbmDFXqvGIAWhHd2Dx91hye2SUZf126/LW49JbG2hvFJEo5/3KdaYpbXjxN9jvK4q
-         OPPrx/2XY2nuMDSkjro01LQ7E3n/fpW33OaCCVyKr+x9dbKDWM9yUY8Vd9ZmrltsYXCY
-         zghw==
-X-Forwarded-Encrypted: i=1; AJvYcCVxW4zb2X6Ad1hDKQgI9Z59I/uG8VsjZIqAGe1bdbkqJb6wSRGe18/YKX64ZmIb8HwK7sGzuNxOR2g=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yxb33/HG4AXIfc2vTzONSG05DNk+Df64+Iz5wTRNGviTnXoXPIJ
-	dHvZTukfAL8uazpquw/C49NI70R03Cf4j6N3yGoDJT6s1kT2B487FHYR
-X-Gm-Gg: ATEYQzwL0G8/XSioyS0WKAThjmLAzNaOG2QfKM57DEepdYAqav32UBsZpxrd88THH70
-	FkqIrPdVcd+ftPgS9gxN7kxYnC2vEI+S/rMJi5FZHd8RscFrHKqpBMgRS3SQZdBciEbk22JbvCU
-	2Y48M2U2ad0eDYE21bu8TLjLtqcRr2JVrHkrwBfyelIMLosc+kLT/ikxUBn+7FiKFYYPOBjv3DN
-	SzIHUvPJ6cdYaNf8Wvayd50uiOl4fSwsqdfCo+NqW9166mdjxuNAKnAfyIkMHqdScHRPAj/XW7R
-	uc40FSwKAERp3STc6zaibyOoyyiExTGr+tEt04CKkAadYLA2jVoqJMrKm/DuXZUDWhGUMMyh0Vg
-	xp/qKnMnpfdhZsygoqTmG6V7NNfJFZ+drJ9BGc6S9KA8c82NsUgRKRBrYWDZ6B5e5Z0Vf8JebAQ
-	wYytER6WJ/ETS0ZPGO/QzFWxeSbba/kMG0G9pICAgDT0tNHtHOiWF35UEiA7sMEgBaXHa3/282
-X-Received: by 2002:a17:902:cec2:b0:2ad:c66d:ad02 with SMTP id d9443c01a7336-2ae2e4d9735mr18263295ad.49.1772180224124;
-        Fri, 27 Feb 2026 00:17:04 -0800 (PST)
-Received: from ?IPV6:2600:1700:e321:62f0:da43:aeff:fecc:bfd5? ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2adfb5c244asm55369655ad.30.2026.02.27.00.17.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Feb 2026 00:17:02 -0800 (PST)
-Sender: Guenter Roeck <groeck7@gmail.com>
-Message-ID: <163f68da-c31b-4ee6-a187-a81d14202311@roeck-us.net>
-Date: Fri, 27 Feb 2026 00:17:00 -0800
+	 In-Reply-To:Content-Type; b=OkCfSXzCNehX/PMVpXthaRnCiccWUZ7h9mJJH1U8bxG3G97bWDKsgNq7XqlgAiVkrmzEX53mNVnpd6RPhAxHz0Q3Hv8INkOG5ce9mDxAwf65GhcqRO+p36X8UlWlY/OfnLnJ86m9APk4VEB80C/dwMh9LKaBeQHVrMU8F5z7s/4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=rswczSH1; arc=none smtp.client-ip=185.171.202.116
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-04.galae.net (Postfix) with ESMTPS id 8B983C406A2;
+	Fri, 27 Feb 2026 16:22:38 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 960485FE46;
+	Fri, 27 Feb 2026 16:22:22 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 300941036949A;
+	Fri, 27 Feb 2026 17:22:15 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1772209341; h=from:subject:date:message-id:to:cc:mime-version:content-type:
+	 content-transfer-encoding:content-language:in-reply-to:references;
+	bh=7EMUj9J2lzttg45PIgu6IItFeqZqS9pqZ7OM/QVePFo=;
+	b=rswczSH1SlJ3ib4UceTBt2QrNTLqbu4jgZYIpkBLsPk28uhMaBBr0lmoF630EXDn/cVVad
+	Rj2a59zPf4cPE1o332uykUPvr1hND4ki0kPYpG8gMA3ZQO3F3A7kXF4/eQOuEKXZilBpdl
+	S3WocPtJBzBp3nB7Mimj0wSrQUCSctSFx+J4pwHmabJxlKopj52QuZ+w8saELtVeCmwofs
+	yfSnU+1p+9eB5NAJxsoc8SGems/k7hkq1xmWhDHo+A/hR2ZbEeDwkN52yRShCiOZUOPTfI
+	lWtYs/QmnzjrL293Im+XZRxo05cW2I+QXfB9Kr27Ihq4lx7BatRM+DxCcbexpQ==
+Message-ID: <b64c6beb-afac-4df0-b687-5ab1e2b4baaf@bootlin.com>
+Date: Fri, 27 Feb 2026 17:22:14 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -87,143 +60,258 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] [RFC] hwmon: nct6775: Register fan PWMs as PWM chip
-To: Richard Weinberger <richard@nod.at>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>,
- linux-pwm <linux-pwm@vger.kernel.org>,
- linux-hwmon <linux-hwmon@vger.kernel.org>,
- =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- julian friedrich <julian.friedrich@frequentis.com>
-References: <20260225125159.20822-1-richard@nod.at>
- <9c733024-8ad6-459d-ae5a-a9825f85c506@roeck-us.net>
- <1892064865.155.1772178411224.JavaMail.zimbra@nod.at>
-Content-Language: en-US
-From: Guenter Roeck <linux@roeck-us.net>
-Autocrypt: addr=linux@roeck-us.net; keydata=
- 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
- np3900V20aS7eD9K8GTU0TGC1pyz6IVJwIE=
-In-Reply-To: <1892064865.155.1772178411224.JavaMail.zimbra@nod.at>
+Subject: Re: [PATCH v3 2/4] pwm: sun50i: Add H616 PWM support
+To: Philipp Zabel <p.zabel@pengutronix.de>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+ Jernej Skrabec <jernej.skrabec@gmail.com>,
+ Samuel Holland <samuel@sholland.org>
+Cc: Paul Kocialkowski <paulk@sys-base.io>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-pwm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <20260123093322.1327389-1-richard.genoud@bootlin.com>
+ <20260123093322.1327389-3-richard.genoud@bootlin.com>
+ <2938bcbbb46fdec1fd2629e11c28ce9cf09eee27.camel@pengutronix.de>
+From: Richard GENOUD <richard.genoud@bootlin.com>
+Content-Language: en-US, fr
+Organization: Bootlin
+In-Reply-To: <2938bcbbb46fdec1fd2629e11c28ce9cf09eee27.camel@pengutronix.de>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-1.66 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20230601];
+	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
+	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	TAGGED_FROM(0.00)[bounces-8170-lists,linux-pwm=lfdr.de];
-	TO_DN_ALL(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DMARC_NA(0.00)[roeck-us.net];
-	RCVD_TLS_LAST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8171-lists,linux-pwm=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
+	FREEMAIL_TO(0.00)[pengutronix.de,baylibre.com,kernel.org,csie.org,gmail.com,sholland.org];
+	RCPT_COUNT_TWELVE(0.00)[15];
 	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[bootlin.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linux@roeck-us.net,linux-pwm@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	RCVD_COUNT_FIVE(0.00)[5];
+	FROM_NEQ_ENVFROM(0.00)[richard.genoud@bootlin.com,linux-pwm@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	MID_RHS_MATCH_FROM(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-pwm];
-	RCPT_COUNT_FIVE(0.00)[6]
-X-Rspamd-Queue-Id: 185401B4774
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 88E511BAC1A
 X-Rspamd-Action: no action
 
-Hi Richard,
-
-On 2/26/26 23:46, Richard Weinberger wrote:
-> Hello Guenter,
-> 
-> ----- Ursprüngliche Mail -----
->> Von: "Guenter Roeck" <linux@roeck-us.net>
->>>    - Exporting a PWM for external use is only allowed when the fan mode
->>>      is set to manual or off.
->>>    - As soon as a PWM is exported, changing its configuration is no
->>>      longer possible through the hwmon sysfs interface, reading is
->>>      still allowed.
->>>    - Changing the PWM period is not supported. IMHO, it is too risky
->>>      since the PWMs usually control system fans and similar components.
->>>    - Reading and decoding the current PWM period is only supported for
->>>      one chip variant so far, for all other chips, a fixed period of
->>>      100ms is assumed.
->>>
+Le 26/02/2026 à 15:12, Philipp Zabel a écrit :
+> On Fr, 2026-01-23 at 10:33 +0100, Richard Genoud wrote:
+>> Add driver for Allwinner H616 PWM controller, supporting up to 6
+>> channels.
+>> Those channels output can be either a PWM signal output or a clock
+>> output, thanks to the bypass.
 >>
->> This is a good start, but I'll want to see stronger safeguards.
->> - Creating a pwmchip entry for a pwm channel must be triggered by
->>    device property data, obtained either from devicetree or through
->>    DMI or through device properties embedded in ACPI data. For each
->>    channel, this must be confirmed by checking that the channel is
->>    not associated with a fan control channel.
+>> The channels are paired (0/1, 2/3 and 4/5) and each pair has a
+>> prescaler/mux/gate.
+>> Moreover, each channel has its own prescaler and bypass.
+>>
+>> The clock provider part of this driver is needed not only because the
+>> H616 PWM controller provides also clocks when bypass is enabled, but
+>> really because pwm-clock isn't fit to handle all cases here.
+>> pwm-clock would work if the 100MHz clock is requested, but if a lower
+>> clock is requested (like 24MHz), it will request a 42ns period to the
+>> PWM driver which will happily serve, with the 100MHz clock as input a
+>> 25MHz frequency and a duty cycle adjustable in the range [0-4]/4,
+>> because that is a sane thing to do for a PWM.
+>> The information missing is that a real clock is resquested, not a PWM.
+>>
+>> Signed-off-by: Richard Genoud <richard.genoud@bootlin.com>
+>> ---
+>>   drivers/pwm/Kconfig           |  12 +
+>>   drivers/pwm/Makefile          |   1 +
+>>   drivers/pwm/pwm-sun50i-h616.c | 959 ++++++++++++++++++++++++++++++++++
+>>   3 files changed, 972 insertions(+)
+>>   create mode 100644 drivers/pwm/pwm-sun50i-h616.c
+>>
+> [...]
+>> diff --git a/drivers/pwm/pwm-sun50i-h616.c b/drivers/pwm/pwm-sun50i-h616.c
+>> new file mode 100644
+>> index 000000000000..02a8e2d39f86
+>> --- /dev/null
+>> +++ b/drivers/pwm/pwm-sun50i-h616.c
+>> @@ -0,0 +1,959 @@
+> [...]
+>> +static int h616_pwm_init_clocks(struct platform_device *pdev,
+>> +				struct h616_pwm_chip *h616chip)
+>> +{
+>> +	struct clk_pwm_pdata *pdata;
+>> +	struct device *dev = &pdev->dev;
+>> +	int num_clocks = 0;
+>> +	int ret;
+>> +
+>> +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+>> +	if (!pdata)
+>> +		return dev_err_probe(dev, -ENOMEM,
+>> +				     "Failed to allocate clk_pwm_pdata\n");
+>> +
+>> +	while (pwmcc_data[num_clocks].name)
+>> +		num_clocks++;
+>> +
+>> +	pdata->hw_data = devm_kzalloc(dev, struct_size(pdata->hw_data, hws, num_clocks),
+>> +				      GFP_KERNEL);
+>> +	if (!pdata->hw_data)
+>> +		return dev_err_probe(dev, -ENOMEM,
+>> +				     "Failed to allocate hw clocks\n");
+>> +
+>> +	pdata->hw_data->num = num_clocks;
+>> +	pdata->reg = h616chip->base;
+>> +
+>> +	spin_lock_init(&pdata->lock);
+>> +
+>> +	for (int i = 0; i < num_clocks; i++) {
+>> +		struct clk_hw **hw = &pdata->hw_data->hws[i];
+>> +
+>> +		ret = h616_add_composite_clk(&pwmcc_data[i], pdata->reg,
+>> +					     &pdata->lock, dev, hw);
+>> +		if (ret) {
+>> +			dev_err_probe(dev, ret,
+>> +				      "Failed to register hw clock %s\n",
+>> +				      pwmcc_data[i].name);
+>> +			for (i--; i >= 0; i--)
+>> +				clk_hw_unregister_composite(pdata->hw_data->hws[i]);
+>> +			return ret;
+>> +		}
+>> +	}
+>> +
+>> +	h616chip->clk_pdata = pdata;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static int h616_pwm_probe(struct platform_device *pdev)
+>> +{
+>> +	const struct h616_pwm_data *data;
+>> +	struct device *dev = &pdev->dev;
+>> +	struct h616_pwm_chip *h616chip;
+>> +	struct pwm_chip *chip;
+>> +	int ret;
+>> +
+>> +	data = of_device_get_match_data(dev);
+>> +	if (!data)
+>> +		return dev_err_probe(dev, -ENODEV,
+>> +				     "Missing specific data structure\n");
+>> +
+>> +	chip = devm_pwmchip_alloc(dev, data->npwm, sizeof(*h616chip));
+>> +	if (IS_ERR(chip))
+>> +		return dev_err_probe(dev, PTR_ERR(chip),
+>> +				     "Failed to allocate pwmchip\n");
+>> +
+>> +	h616chip = h616_pwm_from_chip(chip);
+>> +	h616chip->data = data;
+>> +	h616chip->base = devm_platform_ioremap_resource(pdev, 0);
+>> +	if (IS_ERR(h616chip->base))
+>> +		return dev_err_probe(dev, PTR_ERR(h616chip->base),
+>> +				     "Failed to get PWM base address\n");
+>> +
+>> +	h616chip->bus_clk = devm_clk_get_enabled(dev, "bus");
+>> +	if (IS_ERR(h616chip->bus_clk))
+>> +		return dev_err_probe(dev, PTR_ERR(h616chip->bus_clk),
+>> +				     "Failed to get bus clock\n");
+>> +
+>> +	h616chip->channels = devm_kmalloc_array(dev, data->npwm,
+>> +						sizeof(*(h616chip->channels)),
+>> +						GFP_KERNEL);
+>> +	if (!h616chip->channels)
+>> +		return dev_err_probe(dev, -ENOMEM,
+>> +				     "Failed to allocate %d channels array\n",
+>> +				     data->npwm);
+>> +
+>> +	h616chip->rst = devm_reset_control_get_shared(dev, NULL);
+>> +	if (IS_ERR(h616chip->rst))
+>> +		return dev_err_probe(dev, PTR_ERR(h616chip->rst),
+>> +				     "Failed to get reset control\n");
+>> +
+>> +	chip->ops = &h616_pwm_ops;
+>> +
+>> +	ret = h616_pwm_init_clocks(pdev, h616chip);
+>> +	if (ret)
+>> +		return ret;
+>> +
+>> +	for (unsigned int i = 0; i < data->npwm; i++) {
+>> +		struct h616_pwm_channel *chan = &h616chip->channels[i];
+>> +		struct clk_hw **hw = &h616chip->clk_pdata->hw_data->hws[i];
+>> +
+>> +		chan->pwm_clk = devm_clk_hw_get_clk(dev, *hw, NULL);
+>> +		if (IS_ERR(chan->pwm_clk)) {
+>> +			ret = dev_err_probe(dev, PTR_ERR(chan->pwm_clk),
+>> +					    "Failed to register PWM clock %d\n", i);
+>> +			goto err_get_clk;
+>> +		}
+>> +		chan->mode = H616_PWM_MODE_NONE;
+>> +	}
+>> +
+>> +	ret = devm_of_clk_add_hw_provider(dev, h616_pwm_of_clk_get, h616chip);
+>> +	if (ret) {
+>> +		dev_err_probe(dev, ret, "Failed to add HW clock provider\n");
+>> +		goto err_add_clk_provider;
+>> +	}
+>> +
+>> +	/* Deassert reset */
+>> +	ret = reset_control_deassert(h616chip->rst);
+>> +	if (ret) {
+>> +		dev_err_probe(dev, ret, "Cannot deassert reset control\n");
+>> +		goto err_ctrl_deassert;
+>> +	}
+>> +
+>> +	ret = pwmchip_add(chip);
+>> +	if (ret < 0) {
+>> +		dev_err_probe(dev, ret, "Failed to add PWM chip\n");
+>> +		goto err_pwm_add;
+>> +	}
+>> +
+>> +	platform_set_drvdata(pdev, chip);
+>> +
+>> +	return 0;
+>> +
+>> +err_pwm_add:
+>> +	reset_control_assert(h616chip->rst);
+>> +
+>> +err_ctrl_deassert:
+>> +err_add_clk_provider:
+>> +err_get_clk:
+>> +	for (unsigned int i = 0; i < h616chip->clk_pdata->hw_data->num; i++)
+>> +		clk_hw_unregister_composite(h616chip->clk_pdata->hw_data->hws[i]);
 > 
-> In my case it's a x86 based industrial PC with direct access.
-> What safeguard do you suggest in this case? A module parameter?
+> Won't this try to unregister the clk_hw before the pwm_clk derived from
+> it? You could place this in a devres action to correct the cleanup
+> order and get rid of the duplicated cleanup in h616_pwm_remove().
+Ah! You're right!
+
 > 
+> I think you could even use devm_pwmchip_add() and
+> devm_reset_control_get_shared_deasserted() and remove h616_pwm_remove
+> entirely.
+Nice!
+I'll do that.
 
-Presumably it has DMI information or some other means to identify the system.
-That information can be used to set device properties, which would then be used
-in the probe function to determine if a channel is modeled as pwm channel.
-See device_add_software_node() and friends to get an idea how that works.
+Thanks!
 
-How exactly those properties would look like needs to be documented in
-nuvoton,nct6775.yaml. I'd assume that the pwm channels would be described
-in there just like for any other pwm chips.
+Regards,
+Richard
 
-> Also for ACPI data, what exactly do you have in mind?
 > 
-ACPI can be used to provide devicetree properties. The information is embedded
-in the DSDT table. Conceptually that is identical to devicetree data. That is
-not something you need to be concerned about unless you are responsible for that
-system and in control of the firmware. Technically the company selling that
-industrial PC should provide the information in the DSDT table, but of course
-that needs to be standardized first (and then they would have to actually use it).
-
-Hope this helps,
-
-Guenter
+> regards
+> Philipp
 
 
