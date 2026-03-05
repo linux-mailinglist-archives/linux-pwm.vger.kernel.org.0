@@ -1,177 +1,189 @@
-Return-Path: <linux-pwm+bounces-8184-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8185-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wJkwIJ1NqWk14AAAu9opvQ
-	(envelope-from <linux-pwm+bounces-8184-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Thu, 05 Mar 2026 10:32:13 +0100
+	id QFVsK412qWl77wAAu9opvQ
+	(envelope-from <linux-pwm+bounces-8185-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Thu, 05 Mar 2026 13:26:53 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 035CD20E776
-	for <lists+linux-pwm@lfdr.de>; Thu, 05 Mar 2026 10:32:12 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2F012211994
+	for <lists+linux-pwm@lfdr.de>; Thu, 05 Mar 2026 13:26:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id A47EA308960B
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Mar 2026 09:29:36 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B41DA308BCE1
+	for <lists+linux-pwm@lfdr.de>; Thu,  5 Mar 2026 12:23:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A765F1F8691;
-	Thu,  5 Mar 2026 09:29:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB97E39D6C8;
+	Thu,  5 Mar 2026 12:23:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F43PK5AH"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PaER0a5f"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CA563793DB;
-	Thu,  5 Mar 2026 09:29:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8EE453988F6;
+	Thu,  5 Mar 2026 12:23:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772702965; cv=none; b=T5G7EFuX+ElkOeKVIhnUSWoqRnOnT/unCaD6BVTaQFdDeti7NPoDE3CbsDEsXlaRQsr+Ys9pNO8Df0NW5qQ4KhZMyenfc9ZJNS+QVqCG3U34WF37dBnTy3FIwNZvK4OVYyTkUySqfpKPsyAnFuFtRokytr6Rej/01FqTq4ZPiXg=
+	t=1772713415; cv=none; b=lftklv5ynVZ+nUOYVhVXHQKHBOwEKoe3ScaemADU4hmyt5xg7yPFQzRLgg48lqnX6ZrG3VlOp46GKp/y6QJEYpoK9wXxAInmNx9GayQ0DM4fMxxNwR1TW1Cb53/lk5NSkwL6ueum7hs58sGjuKxnP4AZ6wijouQ4kyAzAs22mPc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772702965; c=relaxed/simple;
-	bh=JT5toTgjzbgzKeoODHGgwKMDOSRkF8JApEv+ETaVYco=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jp3ilGDp5xVWx7yEeS7C/U2Vvf7oaUpM6coB1Q8fELKNyUBjuFu8SRE1/b9OJaD5jfVInRV/CaDpQbDCJXuoXZgBjzI7O/sQ66gWkTuY084/LcShSBorRyPjLX7f3Dd4gsFccvUJete5LODM5jrfHS+xuzOKRLvEWlw12dWljWE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F43PK5AH; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A7BCC116C6;
-	Thu,  5 Mar 2026 09:29:23 +0000 (UTC)
+	s=arc-20240116; t=1772713415; c=relaxed/simple;
+	bh=GU7IYmfFkVf9LKnTBKrEhEIX0CYJNEH8lftpyqFdpwc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=aLHy7zO8yLmlCHyfebKU7iVTOlMU0ZzulqeHhswEwMDV3FBsgMNbrta1FoR6b3baUx/1GhQOiiv83rkqyixdyQJ64+DK9iohELbxQo5KbarrOQ1sxHC7ObBescgHydO0uSrEceDLMjlRtLGDt5sKwKuTF7Ih0EJ48HFr3CIkIxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PaER0a5f; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2BF69C116C6;
+	Thu,  5 Mar 2026 12:23:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772702964;
-	bh=JT5toTgjzbgzKeoODHGgwKMDOSRkF8JApEv+ETaVYco=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=F43PK5AHHkCYeROZH0GYnlXo7VV109Y6s7h7ZSBUj4dft4uoo4Xuy4WIObA6q1SIv
-	 HTZrdshzMY3/e4QnbVLBHo6+04Mv1XRSde6qTaharM5PN7eXmlh1Np5Py/S1T+kI6H
-	 7l5nBud6kiIIKCk0hs+fPkkxa/h03azEm0JBabs1D2Br0WH6vDIT9cRQ1FROdo5oqE
-	 HrT414pDICpuLWUvtzhj6u1pS01UAmnlqrfmCwxMVUVVfsHpkcnqWWg8tZ+m9XoiWM
-	 kMTA5/ReE8TZ2avtrTkleUMJ83hV52H2aGXbCbDFpKK/qzvZZE1dbPybwJki+sWxJE
-	 b08eSfzdMswXA==
-Date: Thu, 5 Mar 2026 10:29:21 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: "Viorel Suman (OSS)" <viorel.suman@oss.nxp.com>
-Cc: Frank Li <Frank.Li@nxp.com>, Sascha Hauer <s.hauer@pengutronix.de>, 
-	Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <festevam@gmail.com>, linux-pwm@vger.kernel.org, 
-	imx@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] pwm: imx-tpm: keep channel state instead of counting
-Message-ID: <aalMdTmQd075dcF1@monoceros>
-References: <20260202104738.837016-1-viorel.suman@oss.nxp.com>
+	s=k20201202; t=1772713415;
+	bh=GU7IYmfFkVf9LKnTBKrEhEIX0CYJNEH8lftpyqFdpwc=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=PaER0a5fuxkTxKv14afwqvMWGPVG3SYfani77x12cJIPlU2vKiYs5zFl+QL7tEENM
+	 oQXuhQlqjn3VBfVPskMjRcePQ8yNSYvqSgXJukfA5QWixXU3jAOdK+OlWeEKF+dn7B
+	 R2KiV0mpyDZEpABOvcV42i0fQhq5TlrF9qpVeJJepoe8eza9r751SX6aYdJrsmXjVb
+	 oj0Ny993+4G2YGfFr9YzS7dInX72KHpQOkTrCghcWR2knwfWZ3Ougs3fbgJqCdhq/1
+	 xkprORX4BlDh9JIxo2z0mjXSkjKHe0hcfexqEhL3g38/SfxWDctYV1YAnLzqRqLqnz
+	 lLdQvM7XWN0tQ==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13727F3092C;
+	Thu,  5 Mar 2026 12:23:35 +0000 (UTC)
+From: Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org>
+Subject: [PATCH 0/4] iio: adc: ad4691: add driver for AD4691 multichannel
+ SAR ADC family
+Date: Thu, 05 Mar 2026 14:23:26 +0200
+Message-Id: <20260305-ad4692-multichannel-sar-adc-driver-v1-0-336229a8dcc7@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="l3hiqyu24f3uothm"
-Content-Disposition: inline
-In-Reply-To: <20260202104738.837016-1-viorel.suman@oss.nxp.com>
-X-Rspamd-Queue-Id: 035CD20E776
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAL51qWkC/x2NQQ6CQAxFr0K6pslQGxSuQlyMtGoTGEhHiQnh7
+ o4u38/LfztkddMMfbWD62bZllSgqSsYnzE9FE0KAwVqwykQRuG2I5zf08t+RtIJc/Syjyhumzq
+ eL8rCLMQ3gnK0ut7t848M1+P4Atc0p7h0AAAA
+X-Change-ID: 20260302-ad4692-multichannel-sar-adc-driver-78e4d44d24b2
+To: Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, Radu Sabau <radu.sabau@analog.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1772713413; l=2732;
+ i=radu.sabau@analog.com; s=20260220; h=from:subject:message-id;
+ bh=GU7IYmfFkVf9LKnTBKrEhEIX0CYJNEH8lftpyqFdpwc=;
+ b=cQc9Kvw+BUYKQkx0T+kNtJWVcKc/VF/EXt4HxpoWTyDR1r2FotoX8J8Hd6hyYwOS8F5iP0tdN
+ bJ/0spzUY+5CRaDPgwA1D5pWF6s2wkkVnZX6yzo3q5fb7lZSvuDr7Wz
+X-Developer-Key: i=radu.sabau@analog.com; a=ed25519;
+ pk=lDPQHgn9jTdt0vo58Na9lLxLaE2mb330if71Cn+EvFU=
+X-Endpoint-Received: by B4 Relay for radu.sabau@analog.com/20260220 with
+ auth_id=642
+X-Original-From: Radu Sabau <radu.sabau@analog.com>
+Reply-To: radu.sabau@analog.com
+X-Rspamd-Queue-Id: 2F012211994
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-3.76 / 15.00];
-	SIGNED_PGP(-2.00)[];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[nxp.com,pengutronix.de,gmail.com,vger.kernel.org,lists.linux.dev,lists.infradead.org];
-	TAGGED_FROM(0.00)[bounces-8184-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8185-lists,linux-pwm=lfdr.de,radu.sabau.analog.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	MISSING_XM_UA(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ukleinek@kernel.org,linux-pwm@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-pwm];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_TO(0.00)[metafoo.de,analog.com,kernel.org,baylibre.com,gmail.com];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,nxp.com:email]
+	RCPT_COUNT_TWELVE(0.00)[20];
+	FROM_HAS_DN(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,linux-pwm@vger.kernel.org];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	HAS_REPLYTO(0.00)[radu.sabau@analog.com];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[analog.com:replyto,analog.com:email,analog.com:url,analog.com:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Action: no action
 
+This series adds support for the Analog Devices AD4691 family of
+high-speed, low-power multichannel successive approximation register
+(SAR) ADCs with an SPI-compatible serial interface.
 
---l3hiqyu24f3uothm
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2] pwm: imx-tpm: keep channel state instead of counting
-MIME-Version: 1.0
+The family includes:
+  - AD4691: 16-channel, 500 kSPS
+  - AD4692: 16-channel, 1 MSPS
+  - AD4693: 8-channel, 500 kSPS
+  - AD4694: 8-channel, 1 MSPS
 
-Hello,
+The devices support five operating modes:
+  - CNV Clock Mode:    external PWM drives CNV, samples at PWM rate
+  - CNV Burst Mode:    PWM triggers bursts, internal oscillator drives
+                       conversions within each burst
+  - Autonomous Mode:   internal oscillator drives conversions,
+                       software starts/stops via register write
+  - SPI Burst Mode:    similar to Autonomous Mode but optimised for
+                       SPI burst reads
+  - Manual Mode:       CNV tied to SPI CS; each SPI transfer triggers
+                       a conversion and returns the previous result
+                       (pipelined);
 
-On Mon, Feb 02, 2026 at 12:47:38PM +0200, Viorel Suman (OSS) wrote:
-> On a soft reset TPM PWM IP may preserve its internal state from
-> previous runtime, therefore on a subsequent OS boot and driver
-> probe "enable_count" value and TPM PWM IP internal channels
-> "enabled" states may get unaligned. In consequence on a suspend/resume
-> cycle the call "if (--tpm->enable_count =3D=3D 0)" may lead to
-> "enable_count" overflow the system being blocked from entering
-> suspend due to:
->=20
->    if (tpm->enable_count > 0)
->        return -EBUSY;
->=20
-> Fix the problem by replacing counting logic with per-channel state
-> handling and by aligning IP and driver state at probe.
->=20
-> Signed-off-by: Viorel Suman (OSS) <viorel.suman@oss.nxp.com>
+The series is structured as follows:
 
-I wonder if the following change would be enough:
+  1/4 - DT bindings (YAML schema + dt-bindings header) and
+        MAINTAINERS entry
+  2/4 - Initial driver: register map via custom regmap callbacks,
+        IIO read_raw/write_raw, all five operating modes, direct
+        single-channel reads
+  3/4 - Triggered buffer support: IRQ-driven (DATA_READY / BUSY on
+        GP0) for non-Manual modes; hrtimer-based trigger for Manual
+        Mode to handle the pipelined SPI protocol
+  4/4 - SPI Engine offload support: DMA-backed high-throughput
+        capture path using the SPI offload subsystem
 
-diff --git a/drivers/pwm/pwm-imx-tpm.c b/drivers/pwm/pwm-imx-tpm.c
-index 5b399de16d60..36f873133f94 100644
---- a/drivers/pwm/pwm-imx-tpm.c
-+++ b/drivers/pwm/pwm-imx-tpm.c
-@@ -352,7 +352,7 @@ static int pwm_imx_tpm_probe(struct platform_device *pd=
-ev)
- 	struct clk *clk;
- 	void __iomem *base;
- 	int ret;
--	unsigned int npwm;
-+	unsigned int i, npwm;
- 	u32 val;
-=20
- 	base =3D devm_platform_ioremap_resource(pdev, 0);
-@@ -382,6 +382,12 @@ static int pwm_imx_tpm_probe(struct platform_device *p=
-dev)
-=20
- 	mutex_init(&tpm->lock);
-=20
-+	for (i =3D 0; i < npwm; ++i) {
-+		val =3D readl(base + PWM_IMX_TPM_CnSC(i));
-+		if (FIELD_GET(PWM_IMX_TPM_CnSC_ELS, val))
-+			++tpm->enable_count;
-+	}
-+
- 	ret =3D devm_pwmchip_add(&pdev->dev, chip);
- 	if (ret)
- 		return dev_err_probe(&pdev->dev, ret, "failed to add PWM chip\n");
+Datasheets:
+  https://www.analog.com/en/products/ad4691.html
+  https://www.analog.com/en/products/ad4692.html
+  https://www.analog.com/en/products/ad4693.html
+  https://www.analog.com/en/products/ad4694.html
 
-Best regards
-Uwe
+Signed-off-by: Radu Sabau <radu.sabau@analog.com>
+---
+Radu Sabau (4):
+      dt-bindings: iio: adc: add bindings for AD4691 family
+      iio: adc: ad4691: add initial driver for AD4691 family
+      iio: adc: ad4691: add triggered buffer support
+      iio: adc: ad4691: add SPI offload support
 
---l3hiqyu24f3uothm
-Content-Type: application/pgp-signature; name="signature.asc"
+ .../devicetree/bindings/iio/adc/adi,ad4691.yaml    |  278 +++
+ MAINTAINERS                                        |    9 +
+ drivers/iio/adc/Kconfig                            |   14 +
+ drivers/iio/adc/Makefile                           |    1 +
+ drivers/iio/adc/ad4691.c                           | 2031 ++++++++++++++++++++
+ include/dt-bindings/iio/adc/adi,ad4691.h           |   13 +
+ 6 files changed, 2346 insertions(+)
+---
+base-commit: 11439c4635edd669ae435eec308f4ab8a0804808
+change-id: 20260302-ad4692-multichannel-sar-adc-driver-78e4d44d24b2
 
------BEGIN PGP SIGNATURE-----
+Best regards,
+-- 
+Radu Sabau <radu.sabau@analog.com>
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmmpTO8ACgkQj4D7WH0S
-/k7Hrgf/Q+CV5g1n5H2m0Eoa2ED9scvifb8NzAU6vXnl5oRGdYwGSwBPx0kH5aoy
-S9Jovt20o7JRkpzJ+8sSZ/QYsshiEDqrELV/kPkpvYHvGhUsbQ/38Vf7xs0ggh70
-0kXlGmvOZw6iwmUILjMQD4/MoNgibQkL2HyittLb6IbuH2/meVm7lqipQ1YvRjTe
-oeAMdnytVyjW8J0yl7rkHFtUsNSS57NxsiFo1cDWJfcBE1LXyGMlxkHL1s0YwCE4
-kF4I0KKeK44djYQ6JG1rvFkVJPMZ39i3pYX42FSS7zGr9G/dRkj452+C3JaZWt7m
-c+nOUaZ7FDkwn3kBIuLvwfmxRr1UaQ==
-=d5zG
------END PGP SIGNATURE-----
 
---l3hiqyu24f3uothm--
 
