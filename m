@@ -1,143 +1,248 @@
-Return-Path: <linux-pwm+bounces-8178-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8179-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4FPYFg1GqWl53gAAu9opvQ
-	(envelope-from <linux-pwm+bounces-8178-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Thu, 05 Mar 2026 09:59:57 +0100
+	id aIPOCe1LqWk14AAAu9opvQ
+	(envelope-from <linux-pwm+bounces-8179-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Thu, 05 Mar 2026 10:25:01 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A7FAA20DD8B
-	for <lists+linux-pwm@lfdr.de>; Thu, 05 Mar 2026 09:59:56 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7CE7D20E53A
+	for <lists+linux-pwm@lfdr.de>; Thu, 05 Mar 2026 10:25:00 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8507A300874A
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Mar 2026 08:57:06 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id C79DC304E30D
+	for <lists+linux-pwm@lfdr.de>; Thu,  5 Mar 2026 09:20:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 525453750D7;
-	Thu,  5 Mar 2026 08:57:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BEC333783C0;
+	Thu,  5 Mar 2026 09:20:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qyrzZSbv"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="UmZ3SJc0"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtpout-02.galae.net (smtpout-02.galae.net [185.246.84.56])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E589372EC5;
-	Thu,  5 Mar 2026 08:57:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86E012D47F4
+	for <linux-pwm@vger.kernel.org>; Thu,  5 Mar 2026 09:20:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.84.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772701025; cv=none; b=BYiqUl51Qhrij/XXA3YCP7Xg/jjmi4UdVRS+OWDSoSR1N2WPzTdfcYKK+bLY8xx/bFc+uNCIDWGfBaY0vEjFzmYt4EVJSYQa3N72TA7J8imLVf4n1PEjm8/pxzFjIAZdPtvUXsRGETQbdSMmIWw1Jv7LPb267pCmhF9uCyhjBnU=
+	t=1772702429; cv=none; b=HANqZgSQRkkWhUOiAeTvE86K5I7RNUPdle+4JjlJ508v3EMaecBG04D7GQCqm1vXJpZi3KnMPJkiSgj695v4OZFWGNye6+M456UrTIS1pr6qmSCKPsYXaUqCyWyYT4XyEQeldTKF7MuALAPjMuG9WmerAApfYQd6WmQ6mhzshtQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772701025; c=relaxed/simple;
-	bh=iqU5pDubMQ06tWai2ZxGuPk0TJeUQI6pQzatbxUVvj4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=DG4gK/48cmV1luOGa5V2eYPgBEbO9irzjEuoqaDHVHcIcbgAyBnsb0HGEu7gt1pAcI0xEGglfaDRkphyPz5dJTo8Cekzch7ALPYi7h4bVeyEGPEos53gApZkiBY+6T/1sS1FRZax8Dq89D/zgtpwiL67ljFtmCFNuUdQLKoGeI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qyrzZSbv; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63A26C116C6;
-	Thu,  5 Mar 2026 08:57:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1772701024;
-	bh=iqU5pDubMQ06tWai2ZxGuPk0TJeUQI6pQzatbxUVvj4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=qyrzZSbvsg9feohGDgAsR0KJ58/BzUhcMLcVU8xgvBmH6cNwppZmtnArAj7ZOPzIr
-	 7bMY6ogG/hlpvycGq4ZmIXc5mZci/DgBwfbxburCw6ehmJtXlm+liXPo5fzirOVvAX
-	 ZeHm8ZxBa/2/ZcruOO1Stu6qN4qZ7c89+l0OGeZTpv2qcjx6Zg7ASY+WJrgST6GwNq
-	 YOCxzy3+lJoN2Z2zuvGVUwow5dCe+PkWwhEfkakXAn16HN1ZxtYbYtcvfqqqj5f5Xh
-	 tWVE6Wz7HbhXZnMdQvEZS3+fL+WDlIITDD+0Zx/8YBf/DbvGqHNfY7GDK8M5yX2zYz
-	 Vcna2ylwW93Zg==
-Date: Thu, 5 Mar 2026 09:57:02 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>, 
-	William Breathitt Gray <wbg@kernel.org>, Lee Jones <lee@kernel.org>, 
-	Thierry Reding <thierry.reding@gmail.com>, linux-iio@vger.kernel.org, linux-renesas-soc@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH 1/5] pwm: rz-mtu3: fix prescale check when enabling 2nd
- channel
-Message-ID: <aalEXwdvHtToZmRQ@monoceros>
-References: <20260130122353.2263273-1-cosmin-gabriel.tanislav.xa@renesas.com>
- <20260130122353.2263273-2-cosmin-gabriel.tanislav.xa@renesas.com>
+	s=arc-20240116; t=1772702429; c=relaxed/simple;
+	bh=DD5lYpM6XZ+Usu3exk9H3DdSb0hJben/UXTnT6KdqKM=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=GufLQxdZfXhG4Iw+kwFAEafy/d0ENlHjjIYTNiNsSzItHtutIiCK0wTTeokapcNhPfVwCQDmVkquqwI7oIw5NenJREqmfLfAsVOWZD/at+a28Qyf4YqiRFGPqcpy48TmNKS2mFq8dBqpFhbxtzOBXOx+zTjCpPL/tW2SSfCas6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=UmZ3SJc0; arc=none smtp.client-ip=185.246.84.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
+Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
+	by smtpout-02.galae.net (Postfix) with ESMTPS id DF7F81A2CD6;
+	Thu,  5 Mar 2026 09:20:24 +0000 (UTC)
+Received: from mail.galae.net (mail.galae.net [212.83.136.155])
+	by smtpout-01.galae.net (Postfix) with ESMTPS id B25105FDEB;
+	Thu,  5 Mar 2026 09:20:24 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 1E4B710369570;
+	Thu,  5 Mar 2026 10:20:14 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
+	t=1772702420; h=from:subject:date:message-id:to:cc:mime-version:
+	 content-transfer-encoding; bh=UkvhX1eGnzYEIZ/ydvqM1n36ebV8YAFKvf0gHruqeB0=;
+	b=UmZ3SJc0Zji3xNMUrwvviAdpYax1HkPBKYFgvhsumSNQGNzWVHEmHhfkt+TkttVf/aqP6t
+	eWexiZkQlFooD2ryhEgv3UKafV+ataLrHzMtcL4pIpyjJia9HCnm2HrJTbHfOZ4MIAeX0I
+	xy2g/UG55w0ScsDkuLPiBrzzSJNRTupLfbtmd/ue8kbmbf3mkcfY9XdklCsncL73Z5mdEI
+	E0j76e3CA6eXc1UhKjgmdiyvsBMXSt9MHB0xH87vWcslY2eb2bJ9vTop59QT4Xy83y80u/
+	TbqaVS74poxBdKumJkC25nX73HnaIGsTNK30lyh5BPy7KJ1injH+ky167S+gPQ==
+From: Richard Genoud <richard.genoud@bootlin.com>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Chen-Yu Tsai <wens@csie.org>,
+	Jernej Skrabec <jernej.skrabec@gmail.com>,
+	Samuel Holland <samuel@sholland.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Paul Kocialkowski <paulk@sys-base.io>,
+	Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+	John Stultz <jstultz@google.com>,
+	Joao Schim <joao@schimsalabim.eu>,
+	linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-sunxi@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	Richard Genoud <richard.genoud@bootlin.com>
+Subject: [PATCH v4 0/4] Introduce Allwinner H616 PWM controller
+Date: Thu,  5 Mar 2026 10:19:55 +0100
+Message-ID: <20260305091959.2530374-1-richard.genoud@bootlin.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="v3ukleok2z5qariw"
-Content-Disposition: inline
-In-Reply-To: <20260130122353.2263273-2-cosmin-gabriel.tanislav.xa@renesas.com>
-X-Rspamd-Queue-Id: A7FAA20DD8B
+Content-Transfer-Encoding: 8bit
+X-Last-TLS-Session-Version: TLSv1.3
+X-Rspamd-Queue-Id: 7CE7D20E53A
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.26 / 15.00];
-	SIGNED_PGP(-2.00)[];
+X-Spamd-Result: default: False [0.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	TAGGED_FROM(0.00)[bounces-8178-lists,linux-pwm=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[bp.renesas.com,kernel.org,gmail.com,vger.kernel.org];
+	FREEMAIL_TO(0.00)[baylibre.com,kernel.org,csie.org,gmail.com,sholland.org,pengutronix.de];
+	RCPT_COUNT_TWELVE(0.00)[18];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8179-lists,linux-pwm=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ukleinek@kernel.org,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-pwm];
 	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[richard.genoud@bootlin.com,linux-pwm@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[bootlin.com:+];
+	RCVD_COUNT_FIVE(0.00)[6];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[bootlin.com:dkim,bootlin.com:mid]
 X-Rspamd-Action: no action
 
+Allwinner H616 PWM controller is quite different from the A10 one.
 
---v3ukleok2z5qariw
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Subject: Re: [PATCH 1/5] pwm: rz-mtu3: fix prescale check when enabling 2nd
- channel
-MIME-Version: 1.0
+It can drive 6 PWM channels, and like for the A10, each channel has a
+bypass that permits to output a clock, bypassing the PWM logic, when
+enabled.
 
-Hello Cosmin,
+But, the channels are paired 2 by 2, sharing a first set of
+MUX/prescaler/gate.
+Then, for each channel, there's another prescaler (that will be bypassed
+if the bypass is enabled for this channel).
 
-On Fri, Jan 30, 2026 at 02:23:49PM +0200, Cosmin Tanislav wrote:
-> enable_count is only incremented after rz_mtu3_pwm_config() is called
-> for the current PWM channel, causing prescale to not be checked if one
-> PWM channel is enabled and we're enabling the second PWM channel of the
-> same HW channel.
+It looks like that:
+            _____      ______      ________
+OSC24M --->|     |    |      |    |        |
+APB1 ----->| Mux |--->| Gate |--->| /div_m |-----> PWM_clock_src_xy
+           |_____|    |______|    |________|
+                          ________
+                         |        |
+                      +->| /div_k |---> PWM_clock_x
+                      |  |________|
+                      |    ______
+                      |   |      |
+                      +-->| Gate |----> PWM_bypass_clock_x
+                      |   |______|
+PWM_clock_src_xy -----+   ________
+                      |  |        |
+                      +->| /div_k |---> PWM_clock_y
+                      |  |________|
+                      |    ______
+                      |   |      |
+                      +-->| Gate |----> PWM_bypass_clock_y
+                          |______|
 
-I don't understand the issue. If the second PWM channel is enabled
-while the first is only requested, changing the period is fine?!
+Where xy can be 0/1, 2/3, 4/5
 
-Can you please show a sequence of events that result in bad behaviour?
+PWM_clock_x/y serve for the PWM purpose.
+PWM_bypass_clock_x/y serve for the clock-provider purpose.
+The common clock framework has been used to manage those clocks.
 
-Best regards
-Uwe
+This PWM driver serves as a clock-provider for PWM_bypass_clocks.
+This is needed for example by the embedded AC300 PHY which clock comes
+from PMW5 pin (PB12).
 
---v3ukleok2z5qariw
-Content-Type: application/pgp-signature; name="signature.asc"
+Usually, to get a clock from a PWM driver, we use the pwm-clock driver
+so that the PWM driver doesn't need to be a clk-provider itself.
+While this works in most cases, here it just doesn't.
+That's because the pwm-clock request a period from the PWM driver,
+without any clue that it actually wants a clock at a specific frequency,
+and not a PWM signal with duty cycle capability.
+So, the PWM driver doesn't know if it can use the bypass or not, it
+doesn't even have the real accurate frequency information (23809524 Hz
+instead of 24MHz) because PWM drivers only deal with periods.
 
------BEGIN PGP SIGNATURE-----
+With pwm-clock, we loose a precious information along the way (that we
+actually want a clock and not a PWM signal).
+That's ok with simple PWM drivers that don't have multiple input clocks,
+but in this case, without this information, we can't know for sure which
+clock to use.
+And here, for instance, if we ask for a 24MHz clock, pwm-clock will
+requests 42ns (assigned-clocks doesn't help for that matter). The logic
+is to select the highest clock (100MHz) with no prescaler and a duty
+cycle value of 2/4 => we have 25MHz instead of 24MHz.
+And that's a perfectly fine choice for a PMW, because we still can
+change the duty cycle in the range [0-4]/4.
+But obviously for a clock, we don't care about the duty cycle, but more
+about the clock accuracy.
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmmpRVwACgkQj4D7WH0S
-/k7Fbgf/bx6EVifYdpoGaB5fRe2misGSlByQK+enGUL2JWVq7IxvXGPY5X+OPJK7
-ZvJQBh8SRtcfbW6Wo+g6oinHWPKhOB4+1Z1+9IRxk4mGuHNzTKnCdu5FvuMJVBNN
-04+ciEat4zNXhTKuFT2vQYCqEdWqQWoXt2jAIA5sZMPbTSd+u+1mKMREzUw4YwuR
-tcpCZAcvmGsQ23HRigkQIKWYvvXAETkmMBE5RhN5vbv1OmQ1PrB0UvKDebdrBNuz
-OOYYo07zrd6upaiMVz4Bq6uqOwdfx6/Wf1sRcLV+P2Bm2GXomZaqYtL01hlYelTI
-3oVz3coTM2rYYjERqikyAGAJArrkZQ==
-=vcUS
------END PGP SIGNATURE-----
+And actually, this PWM is really a PWM AND a real clock when the bypass
+is set.
 
---v3ukleok2z5qariw--
+This series is based onto v6.19-rc4
+
+NB: checkpatch is not happy with patch 2, but it's a false positive.
+It doesn't detect that PWM_XY_SRC_MUX/GATE/DIV are structures, but as
+it's more readable like that, I prefer keeping it that way.
+
+NB2: for geopolitical reasons, I didn't re-use the old series that Paul
+was referring to.
+
+Changes since v3:
+- gather Acked-by/Tested-by
+- fix cast from pointer to integer of different size (kernel test robot
+  with arc platform)
+- add devm_action for clk_hw_unregister_composite as suggested by Philipp
+- remove now unused pwm_remove as suggested by Philipp
+
+Changes since v2:
+- use U32_MAX instead of defining UINT32_MAX
+- add a comment on U32_MAX usage in clk_round_rate()
+- change clk_table_div_m (use macros)
+- fix formatting (double space, superfluous comma, extra line feed)
+- fix the parent clock order
+- simplify code by using scoped_guard()
+- add missing const in to_h616_pwm_chip() and rename to
+h616_pwm_from_chip()
+- add/remove missing/superflous error messages
+- rename cnt->period_ticks, duty_cnt->duty_ticks
+- fix PWM_PERIOD_MAX
+- add .remove() callback
+- fix DIV_ROUND_CLOSEST_ULL->DIV_ROUND_UP_ULL
+- add H616_ prefix
+- protect _reg in macros
+- switch to waveforms instead of apply/get_state
+- shrink struct h616_pwm_channel
+- rebase on v6.19-rc4
+
+Changes since v1:
+- rebase onto v6.19-rc1
+- add missing headers
+- remove MODULE_ALIAS (suggested by Krzysztof)
+- use sun4i-pwm binding instead of creating a new one (suggested by Krzysztof)
+- retrieve the parent clocks from the devicetree
+- switch num_parents to unsigned int
+
+Richard Genoud (4):
+  dt-bindings: pwm: allwinner: add h616 pwm compatible
+  pwm: sun50i: Add H616 PWM support
+  arm64: dts: allwinner: h616: add PWM controller
+  MAINTAINERS: Add entry on Allwinner H616 PWM driver
+
+ .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml |  19 +-
+ MAINTAINERS                                   |   5 +
+ .../arm64/boot/dts/allwinner/sun50i-h616.dtsi |  47 +
+ drivers/pwm/Kconfig                           |  12 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-sun50i-h616.c                 | 936 ++++++++++++++++++
+ 6 files changed, 1019 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/pwm/pwm-sun50i-h616.c
+
+
+base-commit: 11439c4635edd669ae435eec308f4ab8a0804808
 
