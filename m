@@ -1,56 +1,56 @@
-Return-Path: <linux-pwm+bounces-8181-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8182-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gLn0CCNLqWn+3wAAu9opvQ
-	(envelope-from <linux-pwm+bounces-8181-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Thu, 05 Mar 2026 10:21:39 +0100
+	id GNYnK/VKqWn+3wAAu9opvQ
+	(envelope-from <linux-pwm+bounces-8182-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Thu, 05 Mar 2026 10:20:53 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5A79E20E462
-	for <lists+linux-pwm@lfdr.de>; Thu, 05 Mar 2026 10:21:38 +0100 (CET)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 4A7A420E3EF
+	for <lists+linux-pwm@lfdr.de>; Thu, 05 Mar 2026 10:20:53 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id E722D30417F4
-	for <lists+linux-pwm@lfdr.de>; Thu,  5 Mar 2026 09:20:46 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 74FEA3021942
+	for <lists+linux-pwm@lfdr.de>; Thu,  5 Mar 2026 09:20:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A39473783D6;
-	Thu,  5 Mar 2026 09:20:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 28D17378D7C;
+	Thu,  5 Mar 2026 09:20:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="zUpTKyqn"
+	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="v4UrZIht"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtpout-03.galae.net (smtpout-03.galae.net [185.246.85.4])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D5237883D;
-	Thu,  5 Mar 2026 09:20:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA75B378D72
+	for <linux-pwm@vger.kernel.org>; Thu,  5 Mar 2026 09:20:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.246.85.4
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772702435; cv=none; b=bU7qwsE+xwx9AnCkyR6t0ajhkCujs0uEyK0HyBb6EMO/cUik6kLz15e8uFc5ot3Tn0Eglvy9QvlEfDjmQSHaSOJ8DByKOK1N2mXTTESoAsZko5yHHPQLfTn6+V2KZi+csCqMwXVd4yf3wef1Be0w6JYJuXCfYl79M7M4g74peus=
+	t=1772702436; cv=none; b=YL6HlOUy5SYnOnsEJ6xtX+osG90uwNvpLyrVTVzumzbnQDCiEC1XAcpWGe6UI+w4DNvlI1a5LPd/36yuSGEJqnyCOIOyjSymSl47tPIdosKEJO2F4r/Wv/BOSNWbopA/lrpse3/LLko5jSU1FCAkK/AAZNql74n5POCr5lUqa+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772702435; c=relaxed/simple;
-	bh=eqs5h0TUQO/x95+MdqXkWf7IBXaQJOhvZex9HvqWjWg=;
+	s=arc-20240116; t=1772702436; c=relaxed/simple;
+	bh=ccFBjF/h8va7hVwllGTVGR1Ya7n+6b8hVuozzzTpGYo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NWhx8UOj1FL0jQsf7jS4AaibMnT1da4wOtZowsc2WFd4tGa65H2Wolo4YsMwX4h9w5Y0awsLZy2muZ2qc7QONXeZD63ySG6t+nB8/W+bUeMQqAh7AX1Zl89LujqRh0A9eGq5wL1+wQY943smU/QyTy5B8vWMBb9Wm0HxFevdrL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=zUpTKyqn; arc=none smtp.client-ip=185.246.85.4
+	 MIME-Version; b=LXkSdube39qgL4KVgTWAI9K48vFDKHkCvbTr1gB7lHKMA7JkpiT0sPCWbJEoW88KgxXcN7fAsqp9b12teXwANf3anWZFFgOV7V8SJ4pKcs0KE+bvw865kd2yN/x4xpEBDRIDRc5t72lXnQE7BK6b0nkSMplQkbTPQKdtnIvXWso=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=v4UrZIht; arc=none smtp.client-ip=185.246.85.4
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
 Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-03.galae.net (Postfix) with ESMTPS id CC5214E4256C;
-	Thu,  5 Mar 2026 09:20:30 +0000 (UTC)
+	by smtpout-03.galae.net (Postfix) with ESMTPS id 879264E4256D
+	for <linux-pwm@vger.kernel.org>; Thu,  5 Mar 2026 09:20:33 +0000 (UTC)
 Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id A15F45FDEB;
-	Thu,  5 Mar 2026 09:20:30 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 8FF9E1036984B;
-	Thu,  5 Mar 2026 10:20:26 +0100 (CET)
+	by smtpout-01.galae.net (Postfix) with ESMTPS id 5DF935FDEB;
+	Thu,  5 Mar 2026 09:20:33 +0000 (UTC)
+Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id D807C1036984A;
+	Thu,  5 Mar 2026 10:20:29 +0100 (CET)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1772702429; h=from:subject:date:message-id:to:cc:mime-version:
+	t=1772702431; h=from:subject:date:message-id:to:cc:mime-version:
 	 content-transfer-encoding:in-reply-to:references;
-	bh=CbyIvj1lZhi3O56D5jF9FPQq50PM8VFkocVpiqeHY4A=;
-	b=zUpTKyqnsiAiVXAS7j/J+6P9rlJFd3haxmU+VuexVUrRHx9HTTqVIaUTGzYFv2zA3QYGoi
-	1yHw/B1WYSXugz1o/d3MlLHPiGTqCdBngmvzhPdoDG2iBnhk4t4Vt+y5bJn+TbcR2kcN+2
-	ad/VMs5azOLWPPBwBHnFZomGqlUhVzfEpteIA0YQyyNTjtz/d1sOWk8cOWTIN4z1r8Ebim
-	5tgU1KRqIfnAR1GTInaws2rf+Brx1VzWIgDl+TrQv2ps5uvcSvtNJpLViRPVyZfsGFL4vW
-	HToleii8fni8nIWe3xsvSJXj2Ddpfh4m9IyquHwiG+EsDwNfTEvIEPbNQcAUCg==
+	bh=o7thUj1C+8yEK0Fw3YtleNg2pFyzAQb0ZErKMz2sR4s=;
+	b=v4UrZIhtXiVeHJCZwM6PdQQg65XRhfWodJuE/SU1rJC5ZxKbj2A4LPo9Zy2S4Ud85qYHLY
+	Ye+NhvLXdVvT/6D2svH2oBJ/TP9IX2KF7/S5qE9BakDNvRlZHRWTqVqw/ATzji0olqrZ8a
+	hYW8wR15eFLiLpldB11CTS47hrdTQKkksRxfamPI7M+iiFlC4WS6t28j0UwrFCjHRje6WQ
+	58/3c7G5yegzVt22W8rpeG523JTM5ifgv+XmJQjA7oRb3KoNAEE31S2D+x2qEvz+ej9kSx
+	BzaixTgOYKwQDoJbnlGMNwc/spVyVc7dxP/Z3mgN+C5X3jPMb8mzt+E3589/Og==
 From: Richard Genoud <richard.genoud@bootlin.com>
 To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
 	Rob Herring <robh@kernel.org>,
@@ -70,9 +70,9 @@ Cc: Paul Kocialkowski <paulk@sys-base.io>,
 	linux-sunxi@lists.linux.dev,
 	linux-kernel@vger.kernel.org,
 	Richard Genoud <richard.genoud@bootlin.com>
-Subject: [PATCH v4 2/4] pwm: sun50i: Add H616 PWM support
-Date: Thu,  5 Mar 2026 10:19:57 +0100
-Message-ID: <20260305091959.2530374-3-richard.genoud@bootlin.com>
+Subject: [PATCH v4 3/4] arm64: dts: allwinner: h616: add PWM controller
+Date: Thu,  5 Mar 2026 10:19:58 +0100
+Message-ID: <20260305091959.2530374-4-richard.genoud@bootlin.com>
 X-Mailer: git-send-email 2.47.3
 In-Reply-To: <20260305091959.2530374-1-richard.genoud@bootlin.com>
 References: <20260305091959.2530374-1-richard.genoud@bootlin.com>
@@ -84,7 +84,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Last-TLS-Session-Version: TLSv1.3
-X-Rspamd-Queue-Id: 5A79E20E462
+X-Rspamd-Queue-Id: 4A7A420E3EF
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [0.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
@@ -92,7 +92,7 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -100,7 +100,7 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	FREEMAIL_TO(0.00)[baylibre.com,kernel.org,csie.org,gmail.com,sholland.org,pengutronix.de];
 	RCPT_COUNT_TWELVE(0.00)[18];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8181-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8182-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	RECEIVED_HELO_LOCALHOST(0.00)[];
@@ -113,1015 +113,85 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	RCVD_COUNT_FIVE(0.00)[6];
 	TAGGED_RCPT(0.00)[linux-pwm,dt];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,bootlin.com:dkim,bootlin.com:email,bootlin.com:mid,schimsalabim.eu:email]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,bootlin.com:dkim,bootlin.com:email,bootlin.com:mid,30090a0:email]
 X-Rspamd-Action: no action
 
-Add driver for Allwinner H616 PWM controller, supporting up to 6
-channels.
-Those channels output can be either a PWM signal output or a clock
-output, thanks to the bypass.
+The H616 has a PWM controller that can provide PWM signals, but also
+plain clocks.
 
-The channels are paired (0/1, 2/3 and 4/5) and each pair has a
-prescaler/mux/gate.
-Moreover, each channel has its own prescaler and bypass.
-
-The clock provider part of this driver is needed not only because the
-H616 PWM controller provides also clocks when bypass is enabled, but
-really because pwm-clock isn't fit to handle all cases here.
-pwm-clock would work if the 100MHz clock is requested, but if a lower
-clock is requested (like 24MHz), it will request a 42ns period to the
-PWM driver which will happily serve, with the 100MHz clock as input a
-25MHz frequency and a duty cycle adjustable in the range [0-4]/4,
-because that is a sane thing to do for a PWM.
-The information missing is that a real clock is resquested, not a PWM.
+Add the PWM controller node and pins in the device tree.
 
 Tested-by: John Stultz <jstultz@google.com>
-Tested-by: Joao Schim <joao@schimsalabim.eu>
 Signed-off-by: Richard Genoud <richard.genoud@bootlin.com>
 ---
- drivers/pwm/Kconfig           |  12 +
- drivers/pwm/Makefile          |   1 +
- drivers/pwm/pwm-sun50i-h616.c | 936 ++++++++++++++++++++++++++++++++++
- 3 files changed, 949 insertions(+)
- create mode 100644 drivers/pwm/pwm-sun50i-h616.c
+ .../arm64/boot/dts/allwinner/sun50i-h616.dtsi | 47 +++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 6f3147518376..66534e033761 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -736,6 +736,18 @@ config PWM_SUN4I
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-sun4i.
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h616.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h616.dtsi
+index 8d1110c14bad..1c7628a6e4bb 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h616.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h616.dtsi
+@@ -236,6 +236,17 @@ watchdog: watchdog@30090a0 {
+ 			clocks = <&osc24M>;
+ 		};
  
-+config PWM_SUN50I_H616
-+	tristate "Allwinner H616 PWM support"
-+	depends on ARCH_SUNXI || COMPILE_TEST
-+	depends on HAS_IOMEM && COMMON_CLK
-+	help
-+	  Generic PWM framework driver for Allwinner H616 SoCs.
-+	  It supports generic PWM, but can also provides a plain clock.
-+	  The AC300 PHY integrated in H616 SoC needs such a clock.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-h616.
-+
- config PWM_SUNPLUS
- 	tristate "Sunplus PWM support"
- 	depends on ARCH_SUNPLUS || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 0dc0d2b69025..a16ae9eef9e5 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -67,6 +67,7 @@ obj-$(CONFIG_PWM_STM32)		+= pwm-stm32.o
- obj-$(CONFIG_PWM_STM32_LP)	+= pwm-stm32-lp.o
- obj-$(CONFIG_PWM_STMPE)		+= pwm-stmpe.o
- obj-$(CONFIG_PWM_SUN4I)		+= pwm-sun4i.o
-+obj-$(CONFIG_PWM_SUN50I_H616)	+= pwm-sun50i-h616.o
- obj-$(CONFIG_PWM_SUNPLUS)	+= pwm-sunplus.o
- obj-$(CONFIG_PWM_TEGRA)		+= pwm-tegra.o
- obj-$(CONFIG_PWM_TH1520)	+= pwm_th1520.o
-diff --git a/drivers/pwm/pwm-sun50i-h616.c b/drivers/pwm/pwm-sun50i-h616.c
-new file mode 100644
-index 000000000000..2160842e400f
---- /dev/null
-+++ b/drivers/pwm/pwm-sun50i-h616.c
-@@ -0,0 +1,936 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Driver for Allwinner H616 Pulse Width Modulation Controller
-+ *
-+ * (C) Copyright 2025 Richard Genoud, Bootlin <richard.genoud@bootlin.com>
-+ *
-+ * Based on drivers/pwm/pwm-sun4i.c with Copyright:
-+ *
-+ * Copyright (C) 2014 Alexandre Belloni <alexandre.belloni@bootlin.com>
-+ *
-+ * Limitations:
-+ * - As the channels are paired (0/1, 2/3, 4/5), they share the same clock
-+ *   source and prescaler(div_m), but they also have their own prescaler(div_k)
-+ *   and bypass.
-+ *
-+ */
-+
-+#include <linux/bitfield.h>
-+#include <linux/bits.h>
-+#include <linux/clk.h>
-+#include <linux/clk-provider.h>
-+#include <linux/delay.h>
-+#include <linux/device.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/limits.h>
-+#include <linux/math64.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+#include <linux/reset.h>
-+#include <linux/spinlock.h>
-+#include <linux/time.h>
-+
-+/* PWM IRQ Enable Register */
-+#define H616_PWM_IER				0x0
-+
-+/* PWM IRQ Status Register */
-+#define H616_PWM_ISR				0x4
-+
-+/* PWM Capture IRQ Enable Register */
-+#define H616_PWM_CIER				0x10
-+
-+/* PWM Capture IRQ Status Register */
-+#define H616_PWM_CISR				0x14
-+
-+/* PWMCC Pairs Clock Configuration Registers */
-+#define H616_PWM_XY_CLK_CR(pair)		(0x20 + ((pair) * 0x4))
-+#define H616_PWM_XY_CLK_CR_SRC_SHIFT		7
-+#define H616_PWM_XY_CLK_CR_SRC_MASK		1
-+#define H616_PWM_XY_CLK_CR_GATE_BIT		4
-+#define H616_PWM_XY_CLK_CR_BYPASS_BIT(chan)	((chan) % 2 + 5)
-+#define H616_PWM_XY_CLK_CR_DIV_M_SHIFT		0
-+
-+/* PWMCC Pairs Dead Zone Control Registers */
-+#define H616_PWM_XY_DZ(pair)			(0x30 + ((pair) * 0x4))
-+
-+/* PWM Enable Register */
-+#define H616_PWM_ENR				0x40
-+#define H616_PWM_ENABLE(x)			BIT(x)
-+
-+/* PWM Capture Enable Register */
-+#define H616_PWM_CER				0x44
-+
-+/* PWM Control Register */
-+#define H616_PWM_CTRL_REG(chan)		(0x60 + (chan) * 0x20)
-+#define H616_PWM_CTRL_PRESCAL_K_SHIFT	0
-+#define H616_PWM_CTRL_PRESCAL_K_WIDTH	8
-+#define H616_PWM_CTRL_ACTIVE_STATE	BIT(8)
-+
-+/* PWM Period Register */
-+#define H616_PWM_PERIOD_REG(ch)		(0x64 + (ch) * 0x20)
-+#define H616_PWM_PERIOD_MASK		GENMASK(31, 16)
-+#define H616_PWM_DUTY_MASK		GENMASK(15, 0)
-+#define H616_PWM_REG_PERIOD(reg)	(FIELD_GET(H616_PWM_PERIOD_MASK, reg) + 1)
-+#define H616_PWM_REG_DUTY(reg)		FIELD_GET(H616_PWM_DUTY_MASK, reg)
-+#define H616_PWM_PERIOD(prd)		FIELD_PREP(H616_PWM_PERIOD_MASK, (prd) - 1)
-+#define H616_PWM_DUTY(dty)		FIELD_PREP(H616_PWM_DUTY_MASK, dty)
-+#define H616_PWM_PERIOD_MAX		(FIELD_MAX(H616_PWM_PERIOD_MASK) + 1)
-+
-+/* PWM Count Register */
-+#define H616_PWM_CNT_REG(x)		(0x68 + (x) * 0x20)
-+
-+/* PWM Capture Control Register */
-+#define H616_PWM_CCR(x)			(0x6c + (x) * 0x20)
-+
-+/* PWM Capture Rise Lock Register */
-+#define H616_PWM_CRLR(x)		(0x70 + (x) * 0x20)
-+
-+/* PWM Capture Fall Lock Register */
-+#define H616_PWM_CFLR(x)		(0x74 + (x) * 0x20)
-+
-+#define H616_PWM_PAIR_IDX(chan)		((chan) >> 2)
-+
-+/*
-+ * Block diagram of the PWM clock controller:
-+ *
-+ *             _____      ______      ________
-+ * OSC24M --->|     |    |      |    |        |
-+ * APB1 ----->| Mux |--->| Gate |--->| /div_m |-----> H616_PWM_clock_src_xy
-+ *            |_____|    |______|    |________|
-+ *                               ________
-+ *                              |        |
-+ *                           +->| /div_k |---> H616_PWM_clock_x
-+ *                           |  |________|
-+ *                           |    ______
-+ *                           |   |      |
-+ *                           +-->| Gate |----> H616_PWM_bypass_clock_x
-+ *                           |   |______|
-+ * H616_PWM_clock_src_xy ----+   ________
-+ *                           |  |        |
-+ *                           +->| /div_k |---> H616_PWM_clock_y
-+ *                           |  |________|
-+ *                           |    ______
-+ *                           |   |      |
-+ *                           +-->| Gate |----> H616_PWM_bypass_clock_y
-+ *                               |______|
-+ *
-+ * NB: when the bypass is set, all the PWM logic is bypassed.
-+ * So, the duty cycle and polarity can't be modified (we just have a clock).
-+ * The bypass in PWM mode is used to achieve a 1/2 relative duty cycle with the
-+ * fastest clock.
-+ *
-+ * H616_PWM_clock_x/y serve for the PWM purpose.
-+ * H616_PWM_bypass_clock_x/y serve for the clock-provider purpose.
-+ *
-+ */
-+
-+/*
-+ * Table used for /div_m (diviser before obtaining H616_PWM_clock_src_xy)
-+ * It's actually CLK_DIVIDER_POWER_OF_TWO, but limited to /256
-+ */
-+#define CLK_TABLE_DIV_M_ENTRY(i) { \
-+	.val = (i), .div = 1 << (i) \
-+}
-+
-+static const struct clk_div_table clk_table_div_m[] = {
-+	CLK_TABLE_DIV_M_ENTRY(0),
-+	CLK_TABLE_DIV_M_ENTRY(1),
-+	CLK_TABLE_DIV_M_ENTRY(2),
-+	CLK_TABLE_DIV_M_ENTRY(3),
-+	CLK_TABLE_DIV_M_ENTRY(4),
-+	CLK_TABLE_DIV_M_ENTRY(5),
-+	CLK_TABLE_DIV_M_ENTRY(6),
-+	CLK_TABLE_DIV_M_ENTRY(7),
-+	CLK_TABLE_DIV_M_ENTRY(8),
-+	{ /* sentinel */ }
-+};
-+
-+#define H616_PWM_XY_SRC_GATE(_pair, _reg)		\
-+struct clk_gate gate_xy_##_pair = {			\
-+	.reg = (void *)(_reg),				\
-+	.bit_idx = H616_PWM_XY_CLK_CR_GATE_BIT,		\
-+	.hw.init = &(struct clk_init_data){		\
-+		.ops = &clk_gate_ops,			\
-+	}						\
-+}
-+
-+#define H616_PWM_XY_SRC_MUX(_pair, _reg)		\
-+struct clk_mux mux_xy_##_pair = {			\
-+	.reg = (void *)(_reg),				\
-+	.shift = H616_PWM_XY_CLK_CR_SRC_SHIFT,		\
-+	.mask = H616_PWM_XY_CLK_CR_SRC_MASK,		\
-+	.flags = CLK_MUX_ROUND_CLOSEST,			\
-+	.hw.init = &(struct clk_init_data){		\
-+		.ops = &clk_mux_ops,			\
-+	}						\
-+}
-+
-+#define H616_PWM_XY_SRC_DIV(_pair, _reg)		\
-+struct clk_divider rate_xy_##_pair = {			\
-+	.reg = (void *)(_reg),				\
-+	.shift = H616_PWM_XY_CLK_CR_DIV_M_SHIFT,	\
-+	.table = clk_table_div_m,			\
-+	.hw.init = &(struct clk_init_data){		\
-+		.ops = &clk_divider_ops,		\
-+	}						\
-+}
-+
-+#define H616_PWM_X_DIV(_idx, _reg)			\
-+struct clk_divider rate_x_##_idx = {			\
-+	.reg = (void *)(_reg),				\
-+	.shift = H616_PWM_CTRL_PRESCAL_K_SHIFT,		\
-+	.width = H616_PWM_CTRL_PRESCAL_K_WIDTH,		\
-+	.hw.init = &(struct clk_init_data){		\
-+		.ops = &clk_divider_ops,		\
-+	}						\
-+}
-+
-+#define H616_PWM_X_BYPASS_GATE(_idx)			\
-+struct clk_gate gate_x_bypass_##_idx = {		\
-+	.reg = (void *)H616_PWM_ENR,			\
-+	.bit_idx = _idx,				\
-+	.hw.init = &(struct clk_init_data){		\
-+		.ops = &clk_gate_ops,			\
-+	}						\
-+}
-+
-+#define H616_PWM_XY_CLK_SRC(_pair, _reg)			\
-+	static H616_PWM_XY_SRC_MUX(_pair, _reg);		\
-+	static H616_PWM_XY_SRC_GATE(_pair, _reg);		\
-+	static H616_PWM_XY_SRC_DIV(_pair, _reg)
-+
-+#define H616_PWM_X_CLK(_idx)					\
-+	static H616_PWM_X_DIV(_idx, H616_PWM_CTRL_REG(_idx))
-+
-+#define H616_PWM_X_BYPASS_CLK(_idx)				\
-+	H616_PWM_X_BYPASS_GATE(_idx)
-+
-+#define REF_CLK_XY_SRC(_pair)						\
-+	{								\
-+		.name = "pwm-clk-src" #_pair,				\
-+		.mux_hw = &mux_xy_##_pair.hw,				\
-+		.gate_hw = &gate_xy_##_pair.hw,				\
-+		.rate_hw = &rate_xy_##_pair.hw,				\
-+	}
-+
-+#define REF_CLK_X(_idx, _pair)						\
-+	{								\
-+		.name = "pwm-clk" #_idx,				\
-+		.parent_names = (const char *[]){ "pwm-clk-src" #_pair }, \
-+		.num_parents = 1,					\
-+		.rate_hw = &rate_x_##_idx.hw,				\
-+		.flags = CLK_SET_RATE_PARENT,				\
-+	}
-+
-+#define REF_CLK_BYPASS(_idx, _pair)					\
-+	{								\
-+		.name = "pwm-clk-bypass" #_idx,				\
-+		.parent_names = (const char *[]){ "pwm-clk-src" #_pair }, \
-+		.num_parents = 1,					\
-+		.gate_hw = &gate_x_bypass_##_idx.hw,			\
-+		.flags = CLK_SET_RATE_PARENT,	\
-+	}
-+
-+/*
-+ * H616_PWM_clock_src_xy generation:
-+ *             _____      ______      ________
-+ * OSC24M --->|     |    |      |    |        |
-+ * APB1 ----->| Mux |--->| Gate |--->| /div_m |-----> H616_PWM_clock_src_xy
-+ *            |_____|    |______|    |________|
-+ */
-+H616_PWM_XY_CLK_SRC(01, H616_PWM_XY_CLK_CR(0));
-+H616_PWM_XY_CLK_SRC(23, H616_PWM_XY_CLK_CR(1));
-+H616_PWM_XY_CLK_SRC(45, H616_PWM_XY_CLK_CR(2));
-+
-+/*
-+ * H616_PWM_clock_x_div generation:
-+ *                            ________
-+ *                           |        | H616_PWM_clock_x/y
-+ * H616_PWM_clock_src_xy --->| /div_k |--------------->
-+ *                           |________|
-+ */
-+H616_PWM_X_CLK(0);
-+H616_PWM_X_CLK(1);
-+H616_PWM_X_CLK(2);
-+H616_PWM_X_CLK(3);
-+H616_PWM_X_CLK(4);
-+H616_PWM_X_CLK(5);
-+
-+/*
-+ * H616_PWM_bypass_clock_xy generation:
-+ *                             ______
-+ *                            |      |
-+ * H616_PWM_clock_src_xy ---->| Gate |-------> H616_PWM_bypass_clock_x
-+ *                            |______|
-+ *
-+ * The gate is actually H616_PWM_ENR register.
-+ */
-+H616_PWM_X_BYPASS_CLK(0);
-+H616_PWM_X_BYPASS_CLK(1);
-+H616_PWM_X_BYPASS_CLK(2);
-+H616_PWM_X_BYPASS_CLK(3);
-+H616_PWM_X_BYPASS_CLK(4);
-+H616_PWM_X_BYPASS_CLK(5);
-+
-+struct clk_pwm_data {
-+	const char *name;
-+	const char **parent_names;
-+	unsigned int num_parents;
-+	struct clk_hw *mux_hw;
-+	struct clk_hw *rate_hw;
-+	struct clk_hw *gate_hw;
-+	unsigned long flags;
-+};
-+
-+#define CLK_BYPASS(h616chip, ch) ((h616chip)->data->npwm + (ch))
-+#define CLK_XY_SRC_IDX(h616chip, ch) ((h616chip)->data->npwm * 2 + ((ch) >> 1))
-+static struct clk_pwm_data pwmcc_data[] = {
-+	REF_CLK_X(0, 01),
-+	REF_CLK_X(1, 01),
-+	REF_CLK_X(2, 23),
-+	REF_CLK_X(3, 23),
-+	REF_CLK_X(4, 45),
-+	REF_CLK_X(5, 45),
-+	REF_CLK_BYPASS(0, 01),
-+	REF_CLK_BYPASS(1, 01),
-+	REF_CLK_BYPASS(2, 23),
-+	REF_CLK_BYPASS(3, 23),
-+	REF_CLK_BYPASS(4, 45),
-+	REF_CLK_BYPASS(5, 45),
-+	REF_CLK_XY_SRC(01),
-+	REF_CLK_XY_SRC(23),
-+	REF_CLK_XY_SRC(45),
-+	{ /* sentinel */ }
-+};
-+
-+enum h616_pwm_mode {
-+	H616_PWM_MODE_NONE,
-+	H616_PWM_MODE_PWM,
-+	H616_PWM_MODE_CLK,
-+};
-+
-+struct h616_pwm_data {
-+	unsigned int npwm;
-+};
-+
-+struct h616_pwm_channel {
-+	struct clk *pwm_clk;
-+	enum h616_pwm_mode mode;
-+};
-+
-+struct clk_pwm_pdata {
-+	struct clk_hw_onecell_data *hw_data;
-+	spinlock_t lock;
-+	void __iomem *reg;
-+};
-+
-+struct h616_pwm_chip {
-+	struct clk_pwm_pdata *clk_pdata;
-+	struct h616_pwm_channel *channels;
-+	struct clk *bus_clk;
-+	struct reset_control *rst;
-+	void __iomem *base;
-+	const struct h616_pwm_data *data;
-+};
-+
-+struct h616_pwm_waveform {
-+	u8 enabled:1;
-+	u8 active_state:1;
-+	u8 bypass_en:1;
-+	u16 duty_ticks;
-+	u32 period_ticks;
-+	unsigned long clk_rate;
-+};
-+
-+static inline struct h616_pwm_chip *h616_pwm_from_chip(const struct pwm_chip *chip)
-+{
-+	return pwmchip_get_drvdata(chip);
-+}
-+
-+static inline u32 h616_pwm_readl(struct h616_pwm_chip *h616chip,
-+				 unsigned long offset)
-+{
-+	return readl(h616chip->base + offset);
-+}
-+
-+static inline void h616_pwm_writel(struct h616_pwm_chip *h616chip,
-+				   u32 val, unsigned long offset)
-+{
-+	writel(val, h616chip->base + offset);
-+}
-+
-+static void h616_pwm_set_bypass(struct h616_pwm_chip *h616chip,
-+				unsigned int idx, bool en_bypass)
-+{
-+	unsigned long flags, reg_offset;
-+	u32 val;
-+
-+	spin_lock_irqsave(&h616chip->clk_pdata->lock, flags);
-+
-+	reg_offset = H616_PWM_XY_CLK_CR(H616_PWM_PAIR_IDX(idx));
-+	val = h616_pwm_readl(h616chip, reg_offset);
-+	if (en_bypass)
-+		val |= BIT(H616_PWM_XY_CLK_CR_BYPASS_BIT(idx));
-+	else
-+		val &= ~BIT(H616_PWM_XY_CLK_CR_BYPASS_BIT(idx));
-+
-+	h616_pwm_writel(h616chip, val, reg_offset);
-+
-+	spin_unlock_irqrestore(&h616chip->clk_pdata->lock, flags);
-+}
-+
-+static int h616_pwm_request(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct h616_pwm_chip *h616chip = h616_pwm_from_chip(chip);
-+	struct h616_pwm_channel *chan = &h616chip->channels[pwm->hwpwm];
-+
-+	scoped_guard(spinlock_irqsave, &h616chip->clk_pdata->lock) {
-+		if (chan->mode == H616_PWM_MODE_CLK)
-+			return -EBUSY;
-+		chan->mode = H616_PWM_MODE_PWM;
-+	}
-+
-+	return clk_prepare_enable(chan->pwm_clk);
-+}
-+
-+static void h616_pwm_free(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct h616_pwm_chip *h616chip = h616_pwm_from_chip(chip);
-+	struct h616_pwm_channel *chan = &h616chip->channels[pwm->hwpwm];
-+
-+	clk_disable_unprepare(chan->pwm_clk);
-+	chan->mode = H616_PWM_MODE_NONE;
-+}
-+
-+static int h616_pwm_read_waveform(struct pwm_chip *chip,
-+				  struct pwm_device *pwm,
-+				  void *_wfhw)
-+{
-+	struct h616_pwm_waveform *wfhw = _wfhw;
-+	struct h616_pwm_chip *h616chip = h616_pwm_from_chip(chip);
-+	struct h616_pwm_channel *chan = &h616chip->channels[pwm->hwpwm];
-+	u32 val;
-+
-+	wfhw->clk_rate = clk_get_rate(chan->pwm_clk);
-+
-+	val = h616_pwm_readl(h616chip, H616_PWM_ENR);
-+	wfhw->enabled = !!(H616_PWM_ENABLE(pwm->hwpwm) & val);
-+
-+	val = h616_pwm_readl(h616chip, H616_PWM_XY_CLK_CR(H616_PWM_PAIR_IDX(pwm->hwpwm)));
-+	wfhw->bypass_en = !!(val & BIT(H616_PWM_XY_CLK_CR_BYPASS_BIT(pwm->hwpwm)));
-+
-+	val = h616_pwm_readl(h616chip, H616_PWM_CTRL_REG(pwm->hwpwm));
-+	wfhw->active_state = !!(val & H616_PWM_CTRL_ACTIVE_STATE);
-+
-+	val = h616_pwm_readl(h616chip, H616_PWM_PERIOD_REG(pwm->hwpwm));
-+	wfhw->duty_ticks = H616_PWM_REG_DUTY(val);
-+	wfhw->period_ticks = H616_PWM_REG_PERIOD(val);
-+
-+	dev_dbg(pwmchip_parent(chip),
-+		"pwm%u: %s bypass: %s polarity: %s clk_rate=%lu period_ticks=%u duty_ticks=%u\n",
-+		pwm->hwpwm,
-+		wfhw->enabled ? "enabled" : "disabled",
-+		wfhw->bypass_en ? "enabled" : "disabled",
-+		wfhw->active_state ? "normal" : "inversed",
-+		wfhw->clk_rate, wfhw->period_ticks, wfhw->duty_ticks);
-+
-+	return 0;
-+}
-+
-+static int h616_pwm_round_waveform_fromhw(struct pwm_chip *chip,
-+					  struct pwm_device *pwm,
-+					  const void *_wfhw,
-+					  struct pwm_waveform *wf)
-+{
-+	const struct h616_pwm_waveform *wfhw = _wfhw;
-+	u64 tmp, resolution;
-+
-+	dev_dbg(pwmchip_parent(chip),
-+		"pwm%u: %s bypass: %s polarity: %s clk_rate=%lu period_ticks=%u duty_ticks=%u\n",
-+		pwm->hwpwm,
-+		wfhw->enabled ? "enabled" : "disabled",
-+		wfhw->bypass_en ? "enabled" : "disabled",
-+		wfhw->active_state ? "normal" : "inversed",
-+		wfhw->clk_rate, wfhw->period_ticks, wfhw->duty_ticks);
-+
-+	wf->duty_offset_ns = 0;
-+
-+	if (!wfhw->enabled || !wfhw->clk_rate) {
-+		wf->period_length_ns = 0;
-+		wf->duty_length_ns = 0;
-+		return 0;
-+	}
-+
-+	if (wfhw->bypass_en) {
-+		wf->period_length_ns = DIV_ROUND_UP_ULL(NSEC_PER_SEC,
-+							wfhw->clk_rate);
-+		wf->duty_length_ns = DIV_ROUND_UP_ULL(wf->period_length_ns, 2);
-+		return 0;
-+	}
-+
-+	tmp = NSEC_PER_SEC * (u64)wfhw->period_ticks;
-+	wf->period_length_ns = DIV_ROUND_UP_ULL(tmp, wfhw->clk_rate);
-+
-+	tmp = NSEC_PER_SEC * (u64)wfhw->duty_ticks;
-+	wf->duty_length_ns = DIV_ROUND_UP_ULL(tmp, wfhw->clk_rate);
-+	if (!wfhw->active_state) {
-+		/*
-+		 * For inverted polarity, we have to fix cases where
-+		 * computed duty_length_ns > requested duty_length_ns
-+		 * For that, we subtract the actual resolution of the PWM
-+		 * registers
-+		 */
-+		wf->duty_offset_ns = wf->duty_length_ns;
-+		wf->duty_length_ns = wf->period_length_ns - wf->duty_length_ns;
-+
-+		resolution = DIV_ROUND_UP_ULL(NSEC_PER_SEC, wfhw->clk_rate);
-+
-+		if (wf->duty_offset_ns >= resolution)
-+			wf->duty_offset_ns -= resolution;
-+	}
-+
-+	dev_dbg(pwmchip_parent(chip),
-+		"pwm%u period_length_ns=%llu duty_length_ns=%llu duty_offset_ns=%llu\n",
-+		pwm->hwpwm, wf->period_length_ns, wf->duty_length_ns,
-+		wf->duty_offset_ns);
-+
-+	return 0;
-+}
-+
-+static int h616_pwm_write_waveform(struct pwm_chip *chip,
-+				   struct pwm_device *pwm, const void *_wfhw)
-+{
-+	const struct h616_pwm_waveform *wfhw = _wfhw;
-+	struct h616_pwm_chip *h616chip = h616_pwm_from_chip(chip);
-+	struct h616_pwm_channel *chan = &h616chip->channels[pwm->hwpwm];
-+	unsigned long flags;
-+	u32 val;
-+	int ret;
-+
-+	ret = clk_set_rate(chan->pwm_clk, wfhw->clk_rate);
-+	if (ret)
-+		return ret;
-+
-+	h616_pwm_set_bypass(h616chip, pwm->hwpwm, wfhw->bypass_en);
-+
-+	val = h616_pwm_readl(h616chip, H616_PWM_CTRL_REG(pwm->hwpwm));
-+	if (wfhw->active_state)
-+		val |= H616_PWM_CTRL_ACTIVE_STATE;
-+	else
-+		val &= ~H616_PWM_CTRL_ACTIVE_STATE;
-+	h616_pwm_writel(h616chip, val, H616_PWM_CTRL_REG(pwm->hwpwm));
-+
-+	val = H616_PWM_DUTY(wfhw->duty_ticks);
-+	val |= H616_PWM_PERIOD(wfhw->period_ticks);
-+	h616_pwm_writel(h616chip, val, H616_PWM_PERIOD_REG(pwm->hwpwm));
-+
-+	spin_lock_irqsave(&h616chip->clk_pdata->lock, flags);
-+
-+	val = h616_pwm_readl(h616chip, H616_PWM_ENR);
-+	if (wfhw->enabled)
-+		val |= H616_PWM_ENABLE(pwm->hwpwm);
-+	else
-+		val &= ~H616_PWM_ENABLE(pwm->hwpwm);
-+	h616_pwm_writel(h616chip, val, H616_PWM_ENR);
-+
-+	spin_unlock_irqrestore(&h616chip->clk_pdata->lock, flags);
-+
-+	return 0;
-+}
-+
-+static int h616_pwm_round_waveform_tohw(struct pwm_chip *chip,
-+					struct pwm_device *pwm,
-+					const struct pwm_waveform *wf,
-+					void *_wfhw)
-+{
-+	struct h616_pwm_chip *h616chip = h616_pwm_from_chip(chip);
-+	struct h616_pwm_channel *chan = &h616chip->channels[pwm->hwpwm];
-+	struct h616_pwm_waveform *wfhw = _wfhw;
-+	unsigned long max_rate;
-+	long calc_rate;
-+	u64 period_ratio, double_duty_ratio, freq, duty_cycle;
-+
-+	dev_dbg(pwmchip_parent(chip),
-+		"pwm%u period_length_ns=%llu duty_length_ns=%llu duty_offset_ns=%llu\n",
-+		pwm->hwpwm, wf->period_length_ns, wf->duty_length_ns,
-+		wf->duty_offset_ns);
-+
-+	if (wf->period_length_ns == 0) {
-+		wfhw->enabled = 0;
-+		return 0;
-+	}
-+
-+	wfhw->enabled = 1;
-+
-+	duty_cycle = wf->duty_length_ns;
-+	if (wf->duty_length_ns + wf->duty_offset_ns < wf->period_length_ns)
-+		wfhw->active_state = 1;
-+	else
-+		wfhw->active_state = 0;
-+
-+	dev_dbg(pwmchip_parent(chip), "polarity: %s\n",
-+		wfhw->active_state ? "normal" : "inversed");
-+
-+	/*
-+	 * Lowest possible period case:
-+	 * Without bypass, the lowest possible period is when:
-+	 * duty cycle = 1 and period cycle = 2 (0x10001 in period register)
-+	 * E.g. if the input clock is 100MHz, we have a lowest period of 20ns.
-+	 * Now, with the bypass, the period register is ignored and we directly
-+	 * have the 100MHz clock as PWM output, that can act as a 10ns period
-+	 * with 5ns duty.
-+	 * So, to detect this lowest period case, just get the maximum possible
-+	 * rate from chan->pwm_clk and compare it with requested period and
-+	 * duty_cycle.
-+	 *
-+	 * But, to get the maximum possible rate, we have to use U32_MAX instead
-+	 * of (unsigned long)-1.
-+	 * This is because clk_round_rate() uses ultimately DIV_ROUND_UP_ULL()
-+	 * that in turn do_div(n,base). And base is uint32_t divisor.
-+	 */
-+	max_rate = clk_round_rate(chan->pwm_clk, U32_MAX);
-+
-+	dev_dbg(pwmchip_parent(chip), "max_rate: %ld Hz\n", max_rate);
-+
-+	period_ratio = mul_u64_u64_div_u64(wf->period_length_ns,
-+					   max_rate, NSEC_PER_SEC);
-+	double_duty_ratio = mul_u64_u64_div_u64(duty_cycle, (u64)max_rate * 2,
-+						NSEC_PER_SEC);
-+	if (period_ratio == 1) {
-+		if (double_duty_ratio == 0)
-+			/* requested period and duty are too small */
-+			return -EINVAL;
-+		/*
-+		 * If the requested period is to small to be generated by the
-+		 * PWM, but matches the highest clock with a
-+		 * duty_cycle >= period*2, just bypass the PWM logic
-+		 */
-+		freq = div64_u64(NSEC_PER_SEC, wf->period_length_ns);
-+		wfhw->bypass_en = true;
-+	} else {
-+		wfhw->bypass_en = false;
-+		freq = div64_u64(NSEC_PER_SEC * (u64)H616_PWM_PERIOD_MAX,
-+				 wf->period_length_ns);
-+		/*
-+		 * Same remark as above, this is to prevent a value to big for
-+		 * clk_round_rate() to handle
-+		 */
-+		if (freq > U32_MAX)
-+			freq = U32_MAX;
-+	}
-+
-+	dev_dbg(pwmchip_parent(chip), "bypass: %s\n",
-+		wfhw->bypass_en ? "enabled" : "disabled");
-+
-+	calc_rate = clk_round_rate(chan->pwm_clk, freq);
-+	if (calc_rate <= 0)
-+		return calc_rate ? calc_rate : -EINVAL;
-+
-+	dev_dbg(pwmchip_parent(chip), "calc_rate: %ld Hz\n", calc_rate);
-+
-+	wfhw->period_ticks = mul_u64_u64_div_u64(calc_rate,
-+						 wf->period_length_ns,
-+						 NSEC_PER_SEC);
-+	if (wfhw->period_ticks > H616_PWM_PERIOD_MAX)
-+		wfhw->period_ticks = H616_PWM_PERIOD_MAX;
-+
-+	/* min value in period register is 1 */
-+	if (wfhw->period_ticks == 0)
-+		return -EINVAL;
-+
-+	wfhw->duty_ticks = mul_u64_u64_div_u64(calc_rate, duty_cycle,
-+					       NSEC_PER_SEC);
-+
-+	if (wfhw->duty_ticks > wfhw->period_ticks)
-+		wfhw->duty_ticks = wfhw->period_ticks;
-+
-+	if (!wfhw->active_state)
-+		wfhw->duty_ticks = wfhw->period_ticks - wfhw->duty_ticks;
-+
-+	dev_dbg(pwmchip_parent(chip),
-+		"pwm%u period_ticks=%u duty_cycle=%llu duty_ticks=%u\n",
-+		pwm->hwpwm, wfhw->period_ticks, duty_cycle, wfhw->duty_ticks);
-+
-+	wfhw->clk_rate = calc_rate;
-+
-+	return 0;
-+}
-+
-+static const struct pwm_ops h616_pwm_ops = {
-+	.request = h616_pwm_request,
-+	.free = h616_pwm_free,
-+	.sizeof_wfhw = sizeof(struct h616_pwm_waveform),
-+	.round_waveform_tohw = h616_pwm_round_waveform_tohw,
-+	.round_waveform_fromhw = h616_pwm_round_waveform_fromhw,
-+	.read_waveform = h616_pwm_read_waveform,
-+	.write_waveform = h616_pwm_write_waveform,
-+};
-+
-+static struct clk_hw *h616_pwm_of_clk_get(struct of_phandle_args *clkspec,
-+					  void *data)
-+{
-+	struct h616_pwm_chip *h616chip = data;
-+	struct clk_hw_onecell_data *hw_data = h616chip->clk_pdata->hw_data;
-+	unsigned int idx = clkspec->args[0];
-+	struct h616_pwm_channel *chan;
-+	struct clk_hw *ret_clk = NULL;
-+	unsigned long flags;
-+
-+	if (idx >= h616chip->data->npwm)
-+		return ERR_PTR(-EINVAL);
-+
-+	chan = &h616chip->channels[idx];
-+
-+	spin_lock_irqsave(&h616chip->clk_pdata->lock, flags);
-+
-+	if (chan->mode == H616_PWM_MODE_PWM) {
-+		ret_clk = ERR_PTR(-EBUSY);
-+	} else {
-+		chan->mode = H616_PWM_MODE_CLK;
-+		ret_clk = hw_data->hws[CLK_BYPASS(h616chip, idx)];
-+	}
-+	spin_unlock_irqrestore(&h616chip->clk_pdata->lock, flags);
-+
-+	if (IS_ERR(ret_clk))
-+		goto out;
-+
-+	h616_pwm_set_bypass(h616chip, idx, true);
-+out:
-+	return ret_clk;
-+}
-+
-+static int h616_add_composite_clk(struct clk_pwm_data *data,
-+				  void __iomem *reg, spinlock_t *lock,
-+				  struct device *dev, struct clk_hw **hw)
-+{
-+	const struct clk_ops *mux_ops = NULL, *gate_ops = NULL, *rate_ops = NULL;
-+	struct clk_hw *mux_hw = NULL, *gate_hw = NULL, *rate_hw = NULL;
-+	struct device_node *node = dev->of_node;
-+
-+	if (data->mux_hw) {
-+		struct clk_mux *mux;
-+
-+		mux_hw = data->mux_hw;
-+		mux = to_clk_mux(mux_hw);
-+		mux->lock = lock;
-+		mux_ops = mux_hw->init->ops;
-+		mux->reg = (uintptr_t)mux->reg + reg;
-+	}
-+
-+	if (data->gate_hw) {
-+		struct clk_gate *gate;
-+
-+		gate_hw = data->gate_hw;
-+		gate = to_clk_gate(gate_hw);
-+		gate->lock = lock;
-+		gate_ops = gate_hw->init->ops;
-+		gate->reg = (uintptr_t)gate->reg + reg;
-+	}
-+
-+	if (data->rate_hw) {
-+		struct clk_divider *rate;
-+
-+		rate_hw = data->rate_hw;
-+		rate = to_clk_divider(rate_hw);
-+		rate_ops = rate_hw->init->ops;
-+		rate->lock = lock;
-+		rate->reg = (uintptr_t)rate->reg + reg;
-+
-+		if (rate->table) {
-+			const struct clk_div_table *clkt;
-+			int table_size = 0;
-+
-+			for (clkt = rate->table; clkt->div; clkt++)
-+				table_size++;
-+			rate->width = order_base_2(table_size);
-+		}
-+	}
-+
-+	/*
-+	 * Retrieve the parent clock names from DTS for pwm-clk-srcxy
-+	 */
-+	if (!data->parent_names) {
-+		data->num_parents = of_clk_get_parent_count(node);
-+		if (data->num_parents == 0)
-+			return -ENOENT;
-+
-+		data->parent_names = devm_kzalloc(dev,
-+						  sizeof(*data->parent_names),
-+						  GFP_KERNEL);
-+		for (unsigned int i = 0; i < data->num_parents; i++)
-+			data->parent_names[i] = of_clk_get_parent_name(node, i);
-+	}
-+
-+	*hw = clk_hw_register_composite(dev, data->name, data->parent_names,
-+					data->num_parents, mux_hw,
-+					mux_ops, rate_hw, rate_ops,
-+					gate_hw, gate_ops, data->flags);
-+
-+	return PTR_ERR_OR_ZERO(*hw);
-+}
-+
-+static int h616_pwm_init_clocks(struct platform_device *pdev,
-+				struct h616_pwm_chip *h616chip)
-+{
-+	struct clk_pwm_pdata *pdata;
-+	struct device *dev = &pdev->dev;
-+	int num_clocks = 0;
-+	int ret;
-+
-+	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return dev_err_probe(dev, -ENOMEM,
-+				     "Failed to allocate clk_pwm_pdata\n");
-+
-+	while (pwmcc_data[num_clocks].name)
-+		num_clocks++;
-+
-+	pdata->hw_data = devm_kzalloc(dev, struct_size(pdata->hw_data, hws, num_clocks),
-+				      GFP_KERNEL);
-+	if (!pdata->hw_data)
-+		return dev_err_probe(dev, -ENOMEM,
-+				     "Failed to allocate hw clocks\n");
-+
-+	pdata->hw_data->num = num_clocks;
-+	pdata->reg = h616chip->base;
-+
-+	spin_lock_init(&pdata->lock);
-+
-+	for (int i = 0; i < num_clocks; i++) {
-+		struct clk_hw **hw = &pdata->hw_data->hws[i];
-+
-+		ret = h616_add_composite_clk(&pwmcc_data[i], pdata->reg,
-+					     &pdata->lock, dev, hw);
-+		if (ret) {
-+			dev_err_probe(dev, ret,
-+				      "Failed to register hw clock %s\n",
-+				      pwmcc_data[i].name);
-+			for (i--; i >= 0; i--)
-+				clk_hw_unregister_composite(pdata->hw_data->hws[i]);
-+			return ret;
-+		}
-+	}
-+
-+	h616chip->clk_pdata = pdata;
-+
-+	return 0;
-+}
-+
-+static void h616_pwm_unregister_clk(void *data)
-+{
-+	struct clk_hw_onecell_data *hw_data = data;
-+
-+	for (unsigned int i = 0; i < hw_data->num; i++)
-+		clk_hw_unregister_composite(hw_data->hws[i]);
-+}
-+
-+static int h616_pwm_probe(struct platform_device *pdev)
-+{
-+	const struct h616_pwm_data *data;
-+	struct device *dev = &pdev->dev;
-+	struct h616_pwm_chip *h616chip;
-+	struct pwm_chip *chip;
-+	int ret;
-+
-+	data = of_device_get_match_data(dev);
-+	if (!data)
-+		return dev_err_probe(dev, -ENODEV,
-+				     "Missing specific data structure\n");
-+
-+	chip = devm_pwmchip_alloc(dev, data->npwm, sizeof(*h616chip));
-+	if (IS_ERR(chip))
-+		return dev_err_probe(dev, PTR_ERR(chip),
-+				     "Failed to allocate pwmchip\n");
-+
-+	h616chip = h616_pwm_from_chip(chip);
-+	h616chip->data = data;
-+	h616chip->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(h616chip->base))
-+		return dev_err_probe(dev, PTR_ERR(h616chip->base),
-+				     "Failed to get PWM base address\n");
-+
-+	h616chip->bus_clk = devm_clk_get_enabled(dev, "bus");
-+	if (IS_ERR(h616chip->bus_clk))
-+		return dev_err_probe(dev, PTR_ERR(h616chip->bus_clk),
-+				     "Failed to get bus clock\n");
-+
-+	h616chip->channels = devm_kmalloc_array(dev, data->npwm,
-+						sizeof(*(h616chip->channels)),
-+						GFP_KERNEL);
-+	if (!h616chip->channels)
-+		return dev_err_probe(dev, -ENOMEM,
-+				     "Failed to allocate %d channels array\n",
-+				     data->npwm);
-+
-+	chip->ops = &h616_pwm_ops;
-+
-+	ret = h616_pwm_init_clocks(pdev, h616chip);
-+	if (ret)
-+		return ret;
-+
-+	for (unsigned int i = 0; i < data->npwm; i++) {
-+		struct h616_pwm_channel *chan = &h616chip->channels[i];
-+		struct clk_hw **hw = &h616chip->clk_pdata->hw_data->hws[i];
-+
-+		chan->pwm_clk = devm_clk_hw_get_clk(dev, *hw, NULL);
-+		if (IS_ERR(chan->pwm_clk)) {
-+			ret = dev_err_probe(dev, PTR_ERR(chan->pwm_clk),
-+					    "Failed to register PWM clock %d\n", i);
-+			return ret;
-+		}
-+		chan->mode = H616_PWM_MODE_NONE;
-+	}
-+
-+	ret = devm_of_clk_add_hw_provider(dev, h616_pwm_of_clk_get, h616chip);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to add HW clock provider\n");
-+
-+	ret = devm_add_action_or_reset(dev, h616_pwm_unregister_clk,
-+				       h616chip->clk_pdata->hw_data);
-+	if (ret)
-+		return dev_err_probe(dev, ret, "Failed to add devm action\n");
-+
-+	/* Deassert reset */
-+	h616chip->rst = devm_reset_control_get_shared_deasserted(dev, NULL);
-+	if (IS_ERR(h616chip->rst))
-+		return dev_err_probe(dev, PTR_ERR(h616chip->rst),
-+				     "Failed to get reset control\n");
-+
-+	ret = devm_pwmchip_add(dev, chip);
-+	if (ret < 0)
-+		return dev_err_probe(dev, ret, "Failed to add PWM chip\n");
-+
-+	platform_set_drvdata(pdev, chip);
-+
-+	return 0;
-+}
-+
-+static const struct h616_pwm_data sun50i_h616_pwm_data = {
-+	.npwm = 6,
-+};
-+
-+static const struct of_device_id h616_pwm_dt_ids[] = {
-+	{
-+		.compatible = "allwinner,sun50i-h616-pwm",
-+		.data = &sun50i_h616_pwm_data,
-+	}, {
-+		/* sentinel */
-+	}
-+};
-+MODULE_DEVICE_TABLE(of, h616_pwm_dt_ids);
-+
-+static struct platform_driver h616_pwm_driver = {
-+	.driver = {
-+		.name = "h616-pwm",
-+		.of_match_table = h616_pwm_dt_ids,
-+	},
-+	.probe = h616_pwm_probe,
-+};
-+module_platform_driver(h616_pwm_driver);
-+
-+MODULE_AUTHOR("Richard Genoud <richard.genoud@bootlin.com>");
-+MODULE_DESCRIPTION("Allwinner H616 PWM driver");
-+MODULE_LICENSE("GPL");
++		pwm: pwm@300a000 {
++			compatible = "allwinner,sun50i-h616-pwm";
++			reg = <0x0300a000 0x400>;
++			clocks = <&osc24M>, <&ccu CLK_BUS_PWM>;
++			clock-names = "mod", "bus";
++			resets = <&ccu RST_BUS_PWM>;
++			#pwm-cells = <3>;
++			#clock-cells = <1>;
++			status = "disabled";
++		};
++
+ 		pio: pinctrl@300b000 {
+ 			compatible = "allwinner,sun50i-h616-pinctrl";
+ 			reg = <0x0300b000 0x400>;
+@@ -340,6 +351,42 @@ nand_rb1_pin: nand-rb1-pin {
+ 				bias-pull-up;
+ 			};
+ 
++			/omit-if-no-ref/
++			pwm0_pin: pwm0-pin {
++				pins = "PD28";
++				function = "pwm0";
++			};
++
++			/omit-if-no-ref/
++			pwm1_pin: pwm1-pin {
++				pins = "PG19";
++				function = "pwm1";
++			};
++
++			/omit-if-no-ref/
++			pwm2_pin: pwm2-pin {
++				pins = "PH2";
++				function = "pwm2";
++			};
++
++			/omit-if-no-ref/
++			pwm3_pin: pwm3-pin {
++				pins = "PH0";
++				function = "pwm3";
++			};
++
++			/omit-if-no-ref/
++			pwm4_pin: pwm4-pin {
++				pins = "PI14";
++				function = "pwm4";
++			};
++
++			/omit-if-no-ref/
++			pwm5_pin: pwm5-pin {
++				pins = "PA12";
++				function = "pwm5";
++			};
++
+ 			/omit-if-no-ref/
+ 			spi0_pins: spi0-pins {
+ 				pins = "PC0", "PC2", "PC4";
 
