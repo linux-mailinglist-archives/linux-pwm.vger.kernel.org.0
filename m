@@ -1,161 +1,134 @@
-Return-Path: <linux-pwm+bounces-8203-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8204-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iJo5ElvLqmlWXAEAu9opvQ
-	(envelope-from <linux-pwm+bounces-8203-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Fri, 06 Mar 2026 13:40:59 +0100
+	id 2LY5KNPWqmnfXgEAu9opvQ
+	(envelope-from <linux-pwm+bounces-8204-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Fri, 06 Mar 2026 14:29:55 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA0EB220CFA
-	for <lists+linux-pwm@lfdr.de>; Fri, 06 Mar 2026 13:40:58 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C63F2219F2
+	for <lists+linux-pwm@lfdr.de>; Fri, 06 Mar 2026 14:29:54 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 11DBC300B541
-	for <lists+linux-pwm@lfdr.de>; Fri,  6 Mar 2026 12:40:02 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id C162330A414C
+	for <lists+linux-pwm@lfdr.de>; Fri,  6 Mar 2026 13:27:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DEEE0279324;
-	Fri,  6 Mar 2026 12:39:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 68AE339A069;
+	Fri,  6 Mar 2026 13:26:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="EtL0mWXC"
+	dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b="bPNKS921"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from TYVP286CU001.outbound.protection.outlook.com (mail-japaneastazon11011058.outbound.protection.outlook.com [52.101.125.58])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D98FA2701B8;
-	Fri,  6 Mar 2026 12:39:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.135.77
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1A7E39B94D;
+	Fri,  6 Mar 2026 13:26:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.125.58
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1772800795; cv=fail; b=bvZO9YDPeMbHJu8NRRRx7BPe8Cq7whNCYDpdXHedm5kiM+IrELaFUnSEEHa6YJfcw16hXoq0gdpiIbU0wHyw3UYMnkmb8iQfvj+E1wQcd4PslOU2wGIIjnUeW7vsTDfhwuRkN5XtSzZ8mzYIy5YbBUwu6RV8YyWV5F5nbHDwkNY=
+	t=1772803608; cv=fail; b=Ba65dSbILJXc4s7Hd7ZXL0cbGnqPbI/+/31cTFkoaup6MbSMCzCeeSxZCRVSVF8kJJncY7gzznXha0dFziSWrFZqWVIa+cJe54PPz/xqbPQM/Afjn4x+3Q1/vsg4VI/X4b2/+9PESaQbDzyv6EaRzLfMfgtDgpGQkx8o24rWR9w=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1772800795; c=relaxed/simple;
-	bh=XWug7yTDhRCAA13DdBsfjptk/9OAWSJlBTFZiRmoVQM=;
+	s=arc-20240116; t=1772803608; c=relaxed/simple;
+	bh=4o/K/zqrfxiWxZBvGF95qbf8ERumHH8AlLgA0zKu+Mw=;
 	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=HmY0ZHqDwIv5t2SHdJz4LbtVfFDBrPNaZr3VPuXtQuhLG2PC7k7g8+bqRR0A1w40jarYyN4ERpWsw/vPNj2xH5ovhhomBQnhEJr7U04eQk2tuGK0Y4ddyyBVfqaivhS38QjeqKP0Oqn1FXNe7ovYr5REhQVrFKowrugGyNry9CE=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=EtL0mWXC; arc=fail smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
-Received: from pps.filterd (m0516787.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 6266OaU32140227;
-	Fri, 6 Mar 2026 07:39:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=FEkBz
-	Am7ZdWusFPK/DasjdGtQ+ZmE5+FofBqH0FKj+I=; b=EtL0mWXC7RxWlkVIiXMl3
-	UQkT0VJAiYm3JSKIkCBoYD9Aj+8eHGijhiJZ8ypyGCFT6SGf190o3bekrvZYSFTa
-	pWrVR8ydPQq72GJROC2HfF+a8bme5iUGGbYkv4owRaAKOTe7YPS+9+n2HkgkWeC/
-	Za96CJ6tM4V7zYTzCeR2acRH4uG8qUVnOdUvwT7cEJEoqM3KCYLprdVJt5I7U2xQ
-	+SxH1s0vdplBAKsG3SkaEcSEdOLSsKHm1mIK2nrSKW4KgGrvLl/bN00mSnz62hIU
-	0ubc4WRtCDTTM63+hRHrZujWak9ZQZuIbU9GmAsKwleMtoAd8wHpAcvEjH1kDtY9
-	w==
-Received: from ch5pr02cu005.outbound.protection.outlook.com (mail-northcentralusazon11012015.outbound.protection.outlook.com [40.107.200.15])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 4cpd6hkf01-2
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Fri, 06 Mar 2026 07:39:33 -0500 (EST)
+	 Content-Type:MIME-Version; b=nDwcd78+0wBMSLRLawqXvEFV0TAh6j6ntO9yrfEeA5m0abQIw7j4S4nY0m6JtAslNYmZlGSontMfAAzOJhEX6VVu7Iq2Rjx15SFc6rxYg7q0YJIOfgNnhguUXxPyCaHy11o1RsT0ISLGcax/SGC0BxGCh4dzySE+H7gV+Tnmxi0=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com; spf=pass smtp.mailfrom=renesas.com; dkim=pass (1024-bit key) header.d=renesas.com header.i=@renesas.com header.b=bPNKS921; arc=fail smtp.client-ip=52.101.125.58
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=renesas.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=renesas.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=c4HJzxaJviWf7o2/ij0F7XyrgNBxBfh+yiILJ99J12sEVjdq/aoKxB8d6YsGxi9+RYcLDpvpOOeIML+192fGQfIPlCYWpM784gu3LAj8U2cmupImSIQ9XcRAehTuuLp9x3Wf4f9puvhmOhv9S9u2FNrH0CwMY8Prj8aDBznVeKrlGJC4PPkBKZvaKfDSrmp6O7Obih/FW8uW5X5PYFRym53Crk56HR8pQud7Rw3fQglGsDeuLJ3dRS3ONj/3NAuQegnqnB5XO9m0Vs7VwzxWxYoRiZs/uzGi9SuVfw8cudvJf+l0crBd1a9knU5vE+rXoEhMItvq8IMd4nsrJ4tPSQ==
+ b=WIvHWrQyTKFVEcCTS2hn3v9QInhViiZ8h9Hl3uH4A6eEDnebHjMZAplF9kPsYG89geK0ceTCGtxV5ElGyXbfxhKfzsVMTDQtTbSiAlFQO35xee6f7yVHca+UsTMkp2oBf9rv6FUFU+ME/I5LyGA8EfVwqTCobTMiCpRSewctEjisSPG6sxDmyRWKk5z6SQQOIp64EVZiWZWXJMtamnz/hh9EAw+j1ljXPudQGKiKb/LYxk8bit3OXEskYX3sRKXt1uxQn+xxfWe7o1ZRtTidHm4RnHQL8rt2u5/pfVJyS4XkSgJU94oXg5iXVkGRs3us8a3CVd2n4x/8Sr6ORtz0aQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FEkBzAm7ZdWusFPK/DasjdGtQ+ZmE5+FofBqH0FKj+I=;
- b=W9kIXXuA+TPvfckwNi7eWDUVBU81l3BkNKvZ/mO6KwSk85u414HiUi2aBfceVGtaPyoaFU8DEo+540iWyTeZDnO4GxSPp3MzjVS4vbb2ZVb+fDanlfzm89/s34yKKTwV6azfFiQVnfX7FYZuM8ax2uwg9W2xmmzfbxLiCOT0N89iX6n5PA1h5ILINWMmLqPJlFN7vsaVWKdN9j5kmH3O+JMjmu7Ll+wqZThtiRslScEfXFk58QHCmiVTm6xdn3hsT7h9ICiGeP91/N/FNWuuHCu0VDQzK/WiqVZ2IvNIu9PBtlMChhDni0pdOllCEdy1E6wnt2Jpfzvd1tHV7NNsVA==
+ bh=GvGnCclna6+Y6cNa/DyfB/yak42I1TJdI/7yc8KVWDI=;
+ b=YtGq9HfdKs4b0x5RmEXWhvzAIGCWgL6wylA7dalPIk86JflYNKaSVezy8XPYe2se4/82NgJeKea697gduKrazHFgm7ESqGS8/0xrp1sBKg4NUvhFY5vw6JLgD4odmf+gFUQmlG11FXsz1/9w3lsWpP0oAQ90V6WTtFgPkf+DfEphnENoVJy3744laEwNMWdqAX3cs4Nyy+eptDcIVApDmM1fSuwyZ3XchKCuif4DX0OXP8ceT7+KGYt+NHy2+nUFxkg/k2dvpaJPGU6HQNYw+1OW/QTUByGKA1LuBv2InCQuhr23VywH+5mxRS8nQYPd+Rfl5tJ+AIRjgVWh2Z10ng==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-Received: from LV9PR03MB8414.namprd03.prod.outlook.com (2603:10b6:408:367::23)
- by SA6PR03MB7782.namprd03.prod.outlook.com (2603:10b6:806:444::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9678.18; Fri, 6 Mar
- 2026 12:39:30 +0000
-Received: from LV9PR03MB8414.namprd03.prod.outlook.com
- ([fe80::d661:7c16:d052:cc81]) by LV9PR03MB8414.namprd03.prod.outlook.com
- ([fe80::d661:7c16:d052:cc81%5]) with mapi id 15.20.9678.017; Fri, 6 Mar 2026
- 12:39:30 +0000
-From: "Sabau, Radu bogdan" <Radu.Sabau@analog.com>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-CC: Lars-Peter Clausen <lars@metafoo.de>,
-        "Hennerich, Michael"
-	<Michael.Hennerich@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        David
- Lechner <dlechner@baylibre.com>,
-        "Sa, Nuno" <Nuno.Sa@analog.com>, Andy
- Shevchenko <andy@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= <ukleinek@kernel.org>,
-        Liam Girdwood
-	<lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Linus Walleij
-	<linusw@kernel.org>,
-        Bartosz Golaszewski <brgl@kernel.org>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
-Subject: RE: [PATCH 0/4] iio: adc: ad4691: add driver for AD4691 multichannel
- SAR ADC family
-Thread-Topic: [PATCH 0/4] iio: adc: ad4691: add driver for AD4691 multichannel
- SAR ADC family
-Thread-Index: AQHcrJrn376aKaRceEOc7gqoKaoNELWhafkAgAAHPEA=
-Date: Fri, 6 Mar 2026 12:39:30 +0000
+ smtp.mailfrom=renesas.com; dmarc=pass action=none header.from=renesas.com;
+ dkim=pass header.d=renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=renesas.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GvGnCclna6+Y6cNa/DyfB/yak42I1TJdI/7yc8KVWDI=;
+ b=bPNKS921n6LZ4UZwtSlkBqSFS+hUi1Lan7vExNynAaVyqZLOatoe9TYq1gBY2cE17SYVceCvEZE7dsDhhI6ZZ+XdrfiOIKcrztAHogxUoW1wXOJHO9v662J9BX1PuS/oAAfhP7JNSTrJrwPec3CmJt7Nxtqov8u7jEvm6lGX8us=
+Received: from TYRPR01MB15619.jpnprd01.prod.outlook.com
+ (2603:1096:405:29b::10) by TY7PR01MB15780.jpnprd01.prod.outlook.com
+ (2603:1096:405:2c4::12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9678.19; Fri, 6 Mar
+ 2026 13:26:42 +0000
+Received: from TYRPR01MB15619.jpnprd01.prod.outlook.com
+ ([fe80::a68f:5c9:9de8:4fa4]) by TYRPR01MB15619.jpnprd01.prod.outlook.com
+ ([fe80::a68f:5c9:9de8:4fa4%5]) with mapi id 15.20.9678.017; Fri, 6 Mar 2026
+ 13:26:42 +0000
+From: Cosmin-Gabriel Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
+To: =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= <ukleinek@kernel.org>, Biju Das
+	<biju.das.jz@bp.renesas.com>
+CC: William Breathitt Gray <wbg@kernel.org>, Lee Jones <lee@kernel.org>,
+	Thierry Reding <thierry.reding@gmail.com>, "linux-iio@vger.kernel.org"
+	<linux-iio@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org"
+	<linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, "linux-pwm@vger.kernel.org"
+	<linux-pwm@vger.kernel.org>, "stable@vger.kernel.org"
+	<stable@vger.kernel.org>
+Subject: RE: [PATCH 1/5] pwm: rz-mtu3: fix prescale check when enabling 2nd
+ channel
+Thread-Topic: [PATCH 1/5] pwm: rz-mtu3: fix prescale check when enabling 2nd
+ channel
+Thread-Index: AQHckeNxm+l5nvVDhECE0kd9r0GiYLWhc7cAgAAuuBA=
+Date: Fri, 6 Mar 2026 13:26:42 +0000
 Message-ID:
- <LV9PR03MB84149EAE41DE73C61B81091FF77AA@LV9PR03MB8414.namprd03.prod.outlook.com>
-References:
- <20260305-ad4692-multichannel-sar-adc-driver-v1-0-336229a8dcc7@analog.com>
- <aarDJicasFlUnOkx@ashevche-desk.local>
-In-Reply-To: <aarDJicasFlUnOkx@ashevche-desk.local>
+ <TYRPR01MB156191C8E77BDA44AE23A7D4F857AA@TYRPR01MB15619.jpnprd01.prod.outlook.com>
+References: <20260130122353.2263273-1-cosmin-gabriel.tanislav.xa@renesas.com>
+ <20260130122353.2263273-2-cosmin-gabriel.tanislav.xa@renesas.com>
+ <aaqTVDQa7xn70bR_@monoceros>
+In-Reply-To: <aaqTVDQa7xn70bR_@monoceros>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach:
 X-MS-TNEF-Correlator:
+authentication-results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=renesas.com;
 x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: LV9PR03MB8414:EE_|SA6PR03MB7782:EE_
-x-ms-office365-filtering-correlation-id: 0b115e2d-dea4-4dc2-3249-08de7b7d699d
-x-ld-processed: eaa689b4-8f87-40e0-9c6f-7228de4d754a,ExtAddr
+x-ms-traffictypediagnostic: TYRPR01MB15619:EE_|TY7PR01MB15780:EE_
+x-ms-office365-filtering-correlation-id: e7e3b230-0465-4f89-8588-08de7b840178
 x-ms-exchange-senderadcheck: 1
 x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|366016|7416014|376014|38070700021;
+x-microsoft-antispam: BCL:0;ARA:13230040|1800799024|376014|366016|38070700021;
 x-microsoft-antispam-message-info:
- EGqZVddh7i0XTQldcdXdXas18XLqGKz8Rs6cPeE84SAOZvR3bYp8d9SXd/WjMYtuAAO8ZzWfpvrlR5mNJeCdDKNB+ie9GMCMGQ5n3gnWsJUpOLbRg2VCW1BeuVqxtfBM6nMByJ2inPhHnaF+gDInz/+vpVAKEqJjjm9l/b06njBBvVlIDhFcQ6TKrp3VIsehG/g4NW/CaMS3sKATNCJc63UHVBKDIutaPHsC3F7GQg1ZxRi3OormBC6QVw2Y8lkvvtQQLpc00f3S3BBBh3V6/Nl7L4QqvQakYgNER1uwgz5ywtU7Zl6il29R6B+7iGXFtYL7Rg8hm1n/xSz+rbn4dvqt64TmPB2C/86X1flspjHV4MBXwEwCIsugRcR4MvA8t3OnxvGayimtRv3y9VRqftUJlaqDkGDzZtLcy9O+d4OM2aDRSrboXtIvsyHkyRXNqfREaYtzr5WFbiT1GW3zKGRA9UAIFCVV46U0w8bJN0RXCpYXoNCJozTirDtfZHx5dPOoJyJK4kLpQ4Ac47dInk5muObBa8qqFXQaTKNUbwogHUY8kIuw9hEFh6jDbhEeoU95sLKWIS6hEcEvwnLyIZr64TmnRh/X5vIMASb8IYIESv49sab5b6g7aFUjVbMpjgjgFk9Kfp6a3PExwN2nUrW4DrSBja3RdHI5dmMZyzkjoqvqUZ9jfHVwuWIbA0bYBbPXzvkYJ7yeAQyXQ4IOSSNOe9sbyO53V1Rgrw6zHFyCIrq/oohtHzGxzUKC2LOn+I3dTkq4En1w1ew94lTXkNWD7L/6o35FOh8kF9wMatE=
+ 1Scu51H8ipG8skC6/pgunltNIdYFFTcjZOE/o8t8yW8zTNRf0d6Y2p9VolgelrdQdi7AbUnfZrP0d7bcwMctpctcrERIg5afTZbiuM6WUE2VnV8le/UHK/PR4fQkbmTetOc2I6bdc4NrU7ysE7Tz56zf+iQ0j4nypvod5aoq6dCGmHycXCMLEGFmkNP96cSzM1+7Y/WPOMrAkm6twAHS2E42NbOIGUcCPuXQtoEfc+E/YYNzPZz5My9N12WiTveF0m6CtVOjm5VUlGGmgSwmKSi3OG3aCg5OykvoA5H40Q/mv7TSk8g+MLonVSU9OcwCrsFuUcGtlwsGypTvrOlBhnyLYuLOPxGbqYgwbZrabVtcgRVCAye+CT9ksg1abzYhd0hM9LD2mvIW00BKllAv8ARbpPKq5kpcPCfBbVtRoxKf0kkNU7qV9/7BL5dNh9rLyVO/hkJImh2zToUEU7L+iaQR+7C9Y2Z/Gfm60NQucUy1x2pk9VainLeaDI05ssde0wEOob52WogB8+ia748RJBr4TZKVyyVDs/8T/+Jqc5kwPxjLofKEpB4A24nrhvsf16SFUMyTV5AsfL9NdRt6F7P0u9ZoCexLxn3mZWiagLac96MPdTu9njrWp6O8zRzOEG5CBeL3skcoS0nlnUr0VOcHKob0LSrpYm5j1SK6VfQF49B8lCBjMsH0h95GXsmRCGeMAbGJ7Yx6bJfwVfbJxHgbv5r8xbNHMaMcjQdzpVADc+1l1sQsg66bFgV/LeoRjE3Kg4ygZkR+YVdCRaM5CpwZCctIWScnsuO1wZcNmxw=
 x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV9PR03MB8414.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(376014)(38070700021);DIR:OUT;SFP:1101;
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYRPR01MB15619.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(366016)(38070700021);DIR:OUT;SFP:1101;
 x-ms-exchange-antispam-messagedata-chunkcount: 1
 x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?2QNNw+1m+IzmDiQxoKjDEwEerpLFSfsL3JHYY8Jx1//W2BfNuIV9Zt/7Ej?=
- =?iso-8859-1?Q?UiMWyLIk+sqm/+4kopnyzZvEX3oDnu9+FnXhxIhPPvSfjSvipCn/6X2dri?=
- =?iso-8859-1?Q?+hX14nmRFPdej+WDQzU0Va4mVoxoiHs1GvogsxOhHo9Hvi2L+4PKDJGPEI?=
- =?iso-8859-1?Q?VW7ooF0zv/6gKr07FWaj8sgEYz6t9tFsjdG/mbFAb/jMJ7bmjJJic1dPpk?=
- =?iso-8859-1?Q?1lcmCogQvYJiQmQX852V/2biUtYU9B3TE2YmKTXzorXoGl4RJqQiM0h/MG?=
- =?iso-8859-1?Q?YB57fWlYvSOHCsBbv+e+AXUD4qbstzWymXNjJLxjPDaJY7HMTyXwpi0nBQ?=
- =?iso-8859-1?Q?7nwMOK7zaADWXjtiWPwT+b9e3qbFznocubXwJBlL+vwenC92TwrmyY4UDX?=
- =?iso-8859-1?Q?U962Xzd8quW985YqRICYH/fqz0VbCAsAy9pk72vDXRA/wf6GpghTKNahxf?=
- =?iso-8859-1?Q?DTjloQ8T0eLH43JbKmWxl8KRodD1YmXsktM4KhtCHt05Lxm77aGTlPIoHQ?=
- =?iso-8859-1?Q?ih5RIj8q+a4PbFJTs2piZ0JmiGxI4Tpd2TpwvBzAv/NOdOJ+XW6uOIbjPe?=
- =?iso-8859-1?Q?BZ/1QH8qlcz1AKSj2xfBQ+cq4FBUecq2c6xye4SssgiHF7UhiZPTDHjDec?=
- =?iso-8859-1?Q?d5R3MIEhxXWBm+R/lB993RZ15GQ00L1qF8mV9hDtjxD8CEo9+1y3kIKrvY?=
- =?iso-8859-1?Q?ZfwwK10OErmutfbhvuc4XuVMdlPyQTgnLuNIMjO2ZfOhbVeCfJwQLoDxGl?=
- =?iso-8859-1?Q?jwnHLdPJbWgXGKCH+bqU4cgj1Yz9do30u+r/mBycvU9aJWOVa6K86Mq1BL?=
- =?iso-8859-1?Q?jgRc4r/9XojsbHKU5YhSf1eclAJxXp5+l3jo7T57pc1ewF1mqXysc/L8Jv?=
- =?iso-8859-1?Q?wTz4/nMEwqM1umce9kr7NYvdCVxBRKDqi3LbTkCY5OCaxO5t0ANIutHUiY?=
- =?iso-8859-1?Q?f8X1zrFmBwaRrQMOO+gK7c9S94ogFP47S8tMqyYfjuoziNsOTlHDAu4+64?=
- =?iso-8859-1?Q?hAFNAmlEUb+m6oA41UT+jcM5uYqc6815X9tVqIy3C0hREp8o7s6Oja41uC?=
- =?iso-8859-1?Q?GyOiuze8Srbb/pM+64a51raavjZ/ufURa6qfAaXlZ1GHi76g4XY4FB//br?=
- =?iso-8859-1?Q?B1imkhbd2M7OtvRAhGko+Cxc16OoQGIcEnjXVxdf/opf39vOcXlmtQaMyq?=
- =?iso-8859-1?Q?HiR4D5c+4hkqubIcQpo5Qmz3qC7a+uE25vHwPs64dCzlGxAZFcMHXpnjRN?=
- =?iso-8859-1?Q?/7M4rfBioLlCwebXWeymxRJtSbKS2DBC92ACmkkp05I2M9kHBL0G6cW06I?=
- =?iso-8859-1?Q?8Des6HJo1Oyj3/K144YITdwe2f0fp4r5mV2uY7iY2j81068E5kP2VVUsYa?=
- =?iso-8859-1?Q?umREusrjKyMnGL+f5Lvp84XkAIhday+OHsNp56CyXGS5lkTBvW3LtQHagu?=
- =?iso-8859-1?Q?YV0Uq4Avawwb30vQ8E5X9mmNwrP/+WA9XMsdZQse0Qx0KPPAsTFJweDylL?=
- =?iso-8859-1?Q?oI4f6Fj0ITCX9dyl38UDYzD3ccAd2Yd8203dwbQA1FEkhLYT1BB5d1ycd0?=
- =?iso-8859-1?Q?DRUR8KJGXDUbkzaSzEXLRIGVCoL/ZzOf5H4oHCSdf9Fp4wP0MvfsI1XvvE?=
- =?iso-8859-1?Q?JjO32Q6SyOYM8Rs5K6zfJIz0bEK6ybjdMNST4cY/fcv882OYqtJqS3UwV2?=
- =?iso-8859-1?Q?HLB7Kv+G6qc/ZJeOHDq3g6pm0jzWAhTEjhr4fE+DM8d2+GKQaxoZCZ5Bf4?=
- =?iso-8859-1?Q?pZ+oCNVG2QXRtRZ1YygvguDUDAVNAxskCAhFuUsxF7lDiw439ldwDYvYvA?=
- =?iso-8859-1?Q?mdh1r7Z8Xw=3D=3D?=
+ =?iso-8859-1?Q?AcaMAIhvxKhFD7pkLKAWqHcMUXHtQ5XsFaF9aT9sPav7jLcWaMc/ffCa8g?=
+ =?iso-8859-1?Q?9ivF4JXVMXCc2ogoxDnZJahgOmtGtqPBWFo6ei0H6yADVCwTPbkgrveBEz?=
+ =?iso-8859-1?Q?QnKWmiG15UsWXhgEjV/484Pdj45odNztC4q5JDV7AcQPxMWod4mzUi1RIh?=
+ =?iso-8859-1?Q?tpk5wVHAbkBlJnNgEcAEqQCBhOwCg1uJTB4fyrnEWc0j5s95CA5GOshIru?=
+ =?iso-8859-1?Q?5EUrStH9DBcegiDZwSvXF+ZN3nFqecTZ9Y/sn+OmZyHfxmcP/seWKOJy8h?=
+ =?iso-8859-1?Q?lzI+5O5MTZubqbIDnZk+uNvBI1Cquv0lig7KeJnPmkdXBVwt6MWIbpT0SX?=
+ =?iso-8859-1?Q?FqLZW8p4EEQn++Nlm5LgNA5PCV2NgQuw0IC6bw3AGxPYA5/4X8qwZoDxO0?=
+ =?iso-8859-1?Q?QVr3D62JO7wjMQTnBdBWSkWGgd6iP29Tj+ja7YDOxZ/4b6EkgISLlMt01o?=
+ =?iso-8859-1?Q?ZR8HS+8sSSNebPRMIn1/esIy/bCyJIYE7fHiSS71lW0p/OSCCEZ+YYA+MU?=
+ =?iso-8859-1?Q?5k5/6zNsCbQ60CjqtoR40uBP+wHTwxyWNLdsqY7pm1ErqHjOAO6KHdX/qe?=
+ =?iso-8859-1?Q?k+N1SeCIsB3pWT1/w4z1ajQK7zJiUjOeCeWniX2KMGxi0ad72c0jLrDw96?=
+ =?iso-8859-1?Q?YfQ026EfONRqFgUkt0+Ywwat65g1GliC4W138CiRXiJequuS6IcSovXFbd?=
+ =?iso-8859-1?Q?ZF7ei//G7qB8KlopziACY4Uy/aWoKA/Tc9Otuk9aKVeaxeJz9AhfHKUEwY?=
+ =?iso-8859-1?Q?SRAC+JyzjTB5S7bCO4FoCNVz7kHdiDNMa/L99YpU57d7skO/o23Fy6OiGm?=
+ =?iso-8859-1?Q?K7sqe+Q94QTCFfxeGWVw15GBJRll1M/MDJh249yOpU2jWKixiQa2YhJMt+?=
+ =?iso-8859-1?Q?fZRxUSJzxw0KaupPEko0tCyAbKWemCg5ob9Le8IWLrP6wg0t0b9mgE6Wol?=
+ =?iso-8859-1?Q?Gq8lKU5Kl62uBI8sy03obgEZPwSysaR96aR34UoWkvbLPXHSXi895L1gXP?=
+ =?iso-8859-1?Q?83Ma8ob/P20zbQygJHtKW0sF0LNvNbQUnFO9BtkGw5HIr5t6rPwOHk2bBX?=
+ =?iso-8859-1?Q?GsyjiCbCuU+xrVsZv2XY0AeZ4+tXa6RNYDf7dn5Erj0tk3BXC8chfmifV9?=
+ =?iso-8859-1?Q?DweNfbhPYVE2hp++NNJ/lm/78HbCkto2NbFBsqEHfR01hdVTDYD9x5Ym/E?=
+ =?iso-8859-1?Q?zqILuTwJZCVdQqQR3lMvhP9jc2vXIws6HROlY8OC7GTupDbmAh3F9j0y/W?=
+ =?iso-8859-1?Q?LThsiYnyJAM3KDc4OiOtVSlZ/VCj8kT6xiYOfLtwlcZjDO23lcJpPTiSSy?=
+ =?iso-8859-1?Q?vw8Q5aNLgEbDbLo4HlI5b5ywYQnfDwUgx7WSDo/ect8BDWyO+h68TfeGVU?=
+ =?iso-8859-1?Q?0/n8Jrf9uRSxjcgWG599zB9uTQwhonpWlLJFVVAsBKi1+Qd/v06TFCcAWP?=
+ =?iso-8859-1?Q?qKWWB9AVUlqcqMQvtn3bSz97QU6RbHmaluOPsmmGjs5ODgVY3N33fjUwUt?=
+ =?iso-8859-1?Q?dYKfhI3nCYA2mqiU9KN9dcfJr70VDRzhmXpCU1dsj6wyb//0G4+xdU2r7s?=
+ =?iso-8859-1?Q?Dy7bNQ8ngsVdEpvbZDcbLje6R+rwGsmeCbsFomZW3dyliKnXuxdmDdgovn?=
+ =?iso-8859-1?Q?Q9oS+csxarz8JuUUzZPgRlwl/4lW29ZsekM9pTOvrbzuanhctkTfvR4xsB?=
+ =?iso-8859-1?Q?0DXC4FzHOdBXQpL0LVlLh10a/4BxyLIZ7L/V4V3k+Nguicx55j1tC2MC88?=
+ =?iso-8859-1?Q?bU9VGjvchMq5KVy12f3BNe8GN9sShxUVzywJDmsg/bKMmXZeB3MollyqqJ?=
+ =?iso-8859-1?Q?eeXkwzeIF0xrhSRVzHQNHvpVBt9Ec9m1SuIy5Aw4VLyNkM5WXGPi?=
 Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
@@ -164,146 +137,323 @@ List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Exchange-RoutingPolicyChecked:
-	XT51fJtIEyB/gEK+nGS7+Zue2Lzhn6SCh8TUxBwjkpnxLF3hc0RTW9wx6L3hr8+XYbdK1WzzRfNWdDxO96h+LKLi8gVb97NN7Ni1xsc5bcqtawuhKsGzjv1qa7Ijpof4LTkFtjorGrioob6xsT7CdzRMpla7xzh2e1x8OSDsSRaR7iqHjVetK9LwqsQM0+jq2TzJnq2xQXB/c6feBdj49CtwRHGrLfRaZEpTym4wKnO4iONk6KKNo7ldNEJwGpbdeOF26QFZIetbMbOK5eyb9XCZF4bbhe0L+MZMd2JqgwWvZKzl/ntdJP0iiSycwgDLdHaI1uLjwhfouB5j+QjV0w==
-X-OriginatorOrg: analog.com
+X-OriginatorOrg: renesas.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: LV9PR03MB8414.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0b115e2d-dea4-4dc2-3249-08de7b7d699d
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Mar 2026 12:39:30.6012
+X-MS-Exchange-CrossTenant-AuthSource: TYRPR01MB15619.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e7e3b230-0465-4f89-8588-08de7b840178
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Mar 2026 13:26:42.3539
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: YupVOJ5OFpiqK+mkvKe/eBlYF9ymkTuS7WRYlZbshemjEa6UVtROfDDL9TNDYtf+qNghVwr61M4n/SjVNIhzhQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA6PR03MB7782
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzA2MDEyMSBTYWx0ZWRfX8uaurK6Lgh6H
- 1cHhqTMeVL8EK83dUQICl9bIcc7u/x8I6PvOd29CNzICdFd9+cjF2YGAI233N9gfld7ikJ7kwJk
- qVTum/g+HTMoO04LnFgS+dx7u9IuoJeLoSyLga5v9OMcTTsJewShdi8wae81dpoR357f/ERyhW+
- WT1SjYu968tgl7CF0hdOLI9Xi9fCpEQrm+VR74mNR7UJocssEwhra/G4x40ClGj+AvH+oXNJ7M3
- 6bkA7j0fUyzRDr/5wgY3kTbpEdHNfFhEY6IO8u7JjIEfg8mxUvwQIb7+iluVfPHci3rvnAPOkU0
- 1FUIktigBbLL0iWFTB26sAfgletlOGYpiwt3xHANOnJx9VnTAk6fKpjp9EFgP5+L9/sklCl4pw9
- curkN3VKIiJJS/OQ6pv/KFzpSHupj2x5L6oWiiKwSp7H3vC86Aw8H+NR3W9hhqZFnko7tsSHvI+
- XbvjNG/mK6Vl1MKVgSw==
-X-Proofpoint-ORIG-GUID: tbWmGruROAHwnq7Hxlzr48C5bsxOCQqT
-X-Proofpoint-GUID: tbWmGruROAHwnq7Hxlzr48C5bsxOCQqT
-X-Authority-Analysis: v=2.4 cv=Jtz8bc4C c=1 sm=1 tr=0 ts=69aacb05 cx=c_pps
- a=CD2IJdD5qp8L8UJuiUkm2w==:117 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=8nJEP1OIZ-IA:10
- a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22 a=0sLvza09kfJOxVLZPwjg:22
- a=OmVn7CZJonkx5R5zMQLL:22 a=QyXUC8HyAAAA:8 a=gAnH3GRIAAAA:8 a=VwQbUJbxAAAA:8
- a=IpJZQVW2AAAA:8 a=pGLkceISAAAA:8 a=bn1LqWbYnVC-s5rXbvgA:9 a=wPNLvfGTeEIA:10
- a=IawgGOuG5U0WyFbmm1f5:22
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-06_04,2026-03-06_02,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- spamscore=0 lowpriorityscore=0 adultscore=0 suspectscore=0 phishscore=0
- malwarescore=0 priorityscore=1501 bulkscore=0 clxscore=1011 impostorscore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2602130000 definitions=main-2603060121
-X-Rspamd-Queue-Id: AA0EB220CFA
+X-MS-Exchange-CrossTenant-userprincipalname: pZ947HmVjSk2/JPC67YmAsDAOzc9y8gbYEdmzDViAZhQ+xn1Dir/eLmejZ+9kBBH4MNnqWYbWOg4xAp6k++r0LWWZcFLoKJlTGSIuCRd4qRx7UtHu77uuS8tDTTqJCmO
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: TY7PR01MB15780
+X-Rspamd-Queue-Id: 9C63F2219F2
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [1.34 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-0.16 / 15.00];
 	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[analog.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
-	R_DKIM_ALLOW(-0.20)[analog.com:s=DKIM];
+	DMARC_POLICY_ALLOW(-0.50)[renesas.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[renesas.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[20];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-8204-lists,linux-pwm=lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_EQ_ADDR_SOME(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8203-lists,linux-pwm=lfdr.de];
-	FREEMAIL_CC(0.00)[metafoo.de,analog.com,kernel.org,baylibre.com,gmail.com,vger.kernel.org];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[Radu.Sabau@analog.com,linux-pwm@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[analog.com:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	NEURAL_HAM(-0.00)[-1.000];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[renesas.com:+];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	RCVD_COUNT_SEVEN(0.00)[7]
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[cosmin-gabriel.tanislav.xa@renesas.com,linux-pwm@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-pwm];
+	RCPT_COUNT_SEVEN(0.00)[10];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,renesas.com:dkim,renesas.com:email]
 X-Rspamd-Action: no action
 
-
-
-> -----Original Message-----
-> From: Andy Shevchenko <andriy.shevchenko@intel.com>
-> Sent: Friday, March 6, 2026 2:06 PM
-> To: Sabau, Radu bogdan <Radu.Sabau@analog.com>
-> Cc: Lars-Peter Clausen <lars@metafoo.de>; Hennerich, Michael <Michael.Hen=
-nerich@analog.com>; Jonathan Cameron
-> <jic23@kernel.org>; David Lechner <dlechner@baylibre.com>; Sa, Nuno <Nuno=
-.Sa@analog.com>; Andy Shevchenko
-> <andy@kernel.org>; Rob Herring <robh@kernel.org>; Krzysztof Kozlowski <kr=
-zk+dt@kernel.org>; Conor Dooley <conor+dt@kernel.org>;
-> Uwe Kleine-K=F6nig <ukleinek@kernel.org>; Liam Girdwood <lgirdwood@gmail.=
-com>; Mark Brown <broonie@kernel.org>; Linus Walleij
-> <linusw@kernel.org>; Bartosz Golaszewski <brgl@kernel.org>; linux-iio@vge=
-r.kernel.org; devicetree@vger.kernel.org; linux-
-> kernel@vger.kernel.org; linux-pwm@vger.kernel.org; linux-gpio@vger.kernel=
-.org
-> Subject: Re: [PATCH 0/4] iio: adc: ad4691: add driver for AD4691 multicha=
-nnel SAR ADC family
+> From: Uwe Kleine-K=F6nig <ukleinek@kernel.org>
+> Sent: Friday, March 6, 2026 11:30 AM
 >=20
-> [External]
+> Hello,
 >=20
-> On Thu, Mar 05, 2026 at 02:23:26PM +0200, Radu Sabau via B4 Relay wrote:
-> > This series adds support for the Analog Devices AD4691 family of
-> > high-speed, low-power multichannel successive approximation register
-> > (SAR) ADCs with an SPI-compatible serial interface.
+> On Fri, Jan 30, 2026 at 02:23:49PM +0200, Cosmin Tanislav wrote:
+> > enable_count is only incremented after rz_mtu3_pwm_config() is called
+> > for the current PWM channel, causing prescale to not be checked if one
+> > PWM channel is enabled and we're enabling the second PWM channel of the
+> > same HW channel.
 > >
-> > The family includes:
-> >   - AD4691: 16-channel, 500 kSPS
-> >   - AD4692: 16-channel, 1 MSPS
-> >   - AD4693: 8-channel, 500 kSPS
-> >   - AD4694: 8-channel, 1 MSPS
+> > To handle this edge case, if the user_count of the HW channel is larger
+> > than 1 and the sibling PWM channel is enabled, check that the new
+> > prescale is not smaller than the sibling's prescale.
 > >
-> > The devices support five operating modes:
-> >   - CNV Clock Mode:    external PWM drives CNV, samples at PWM rate
-> >   - CNV Burst Mode:    PWM triggers bursts, internal oscillator drives
-> >                        conversions within each burst
-> >   - Autonomous Mode:   internal oscillator drives conversions,
-> >                        software starts/stops via register write
-> >   - SPI Burst Mode:    similar to Autonomous Mode but optimised for
-> >                        SPI burst reads
-> >   - Manual Mode:       CNV tied to SPI CS; each SPI transfer triggers
-> >                        a conversion and returns the previous result
-> >                        (pipelined);
+> > If the new prescale is larger than the sibling's prescale, use the
+> > sibling's prescale.
+> >
+> > The user_count check is ensures that we are indeed dealing with a HW
+> > channel that has two IOs.
+> >
+> > Cc: stable@vger.kernel.org
+> > Fixes: 254d3a727421 ("pwm: Add Renesas RZ/G2L MTU3a PWM driver")
+> > Signed-off-by: Cosmin Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
+> > ---
+> >  drivers/pwm/pwm-rz-mtu3.c | 24 +++++++++++++++++++-----
+> >  1 file changed, 19 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/drivers/pwm/pwm-rz-mtu3.c b/drivers/pwm/pwm-rz-mtu3.c
+> > index ab39bd37edaf..f6073be1c2f8 100644
+> > --- a/drivers/pwm/pwm-rz-mtu3.c
+> > +++ b/drivers/pwm/pwm-rz-mtu3.c
+> > @@ -142,6 +142,14 @@ rz_mtu3_get_channel(struct rz_mtu3_pwm_chip *rz_mt=
+u3_pwm, u32 hwpwm)
+> >  	return priv;
+> >  }
+> >
+> > +static u32 rz_mtu3_sibling_hwpwm(u32 hwpwm, bool is_primary)
+> > +{
+> > +	if (is_primary)
+> > +		return hwpwm + 1;
+> > +	else
+> > +		return hwpwm - 1;
+> > +}
 >=20
-> This cover letter doesn't answer to the first important question: Why a b=
-rand
-> new driver? Do your homework and check what is already in the kernel and
-> explain in the next version why no other existing driver can be reused (r=
-efactored).
+> Can we please make this function a bit more sophisticated to not need
+> is_primary? Something like:
 >=20
-> --
-> With Best Regards,
-> Andy Shevchenko
+> static u32 rz_mtu3_sibling_hwpwm(struct rz_mtu3_pwm_chip *rz_mtu3_pwm, u3=
+2 hwpwm)
+> {
+> 	struct rz_mtu3_pwm_channel *priv =3D rz_mtu3_get_channel(rz_mtu3_pwm, hw=
+pwm);
+>=20
+> 	BUG_ON(priv->map->num_channel_ios !=3D 2);
+>=20
+> 	if (priv->map->base_pwm_number =3D=3D hwpwm)
+> 		return hwpwm + 1;
+> 	else
+> 		return hwpwm - 1;
+> }
+>=20
+> (Or if you want to save the rz_mtu3_get_channel() call, pass priv to
+> rz_mtu3_sibling_hwpwm() which is already available at the call sites.)
+>=20
+> And well, BUG_ON isn't very loved, so either it should be dropped or the
+> issue escalated in a more civilized manner. I keep it for the sake of
+> simplicity during the discussion.
 >=20
 
-Hi Andy,
+I can do that. And, to avoid having the BUG_ON(), we can make it return
+an int and receive a sibling_hwpwm pointer as an output parameter.
 
-Indeed at first glance I thought about adding support for these parts in th=
-e existing
-AD4965 driver. The registers indeed are a bit similar between them, but the
-channel specific registers are completely different, and more than this the
-conversion modes are different.
-With this being said, I will try and make things more clear by answering th=
-is
-question in the cover letter of the next patch. Thank you for pointing this=
- out.
+With that in mind, this patch could be simplified to the following diff
+(approximatively, I haven't tested it yet).
 
-Best Regards,
-Radu
+Please let me know what you think the best solution would be.
 
+diff --git a/drivers/pwm/pwm-rz-mtu3.c b/drivers/pwm/pwm-rz-mtu3.c
+index ab39bd37edaf..4548af0c3b3c 100644
+--- a/drivers/pwm/pwm-rz-mtu3.c
++++ b/drivers/pwm/pwm-rz-mtu3.c
+@@ -142,6 +142,20 @@ rz_mtu3_get_channel(struct rz_mtu3_pwm_chip *rz_mtu3_p=
+wm, u32 hwpwm)
+ 	return priv;
+ }
+=20
++static int rz_mtu3_sibling_hwpwm(struct rz_mtu3_pwm_channel *priv, u32 hwp=
+wm,
++				 u32 *sibling_hwpwm)
++{
++	if (priv->map->num_channel_ios !=3D 2)
++		return -EINVAL;
++
++	if (priv->map->base_pwm_number =3D=3D hwpwm)
++		*sibling_hwpwm =3D hwpwm + 1;
++	else
++		*sibling_hwpwm =3D hwpwm - 1;
++
++	return 0;
++}
++
+ static bool rz_mtu3_pwm_is_ch_enabled(struct rz_mtu3_pwm_chip *rz_mtu3_pwm=
+,
+ 				      u32 hwpwm)
+ {
+@@ -321,6 +335,7 @@ static int rz_mtu3_pwm_config(struct pwm_chip *chip, st=
+ruct pwm_device *pwm,
+ 	struct rz_mtu3_pwm_chip *rz_mtu3_pwm =3D to_rz_mtu3_pwm_chip(chip);
+ 	struct rz_mtu3_pwm_channel *priv;
+ 	u64 period_cycles;
++	u32 sibling_hwpwm;
+ 	u64 duty_cycles;
+ 	u8 prescale;
+ 	u16 pv, dc;
+@@ -340,7 +355,9 @@ static int rz_mtu3_pwm_config(struct pwm_chip *chip, st=
+ruct pwm_device *pwm,
+ 	 * different settings. Modify prescalar if other PWM is off or handle
+ 	 * it, if current prescale value is less than the one we want to set.
+ 	 */
+-	if (rz_mtu3_pwm->enable_count[ch] > 1) {
++	if (rz_mtu3_pwm->user_count[ch] > 1 &&
++	    !rz_mtu3_sibling_hwpwm(priv, pwm->hwpwm, &sibling_hwpwm) &&
++	    rz_mtu3_pwm_is_ch_enabled(rz_mtu3_pwm, sibling_hwpwm)) {
+ 		if (rz_mtu3_pwm->prescale[ch] > prescale)
+ 			return -EBUSY;
+
+
+> > +
+> >  static bool rz_mtu3_pwm_is_ch_enabled(struct rz_mtu3_pwm_chip *rz_mtu3=
+_pwm,
+> >  				      u32 hwpwm)
+> >  {
+> > @@ -322,6 +330,7 @@ static int rz_mtu3_pwm_config(struct pwm_chip *chip=
+, struct pwm_device *pwm,
+> >  	struct rz_mtu3_pwm_channel *priv;
+> >  	u64 period_cycles;
+> >  	u64 duty_cycles;
+> > +	bool is_primary;
+> >  	u8 prescale;
+> >  	u16 pv, dc;
+> >  	u8 val;
+> > @@ -329,6 +338,7 @@ static int rz_mtu3_pwm_config(struct pwm_chip *chip=
+, struct pwm_device *pwm,
+> >
+> >  	priv =3D rz_mtu3_get_channel(rz_mtu3_pwm, pwm->hwpwm);
+> >  	ch =3D priv - rz_mtu3_pwm->channel_data;
+> > +	is_primary =3D priv->map->base_pwm_number =3D=3D pwm->hwpwm;
+> >
+> >  	period_cycles =3D mul_u64_u32_div(state->period, rz_mtu3_pwm->rate,
+> >  					NSEC_PER_SEC);
+> > @@ -340,11 +350,15 @@ static int rz_mtu3_pwm_config(struct pwm_chip *ch=
+ip, struct pwm_device *pwm,
+> >  	 * different settings. Modify prescalar if other PWM is off or handle
+> >  	 * it, if current prescale value is less than the one we want to set.
+> >  	 */
+> > -	if (rz_mtu3_pwm->enable_count[ch] > 1) {
+> > -		if (rz_mtu3_pwm->prescale[ch] > prescale)
+> > -			return -EBUSY;
+>=20
+> OK, I understood the issue. If the sibling is already on and the current
+> IO is still off, enable_count doesn't account yet for the current
+> IO and thus is 1 but still the prescaler must not be changed.
+>=20
+> The commit log needs updating to make this clearer.
+>=20
+
+I'll try to rephrase it to make it clearer.
+
+> An alternative would be to check for
+>=20
+> 	if (rz_mtu3_pwm->enable_count[ch] + (pwm->state.enabled ? 0 : 1) > 1)
+>=20
+> but I'm not sure this is better.
+>=20
+
+This was essentially my initial solution internally, but it was argued by
+my colleagues that it would be difficult to understand.
+
+The solution that I ended up submitting here is more explicit and easier
+to grasp at a glance, at the expense of being lengthier.
+
+I still quite prefer the shorter solution, as it is not necessary to query
+the actual hardware state in this scenario, as the PWM state should always
+be in sync with it.
+
+The PWM state is enough to figure out the effective enable_count, as we can
+only make it into this function when
+a) the PWM channel is already enabled and it is being updated OR
+b) when the PWM channel is being enabled (and it was previously disabled).
+
+> > +	if (rz_mtu3_pwm->user_count[ch] > 1) {
+> > +		u32 sibling_hwpwm =3D rz_mtu3_sibling_hwpwm(pwm->hwpwm, is_primary);
+>=20
+> Maybe add a comment here saying something like:
+>=20
+> 	Not all channels have a sibling, but if user_count > 1 there is
+> 	one.
+
+Let's figure out which solution would be the best, and I will add comments
+for any of the unclear things.
+
+> >
+> > -		prescale =3D rz_mtu3_pwm->prescale[ch];
+> > +		if (rz_mtu3_pwm_is_ch_enabled(rz_mtu3_pwm, sibling_hwpwm)) {
+> > +			if (rz_mtu3_pwm->prescale[ch] > prescale)
+> > +				return -EBUSY;
+> > +
+> > +			prescale =3D rz_mtu3_pwm->prescale[ch];
+> > +		}
+> >  	}
+> >
+> >  	pv =3D rz_mtu3_pwm_calculate_pv_or_dc(period_cycles, prescale);
+> > @@ -371,7 +385,7 @@ static int rz_mtu3_pwm_config(struct pwm_chip *chip=
+, struct pwm_device *pwm,
+> >  	if (rz_mtu3_pwm->prescale[ch] !=3D prescale && rz_mtu3_pwm->enable_co=
+unt[ch])
+> >  		rz_mtu3_disable(priv->mtu);
+> >
+> > -	if (priv->map->base_pwm_number =3D=3D pwm->hwpwm) {
+> > +	if (is_primary) {
+> >  		rz_mtu3_8bit_ch_write(priv->mtu, RZ_MTU3_TCR,
+> >  				      RZ_MTU3_TCR_CCLR_TGRA | val);
+> >  		rz_mtu3_pwm_write_tgr_registers(priv, RZ_MTU3_TGRA, pv,
+>=20
+> All in all I'm unhappy with the hwpwm to channel+IO mapping, this makes
+> this all more complicated. This is something that already bugged me when
+> this driver was created.
+>=20
+> It's out of scope for this series of fixes, but I wonder if we could
+> create a mapping from hwpwm to an IO-id like this:
+>=20
+> 	hwpwm | IO-id
+> 	------+------
+> 	   0  |    0	(channel 0, io 0)
+> 	   1  |    1	(channel 0, io 1)
+> 	   2  |    2	(channel 1, io 0)
+> 	   3  |    4	(channel 2, io 0)
+>            4  |    6	(channel 3, io 0)
+> 	   5  |    7	(channel 3, io 1)
+> 	   6  |    8	(channel 4, io 0)
+> 	   7  |    9	(channel 4, io 1)
+> 	   8  |   12	(channel 6, io 0)
+> 	   9  |   13	(channel 6, io 1)
+> 	  10  |   14	(channel 7, io 0)
+> 	  11  |   15	(channel 7, io 1)
+>=20
+> then the sibling would be just `io_id ^ 1` and the channel could
+> be computed by `io_id >> 1` and the base id for a given io is just
+> `io_id & ~1`.
+>=20
+> Tracking of an IO being enabled could be done using
+>=20
+> 	enabled_io & (1 << io_id)
+>=20
+> I think this would be a simpler scheme that needs less memory and less
+> pointer dereferencing and the check for the sibling being enabled would
+> also be a trivial bit operation.
+>=20
+
+I agree that the current setup is not the best. Especially the loop inside
+rz_mtu3_get_channel() is quite sub-optimal, in my opinion.
+
+I have many more patches already implemented and prepared to be sent for
+MTU3, including conversion to waveform APIs, a lot of cleanups, support
+for more prescale values, bootloader handoff support, etc, but I have
+sent the fixes first as they are higher priority.
+
+I will try to implement your mapping improvement idea and integrate it in
+one of the later series of patches.
+
+Please let me know which solution you think is the best for dealing with
+the issue the current patch is trying to solve, and I'll continue from
+there.
+
+> Best regards
+> Uwe
 
