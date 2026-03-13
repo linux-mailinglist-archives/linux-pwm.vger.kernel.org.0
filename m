@@ -1,56 +1,56 @@
-Return-Path: <linux-pwm+bounces-8246-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8247-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mLJFBvPhs2ktcQAAu9opvQ
-	(envelope-from <linux-pwm+bounces-8246-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Fri, 13 Mar 2026 11:07:47 +0100
+	id ME2ZNNTis2ktcQAAu9opvQ
+	(envelope-from <linux-pwm+bounces-8247-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Fri, 13 Mar 2026 11:11:32 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 23FC1281162
-	for <lists+linux-pwm@lfdr.de>; Fri, 13 Mar 2026 11:07:46 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 73C9028133E
+	for <lists+linux-pwm@lfdr.de>; Fri, 13 Mar 2026 11:11:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 42E943010237
+	by sea.lore.kernel.org (Postfix) with ESMTP id EC30631EA824
 	for <lists+linux-pwm@lfdr.de>; Fri, 13 Mar 2026 10:07:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9E46A388E68;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A51BA38AC8F;
 	Fri, 13 Mar 2026 10:07:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tOQJrMbC"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bzrSWSIc"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 759B336E498;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75A4738423D;
 	Fri, 13 Mar 2026 10:07:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1773396461; cv=none; b=iFBXBUnwWNYbEki0jdsUvHTedyg2bVTqKPJMalfFZT1+cKwpKu+NZhsT5MjQEGNeSWgmkxTDvex/s0KqRqzpUfIvDwcq3H3sY3Kg193fKP+eRJtsof+Ws4RKm4zNQtBUxk6oPtFqDrRVs+EAmmNBqa6B3U+xHI3A2DHA/NxGuP4=
+	t=1773396461; cv=none; b=e9P9Kcj3v1ay/2HIb1mImD2L1XwsHITFXHjtDvehiK/8CqZqgwYDbxYqlY8bgbEvGXunH0z/WD0ok3T6iSzkpYAbDU0v0gSS+QApXyWzo7cSr6T/OCNo57LnpSbFfaqarI+SHL5BnNvRoGmGEwWfCCTBHy6h81qiS9475EBogpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1773396461; c=relaxed/simple;
-	bh=OAr7/fKhE1uq3enpjNws49qkwM8Ys9veoC9OX+TLv3E=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=R3wV2za+3kLTMMfQnmYLc6xCPGaInfk2udfA3pcowFm8Crzwm0ssCofMlW8M7NxUU/ktqzleOZoSJaMlbhE5UI09TY6m3J2Fzbwz4Oh75wRYO+Kp6Ey+T/sDBMwVkwCButexMWXzLRCdOyW3wNaLUV1/wb/WWmvFgK6X71NLMNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tOQJrMbC; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 189A6C19424;
+	bh=GI5A6sIDTkRHuW8a/SgtskqxywWH7KKoxYkTh0qrVok=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=EYc7PLb7ZL+Sm3U3UcJVnGlS0iM+Dql1u2i1HBbUzyofiX4c2AZXEGidV2ri3bG72M1Ny+6/diJ3Dmi00tn8B6xmzQfPRVlAYiT5IoHZsvG3E5OnMsNLDJY/Tp09koGzb+7FgiR5rzHWvpPey6XUYXqpf/KGEe7ADZYdd8a5m8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bzrSWSIc; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 317D7C19421;
 	Fri, 13 Mar 2026 10:07:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1773396461;
-	bh=OAr7/fKhE1uq3enpjNws49qkwM8Ys9veoC9OX+TLv3E=;
-	h=From:Subject:Date:To:Cc:Reply-To:From;
-	b=tOQJrMbCB2uzv2mH5QR1EcncN4YwuUzR3wz3vwsbOyv0W0Wh1+U13MTjqR1bCBwdJ
-	 YK7igwFQTlYILi01ZxpSJRJf53fWz1yqAMpkh3bTbG5+QJTtTH/YkeFrZKzMYGx3M4
-	 8eFgQppyjYcHH8yh7j3QCUzRHrIWT0eMKy2HjLl9XXIIhE9az7/va57p0ANEq7K4+y
-	 z1kOXiIakTbsslvmNKWw/AJzfMHFEBuk/4pKPLO6vgfVqbcchUnA07PeJhCvV+ixzL
-	 qtYUaZ6Wr5dDMEyzC1S9lSLFZtq7pCk5BIYTct6kRZ8jigc7IN1qTZDS3rlECI+pIk
-	 ovHf8coEUZrVw==
+	bh=GI5A6sIDTkRHuW8a/SgtskqxywWH7KKoxYkTh0qrVok=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
+	b=bzrSWSIc1ENoTTXhwORkNWxyNxkOqohR4gqsYT8NQp4IZkSKuHfe1UNZVxulSX8qY
+	 4upITLZWOPsH9+FT0edMmgiNWChTcxDT0C1Eeq1StBsBSJTunbtD9aPPS0iSNhrIiN
+	 znIBauMP8c6uB+rHsPVKvG8XMUrZfrbyOyI/b1tAAjDHDdaamt4XnGxbbvmN6G2XgR
+	 +4257sLCcr93KcahbGxJPJWnYpbL2fp7/w8K/VvgKK/yKTpQfwaD02Qdxl6B2z3UPu
+	 mB5TwewSPhmbmofYZRScvXkKXQqnJuy7pGQF6cmxtMC2DrCzmCndGWNZ056a2p+UiL
+	 1Ntq8hNoe/H+w==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B55105F78C;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 206DA105F78B;
 	Fri, 13 Mar 2026 10:07:41 +0000 (UTC)
 From: Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org>
-Subject: [PATCH v3 0/4] iio: adc: ad4691: add driver for AD4691
- multichannel SAR ADC family
-Date: Fri, 13 Mar 2026 12:07:24 +0200
-Message-Id: <20260313-ad4692-multichannel-sar-adc-driver-v3-0-b4d14d81a181@analog.com>
+Date: Fri, 13 Mar 2026 12:07:25 +0200
+Subject: [PATCH v3 1/4] dt-bindings: iio: adc: add bindings for AD4691
+ family
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -59,11 +59,9 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-B4-Tracking: v=1; b=H4sIANzhs2kC/43NywrCMBQE0F8pWRtJbtKXK/9DXORxbQO1kaQGp
- fTfTQuC7rqcYTgzk4jBYSSnYiYBk4vOjzmIQ0FMr8YOqbM5E2BQMcGAKiurFuj9OUxuXYw40Kh
- C7g21wSUMtG5QWiktSA0kQ4+AN/faTi7XnHsXJx/e22fia/vlyz184pRRISqAVjXWmPqsRjX47
- mj8nax+gh+Ts10mZNO2WjcKdYn831yW5QMkPimZKQEAAA==
-X-Change-ID: 20260302-ad4692-multichannel-sar-adc-driver-78e4d44d24b2
+Message-Id: <20260313-ad4692-multichannel-sar-adc-driver-v3-1-b4d14d81a181@analog.com>
+References: <20260313-ad4692-multichannel-sar-adc-driver-v3-0-b4d14d81a181@analog.com>
+In-Reply-To: <20260313-ad4692-multichannel-sar-adc-driver-v3-0-b4d14d81a181@analog.com>
 To: Lars-Peter Clausen <lars@metafoo.de>, 
  Michael Hennerich <Michael.Hennerich@analog.com>, 
  Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
@@ -79,11 +77,11 @@ Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
  linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
  linux-gpio@vger.kernel.org, Radu Sabau <radu.sabau@analog.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1773396456; l=5626;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1773396456; l=7296;
  i=radu.sabau@analog.com; s=20260220; h=from:subject:message-id;
- bh=OAr7/fKhE1uq3enpjNws49qkwM8Ys9veoC9OX+TLv3E=;
- b=gmtQ0ppWkV5rnMisa38VpDqrJfXrxTPsSM0gQs7fHEjsKFaCxH19pKTRd6+5oXLDFsfckceiR
- bSlmr/QducdDreghb59a+XKP2IMJoFHfjYWzwe0m7MfTifoUXSTSMk4
+ bh=oJ+skzTO+ldVyCAp6LzsSaIW3BVvqyXV5zmKWF0Z/GQ=;
+ b=U9uUEwwFsZs5v0+at5LAoz4KhSbzNVWFTLPt5bpOeFmpVRerc9avumDdrNlGW13zGWDzir0a4
+ xTzVsTGq4AMDvYrBGE2c6f4X9f0JURjRmOo5Ql0sIEBlT9/ILAGnMDx
 X-Developer-Key: i=radu.sabau@analog.com; a=ed25519;
  pk=lDPQHgn9jTdt0vo58Na9lLxLaE2mb330if71Cn+EvFU=
 X-Endpoint-Received: by B4 Relay for radu.sabau@analog.com/20260220 with
@@ -95,12 +93,12 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8246-lists,linux-pwm=lfdr.de,radu.sabau.analog.com];
+	TAGGED_FROM(0.00)[bounces-8247-lists,linux-pwm=lfdr.de,radu.sabau.analog.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FREEMAIL_TO(0.00)[metafoo.de,analog.com,kernel.org,baylibre.com,gmail.com,pengutronix.de];
@@ -114,126 +112,260 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,linux-pwm@vger.kernel.org];
 	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-pwm,dt];
 	HAS_REPLYTO(0.00)[radu.sabau@analog.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[analog.com:email,analog.com:mid,analog.com:replyto,analog.com:url,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 23FC1281162
+	DBL_BLOCKED_OPENRESOLVER(0.00)[devicetree.org:url,analog.com:email,analog.com:mid,analog.com:replyto,analog.com:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,0.0.0.0:email]
+X-Rspamd-Queue-Id: 73C9028133E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-This series adds support for the Analog Devices AD4691 family of
-high-speed, low-power multichannel successive approximation register
-(SAR) ADCs with an SPI-compatible serial interface.
+From: Radu Sabau <radu.sabau@analog.com>
 
-The family includes:
-  - AD4691: 16-channel, 500 kSPS
-  - AD4692: 16-channel, 1 MSPS
-  - AD4693: 8-channel, 500 kSPS
-  - AD4694: 8-channel, 1 MSPS
+Add DT bindings for the Analog Devices AD4691 family of multichannel
+SAR ADCs (AD4691, AD4692, AD4693, AD4694).
 
-The devices support two operating modes, auto-detected from the device
-tree:
-  - CNV Clock Mode: external PWM drives CNV independently of SPI;
-                    DATA_READY on GP0 signals end of conversion
-  - Manual Mode: CNV tied to SPI CS; each SPI transfer reads
-                 the previous conversion result and starts the
-                 next (pipelined N+1 scheme)
-
-A new driver is warranted rather than extending ad4695: the AD4691
-data path uses an accumulator-register model — results are read from
-AVG_IN registers, with ACC_MASK, ADC_SETUP, DEVICE_SETUP, and
-GPIO_MODE registers controlling the sequencer — none of which exist
-in AD4695. CNV Clock Mode (PWM drives CNV independently of SPI) and
-Manual Mode (pipelined N+1 transfers) also have no equivalent in
-AD4695's command-embedded single-cycle protocol.
-
-The series is structured as follows:
-  1/4 - DT bindings (YAML schema + dt-bindings header) and
-        MAINTAINERS entry
-  2/4 - Initial driver: register map via custom regmap callbacks,
-        IIO read_raw/write_raw, both operating modes, single-channel
-          reads via internal oscillator (Autonomous Mode)
-  3/4 - Triggered buffer support: IRQ-driven (DATA_READY on GP0) for
-        CNV Clock Mode; hrtimer-based trigger for Manual Mode to
-        handle the pipelined N+1 SPI protocol
-  4/4 - SPI Engine offload support: DMA-backed high-throughput
-        capture path using the SPI offload subsystem
-
-Datasheets:
-  https://www.analog.com/en/products/ad4691.html
-  https://www.analog.com/en/products/ad4692.html
-  https://www.analog.com/en/products/ad4693.html
-  https://www.analog.com/en/products/ad4694.html
+The binding describes the hardware connections: an optional PWM on
+the CNV pin selects CNV Clock Mode; when absent, Manual Mode is used
+with CNV tied to SPI CS. GPIO pins, voltage supplies, and the
+trigger-source interface for SPI Engine offload operation are also
+described.
 
 Signed-off-by: Radu Sabau <radu.sabau@analog.com>
 ---
-Changes in v3:
-- Replace GPIO reset handling with reset controller framework
-- Replace two regmap_write() calls for ACC_MASK1/ACC_MASK2 with regmap_bulk_write()
-- Move conv_us declaration closer to its first use
-- Derive spi_device/dev from regmap instead of storing st->spi
-- ad4691_trigger_handler(): use guard(mutex)() and iio_for_each_active_channel()
-- ad4691_setup_triggered_buffer(): return -ENOMEM/-ENOENT directly instead of
-  wrapping in dev_err_probe(); fix fwnode_irq_get() check (irq <= 0 → irq < 0)
-- Add GENMASK defines for SPI offload 32-bit message layout; replace manual
-  bit-shifts with put_unaligned_be32() + FIELD_PREP()
-- Use DIV_ROUND_CLOSEST_ULL() instead of div64_u64()
-- ad4691_set_sampling_freq(): fix indentation; drop unnecessary else after return
-- ad4691_probe(): use PTR_ERR_OR_ZERO() for devm_spi_offload_get()
-- Link to v2: https://lore.kernel.org/r/20260310-ad4692-multichannel-sar-adc-driver-v2-0-d9bb8aeb5e17@analog.com
+ .../devicetree/bindings/iio/adc/adi,ad4691.yaml    | 180 +++++++++++++++++++++
+ MAINTAINERS                                        |   8 +
+ include/dt-bindings/iio/adc/adi,ad4691.h           |  13 ++
+ 3 files changed, 201 insertions(+)
 
-Changes in v2:
-- Drop adi,spi-mode DT property; operating mode now auto-detected
-  from pwms presence (CNV Clock Mode if present, Manual Mode if not)
-- Reduce from 5 operating modes to 2 (CNV Clock Mode, Manual Mode);
-  Autonomous, SPI Burst and CNV Burst modes removed as user-selectable
-  modes; Autonomous Mode is now the internal idle/single-shot state
-- Single-shot read_raw always uses internal oscillator (Autonomous
-  Mode), independent of the configured buffer mode
-- Replace bulk regulator API with devm_regulator_get_enable() and
-  devm_regulator_get_enable_read_voltage()
-- Use guard(mutex) and IIO_DEV_ACQUIRE_DIRECT_MODE scoped helpers
-- Replace enum + indexed chip_info array with named chip_info structs
-- Remove product_id field and hardware ID check from probe
-- Factor IIO_CHAN_INFO_RAW body into ad4691_single_shot_read() helper
-- Use fwnode_irq_get(dev_fwnode(dev), 0); drop interrupt-names from
-  DT binding
-- Use devm_clk_get_enabled(dev, NULL); drop clock-names from DT
-  binding
-- Use spi_write_then_read() for DMA-safe register writes
-- Use put_unaligned_be16() for SPI header construction
-- fsleep() instead of usleep_range() in single-shot path
-- storagebits 24->32 for manual-mode channels (uniform DMA layout)
-- Collect full scan into vals[16], single iio_push_to_buffers_with_ts()
-- Use pf->timestamp instead of iio_get_time_ns() in trigger handler
-- Remove IRQF_TRIGGER_FALLING (comes from firmware/DT)
-- Fix offload xfer array size ([17]: N channels + 1 state reset)
-- Drop third DT binding example per reviewer request
-- Link to v1: https://lore.kernel.org/r/20260305-ad4692-multichannel-sar-adc-driver-v1-0-336229a8dcc7@analog.com
+diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad4691.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad4691.yaml
+new file mode 100644
+index 000000000000..a9301e0ca851
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/adi,ad4691.yaml
+@@ -0,0 +1,180 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/iio/adc/adi,ad4691.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Analog Devices AD4691 Family Multichannel SAR ADCs
++
++maintainers:
++  - Radu Sabau <radu.sabau@analog.com>
++
++description: |
++  The AD4691 family are high-speed, low-power, multichannel successive
++  approximation register (SAR) analog-to-digital converters (ADCs) with
++  an SPI-compatible serial interface. The ADC supports CNV Clock Mode,
++  where an external PWM drives the CNV pin, and Manual Mode, where CNV
++  is directly tied to the SPI chip-select.
++
++  Datasheets:
++    * https://www.analog.com/en/products/ad4692.html
++    * https://www.analog.com/en/products/ad4691.html
++    * https://www.analog.com/en/products/ad4694.html
++    * https://www.analog.com/en/products/ad4693.html
++
++$ref: /schemas/spi/spi-peripheral-props.yaml#
++
++properties:
++  compatible:
++    enum:
++      - adi,ad4691
++      - adi,ad4692
++      - adi,ad4693
++      - adi,ad4694
++
++  reg:
++    maxItems: 1
++
++  spi-max-frequency:
++    maximum: 40000000
++
++  spi-cpol: true
++  spi-cpha: true
++
++  vio-supply:
++    description: I/O voltage supply (1.71V to 1.89V or VDD).
++
++  vref-supply:
++    description: External reference voltage supply (2.4V to 5.25V).
++
++  vrefin-supply:
++    description: Internal reference buffer input supply.
++
++  reset-gpios:
++    description: GPIO connected to the RESET pin (active high).
++    maxItems: 1
++
++  clocks:
++    description: Reference clock for PWM timing in CNV Clock Mode.
++    maxItems: 1
++
++  pwms:
++    description:
++      PWM connected to the CNV pin. When present, selects CNV Clock Mode where
++      the PWM drives the conversion rate. When absent, Manual Mode is used
++      (CNV tied to SPI CS).
++    maxItems: 1
++
++  pwm-names:
++    items:
++      - const: cnv
++
++  interrupts:
++    description:
++      Interrupt line connected to the ADC GP0 pin. GP0 must be physically
++      wired to an interrupt-capable input on the SoC. The ADC asserts GP0 as
++      DATA_READY at end of conversion, used both for non-offload CNV Clock Mode
++      operation and for SPI Engine offload triggering via '#trigger-source-cells'.
++      Not used in Manual Mode, where CNV is tied to SPI CS and no DATA_READY
++      signal is generated.
++    maxItems: 1
++
++  '#trigger-source-cells':
++    description: |
++      For SPI Engine offload operation, this node acts as a trigger source.
++      Two cells are required:
++        - First cell: Trigger event type (0 = BUSY, 1 = DATA_READY)
++        - Second cell: GPIO pin number (only 0 = GP0 is supported)
++
++      Macros are available in dt-bindings/iio/adc/adi,ad4691.h:
++        AD4691_TRIGGER_EVENT_BUSY, AD4691_TRIGGER_EVENT_DATA_READY
++        AD4691_TRIGGER_PIN_GP0
++    const: 2
++
++required:
++  - compatible
++  - reg
++  - vio-supply
++  - reset-gpios
++
++allOf:
++  # vref-supply and vrefin-supply are mutually exclusive, one is required
++  - oneOf:
++      - required:
++          - vref-supply
++      - required:
++          - vrefin-supply
++
++  # CNV Clock Mode requires a reference clock.
++  - if:
++      required:
++        - pwms
++    then:
++      required:
++        - clocks
++
++  # CNV Clock Mode (pwms present) without SPI offload requires a DRDY interrupt.
++  # Offload configurations expose '#trigger-source-cells' instead.
++  - if:
++      required:
++        - pwms
++      not:
++        required:
++          - '#trigger-source-cells'
++    then:
++      required:
++        - interrupts
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    /* Example: AD4692 in CNV Clock Mode (pwms present) with standard SPI */
++    spi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        adc@0 {
++            compatible = "adi,ad4692";
++            reg = <0>;
++            spi-cpol;
++            spi-cpha;
++            spi-max-frequency = <40000000>;
++
++            vio-supply = <&vio_supply>;
++            vref-supply = <&vref_5v>;
++
++            reset-gpios = <&gpio 10 GPIO_ACTIVE_HIGH>;
++
++            clocks = <&ref_clk>;
++
++            pwms = <&pwm_gen 0 0>;
++            pwm-names = "cnv";
++
++            interrupts = <12 4>;
++        };
++    };
++
++  - |
++    #include <dt-bindings/gpio/gpio.h>
++
++    /* Example: AD4692 in Manual Mode (no pwms) with SPI Engine offload */
++    spi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        adc@0 {
++            compatible = "adi,ad4692";
++            reg = <0>;
++            spi-cpol;
++            spi-cpha;
++            spi-max-frequency = <31250000>;
++
++            vio-supply = <&vio_supply>;
++            vrefin-supply = <&vrefin_supply>;
++
++            reset-gpios = <&gpio 10 GPIO_ACTIVE_HIGH>;
++        };
++    };
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 61bf550fd37c..9994d107d88d 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1484,6 +1484,14 @@ W:	https://ez.analog.com/linux-software-drivers
+ F:	Documentation/devicetree/bindings/iio/adc/adi,ad4170-4.yaml
+ F:	drivers/iio/adc/ad4170-4.c
+ 
++ANALOG DEVICES INC AD4691 DRIVER
++M:	Radu Sabau <radu.sabau@analog.com>
++L:	linux-iio@vger.kernel.org
++S:	Supported
++W:	https://ez.analog.com/linux-software-drivers
++F:	Documentation/devicetree/bindings/iio/adc/adi,ad4691.yaml
++F:	include/dt-bindings/iio/adc/adi,ad4691.h
++
+ ANALOG DEVICES INC AD4695 DRIVER
+ M:	Michael Hennerich <michael.hennerich@analog.com>
+ M:	Nuno Sá <nuno.sa@analog.com>
+diff --git a/include/dt-bindings/iio/adc/adi,ad4691.h b/include/dt-bindings/iio/adc/adi,ad4691.h
+new file mode 100644
+index 000000000000..294b03974f48
+--- /dev/null
++++ b/include/dt-bindings/iio/adc/adi,ad4691.h
+@@ -0,0 +1,13 @@
++/* SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause) */
++
++#ifndef _DT_BINDINGS_ADI_AD4691_H
++#define _DT_BINDINGS_ADI_AD4691_H
++
++/* Trigger event types */
++#define AD4691_TRIGGER_EVENT_BUSY	0
++#define AD4691_TRIGGER_EVENT_DATA_READY	1
++
++/* Trigger GPIO pin selection */
++#define AD4691_TRIGGER_PIN_GP0		0
++
++#endif /* _DT_BINDINGS_ADI_AD4691_H */
 
----
-Radu Sabau (4):
-      dt-bindings: iio: adc: add bindings for AD4691 family
-      iio: adc: ad4691: add initial driver for AD4691 family
-      iio: adc: ad4691: add triggered buffer support
-      iio: adc: ad4691: add SPI offload support
-
- .../devicetree/bindings/iio/adc/adi,ad4691.yaml    |  180 +++
- MAINTAINERS                                        |    9 +
- drivers/iio/adc/Kconfig                            |   14 +
- drivers/iio/adc/Makefile                           |    1 +
- drivers/iio/adc/ad4691.c                           | 1505 ++++++++++++++++++++
- include/dt-bindings/iio/adc/adi,ad4691.h           |   13 +
- 6 files changed, 1722 insertions(+)
----
-base-commit: 11439c4635edd669ae435eec308f4ab8a0804808
-change-id: 20260302-ad4692-multichannel-sar-adc-driver-78e4d44d24b2
-
-Best regards,
 -- 
-Radu Sabau <radu.sabau@analog.com>
+2.43.0
 
 
 
