@@ -1,170 +1,194 @@
-Return-Path: <linux-pwm+bounces-8309-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8310-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ODOJEAk9vWkH8AIAu9opvQ
-	(envelope-from <linux-pwm+bounces-8309-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Fri, 20 Mar 2026 13:26:49 +0100
+	id GEXGGPlTvWlr8gIAu9opvQ
+	(envelope-from <linux-pwm+bounces-8310-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Fri, 20 Mar 2026 15:04:41 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4C1282DA2CF
-	for <lists+linux-pwm@lfdr.de>; Fri, 20 Mar 2026 13:26:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTPS id 5E6B52DB89B
+	for <lists+linux-pwm@lfdr.de>; Fri, 20 Mar 2026 15:04:40 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id A90B2301EBF9
-	for <lists+linux-pwm@lfdr.de>; Fri, 20 Mar 2026 12:26:35 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 2C48330216E3
+	for <lists+linux-pwm@lfdr.de>; Fri, 20 Mar 2026 14:01:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04D413ACEFE;
-	Fri, 20 Mar 2026 12:26:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e2Th899H"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A47C3C13E1;
+	Fri, 20 Mar 2026 14:01:09 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f170.google.com (mail-oi1-f170.google.com [209.85.167.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D283F3AC0D6;
-	Fri, 20 Mar 2026 12:26:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 398C53C061E
+	for <linux-pwm@vger.kernel.org>; Fri, 20 Mar 2026 14:01:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774009593; cv=none; b=u6q6zu7MBDI1SoP63fCaMxDM77CMdZTKY6BSnx2CXOK14mxOpru11NgvSdBawySVSADiIl08U4yfULgDLGz48GjFFnsmmTsX/X1QweJLyLcpsZRH3f2sIossSU0Le5fgus/tE81Z4cJ51hQ6gyogW2+g21HafTrj6KpBPxRwRcE=
+	t=1774015268; cv=none; b=cXhZLnV5Bq1TlofIkmeiPLPuIbQdhfj86n1gYAaWxub3ZKgD1zyUvrgftbdvLx8RsDBPYeWedHHn0m6m0684EEVmhUKOC0Dq2gJv5wUjlUbkhkdUNY2pA6S7icNcrpdGZUPUVX1eMaXqCoxb0fs+1Bf5ioYe4savdbjNmpp1yXg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774009593; c=relaxed/simple;
-	bh=jXcv2Q8Am/1SMQ2s+Xp0fxNypJnSSzleE88TmjASg0k=;
-	h=Date:Content-Type:MIME-Version:From:Cc:To:In-Reply-To:References:
-	 Message-Id:Subject; b=UOymc6yn35WMUSXewwc1GnOxltcp0VTu7jEiVBVDaILl/LCoBQXauTCa/SY3KXhEE8yykHnxRq6rw3VZniCyJ8Jf/QWnh/n3iPu13pMVT72gJQ2pabXXWSAgLiv93GiW9/GOEr8nLjt1vKPTSo40M3G1UAt58pSouojZrS+BFH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e2Th899H; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64B27C2BC9E;
-	Fri, 20 Mar 2026 12:26:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774009593;
-	bh=jXcv2Q8Am/1SMQ2s+Xp0fxNypJnSSzleE88TmjASg0k=;
-	h=Date:From:Cc:To:In-Reply-To:References:Subject:From;
-	b=e2Th899HS6X6sMPqmj0y9cPTOq1+ApmVoSWjGf4o5VYHEwCvk3Mo8gnLtX7DgIh1v
-	 b573/r1Zivh9xUTcrZJ/EevSYGq7B+O637knEHr+2vKQhDCkFjctmFYQjicuQJVuVg
-	 8w+vn5hsr2ifloAmK4uVvlzhzjw52xgvJeuNHlzgF4mxWUFhWuLmkDrSHFWZ6oQFaa
-	 YjTi8hvVeW/sApU31OLvfBp0/Sv7RX77Ri7HO2tzw4h5VEJias5s+wbIZWBjn4EzEz
-	 E/uHPQyUPGeaEKXQV7xTbUCPOKQbPubzApsiZGWV0agRrlw7wAZ2j+qTrNcHrSoz2a
-	 YesLKAdRTX6rg==
-Date: Fri, 20 Mar 2026 07:26:32 -0500
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+	s=arc-20240116; t=1774015268; c=relaxed/simple;
+	bh=Nx8bQBs95SJZiGV9sxDUOjb6cqnHHMShwIEg031kToo=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Y6uvxxE8b7CEpQiug4e4mT9jo6Hu98Vt9hKOITlhek31EtWcJN46q2DB/cE1uwlRzCZ+VNDYaWjLBIH7UoG295X0C/a3WuptSk7VIXzeOLKOObXnaD8zVT60utKAH79uPQL2vAzQx659kcx44eWQG43rHf3pHexKdI9y9t7yUng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.167.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=gompa.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-oi1-f170.google.com with SMTP id 5614622812f47-467d9ca391cso739164b6e.3
+        for <linux-pwm@vger.kernel.org>; Fri, 20 Mar 2026 07:01:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774015265; x=1774620065;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=txsLO2jkdNhN6oBkuArfXNgiBSygoSMNA3GUMB3p1q0=;
+        b=RZBcFvs2iUPvzFDbg0JIFVIT3vtsUyPoQ6NvPjy4bO2trUybrmyptEA9Aw6uX76pND
+         yy+d67O0wmxZ8ZRhTYEk+ZETDzJLTXgXC9tD3OsOhlVCXRtvNudosRLOenQFGCjkf962
+         BZDzSGWqgqniXT95Rc8nvuRPoKRVO5vCtpAerVVrjrzI51hTPHvBBPvVkJgTxwk94XYi
+         DOCH06CLB8hBZ50UMSrp6H7if955RKWEd5Lvb+3lHuI+TSqgagiBrxoYv+/6WTuxoGpl
+         Gr+cGuCQoKG5F5HDpCoh79qqiLfPRP+YVp1mFlXLn52ukVX5xE39e/2Obl4+Ox/SoeVW
+         zcpw==
+X-Forwarded-Encrypted: i=1; AJvYcCUrHwp3D90bhToRJeoTBuGruLRIPkujbdxJYPr0UPuZX9giEDYlDs+3beYUK+W7Tci9XYBwPxpcwfE=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyUzjpG1pvZwHOkWrb88C1FAfH7VgMT2ZypPIYmoMlsdSiTgZ1U
+	u8uuVNxGJP9XG7XYYvSe9q9lRhbKgOcV9fI40jCTKony88Wh/IqlNHuLx8yHEgZD
+X-Gm-Gg: ATEYQzw0e4bzRpOzLQ61QTfw84WO8iQRY8eHxa2u12xP2E6J+BeLiwp5tU7rMZg8ZOb
+	suaih5JytHiXU6EaxV8LAr78DB6FWZLudgu8SZ/wEpWLSqI4rwpuFTv+Nksx9aIeL7ZZYN+6iRf
+	45Mzag/lj3/EgUiak0uye1ngcv3kGur8wfuY/b4EXqX/+HAzyMYnDC+EfOEftvzx+vkNxugSuyV
+	grGzW5FvVGHH7mBQiqOeol+fIVFz5ZbptIvuP0idTkZJalDGN/mqhgDo7f34MI4JGRBBJ1RUgk9
+	V7txN9ujf8+fshz1r/da+FeHNFOxyv2ak42nDCJw7OV8POnHxvGV0pHSy2b8ESOSfAOJBbAnxbs
+	zVYAq3r1FQxWPhuVy7KAwYasXlSSPSxfka4W6IaCGMsbAg7PursQi6odrHUXQm3cmF3NbCLAdxF
+	kzYbJxXOiEOLA4At5/KabFO50t6Vfe+vlTNbgeNsPFWH7UM9A/SkxiG1OvYqTNImzR8tFL4T79J
+	WdtZaAoDJ8Y1rxArPne65kpP0tyVd1nfKOT5VDtXq9Rcoy5lKKC9QxN5ZCdOL+pJfcha6Vn7A==
+X-Received: by 2002:a05:6808:6702:b0:467:ca8:c396 with SMTP id 5614622812f47-467e5d34590mr1805095b6e.9.1774015263974;
+        Fri, 20 Mar 2026 07:01:03 -0700 (PDT)
+Received: from mail-ot1-f46.google.com (mail-ot1-f46.google.com. [209.85.210.46])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-467e7a96c3asm1432904b6e.0.2026.03.20.07.01.03
+        for <linux-pwm@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 20 Mar 2026 07:01:03 -0700 (PDT)
+Received: by mail-ot1-f46.google.com with SMTP id 46e09a7af769-7d7851e2cc4so1880854a34.3
+        for <linux-pwm@vger.kernel.org>; Fri, 20 Mar 2026 07:01:03 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCWAbtKcmHINyVnbH85GRDlO82qHfNmXLA+oIHVgnKgfNNcNcluTEhgqUz50ZJiE0qWsoWzA+OsILcg=@vger.kernel.org
+X-Received: by 2002:a05:6830:67c5:b0:7d7:d15a:ce8e with SMTP id
+ 46e09a7af769-7d7eb04feffmr2015751a34.32.1774015263260; Fri, 20 Mar 2026
+ 07:01:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-From: "Rob Herring (Arm)" <robh@kernel.org>
-Cc: Andy Shevchenko <andy@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- linux-iio@vger.kernel.org, linux-gpio@vger.kernel.org, 
- Mark Brown <broonie@kernel.org>, devicetree@vger.kernel.org, 
- linux-pwm@vger.kernel.org, David Lechner <dlechner@baylibre.com>, 
- Krzysztof Kozlowski <krzk+dt@kernel.org>, linux-kernel@vger.kernel.org, 
- Jonathan Cameron <jic23@kernel.org>, Linus Walleij <linusw@kernel.org>, 
- Michael Hennerich <Michael.Hennerich@analog.com>, 
- Bartosz Golaszewski <brgl@kernel.org>, 
- Philipp Zabel <p.zabel@pengutronix.de>, Conor Dooley <conor+dt@kernel.org>, 
- =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
- Liam Girdwood <lgirdwood@gmail.com>
-To: Radu Sabau <radu.sabau@analog.com>
-In-Reply-To: <20260320-ad4692-multichannel-sar-adc-driver-v4-1-052c1050507a@analog.com>
-References: <20260320-ad4692-multichannel-sar-adc-driver-v4-0-052c1050507a@analog.com>
- <20260320-ad4692-multichannel-sar-adc-driver-v4-1-052c1050507a@analog.com>
-Message-Id: <177400959255.943880.4128073323297765287.robh@kernel.org>
-Subject: Re: [PATCH v4 1/4] dt-bindings: iio: adc: add AD4691 family
-X-Spamd-Result: default: False [0.34 / 15.00];
+References: <20260320-apple-m3-initial-devicetrees-v1-0-5842e1e393a8@jannau.net>
+In-Reply-To: <20260320-apple-m3-initial-devicetrees-v1-0-5842e1e393a8@jannau.net>
+From: Neal Gompa <neal@gompa.dev>
+Date: Fri, 20 Mar 2026 10:00:26 -0400
+X-Gmail-Original-Message-ID: <CAEg-Je9b1VujkHCVdXowQs+BXA0+DL=6sdoP0wuSYpau4T31XQ@mail.gmail.com>
+X-Gm-Features: AaiRm53Q86Nf9dVOSTKn0cYEE4xmDvp3jUYoCfYFj-SX9hFNk_weUYFVfwHr6Ok
+Message-ID: <CAEg-Je9b1VujkHCVdXowQs+BXA0+DL=6sdoP0wuSYpau4T31XQ@mail.gmail.com>
+Subject: Re: [PATCH 0/9] Initial Apple silicon M3 device trees and dt-bindings
+To: Janne Grunau <j@jannau.net>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+	Conor Dooley <conor+dt@kernel.org>, Lorenzo Pieralisi <lpieralisi@kernel.org>, 
+	Sven Peter <sven@kernel.org>, Wim Van Sebroeck <wim@linux-watchdog.org>, 
+	Guenter Roeck <linux@roeck-us.net>, Linus Walleij <linusw@kernel.org>, 
+	Mark Kettenis <kettenis@openbsd.org>, Andi Shyti <andi.shyti@kernel.org>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Sasha Finkelstein <fnkl.kernel@gmail.com>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, asahi@lists.linux.dev, 
+	linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org, 
+	linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-pwm@vger.kernel.org, Michael Reeves <michael.reeves077@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [0.04 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[20];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,metafoo.de,vger.kernel.org,baylibre.com,analog.com,pengutronix.de,gmail.com];
-	TAGGED_FROM(0.00)[bounces-8309-lists,linux-pwm=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8310-lists,linux-pwm=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	DMARC_NA(0.00)[gompa.dev];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,linux-watchdog.org,roeck-us.net,openbsd.org,gmail.com,vger.kernel.org,lists.linux.dev,lists.infradead.org];
+	RCPT_COUNT_TWELVE(0.00)[22];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-0.859];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[robh@kernel.org,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-pwm,dt];
 	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,analog.com:email,devicetree.org:url]
-X-Rspamd-Queue-Id: 4C1282DA2CF
+	RCVD_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[neal@gompa.dev,linux-pwm@vger.kernel.org];
+	NEURAL_SPAM(0.00)[0.595];
+	R_DKIM_NA(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,gompa.dev:email,jannau.net:email]
+X-Rspamd-Queue-Id: 5E6B52DB89B
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-
-On Fri, 20 Mar 2026 13:03:55 +0200, Radu Sabau wrote:
-> Add DT bindings for the Analog Devices AD4691 family of multichannel
-> SAR ADCs (AD4691, AD4692, AD4693, AD4694).
-> 
-> The binding describes the hardware connections:
-> 
-> - Power domains: avdd-supply (required), vio-supply, ref-supply or
->   refin-supply (external reference; the REFIN path enables the
->   internal reference buffer), and an optional ldo-in-supply, that if
->   absent, means the on-chip internal LDO will be used.
-> 
-> - Optional PWM on the CNV pin selects CNV Burst Mode; when absent,
->   Manual Mode is assumed with CNV tied to SPI CS.
-> 
-> - An optional reset GPIO (reset-gpios) for hardware reset.
-> 
-> - Up to four GP pins (gp0..gp3) usable as interrupt sources,
->   identified in firmware via interrupt-names "gp0".."gp3".
-> 
-> - gpio-controller with #gpio-cells = <2> for GP pin GPIO usage.
-> 
-> - #trigger-source-cells = <1>: one cell selecting the GP pin number
->   (0-3) used as the SPI offload trigger source.
-> 
-> Two binding examples are provided: CNV Burst Mode with SPI offload
-> (DMA data acquisition driven by DATA_READY on a GP pin), and Manual
-> Mode for CPU-driven triggered-buffer or single-shot capture.
-> 
-> Signed-off-by: Radu Sabau <radu.sabau@analog.com>
+On Fri, Mar 20, 2026 at 8:23=E2=80=AFAM Janne Grunau <j@jannau.net> wrote:
+>
+> Hej,
+>
+> This series adds initial device trees for M3 Apple silicon devices. The
+> device trees contain only a minimal set of hardware not going much
+> beyond the minimum required for booting kernel and initramfs and
+> verify via serial console that the hardware and drivers work.
+> The hardware with the exception of the interrupt controller is
+> compatible with the M1 and M2 SoCs and the existing drivers.
+> Changes for the interrupt controller were sent separately in [1] and are
+> picked up and in linux-next. The device trees pass make dtbs_check with
+> the apple,aic2 dt-bindings change from that series.
+>
+> Link: https://lore.kernel.org/asahi/20260223-irq-apple-aic3-v3-0-2b732807=
+6b8d@jannau.net/ [1]
+>
+> Signed-off-by: Janne Grunau <j@jannau.net>
 > ---
->  .../devicetree/bindings/iio/adc/adi,ad4691.yaml    | 173 +++++++++++++++++++++
->  MAINTAINERS                                        |   7 +
->  2 files changed, 180 insertions(+)
-> 
+> Janne Grunau (9):
+>       dt-bindings: arm: cpus: Add Apple M3 CPU core compatibles
+>       dt-bindings: arm: apple: apple,pmgr: Add t8122 compatible
+>       dt-bindings: power: apple,pmgr-pwrstate: Add t8122 compatible
+>       dt-bindings: watchdog: apple,wdt: Add t8122 compatible
+>       dt-bindings: pinctrl: apple,pinctrl: Add t8122 compatible
+>       dt-bindings: i2c: apple,i2c: Add t8122 compatible
+>       dt-bindings: pwm: apple,s5l-fpwm: Add t8122 compatible
+>       dt-bindings: arm: apple: Add M3 based devices
+>       arm64: dts: apple: Initial t8122 (M3) device trees
+>
+>  Documentation/devicetree/bindings/arm/apple.yaml   |   18 +
+>  .../devicetree/bindings/arm/apple/apple,pmgr.yaml  |    4 +-
+>  Documentation/devicetree/bindings/arm/cpus.yaml    |    2 +
+>  .../devicetree/bindings/i2c/apple,i2c.yaml         |    4 +-
+>  .../devicetree/bindings/pinctrl/apple,pinctrl.yaml |    4 +-
+>  .../bindings/power/apple,pmgr-pwrstate.yaml        |    4 +-
+>  .../devicetree/bindings/pwm/apple,s5l-fpwm.yaml    |    1 +
+>  .../devicetree/bindings/watchdog/apple,wdt.yaml    |    4 +-
+>  arch/arm64/boot/dts/apple/Makefile                 |    5 +
+>  arch/arm64/boot/dts/apple/t8122-j433.dts           |   19 +
+>  arch/arm64/boot/dts/apple/t8122-j434.dts           |   19 +
+>  arch/arm64/boot/dts/apple/t8122-j504.dts           |   37 +
+>  arch/arm64/boot/dts/apple/t8122-j613.dts           |   35 +
+>  arch/arm64/boot/dts/apple/t8122-j615.dts           |   35 +
+>  arch/arm64/boot/dts/apple/t8122-jxxx.dtsi          |   48 +
+>  arch/arm64/boot/dts/apple/t8122-pmgr.dtsi          | 1149 ++++++++++++++=
+++++++
+>  arch/arm64/boot/dts/apple/t8122-usbpd-i2c.dtsi     |   32 +
+>  arch/arm64/boot/dts/apple/t8122.dtsi               |  444 ++++++++
+>  18 files changed, 1859 insertions(+), 5 deletions(-)
+> ---
+> base-commit: 6de23f81a5e08be8fbf5e8d7e9febc72a5b5f27f
+> change-id: 20260319-apple-m3-initial-devicetrees-5c546ad977a2
+>
 
-My bot found errors running 'make dt_binding_check' on your patch:
+LGTM.
 
-yamllint warnings/errors:
+Reviewed-by: Neal Gompa <neal@gompa.dev>
 
-dtschema/dtc warnings/errors:
-/builds/robherring/dt-review-ci/linux/Documentation/devicetree/bindings/iio/adc/adi,ad4691.yaml: properties:interrupt-names: {'description': 'Names of the interrupt lines, matching the GP pin names.', 'minItems': 1, 'maxItems': 4, 'items': [{'const': 'gp0'}, {'const': 'gp1'}, {'const': 'gp2'}, {'const': 'gp3'}]} should not be valid under {'required': ['maxItems']}
-	hint: "maxItems" is not needed with an "items" list
-	from schema $id: http://devicetree.org/meta-schemas/items.yaml
-
-doc reference errors (make refcheckdocs):
-
-See https://patchwork.kernel.org/project/devicetree/patch/20260320-ad4692-multichannel-sar-adc-driver-v4-1-052c1050507a@analog.com
-
-The base for the series is generally the latest rc1. A different dependency
-should be noted in *this* patch.
-
-If you already ran 'make dt_binding_check' and didn't see the above
-error(s), then make sure 'yamllint' is installed and dt-schema is up to
-date:
-
-pip3 install dtschema --upgrade
-
-Please check and re-submit after running the above command yourself. Note
-that DT_SCHEMA_FILES can be set to your schema file to speed up checking
-your schema. However, it must be unset to test all examples with your schema.
-
+--=20
+=E7=9C=9F=E5=AE=9F=E3=81=AF=E3=81=84=E3=81=A4=E3=82=82=E4=B8=80=E3=81=A4=EF=
+=BC=81/ Always, there's only one truth!
 
