@@ -1,51 +1,51 @@
-Return-Path: <linux-pwm+bounces-8341-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8342-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kCqyH0XrwGl0OgQAu9opvQ
-	(envelope-from <linux-pwm+bounces-8341-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Mar 2026 08:27:01 +0100
+	id IATPJe3qwGl6OQQAu9opvQ
+	(envelope-from <linux-pwm+bounces-8342-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Mar 2026 08:25:33 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 21C5C2ED90A
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Mar 2026 08:27:01 +0100 (CET)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 666612ED859
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Mar 2026 08:25:32 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 88C20304702C
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Mar 2026 07:24:33 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 040733004D98
+	for <lists+linux-pwm@lfdr.de>; Mon, 23 Mar 2026 07:24:54 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8A8035F172;
-	Mon, 23 Mar 2026 07:24:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A21935DA7B;
+	Mon, 23 Mar 2026 07:24:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fDFpeCQV"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u6SMIQGE"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C57B33D6ED;
-	Mon, 23 Mar 2026 07:24:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C91DD35E95C;
+	Mon, 23 Mar 2026 07:24:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774250671; cv=none; b=SsBx6LRC/W8Of/q5sGuRE1PZSq+gjXtbOqe0W82Y9j+glZoSBXjn6Rzqynbtm7eLoJL/V4r+b7fgFPjKl28ULSuB+NLh7Teq/uuvksHEdrq1qBzNkmaE6NjkegcbFqYu7lQ2SLuyK86FwaDehBEdELFYLYz/X++b41V0tjNkb2s=
+	t=1774250692; cv=none; b=XIfjl81Yss002LlewJ7t8rF3YXliNFbpKV0AeHvwcff6ep704zAlHi3RP1kBbA9sDsvsKBPJLfJE5cDBO0BqnxTZhExbDaNw48yjzKWKVt6KiKLJOVm8Rbu4Zm1ULuwGJ/XZS3ke23SciMVefuc36Cb4f4Kr0QQ9GB+rZTbtato=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774250671; c=relaxed/simple;
-	bh=1wX3cCzOotX5HYWcm0z9dTm/RgsIvPlTofCpo/Ap+2g=;
+	s=arc-20240116; t=1774250692; c=relaxed/simple;
+	bh=NjNq7kW0nQDF61cbcfgcT5KIPc4deicQ9CCz8WFnpfM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZEkmKYz/vxJB3occ1gRnhkS1vn1S6TIIwo6hwV34HiPP5UD3aZr060Rj6w+tNu40wPLM/TJfa9ieD3H2qh6os4gQjWozTzVHEylJwG3if8fDSGv4EJ/cd14AWf8jMDnnn/nUII7raPHKfosBTMSMjld+aQ+z9Uz8oScmXPXWIVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fDFpeCQV; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5537AC4CEF7;
-	Mon, 23 Mar 2026 07:24:29 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=TPkLKOgDVpLGzw40YZmuWOetUo3or+1hCAlsj0JqbD4EIO7KEjJLh9Hr4p99nhEzQUOMVlgOetkwZZQocegJKxV7qFGxU8pZmzQY/vsZvSUb4Iqjy34a4EtuPrXjVFPZWInl4S7JLW7jtxEI7Mfi6Kogo0zEVKsZeAo1GxHJaJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u6SMIQGE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B921C4CEF7;
+	Mon, 23 Mar 2026 07:24:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774250671;
-	bh=1wX3cCzOotX5HYWcm0z9dTm/RgsIvPlTofCpo/Ap+2g=;
+	s=k20201202; t=1774250691;
+	bh=NjNq7kW0nQDF61cbcfgcT5KIPc4deicQ9CCz8WFnpfM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=fDFpeCQVfTYriJwYms03+m8ztBoMKjYc2BHeLYIpcsKhhXP27fkoyXVFAHhj1gqfM
-	 fHvMC87gguigzzlZVOrePfySIseHsttYBT4Yo+bYPoXRc3D9XEgu+2RQrXzfx3/C6W
-	 tuTR4nD+WbUsXt4ytkRXcP49Lsv8rZ/LzyamMEoqEHq/gTLGNR1AE5Wp7jc7sLmJrM
-	 zWmIHcJvvRjD0MiCh3SlP+neOhgFgUfq8vRjgZe8+TCg8r+dct2lYRm9vdEKiOiGPB
-	 7G9AjDC2Qa9BVUwi9htrKHo3JrSr5wtUVtrXmi+yccCcR8VS4Ml8UwJgh2rAj6g+7s
-	 0H0ulPahWs05A==
-Message-ID: <de5e6159-ae89-4b8f-948a-678cea9211fa@kernel.org>
-Date: Mon, 23 Mar 2026 08:24:27 +0100
+	b=u6SMIQGE8u4sB1Orsg3zFkXOlDCHJG9DrX4SLapYuwq6s5QeVfPylaOrPhvblykrH
+	 P+4taE+NUu9mjqbGOyQItU2pIdm4auQoqIGFLhPtGGoXNhOmZEx+kyTJsJUy1g0G9l
+	 OmYTX7Y3AQkKxA7Nsq6aQQtBBVuhvCYZUzV+TSuDxSKS0j7fzOEl0V/WQdfOAkUZHC
+	 Ry65APiTpzisuhW4gDgn3YTFXerQzUyhub187jHIlDXQoy4+V6Cw+94XDIm7aaxyWC
+	 FmQzmyqD0/mqqmmrNHHg5+WI99ak9lE64ROAl3LhV7N4v06m5RH39c/3NQe/1CvW0H
+	 KRXDYvKD05eKQ==
+Message-ID: <26c43bb4-d6d3-41ff-926a-597ee1392e83@kernel.org>
+Date: Mon, 23 Mar 2026 08:24:47 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -53,7 +53,7 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH 5/5] pwm: tegra: Add support for Tegra264
+Subject: Re: [PATCH 0/5] Tegra264 PWM support
 To: Mikko Perttunen <mperttunen@nvidia.com>,
  Thierry Reding <thierry.reding@gmail.com>,
  =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
@@ -61,7 +61,6 @@ To: Mikko Perttunen <mperttunen@nvidia.com>,
 Cc: linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org,
  linux-kernel@vger.kernel.org, Yi-Wei Wang <yiweiw@nvidia.com>
 References: <20260323-t264-pwm-v1-0-4c4ff743050f@nvidia.com>
- <20260323-t264-pwm-v1-5-4c4ff743050f@nvidia.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -107,18 +106,18 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20260323-t264-pwm-v1-5-4c4ff743050f@nvidia.com>
+In-Reply-To: <20260323-t264-pwm-v1-0-4c4ff743050f@nvidia.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8341-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8342-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FREEMAIL_TO(0.00)[nvidia.com,gmail.com,kernel.org];
@@ -130,32 +129,33 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-pwm@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-pwm];
 	RCPT_COUNT_SEVEN(0.00)[8];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 21C5C2ED90A
+X-Rspamd-Queue-Id: 666612ED859
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 On 23/03/2026 03:36, Mikko Perttunen wrote:
-> +
->  static const struct of_device_id tegra_pwm_of_match[] = {
->  	{ .compatible = "nvidia,tegra20-pwm", .data = &tegra20_pwm_soc },
->  	{ .compatible = "nvidia,tegra186-pwm", .data = &tegra186_pwm_soc },
->  	{ .compatible = "nvidia,tegra194-pwm", .data = &tegra186_pwm_soc },
-> +	{ .compatible = "nvidia,tegra264-pwm", .data = &tegra264_pwm_soc },
+> Hello,
+> 
+> this adds support for the PWM controller on Tegra264. The controller
+> is similar to previous generations, but the register fields are
+> widened, the depth is made configurable, and the enable bit moves
+> to a different spot.
+> 
+> This series adds only basic support with fixed depth -- configurable
+> depth will come later.
+> 
+> The series uses the nvidia,tegra264-pwm compatible string. Bindings
+> for this are added in Thierry's series
+> 
+>   https://lore.kernel.org/linux-tegra/20260320234056.2579010-1-thierry.reding@kernel.org/
 
-Undocumented ABI.
-
-Please run scripts/checkpatch.pl on the patches and fix reported
-warnings. After that, run also 'scripts/checkpatch.pl --strict' on the
-patches and (probably) fix more warnings. Some warnings can be ignored,
-especially from --strict run, but the code here looks like it needs a
-fix. Feel free to get in touch if the warning is not clear.
-
+NAK, that's not how you send driver code.
 
 Best regards,
 Krzysztof
