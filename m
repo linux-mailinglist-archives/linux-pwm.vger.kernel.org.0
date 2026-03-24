@@ -1,257 +1,221 @@
-Return-Path: <linux-pwm+bounces-8346-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8347-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2HNIFtR+wWknTgQAu9opvQ
-	(envelope-from <linux-pwm+bounces-8346-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Mar 2026 18:56:36 +0100
+	id iD16KR4XwmkHZgQAu9opvQ
+	(envelope-from <linux-pwm+bounces-8347-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Tue, 24 Mar 2026 05:46:22 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id EAE312FAAA4
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Mar 2026 18:56:35 +0100 (CET)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 21D303020D8
+	for <lists+linux-pwm@lfdr.de>; Tue, 24 Mar 2026 05:46:22 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4F3213221BA8
-	for <lists+linux-pwm@lfdr.de>; Mon, 23 Mar 2026 16:27:56 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id E1802302867B
+	for <lists+linux-pwm@lfdr.de>; Tue, 24 Mar 2026 04:46:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1609F3BD634;
-	Mon, 23 Mar 2026 16:27:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 584921DF261;
+	Tue, 24 Mar 2026 04:46:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b="TXowK2Ek"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="PrTvJnal"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtpout-04.galae.net (smtpout-04.galae.net [185.171.202.116])
+Received: from CO1PR03CU002.outbound.protection.outlook.com (mail-westus2azon11010003.outbound.protection.outlook.com [52.101.46.3])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 522613B775A
-	for <linux-pwm@vger.kernel.org>; Mon, 23 Mar 2026 16:27:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.171.202.116
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774283238; cv=none; b=h3HRApXLdgxNdetm/psymz2Ky+D8UEg5AH2BwZL7yqYJScT6g1nLP7NVMibxiz7dnnomZcECl2R+iFFy5o9qX3jLuCLrEqtwoBYtmJeoRaqhwLqZB9+OxulsM/CjcR3mM1AKbkKC2606g+gGY8dAIeVynxrb2hlaaRzokkcIalc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774283238; c=relaxed/simple;
-	bh=negpr9ymqdcFH8ARZ0fVPTcU/bLZrgK4U2z5BTwZzQI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HdzZXuPdXvU7xcpOfADzuBjTiGeDmTyvU45u3oT7wj1tz7/vJEVBGKpA8/mAxbvuh/skha+hPpDJOu/WpSIw/esm0Mu2MpE0/ws4AD3KdSkG0qJO9GTgwzqfXLD26BCYkvkadv0C7dI3G/OCzZ+1mLROF82dGhPPeHxtq2AWyLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com; spf=pass smtp.mailfrom=bootlin.com; dkim=pass (2048-bit key) header.d=bootlin.com header.i=@bootlin.com header.b=TXowK2Ek; arc=none smtp.client-ip=185.171.202.116
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bootlin.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bootlin.com
-Received: from smtpout-01.galae.net (smtpout-01.galae.net [212.83.139.233])
-	by smtpout-04.galae.net (Postfix) with ESMTPS id 9CFEAC58081;
-	Mon, 23 Mar 2026 16:27:40 +0000 (UTC)
-Received: from mail.galae.net (mail.galae.net [212.83.136.155])
-	by smtpout-01.galae.net (Postfix) with ESMTPS id B55FA5FEF6;
-	Mon, 23 Mar 2026 16:27:13 +0000 (UTC)
-Received: from [127.0.0.1] (localhost [127.0.0.1]) by localhost (Mailerdaemon) with ESMTPSA id 9E6CE10450D30;
-	Mon, 23 Mar 2026 17:27:08 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bootlin.com; s=dkim;
-	t=1774283232; h=from:subject:date:message-id:to:cc:mime-version:content-type:
-	 content-transfer-encoding:content-language:in-reply-to:references;
-	bh=rNB46l86KhEE2SPNXttKfCE0ClL7ezUhxWzUZSM4r9U=;
-	b=TXowK2EkL0zs85jOe3inW1IcVG7tXjhR3+1Xx8pd1rwRB0Pvka2AW6OGjwybZLXNw4YxLr
-	2kfDMnsPnl06UmYne/mLGaxTNDdIo/D/QxDsDMuR3mrBm9vhAF3nNIS3dlOjN34a4wLFg5
-	QItJ4JvuZ7k2USxBHlnPEV9Ac8+BTYAsVaAqHEJOQ0zeErFQF3+Rk+CWBZYbzZ2Ucaypyi
-	d0vlXkSTYbmlPaGd0Qe8GsyRsjuluHjsvLlnJoOaFXHCsPjHv1340FR9Nv8zp1s1mTDE1f
-	zc7wxTzTjYtHknt4bpQ2BbllBHvwnE2iti57YAJeXR+zOknZaFI1eR4JsiFjtg==
-Message-ID: <b47801f9-3828-4c68-992c-e85373576f3d@bootlin.com>
-Date: Mon, 23 Mar 2026 17:27:07 +0100
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24DD3E573;
+	Tue, 24 Mar 2026 04:46:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.46.3
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774327579; cv=fail; b=ned8f2q1RNYKd9vBM0Y6uJv3HIn4UDYrkjWs+/pdeh0Qsdw3IqdsI6LVwGYMgqHKhYhT1gTuEVOQPsegLPEGHhPgO41Wj3H3gXpR/ZYa1iIcaej2peV/0sCoFZHO0wBZtckaIaqbEQm55PmyqquexlUFnpaXFa8Om813gAy3fAM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774327579; c=relaxed/simple;
+	bh=UifJCAcALMB5HPM0j/rIl4jvLzZy9xAj3pPRvMsKV/0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=kj8gTMKZxBCbJTw594uWRwsDx43MhOoIQ2nr6R7N0mkV8Dips8juGajsueKknBHhDCWH0cjFDU5D5tkGWkXZgQV5TKH8tVLEy/whn28miSPjIFtYaRkwymnOcfAJs9hECmiiEHGbKbMdB7ntGtMvL4XhuhuBx7arqmn+x3TiWEc=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=PrTvJnal; arc=fail smtp.client-ip=52.101.46.3
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
+Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=aUCvZK6R7/sewOOtpfe7+2NR8I7utQpCxJ2lOuQVAOZuZT99JEe0M2PfTbjtj45g4oZ89XFq1JcZtP7pepCjuxpupNt2rz8Y6P1RMOV3CDvzhezZNgpAIObSwH6AKPoA+SvPnX2k3AAx2ZUXhCWeamCvkQ6BlIRd4mmrrr5xP3RkdMDiJMLaXGPh3UZOh9f3FuwhVrk1r6zewLe6V0oxEDWjiA0i5zeHRpqr0Mxt0VHrM9OliGq5TDt54SeIk+puu5x6orgHPSc0h3FbtLyYdtuzBQ7iPSZXJywvtpvWdW+gqrPAeFPhTRcWU6dCqaLDmafhFmVdfxwAFIAcSXl/Rw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=Ikgybo9w2gKdvTxAq+CVxK1Lfj5awGkm/fQqQI2az+4=;
+ b=NEW5rQ69+kappaBpcJnIzD+jwG2xbA5pO+ZR6rhs7bkpAhlWoszjA/2jmeVDMJqRIFrBsZnqusgLxkOPPulbu/6mpScRs328/WgUSxTMS8nrDF93ZdLQLqVWdfK/56VJc83WqtaDA2cqcVmpwIm71K1mVq5CQio+PhmR4WX+UW+cWkBFR//EhuEeGFYS2UbSqIolEg5mJ/4/BW902RqObYR3Gh7WitxJgJ0nrlvhEs/UnA4xrSr2wUCCWuuKaikvFFAjp4Pj6gtLHDjOU4ZBu8QRb5yiZAt0YsC5JtjK85EpdXXSYqObKioknjyBeyGbMHlT1qRQoKy9RRMUFNSUlQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ikgybo9w2gKdvTxAq+CVxK1Lfj5awGkm/fQqQI2az+4=;
+ b=PrTvJnalOZa7xrrqavJ9YaDwpjRCQiWjwjRO4+9DrMsIRbe9sqbXJR32B9qra9rfZylnHy66fg/R8fc6MrHpfamves4qcDj6Ne5yek9cBb/HN/JdGDZbckx8VQmeh1OaLV6LjUN1p7uw2d03UdQSAzgNZjCuh4lNw2bjpHgT7+lU6+5SfR1IrYT+vjkBMDrLHRHsAjFAfjt6cCHinCIg0LcU4apzjcd+WvteXYCnaOjuyZXvPUXZ1LlIlQcwiJgT8Y5ZRjCoN/q4xFz5cEwjuVoofEWSlfD2iO3fXcxzHx4hkSSE1y6U/kj2cQYpXdg5/2OwzKnHwI4+UkYcNNHTbg==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nvidia.com;
+Received: from SJ2PR12MB9161.namprd12.prod.outlook.com (2603:10b6:a03:566::20)
+ by DM4PR12MB5820.namprd12.prod.outlook.com (2603:10b6:8:64::9) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.9745.20; Tue, 24 Mar 2026 04:46:14 +0000
+Received: from SJ2PR12MB9161.namprd12.prod.outlook.com
+ ([fe80::d9d1:8c49:a703:b017]) by SJ2PR12MB9161.namprd12.prod.outlook.com
+ ([fe80::d9d1:8c49:a703:b017%4]) with mapi id 15.20.9745.019; Tue, 24 Mar 2026
+ 04:46:08 +0000
+From: Mikko Perttunen <mperttunen@nvidia.com>
+To: Thierry Reding <thierry.reding@gmail.com>,
+ Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>,
+ Jonathan Hunter <jonathanh@nvidia.com>, Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Yi-Wei Wang <yiweiw@nvidia.com>
+Subject: Re: [PATCH 5/5] pwm: tegra: Add support for Tegra264
+Date: Tue, 24 Mar 2026 13:46:04 +0900
+Message-ID: <14407093.uLZWGnKmhe@senjougahara>
+In-Reply-To: <de5e6159-ae89-4b8f-948a-678cea9211fa@kernel.org>
+References:
+ <20260323-t264-pwm-v1-0-4c4ff743050f@nvidia.com>
+ <20260323-t264-pwm-v1-5-4c4ff743050f@nvidia.com>
+ <de5e6159-ae89-4b8f-948a-678cea9211fa@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-ClientProxiedBy: TPYP295CA0015.TWNP295.PROD.OUTLOOK.COM
+ (2603:1096:7d0:9::10) To SJ2PR12MB9161.namprd12.prod.outlook.com
+ (2603:10b6:a03:566::20)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v4 0/4] Introduce Allwinner H616 PWM controller
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
- Jernej Skrabec <jernej.skrabec@gmail.com>,
- Samuel Holland <samuel@sholland.org>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Paul Kocialkowski <paulk@sys-base.io>,
- Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
- John Stultz <jstultz@google.com>, Joao Schim <joao@schimsalabim.eu>,
- linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-sunxi@lists.linux.dev,
- linux-kernel@vger.kernel.org
-References: <20260305091959.2530374-1-richard.genoud@bootlin.com>
-From: Richard GENOUD <richard.genoud@bootlin.com>
-Content-Language: en-US, fr
-Organization: Bootlin
-In-Reply-To: <20260305091959.2530374-1-richard.genoud@bootlin.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Last-TLS-Session-Version: TLSv1.3
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[bootlin.com,reject];
-	R_DKIM_ALLOW(-0.20)[bootlin.com:s=dkim];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR12MB9161:EE_|DM4PR12MB5820:EE_
+X-MS-Office365-Filtering-Correlation-Id: d457de48-ecf0-41d9-0d8f-08de896043df
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|10070799003|366016|22082099003|56012099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	AJlMih0l83FTyUdBSIbzuwdHqPrhch2XOgkzkOUbQxoPnMyPmLpazXqTsB84LJmW8QLwUPtyeGeyyyfQwOoGOUwvqCoxDSEtKTSXnLHYXkOMPGQPgtKsvY6PiYOrdiBZ62wbl5K6wQQxqOHRyTWjfKKBh3dpJP38QJPt89XdUt57rVMjOC9Tt0w6AQh4AZnGUo/OIAuXTZCpzW6fT7syeZ6qyR7FWRCyeCMB9qhB4d1emrVNNV2nXHTz/L9bPiYTYXXkAN6gYw1omJ+/pdeMXikSMFA6LCkkhzNBiY7YP85KG+iKPBNS98xAPzQ75p5x0pLxuYCbM89THYo+CDqT8ykcOXQQfmK4lCukiNVdFoOXvpOhIuouzsAL11f28oglMaGMERt7HD+glpa8K1mPv9azUfK0cplAjTd0kZ7CBxs7ICRbOsP+g2BXJnJkdzqPDbVJmzBXIyCA+RGMCYijZiX6/so8ES/2sHglcCsoiKdNyY1PvaQyg714LhxKz40yG37GeuYNDkr9x5qrW4kipbWBn7WVNxAqZmRO0OqYxlfD5AFSdWmGTYWm2yPBVPPO4mHWSKIzmtLKjCsRPP9ivHhjIeILk+HoxYUvIIN1m0yxQZFnwMgevq3M26dUzqPJe6Y/XLdHSUgayDyolMkC8T1aJPMWAbhk+xwWv5dfr9LUtcEqOzysS9ZHoBAolc8S4kj7NHva6g6495ePcG8iNXRE4i7U7FY7ByR3WmMxbuo=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB9161.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(10070799003)(366016)(22082099003)(56012099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 2
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?cTkxUmJUMHd6MFMyejNYU0VlbVE0WEo1a2lReWpaUHMvQmhMeVQ5d1dRMkUw?=
+ =?utf-8?B?d3hzM0JNMytNSHFlTGRsams5dDVoTkVoOVQvbGF3ekJsK1R0UnVuUXpIalNJ?=
+ =?utf-8?B?VW8va0FVT2d3cVc5aGllVXFadmI1MldmU3NMMEk3VkNrdVBRYVYxV3Nyczdu?=
+ =?utf-8?B?VVFhTTYxMUM1UmwreW1xcEsrZVR5cnJaU0ZEL3kzbEp2dHRxamEwdE5CNi9N?=
+ =?utf-8?B?OHBnSkZFRVlUYWxpcy9KZzRMMGVwY1hkK1BIKzNPaHd2djVhVGRPQkpuK0hq?=
+ =?utf-8?B?UVo4NFBKZ3Y5UGlrcjdEYWR0RHN1TFlqVjFXU2VxazBsdzJpQ3ZMUXBXNXh5?=
+ =?utf-8?B?TVNIaXE5VkdWaVdBR29PQkdOL01La2h5MVNIdWZzemU2VVlMYVdEU2c4cXVi?=
+ =?utf-8?B?WWhMTHhiZ05NQkpsYzd3MVN6bmdBdG1oVUJEWTBlcUdiRTYzMk5xeWUxazU3?=
+ =?utf-8?B?cFlZVFZpUmxiNnowdk9YOFptWnNFQ2VxM0Fva2xHRzdLSHRJeWVJdUlvUXFK?=
+ =?utf-8?B?bWkvdkpUM0Y2SU1WZ2p5aHJqL1cvdUhkUjJ0S1BqUmd0djdRdDZJT2NqU1Zw?=
+ =?utf-8?B?STFwOFZzMlhFV1FONEgwRmdTMlBKbmtROEhia1RuZXhBczZlNzdHcm1TNWU4?=
+ =?utf-8?B?bzBSQU9qZnB0RzRvcDYvMHUvb0x6cGVyUHVSbnA1WStBTHVpVm1raGRYWVc0?=
+ =?utf-8?B?TUZJcnFDVUZOSEZtMzVaSGtCbldpSUt6ZEpUdmRlNEJUSG0zODRDLzRFY0xo?=
+ =?utf-8?B?WVJidEU4c1cxM3FnZk1aZjZRTFhtaFMzOVVYbndEUmRoaGs1YmxkQjJLUHNI?=
+ =?utf-8?B?UUpaNXZyV1loRmFMaE9lWU10UndRblRKZ3QwQmdlUnZFdjVaQ29SOUFRTWJu?=
+ =?utf-8?B?TnpsVEdBaWZBazRDK0lad0dlTTd6Z1g2VlpVWUgydGh6eHVDazg2ZUVtUktZ?=
+ =?utf-8?B?OWl2QjMzSDh4MFBnYTVSNEJIMWVJeTJyeTJaWmdOMjlTL25wMk9reTJlOXhK?=
+ =?utf-8?B?aTFNMk1SZE8wQkU2aDlNMW9UUnBwdW9LTTlpV1RSdE1WNDFxMktyVTFHVU80?=
+ =?utf-8?B?VldnZ3hHc2t2bG9uaDlmY2dMUU53YmJ2Q0hhckZmU3pGTFJkSFBYYkxLT2Js?=
+ =?utf-8?B?aUJORnN5UmxXRXVoVDgzazRWMzI3a3ZrK2V0eHBUcHh0Ny9JbkNlUm16bUtt?=
+ =?utf-8?B?TnlHSERld211YzAzVExrU2tVZ1RsdkJ2d09CNjNpWlBqZ3U3VUhsODV5VmZ0?=
+ =?utf-8?B?RE1MODBwZE8vT3FwQ3JZRksycHNJYk1NVmxpYmtRRUl0dUlWeEw0OUdQS1lB?=
+ =?utf-8?B?c1h5WGpES1pKZ3BGNVlEbTVsTEpHVnp1bXlLTTFLbytLd0x4TndrYUJyRDVo?=
+ =?utf-8?B?YTZ3Y2RHL2lvVzRuMysrSENOamQ2V1ZkeTc4TjkyWjFJNm8rVXlYRkJubDJn?=
+ =?utf-8?B?cjFRSzBSWEJWQnQvNEhwMFp2ZHdvc3N4MUNVRmZkbGdqcUdFS3BkQlBQaG5o?=
+ =?utf-8?B?YmIxanVIeTZVTWxtVHlvQk9sY0ZWb2l1R0ZHSjRtVWYxTkIxUE1SUkNlTVlM?=
+ =?utf-8?B?dFk2aWxkNzk1Z2FNL2M1MmZQZzYxZ1RDSU1kRTZSTFprbE85M3ExV3VhZHB2?=
+ =?utf-8?B?NFl0TnZlakhQTEVhRE56Tld6WWtuSjRVaUh3Sk41dkF2aXplRjZ4eHFwWGw5?=
+ =?utf-8?B?eFgrSEE0Y0crVForUU5xWHY5UnBZYnh4WWJ6WlRTaE9NWmhLV2R4OFBOU0Zh?=
+ =?utf-8?B?TVJwVHlLcE9sRTRQN3NGemt5Qis1cmxNVlFUVndTTHdhandmWUVzczV3cmNS?=
+ =?utf-8?B?L2s4V2NYSmVVOUVWcjRROVI2V0oxQXptS3hubEZwY2czQU1lVUgzWDhDaVZa?=
+ =?utf-8?B?eEU2bmUrSHpwZTFhSlZPRjhSZ2o2ZXBYRHBCa2R6cm4wajlsSzVSZDhBblBF?=
+ =?utf-8?B?c3huOFRqcjRIQkxvdXdIUkl1MHMwcnRrTDNjSnJBUnlnaFRzbHBRVWZLVkkw?=
+ =?utf-8?B?V3VUbWpPVXIvVXNnWnhJN3JvbFFJSHJMdEErblRnWGhCcy9kZFpjd3RBRWpo?=
+ =?utf-8?B?VXd2WGRmWVQ4cTZiNTFBSTBDd2J3d3NGUEU2N3YvampMOXZNY2VMakhPd0FL?=
+ =?utf-8?B?emRkeUVScm5DWmZWSkU4OWN5M0haeVpYdG1ORG5HMGFsdWtEUzAvemF6SXln?=
+ =?utf-8?B?NTkzRjA1V3hGSmFEUC9xZm5VNjRxZFpaQXdEQXh3SDZHdjZySERVcHhoOFpB?=
+ =?utf-8?B?YUZkUzNFMEtIcCtkS3Y2bU51YktKRkpFc3QwYlJGRm00TVRya3lHd0tTd3hk?=
+ =?utf-8?B?Y2FidGFteUJiamZlYUdiSzRrTnBsbGNoc21JVnJFMTVoQm04YU1paEJsVWto?=
+ =?utf-8?Q?btjKYAetpK3ysqMpKS9GYj/W8H95Ibe5nqmm0WEiLs3Ka?=
+X-MS-Exchange-AntiSpam-MessageData-1: I2pu29fTwZxw1w==
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d457de48-ecf0-41d9-0d8f-08de896043df
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB9161.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 24 Mar 2026 04:46:08.3422
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: whnI9woU1gFnl1SBM1Fo8yQNcWTDW+lRA/huv7hcIJEJkmCvIJaa688ATrUXJpwOsD8HeZhAP+VNMf3PMaJ19w==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR12MB5820
+X-Spamd-Result: default: False [0.34 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[nvidia.com,reject];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_DKIM_ALLOW(-0.20)[Nvidia.com:s=selector2];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8346-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8347-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	HAS_ORG_HEADER(0.00)[];
-	FREEMAIL_TO(0.00)[baylibre.com,kernel.org,csie.org,gmail.com,sholland.org,pengutronix.de];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[bootlin.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[richard.genoud@bootlin.com,linux-pwm@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com,kernel.org,nvidia.com];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[Nvidia.com:+];
+	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mperttunen@nvidia.com,linux-pwm@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	MID_RHS_MATCH_FROM(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[bootlin.com:dkim,bootlin.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: EAE312FAAA4
+	TAGGED_RCPT(0.00)[linux-pwm];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[Nvidia.com:dkim,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 21D303020D8
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Le 05/03/2026 à 10:19, Richard Genoud a écrit :
-> Allwinner H616 PWM controller is quite different from the A10 one.
-> 
-> It can drive 6 PWM channels, and like for the A10, each channel has a
-> bypass that permits to output a clock, bypassing the PWM logic, when
-> enabled.
-> 
-> But, the channels are paired 2 by 2, sharing a first set of
-> MUX/prescaler/gate.
-> Then, for each channel, there's another prescaler (that will be bypassed
-> if the bypass is enabled for this channel).
-> 
-> It looks like that:
->              _____      ______      ________
-> OSC24M --->|     |    |      |    |        |
-> APB1 ----->| Mux |--->| Gate |--->| /div_m |-----> PWM_clock_src_xy
->             |_____|    |______|    |________|
->                            ________
->                           |        |
->                        +->| /div_k |---> PWM_clock_x
->                        |  |________|
->                        |    ______
->                        |   |      |
->                        +-->| Gate |----> PWM_bypass_clock_x
->                        |   |______|
-> PWM_clock_src_xy -----+   ________
->                        |  |        |
->                        +->| /div_k |---> PWM_clock_y
->                        |  |________|
->                        |    ______
->                        |   |      |
->                        +-->| Gate |----> PWM_bypass_clock_y
->                            |______|
-> 
-> Where xy can be 0/1, 2/3, 4/5
-> 
-> PWM_clock_x/y serve for the PWM purpose.
-> PWM_bypass_clock_x/y serve for the clock-provider purpose.
-> The common clock framework has been used to manage those clocks.
-> 
-> This PWM driver serves as a clock-provider for PWM_bypass_clocks.
-> This is needed for example by the embedded AC300 PHY which clock comes
-> from PMW5 pin (PB12).
-> 
-> Usually, to get a clock from a PWM driver, we use the pwm-clock driver
-> so that the PWM driver doesn't need to be a clk-provider itself.
-> While this works in most cases, here it just doesn't.
-> That's because the pwm-clock request a period from the PWM driver,
-> without any clue that it actually wants a clock at a specific frequency,
-> and not a PWM signal with duty cycle capability.
-> So, the PWM driver doesn't know if it can use the bypass or not, it
-> doesn't even have the real accurate frequency information (23809524 Hz
-> instead of 24MHz) because PWM drivers only deal with periods.
-> 
-> With pwm-clock, we loose a precious information along the way (that we
-> actually want a clock and not a PWM signal).
-> That's ok with simple PWM drivers that don't have multiple input clocks,
-> but in this case, without this information, we can't know for sure which
-> clock to use.
-> And here, for instance, if we ask for a 24MHz clock, pwm-clock will
-> requests 42ns (assigned-clocks doesn't help for that matter). The logic
-> is to select the highest clock (100MHz) with no prescaler and a duty
-> cycle value of 2/4 => we have 25MHz instead of 24MHz.
-> And that's a perfectly fine choice for a PMW, because we still can
-> change the duty cycle in the range [0-4]/4.
-> But obviously for a clock, we don't care about the duty cycle, but more
-> about the clock accuracy.
-> 
-> And actually, this PWM is really a PWM AND a real clock when the bypass
-> is set.
-> 
-> This series is based onto v6.19-rc4
-> 
-> NB: checkpatch is not happy with patch 2, but it's a false positive.
-> It doesn't detect that PWM_XY_SRC_MUX/GATE/DIV are structures, but as
-> it's more readable like that, I prefer keeping it that way.
-> 
-> NB2: for geopolitical reasons, I didn't re-use the old series that Paul
-> was referring to.
-> 
+On Monday, March 23, 2026 4:24=E2=80=AFPM Krzysztof Kozlowski wrote:
+> On 23/03/2026 03:36, Mikko Perttunen wrote:
+> > +
+> >=20
+> >  static const struct of_device_id tegra_pwm_of_match[] =3D {
+> > =20
+> >  	{ .compatible =3D "nvidia,tegra20-pwm", .data =3D &tegra20_pwm_soc },
+> >  	{ .compatible =3D "nvidia,tegra186-pwm", .data =3D &tegra186_pwm_soc =
+},
+> >  	{ .compatible =3D "nvidia,tegra194-pwm", .data =3D &tegra186_pwm_soc =
+},
+> >=20
+> > +	{ .compatible =3D "nvidia,tegra264-pwm", .data =3D &tegra264_pwm_soc =
+},
+>=20
+> Undocumented ABI.
+>=20
+> Please run scripts/checkpatch.pl on the patches and fix reported
+> warnings. After that, run also 'scripts/checkpatch.pl --strict' on the
+> patches and (probably) fix more warnings. Some warnings can be ignored,
+> especially from --strict run, but the code here looks like it needs a
+> fix. Feel free to get in touch if the warning is not clear.
+>=20
+>=20
+> Best regards,
+> Krzysztof
 
-Hi Uwe, do you plan to grab this series or does it needs some further 
-reviews?
+So, this series was checkpatch --strict clean (modulo one false positive) w=
+hen=20
+I submitted. I agree that that is strange, so I looked into it and looks li=
+ke=20
+I had an old processed-schema.json file containing tegra264-pwm, so checkpa=
+tch=20
+didn't complain. It is of course in .gitignore so I didn't notice.
 
-Regards,
-Richard
+Mikko
 
-> Changes since v3:
-> - gather Acked-by/Tested-by
-> - fix cast from pointer to integer of different size (kernel test robot
->    with arc platform)
-> - add devm_action for clk_hw_unregister_composite as suggested by Philipp
-> - remove now unused pwm_remove as suggested by Philipp
-> 
-> Changes since v2:
-> - use U32_MAX instead of defining UINT32_MAX
-> - add a comment on U32_MAX usage in clk_round_rate()
-> - change clk_table_div_m (use macros)
-> - fix formatting (double space, superfluous comma, extra line feed)
-> - fix the parent clock order
-> - simplify code by using scoped_guard()
-> - add missing const in to_h616_pwm_chip() and rename to
-> h616_pwm_from_chip()
-> - add/remove missing/superflous error messages
-> - rename cnt->period_ticks, duty_cnt->duty_ticks
-> - fix PWM_PERIOD_MAX
-> - add .remove() callback
-> - fix DIV_ROUND_CLOSEST_ULL->DIV_ROUND_UP_ULL
-> - add H616_ prefix
-> - protect _reg in macros
-> - switch to waveforms instead of apply/get_state
-> - shrink struct h616_pwm_channel
-> - rebase on v6.19-rc4
-> 
-> Changes since v1:
-> - rebase onto v6.19-rc1
-> - add missing headers
-> - remove MODULE_ALIAS (suggested by Krzysztof)
-> - use sun4i-pwm binding instead of creating a new one (suggested by Krzysztof)
-> - retrieve the parent clocks from the devicetree
-> - switch num_parents to unsigned int
-> 
-> Richard Genoud (4):
->    dt-bindings: pwm: allwinner: add h616 pwm compatible
->    pwm: sun50i: Add H616 PWM support
->    arm64: dts: allwinner: h616: add PWM controller
->    MAINTAINERS: Add entry on Allwinner H616 PWM driver
-> 
->   .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml |  19 +-
->   MAINTAINERS                                   |   5 +
->   .../arm64/boot/dts/allwinner/sun50i-h616.dtsi |  47 +
->   drivers/pwm/Kconfig                           |  12 +
->   drivers/pwm/Makefile                          |   1 +
->   drivers/pwm/pwm-sun50i-h616.c                 | 936 ++++++++++++++++++
->   6 files changed, 1019 insertions(+), 1 deletion(-)
->   create mode 100644 drivers/pwm/pwm-sun50i-h616.c
-> 
-> 
-> base-commit: 11439c4635edd669ae435eec308f4ab8a0804808
 
 
