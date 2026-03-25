@@ -1,243 +1,188 @@
-Return-Path: <linux-pwm+bounces-8354-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8355-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id GG15Add8w2mbrAQAu9opvQ
-	(envelope-from <linux-pwm+bounces-8354-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Wed, 25 Mar 2026 07:12:39 +0100
+	id eN70HW6Ew2kPrQQAu9opvQ
+	(envelope-from <linux-pwm+bounces-8355-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Wed, 25 Mar 2026 07:45:02 +0100
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 555B5320164
-	for <lists+linux-pwm@lfdr.de>; Wed, 25 Mar 2026 07:12:38 +0100 (CET)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id D901332049F
+	for <lists+linux-pwm@lfdr.de>; Wed, 25 Mar 2026 07:45:01 +0100 (CET)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 151443006B16
-	for <lists+linux-pwm@lfdr.de>; Wed, 25 Mar 2026 06:12:37 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 18C3330158A6
+	for <lists+linux-pwm@lfdr.de>; Wed, 25 Mar 2026 06:42:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B99E83382FC;
-	Wed, 25 Mar 2026 06:12:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1E6A359A67;
+	Wed, 25 Mar 2026 06:42:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y4YsX9Nt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cPagIaJm"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f171.google.com (mail-pf1-f171.google.com [209.85.210.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 947128248B;
-	Wed, 25 Mar 2026 06:12:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6510630AACD
+	for <linux-pwm@vger.kernel.org>; Wed, 25 Mar 2026 06:42:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774419156; cv=none; b=e5Osprhfjk/suFMulXqlMyh9MdZ7okGMmCQ9UYkafIrzxrGtt9XrsbapfkadIVYqe2t8bEI4Xj4qTB60Na21mnQ76HJxDHmipLflXOKjVIoK8fRN/lylJcz7ppJQYifgx7YKzXrfXEM2kEthkUawwHdSJB+FYtdCVTFIjrOpu10=
+	t=1774420972; cv=none; b=Qha2jQ1gcPDpmJJ7U8w/CeN8vHIPX8NdBlVa9T00ciNaF3MxMfaSGj2Lfjf5RjGBFM/Iq195bjF0V97/BcqPukwjFkcIqWgOM6ljK7sku/YxjO+gukDXu14kcfB++lBcO/VUcfaKHXVib4JmtTMAF8XzP/fja01V1dpBLKukPiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774419156; c=relaxed/simple;
-	bh=xstdmZOTq1U4oAsFj5MoDcInVoa2Da6Y31f2uchmnUk=;
+	s=arc-20240116; t=1774420972; c=relaxed/simple;
+	bh=PxgRccVn8cF02TlACNrcwsh3WON1Nirb5TL1ReGEieE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZH7/KufVXj5TuG8G9VdQHtOqagO3fWIl2e3DllhE0xnWfN/QnR0wtFetYO0x4k8qAzaiT1OfM+QHnCmYunoAqz2ZvmAvhxnRD+utUCKON4oBGsct3DgLzXxrBh16VmtpmPfjNNfFltiydXr3U/MOYGJXTpgfgpzls1ddqkZVtGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y4YsX9Nt; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B83EAC4CEF7;
-	Wed, 25 Mar 2026 06:12:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1774419156;
-	bh=xstdmZOTq1U4oAsFj5MoDcInVoa2Da6Y31f2uchmnUk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=Y4YsX9NtZ+XW73B8QkeYanPZi5D7ng6ZzeOA1yc9e5lQ/b7GWVTmTVY+0+/4UWtOr
-	 TFQiKdY0j2j9/FDUdtI+xjdTHvfDT1HCOQDRHzvI/HwTHAMRUnzjp8mACieo84eyjv
-	 I6mug3p8FzWnzIpN5r58dXxCpb6gIV46DquxGUb6HzUXDHQKgQAtStnVX3KtXYL2p0
-	 Vrxg5Kxl/7irHCtA7weMyRxhamZUsLsH50RSTE8FIPTuo7xzrNp8CmxCwUN9S8H64T
-	 AVFFJ6wckeU/fhMfC5Qf2RxyUi5kbT/Uff0wiBuAWSSjzFcOc+qPRzILXRUe7T/LYd
-	 CAHYILChH5C+A==
-Date: Wed, 25 Mar 2026 07:12:33 +0100
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Mikko Perttunen <mperttunen@nvidia.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, Yi-Wei Wang <yiweiw@nvidia.com>, 
-	Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, Stephen Boyd <sboyd@kernel.org>, 
-	linux-pm@vger.kernel.org
+	 Content-Type:Content-Disposition:In-Reply-To; b=lX0OZ/SzwpZov9jQyN6Fl0657FrIesOvjRnER0mFI5p63iWgnc/NT+fkIniFTXqNqRefbQemBA5IX2K96ZuazRuDUF1VvfVujXIyQono01ImUXdisAScT/uxRhYhgcpBuHkG0S7UjP4O37AZCffWPzGn83PMpaKPZKm9ZfrJSrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=cPagIaJm; arc=none smtp.client-ip=209.85.210.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+Received: by mail-pf1-f171.google.com with SMTP id d2e1a72fcca58-8298fad2063so3098654b3a.3
+        for <linux-pwm@vger.kernel.org>; Tue, 24 Mar 2026 23:42:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google; t=1774420971; x=1775025771; darn=vger.kernel.org;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=/6M4B+9kyrMtUcVVbXTu+8SlccYPDUcc3KdjZB1RGuY=;
+        b=cPagIaJmGj/19semEx7ShU5yUUW9rl+iH2EGWhB3EQdKGhquRqdzvs3UEF6eD9Oa5y
+         +oqWbXI5+AlsUs2I7/W9nZVl+Zg1P/oAtOyzB4wqYYbCw8DftL5KckkXc+eHyYcrwkPb
+         ceqyh+FhWdVOXCBwuInDqlndSFCBONEADL5LJZospY8fRCoCQFSg6UxxzT1lIIPwuP5M
+         m49n8gfn3ob7ttccau6j7/KSxEOkCEFi0x3A1zIrzWaL4YndJMG8NT0iQD99Z9gQQ/24
+         DaTjhXHR7AYnbe3SdY/ctVVDJsv6vfgJ9xSLMAiOa4BaCNma66FGLR3DGYW7k0TOoij7
+         RCKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774420971; x=1775025771;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=/6M4B+9kyrMtUcVVbXTu+8SlccYPDUcc3KdjZB1RGuY=;
+        b=E43vOFt5A9OwMRoeodyawKSDL2LKeqMWi3z9xNBIusl44DkKsoqCWfnVxyxtCWTrHj
+         vKG/eLGoxhZAYNwZrORZeOWC3c8sOzF5zbbt4qQYArG5qSaujYmh77FqMRwIFv4BMeAP
+         v4uVoIjVl6xtL6L2wp9F+XaG2J5d7ojUonWBHxgPEBuzocJHhWpV9T8gjBDOQ1uGhiZt
+         szj4s/+DTcqKAxWOAgMmvu5aPDGyT0iAw7erQmAi22yVvAVAO30Hl6/zaQHkeYJyem+O
+         eZvTTlfLy6jAAbXYXMfwGfBIzFcyotGRydkA6pzmLiolJ5JcX2v24DLz5yC6lPMSWcLH
+         HSVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVwL4F2GcwQ9BIshdn2UYpPppKnlYzqXDWIlfZZxSWnaLAUwj5H21VVTjM5MJs4+hx0fZV4BJ6hbhw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yx7CXNTJA+AD5fUOG/deUziYotoJ0gtXBtnOSOBMPd9WvXXvxyn
+	KrVl+TOIvOgeGYCmxen9tHWKYuqXhbB/XXZA9lSlnlQV58WO8Ciay0cdoxrXvyurD50=
+X-Gm-Gg: ATEYQzySy9G31gQLWlgQnd7Cggs4g3e4/M6r/yHuBwindHLDoJXmTfaj6+AZm2Tnity
+	OMdwGPYsR6WD3DTAmuI4kLJ+c0OawOyepJ+MyIsSpaH6CQIWFp3+n4fukQnH5HfG2OSzvjHbgIp
+	1YEj4lL9/0OHQ35kpIJ7m/4DjZgHsatiGP3jam8eAsIlEurlPDpu1DmPv8RIv+KU/ldrtjo/zK1
+	MXEj/FcTnWZKbJw3yLmKhh7N9sCqHCgQN+RX4co3I4VwNEqHKHJLp7R1i2m236iaBb2kpA7b18Z
+	uonTKx6ellbuId6MW9Uh37WUdcoV0HQPJ6f1tG97gHEZzEeshTdMP94GEyPMYb/i6gXfsiml0Oo
+	H+6SaJ+UdsgF67byYXtF54waLdXtevhHatxOcUO7crrOaX6JCyOUgJAd2Ny2uPRLwfNtneCeJVa
+	41Vv8N7iLmwBVOh14w6LDYTK1G
+X-Received: by 2002:a05:6a00:b484:b0:82c:24a6:2a75 with SMTP id d2e1a72fcca58-82c6de79e34mr2217015b3a.10.1774420970591;
+        Tue, 24 Mar 2026 23:42:50 -0700 (PDT)
+Received: from localhost ([122.172.81.200])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-82b0409b448sm14055926b3a.39.2026.03.24.23.42.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 24 Mar 2026 23:42:49 -0700 (PDT)
+Date: Wed, 25 Mar 2026 12:12:47 +0530
+From: Viresh Kumar <viresh.kumar@linaro.org>
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+Cc: Mikko Perttunen <mperttunen@nvidia.com>, 
+	Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, 
+	linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Yi-Wei Wang <yiweiw@nvidia.com>, Viresh Kumar <vireshk@kernel.org>, Nishanth Menon <nm@ti.com>, 
+	Stephen Boyd <sboyd@kernel.org>, linux-pm@vger.kernel.org
 Subject: Re: [PATCH 1/5] pwm: tegra: Avoid hard-coded max clock frequency
-Message-ID: <acN7pSjuMkZl2yhV@monoceros>
+Message-ID: <2qvafxg3umwqeshf6eag3ep2zpyfwxbcdj57iorlcrus3tzrti@cpnkeirybxxo>
 References: <20260323-t264-pwm-v1-0-4c4ff743050f@nvidia.com>
  <20260323-t264-pwm-v1-1-4c4ff743050f@nvidia.com>
  <acKggw9F7oULLEuJ@monoceros>
  <4405239.kQq0lBPeGt@senjougahara>
+ <acN7pSjuMkZl2yhV@monoceros>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="jyx2ilssaabpedyx"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <4405239.kQq0lBPeGt@senjougahara>
-X-Spamd-Result: default: False [-3.76 / 15.00];
-	SIGNED_PGP(-2.00)[];
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <acN7pSjuMkZl2yhV@monoceros>
+X-Spamd-Result: default: False [-1.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	DMARC_POLICY_ALLOW(-0.50)[linaro.org,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[linaro.org:s=google];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[gmail.com,nvidia.com,vger.kernel.org,kernel.org,ti.com];
-	TAGGED_FROM(0.00)[bounces-8354-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	TAGGED_FROM(0.00)[bounces-8355-lists,linux-pwm=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	FREEMAIL_CC(0.00)[nvidia.com,gmail.com,vger.kernel.org,kernel.org,ti.com];
+	FROM_HAS_DN(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ukleinek@kernel.org,linux-pwm@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[11];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[viresh.kumar@linaro.org,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[linaro.org:+];
+	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-pwm];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linaro.org:email,chromium.org:email]
-X-Rspamd-Queue-Id: 555B5320164
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,linaro.org:dkim]
+X-Rspamd-Queue-Id: D901332049F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+On 25-03-26, 07:12, Uwe Kleine-König wrote:
+> On Wed, Mar 25, 2026 at 09:34:55AM +0900, Mikko Perttunen wrote:
+> > On Wednesday, March 25, 2026 1:45 AM Uwe Kleine-König wrote:
+> > > On Mon, Mar 23, 2026 at 11:36:37AM +0900, Mikko Perttunen wrote:
+> > > > @@ -303,7 +300,7 @@ static int tegra_pwm_probe(struct platform_device
+> > > > *pdev)> 
+> > > >  		return ret;
+> > > >  	
+> > > >  	/* Set maximum frequency of the IP */
+> > > > 
+> > > > -	ret = dev_pm_opp_set_rate(&pdev->dev, pc->soc->max_frequency);
+> > > > +	ret = dev_pm_opp_set_rate(&pdev->dev, S64_MAX);
+> > > 
+> > > The documentation comment for dev_pm_opp_set_rate() reads:
+> > > 
+> > > 	Device wanting to run at fmax provided by the opp, should have
+> > > 	already rounded to the target OPP's frequency.
 
---jyx2ilssaabpedyx
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 1/5] pwm: tegra: Avoid hard-coded max clock frequency
-MIME-Version: 1.0
+And that is correct, right ? This comment is talking about the max freq possible
+with each OPP and not the highest freq possible with the device. If a device
+supports 5 OPPs (0-4) and if we want to run at the freq mentioned in the OPP3
+entry in DT, then the caller must send a frequency such that clk_round_rate()
+returns the frequency of the OPP3.
 
-[ Adding OPP maintainers to Cc: ]
+In the above case though, we will end up running at the highest freq returned
+by clk_round_rate() and an OPP corresponding to that.
 
-Helle Mikko,
+> > > I think using S64_MAX is technically fine (assuming there are no issues
+> > > with big numbers in that function), but still it feels wrong to use
+> > > something simpler than the comment suggests. Am I missing something?
 
-On Wed, Mar 25, 2026 at 09:34:55AM +0900, Mikko Perttunen wrote:
-> On Wednesday, March 25, 2026 1:45=E2=80=AFAM Uwe Kleine-K=C3=B6nig wrote:
-> > On Mon, Mar 23, 2026 at 11:36:37AM +0900, Mikko Perttunen wrote:
-> > > @@ -303,7 +300,7 @@ static int tegra_pwm_probe(struct platform_device
-> > > *pdev)>=20
-> > >  		return ret;
-> > >  =09
-> > >  	/* Set maximum frequency of the IP */
-> > >=20
-> > > -	ret =3D dev_pm_opp_set_rate(&pdev->dev, pc->soc->max_frequency);
-> > > +	ret =3D dev_pm_opp_set_rate(&pdev->dev, S64_MAX);
-> >=20
-> > The documentation comment for dev_pm_opp_set_rate() reads:
-> >=20
-> > 	Device wanting to run at fmax provided by the opp, should have
-> > 	already rounded to the target OPP's frequency.
-> >=20
-> > I think using S64_MAX is technically fine (assuming there are no issues
-> > with big numbers in that function), but still it feels wrong to use
-> > something simpler than the comment suggests. Am I missing something?
->=20
-> Looking at the history of the function, the comment was added in the comm=
-it=20
-> below. It seems like it used to be that the opp framework always used the=
- fmax=20
-> of each OPP even if a lower rate was specified, but after the change, the=
-=20
-> caller has to specify the fmax rate if they want that rate specifically. =
-As=20
-> such I don't think it should be an issue in our case, as we're just using=
- the=20
-> rate to find an OPP and don't have a specific one in mind.
->=20
-> commit b3e3759ee4abd72bedbf4b109ff1749d3aea6f21
-> Author: Stephen Boyd <swboyd@chromium.org>
-> Date:   Wed Mar 20 15:19:08 2019 +0530
->=20
->     opp: Don't overwrite rounded clk rate
->    =20
->     The OPP table normally contains 'fmax' values corresponding to the
->     voltage or performance levels of each OPP, but we don't necessarily w=
-ant
->     all the devices to run at fmax all the time. Running at fmax makes se=
-nse
->     for devices like CPU/GPU, which have a finite amount of work to do and
->     since a specific amount of energy is consumed at an OPP, its better to
->     run at the highest possible frequency for that voltage value.
->    =20
->     On the other hand, we have IO devices which need to run at specific
->     frequencies only for their proper functioning, instead of maximum
->     possible frequency.
->    =20
->     The OPP core currently roundup to the next possible OPP for a frequen=
-cy
->     and select the fmax value. To support the IO devices by the OPP core,
->     lets do the roundup to fetch the voltage or performance state values,
->     but not use the OPP frequency value. Rather use the value returned by
->     clk_round_rate().
->    =20
->     The current user, cpufreq, of dev_pm_opp_set_rate() already does the
->     rounding to the next OPP before calling this routine and it won't
->     have any side affects because of this change.
->    =20
->     Signed-off-by: Stephen Boyd <swboyd@chromium.org>
->     Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->     [ Viresh: Massaged changelog, added comment and use temp_opp variable
->               instead ]
->     Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+I think S64_MAX will work as well, unless clk_round_rate() returns a frequency
+higher than what the OPP table mentions. It may still work, but the values may
+be confusing and inconsistent.
 
-So the comment describing dev_pm_opp_set_rate() needs an update, right?
+> > Looking at the history of the function, the comment was added in the commit 
+> > below. It seems like it used to be that the opp framework always used the fmax 
+> > of each OPP even if a lower rate was specified, but after the change, the 
+> > caller has to specify the fmax rate if they want that rate specifically. As 
+> > such I don't think it should be an issue in our case, as we're just using the 
+> > rate to find an OPP and don't have a specific one in mind.
 
-> > >  	if (ret < 0) {
-> > >  =09
-> > >  		dev_err(&pdev->dev, "Failed to set max frequency: %d\n",=20
-> ret);
-> > >  		goto put_pm;
-> > >=20
-> > > @@ -318,7 +315,7 @@ static int tegra_pwm_probe(struct platform_device
-> > > *pdev)>=20
-> > >  	/* Set minimum limit of PWM period for the IP */
-> > >  	pc->min_period_ns =3D
-> > >=20
-> > > -	    (NSEC_PER_SEC / (pc->soc->max_frequency >> PWM_DUTY_WIDTH)) + 1;
-> > > +	    (NSEC_PER_SEC / (pc->clk_rate >> PWM_DUTY_WIDTH)) + 1;
-> >=20
-> > Orthogonal to this patch: Should this be
-> >=20
-> > 	DIV_ROUND_UP(NSEC_PER_SEC, pc->clk_rate >> PWM_DUTY_WIDTH)
-> >=20
-> > ? Or even
-> >=20
-> > 	DIV_ROUND_UP(NSEC_PER_SEC < PWM_DUTY_WIDTH, pc->clk_rate);
-> >=20
-> > ? (Note, the latter doesn't work as is, as the first parameter has an
-> > overflow, I guess you're still getting my question.)
->=20
-> Indeed, it would be overestimating the minimum period right now. It's not=
-=20
-> quite part of Tegra264 support but I can include a patch in the next revi=
-sion=20
-> if you'd like. Otherwise I could include it in the followup series or as =
-a=20
-> separate patch.
+Right.
 
-If you know it and feel responsible to address it at some point that's
-fine. We lived with that issue for some time now, so a separate and if
-you prefer later series is fine for me.
+> So the comment describing dev_pm_opp_set_rate() needs an update, right?
 
-Best regards
-Uwe
+Maybe, not sure. But as I mentioned earlier, it is written with the context of
+each OPP's highest freq.
 
---jyx2ilssaabpedyx
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmnDfM8ACgkQj4D7WH0S
-/k4zMAgAjph1fJZQ6bWy1sM5PS4v3zGs0q2noKdGcU6DIQZgUo+IhR0zBkmdshVI
-Ano2T1XghQl2W6LPOfqveYYjvgArLa6RaioSzr3AnCpOiJ0YWVkTC2a62rOdArZQ
-M05owpfMLvGotITwbgMZCEoC65PcXnqIqsfPuFblg/IaKSQkm/o5lxMuScldFe/m
-PnMm46JAaf7NbC7RVz/DxHCCwcV4hEP2Qj11AQQepsuk0Yd/V6HSAK6hQfxKF+8J
-ESInJIj2C9T7fx2l1VpMXTfNu2oRqSg0dzCkZsJYpGCcKM1ei8IGoNJ4A3vdWsSf
-lbv3YWcMpsaOjqnx7qkWzZ/DukjfyA==
-=Ogg3
------END PGP SIGNATURE-----
-
---jyx2ilssaabpedyx--
+-- 
+viresh
 
