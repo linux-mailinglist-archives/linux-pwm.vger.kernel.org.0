@@ -1,173 +1,184 @@
-Return-Path: <linux-pwm+bounces-8419-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8420-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ABc6DpFRymnO7gUAu9opvQ
-	(envelope-from <linux-pwm+bounces-8419-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2026 12:33:53 +0200
+	id 8J+3F+FqymnG8gUAu9opvQ
+	(envelope-from <linux-pwm+bounces-8420-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2026 14:21:53 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id DC1E5359627
-	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2026 12:33:52 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id AA28335AF35
+	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2026 14:21:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 27DCE301D6C9
-	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2026 10:27:47 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id E6C74304FF8A
+	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2026 12:13:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C28553BA240;
-	Mon, 30 Mar 2026 10:27:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Sak1P2kU"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7F02277C9D;
+	Mon, 30 Mar 2026 12:13:04 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-dl1-f44.google.com (mail-dl1-f44.google.com [74.125.82.44])
+Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com [209.85.221.181])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 850CC274B46
-	for <linux-pwm@vger.kernel.org>; Mon, 30 Mar 2026 10:27:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.44
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774866465; cv=pass; b=Ay9BCiwVByzqzA9kBwo/a8HhbDOinQA6DB26VerLVExCnWyl4p4GyYCQ953VuWKerJDULA7UHdM1PmX/1kMYRWp+HdZlFr8CmxoqB1ahPjwMzUjl4GQRLpVxlGc+6tkr4R5ifYQeavPac8NSY4Q0wBg5U8kcAF+oMsJKfybUV1E=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774866465; c=relaxed/simple;
-	bh=d9y55bKppxCwu8kQEd9JuS1z3KUYYcK2BoJdPrGox3E=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A15B21ADB7
+	for <linux-pwm@vger.kernel.org>; Mon, 30 Mar 2026 12:13:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.181
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774872784; cv=none; b=qFw4DVg6776cX3wAovHSlTuaaPNUW/txf1NZbRqFaQP/ciKu96TiO8uGBcYi2aD2cSlxe1FzYyijUvWlxEx+VH83VS5+WCWaiGl1RNTAqp54RO6rFSeI0b7co+AVENWzfqgmkGOwnPlB2/ZmHtBtpGZWy/1gyMEc/8z+yO2C3Pw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774872784; c=relaxed/simple;
+	bh=gu2bg73xFS0jBgND2oeThYTBnkCQBKCEGzyuQqD4MTE=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=FAB6CbkMbi7yyX2bkkJKAy2CJIgd+4asSVICpXJ5VlN3Prj4DOzlBsIuUGvTCniX1ZK7Nx9m00HQDvzgIr4qlHyROr+8f9ayOGaLOcNVwB9rSipcXYcOXdKrMAILwqtc9m8AXPbRIEXaDJ/pZAisRHFu1JiZncJFITDcOh3jUA8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Sak1P2kU; arc=pass smtp.client-ip=74.125.82.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	 To:Cc:Content-Type; b=B4lFCgC6AVoWm/gf0barl2K/o20ahIam4vkiNWdHPeljWK0EXZKCLAGKd/Sew5Dxi5c4VnEXAVMEJ6J7nDxSo9bDRTItfjcnhHecj//C5yr5GKozsNtfrTx96rBip5r0sBzOoaTBGlekcmsDmAIjeLDw/zTCIGUpcRDAIG/HzPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.221.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-dl1-f44.google.com with SMTP id a92af1059eb24-124b07e5fe4so142961c88.3
-        for <linux-pwm@vger.kernel.org>; Mon, 30 Mar 2026 03:27:44 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1774866464; cv=none;
-        d=google.com; s=arc-20240605;
-        b=hPZheOM1xQK7Nmym8BwnrDkXnYGtLoY/19gSK71PZVfdc9GTqsamV2mZ5AwcM1FdnE
-         EBNQfrQy+aX5TiiOrHiaCcHNKoINPRoyNP6hs8O0eQfEjosYz2246IF6HhRlJPzqTHwF
-         IVoheBxHCjJJlYQc4I1ldNoGdF6itQgSIlY14IsrkRyf2WbN7TP2et/5D5UhRZDK2Al4
-         UAauNiTp9HXKiHwVoJ4g4rOdtOct0zBtGnxOgHcHoUIojuDD8O++v6hvCz/RctlXxWwc
-         X5HS/I3ZYpUxyJf6A7vJAq1XWwCG9ztJxRSMJ5VJ76pV/hWoHKvGTH1WNppCle0akWlr
-         bsvw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=d9y55bKppxCwu8kQEd9JuS1z3KUYYcK2BoJdPrGox3E=;
-        fh=W96f88bCRalj1NzvKmn7bgB37tyAYPMKnXeMY50aPe8=;
-        b=k3s0QDs4LmCWk6hKKCp+PtTyWLX0vFhHyyQGOwd30V2ndfPEE2LI5HnbdE9/aLfB6m
-         saWalahtf1XrZZXDahyTp/pW0bzdF8ckwpAzGBewCStZpxe04uqfSxSW9vHH7sPgTgHU
-         JtSUXSb7AkEmT1PqDmhiVvsjrDHgj/j+j51XkZVh88EgdDuVFaasivqyC62y+2n++Rj6
-         jPkXfRZnzPQErDsCMmay9SqAEQrv3wSwis0XH9VrMjCnATpBuzXILCfH04ia3OXMiMgZ
-         lNUb6V7DnCUIDvXBT97gDHZX2MHomr10pzFy0NabIjntYr87bVlILNSRSCnEcT2pnZC7
-         XwmQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1774866464; x=1775471264; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=d9y55bKppxCwu8kQEd9JuS1z3KUYYcK2BoJdPrGox3E=;
-        b=Sak1P2kUGPLJ+21jHok2OEvJKwsqygZFcoRoNDqjwKyu2I5I+z9Nrx2jqFrXyx4J74
-         Qxtwh5n8S61HpPbGorLzdfZzH776mp21LsQNRJUYE3PlhxjoJu1xfi/c5F7eEbTU0/0d
-         oygWt6qGvliVrAe6U219gLY9yBHsLq9Z3EGnfae/MXyzvBjSG1F/5+oFg1PawnrxzzIo
-         j5skVCFiPM8x9aM89S4tBUSU0rtR2s/35ShIQlxIb6mc8gEGrlHWoOopMpZzIV2VhsvQ
-         yVWT6p0W8i2dTg0zjY1Xc6vV7qYFAfigtaIltCdBezOr9iadgWS97kEc4fcB3rscOTZV
-         YjwQ==
+Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-56cd842b60bso3202108e0c.0
+        for <linux-pwm@vger.kernel.org>; Mon, 30 Mar 2026 05:13:03 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774866464; x=1775471264;
+        d=1e100.net; s=20251104; t=1774872782; x=1775477582;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=d9y55bKppxCwu8kQEd9JuS1z3KUYYcK2BoJdPrGox3E=;
-        b=oH3ZOmHFNAEg9m0tJoobBdqK7/3VbGnO05N3pWFirTKJkgdTm4rsMMNP2DWJMg3bib
-         82SQPI5Dj9/nCfrc+9tdKqTbCDh20zNu9R2WSh87OwbmvI8VdNFRjCXYFtqX+yrzonzx
-         48YO0UQVKTUGoAvWKkPNia3xalbau5Lppis8OSo1Hxx80cZc6kyOQNRYS8WqB0fT2gaz
-         Itm86XxFV8JFYBs+45EG6QGr7S5w5TIK9TUy2CrhbNcLyuzu41kNqV4++ZPIUqY8podM
-         174mSSmruemcdAxYBc2o/dAJZLJQXNRT8yNhtqxWA+C5fZ6EBqHTPlz0IgLsRvkos6M/
-         5NCA==
-X-Forwarded-Encrypted: i=1; AJvYcCVcfop2JiduqzGhxNJTG8wFrJho/PJ8pg5o92P2wtpds8xdo6xacFTnRSVZh2aVR4bagzN/i84+qdI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxCEAz+9HqlV4bIxNUiu9zNH40lm5vfV53vDzWZzGIYrY/xctaU
-	1ovfJSuIiQ2COQ1CuY6lKlTgB/85smqOQch6I/i8H4t1cYPNa4jzWcTvPgY+VpLgWJxg4S3S9KA
-	+Os6wyyrSnuc8s9A/dQM8Y3OJ/SdjUfo=
-X-Gm-Gg: ATEYQzxVkIv+2qLJpjy7fmdRNA1iGVydntLePQVFkUgb+Ng+4l1iot/7zERGO/TacjW
-	FlBC9vT+LJdrRpP/0oGFlNv+7GWT6cgFtUn6NGZMkgMjAEY9Vsf1UdNgk6UBLXcQl5MgA1wzMS6
-	dvL9R1IVi6gUp/VlL3yJpg+odalPjvdWhUq4G+Uzzc/+GkmiBlgMrS9G2RlXe6EgFaDnQXAuezD
-	iu1ssZhjy1rNcDpzhXBMHZsLS00Ky4Dj3snNMH9mL7gjVVQbcB9pHfgheRDjBox28Ah40sDS96e
-	BxHL0gAbrnG67aovbePDYi9sHf+HSx9rCgqjNb6tpcaT1IWXJ4SoP04XyktmF4TxDdPinY78xqN
-	znTOifFOxGgSE4GcriNOJL2w=
-X-Received: by 2002:a05:7300:f794:b0:2c5:704f:7157 with SMTP id
- 5a478bee46e88-2c5704f7c1amr684174eec.2.1774866463645; Mon, 30 Mar 2026
- 03:27:43 -0700 (PDT)
+        bh=u2SCNNGrJmTLDn5Ig7RgkFDYfrdLEqp1DryMV/htQms=;
+        b=fqO+oQ7xYkCcZlN3Nf+PgPezN8k1gTbCAJni0cWO945Pf6RxeAiIy0D2H5xr+VyAvi
+         CMgs4WXs8okW8X20w/00X+YkwQ+Y3Gipx80G0IfcgBnCqyKDV/KT4BnNh8K836cUgIje
+         OkJrwNlCToyeONWSaUzdKtjotFAU67RWIA6fyu4z5gkv1QkTC8T1RVm8JcE/21FL0lLv
+         ZLnegZzL17XB9MNOZzahAAaf1NTLdtaLj4MYYR3UFlY8xiH0NH3uujqKypE1ifPvqxXm
+         WEoBcVkonXaNPsz+kiqfliX1uEoAo7O6sOzNKq4tTZ3rxsftev/+3rNc86vH37saT9uW
+         KX4w==
+X-Forwarded-Encrypted: i=1; AJvYcCUQ3qgMX/npCpgBp2Njx/kp9QldHHg6xuLzq25h7Itw53xBsmK4DIber/bko4kUmt0XvY6Gs4Lgzhw=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw137KmchvibvqKcTgLMz+5BZDxb6F26UrQw9nKTOLYx1mbnFjU
+	TVb9E6hQvWrLm0alyrMU2IRRKwQJ4KmT9XQLGDmGdlAb4OwIF6A7j1kQqjXRjJ1x
+X-Gm-Gg: ATEYQzzxpwow/LowkQV1XFdDikDMYS+7GZHm/sUtEoY7vezeCgd7hBN0Pvvbijdutrd
+	4eEnFQNe4RlS0MBJjR1W3/E4uLRiSJEJCMxyJmwJQo5f2q0ce1YH8yi15XKP/SjLuSSDAxH6hqY
+	e+fAlFwc+vrHIOGGMndi5N1cqEmvy/OrYhxVOMbUe2nngdFkpD/weZx2e/XnmhbNKy+9RMb/AWH
+	IdZY/qOacFsSudYdxTwiht+ouO6xi8rRBKSpoYwlWjYWwbfgYG6b5BkuAiqoGix8RFiEed/8u4d
+	42Y78nzEvBUdKyvlMaXyqpIqII6ufxuH2FUHL07Z/+M6N/QIRx7dTIQzmo+99ReaCUOP+JGBmB+
+	WK6dntHlPgfGpZawB6DaK2JY26ifCxNv9tHvb4kpzpA3Ok2PERu+uvmJphmI6Db003Dm1whMo7E
+	oDOVv/boaRXYjcHRh+0qOndT0lnuwy4SQzPU4AAeOzvzzw/1muXG7RFH/+ekhn
+X-Received: by 2002:a05:6122:218e:b0:56b:95cf:e9ef with SMTP id 71dfb90a1353d-56d4a67bf38mr4983318e0c.16.1774872782202;
+        Mon, 30 Mar 2026 05:13:02 -0700 (PDT)
+Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com. [209.85.222.51])
+        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-56d589f9a1esm8133254e0c.12.2026.03.30.05.13.01
+        for <linux-pwm@vger.kernel.org>
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 30 Mar 2026 05:13:01 -0700 (PDT)
+Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-94ac8cbf3feso2679420241.0
+        for <linux-pwm@vger.kernel.org>; Mon, 30 Mar 2026 05:13:01 -0700 (PDT)
+X-Forwarded-Encrypted: i=1; AJvYcCVAJGOErQMuM828+nvBD3NmWUjeSYtNOY1CdSVLyJ/AUVJJ1DcjQBY1Nc4IKNcxL1va5BTh9/CTvKI=@vger.kernel.org
+X-Received: by 2002:a05:6102:8091:b0:605:3bf8:d7ed with SMTP id
+ ada2fe7eead31-6053bf90f72mr1025174137.10.1774872781056; Mon, 30 Mar 2026
+ 05:13:01 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260223-clk-send-sync-v5-0-181bf2f35652@google.com>
- <DH7L09UFWGTK.2MT0OTWH1DUV4@kernel.org> <20260321-awesome-hot-kingfisher-5d9f55@houat>
- <CABx5tqJvOFEzmadeXpDxSUjkghviqtP0jo+kzSB5X6u_P_j2ig@mail.gmail.com>
- <CABx5tqL+G9i1ZW7i5AHaTqUFTVRDmBvP=RycUdwjG-GOp4uzBA@mail.gmail.com>
- <CANiq72=M3H-06L7udG_LqTwLykZkAjfy2d5NXQZn5TYRJ+N37w@mail.gmail.com> <acoq7E8NH-ihCq1K@google.com>
-In-Reply-To: <acoq7E8NH-ihCq1K@google.com>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Mon, 30 Mar 2026 12:27:30 +0200
-X-Gm-Features: AQROBzBw2zE5e8wBGjGUmjeI3w5sXAYU-mC5MJEbQZIxPhWtE3tBZZKIxgdi_Gk
-Message-ID: <CANiq72=b6bFQ=OFEXMedO1JoL4qckRmTPYzFrXGCzgxZZOmbuA@mail.gmail.com>
-Subject: Re: [PATCH v5 0/3] Implement Send and Sync for clk
-To: Alice Ryhl <aliceryhl@google.com>
-Cc: Brian Masney <bmasney@redhat.com>, Maxime Ripard <mripard@kernel.org>, 
-	Danilo Krummrich <dakr@kernel.org>, Stephen Boyd <sboyd@kernel.org>, 
-	Michael Turquette <mturquette@baylibre.com>, 
-	Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Drew Fustini <fustini@kernel.org>, 
-	Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>, 
-	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
-	Michal Wilczynski <m.wilczynski@samsung.com>, Viresh Kumar <viresh.kumar@linaro.org>, 
-	Miguel Ojeda <ojeda@kernel.org>, Gary Guo <gary@garyguo.net>, 
-	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
-	Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
-	Trevor Gross <tmgross@umich.edu>, Daniel Almeida <daniel.almeida@collabora.com>, 
-	linux-clk@vger.kernel.org, rust-for-linux@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, 
-	linux-pwm@vger.kernel.org, Boqun Feng <boqun@kernel.org>
+References: <20250527171504.346696-2-u.kleine-koenig@baylibre.com>
+ <a14be34c-de2a-4bea-9282-1fac7780b9a4@kernel.org> <crk42dsypmbyqk7avldghjq32vslmalfmmouwxzgtdci4agfhz@rkbmxj5z22fx>
+ <20250606141324.GA1383279-robh@kernel.org> <erst43cabswj3cwnszssolgyoh4dsgrlnjjxhb7luk3qkqhyay@6zyoixljvwwg>
+In-Reply-To: <erst43cabswj3cwnszssolgyoh4dsgrlnjjxhb7luk3qkqhyay@6zyoixljvwwg>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 30 Mar 2026 14:12:47 +0200
+X-Gmail-Original-Message-ID: <CAMuHMdXDZD6QAbKgny1utfYhagUEZ5pcgiDCTTfJKNVVZLOUYg@mail.gmail.com>
+X-Gm-Features: AQROBzCz5K9CVhDhcMpmA7U1tBX0huemhEHllmKL7cyhyBhjBEZSpl6cn-J6aWU
+Message-ID: <CAMuHMdXDZD6QAbKgny1utfYhagUEZ5pcgiDCTTfJKNVVZLOUYg@mail.gmail.com>
+Subject: Re: New default binding for PWM devices? [Was: Re: [PATCH]
+ dt-bindings: timer: xlnx,xps-timer: Make PWM in example usable]
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@baylibre.com>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Sean Anderson <sean.anderson@seco.com>, 
+	linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, Chris Packham <Chris.Packham@alliedtelesis.co.nz>, 
+	Marek Vasut <marek.vasut+renesas@mailbox.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+X-Spamd-Result: default: False [0.04 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8419-lists,linux-pwm=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[redhat.com,kernel.org,baylibre.com,linux.intel.com,samsung.com,linaro.org,garyguo.net,protonmail.com,umich.edu,collabora.com,vger.kernel.org,lists.freedesktop.org];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[26];
-	MIME_TRACE(0.00)[0:+];
-	FROM_HAS_DN(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8420-lists,linux-pwm=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[miguelojedasandonis@gmail.com,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	TAGGED_RCPT(0.00)[linux-pwm];
+	RCVD_TLS_LAST(0.00)[];
+	SUBJECT_HAS_QUESTION(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DMARC_NA(0.00)[linux-m68k.org];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	MIME_TRACE(0.00)[0:+];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,mail.gmail.com:mid]
-X-Rspamd-Queue-Id: DC1E5359627
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[geert@linux-m68k.org,linux-pwm@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_COUNT_FIVE(0.00)[6];
+	R_DKIM_NA(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-pwm,dt,renesas];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,linux-m68k.org:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,baylibre.com:email,800f0000:email]
+X-Rspamd-Queue-Id: AA28335AF35
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Mon, Mar 30, 2026 at 9:49=E2=80=AFAM Alice Ryhl <aliceryhl@google.com> w=
-rote:
+Hi Uwe,
+
+On Sat, 7 Jun 2025 at 09:23, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@baylibre.com> wrote:
+> On Fri, Jun 06, 2025 at 09:13:24AM -0500, Rob Herring wrote:
+> >    reg:
+> > >      maxItems: 1
+> > >
+> > > -  '#pwm-cells': true
+> > > +  '#pwm-cells':
+> > > +    const: 3
+> > >
+> > >    xlnx,count-width:
+> > >      $ref: /schemas/types.yaml#/definitions/uint32
+> > > @@ -82,7 +83,7 @@ examples:
+> > >      };
+> > >
+> > >      timer@800f0000 {
+> > > -        #pwm-cells =3D <0>;
+> > > +        #pwm-cells =3D <3>;
+> > >          clock-names =3D "s_axi_aclk";
+> > >          clocks =3D <&zynqmp_clk 71>;
+> > >          compatible =3D "xlnx,xps-timer-1.00.a";
+> > >
+> > > There is however one concern that I want to get resolved first to
+> > > prevent churn:
+> > >
+> > > In principle I think it's bad that a phandle to a PWM must contain a
+> > > period and flags specifying the polarity. For some use cases the peri=
+od
+> > > might not matter or is implicitly given or more than one period lengt=
+h
+> > > is relevant.
+> >
+> > Why can't the period be 0 and no flags set if they aren't needed?
 >
-> The drm-rust-next branch has closed now that -rc6 is out. If we don't
-> hear from Stephen, do you mind picking it up Miguel?
+> I don't say they cannot, and probably that's the most sane option if
+> there is no fixed default period and flags and we're sticking to 3
+> cells.
 
-Yeah, I will pick them -- I talked with Danilo about it a few days ago.
+So zero should have been used for drivers/pwm/pwm-argon-fan-hat.c?
 
-Cheers,
-Miguel
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k=
+.org
+
+In personal conversations with technical people, I call myself a hacker. Bu=
+t
+when I'm talking to journalists I just say "programmer" or something like t=
+hat.
+                                -- Linus Torvalds
 
