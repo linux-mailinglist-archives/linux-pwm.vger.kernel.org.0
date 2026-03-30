@@ -1,279 +1,179 @@
-Return-Path: <linux-pwm+bounces-8421-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8422-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +BfbHlWIymn09gUAu9opvQ
-	(envelope-from <linux-pwm+bounces-8421-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2026 16:27:33 +0200
+	id sNFgBEyNymn09gUAu9opvQ
+	(envelope-from <linux-pwm+bounces-8422-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2026 16:48:44 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 28D2935CD04
-	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2026 16:27:33 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9F2C735D250
+	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2026 16:48:43 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 47EC1305E30F
-	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2026 14:21:02 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 3E081319A2F8
+	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2026 14:38:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 322673D7D92;
-	Mon, 30 Mar 2026 14:21:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E190B2EC0A6;
+	Mon, 30 Mar 2026 14:37:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="l3C40f88"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f1XNAf7L"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx0a-00128a01.pphosted.com (mx0a-00128a01.pphosted.com [148.163.135.77])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B35BE3A4518;
-	Mon, 30 Mar 2026 14:20:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.135.77
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774880461; cv=fail; b=rnS1sC4b3lAC9/MlsuxcQZpuX9zSS6tO0BERm1rHufQcDmi42gss3dA18geqtivp2/7dCiITeTlqwTr6DzT1pFvcsT5li0uDxm81s6irO+e2naUbRrvztqyLVg+t/FyS+UaezB9jCgp9OAkLeYelvtXQkJ4IoQZSfWjaZ2aVw6s=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774880461; c=relaxed/simple;
-	bh=vBQ7r2vPsaifNbBZoaHwvqixWE7VQl9rCVCbvhTB5sM=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=DwNW4k7nK7ByKWMxksJqUeoqv/V3BkgrmZ9Jgp1eEO0wOzXutCHpwE2lqJWEQhHnf8wbKAigxUm4i+VqN/ra7qeNO2mAyGmtXsDrqaZUmW7S9dnuondDVeIWZYdGi0aeTT1bhDjV5ERl6AOsM4FYWZJiHWFMqpMyjH01MbrF8AY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=l3C40f88; arc=fail smtp.client-ip=148.163.135.77
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=analog.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
-Received: from pps.filterd (m0516787.ppops.net [127.0.0.1])
-	by mx0a-00128a01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 62UAw2vR3972697;
-	Mon, 30 Mar 2026 10:20:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
-	:content-transfer-encoding:content-type:date:from:in-reply-to
-	:message-id:mime-version:references:subject:to; s=DKIM; bh=vBQ7r
-	2vPsaifNbBZoaHwvqixWE7VQl9rCVCbvhTB5sM=; b=l3C40f88m0Swu7P51Cmjc
-	kTl2alpoi7tphFLsuvjOj2N/xqkrdsi4fGMAqVPdG624Y92pU8jVuYxUQChAUzWB
-	KY2ShRLumBKEu1CmztR36kRT8SmwfiR/pjX1vETpzHnfWzDLDde8qwYUnX4kutR1
-	U1m8+KXi+DDZvPSoHz3dU+HU3mJtes3WUqkMGtGnKXcuhWiSqp6l08jTjEkPESHN
-	09ivj/QXvy6QMtUe2vIKwg67s5+dOkBKYGui/BV/Gz1i21mmGu6DM6Rs3GXCVjcm
-	gqpdkXUdtytV6JAEU19YisCuXgTQwIV98RLjQHn3q8RZIFaXbd79gcqrAqxcEOKh
-	A==
-Received: from sa9pr02cu001.outbound.protection.outlook.com (mail-southcentralusazon11013064.outbound.protection.outlook.com [40.93.196.64])
-	by mx0a-00128a01.pphosted.com (PPS) with ESMTPS id 4d7gkva7nq-2
-	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-	Mon, 30 Mar 2026 10:20:36 -0400 (EDT)
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=n7W3eGzDrJDgkx1OASYnhgSJyEq5BADrpnLyZ+RwLsbStwJ3p+dPlfAaBimbO2w16Klr+9G1s6r2T5tmIqt5tqbgO6kT+ND6D35nqcvk1PK7ocEj/B2KFS+SBTkytIiRVrD3EGkMQnJGZw+ltwZ6hX2CT2/Rv9Akm5LkmcDyaW39fniptcIgreQuq7ssmUCa/fd2EtR1p0KZmuvVjIFzdjI2zr/SwJPfLF8PgidWmh+rKAxna5/uiWHmjQZ5DzDvsMUwtfhCXYy0EjCRenTEvcDSkpXlWFUiRpIJo2a10tUDkGEzHXwUoD22dw6pxXVIsLBAsXqoZgBk2wYGX/RMbg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vBQ7r2vPsaifNbBZoaHwvqixWE7VQl9rCVCbvhTB5sM=;
- b=nm2YUjfLBPOK7k+glYC0gvyeWgeZry3XBMuA5IchMxibr+cXjuTr4MTZXBxKyfTLDrAnYpKtZvTjsZQK2GVfaP2dnzvqiqvBqYdm0RPJmtW1RzoCeE9reqxxasG2PZ3ZAOXD2MgrKmBPbTlrnymyJQl/PNuHdWnYwqxLikNNiZ2che4eIr8/NmhTxuHuzcISF42suXDSD/5Sul3EWudyG4+1Uzfv/NuqRzaQf6ajgiDY4FI9yKBp0ds04g38DnlK/5086nL8kyUT3u0Ca5YZ4FpNDgIKdbcyLJ7JNg2O75UJlHFPXm5CwSZlhF1G4qJdimmyOmbf85KpPsKgtHRX7A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
- dkim=pass header.d=analog.com; arc=none
-Received: from LV9PR03MB8414.namprd03.prod.outlook.com (2603:10b6:408:367::23)
- by CH4PR03MB8018.namprd03.prod.outlook.com (2603:10b6:610:236::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9745.20; Mon, 30 Mar
- 2026 14:20:27 +0000
-Received: from LV9PR03MB8414.namprd03.prod.outlook.com
- ([fe80::d661:7c16:d052:cc81]) by LV9PR03MB8414.namprd03.prod.outlook.com
- ([fe80::d661:7c16:d052:cc81%6]) with mapi id 15.20.9745.027; Mon, 30 Mar 2026
- 14:20:27 +0000
-From: "Sabau, Radu bogdan" <Radu.Sabau@analog.com>
-To: Andy Shevchenko <andriy.shevchenko@intel.com>
-CC: Lars-Peter Clausen <lars@metafoo.de>,
-        "Hennerich, Michael"
-	<Michael.Hennerich@analog.com>,
-        Jonathan Cameron <jic23@kernel.org>,
-        David
- Lechner <dlechner@baylibre.com>,
-        "Sa, Nuno" <Nuno.Sa@analog.com>, Andy
- Shevchenko <andy@kernel.org>,
-        Rob Herring <robh@kernel.org>,
-        Krzysztof
- Kozlowski <krzk+dt@kernel.org>,
-        Conor Dooley <conor+dt@kernel.org>,
-        =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= <ukleinek@kernel.org>,
-        Liam Girdwood
-	<lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>,
-        Linus Walleij
-	<linusw@kernel.org>,
-        Bartosz Golaszewski <brgl@kernel.org>,
-        Philipp Zabel
-	<p.zabel@pengutronix.de>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Shuah Khan
-	<skhan@linuxfoundation.org>,
-        "linux-iio@vger.kernel.org"
-	<linux-iio@vger.kernel.org>,
-        "devicetree@vger.kernel.org"
-	<devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>,
-        "linux-pwm@vger.kernel.org"
-	<linux-pwm@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org"
-	<linux-gpio@vger.kernel.org>,
-        "linux-doc@vger.kernel.org"
-	<linux-doc@vger.kernel.org>
-Subject: RE: [PATCH v5 2/4] iio: adc: ad4691: add initial driver for AD4691
- family
-Thread-Topic: [PATCH v5 2/4] iio: adc: ad4691: add initial driver for AD4691
- family
-Thread-Index: AQHcvdoCw4o9rbwX3EeiToji+73F0LXCQCsAgATiWGA=
-Date: Mon, 30 Mar 2026 14:20:27 +0000
-Message-ID:
- <LV9PR03MB84143540CE505514E1CD84B4F752A@LV9PR03MB8414.namprd03.prod.outlook.com>
-References:
- <20260327-ad4692-multichannel-sar-adc-driver-v5-0-11f789de47b8@analog.com>
- <20260327-ad4692-multichannel-sar-adc-driver-v5-2-11f789de47b8@analog.com>
- <acZrthJYQX-h_9p5@ashevche-desk.local>
-In-Reply-To: <acZrthJYQX-h_9p5@ashevche-desk.local>
-Accept-Language: en-US
-Content-Language: en-GB
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: LV9PR03MB8414:EE_|CH4PR03MB8018:EE_
-x-ms-office365-filtering-correlation-id: 8d3063d0-8a3c-4da7-60f0-08de8e677dbf
-x-ld-processed: eaa689b4-8f87-40e0-9c6f-7228de4d754a,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|376014|1800799024|7416014|366016|38070700021|22082099003|56012099003|18002099003;
-x-microsoft-antispam-message-info:
- N6svVxx3X+/0vhzNOhBe7XvV2Yl8EOIfef4DwtMmPyLQLtbWZ3trZnuDLDscvgZPF/9k5IT84pJw3D6JBfh0bRNIrn+7HqZpn55ayhJ2ZanqhLdTnFsXkZF9RdSJyJ4r0aJYSJUqtteUTOiLagRXZ374RNNKeMhPLE3IfjMIvWPPFp7bYm8inBV+WzdRf1RgeFZyzT3oN9skuWDLJO7SAWUuIF9OIeqsPVAdG2Vr39UE5mcQmt7Kk8miNqn2b3gt8011dIsrIibAooTfMX+KjpHPGMI92Pg7jD8TfjG6YBy/lU8XDgqdXHwbo2ZQeuHwJSTpVmuDwKtyUpOLcwzbt9bpZQdpi2HEqCT0xOQXwqzo0QwBMHWe1VoF+AfUKZEwce6wlBa1ptVech3nJL/iVhADvKMWJrpNWesCme+kDkaMsgXpXpmpfIXsoXOgJOSnHLcJ7j9uETYzyfI8ao709MBoXfH+WrZSq4SAo7/dsOx1UcC5/eLkK/QJepFavtg0pNVt0Bb10AP0zD+XdMaAVQpFkFwPzVgQA6FBnqYYgsZoYoaPcUuHRUWNJo9pLhp1HPbRZnrSQG02tH/P/hu0sc5prOModsXccfCYrzFMTOFcYtKxv9l0FZUhxYCPuT39pjCpfUkrWShTN4yZI5vC9Q5P540XS6ZtMR8M6AaM9Xiz1zs4aOGSPZgH16J5v4UWNjtg4cNFiphrpPRrFYUCYKMrq5y3rdcYw9d3PgCXNb7Rx9z6M8bQtlSmIo8an1Fc9bbA75qaAMuwcrdupt2s22LmrFfzuRSrxR4Pjs7tOBo=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV9PR03MB8414.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(1800799024)(7416014)(366016)(38070700021)(22082099003)(56012099003)(18002099003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?ltoLCLPtrPt8SYnA6Do4NNNNijKDJpTY9krDzcbHBkHIglHedHfhQsH4ir?=
- =?iso-8859-1?Q?bOWdIZc11UyAMCHSrlmmsGg+kLekjv3uNMQgGAUIriB4nvXeJdudyH+B6L?=
- =?iso-8859-1?Q?GcyiUsR6lOUJ36PPf6kgf9NmtGrfDyjMWbZcX8RF2Mp/BnSNvHfUrPgA3S?=
- =?iso-8859-1?Q?53KI9DN8u869roDqLaLNt99/ZyvaFAWBA+ADe6g6+MdO1RA4avJBTZSh+G?=
- =?iso-8859-1?Q?UdQdc9fESQpiEgbJ0FUSDXQUSwQ4cnqbV3lZ/zmvnKlQTIl4VMsawf97s1?=
- =?iso-8859-1?Q?+JP1uUAH8YoLjm3M1PVIgrpBx9hPOoZ8pCa65M/03HpJ8Ls63S4MDUklPm?=
- =?iso-8859-1?Q?XkMsmYRbf2pt4a/hcLtMEjDY7fu0yWQtxTSAq6XM9bfB/9N5H8N06ASkpa?=
- =?iso-8859-1?Q?Yq/T45KsWzuuIiNcOTmCnzSaytZq20d5iAhAs6a8Ly9zoV/WvOgP6JlaK4?=
- =?iso-8859-1?Q?HezOhaUGcsM5pSBq1q5CfFJZa6fygcORKn2vzkeJzXKq3v4Zsw9SAFHIF8?=
- =?iso-8859-1?Q?H90/FZ+L27+aIecQBtl3EChD98q9TwCHZ2IjFwaSqtGDBB1B3gYbbB3X2L?=
- =?iso-8859-1?Q?NiNKkIANkHtZyhAmTFnm+jHG7qRfZ1oPvKhwnx4ePm8cngLv58MY1dm+k2?=
- =?iso-8859-1?Q?UGBRjA4wNZ5sODleaDmwYwsGZ+l7lS51THW7T9W3HQPtOpCPwmp8d1gB1f?=
- =?iso-8859-1?Q?zHkDZGWwByHMUknUdPvWtfcZb1yXKbC6zf4D2OE2dYc8lISMTR1Jqy4los?=
- =?iso-8859-1?Q?bjnKdvnz9cNg/J75fuWLNu2vPbc8M0dv1UAYEDmsHCl9R3fRzc4sqTOIxq?=
- =?iso-8859-1?Q?t+ZIeaa7UwdbPR+DizKmPTnOobV+9zdpI05Jiw/1zCz+TKQAD9euFf6T/H?=
- =?iso-8859-1?Q?w/X0pEujcyoUGTDSYxKSl5F82V7KlumMWKz7kZ2gOHh0xkKvLuJHqHWCLj?=
- =?iso-8859-1?Q?VXDI0fvPj4B+Ozo6KVCgpVMEDda7O99YoqBGqNu6ilbsPfCrIg8Q8XAzWd?=
- =?iso-8859-1?Q?QvVrx3kD5idloqQoaOkNFwhXa1fC4Umm7WJPTh6PzCDodywLvD8PohIsP9?=
- =?iso-8859-1?Q?A4EISYNVAvaTkj4Xz/uUQ5M4B300NvwIvGwgTx30oxtP9u1AvNk3qzEkot?=
- =?iso-8859-1?Q?VWIFlF3mxPZS5LkGCrndMCdwMbOtscvQaN7+M8xk1SdTX2TGfR5j9Qg1pZ?=
- =?iso-8859-1?Q?Ks4nXkSTytcLyVmebx/tKpwAdVo94pceMqpNX25TweWt9Sqjr5gfHEaL5U?=
- =?iso-8859-1?Q?t6pMoPbNXPt5cyCoNiBA+SBkJnbMgsAy0eJ/d0Z3t9cxr9iNrWLnlsMSKF?=
- =?iso-8859-1?Q?QQZxG2rxOgrvz1IYoj6+gBHBXBH2svd15G7GgWYH++tczpJGldqCVr0kkr?=
- =?iso-8859-1?Q?wg6IfqDzu/e8Ixq5CphdgpBuDIanhHsZmFcFZJHeVoSyxq/oE87k0VpH7Y?=
- =?iso-8859-1?Q?f7hYG0aAmaQbb0cPfVxKuirExbsmkB4neVgbsXEtNRMSpvul8QlwiXO5tT?=
- =?iso-8859-1?Q?HobEECCplNdl7QEq9iYe51aB4XLMBhc+UVfQua1YDyli9QbP/9BjVEHqHx?=
- =?iso-8859-1?Q?egRUKGDvgaV+G1GGxXI2iLRjJARPXYkc8fsz0CrefTA2jhbb62qPLyrQ2w?=
- =?iso-8859-1?Q?Agld5OtZs36VhiQP4fTJcqJ27++f3X84u2tlErw38FWM+76BEcfMKPyi5g?=
- =?iso-8859-1?Q?GVw/r/Hfyjd4zHjrRR4H/2EjQYHm3YSNWUm6ZBpGUNSXlkQ6WPZOFqxZ9i?=
- =?iso-8859-1?Q?9AhZz72pCK7Lk6xuOzmvAywgZUrXy2auz3fgUAoJNihRr0vdwISg1zkItQ?=
- =?iso-8859-1?Q?qAbrcgM7Gg=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54C7F2E091B;
+	Mon, 30 Mar 2026 14:37:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774881441; cv=none; b=jMwp/XCoZSucb9xNjs3XvRIppPOEPmdyC2VXpTpEm8d9CEB7cX2YOAYDT6G2u2unJbzfp06wwLQDXljJMotmN/mOtCPqwoWu1x96RG8xUoNO5l/haa3KKhMWt9GoBPo4k+V7nAlCglnNzfcH0QcTR0jXMjgdWBT7b96PNkBYiKQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774881441; c=relaxed/simple;
+	bh=FfsIVUKLPFqUD2jO1eTH3CMDTjs2wmEjz9bthk26meA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=rMEAD3G43tffOhQo1xsGd6fzThT95/7ST7k7BpLpvb5e8WGCN4KTozqrQlq8UD/UQm3wPmb2OY4Vvo+vqcpS5MZWWRkxF0CaDOZ8pLTaJkoAVzms3O4uG4wvRqOJt6F8dlmxEuaak7DeTx8npNGsJypuiVHhK9VAHSCItsgc/nY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f1XNAf7L; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1774881440; x=1806417440;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=FfsIVUKLPFqUD2jO1eTH3CMDTjs2wmEjz9bthk26meA=;
+  b=f1XNAf7LVdSvhsGh7TuDRaG50/d5WRAAHRfC6SbiUCQd5cBaTIR5RHYT
+   X0WQ5lA2Av3Fj2/rRjKCZuj8p1HqmmYXti4NBCS8pJDooQtXgM0+dPwPR
+   Wb40NHVY3PNkQo3FQti9267CQQEj0VhJqHt2eunDZbxzBvfJkQUWfckdV
+   XR18HpnY12M3ewH/B6vPqt0gqF954h+38A1wH9kFrQYiD6TpdU+KP7JV7
+   ja4ypbwAQ7NK6UtutBw7foQCKquol9PzryHpb2jjoNIa0ezJqlQbD0r2Y
+   aISAv2pEG2gj/dBCCp/lMA49sMeQBa59XEqedTYqxcuoKT+A7fG0dfEjS
+   g==;
+X-CSE-ConnectionGUID: tqPNu9e/Tf+77S/YXn3Wug==
+X-CSE-MsgGUID: eorGjQYHTkiD+SAc2Vnn2Q==
+X-IronPort-AV: E=McAfee;i="6800,10657,11743"; a="75770636"
+X-IronPort-AV: E=Sophos;i="6.23,150,1770624000"; 
+   d="scan'208";a="75770636"
+Received: from orviesa010.jf.intel.com ([10.64.159.150])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2026 07:37:20 -0700
+X-CSE-ConnectionGUID: GQSdPSfWSXiYPERlw7dyaw==
+X-CSE-MsgGUID: T37eBBTtRSqbMyEgnSZ/aw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,150,1770624000"; 
+   d="scan'208";a="225245200"
+Received: from lkp-server01.sh.intel.com (HELO 283bf2e1b94a) ([10.239.97.150])
+  by orviesa010.jf.intel.com with ESMTP; 30 Mar 2026 07:37:16 -0700
+Received: from kbuild by 283bf2e1b94a with local (Exim 4.98.2)
+	(envelope-from <lkp@intel.com>)
+	id 1w7Dju-000000001DN-01E6;
+	Mon, 30 Mar 2026 14:37:14 +0000
+Date: Mon, 30 Mar 2026 22:36:53 +0800
+From: kernel test robot <lkp@intel.com>
+To: Mikko Perttunen <mperttunen@nvidia.com>,
+	Thierry Reding <thierry.reding@gmail.com>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Jonathan Hunter <jonathanh@nvidia.com>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, linux-pwm@vger.kernel.org,
+	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+	devicetree@vger.kernel.org, Yi-Wei Wang <yiweiw@nvidia.com>,
+	Mikko Perttunen <mperttunen@nvidia.com>
+Subject: Re: [PATCH v2 2/7] pwm: tegra: Avoid hard-coded max clock frequency
+Message-ID: <202603302259.NdAkuCVx-lkp@intel.com>
+References: <20260325-t264-pwm-v2-2-998d885984b3@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-Exchange-RoutingPolicyChecked:
-	uA86lk5/HCG7VbRHPu8F7djmJY+xQM5I9zjwNnAXzIvMC6E2rFNebJYRWTcmeKn1dhTdL78B0urfik2GqIIc/yODQjWSMis2YRXoRLrP/3SafK/9M3feGxO+GDoKCcC+nRE1XBR0Cnpkf35JSOb+tNk2cYYXGfnnP7fdKW5ei6mlSOdoeq47XVPcpaqwbnEtTAyvtQZPl4FYPvnfI/8747zKlPjTEuRHG0g0t9P4UkMxSgw01oTWcAMpLKICtaKoiaE0hr/m6lbsB3PojRvPUWJIXtdzR1PmTgjMTJjgxhV1zcXgSYkWzYYW6Yfs/Qox9Bm1ExhWhkDl/nENjXQCiQ==
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: LV9PR03MB8414.namprd03.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8d3063d0-8a3c-4da7-60f0-08de8e677dbf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Mar 2026 14:20:27.5400
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: wXKan71K6560KZpc/ekF7+qfqid/h7CgZlD/gyFH5ngg7aFU2QX9a8G0QH69nc95peowpYEzYn6CUiaBXsbNqA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH4PR03MB8018
-X-Proofpoint-GUID: mdMzV7nqP_aRdBTcUwF5BNz4a-Ie6K96
-X-Proofpoint-ORIG-GUID: mdMzV7nqP_aRdBTcUwF5BNz4a-Ie6K96
-X-Authority-Analysis: v=2.4 cv=TeqbdBQh c=1 sm=1 tr=0 ts=69ca86b4 cx=c_pps
- a=Kac4Oh/pgoirBk7HbaAweA==:117 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
- a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=8nJEP1OIZ-IA:10
- a=Yq5XynenixoA:10 a=VkNPw1HP01LnGYTKEx00:22 a=0sLvza09kfJOxVLZPwjg:22
- a=OmVn7CZJonkx5R5zMQLL:22 a=QyXUC8HyAAAA:8 a=gAnH3GRIAAAA:8
- a=dnFdfbny24WZlfKQ-RQA:9 a=wPNLvfGTeEIA:10
-X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwMzMwMDExMiBTYWx0ZWRfX3a1laztfAHFL
- oJgZyYi7eZDaU6ZCb+Qz3hNWp31LUzOc2eiJdj8LRQU0TgNk4YSPb/8T1NG1BGXH9rAFm9ZtBJT
- wRcWNvk2/wLrnCP369zAPb5Ujgsm6NsK3n9rBle0NTviKzUmaG7IaZ/XQ2IFvAm0MZWdxtBFlqM
- SZh/icEZ9UKRqJdvpedmEJm1taj0dP7uLzNgoQALW4d+ym5YyJVfSztLO5uh12lk69pi8lp/NY6
- 18xzAPXsyZCOUj+l7WY/cwRNv371L2zvu4V5ecnBoZILAMImqlZlP27OEGXZoAXD/WtJAWMSVmh
- qEJ6axmkAhHog6uzA7qdkxyDmxuG2pC2kBMuuc1CJsHUIyh+NiaksZKUHGpgI/aEbrqbjKlZJAg
- DQ9r272Vpr9jS8qaPi6JTT2h1zc4KLzKmei3jvBcqfW+c72ZkIiMxyTmtl+gppr+kDGxppHrTzu
- AlqK/7GqLAMe4zRNWpQ==
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
- definitions=2026-03-29_05,2026-03-28_01,2025-10-01_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
- phishscore=0 adultscore=0 priorityscore=1501 clxscore=1015 spamscore=0
- impostorscore=0 lowpriorityscore=0 suspectscore=0 bulkscore=0 malwarescore=0
- classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
- reason=mlx scancount=1 engine=8.22.0-2603050001 definitions=main-2603300112
-X-Spamd-Result: default: False [1.34 / 15.00];
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260325-t264-pwm-v2-2-998d885984b3@nvidia.com>
+X-Spamd-Result: default: False [0.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[analog.com,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[analog.com:s=DKIM];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[24];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8421-lists,linux-pwm=lfdr.de];
-	FREEMAIL_CC(0.00)[metafoo.de,analog.com,kernel.org,baylibre.com,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org,vger.kernel.org];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,analog.com:dkim,analog.com:email,intel.com:email,LV9PR03MB8414.namprd03.prod.outlook.com:mid];
+	TAGGED_FROM(0.00)[bounces-8422-lists,linux-pwm=lfdr.de];
+	FREEMAIL_TO(0.00)[nvidia.com,gmail.com,kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[Radu.Sabau@analog.com,linux-pwm@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[analog.com:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[intel.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCVD_COUNT_SEVEN(0.00)[7]
-X-Rspamd-Queue-Id: 28D2935CD04
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,intel.com:email,intel.com:mid,01.org:url,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 9F2C735D250
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+Hi Mikko,
+
+kernel test robot noticed the following build warnings:
+
+[auto build test WARNING on 11439c4635edd669ae435eec308f4ab8a0804808]
+
+url:    https://github.com/intel-lab-lkp/linux/commits/Mikko-Perttunen/dt-bindings-pwm-Document-Tegra194-and-Tegra264-controllers/20260329-233356
+base:   11439c4635edd669ae435eec308f4ab8a0804808
+patch link:    https://lore.kernel.org/r/20260325-t264-pwm-v2-2-998d885984b3%40nvidia.com
+patch subject: [PATCH v2 2/7] pwm: tegra: Avoid hard-coded max clock frequency
+config: nios2-allmodconfig (https://download.01.org/0day-ci/archive/20260330/202603302259.NdAkuCVx-lkp@intel.com/config)
+compiler: nios2-linux-gcc (GCC) 11.5.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260330/202603302259.NdAkuCVx-lkp@intel.com/reproduce)
+
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202603302259.NdAkuCVx-lkp@intel.com/
+
+All warnings (new ones prefixed by >>):
+
+   In file included from include/linux/kernel.h:17,
+                    from include/linux/clk.h:13,
+                    from drivers/pwm/pwm-tegra.c:39:
+   drivers/pwm/pwm-tegra.c: In function 'tegra_pwm_probe':
+>> include/linux/limits.h:26:25: warning: unsigned conversion from 'long long int' to 'long unsigned int' changes value from '9223372036854775807' to '4294967295' [-Woverflow]
+      26 | #define S64_MAX         ((s64)(U64_MAX >> 1))
+         |                         ^~~~~~~~~~~~~~~~~~~~~
+   drivers/pwm/pwm-tegra.c:303:47: note: in expansion of macro 'S64_MAX'
+     303 |         ret = dev_pm_opp_set_rate(&pdev->dev, S64_MAX);
+         |                                               ^~~~~~~
 
 
-> -----Original Message-----
-> From: Andy Shevchenko <andriy.shevchenko@intel.com>
-> Sent: Friday, March 27, 2026 1:36 PM
-> To: Sabau, Radu bogdan <Radu.Sabau@analog.com>
+vim +26 include/linux/limits.h
 
-...
+3c9d017cc283df Andy Shevchenko 2023-08-04  14  
+54d50897d544c8 Masahiro Yamada 2019-03-07  15  #define U8_MAX		((u8)~0U)
+54d50897d544c8 Masahiro Yamada 2019-03-07  16  #define S8_MAX		((s8)(U8_MAX >> 1))
+54d50897d544c8 Masahiro Yamada 2019-03-07  17  #define S8_MIN		((s8)(-S8_MAX - 1))
+54d50897d544c8 Masahiro Yamada 2019-03-07  18  #define U16_MAX		((u16)~0U)
+54d50897d544c8 Masahiro Yamada 2019-03-07  19  #define S16_MAX		((s16)(U16_MAX >> 1))
+54d50897d544c8 Masahiro Yamada 2019-03-07  20  #define S16_MIN		((s16)(-S16_MAX - 1))
+54d50897d544c8 Masahiro Yamada 2019-03-07  21  #define U32_MAX		((u32)~0U)
+3f50f132d8400e John Fastabend  2020-03-30  22  #define U32_MIN		((u32)0)
+54d50897d544c8 Masahiro Yamada 2019-03-07  23  #define S32_MAX		((s32)(U32_MAX >> 1))
+54d50897d544c8 Masahiro Yamada 2019-03-07  24  #define S32_MIN		((s32)(-S32_MAX - 1))
+54d50897d544c8 Masahiro Yamada 2019-03-07  25  #define U64_MAX		((u64)~0ULL)
+54d50897d544c8 Masahiro Yamada 2019-03-07 @26  #define S64_MAX		((s64)(U64_MAX >> 1))
+54d50897d544c8 Masahiro Yamada 2019-03-07  27  #define S64_MIN		((s64)(-S64_MAX - 1))
+54d50897d544c8 Masahiro Yamada 2019-03-07  28  
 
->=20
-> > +#include <linux/bitfield.h>
-> > +#include <linux/bitops.h>
-> > +#include <linux/cleanup.h>
-> > +#include <linux/delay.h>
-> > +#include <linux/device.h>
->=20
-> Hmm... Is it used? Or perhaps you need only
-> dev_printk.h
-> device/devres.h
-> ?
-
-Hi Andy,
-
-I have checked this out and it seems device.h doesn't actually need
-to be included anyway since spi.h directly includes device.h, and since
-this is a SPI driver that's never going away, it's covered. Will drop it!
-
-Thanks,
-Radu
-
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
 
