@@ -1,235 +1,195 @@
-Return-Path: <linux-pwm+bounces-8423-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8424-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6JadAUePymlC+AUAu9opvQ
-	(envelope-from <linux-pwm+bounces-8423-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2026 16:57:11 +0200
+	id 6N/DCkayymkX/QUAu9opvQ
+	(envelope-from <linux-pwm+bounces-8424-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2026 19:26:30 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5328635D46E
-	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2026 16:57:10 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 919E035F484
+	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2026 19:26:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A86FE313089C
-	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2026 14:48:33 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 6AE68301E206
+	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2026 17:24:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6252324B23;
-	Mon, 30 Mar 2026 14:48:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id DAAB13D8124;
+	Mon, 30 Mar 2026 17:24:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="byu97nM0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V76BZqIs"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 536343242BD;
-	Mon, 30 Mar 2026 14:48:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774882102; cv=none; b=hOPyN/o7zcFOyY2Z4Mcs0ncWb01Pqu+sd3tEKKdZo0pUUPNxgc6k0HlgKbxbzJ9QKwN/CmG46GJVYzpEPjp4LBAcOnHFx8X0hryT2xTgO3oZryPRl4shYvir1LlsLJVT9u+1yIaXA1881DuC7IsxQZE2jXiE2q0SDDJ18ugccRU=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774882102; c=relaxed/simple;
-	bh=xpBPUcul1mxy76GdOsZONkg8Sx2okkRC6m5zBbw2K2U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bCxVOK5gjduDy4+muLIKiqt2uUZJWntcAkhXGYGiybs/xMJTETLZWHi0jP5Kso9hastE1dD25DYl5s5bzpKzdsUHoltrdBtKAzBSIwu4gjyyxAWYMC8faHFrHuJopVuAeKGKSACCneQmMaT2bC3pTJTFbEBMm4i7rQpslpqZd1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=byu97nM0; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774882101; x=1806418101;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=xpBPUcul1mxy76GdOsZONkg8Sx2okkRC6m5zBbw2K2U=;
-  b=byu97nM0kVK6sXPi2Ars2jrEyZxmWIFEbIssuepZBxVJKiQO8OCfzkUh
-   Li17a95Y7r6c9HQ3LHnG4UKtGmWoa9txE43VXKHGfPCZeM3PO2FlnxcZS
-   DB2OPSxpz6J+aj3tgizdWB8QZn5gzI1lN9TO2VI1vVAPPvR0nzPRN+Q9W
-   UvIqpUA0E/tcHsD2pPvdjGJcoNOy+kuy99yQtYIhIS9zrCR5KsPLRxCM8
-   9ZhJwhVJWhXPqUbvh8oGkUon3UVgIGlS8c7gJEQxGpEUtxE6OCN0mreUm
-   PoDpYKpZ2ebRWdjfu2Qhtbj1OKgDae3mjDYsTbzMKkI2IVnYFrtTCCC6V
-   g==;
-X-CSE-ConnectionGUID: 5gdJG16QS9+WFOPeUskbCQ==
-X-CSE-MsgGUID: MmyPapJrSK2AbhJZvZNL7w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11743"; a="79779133"
-X-IronPort-AV: E=Sophos;i="6.23,150,1770624000"; 
-   d="scan'208";a="79779133"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2026 07:48:20 -0700
-X-CSE-ConnectionGUID: GeCJocUATueDNdJ/3Bzb9Q==
-X-CSE-MsgGUID: Uwruj5+6QpuBx/L3s5F1+g==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.23,150,1770624000"; 
-   d="scan'208";a="222767787"
-Received: from lkp-server01.sh.intel.com (HELO 283bf2e1b94a) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 30 Mar 2026 07:48:17 -0700
-Received: from kbuild by 283bf2e1b94a with local (Exim 4.98.2)
-	(envelope-from <lkp@intel.com>)
-	id 1w7DuY-000000001E5-1RHg;
-	Mon, 30 Mar 2026 14:48:14 +0000
-Date: Mon, 30 Mar 2026 22:47:32 +0800
-From: kernel test robot <lkp@intel.com>
-To: Mikko Perttunen <mperttunen@nvidia.com>,
-	Thierry Reding <thierry.reding@gmail.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Jonathan Hunter <jonathanh@nvidia.com>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, linux-pwm@vger.kernel.org,
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-	devicetree@vger.kernel.org, Yi-Wei Wang <yiweiw@nvidia.com>,
-	Mikko Perttunen <mperttunen@nvidia.com>
-Subject: Re: [PATCH v2 2/7] pwm: tegra: Avoid hard-coded max clock frequency
-Message-ID: <202603302251.AFXspVqF-lkp@intel.com>
-References: <20260325-t264-pwm-v2-2-998d885984b3@nvidia.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 50E0E3DC4D0
+	for <linux-pwm@vger.kernel.org>; Mon, 30 Mar 2026 17:24:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.208.41
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774891488; cv=pass; b=rDSNafGJ61mCSf7IOmLGD2Tpr5y0FCoospZBHRrF0vqKYYOUtmTLCiUqvUFAeFEwQnellXK7tvJwmv6l+/rIq2tVZSLOrE8QHOa6ME5NW4wOofp27hqL0X+41H4/ZU+XEIhVO3CUEAP4hgw/t1Y4eDQ69D92bZfbG446IYujih0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774891488; c=relaxed/simple;
+	bh=/POCNtVCVgs8Wz8mZ9O1D8ykDMaaTk6zJm6BSwE9+PU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=B1Fk5zImhvYodrxFqXMya5L2g+X7QH5xcLkFaX9s7B+i0bD7bk8E+tMPFP7goXlxANvh4jSAVBPvamS0RqlJiYaALDSCwUqQBsH2ijLEN9eVgVY48LpGs/lakTqcSb8K/S6pwnFkAdpaPVPtQXaUKawspGOA2x8M50UQPVyvvFw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V76BZqIs; arc=pass smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-661d20c9787so6297347a12.0
+        for <linux-pwm@vger.kernel.org>; Mon, 30 Mar 2026 10:24:47 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1774891486; cv=none;
+        d=google.com; s=arc-20240605;
+        b=EAE5lQITwv5Q2++88lydnbVpzuapyo7aXuv+5QxLo+UpQjM4jk3vMTmfVV2mITC3LH
+         f0OOxG3fpN9VI+XE4neuuk4mAwnHz4zYyh1ulMJC2b9cJqnD4fFKkTE57QPg+KWEXmLr
+         S5zXN7S55GZMB7QLlFRwmfzxdHIff7nUTs+bnGe30TVfe+KB7/BfJOb++1mbJzFrw3I2
+         t18Y3MPCEPxJ8sOP5FEp5uV325g04kp4AMd/PgjaoHSrSWjDd1XixbstsKtZy6JUwhw8
+         U7PczHpzLmu5Ac9aekiHjiumc82m1DBHmVidRFRfune0T+faewsnFt/Q1cvKx9tSJVv0
+         Mr7Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=/POCNtVCVgs8Wz8mZ9O1D8ykDMaaTk6zJm6BSwE9+PU=;
+        fh=SWc+RtLGtQ0EcpidYTSgnjbYVtiJ2ethYBp3NmiVMjk=;
+        b=WM7h/+ZGIdVjwW6ASFV3IAPoFJFqJ9+xeBZCm9gx7KUTRwncpXnQKGDx9LnGwCr1Zk
+         ZKJDe7AGUlM61SQFo0ZqQXm/iO1EiARidZYU00XthXXhaMRpaORmk4ikanHHMzoDEpvO
+         DeQ79y2toDzABjLdsBjlMaLirEoj0eM8VLbu8tPSXhIbqukxWf8LknY350+Klk8lA1gt
+         hI/lFzl7lAAJjN7npmaRSSH5H7yD+gvRH9Bs0zwBE2NYXWOM7sBqOQ2vWC5gxshmQ1F+
+         MSzF2Bb0RADx67IBY7NUfEcfjtZVeA+SHkIvqOcQEMFTNHdD2y97OTgAwrbmdMO5am3S
+         L0yw==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1774891486; x=1775496286; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/POCNtVCVgs8Wz8mZ9O1D8ykDMaaTk6zJm6BSwE9+PU=;
+        b=V76BZqIsg6SY28n+CDDu+IH++PLSb8MJSlRIvY02cnLUWXpaxB91LN/qlH3xzlIxCx
+         OJpm0KiBuf6pIWl4hS1tBcqhmkha9q0QN7jpVlN/RWZSajGpxmqtZstQppDr8zTLHfCl
+         7/3yLIORDyGDv/FwB7cjm/RynB6KgTd3CbCbcKooE15JDQcnwXYC3TG/cD+TSmFNry9y
+         qase5dwhuuHQDJ75vNqql1kmgBxzGIcszCChHk74hP53Qdi5sFznMywjfIRhJmz89xoa
+         FPIC0Py+qZ9XjashK4KXSbxEdCIEca9UEaypsvN6Gb+8PtPdnCYX4WzuDT0B1re+KOEK
+         PpHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1774891486; x=1775496286;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=/POCNtVCVgs8Wz8mZ9O1D8ykDMaaTk6zJm6BSwE9+PU=;
+        b=FRimM6Hrc4s6mdEIziZZ78E/KAaliLaDeFjaZGmB6mDJU8VSIJe7DsP3C0NzgT1tAo
+         OE0piMKdqi4zB0EzF0fw6ZTjH0oM0zLGAX/jGkddM5uGXiraGvq/pPaksAvPrjlH6aLD
+         rxZfm4jsRFjWkkly1rPWqp6PitgU319RBjiQW4awXJPVn6ncgTgarbj3DLMhLhqQHRYB
+         Mivc0MNnCRNm68jnq+F1PApABk9zR7C7IsPXFInvjWFtlgaSplXVoZrFDzMY1usiy0HC
+         KNuVGPRFgTees7yQV3u7kuIfxeRFSz6z2pITrpaE6Q2Cl4iNOt0G9rLe7HkDsNAleG9b
+         vGeA==
+X-Forwarded-Encrypted: i=1; AJvYcCWSJn59yoceFZ6PC1sthfapt3oL9uxiVHCy2YCzYcDjoMdpHTqOV2qQI5RI+B90VItUnVSVNf63RFM=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxoxtUBgezImWa39WGsNMAUgGdkyHpzmx6qefl7qpkAJro6fLHw
+	LQ0+RHSbcYFQ7Rvg3FofL3L++amYnPHL9Z1oH023SLsnnvVAG2NBV5lPmi75FKZvC/9MqdDXsIz
+	AqyegRgf/ffl7p3RN3CKeoe5oTGyr5jY=
+X-Gm-Gg: ATEYQzzzzfO7EGf94o4oXDemucR0PKZ2GGTAGmhgjVcsRHKD+/8MW8nYtA0Kt7pi1WE
+	Aq17KXSeU39dgNwdy9CbbwFWUb6SuEs7LjchjbOv6/Eu5CO6i36sl+GiWbKinqASGqgMhsGTfU6
+	knUiZHrDwVxKChMCOByh4Zga0jxm6u3DNqlCXyOej0cOgFtWEnw0rOMdyZL9GwVOedTgnyifHg1
+	smMXJMM/0i4LIA7tb2MWQoowAJg7mBSXJ+VIoQHoDVWZ1H/3dUHJyBUejrkWo19f/wx/Ybc4bbT
+	tC8jt43/E9KcNZSDNDw52inGnCvx28efZ3D1TAx8BIr7fHZf05dbqUtNJPU8XBBang+E8DtzSSz
+	Y/pFrKl0=
+X-Received: by 2002:a17:907:9626:b0:b97:554:f12e with SMTP id
+ a640c23a62f3a-b9b50350860mr690721166b.14.1774891485468; Mon, 30 Mar 2026
+ 10:24:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20260325-t264-pwm-v2-2-998d885984b3@nvidia.com>
-X-Spamd-Result: default: False [0.34 / 15.00];
+References: <20260327-ad4692-multichannel-sar-adc-driver-v5-0-11f789de47b8@analog.com>
+ <20260327-ad4692-multichannel-sar-adc-driver-v5-2-11f789de47b8@analog.com>
+ <acZrthJYQX-h_9p5@ashevche-desk.local> <LV9PR03MB84143540CE505514E1CD84B4F752A@LV9PR03MB8414.namprd03.prod.outlook.com>
+In-Reply-To: <LV9PR03MB84143540CE505514E1CD84B4F752A@LV9PR03MB8414.namprd03.prod.outlook.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Mon, 30 Mar 2026 20:24:09 +0300
+X-Gm-Features: AQROBzDi52qTqIm1Vf3lVJqwmlc9iA41VGN7nD3k385cLEOQCXsLlg-VEZ4M7zs
+Message-ID: <CAHp75VcUCM8aeUpNaFEXnS+Cm08Mq5j+Qp2gYqWP9vCO+9CtQA@mail.gmail.com>
+Subject: Re: [PATCH v5 2/4] iio: adc: ad4691: add initial driver for AD4691 family
+To: "Sabau, Radu bogdan" <Radu.Sabau@analog.com>
+Cc: Andy Shevchenko <andriy.shevchenko@intel.com>, Lars-Peter Clausen <lars@metafoo.de>, 
+	"Hennerich, Michael" <Michael.Hennerich@analog.com>, Jonathan Cameron <jic23@kernel.org>, 
+	David Lechner <dlechner@baylibre.com>, "Sa, Nuno" <Nuno.Sa@analog.com>, 
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+	Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
+	Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, 
+	Shuah Khan <skhan@linuxfoundation.org>, 
+	"linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, 
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, 
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, 
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, 
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
-	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-8424-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8423-lists,linux-pwm=lfdr.de];
-	FREEMAIL_TO(0.00)[nvidia.com,gmail.com,kernel.org];
+	RCVD_COUNT_THREE(0.00)[4];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[intel.com,metafoo.de,analog.com,kernel.org,baylibre.com,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org,vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[25];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[intel.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-pwm,dt];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,intel.com:dkim,intel.com:email,intel.com:mid,01.org:url]
-X-Rspamd-Queue-Id: 5328635D46E
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andyshevchenko@gmail.com,linux-pwm@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: 919E035F484
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Mikko,
+On Mon, Mar 30, 2026 at 5:20=E2=80=AFPM Sabau, Radu bogdan
+<Radu.Sabau@analog.com> wrote:
+> > -----Original Message-----
+> > From: Andy Shevchenko <andriy.shevchenko@intel.com>
+> > Sent: Friday, March 27, 2026 1:36 PM
+> > To: Sabau, Radu bogdan <Radu.Sabau@analog.com>
 
-kernel test robot noticed the following build warnings:
+...
 
-[auto build test WARNING on 11439c4635edd669ae435eec308f4ab8a0804808]
+> > > +#include <linux/bitfield.h>
+> > > +#include <linux/bitops.h>
+> > > +#include <linux/cleanup.h>
+> > > +#include <linux/delay.h>
+> > > +#include <linux/device.h>
+> >
+> > Hmm... Is it used? Or perhaps you need only
+> > dev_printk.h
+> > device/devres.h
+> > ?
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Mikko-Perttunen/dt-bindings-pwm-Document-Tegra194-and-Tegra264-controllers/20260329-233356
-base:   11439c4635edd669ae435eec308f4ab8a0804808
-patch link:    https://lore.kernel.org/r/20260325-t264-pwm-v2-2-998d885984b3%40nvidia.com
-patch subject: [PATCH v2 2/7] pwm: tegra: Avoid hard-coded max clock frequency
-config: hexagon-randconfig-r113-20260330 (https://download.01.org/0day-ci/archive/20260330/202603302251.AFXspVqF-lkp@intel.com/config)
-compiler: clang version 23.0.0git (https://github.com/llvm/llvm-project 2cd67b8b69f78e3f95918204320c3075a74ba16c)
-sparse: v0.6.5-rc1
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260330/202603302251.AFXspVqF-lkp@intel.com/reproduce)
+> I have checked this out and it seems device.h doesn't actually need
+> to be included anyway since spi.h directly includes device.h, and since
+> this is a SPI driver that's never going away, it's covered. Will drop it!
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202603302251.AFXspVqF-lkp@intel.com/
+No, this is the wrong justification. IWYU principle is about exact
+match between what is used and included in a file (module). spi.h is
+not dev_*() provider and may not be considered for that.
 
-sparse warnings: (new ones prefixed by >>)
->> drivers/pwm/pwm-tegra.c:303:47: sparse: sparse: cast truncates bits from constant value (7fffffffffffffff becomes ffffffff)
-
-vim +303 drivers/pwm/pwm-tegra.c
-
-   266	
-   267	static int tegra_pwm_probe(struct platform_device *pdev)
-   268	{
-   269		struct pwm_chip *chip;
-   270		struct tegra_pwm_chip *pc;
-   271		const struct tegra_pwm_soc *soc;
-   272		int ret;
-   273	
-   274		soc = of_device_get_match_data(&pdev->dev);
-   275	
-   276		chip = devm_pwmchip_alloc(&pdev->dev, soc->num_channels, sizeof(*pc));
-   277		if (IS_ERR(chip))
-   278			return PTR_ERR(chip);
-   279		pc = to_tegra_pwm_chip(chip);
-   280	
-   281		pc->soc = soc;
-   282	
-   283		pc->regs = devm_platform_ioremap_resource(pdev, 0);
-   284		if (IS_ERR(pc->regs))
-   285			return PTR_ERR(pc->regs);
-   286	
-   287		platform_set_drvdata(pdev, chip);
-   288	
-   289		pc->clk = devm_clk_get(&pdev->dev, NULL);
-   290		if (IS_ERR(pc->clk))
-   291			return PTR_ERR(pc->clk);
-   292	
-   293		ret = devm_tegra_core_dev_init_opp_table_common(&pdev->dev);
-   294		if (ret)
-   295			return ret;
-   296	
-   297		pm_runtime_enable(&pdev->dev);
-   298		ret = pm_runtime_resume_and_get(&pdev->dev);
-   299		if (ret)
-   300			return ret;
-   301	
-   302		/* Set maximum frequency of the IP */
- > 303		ret = dev_pm_opp_set_rate(&pdev->dev, S64_MAX);
-   304		if (ret < 0) {
-   305			dev_err(&pdev->dev, "Failed to set max frequency: %d\n", ret);
-   306			goto put_pm;
-   307		}
-   308	
-   309		/*
-   310		 * The requested and configured frequency may differ due to
-   311		 * clock register resolutions. Get the configured frequency
-   312		 * so that PWM period can be calculated more accurately.
-   313		 */
-   314		pc->clk_rate = clk_get_rate(pc->clk);
-   315	
-   316		/* Set minimum limit of PWM period for the IP */
-   317		pc->min_period_ns =
-   318		    (NSEC_PER_SEC / (pc->clk_rate >> PWM_DUTY_WIDTH)) + 1;
-   319	
-   320		pc->rst = devm_reset_control_get_exclusive(&pdev->dev, "pwm");
-   321		if (IS_ERR(pc->rst)) {
-   322			ret = PTR_ERR(pc->rst);
-   323			dev_err(&pdev->dev, "Reset control is not found: %d\n", ret);
-   324			goto put_pm;
-   325		}
-   326	
-   327		reset_control_deassert(pc->rst);
-   328	
-   329		chip->ops = &tegra_pwm_ops;
-   330	
-   331		ret = pwmchip_add(chip);
-   332		if (ret < 0) {
-   333			dev_err(&pdev->dev, "pwmchip_add() failed: %d\n", ret);
-   334			reset_control_assert(pc->rst);
-   335			goto put_pm;
-   336		}
-   337	
-   338		pm_runtime_put(&pdev->dev);
-   339	
-   340		return 0;
-   341	put_pm:
-   342		pm_runtime_put_sync_suspend(&pdev->dev);
-   343		pm_runtime_force_suspend(&pdev->dev);
-   344		return ret;
-   345	}
-   346	
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+--=20
+With Best Regards,
+Andy Shevchenko
 
