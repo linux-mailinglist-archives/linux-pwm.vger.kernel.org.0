@@ -1,71 +1,71 @@
-Return-Path: <linux-pwm+bounces-8422-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8423-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id sNFgBEyNymn09gUAu9opvQ
-	(envelope-from <linux-pwm+bounces-8422-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2026 16:48:44 +0200
+	id 6JadAUePymlC+AUAu9opvQ
+	(envelope-from <linux-pwm+bounces-8423-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2026 16:57:11 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9F2C735D250
-	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2026 16:48:43 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5328635D46E
+	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2026 16:57:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 3E081319A2F8
-	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2026 14:38:22 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id A86FE313089C
+	for <lists+linux-pwm@lfdr.de>; Mon, 30 Mar 2026 14:48:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E190B2EC0A6;
-	Mon, 30 Mar 2026 14:37:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E6252324B23;
+	Mon, 30 Mar 2026 14:48:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="f1XNAf7L"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="byu97nM0"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54C7F2E091B;
-	Mon, 30 Mar 2026 14:37:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 536343242BD;
+	Mon, 30 Mar 2026 14:48:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774881441; cv=none; b=jMwp/XCoZSucb9xNjs3XvRIppPOEPmdyC2VXpTpEm8d9CEB7cX2YOAYDT6G2u2unJbzfp06wwLQDXljJMotmN/mOtCPqwoWu1x96RG8xUoNO5l/haa3KKhMWt9GoBPo4k+V7nAlCglnNzfcH0QcTR0jXMjgdWBT7b96PNkBYiKQ=
+	t=1774882102; cv=none; b=hOPyN/o7zcFOyY2Z4Mcs0ncWb01Pqu+sd3tEKKdZo0pUUPNxgc6k0HlgKbxbzJ9QKwN/CmG46GJVYzpEPjp4LBAcOnHFx8X0hryT2xTgO3oZryPRl4shYvir1LlsLJVT9u+1yIaXA1881DuC7IsxQZE2jXiE2q0SDDJ18ugccRU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774881441; c=relaxed/simple;
-	bh=FfsIVUKLPFqUD2jO1eTH3CMDTjs2wmEjz9bthk26meA=;
+	s=arc-20240116; t=1774882102; c=relaxed/simple;
+	bh=xpBPUcul1mxy76GdOsZONkg8Sx2okkRC6m5zBbw2K2U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=rMEAD3G43tffOhQo1xsGd6fzThT95/7ST7k7BpLpvb5e8WGCN4KTozqrQlq8UD/UQm3wPmb2OY4Vvo+vqcpS5MZWWRkxF0CaDOZ8pLTaJkoAVzms3O4uG4wvRqOJt6F8dlmxEuaak7DeTx8npNGsJypuiVHhK9VAHSCItsgc/nY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=f1XNAf7L; arc=none smtp.client-ip=192.198.163.17
+	 Content-Type:Content-Disposition:In-Reply-To; b=bCxVOK5gjduDy4+muLIKiqt2uUZJWntcAkhXGYGiybs/xMJTETLZWHi0jP5Kso9hastE1dD25DYl5s5bzpKzdsUHoltrdBtKAzBSIwu4gjyyxAWYMC8faHFrHuJopVuAeKGKSACCneQmMaT2bC3pTJTFbEBMm4i7rQpslpqZd1E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=byu97nM0; arc=none smtp.client-ip=192.198.163.12
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1774881440; x=1806417440;
+  t=1774882101; x=1806418101;
   h=date:from:to:cc:subject:message-id:references:
    mime-version:in-reply-to;
-  bh=FfsIVUKLPFqUD2jO1eTH3CMDTjs2wmEjz9bthk26meA=;
-  b=f1XNAf7LVdSvhsGh7TuDRaG50/d5WRAAHRfC6SbiUCQd5cBaTIR5RHYT
-   X0WQ5lA2Av3Fj2/rRjKCZuj8p1HqmmYXti4NBCS8pJDooQtXgM0+dPwPR
-   Wb40NHVY3PNkQo3FQti9267CQQEj0VhJqHt2eunDZbxzBvfJkQUWfckdV
-   XR18HpnY12M3ewH/B6vPqt0gqF954h+38A1wH9kFrQYiD6TpdU+KP7JV7
-   ja4ypbwAQ7NK6UtutBw7foQCKquol9PzryHpb2jjoNIa0ezJqlQbD0r2Y
-   aISAv2pEG2gj/dBCCp/lMA49sMeQBa59XEqedTYqxcuoKT+A7fG0dfEjS
+  bh=xpBPUcul1mxy76GdOsZONkg8Sx2okkRC6m5zBbw2K2U=;
+  b=byu97nM0kVK6sXPi2Ars2jrEyZxmWIFEbIssuepZBxVJKiQO8OCfzkUh
+   Li17a95Y7r6c9HQ3LHnG4UKtGmWoa9txE43VXKHGfPCZeM3PO2FlnxcZS
+   DB2OPSxpz6J+aj3tgizdWB8QZn5gzI1lN9TO2VI1vVAPPvR0nzPRN+Q9W
+   UvIqpUA0E/tcHsD2pPvdjGJcoNOy+kuy99yQtYIhIS9zrCR5KsPLRxCM8
+   9ZhJwhVJWhXPqUbvh8oGkUon3UVgIGlS8c7gJEQxGpEUtxE6OCN0mreUm
+   PoDpYKpZ2ebRWdjfu2Qhtbj1OKgDae3mjDYsTbzMKkI2IVnYFrtTCCC6V
    g==;
-X-CSE-ConnectionGUID: tqPNu9e/Tf+77S/YXn3Wug==
-X-CSE-MsgGUID: eorGjQYHTkiD+SAc2Vnn2Q==
-X-IronPort-AV: E=McAfee;i="6800,10657,11743"; a="75770636"
+X-CSE-ConnectionGUID: 5gdJG16QS9+WFOPeUskbCQ==
+X-CSE-MsgGUID: MmyPapJrSK2AbhJZvZNL7w==
+X-IronPort-AV: E=McAfee;i="6800,10657,11743"; a="79779133"
 X-IronPort-AV: E=Sophos;i="6.23,150,1770624000"; 
-   d="scan'208";a="75770636"
-Received: from orviesa010.jf.intel.com ([10.64.159.150])
-  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2026 07:37:20 -0700
-X-CSE-ConnectionGUID: GQSdPSfWSXiYPERlw7dyaw==
-X-CSE-MsgGUID: T37eBBTtRSqbMyEgnSZ/aw==
+   d="scan'208";a="79779133"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 30 Mar 2026 07:48:20 -0700
+X-CSE-ConnectionGUID: GeCJocUATueDNdJ/3Bzb9Q==
+X-CSE-MsgGUID: Uwruj5+6QpuBx/L3s5F1+g==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,150,1770624000"; 
-   d="scan'208";a="225245200"
+   d="scan'208";a="222767787"
 Received: from lkp-server01.sh.intel.com (HELO 283bf2e1b94a) ([10.239.97.150])
-  by orviesa010.jf.intel.com with ESMTP; 30 Mar 2026 07:37:16 -0700
+  by fmviesa007.fm.intel.com with ESMTP; 30 Mar 2026 07:48:17 -0700
 Received: from kbuild by 283bf2e1b94a with local (Exim 4.98.2)
 	(envelope-from <lkp@intel.com>)
-	id 1w7Dju-000000001DN-01E6;
-	Mon, 30 Mar 2026 14:37:14 +0000
-Date: Mon, 30 Mar 2026 22:36:53 +0800
+	id 1w7DuY-000000001E5-1RHg;
+	Mon, 30 Mar 2026 14:48:14 +0000
+Date: Mon, 30 Mar 2026 22:47:32 +0800
 From: kernel test robot <lkp@intel.com>
 To: Mikko Perttunen <mperttunen@nvidia.com>,
 	Thierry Reding <thierry.reding@gmail.com>,
@@ -79,7 +79,7 @@ Cc: oe-kbuild-all@lists.linux.dev, linux-pwm@vger.kernel.org,
 	devicetree@vger.kernel.org, Yi-Wei Wang <yiweiw@nvidia.com>,
 	Mikko Perttunen <mperttunen@nvidia.com>
 Subject: Re: [PATCH v2 2/7] pwm: tegra: Avoid hard-coded max clock frequency
-Message-ID: <202603302259.NdAkuCVx-lkp@intel.com>
+Message-ID: <202603302251.AFXspVqF-lkp@intel.com>
 References: <20260325-t264-pwm-v2-2-998d885984b3@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
@@ -96,12 +96,12 @@ X-Spamd-Result: default: False [0.34 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
 	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8422-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8423-lists,linux-pwm=lfdr.de];
 	FREEMAIL_TO(0.00)[nvidia.com,gmail.com,kernel.org];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -114,11 +114,11 @@ X-Spamd-Result: default: False [0.34 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[lkp@intel.com,linux-pwm@vger.kernel.org];
 	DKIM_TRACE(0.00)[intel.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-pwm,dt];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,intel.com:email,intel.com:mid,01.org:url,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 9F2C735D250
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,intel.com:dkim,intel.com:email,intel.com:mid,01.org:url]
+X-Rspamd-Queue-Id: 5328635D46E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
@@ -132,46 +132,102 @@ url:    https://github.com/intel-lab-lkp/linux/commits/Mikko-Perttunen/dt-bindin
 base:   11439c4635edd669ae435eec308f4ab8a0804808
 patch link:    https://lore.kernel.org/r/20260325-t264-pwm-v2-2-998d885984b3%40nvidia.com
 patch subject: [PATCH v2 2/7] pwm: tegra: Avoid hard-coded max clock frequency
-config: nios2-allmodconfig (https://download.01.org/0day-ci/archive/20260330/202603302259.NdAkuCVx-lkp@intel.com/config)
-compiler: nios2-linux-gcc (GCC) 11.5.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260330/202603302259.NdAkuCVx-lkp@intel.com/reproduce)
+config: hexagon-randconfig-r113-20260330 (https://download.01.org/0day-ci/archive/20260330/202603302251.AFXspVqF-lkp@intel.com/config)
+compiler: clang version 23.0.0git (https://github.com/llvm/llvm-project 2cd67b8b69f78e3f95918204320c3075a74ba16c)
+sparse: v0.6.5-rc1
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20260330/202603302251.AFXspVqF-lkp@intel.com/reproduce)
 
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202603302259.NdAkuCVx-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202603302251.AFXspVqF-lkp@intel.com/
 
-All warnings (new ones prefixed by >>):
+sparse warnings: (new ones prefixed by >>)
+>> drivers/pwm/pwm-tegra.c:303:47: sparse: sparse: cast truncates bits from constant value (7fffffffffffffff becomes ffffffff)
 
-   In file included from include/linux/kernel.h:17,
-                    from include/linux/clk.h:13,
-                    from drivers/pwm/pwm-tegra.c:39:
-   drivers/pwm/pwm-tegra.c: In function 'tegra_pwm_probe':
->> include/linux/limits.h:26:25: warning: unsigned conversion from 'long long int' to 'long unsigned int' changes value from '9223372036854775807' to '4294967295' [-Woverflow]
-      26 | #define S64_MAX         ((s64)(U64_MAX >> 1))
-         |                         ^~~~~~~~~~~~~~~~~~~~~
-   drivers/pwm/pwm-tegra.c:303:47: note: in expansion of macro 'S64_MAX'
-     303 |         ret = dev_pm_opp_set_rate(&pdev->dev, S64_MAX);
-         |                                               ^~~~~~~
+vim +303 drivers/pwm/pwm-tegra.c
 
-
-vim +26 include/linux/limits.h
-
-3c9d017cc283df Andy Shevchenko 2023-08-04  14  
-54d50897d544c8 Masahiro Yamada 2019-03-07  15  #define U8_MAX		((u8)~0U)
-54d50897d544c8 Masahiro Yamada 2019-03-07  16  #define S8_MAX		((s8)(U8_MAX >> 1))
-54d50897d544c8 Masahiro Yamada 2019-03-07  17  #define S8_MIN		((s8)(-S8_MAX - 1))
-54d50897d544c8 Masahiro Yamada 2019-03-07  18  #define U16_MAX		((u16)~0U)
-54d50897d544c8 Masahiro Yamada 2019-03-07  19  #define S16_MAX		((s16)(U16_MAX >> 1))
-54d50897d544c8 Masahiro Yamada 2019-03-07  20  #define S16_MIN		((s16)(-S16_MAX - 1))
-54d50897d544c8 Masahiro Yamada 2019-03-07  21  #define U32_MAX		((u32)~0U)
-3f50f132d8400e John Fastabend  2020-03-30  22  #define U32_MIN		((u32)0)
-54d50897d544c8 Masahiro Yamada 2019-03-07  23  #define S32_MAX		((s32)(U32_MAX >> 1))
-54d50897d544c8 Masahiro Yamada 2019-03-07  24  #define S32_MIN		((s32)(-S32_MAX - 1))
-54d50897d544c8 Masahiro Yamada 2019-03-07  25  #define U64_MAX		((u64)~0ULL)
-54d50897d544c8 Masahiro Yamada 2019-03-07 @26  #define S64_MAX		((s64)(U64_MAX >> 1))
-54d50897d544c8 Masahiro Yamada 2019-03-07  27  #define S64_MIN		((s64)(-S64_MAX - 1))
-54d50897d544c8 Masahiro Yamada 2019-03-07  28  
+   266	
+   267	static int tegra_pwm_probe(struct platform_device *pdev)
+   268	{
+   269		struct pwm_chip *chip;
+   270		struct tegra_pwm_chip *pc;
+   271		const struct tegra_pwm_soc *soc;
+   272		int ret;
+   273	
+   274		soc = of_device_get_match_data(&pdev->dev);
+   275	
+   276		chip = devm_pwmchip_alloc(&pdev->dev, soc->num_channels, sizeof(*pc));
+   277		if (IS_ERR(chip))
+   278			return PTR_ERR(chip);
+   279		pc = to_tegra_pwm_chip(chip);
+   280	
+   281		pc->soc = soc;
+   282	
+   283		pc->regs = devm_platform_ioremap_resource(pdev, 0);
+   284		if (IS_ERR(pc->regs))
+   285			return PTR_ERR(pc->regs);
+   286	
+   287		platform_set_drvdata(pdev, chip);
+   288	
+   289		pc->clk = devm_clk_get(&pdev->dev, NULL);
+   290		if (IS_ERR(pc->clk))
+   291			return PTR_ERR(pc->clk);
+   292	
+   293		ret = devm_tegra_core_dev_init_opp_table_common(&pdev->dev);
+   294		if (ret)
+   295			return ret;
+   296	
+   297		pm_runtime_enable(&pdev->dev);
+   298		ret = pm_runtime_resume_and_get(&pdev->dev);
+   299		if (ret)
+   300			return ret;
+   301	
+   302		/* Set maximum frequency of the IP */
+ > 303		ret = dev_pm_opp_set_rate(&pdev->dev, S64_MAX);
+   304		if (ret < 0) {
+   305			dev_err(&pdev->dev, "Failed to set max frequency: %d\n", ret);
+   306			goto put_pm;
+   307		}
+   308	
+   309		/*
+   310		 * The requested and configured frequency may differ due to
+   311		 * clock register resolutions. Get the configured frequency
+   312		 * so that PWM period can be calculated more accurately.
+   313		 */
+   314		pc->clk_rate = clk_get_rate(pc->clk);
+   315	
+   316		/* Set minimum limit of PWM period for the IP */
+   317		pc->min_period_ns =
+   318		    (NSEC_PER_SEC / (pc->clk_rate >> PWM_DUTY_WIDTH)) + 1;
+   319	
+   320		pc->rst = devm_reset_control_get_exclusive(&pdev->dev, "pwm");
+   321		if (IS_ERR(pc->rst)) {
+   322			ret = PTR_ERR(pc->rst);
+   323			dev_err(&pdev->dev, "Reset control is not found: %d\n", ret);
+   324			goto put_pm;
+   325		}
+   326	
+   327		reset_control_deassert(pc->rst);
+   328	
+   329		chip->ops = &tegra_pwm_ops;
+   330	
+   331		ret = pwmchip_add(chip);
+   332		if (ret < 0) {
+   333			dev_err(&pdev->dev, "pwmchip_add() failed: %d\n", ret);
+   334			reset_control_assert(pc->rst);
+   335			goto put_pm;
+   336		}
+   337	
+   338		pm_runtime_put(&pdev->dev);
+   339	
+   340		return 0;
+   341	put_pm:
+   342		pm_runtime_put_sync_suspend(&pdev->dev);
+   343		pm_runtime_force_suspend(&pdev->dev);
+   344		return ret;
+   345	}
+   346	
 
 -- 
 0-DAY CI Kernel Test Service
