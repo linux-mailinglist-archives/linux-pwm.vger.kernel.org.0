@@ -1,219 +1,213 @@
-Return-Path: <linux-pwm+bounces-8438-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8439-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KEUdFtxyy2k3HwYAu9opvQ
-	(envelope-from <linux-pwm+bounces-8438-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Tue, 31 Mar 2026 09:08:12 +0200
+	id gDbcIaR0y2k3HwYAu9opvQ
+	(envelope-from <linux-pwm+bounces-8439-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Tue, 31 Mar 2026 09:15:48 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 944E4364C95
-	for <lists+linux-pwm@lfdr.de>; Tue, 31 Mar 2026 09:08:11 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 87F11364EC4
+	for <lists+linux-pwm@lfdr.de>; Tue, 31 Mar 2026 09:15:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id CD459304750F
-	for <lists+linux-pwm@lfdr.de>; Tue, 31 Mar 2026 07:03:50 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 168E83048616
+	for <lists+linux-pwm@lfdr.de>; Tue, 31 Mar 2026 07:10:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 31510386434;
-	Tue, 31 Mar 2026 07:03:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 40E863B6C11;
+	Tue, 31 Mar 2026 07:10:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b="2+wU6cum"
+	dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b="qnJN3Zsa"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from TYPPR03CU001.outbound.protection.outlook.com (mail-japaneastazon11022133.outbound.protection.outlook.com [52.101.126.133])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C7B62F4A14
-	for <linux-pwm@vger.kernel.org>; Tue, 31 Mar 2026 07:03:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1774940630; cv=none; b=qzMuwLXYT8I48b2pFYANwaA2IZpPztHA3tHCmUNUUqtLMH0pw922zdjvCSzxgdoQMq6e4NJTYh0yhR6cxNvJKyDzDufSdaBBrSC5i+2LRG8v+Vw63BdfZVWliOUV5gOEBtLDpMF1/kF/heiV10wJ07ax0ZE3jfORJUUoO87UJoc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1774940630; c=relaxed/simple;
-	bh=jGxbfeQZaCNRWO0CupX9OPM0rLpBdoeHpdVT2+551Hs=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=mPC16ZFw54egJG5rznLPXzyZdOkgpRlTv6HEvdSIm6TjMTFdEKMfTT5QNIcVMRgodAJ2szxCMiQTelIKh2+XLZxeIkZz6kSdrp50PNabZ+VKhfQZr9J25EB2xRj7nj8y2NK+s3YX7g9x3cylqejhUF5iezQQUy6vHMTMrjyrl00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20230601.gappssmtp.com header.i=@baylibre-com.20230601.gappssmtp.com header.b=2+wU6cum; arc=none smtp.client-ip=209.85.128.53
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-483487335c2so56183745e9.2
-        for <linux-pwm@vger.kernel.org>; Tue, 31 Mar 2026 00:03:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20230601.gappssmtp.com; s=20230601; t=1774940626; x=1775545426; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=2rrakuJVzyP5a9RFW+UWE6NH7PekmyTOLmdb7Ewoj4E=;
-        b=2+wU6cumNr+ZYkoQIWBYI+cz+yAhUPSlBX6boZTAldVUctZvbGeQihdmR7kQCTtu8X
-         dh9Uimsh6St9oluX/rMAIeryOBLCqgn3RXek9TUlyHF4U6hcVWjx9MMXBjGPxbdEjFpD
-         cF5x9/BBlJW8yfY8m5LATsucTzJefPoEI4mBKMsvMH57Watik7Vv3wyDdUqa1rIvv2l1
-         wSJkXGp5ZBrDTIhlcmimN4ALXBwm5Xx2Tm1tDzENyVdoW72D9tIasC0dUPVM8CumEP1w
-         RtSmG5XUY3HNaKJiqVJ79b1ZVWwCU974U6axA78oksBFo6ZT5chQbZogndYZxGRC2fJE
-         Gmvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1774940626; x=1775545426;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=2rrakuJVzyP5a9RFW+UWE6NH7PekmyTOLmdb7Ewoj4E=;
-        b=Vps1OOgmD2e7c/fj8Bg8LvLZiCXuwW0s24xwc/448CMTMuHX3yVTfPSM4gFu1/LOgn
-         gotnOy3b5yT15QlbiaJ0NWzAYTWwln2ME1VzcaWpFG3S5JhjFigziFrXDM5WJWl3O7pe
-         FEcke0i5hT3a9H5jKApPZll4catJ75JKz6vT4GjpH8LEorgxFSrhswmdKPaed/AoSv8C
-         ZIiD0cM1AQm8uIzV+Td08minWjTGZgl4m8exKbVJqrE40VQUviGqFoIM9g3+ENWG+6vC
-         RW3FLug93uGcJBoCuHLXlO6JctoZv4qYF6jH90SJ5F/PSdEFjRL0Bigtmo5CI9qzTw4/
-         Cm3w==
-X-Forwarded-Encrypted: i=1; AJvYcCWVPAoAoyv9x8ApHnK86hchlAAjTRey56bzisZkwXmY4lXSE/WeR0ZU0UvoZMQp+byGEG1dEQDV3So=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxhCkpU4tZqwGDNDG6qpWdv1Sh9eZWAvpMJFzUZbFHLdKssybGY
-	TJ1Gy8rUDolTxexc2nsqKjCJLYSLjERMpSINT+jX5r1eomjvE0Ab06gnvJ0apyP2D1I=
-X-Gm-Gg: ATEYQzyS4ZKMISRrLzo8sNiLb+neODoCUsqdo3KgOTJlJy8HqHjwkXkPKbf/lJwJoDJ
-	XFsSNWQyRiMXQtT5v3XoTjzLmv95DTuSWSYaLUxVyz+WTKjLvf8PuqRkRRXsYFT3D+2L1JU4d8u
-	y5IQ3t3ggBmtYoyLC2tkf9ltULvykIhSxox3Q/Py1MrSDDK+z4KMN0MqKACe3Uvh4sewcgAyrxY
-	obBuaYZTiRu/QO0GadkEDwm4EDkuIicyVk7E6tO68T/VeGY8L6h+eP+Pvbhw3dc1KTTBWMi77V0
-	/6A5duQVrMQi+Wk4iUbBEFuIns20jaGz++TNlGsPElIhx1psAiTXBYeu8cZF3NYW95aMx8BOTTE
-	ZTMp9r3FQWyrzmdznb3D9Dbd0fG/uv/xswbVb7Rz2Hkbbt/Pw/ypTYCLiyceTYEnaRO6Ng3WxK5
-	CQTHF2XQAzFcibzaZJE/5CZshoQglO8M6ei8+OM1m7h6dI/lVdor4Vpg5demTsHEWB10gaBmfyO
-	yXo7Xy0F7C6uQo=
-X-Received: by 2002:a05:600c:6814:b0:486:fbe1:2499 with SMTP id 5b1f17b1804b1-48727f7be29mr260514595e9.22.1774940625999;
-        Tue, 31 Mar 2026 00:03:45 -0700 (PDT)
-Received: from localhost (p200300f65f20eb048bf95aaa62516f6f.dip0.t-ipconnect.de. [2003:f6:5f20:eb04:8bf9:5aaa:6251:6f6f])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-4887e93c014sm16826495e9.10.2026.03.31.00.03.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2026 00:03:44 -0700 (PDT)
-Date: Tue, 31 Mar 2026 09:03:43 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, 
-	Conor Dooley <conor+dt@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, 
-	Thomas Gleixner <tglx@linutronix.de>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
-	Sean Anderson <sean.anderson@seco.com>, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, Chris Packham <Chris.Packham@alliedtelesis.co.nz>, 
-	Marek Vasut <marek.vasut+renesas@mailbox.org>
-Subject: Re: New default binding for PWM devices? [Was: Re: [PATCH]
- dt-bindings: timer: xlnx,xps-timer: Make PWM in example usable]
-Message-ID: <actvzQTb-a7O7sbP@monoceros>
-References: <20250527171504.346696-2-u.kleine-koenig@baylibre.com>
- <a14be34c-de2a-4bea-9282-1fac7780b9a4@kernel.org>
- <crk42dsypmbyqk7avldghjq32vslmalfmmouwxzgtdci4agfhz@rkbmxj5z22fx>
- <20250606141324.GA1383279-robh@kernel.org>
- <erst43cabswj3cwnszssolgyoh4dsgrlnjjxhb7luk3qkqhyay@6zyoixljvwwg>
- <CAMuHMdXDZD6QAbKgny1utfYhagUEZ5pcgiDCTTfJKNVVZLOUYg@mail.gmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4A4540DFCA;
+	Tue, 31 Mar 2026 07:10:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.126.133
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1774941030; cv=fail; b=Qy1aZJrYz5JQsdIOJFUBE9JVfh98H2AfVNu8jIV9ha2CUJHKmIv89Mof/ENn2RJzkMmDCDaTaluigQ2+dpEu5hloFRSW93ZaBoHjsXasA8RUsRLmlQ5evzVziXNRAuoAGq8NJ/rvZy91BnHEbs8im+h9ZiykjRpCOsQA7VEYcBw=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1774941030; c=relaxed/simple;
+	bh=hDld2upoHvtBG8tDwoj91G4EcKtVoc+2X9/B9V/+YpU=;
+	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
+	 Content-Type:MIME-Version; b=dRejgDh6NV3YUfmX7e2VGhTy9+OQiGkkYiaXmM8qlAiqstXIFDFDeEGJJZPNdKkT/bHrPBwCvQl4yE3jeDIto17p2PPT0zXIdDaapc75OTCrzSViLCWGQJsDEJ46c9sjYW9ywH0txr4FeRXM9FTa+DA4MVp1SkNkaBHfzfwuHyM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amlogic.com; spf=pass smtp.mailfrom=amlogic.com; dkim=pass (2048-bit key) header.d=amlogic.com header.i=@amlogic.com header.b=qnJN3Zsa; arc=fail smtp.client-ip=52.101.126.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amlogic.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amlogic.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=ux+YnAWqFo+9a/ezG9f46J63459HzkbVpEef42YTA9B9JBd4Y+R7/6wEfsMv4YRbnieD4NKlFYZBRQW+cVxlPJTrFMtmuOmcSk6hDyZJIRrlTHsMnGd+hCF7F4UHuMcYtXjiMdksZ9Rg0HzE7Zc+WCdUhgyBMTfedipaPFqUXlR41xVdT7RIZO7gqbumOTq8jWfW6lCtyqvMY2AEhrApXvCXdIghiWOpJlmKN2bOZgS4DA4U92GhUjIANxW3Ea5ZiISZ9nBklhb6zzI/EzjXoeZ7UZN4X4a23WPvxoFofalnImsGIdJ6HK21XZJKHbxLj0zY9XL2E0v3GoErpd/KFA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=f7sCxAQo5KUWXDnG0T3DVpfFsu04UXEfoOoLdVgxNOs=;
+ b=WtlUa/embiQ5oPxZn7KFk702PuUO9S1RK/v4B3ZOmWeTWvTc3VJVAcspYrquxjgaYa18NVtBWLfk78WJAJ7AN62Nr7iW0meBgS9eWMIP2wK89u4goe5nyceyeIJWaTJ/AVxfCXE7U6cQVMBbd5EC4P2Qk93gcN2Vu6SJuB7TQa6gjE0XZUSdyeXpdS303MdwpoRxJmngQQSG6tUk4cSbuP8g609Js4KfN+LpT7jmbRdM1lTFTWLdoAYz7o+3oC7Y/IQNF5DYHhbPfpXdN4mlWr79+w1wk/AAhlanmNoh9Zxm506Zc1mighyQ5kPCBMO+sC3go2VVQXHG/cr9rNKnpA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amlogic.com; dmarc=pass action=none header.from=amlogic.com;
+ dkim=pass header.d=amlogic.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=amlogic.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=f7sCxAQo5KUWXDnG0T3DVpfFsu04UXEfoOoLdVgxNOs=;
+ b=qnJN3ZsagsL1zXYEVpb11QTBC7/0JITo0OFzxLaScLvkdqI7fwHh90gaaY+l4QcUOTgqmAh2uoE7V4vSmX0r3UrKI9MbdzRCgnHKiiUdbAk7XruSnprQnWzApKjyj0T0CX854xf4Y86ZHD8/7mJWuRPKpb+nUqKt0MXCM42LKHZmbJsjAUQ7ANYI+WGgDckUZNt/kqIZqvoxM46IyGh/tSeP85BcwWIYUgi7aPdiFmfa7PIIo3fB9z3Cdphr9AZuFhRuvZ84F819IjX9xcFcM1E1R6kQoQkyoSyUHPGZUuLuJcvZoE7R+zEMvRGqpKHU3J34Zdv9ZyJ9uSY7K2jaFQ==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=amlogic.com;
+Received: from TYZPR03MB6896.apcprd03.prod.outlook.com (2603:1096:400:289::14)
+ by SEYPR03MB7864.apcprd03.prod.outlook.com (2603:1096:101:16c::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9745.28; Tue, 31 Mar
+ 2026 07:10:22 +0000
+Received: from TYZPR03MB6896.apcprd03.prod.outlook.com
+ ([fe80::78d4:9dee:2e32:d1e4]) by TYZPR03MB6896.apcprd03.prod.outlook.com
+ ([fe80::78d4:9dee:2e32:d1e4%3]) with mapi id 15.20.9745.027; Tue, 31 Mar 2026
+ 07:10:22 +0000
+Message-ID: <70a637b1-a76a-470c-9a97-0b4599a40a1c@amlogic.com>
+Date: Tue, 31 Mar 2026 15:10:19 +0800
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 0/2] Add PWM support Amlogic S7 S7D S6
+Content-Language: en-US
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>,
+ Neil Armstrong <neil.armstrong@linaro.org>,
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>,
+ linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-amlogic@lists.infradead.org, Junyi Zhao <junyi.zhao@amlogic.com>
+References: <20260326-s6-s7-pwm-v1-0-67e2f72b98bc@amlogic.com>
+ <CAFBinCD1GPP82MEBDHg3BwCJg6JY5k2HksEt+kCB=YjnYTO7Tw@mail.gmail.com>
+From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+In-Reply-To: <CAFBinCD1GPP82MEBDHg3BwCJg6JY5k2HksEt+kCB=YjnYTO7Tw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: TYCPR01CA0139.jpnprd01.prod.outlook.com
+ (2603:1096:400:2b7::16) To TYZPR03MB6896.apcprd03.prod.outlook.com
+ (2603:1096:400:289::14)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="wyl7ytgv5wvrmgoq"
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdXDZD6QAbKgny1utfYhagUEZ5pcgiDCTTfJKNVVZLOUYg@mail.gmail.com>
-X-Spamd-Result: default: False [-1.76 / 15.00];
-	SIGNED_PGP(-2.00)[];
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: TYZPR03MB6896:EE_|SEYPR03MB7864:EE_
+X-MS-Office365-Filtering-Correlation-Id: 529f9229-6533-4db5-ac89-08de8ef4930e
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|376014|7416014|366016|18002099003|56012099003|22082099003;
+X-Microsoft-Antispam-Message-Info:
+	80qJ8YYcptynYAYB8CPeHBXYjf5OKGVBhIIMLupxMOZKy5EuvBZ0Z3p9fSpBLvzkUdkm4AP+d2bMoTK/8ZDt08pKFwt9rGB0nq5pozbMzrc0qkt3NejI/mYeLFYvdR8/HJ9IsxVEddO5OE3uxulT6yDp/EwBav5SwLJrzj0oFhRqdHQWrEQH8FqN3SEz3T/YLLPpFCAAoCbLxAK+PFtodA16A0OkHpuYpLknZGJX8yiXeif9JfWIwKB0u/XFvqlq+Pwslv8qAvYiLeO3aPCXvcfsrDR9riXmMl7s5CNB/2n4L0VsEzLc2V+6Iv324TpKzK6Eotzgysd2jTKsK/ev81qC/6kyLLgUfnjADlB3EFMyNnxYK8ZXFxAwWJDDheyD3lUJO3W5Fb6tPhabldl9MPc2BHHW//uK3PHx+S+i74FE7rgCDfxVk+ndLd3VJmRqu4d2kFzpVzDD88NcSZ9DYLiBSLbhsiHNyTi9fyKCcjx5xgIJFCZNGvXF+lkvAgmm5e50zYWtXno0OHTiOWo9zxH5+CWIPzMBIlOuKG3sTDSw4GILHzOSZS2LVetcoyNCOYSPmfzHv0qsY9bmJcrCYyyAkZAANZIqC3TGjKP7BAwyeLyP+Zv+VWxB9DJEGDWDrEGKl2J+Sm/5HUaswR9NuSXGNFFFijK6QCmS1uLjybnAPVjnBmqD2w5AjPTIrrze13em3ykOyew4+ca8GxAeADudIcB600fv9vIUnmk0p0M=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TYZPR03MB6896.apcprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(7416014)(366016)(18002099003)(56012099003)(22082099003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?eFZqdFBlbkJReWk0TWdIRmhKbGRwNXRoZU9jNWNKL0lkSEpQUzIwZWpkQStJ?=
+ =?utf-8?B?dkFtTFNKUkVNYy9WdElWaFUzUERhNjMrRHdabXVzYjlpQVlmYlJPUWptZEZ5?=
+ =?utf-8?B?U2h1L3lzcXdDYTkxSGUreDJWNmluVlNTTEdpM29wNWdQTVdSRGFJYUgyN0hS?=
+ =?utf-8?B?QVJ1Ym4xaTd1OVMxdGJ6SmVRSFFWbCttdWR0MVJNWVV4cE5IVjBrWWJtWWVl?=
+ =?utf-8?B?KzZhbHJHUDZKd0JnRU5aU2JReFFwd0dyZVdTNGpOUWJnMDhBUEd3cGkvZVpN?=
+ =?utf-8?B?dHBucEtIaEhTZjdiSlg5V1lnc1FtVGNUMXFCVXA1YUxTVUV4R1NRbjRXWFJG?=
+ =?utf-8?B?VHNpV01HZHBWYXF6aHhwK0Z6TnVYVDdBMXNUSHEyK1lEaGxXRVh1ZkJQQWlW?=
+ =?utf-8?B?TElicVZtQnZUdURFR3JWeWpYR0xXUnQ3M0ZiYkRIYjBBSW5JSjN6N0ljSUJ3?=
+ =?utf-8?B?cjZidFFmcnA3d1YwczNlY0wzNnBIbi8vbm5HU0M3NUhqOE5md3o4VFpjNlFR?=
+ =?utf-8?B?Z0ZuS1NvWlpyNm43UnlONFZlQXl5SWRFTE1ER0MxQ1hYQmtvTTFsYzd1ZlJ5?=
+ =?utf-8?B?YkN2dFJOaEUxbUI0Lzg1UjlyMXVLSHlyS2NXOHIvcTdaS3lqdHZPK2Z1M3E3?=
+ =?utf-8?B?UVRlK0R6UWJoUURPdHU0YXZlcWE4MW9qYVYrVkd3NERGamsybUZUNENDVDR4?=
+ =?utf-8?B?Vm5vQUpTaG02SE1odFM2VHZJK1Y0TlFVcWVJaHB1V09XQ2dWV1JDVVQ1R0Nj?=
+ =?utf-8?B?b3pOWUZFNkN3aUN2bzR5V29OaG1uYXYyOTY4WUdqYnkzMzhoUG5JekV3dUlJ?=
+ =?utf-8?B?SGxmeUgydm5TQVIxS0VyVDBhZUI0OVNjUi9uWnBlUjlaRW9PeGRISDBma2NH?=
+ =?utf-8?B?Z0pxdTgrckJZbzdkUHdMV3FmNis5UnNieW8vU2xWdnltS0tHcVNIWmhLMUhY?=
+ =?utf-8?B?VGJTWFZoc09uSWwzc0IyWkdtb1JyV1FSWVQ0NG9vWklLZHBGbUVYZmtHOTNX?=
+ =?utf-8?B?cFNrS1N5M3FDN3FnYTU5UG5tSVhJMkhNaUJGTHcyNkFJVHkzOEs1dmpESDZh?=
+ =?utf-8?B?OS9PVllrUTZHUWJFa3p4cUNsUk9KZzA4R3RsMWJkRGNHWmNHQlpwK1BHY0dZ?=
+ =?utf-8?B?ektmUCs3clZHakh6T3dxT2x3d1ZFK1M1MFV0MkhlYXZyVWlJbjZkZXpLSTky?=
+ =?utf-8?B?YW9POXk4ejJ4KzYrNWZDYmZHV0ptYmVUZVdQeHE3dzR3TEZucWxOWGpYaFdS?=
+ =?utf-8?B?UXVDUmdjajVUd0dNakVRK09iVHM0SUwzWnJJY1VuVVRKWEhQM3lqTW1EYXBu?=
+ =?utf-8?B?dVFwSVRhcmpmTGtMLzZpcUl2Mlpra05oa2YwOTlibC9wQk9kT0NkK29pekV1?=
+ =?utf-8?B?bm1wQ3ZOQ25qZSszKzhUeHdPVTZNdnd0REpWdEF1OFRPVnplZGw4dE45ZGxL?=
+ =?utf-8?B?UmRUeGowS3FpL2g3b0Y5R25JM0NmdzYvcTNqR3lVR1NQVTFJdHQ5aVhEcUo5?=
+ =?utf-8?B?aTRSeW9nTElJc284dnh0a085ZkoxTjlucGswYyt5bXFuMXNwODBZTVRpYmdw?=
+ =?utf-8?B?bjhhUDV3MmZ3SzYrOVVYU0ZUenhnQ09iQ1F6YVhoSXN3WUFaSDhsYVB6dnhw?=
+ =?utf-8?B?NHNxYjNnZTU4ZkQzZnp6NmdBQXNBdC80ZFo1NmNTVXNMSFFjUnRUQmY2RElz?=
+ =?utf-8?B?TVBsK3JMTWNHOXMyZnhSN3hOcktFeEhNemd3Wm9WYmZPMFdPdm9UbWtKaUFE?=
+ =?utf-8?B?cHBiK095dm84S2RnVlk3MGZkQjQxY2dqMVd3VU5WcUFlVy93SnB1UWNBRXVC?=
+ =?utf-8?B?dG16aFBFZnN5c2RURlRMZ0ZnZEd2Y1hyTHNWN1JlOUR6Yng3ZmdZaWxYTXdL?=
+ =?utf-8?B?bVlhYjNvWnVucnNVS3lidHZLYjROOG5WSzBzT0RZY3VXa1lGMDRRWDZxaCtx?=
+ =?utf-8?B?a3V6cGI3aG5uU1Jyd3BLWi9uYUJtV1BtWld0QmkzK0NUTkg4RHZLWmhwb2c4?=
+ =?utf-8?B?Qm13V3BBOFY0LzV2Tk1iYXBzOTV3b0I2K05HakJpYWhqQmhDQVRCNVc5Wm9s?=
+ =?utf-8?B?b2tFZkFtYTZsYXhxNDF2TG5QZzBMd0c1OEFGcEgzNW8xa1NPTmtocWpxdmps?=
+ =?utf-8?B?dGRDVDQ2c01hNWtyKzB3WTIyS2xFYUhKVWkxYUM4NGlBNmxzVGNoNWQ5TSsw?=
+ =?utf-8?B?b3p2QVpJTUFwa3pPSWFTTllWL0Q0b3RFTW9sU0FoUVh2Szh5NGNGQ2NtZFFU?=
+ =?utf-8?B?dG9BQklraTEyaVYzSVh2NmVvV0MzWWkrS2N0OVlzYS9IVjUvc3hydFpVcW83?=
+ =?utf-8?B?b1BKMGtMRm9mcmo2VEZmK01GWTBvcm9wQlJSNFY4NStFanJkczBxZz09?=
+X-OriginatorOrg: amlogic.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 529f9229-6533-4db5-ac89-08de8ef4930e
+X-MS-Exchange-CrossTenant-AuthSource: TYZPR03MB6896.apcprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 31 Mar 2026 07:10:22.4769
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 0df2add9-25ca-4b3a-acb4-c99ddf0b1114
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Kb0CeX3LDy2TtMJ9iS3SyzbNCx1UqLtZyWD0vJOkU5IoDKxA7+B+nrd+LIhzPa/JCVxzrf9F7w7FO6fqDn/r7B/xUuygAseivBaN8kQp9mY=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SEYPR03MB7864
+X-Spamd-Result: default: False [1.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[baylibre-com.20230601.gappssmtp.com:s=20230601];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[amlogic.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[amlogic.com:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8438-lists,linux-pwm=lfdr.de];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	DMARC_NA(0.00)[baylibre.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,baylibre.com:email];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[u.kleine-koenig@baylibre.com,linux-pwm@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-8439-lists,linux-pwm=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[baylibre-com.20230601.gappssmtp.com:+];
+	FREEMAIL_TO(0.00)[googlemail.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,linaro.org,baylibre.com,vger.kernel.org,lists.infradead.org,amlogic.com];
+	DKIM_TRACE(0.00)[amlogic.com:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-pwm,dt,renesas];
-	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[xianwei.zhao@amlogic.com,linux-pwm@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	SUBJECT_HAS_QUESTION(0.00)[]
-X-Rspamd-Queue-Id: 944E4364C95
+	NEURAL_HAM(-0.00)[-0.994];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 87F11364EC4
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+Hi Martin,
+     I confirmed with Junyi Zhao that the current implementation counts 
+from zero, so this submission is correct.
+We agree this should be fixed and will address it in a follow-up patch.
+Thanks for pointing it out.
 
---wyl7ytgv5wvrmgoq
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: New default binding for PWM devices? [Was: Re: [PATCH]
- dt-bindings: timer: xlnx,xps-timer: Make PWM in example usable]
-MIME-Version: 1.0
-
-Hello Geert,
-
-On Mon, Mar 30, 2026 at 02:12:47PM +0200, Geert Uytterhoeven wrote:
-> On Sat, 7 Jun 2025 at 09:23, Uwe Kleine-K=F6nig
-> <u.kleine-koenig@baylibre.com> wrote:
-> > On Fri, Jun 06, 2025 at 09:13:24AM -0500, Rob Herring wrote:
-> > >    reg:
-> > > >      maxItems: 1
-> > > >
-> > > > -  '#pwm-cells': true
-> > > > +  '#pwm-cells':
-> > > > +    const: 3
-> > > >
-> > > >    xlnx,count-width:
-> > > >      $ref: /schemas/types.yaml#/definitions/uint32
-> > > > @@ -82,7 +83,7 @@ examples:
-> > > >      };
-> > > >
-> > > >      timer@800f0000 {
-> > > > -        #pwm-cells =3D <0>;
-> > > > +        #pwm-cells =3D <3>;
-> > > >          clock-names =3D "s_axi_aclk";
-> > > >          clocks =3D <&zynqmp_clk 71>;
-> > > >          compatible =3D "xlnx,xps-timer-1.00.a";
-> > > >
-> > > > There is however one concern that I want to get resolved first to
-> > > > prevent churn:
-> > > >
-> > > > In principle I think it's bad that a phandle to a PWM must contain a
-> > > > period and flags specifying the polarity. For some use cases the pe=
-riod
-> > > > might not matter or is implicitly given or more than one period len=
-gth
-> > > > is relevant.
-> > >
-> > > Why can't the period be 0 and no flags set if they aren't needed?
-> >
-> > I don't say they cannot, and probably that's the most sane option if
-> > there is no fixed default period and flags and we're sticking to 3
-> > cells.
->=20
-> So zero should have been used for drivers/pwm/pwm-argon-fan-hat.c?
-
-Do you mean #pwm-cells =3D <0>? Or period =3D flags =3D 0?
-
-If the phandle wouldn't contain period and flags and so it would only be
-used to identify the PWM to use and say nothing about how it is used,
-then using #pwm-cells =3D <0> for PWM chips that only have a single PWM
-would work fine.
-
-Best regards
-Uwe
-
---wyl7ytgv5wvrmgoq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmnLccUACgkQj4D7WH0S
-/k5NrAf/fw5ux7T53E9Vam6KUGE1olp2rUotaB1fGpB//Vp+V05CVJJV5GDV4VhH
-y2GFYYQbq1ITeXnvxHBYEbm4QRZ78Pcw10MsfyX9DmRyyFcc2Px2PI0EnkHbExfY
-gShB5qrky/K+ZWxwLWg4H8d5IrrTW5ol+ha7TenzMS1JjDxzjv/lMgGkyXdwLhhJ
-ufQzICkv2TzQw0Go1IQM3qwf62IAk8VI7j9Y2QtSStTCAVObtx3dx/PJ01rk6YVK
-3AJwhMuSUEP6F1BPxKPRM1zZwet5rTfTbYUOIm1yVU2WyN2xFq/x5ExQPtQvVsxK
-AFcszk2tlKcAZx+GW8MHjL+1N1Oa0g==
-=KGrq
------END PGP SIGNATURE-----
-
---wyl7ytgv5wvrmgoq--
+On 2026/3/31 05:54, Martin Blumenstingl wrote:
+> Hi Xianwei Zhao,
+> 
+> thanks for your contribution!
+> 
+> On Thu, Mar 26, 2026 at 7:35 AM Xianwei Zhao via B4 Relay
+> <devnull+xianwei.zhao.amlogic.com@kernel.org>  wrote:
+>> Add bindings and driver support Amlogic S7/S7D/S6 SoCs.
+> There is an old report that got lost, stating that the current
+> pwm-meson driver has an off-by-one error with the hi and lo fields:
+> [0]
+> Since you are working on bringing up a new platform: is this something
+> you can verify in your lab?
+> To be clear: I'm not expecting you to work on this ad-hoc or bring a
+> patch into this series. However, it would be great if you could verify
+> if the findings from [0] are correct and send an updated patch in
+> future.
+> 
+> Thank you and best regards
+> Martin
 
