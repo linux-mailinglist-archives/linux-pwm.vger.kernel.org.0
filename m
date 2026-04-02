@@ -1,69 +1,62 @@
-Return-Path: <linux-pwm+bounces-8458-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8459-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EHJVD3x1zmk6nwYAu9opvQ
-	(envelope-from <linux-pwm+bounces-8458-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Thu, 02 Apr 2026 15:56:12 +0200
+	id 2ECaKUSNzmnOoQYAu9opvQ
+	(envelope-from <linux-pwm+bounces-8459-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Thu, 02 Apr 2026 17:37:40 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8AD1C38A189
-	for <lists+linux-pwm@lfdr.de>; Thu, 02 Apr 2026 15:56:11 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id EF43738B534
+	for <lists+linux-pwm@lfdr.de>; Thu, 02 Apr 2026 17:37:37 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3D4E03078C2C
-	for <lists+linux-pwm@lfdr.de>; Thu,  2 Apr 2026 13:46:52 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CAA863064E37
+	for <lists+linux-pwm@lfdr.de>; Thu,  2 Apr 2026 15:35:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CCBF3806D4;
-	Thu,  2 Apr 2026 13:46:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6E19F3DCDAF;
+	Thu,  2 Apr 2026 15:35:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J8AJOyWB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D28Q9m9y"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE1B2ECE9B;
-	Thu,  2 Apr 2026 13:46:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1336534EEF3;
+	Thu,  2 Apr 2026 15:35:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775137608; cv=none; b=bmkcC3f5KZbecN0ErnpDnrBK8X9E54uLzowwZKPN+gIA1Foqcr0I6EBV7YWflJyWtkYHaLtL5IiLx1l5dyFnO5QioVK+T4hJP2Qyj8o/+CNtsJzFM3VYWuwyLEyRjjfcj/R2Qu44Cty9me2BkPvn3lKafhM/0eJ81/ezwkLxV2c=
+	t=1775144134; cv=none; b=MM7FsHVLtB1MD5fKgvk/u3o7wJxoEyR1Y5/nRHVWm8MhJhcA6JbbDAXGNUx45ZLdlS5SFm+zfoj5fjhgB2I/7N4ONYd5kY6jzy0GcuRmAggtuGIVVM9laoMx3B6ZzVPLcSY7mbBVNHOGeEJsQtEoqOVPykDOUn/rME5i0aXm7BU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775137608; c=relaxed/simple;
-	bh=ZEjmKDIfow7ENxk7DM4IKrLgjdy9XKybDTE/ogWtzH0=;
+	s=arc-20240116; t=1775144134; c=relaxed/simple;
+	bh=r7iiCd/fvKb2J1LKeOzWFvVJRWgqqYur0jEJoW8UgHs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=tCGDRPl/DB3LUFyXBwJXk62BXEUe/K6z/Ce8GDcmKWS99TVcjYBg0tpUYNudzcTc5JL9OIJ8PWC6qFjTTemuUa0KDN7AUZVdrAUluu4bW7eMP8bkjsZM1JnhjKkmEoBiylWqghlGtsyFI2JngJr4seTH2iCTJY/Cp6oH1Bekhyo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J8AJOyWB; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D4ECC19424;
-	Thu,  2 Apr 2026 13:46:47 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=TgWcTmvWYsSOCuKSfbffq8iEIR8l3HofqwG5w4KK+B3IY9ecGpxvF0pOgnz5R7IFhp+oeh7l84n34Wst2eMC+3IXfMqkmP2m1GJx653d9gBj9VPaO0I72P/MYVigwyk8IF6jj/GP9rZxJ39pGq3BCKUPQ7/6OUWS0U6v3+yNkzU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D28Q9m9y; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26F84C116C6;
+	Thu,  2 Apr 2026 15:35:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775137607;
-	bh=ZEjmKDIfow7ENxk7DM4IKrLgjdy9XKybDTE/ogWtzH0=;
+	s=k20201202; t=1775144133;
+	bh=r7iiCd/fvKb2J1LKeOzWFvVJRWgqqYur0jEJoW8UgHs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=J8AJOyWBZ5A7mYDE9tlOIxKrcA9BY8QKtFOhLGeVU+CTmqiwbWIAPrg0DZA4DSWyI
-	 ioGCHACNmkjxlC52EzZQ2piNTAhyGBBuhjHecyCvHQIyVFUQLxGmMUqclkzvUdOreM
-	 77y0MIKAD68/1Fdt7VEiqrTlCl9T0Etd5W0GvMK73ukVESL9Pu17ztnp5kexEKECc9
-	 6UOGO5b1Crd2uwQeWVgza3z8oWaTr0iMNGalGBILbOsWgwnFKaKca2RvDprWjYEDvT
-	 LW8JGqC4BQFt9wiZvAApVE17hYh0NyHSLJBHyj5b/0inTBUT0tMyv7ZLpvRgWeSbvu
-	 FWX1zgaMmR/Iw==
-Date: Thu, 2 Apr 2026 15:46:45 +0200
+	b=D28Q9m9yZT4BWr23qLpUw1YuJaajJCr31KFKFfvGwwEMua/EeNXCyRVb8hA3P4/9C
+	 o01Lpl690mjPYInAWG9JQCiCZhsgunpehb/62WC3YYo4/dtzgrzGNyROHK1LAESBc+
+	 Al/PHdGRo5Ain6YzP5/QwsQftr+tGnnCOHO/bIWLnuUy9sIVNfefE2JwnReDYi177V
+	 aV92lDAfhyyQW0MykCaLnGQ55n5Am4tt/RQG+tskkxDOGscEzgZVtjsQM/hKmVlHKq
+	 O18hvkYmprCovTQ0rbfD+pCf8BiK1IULxLQtob8o11EofD4IKelOpA1ME+EcqtsxEV
+	 MoUvb+toBNEcw==
+Date: Thu, 2 Apr 2026 17:35:31 +0200
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Matthew Maurer <mmaurer@google.com>
-Cc: Bjorn Andersson <andersson@kernel.org>, 
-	Konrad Dybcio <konradybcio@kernel.org>, Satya Durga Srinivasu Prabhala <satyap@quicinc.com>, 
-	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
-	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
-	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
-	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
-	Daniel Almeida <daniel.almeida@collabora.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
-	"Rafael J. Wysocki" <rafael@kernel.org>, David Airlie <airlied@gmail.com>, 
-	Simona Vetter <simona@ffwll.ch>, Michal Wilczynski <m.wilczynski@samsung.com>, 
-	Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
-	Leon Romanovsky <leon@kernel.org>, Trilok Soni <tsoni@quicinc.com>, linux-kernel@vger.kernel.org, 
-	linux-arm-msm@vger.kernel.org, rust-for-linux@vger.kernel.org, driver-core@lists.linux.dev, 
-	dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH v2 3/6] rust: device: Support testing devices for equality
-Message-ID: <ac5y636Wt7bqPUck@monoceros>
-References: <20260203-qcom-socinfo-v2-0-d6719db85637@google.com>
- <20260203-qcom-socinfo-v2-3-d6719db85637@google.com>
+To: george.moussalem@outlook.com
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Baruch Siach <baruch@tkos.co.il>, Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	Devi Priya <quic_devipriy@quicinc.com>, Baruch Siach <baruch.siach@siklu.com>
+Subject: Re: [PATCH v20 2/6] pwm: driver for qualcomm ipq6018 pwm block
+Message-ID: <ac6MP-O2MNDkleZB@monoceros>
+References: <20260204-ipq-pwm-v20-0-91733011a3d1@outlook.com>
+ <20260204-ipq-pwm-v20-2-91733011a3d1@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -71,80 +64,154 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="hamqz4ifmyrgsoal"
+	protocol="application/pgp-signature"; boundary="cuqojunejqg7fvth"
 Content-Disposition: inline
-In-Reply-To: <20260203-qcom-socinfo-v2-3-d6719db85637@google.com>
+In-Reply-To: <20260204-ipq-pwm-v20-2-91733011a3d1@outlook.com>
 X-Spamd-Result: default: False [-2.26 / 15.00];
 	SIGNED_PGP(-2.00)[];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	TAGGED_FROM(0.00)[bounces-8458-lists,linux-pwm=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,quicinc.com,gmail.com,garyguo.net,protonmail.com,google.com,umich.edu,collabora.com,linuxfoundation.org,ffwll.ch,samsung.com,intel.com,vger.kernel.org,lists.linux.dev,lists.freedesktop.org];
+	TAGGED_FROM(0.00)[bounces-8459-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	FREEMAIL_TO(0.00)[outlook.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[ukleinek@kernel.org,linux-pwm@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-pwm];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[29];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 8AD1C38A189
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: EF43738B534
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 
---hamqz4ifmyrgsoal
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+--cuqojunejqg7fvth
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 3/6] rust: device: Support testing devices for equality
+Subject: Re: [PATCH v20 2/6] pwm: driver for qualcomm ipq6018 pwm block
 MIME-Version: 1.0
 
-On Tue, Feb 03, 2026 at 03:46:32PM +0000, Matthew Maurer wrote:
-> This allows device drivers to check if, for example, an auxiliary
-> devices is one of its children by comparing the parent field, or
-> checking if a device parameter is its own device.
->=20
-> Also convert existing `.as_raw() !=3D .as_raw()` to  use this new
-> implementation.
->=20
-> Signed-off-by: Matthew Maurer <mmaurer@google.com>
+Hello,
 
-I don't understand the implications of this patch, but it's fine for me
-to be merged via the rust tree.
+I applied the patch and reviewed it in my editor. Here is the resulting
+diff:
 
-Acked-by: Uwe Kleine-K=F6nig <ukleinek@kernel.org>
+diff --git a/drivers/pwm/pwm-ipq.c b/drivers/pwm/pwm-ipq.c
+index b944ecb456d5..4818d0170d53 100644
+--- a/drivers/pwm/pwm-ipq.c
++++ b/drivers/pwm/pwm-ipq.c
+@@ -97,9 +97,10 @@ static int ipq_pwm_apply(struct pwm_chip *chip, struct p=
+wm_device *pwm,
+ 	if (state->polarity !=3D PWM_POLARITY_NORMAL)
+ 		return -EINVAL;
+=20
+-	if (!ipq_chip->clk_rate)
+-		return -EINVAL;
+-
++	/*
++	 * XXX Why? A comment please. (Is this already covered by the checks
++	 * below?)
++	 */
+ 	if (state->period < DIV64_U64_ROUND_UP(NSEC_PER_SEC,
+ 					       ipq_chip->clk_rate))
+ 		return -ERANGE;
+@@ -107,18 +108,29 @@ static int ipq_pwm_apply(struct pwm_chip *chip, struc=
+t pwm_device *pwm,
+ 	period_ns =3D min(state->period, IPQ_PWM_MAX_PERIOD_NS);
+ 	duty_ns =3D min(state->duty_cycle, period_ns);
+=20
++	/*
++	 * Pick the maximal value for PWM_DIV that still allows a
++	 * 100% relative duty cycle. This allows a fine grained
++	 * selection of duty cycles.
++	 */
+ 	pwm_div =3D IPQ_PWM_MAX_DIV - 1;
++
++	/*
++	 * XXX mul_u64_u64_div_u64 returns an u64, this might overflow the
++	 * unsigned int pre_div.
++	 */
+ 	pre_div =3D mul_u64_u64_div_u64(period_ns, ipq_chip->clk_rate,
+ 				      (u64)NSEC_PER_SEC * (pwm_div + 1));
+-	pre_div =3D (pre_div > 0) ? pre_div - 1 : 0;
++
++	if (!pre_div)
++		return -ERANGE;
++
++	pre_div -=3D 1;
+=20
+ 	if (pre_div > IPQ_PWM_MAX_DIV)
+ 		pre_div =3D IPQ_PWM_MAX_DIV;
+=20
+-	/*
+-	 * high duration =3D pwm duty * (pwm div + 1)
+-	 * pwm duty =3D duty_ns / period_ns
+-	 */
++	/* pwm duty =3D HI_DUR * (PRE_DIV + 1) / clk_rate */
+ 	hi_dur =3D mul_u64_u64_div_u64(duty_ns, ipq_chip->clk_rate,
+ 				     (u64)(pre_div + 1) * NSEC_PER_SEC);
+=20
+@@ -161,6 +173,10 @@ static int ipq_pwm_get_state(struct pwm_chip *chip, st=
+ruct pwm_device *pwm,
+ 	pre_div =3D FIELD_GET(IPQ_PWM_REG1_PRE_DIV, reg1);
+=20
+ 	effective_div =3D (u64)(pre_div + 1) * (pwm_div + 1);
++
++	/*
++	 * effective_div <=3D 0x100000000, so the multiplication doesn't overflow.
++	 */
+ 	state->period =3D DIV64_U64_ROUND_UP(effective_div * NSEC_PER_SEC,
+ 					   ipq_chip->clk_rate);
+=20
+@@ -210,6 +226,8 @@ static int ipq_pwm_probe(struct platform_device *pdev)
+ 		return dev_err_probe(dev, ret, "Failed to lock clock rate\n");
+=20
+ 	pwm->clk_rate =3D clk_get_rate(clk);
++	if (!pwm->clk_rate)
++		return dev_err_probe(dev, -EINVAL, "Failed due to clock rate being zero\=
+n");
+=20
+ 	chip->ops =3D &ipq_pwm_ops;
+=20
 
+Comments with XXX need more code adaptions (or a comment why my concern
+isn't justified).
 
---hamqz4ifmyrgsoal
+Best regards
+Uwe
+
+--cuqojunejqg7fvth
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmnOc0IACgkQj4D7WH0S
-/k6ASwf/fRIIL3jHKKOYTcASOtVM7fzGJ0OLkDC6JblRbcNMrKJ6RmIJDyX96eYV
-Zt2RmQN+twy0K15YwYiBdSWLU6yWsyomYriZo96Rd3PpM8K6Cyg2RadXLwLFvHZE
-3BjQs3rgGwoaE0rdYr3Rkje5ReKIMFZF68FLh7x9xgtFVR67uDPbMnapeTQagaVX
-G4l0cekgdlXUfo1xlFkYjnVPk7xkrVAzg/dT2TjYBIq76T5O6MIY9WrzXy5ifXxD
-Hbie7nG7EVpLIzwaf4d1d1Jkbxny+qEhQmdIZbYht0l+EZux8H5skWnZBeLozeNK
-UzKak8KjOsTAQJLy0DJvfczUV/gupA==
-=cFJW
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmnOjMAACgkQj4D7WH0S
+/k4pVgf/cETIaYkltCz65bm+33f6CU+amN5LmNhNoMv7fFgWhXEQJJWO4BQD2cyF
+NmakHDiUbBrzos0rZgvfEejWIPMH5iMoL6kY2DPMIq3SEb9aowgfXMAtbxWxcW4q
+zKnfpjj29dDcZiX6MdF3aTeQLEbPuWt7viGtegmyPBCBm/qa79BDyKLDw0MVPcpv
+6GTFyqq7xjMZ0USn23CH/r5AscEgPG2VwItf7UDXJPPrRXTZArIUE+S97bGX+tL3
+17S+i+b7LVXUdrcRZtHrFifM9m69OaQDRGJLPnr91B2+7/wFYzOSBcTaErnWu3R2
+Pw3r6JurrbfzRaFT3xqLW5aB+LxyeA==
+=qKav
 -----END PGP SIGNATURE-----
 
---hamqz4ifmyrgsoal--
+--cuqojunejqg7fvth--
 
