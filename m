@@ -1,213 +1,205 @@
-Return-Path: <linux-pwm+bounces-8453-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8454-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UGHrISbXzWn1iAYAu9opvQ
-	(envelope-from <linux-pwm+bounces-8453-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Thu, 02 Apr 2026 04:40:38 +0200
+	id YM//NHk1zmmAmAYAu9opvQ
+	(envelope-from <linux-pwm+bounces-8454-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Thu, 02 Apr 2026 11:23:05 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E1D5D382C31
-	for <lists+linux-pwm@lfdr.de>; Thu, 02 Apr 2026 04:40:37 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7EF4386D2D
+	for <lists+linux-pwm@lfdr.de>; Thu, 02 Apr 2026 11:23:05 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id CD593302F392
-	for <lists+linux-pwm@lfdr.de>; Thu,  2 Apr 2026 02:40:20 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 6B31830C645B
+	for <lists+linux-pwm@lfdr.de>; Thu,  2 Apr 2026 09:18:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C061F33FE02;
-	Thu,  2 Apr 2026 02:40:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gdDlLgTc"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 125BA2236E0;
+	Thu,  2 Apr 2026 09:18:52 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A78133DEF9;
-	Thu,  2 Apr 2026 02:40:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from zg8tmja2lje4os4yms4ymjma.icoremail.net (zg8tmja2lje4os4yms4ymjma.icoremail.net [206.189.21.223])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1BE3A381B00;
+	Thu,  2 Apr 2026 09:18:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.21.223
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775097618; cv=none; b=RJsxKp9xDjz0Ue6H9dRjd76Ep95y9Nsa1QgQQH/ITOlW8tnUY4QWYgBlvtdoL8rXwLGKan3CleTSQdKKjDzznmw8oIJHsxGZnVg1rBALggvzHwZLPlT2x2hYO5X2/+XaCBZTuQfiEkUhg9dFmJRUlc0cekVz+S/0AHa2RYW61Do=
+	t=1775121531; cv=none; b=VvwRwl+oP18Cx6awQUOEvfCDs4waO1oGLv/F4Z4VKGZERZroma6l0IPm5obBUELG6cSyFkyqVqhOGOIhRfils3X4REEh3lCnQyB51Cjrtl5lF2lAHkvbTDWRmty4PRaSJEpinHrQagfZGB9f1HujcZnv8LogXcpIKLxCSBHYZKk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775097618; c=relaxed/simple;
-	bh=4SdS+lHyJtTa2/Ms9Wv2AX4lHTJvDixvSJNqF+OkoRQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aooT2j20kwcGT5CfFly9g8O5BnB9cXLgt1skaLsd7scoo/95U+n3LpaVgADD6gVLqkftswqMFXK984wxX79HwIiz5vwCKX7XsoLvmprbyXaW7UrtZe463WJt8jCNLpvlcaMuSh3aG3DrgtyKPraRXzx99DjocO4EEB7aDc2yjNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gdDlLgTc; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3CF59C19421;
-	Thu,  2 Apr 2026 02:40:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775097618;
-	bh=4SdS+lHyJtTa2/Ms9Wv2AX4lHTJvDixvSJNqF+OkoRQ=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=gdDlLgTcIWHHBa0BBSkuXr7+5Mc71LCm3SKnt+e2bILq82u9TiWjX+JLLZOQZ74pj
-	 SASzrPRtLWsHMPmo3XrVSXJkLyMLkRKe070lV+/teMbXuGNwOt/E/DTk1kx+rLzxw0
-	 gYXZI/hgkXW1ssoGbOH1EBSu+cVpVczd5TRrswsO0+f0cYleGVMVPnbwe6ocmcgCnd
-	 E9WgjV+ZvcWWRBVDsLrJKs0JnI4p3FL2O/1tKvewkAOTM1gGghWJtYaNheZ8gBV3rh
-	 U7wOhEtakGHf+o+9HsGeCxjihr1gKe08VLMKv7QF4GWY416qzCduQ2peEMRhzpDc4+
-	 L64HvAA9c5DJQ==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE4E1112279;
-	Thu,  2 Apr 2026 02:40:18 +0000 (UTC)
-From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
-Date: Thu, 02 Apr 2026 02:40:16 +0000
-Subject: [PATCH v2 2/2] pwm: meson: Add support for Amlogic S7
+	s=arc-20240116; t=1775121531; c=relaxed/simple;
+	bh=Kyih91n6QOVOTdAnALskydk10icL5FGjYOIjclSavyY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=kqjq9mEH3znLHVRcObmTrz+pKYwhsrU6RqxnRDFHMxjssJn+noiyhvckohxBQzaum9Arf/Jayi+5NvKmAJqLVyhSqyf8LhOBlynocHX71OiBMLLSYm+Cv9wOxcaW4Z1WO385Knnn+5K6uuHx0aILjLMgMJQbL8ftpXE3V9vOQjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=206.189.21.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from E0005152DT.eswin.cn (unknown [10.12.96.41])
+	by app1 (Coremail) with SMTP id TAJkCgAnyXJbNM5pVhMOAA--.58655S2;
+	Thu, 02 Apr 2026 17:18:20 +0800 (CST)
+From: dongxuyang@eswincomputing.com
+To: ukleinek@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	ben-linux@fluff.org,
+	ben.dooks@codethink.co.uk,
+	p.zabel@pengutronix.de,
+	linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: ningyu@eswincomputing.com,
+	linmin@eswincomputing.com,
+	xuxiang@eswincomputing.com,
+	wangguosheng@eswincomputing.com,
+	pinkesh.vaghela@einfochips.com,
+	Xuyang Dong <dongxuyang@eswincomputing.com>
+Subject: [PATCH v3 0/2] Update designware pwm driver
+Date: Thu,  2 Apr 2026 17:17:18 +0800
+Message-Id: <20260402091718.1608-1-dongxuyang@eswincomputing.com>
+X-Mailer: git-send-email 2.31.1.windows.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260402-s6-s7-pwm-v2-2-657dce040956@amlogic.com>
-References: <20260402-s6-s7-pwm-v2-0-657dce040956@amlogic.com>
-In-Reply-To: <20260402-s6-s7-pwm-v2-0-657dce040956@amlogic.com>
-To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
- Conor Dooley <conor+dt@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, 
- Neil Armstrong <neil.armstrong@linaro.org>, 
- Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
- Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
- linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
- linux-amlogic@lists.infradead.org, Xianwei Zhao <xianwei.zhao@amlogic.com>
-X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1775097616; l=2781;
- i=xianwei.zhao@amlogic.com; s=20251216; h=from:subject:message-id;
- bh=o49tWz26WxnJOme5RKrdAld7mCVrpPGE+v52KlxAPOc=;
- b=ZCG8B2cWMv72BgpxPUZFlE4mKV/iyUMBSOfTUhkafcR/E4XCYxDHR+ni2AbmTmY920F+TCJi4
- pkcdl4Qr2F1DRXBjIoWyboQEN8XmeDGS2lf5Wly1Kb+9CasM+VeAdlH
-X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
- pk=dWwxtWCxC6FHRurOmxEtr34SuBYU+WJowV/ZmRJ7H+k=
-X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20251216 with
- auth_id=578
-X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
-Reply-To: xianwei.zhao@amlogic.com
-X-Spamd-Result: default: False [-0.66 / 15.00];
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:TAJkCgAnyXJbNM5pVhMOAA--.58655S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxAF1rZw4rXw1UXrykZF4fZrb_yoWrAw1Dpa
+	ykKFWakrWkWrySgFs7X3W8uFyYqw18GFWUKwn5Ga4UZwn0y34UJrZYkFy5tF9Fvr1kWFya
+	y34fGa17ua4YyF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26F1j6w1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkF7I0En4kS14v26r1q6r43MxkIecxEwVCm-wCF04
+	k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
+	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr4
+	1lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l
+	IxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4
+	A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUmjgxUUUUU=
+X-CM-SenderInfo: pgrqw5xx1d0w46hv4xpqfrz1xxwl0woofrz/
+X-Spamd-Result: default: False [1.54 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-8454-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8453-lists,linux-pwm=lfdr.de,xianwei.zhao.amlogic.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	DMARC_NA(0.00)[eswincomputing.com];
+	RCPT_COUNT_TWELVE(0.00)[16];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[kernel.org,gmail.com,linaro.org,baylibre.com,googlemail.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FROM_NO_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	FROM_HAS_DN(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCVD_COUNT_FIVE(0.00)[5];
+	NEURAL_HAM(-0.00)[-0.978];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,linux-pwm@vger.kernel.org];
-	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	HAS_REPLYTO(0.00)[xianwei.zhao@amlogic.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[amlogic.com:email,amlogic.com:replyto,amlogic.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: E1D5D382C31
+	R_DKIM_NA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	FROM_NEQ_ENVFROM(0.00)[dongxuyang@eswincomputing.com,linux-pwm@vger.kernel.org]
+X-Rspamd-Queue-Id: B7EF4386D2D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+From: Xuyang Dong <dongxuyang@eswincomputing.com>
 
-Add support for Amlogic S7 PWM. Amlogic S7 different from the
-previous SoCs, a controller includes one pwm, at the same time,
-the controller has only one input clock source.
+There is already a patch [1] for the DesignWare PWM driver,
+which is posted by Ben and still under review.
+Based on this patch, this series is a continuation of [1]
+to add support for IP versions 2.11a and later, which
+includes support for "Pulse Width Modulation with 0%
+and 100% Duty Cycle".
 
-Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
----
- drivers/pwm/pwm-meson.c | 32 +++++++++++++++++++++++++++++---
- 1 file changed, 29 insertions(+), 3 deletions(-)
+Supported chips:
+ESWIN EIC7700 series SoC.
 
-diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-index 8c6bf3d49753..7a43c42ef3d6 100644
---- a/drivers/pwm/pwm-meson.c
-+++ b/drivers/pwm/pwm-meson.c
-@@ -113,6 +113,7 @@ struct meson_pwm_data {
- 	int (*channels_init)(struct pwm_chip *chip);
- 	bool has_constant;
- 	bool has_polarity;
-+	bool single_pwm;
- };
- 
- struct meson_pwm {
-@@ -503,6 +504,18 @@ static void meson_pwm_s4_put_clk(void *data)
- 	clk_put(clk);
- }
- 
-+static int meson_pwm_init_channels_s7(struct pwm_chip *chip)
-+{
-+	struct device *dev = pwmchip_parent(chip);
-+	struct meson_pwm *meson = to_meson_pwm(chip);
-+
-+	meson->channels[0].clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(meson->channels[0].clk))
-+		return dev_err_probe(dev, PTR_ERR(meson->channels[0].clk),
-+				     "Failed to get clk\n");
-+	return 0;
-+}
-+
- static int meson_pwm_init_channels_s4(struct pwm_chip *chip)
- {
- 	struct device *dev = pwmchip_parent(chip);
-@@ -592,6 +605,13 @@ static const struct meson_pwm_data pwm_s4_data = {
- 	.has_polarity = true,
- };
- 
-+static const struct meson_pwm_data pwm_s7_data = {
-+	.channels_init = meson_pwm_init_channels_s7,
-+	.has_constant = true,
-+	.has_polarity = true,
-+	.single_pwm = true,
-+};
-+
- static const struct of_device_id meson_pwm_matches[] = {
- 	{
- 		.compatible = "amlogic,meson8-pwm-v2",
-@@ -642,6 +662,10 @@ static const struct of_device_id meson_pwm_matches[] = {
- 		.compatible = "amlogic,meson-s4-pwm",
- 		.data = &pwm_s4_data
- 	},
-+	{
-+		.compatible = "amlogic,s7-pwm",
-+		.data = &pwm_s7_data
-+	},
- 	{},
- };
- MODULE_DEVICE_TABLE(of, meson_pwm_matches);
-@@ -650,9 +674,11 @@ static int meson_pwm_probe(struct platform_device *pdev)
- {
- 	struct pwm_chip *chip;
- 	struct meson_pwm *meson;
--	int err;
-+	const struct meson_pwm_data *pdata = of_device_get_match_data(&pdev->dev);
-+	int err, npwm;
- 
--	chip = devm_pwmchip_alloc(&pdev->dev, MESON_NUM_PWMS, sizeof(*meson));
-+	npwm = pdata->single_pwm ? 1 : MESON_NUM_PWMS;
-+	chip = devm_pwmchip_alloc(&pdev->dev, npwm, sizeof(*meson));
- 	if (IS_ERR(chip))
- 		return PTR_ERR(chip);
- 	meson = to_meson_pwm(chip);
-@@ -664,7 +690,7 @@ static int meson_pwm_probe(struct platform_device *pdev)
- 	spin_lock_init(&meson->lock);
- 	chip->ops = &meson_pwm_ops;
- 
--	meson->data = of_device_get_match_data(&pdev->dev);
-+	meson->data = pdata;
- 
- 	err = meson->data->channels_init(chip);
- 	if (err < 0)
+Test:
+Tested this patch on the Sifive HiFive Premier P550 (which uses the EIC7700
+SoC).
 
--- 
-2.52.0
+[1] https://lore.kernel.org/lkml/20230907161242.67190-1-ben.dooks@codethink.co.uk/
 
+Updates:
+  Change in v3:
+  - YAML:
+    - Added a clear justification for the optional resets property. It is
+      required to support proper controller initialization when no PWM
+      channel is active at boot time, while allowing the driver to skip
+      reset deassertion if any channel is already enabled.
+  - Driver:
+    - Update the boundary value check of tmp in __dwc_pwm_configure_timer()
+      for DWC_TIM_CTRL_0N100PWM_EN.
+    - Replace 'sizeof(struct dwc_pwm_drvdata)' with
+      'struct_size(data, chips, 1)'.
+    - Drop devm_clk_get_enabled() in favor of devm_clk_get() with explicit
+      clk_prepare_enable() and clk_disable_unprepare() allowing runtime PM
+      to manage clock state.
+    - Replace devm_reset_control_get_optional_exclusive_deasserted() with
+      devm_reset_control_get_optional_exclusive() and issue a full reset via
+      reset_control_reset() only when no PWM channel is active at probe time.
+    - Detect bootloader-enabled PWM channels by reading the enable bit, and
+      initialize runtime PM as active for those channels by calling
+      pm_runtime_set_active() and pm_runtime_get_noresume().
+    - Remove autosuspend as it is not required for this driver.
+    - Use explicit pm_runtime_enable() and pm_runtime_disable() instead of
+      the managed devm_pm_runtime_enable() variant to ensure correct cleanup.
+    - On device removal, recheck the channel enable status. If any channel
+      remains active, call pm_runtime_put_noidle() before disabling clocks
+      via clk_disable_unprepare().
+      Resume device before register access during removal if it is runtime
+      suspended, and re-suspend it afterward.
+    - If device is suspended, resume it before register access during system
+      resume/suspend.
+    - Use pm_ptr() instead of pm_sleep_ptr() for correct PM operation.
+
+  - Link to v2: https://lore.kernel.org/all/20260306093000.2065-1-dongxuyang@eswincomputing.com/
+
+  Change in v2:
+  - YAML:
+    - Remove eswin,eic7700-pwm.yaml. Use snps,dw-apb-timers-pwm2.yaml.
+      The description in snps,dw-apb-timers-pwm2.yaml is better.
+    - Add the resets property as optional, as defined in the databook.
+    - Remove snps,pwm-full-range-enable as no additional property is needed.
+  - Driver:
+    - Change the file from pwm-dwc-eic7700.c to pwm-dwc-of.c from [1].
+    - Define DWC_TIM_VERSION_ID_2_11A 2.11a as the baseline version.
+    - Enable the 0% and 100% duty cycle mode by setting dwc->feature if
+      the version read from the TIMERS_COMP_VERSION register is later
+      than or equal to DWC_TIM_VERSION_ID_2_11A.
+    - Use the DIV_ROUND_UP_ULL() to calculate width in the .apply and
+      .get_state.
+    - Additionally, Power Management (PM) support has been added to the
+      pwm-dwc-of.c driver.
+    - Drop the headers that are not used.
+    - Use devm_clk_get_enabled() instead of devm_clk_get().
+    - Drop of_match_ptr.
+    - Fix build error with 1ULL << 32.
+      Reported-by: kernel test robot <lkp@intel.com>
+      Closes: https://lore.kernel.org/oe-kbuild-all/202512061720.j31AsgM7-lkp@intel.com/
+
+  - Link to v1: https://lore.kernel.org/all/20251205090411.1388-1-dongxuyang@eswincomputing.com/
+  - Link to v9: https://lore.kernel.org/lkml/20230907161242.67190-1-ben.dooks@codethink.co.uk/
+
+Xuyang Dong (2):
+  dt-bindings: pwm: dwc: add reset optional
+  pwm: dwc: add of/platform support
+
+ .../bindings/pwm/snps,dw-apb-timers-pwm2.yaml |   3 +
+ drivers/pwm/Kconfig                           |  10 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-dwc-core.c                    | 101 ++++--
+ drivers/pwm/pwm-dwc-of.c                      | 331 ++++++++++++++++++
+ drivers/pwm/pwm-dwc.h                         |  25 +-
+ 6 files changed, 442 insertions(+), 29 deletions(-)
+ create mode 100644 drivers/pwm/pwm-dwc-of.c
+
+--
+2.34.1
 
 
