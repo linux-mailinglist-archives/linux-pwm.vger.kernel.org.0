@@ -1,188 +1,150 @@
-Return-Path: <linux-pwm+bounces-8457-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8458-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4GxZJ1JYzmkxnAYAu9opvQ
-	(envelope-from <linux-pwm+bounces-8457-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Thu, 02 Apr 2026 13:51:46 +0200
+	id EHJVD3x1zmk6nwYAu9opvQ
+	(envelope-from <linux-pwm+bounces-8458-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Thu, 02 Apr 2026 15:56:12 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 331CC388965
-	for <lists+linux-pwm@lfdr.de>; Thu, 02 Apr 2026 13:51:46 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8AD1C38A189
+	for <lists+linux-pwm@lfdr.de>; Thu, 02 Apr 2026 15:56:11 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 0CB023020A69
-	for <lists+linux-pwm@lfdr.de>; Thu,  2 Apr 2026 11:48:38 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3D4E03078C2C
+	for <lists+linux-pwm@lfdr.de>; Thu,  2 Apr 2026 13:46:52 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 090493E123E;
-	Thu,  2 Apr 2026 11:47:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1CCBF3806D4;
+	Thu,  2 Apr 2026 13:46:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="N+YMWDi2"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J8AJOyWB"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx5.sberdevices.ru (mx5.sberdevices.ru [95.181.183.35])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCA503C344C;
-	Thu,  2 Apr 2026 11:46:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.181.183.35
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECE1B2ECE9B;
+	Thu,  2 Apr 2026 13:46:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775130422; cv=none; b=FtmafZJpa0/YYMndlEMUvTs7pBT30fXVN9uOdcTPyNecppOfMCCxHPz7IwZKYwOtZ0KoN7BpJgRn84HYTRIV9tuWbvGpDDB/8VsHKjvVvA8dIthdLSrh+k+Iiy9fqQ9q9u8H/s7UnGwZwD7fF2nfI+D+Jjeu/8KHkhTKoxZqrtU=
+	t=1775137608; cv=none; b=bmkcC3f5KZbecN0ErnpDnrBK8X9E54uLzowwZKPN+gIA1Foqcr0I6EBV7YWflJyWtkYHaLtL5IiLx1l5dyFnO5QioVK+T4hJP2Qyj8o/+CNtsJzFM3VYWuwyLEyRjjfcj/R2Qu44Cty9me2BkPvn3lKafhM/0eJ81/ezwkLxV2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775130422; c=relaxed/simple;
-	bh=C6BnlSlAquTCbKbHPYjW9baNoRu/YDPrrH2izkgFDFY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=c1CUzaw0Nb7zXEVJEl67e7ar3xgoLPBquB9DBmXK9rEvQyaSU2XaeT+EczG9RbHXGuERudnE1CahoJ+ut6p9BXWK43OM9fcpF+8dezuCTe9wOnZ7HbQTY2+kZs5HO5wHce4MKp5whfoj3Yf1llH3mAnmZIND2KR6GSNndkJbdZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=N+YMWDi2; arc=none smtp.client-ip=95.181.183.35
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
-Received: from p-antispam-ksmg-gc-msk01.sberdevices.ru (localhost [127.0.0.1])
-	by mx5.sberdevices.ru (Postfix) with ESMTP id 05B9A240005;
-	Thu,  2 Apr 2026 14:46:42 +0300 (MSK)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mx5.sberdevices.ru 05B9A240005
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
-	s=post; t=1775130402;
-	bh=LS4xrv2sD/iCCx4NjkrxG3qRMXJ6P8C3NNJ6hNqyLu8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
-	b=N+YMWDi2qhINcmzCHNSXhp6ERUeAKq0p2KdXHod7x7aVtTbW/R2sG6vjo9+SsWIbZ
-	 +SnIEKHalDH9insT3IKFn0q3um+WvBs1BIOBKgrf/74KweMlOZJiwd3jMQKCTdCAVu
-	 Yt6B8OfNaXdDzH/6PxXFTFdHOIZyQjv7m6GshOjzuprKb4+MEHiOI0an8KSrDh3KsU
-	 dmSqbyp6pjRjkcXYclMWN1Gig69RoIZt5jZwjNd2Hh5OHqeNtCMOPtfA/7et9dAzYf
-	 +ZkVcpDBQDt7oZJG8SuFp7UUVJU9YcnnHGFtm0sklPjSiLJyDYiWIe01oIpU/qXOkh
-	 /AGFJPh0taGDw==
-Received: from smtp.sberdevices.ru (p-exch-cas-s-m1.sberdevices.ru [172.16.210.2])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(Client CN "sberdevices.ru", Issuer "R12" (not verified))
-	by mx5.sberdevices.ru (Postfix) with ESMTPS;
-	Thu,  2 Apr 2026 14:46:41 +0300 (MSK)
-Message-ID: <6fd5f5a8-dd60-48ad-be29-d263578e6b0a@salutedevices.com>
-Date: Thu, 2 Apr 2026 14:46:40 +0300
+	s=arc-20240116; t=1775137608; c=relaxed/simple;
+	bh=ZEjmKDIfow7ENxk7DM4IKrLgjdy9XKybDTE/ogWtzH0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=tCGDRPl/DB3LUFyXBwJXk62BXEUe/K6z/Ce8GDcmKWS99TVcjYBg0tpUYNudzcTc5JL9OIJ8PWC6qFjTTemuUa0KDN7AUZVdrAUluu4bW7eMP8bkjsZM1JnhjKkmEoBiylWqghlGtsyFI2JngJr4seTH2iCTJY/Cp6oH1Bekhyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J8AJOyWB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D4ECC19424;
+	Thu,  2 Apr 2026 13:46:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775137607;
+	bh=ZEjmKDIfow7ENxk7DM4IKrLgjdy9XKybDTE/ogWtzH0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=J8AJOyWBZ5A7mYDE9tlOIxKrcA9BY8QKtFOhLGeVU+CTmqiwbWIAPrg0DZA4DSWyI
+	 ioGCHACNmkjxlC52EzZQ2piNTAhyGBBuhjHecyCvHQIyVFUQLxGmMUqclkzvUdOreM
+	 77y0MIKAD68/1Fdt7VEiqrTlCl9T0Etd5W0GvMK73ukVESL9Pu17ztnp5kexEKECc9
+	 6UOGO5b1Crd2uwQeWVgza3z8oWaTr0iMNGalGBILbOsWgwnFKaKca2RvDprWjYEDvT
+	 LW8JGqC4BQFt9wiZvAApVE17hYh0NyHSLJBHyj5b/0inTBUT0tMyv7ZLpvRgWeSbvu
+	 FWX1zgaMmR/Iw==
+Date: Thu, 2 Apr 2026 15:46:45 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Matthew Maurer <mmaurer@google.com>
+Cc: Bjorn Andersson <andersson@kernel.org>, 
+	Konrad Dybcio <konradybcio@kernel.org>, Satya Durga Srinivasu Prabhala <satyap@quicinc.com>, 
+	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun.feng@gmail.com>, Gary Guo <gary@garyguo.net>, 
+	=?utf-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, 
+	Daniel Almeida <daniel.almeida@collabora.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
+	"Rafael J. Wysocki" <rafael@kernel.org>, David Airlie <airlied@gmail.com>, 
+	Simona Vetter <simona@ffwll.ch>, Michal Wilczynski <m.wilczynski@samsung.com>, 
+	Dave Ertman <david.m.ertman@intel.com>, Ira Weiny <ira.weiny@intel.com>, 
+	Leon Romanovsky <leon@kernel.org>, Trilok Soni <tsoni@quicinc.com>, linux-kernel@vger.kernel.org, 
+	linux-arm-msm@vger.kernel.org, rust-for-linux@vger.kernel.org, driver-core@lists.linux.dev, 
+	dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH v2 3/6] rust: device: Support testing devices for equality
+Message-ID: <ac5y636Wt7bqPUck@monoceros>
+References: <20260203-qcom-socinfo-v2-0-d6719db85637@google.com>
+ <20260203-qcom-socinfo-v2-3-d6719db85637@google.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [DMARC error]Re: [PATCH 0/2] Add PWM support Amlogic S7 S7D S6
-To: Xianwei Zhao <xianwei.zhao@amlogic.com>, Martin Blumenstingl
-	<martin.blumenstingl@googlemail.com>
-CC: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Rob Herring
-	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
-	<conor+dt@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, Neil Armstrong
-	<neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Jerome
- Brunet <jbrunet@baylibre.com>, <linux-pwm@vger.kernel.org>,
-	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, <linux-amlogic@lists.infradead.org>,
-	Junyi Zhao <junyi.zhao@amlogic.com>
-References: <20260326-s6-s7-pwm-v1-0-67e2f72b98bc@amlogic.com>
- <CAFBinCD1GPP82MEBDHg3BwCJg6JY5k2HksEt+kCB=YjnYTO7Tw@mail.gmail.com>
- <70a637b1-a76a-470c-9a97-0b4599a40a1c@amlogic.com>
- <4a9c726a-d580-4b0b-9530-228b58389c80@salutedevices.com>
- <78e05060-6f25-4d78-8b0d-35b8fca0cecb@amlogic.com>
-Content-Language: en-US
-From: George Stark <gnstark@salutedevices.com>
-In-Reply-To: <78e05060-6f25-4d78-8b0d-35b8fca0cecb@amlogic.com>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: p-exch-cas-a-m1.sberdevices.ru (172.24.201.216) To
- p-exch-cas-s-m1.sberdevices.ru (172.16.210.2)
-X-KSMG-AntiPhishing: NotDetected
-X-KSMG-AntiSpam-Auth: dkim=none
-X-KSMG-AntiSpam-Envelope-From: gnstark@salutedevices.com
-X-KSMG-AntiSpam-Info: LuaCore: 96 0.3.96 f0df504111d78c4fb91ce829559989c2d1ddd192, {Tracking_from_domain_doesnt_match_to}, 127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;salutedevices.com:7.1.1;smtp.sberdevices.ru:7.1.1,5.0.1, FromAlignment: s
-X-KSMG-AntiSpam-Interceptor-Info: scan successful
-X-KSMG-AntiSpam-Lua-Profiles: 201900 [Apr 02 2026]
-X-KSMG-AntiSpam-Method: none
-X-KSMG-AntiSpam-Rate: 0
-X-KSMG-AntiSpam-Status: not_detected
-X-KSMG-AntiSpam-Version: 6.1.1.22
-X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.1.8310, bases: 2026/04/02 09:00:00 #28364014
-X-KSMG-AntiVirus-Status: NotDetected, skipped
-X-KSMG-KATA-Status: Not Scanned
-X-KSMG-LinksScanning: NotDetected
-X-KSMG-Message-Action: skipped
-X-KSMG-Rule-ID: 5
-X-Spamd-Result: default: False [-2.16 / 15.00];
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="hamqz4ifmyrgsoal"
+Content-Disposition: inline
+In-Reply-To: <20260203-qcom-socinfo-v2-3-d6719db85637@google.com>
+X-Spamd-Result: default: False [-2.26 / 15.00];
+	SIGNED_PGP(-2.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[salutedevices.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[salutedevices.com:s=post];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8457-lists,linux-pwm=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[amlogic.com,googlemail.com];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	TAGGED_FROM(0.00)[bounces-8458-lists,linux-pwm=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,linaro.org,baylibre.com,vger.kernel.org,lists.infradead.org,amlogic.com];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[kernel.org,quicinc.com,gmail.com,garyguo.net,protonmail.com,google.com,umich.edu,collabora.com,linuxfoundation.org,ffwll.ch,samsung.com,intel.com,vger.kernel.org,lists.linux.dev,lists.freedesktop.org];
+	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[gnstark@salutedevices.com,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[salutedevices.com:+];
-	NEURAL_HAM(-0.00)[-0.996];
-	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 331CC388965
+	FROM_NEQ_ENVFROM(0.00)[ukleinek@kernel.org,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[linux-pwm];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[29];
+	TO_DN_SOME(0.00)[]
+X-Rspamd-Queue-Id: 8AD1C38A189
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hello Xianwei Zhao
 
-On 3/31/26 10:59, Xianwei Zhao wrote:
-> Hi George,
-> 
-> On 2026/3/31 15:33, George Stark wrote:
->> Hello Martin, Xianwei
->>
->>
->> On 3/31/26 10:10, Xianwei Zhao wrote:
->>> Hi Martin,
->>>      I confirmed with Junyi Zhao that the current implementation counts
->>> from zero, so this submission is correct.
->>> We agree this should be fixed and will address it in a follow-up patch.
->>> Thanks for pointing it out.
->>>
->>> On 2026/3/31 05:54, Martin Blumenstingl wrote:
->>>> Hi Xianwei Zhao,
->>>>
->>>> thanks for your contribution!
->>>>
->>>> On Thu, Mar 26, 2026 at 7:35 AM Xianwei Zhao via B4 Relay
->>>> <devnull+xianwei.zhao.amlogic.com@kernel.org>  wrote:
->>>>> Add bindings and driver support Amlogic S7/S7D/S6 SoCs.
->>>> There is an old report that got lost, stating that the current
->>
->> Xianwei Zhao thanks for the confirmation.
->> I am the author of the old report and the corresponding patch and it's
->> not lost. So if the patch is correct I'll be glad to add relevant
->> tested-by tags.
->>
-> 
-> I will use your patch and won't send a separate one.
-> Do you mean I should add a Tested-by tag to your patch?
+--hamqz4ifmyrgsoal
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 3/6] rust: device: Support testing devices for equality
+MIME-Version: 1.0
 
-Yes since you've confirmed the problem exists then your tested-by tag 
-would be appropriate. And I'm ok if you resend the patch. Thanks.
+On Tue, Feb 03, 2026 at 03:46:32PM +0000, Matthew Maurer wrote:
+> This allows device drivers to check if, for example, an auxiliary
+> devices is one of its children by comparing the parent field, or
+> checking if a device parameter is its own device.
+>=20
+> Also convert existing `.as_raw() !=3D .as_raw()` to  use this new
+> implementation.
+>=20
+> Signed-off-by: Matthew Maurer <mmaurer@google.com>
 
->>>> pwm-meson driver has an off-by-one error with the hi and lo fields:
->>>> [0]
->>>> Since you are working on bringing up a new platform: is this something
->>>> you can verify in your lab?
->>>> To be clear: I'm not expecting you to work on this ad-hoc or bring a
->>>> patch into this series. However, it would be great if you could verify
->>>> if the findings from [0] are correct and send an updated patch in
->>>> future.
->>>>
->>>> Thank you and best regards
->>>> Martin 
+I don't understand the implications of this patch, but it's fine for me
+to be merged via the rust tree.
 
--- 
-Best regards
-George
+Acked-by: Uwe Kleine-K=F6nig <ukleinek@kernel.org>
+
+
+--hamqz4ifmyrgsoal
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmnOc0IACgkQj4D7WH0S
+/k6ASwf/fRIIL3jHKKOYTcASOtVM7fzGJ0OLkDC6JblRbcNMrKJ6RmIJDyX96eYV
+Zt2RmQN+twy0K15YwYiBdSWLU6yWsyomYriZo96Rd3PpM8K6Cyg2RadXLwLFvHZE
+3BjQs3rgGwoaE0rdYr3Rkje5ReKIMFZF68FLh7x9xgtFVR67uDPbMnapeTQagaVX
+G4l0cekgdlXUfo1xlFkYjnVPk7xkrVAzg/dT2TjYBIq76T5O6MIY9WrzXy5ifXxD
+Hbie7nG7EVpLIzwaf4d1d1Jkbxny+qEhQmdIZbYht0l+EZux8H5skWnZBeLozeNK
+UzKak8KjOsTAQJLy0DJvfczUV/gupA==
+=cFJW
+-----END PGP SIGNATURE-----
+
+--hamqz4ifmyrgsoal--
 
