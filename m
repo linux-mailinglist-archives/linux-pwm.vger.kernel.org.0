@@ -1,717 +1,188 @@
-Return-Path: <linux-pwm+bounces-8456-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8457-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ABTMFfU0zmk8mAYAu9opvQ
-	(envelope-from <linux-pwm+bounces-8456-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Thu, 02 Apr 2026 11:20:53 +0200
+	id 4GxZJ1JYzmkxnAYAu9opvQ
+	(envelope-from <linux-pwm+bounces-8457-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Thu, 02 Apr 2026 13:51:46 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 82E96386C86
-	for <lists+linux-pwm@lfdr.de>; Thu, 02 Apr 2026 11:20:52 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 331CC388965
+	for <lists+linux-pwm@lfdr.de>; Thu, 02 Apr 2026 13:51:46 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9527E300AB22
-	for <lists+linux-pwm@lfdr.de>; Thu,  2 Apr 2026 09:19:45 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 0CB023020A69
+	for <lists+linux-pwm@lfdr.de>; Thu,  2 Apr 2026 11:48:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C42F7382F20;
-	Thu,  2 Apr 2026 09:19:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 090493E123E;
+	Thu,  2 Apr 2026 11:47:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b="N+YMWDi2"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from zg8tmtyylji0my4xnjeumjiw.icoremail.net (zg8tmtyylji0my4xnjeumjiw.icoremail.net [162.243.161.220])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B57F1382F02;
-	Thu,  2 Apr 2026 09:19:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.243.161.220
+Received: from mx5.sberdevices.ru (mx5.sberdevices.ru [95.181.183.35])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCA503C344C;
+	Thu,  2 Apr 2026 11:46:50 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.181.183.35
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775121584; cv=none; b=i+C0u442JkPMz5iLMOO0DUqakI9Ggi8Rf7EQtnyYzitpFAtYuBe0ioSq33LoD+mBY2odI/D/bKqvTcKgQIlBr/t8G/nN08lTYxD3x1YOU5RJcgU3wrVRbUTuBtTwNvpYK828TLD93zFjHIcKoitOIPfbRLke+s8h9SHMz9XZQOM=
+	t=1775130422; cv=none; b=FtmafZJpa0/YYMndlEMUvTs7pBT30fXVN9uOdcTPyNecppOfMCCxHPz7IwZKYwOtZ0KoN7BpJgRn84HYTRIV9tuWbvGpDDB/8VsHKjvVvA8dIthdLSrh+k+Iiy9fqQ9q9u8H/s7UnGwZwD7fF2nfI+D+Jjeu/8KHkhTKoxZqrtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775121584; c=relaxed/simple;
-	bh=oBwodQZnYkVNUpmAIYafFb7DwOPd2cZ+nfGOi5zocvU=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=b2sJtCJ2HoJCL2S+24BDhWCDxrXCg6ER2gn2xDCqfvtu+iQtitcyzrUIAM1rDePTn30M0ui6AG94RN1+PvOkIhD2haFbQacL0xMPs1J2h3DApECK/kiQAZGpF46Fygs0FavUQaJvU+5MYcTZJbsDBv6d8qA920PWrRZoGR4G9Q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=162.243.161.220
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from E0005152DT.eswin.cn (unknown [10.12.96.41])
-	by app2 (Coremail) with SMTP id TQJkCgA3TaCZNM5p1AwOAA--.63708S2;
-	Thu, 02 Apr 2026 17:19:23 +0800 (CST)
-From: dongxuyang@eswincomputing.com
-To: ukleinek@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	ben-linux@fluff.org,
-	ben.dooks@codethink.co.uk,
-	p.zabel@pengutronix.de,
-	linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: ningyu@eswincomputing.com,
-	linmin@eswincomputing.com,
-	xuxiang@eswincomputing.com,
-	wangguosheng@eswincomputing.com,
-	pinkesh.vaghela@einfochips.com,
-	Xuyang Dong <dongxuyang@eswincomputing.com>
-Subject: [PATCH v3 2/2] pwm: dwc: add of/platform support
-Date: Thu,  2 Apr 2026 17:19:20 +0800
-Message-Id: <20260402091920.1721-1-dongxuyang@eswincomputing.com>
-X-Mailer: git-send-email 2.31.1.windows.1
-In-Reply-To: <20260402091718.1608-1-dongxuyang@eswincomputing.com>
-References: <20260402091718.1608-1-dongxuyang@eswincomputing.com>
+	s=arc-20240116; t=1775130422; c=relaxed/simple;
+	bh=C6BnlSlAquTCbKbHPYjW9baNoRu/YDPrrH2izkgFDFY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=c1CUzaw0Nb7zXEVJEl67e7ar3xgoLPBquB9DBmXK9rEvQyaSU2XaeT+EczG9RbHXGuERudnE1CahoJ+ut6p9BXWK43OM9fcpF+8dezuCTe9wOnZ7HbQTY2+kZs5HO5wHce4MKp5whfoj3Yf1llH3mAnmZIND2KR6GSNndkJbdZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com; spf=pass smtp.mailfrom=salutedevices.com; dkim=pass (2048-bit key) header.d=salutedevices.com header.i=@salutedevices.com header.b=N+YMWDi2; arc=none smtp.client-ip=95.181.183.35
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=salutedevices.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=salutedevices.com
+Received: from p-antispam-ksmg-gc-msk01.sberdevices.ru (localhost [127.0.0.1])
+	by mx5.sberdevices.ru (Postfix) with ESMTP id 05B9A240005;
+	Thu,  2 Apr 2026 14:46:42 +0300 (MSK)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mx5.sberdevices.ru 05B9A240005
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=salutedevices.com;
+	s=post; t=1775130402;
+	bh=LS4xrv2sD/iCCx4NjkrxG3qRMXJ6P8C3NNJ6hNqyLu8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:From:Content-Type:From;
+	b=N+YMWDi2qhINcmzCHNSXhp6ERUeAKq0p2KdXHod7x7aVtTbW/R2sG6vjo9+SsWIbZ
+	 +SnIEKHalDH9insT3IKFn0q3um+WvBs1BIOBKgrf/74KweMlOZJiwd3jMQKCTdCAVu
+	 Yt6B8OfNaXdDzH/6PxXFTFdHOIZyQjv7m6GshOjzuprKb4+MEHiOI0an8KSrDh3KsU
+	 dmSqbyp6pjRjkcXYclMWN1Gig69RoIZt5jZwjNd2Hh5OHqeNtCMOPtfA/7et9dAzYf
+	 +ZkVcpDBQDt7oZJG8SuFp7UUVJU9YcnnHGFtm0sklPjSiLJyDYiWIe01oIpU/qXOkh
+	 /AGFJPh0taGDw==
+Received: from smtp.sberdevices.ru (p-exch-cas-s-m1.sberdevices.ru [172.16.210.2])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(Client CN "sberdevices.ru", Issuer "R12" (not verified))
+	by mx5.sberdevices.ru (Postfix) with ESMTPS;
+	Thu,  2 Apr 2026 14:46:41 +0300 (MSK)
+Message-ID: <6fd5f5a8-dd60-48ad-be29-d263578e6b0a@salutedevices.com>
+Date: Thu, 2 Apr 2026 14:46:40 +0300
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [DMARC error]Re: [PATCH 0/2] Add PWM support Amlogic S7 S7D S6
+To: Xianwei Zhao <xianwei.zhao@amlogic.com>, Martin Blumenstingl
+	<martin.blumenstingl@googlemail.com>
+CC: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Rob Herring
+	<robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+	<conor+dt@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, Neil Armstrong
+	<neil.armstrong@linaro.org>, Kevin Hilman <khilman@baylibre.com>, Jerome
+ Brunet <jbrunet@baylibre.com>, <linux-pwm@vger.kernel.org>,
+	<devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-amlogic@lists.infradead.org>,
+	Junyi Zhao <junyi.zhao@amlogic.com>
+References: <20260326-s6-s7-pwm-v1-0-67e2f72b98bc@amlogic.com>
+ <CAFBinCD1GPP82MEBDHg3BwCJg6JY5k2HksEt+kCB=YjnYTO7Tw@mail.gmail.com>
+ <70a637b1-a76a-470c-9a97-0b4599a40a1c@amlogic.com>
+ <4a9c726a-d580-4b0b-9530-228b58389c80@salutedevices.com>
+ <78e05060-6f25-4d78-8b0d-35b8fca0cecb@amlogic.com>
+Content-Language: en-US
+From: George Stark <gnstark@salutedevices.com>
+In-Reply-To: <78e05060-6f25-4d78-8b0d-35b8fca0cecb@amlogic.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:TQJkCgA3TaCZNM5p1AwOAA--.63708S2
-X-Coremail-Antispam: 1UD129KBjvAXoW3ur1rZF1Utr48XFW3uryxuFg_yoW8Ar18Ao
-	WxKr1fXw18K3Z3J392ka42gayjvw4kt34fCr1rWF4DC3Z8Zw15AFWUK34Ygw1Sqw1YyFWx
-	Ar4xXr1fAF4fJw18n29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-	AaLaJ3UjIYCTnIWjp_UUUYK7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20EY4v20xva
-	j40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2
-	x7M28EF7xvwVC0I7IYx2IY67AKxVW7JVWDJwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8
-	Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
-	xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-	6xIIjxv20xvE14v26r1Y6r17McIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
-	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
-	8cxan2IY04v7M4kE6xkIj40Ew7xC0wCY1x0262kKe7AKxVWUtVW8ZwCY02Avz4vE-syl42
-	xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWU
-	GwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI4
-	8JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4U
-	MIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I
-	8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUOEfODUUUU
-X-CM-SenderInfo: pgrqw5xx1d0w46hv4xpqfrz1xxwl0woofrz/
-X-Spamd-Result: default: False [1.54 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-ClientProxiedBy: p-exch-cas-a-m1.sberdevices.ru (172.24.201.216) To
+ p-exch-cas-s-m1.sberdevices.ru (172.16.210.2)
+X-KSMG-AntiPhishing: NotDetected
+X-KSMG-AntiSpam-Auth: dkim=none
+X-KSMG-AntiSpam-Envelope-From: gnstark@salutedevices.com
+X-KSMG-AntiSpam-Info: LuaCore: 96 0.3.96 f0df504111d78c4fb91ce829559989c2d1ddd192, {Tracking_from_domain_doesnt_match_to}, 127.0.0.199:7.1.2;d41d8cd98f00b204e9800998ecf8427e.com:7.1.1;salutedevices.com:7.1.1;smtp.sberdevices.ru:7.1.1,5.0.1, FromAlignment: s
+X-KSMG-AntiSpam-Interceptor-Info: scan successful
+X-KSMG-AntiSpam-Lua-Profiles: 201900 [Apr 02 2026]
+X-KSMG-AntiSpam-Method: none
+X-KSMG-AntiSpam-Rate: 0
+X-KSMG-AntiSpam-Status: not_detected
+X-KSMG-AntiSpam-Version: 6.1.1.22
+X-KSMG-AntiVirus: Kaspersky Secure Mail Gateway, version 2.1.1.8310, bases: 2026/04/02 09:00:00 #28364014
+X-KSMG-AntiVirus-Status: NotDetected, skipped
+X-KSMG-KATA-Status: Not Scanned
+X-KSMG-LinksScanning: NotDetected
+X-KSMG-Message-Action: skipped
+X-KSMG-Rule-ID: 5
+X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[salutedevices.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[salutedevices.com:s=post];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8456-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8457-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DMARC_NA(0.00)[eswincomputing.com];
+	FREEMAIL_TO(0.00)[amlogic.com,googlemail.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,linaro.org,baylibre.com,vger.kernel.org,lists.infradead.org,amlogic.com];
 	RCPT_COUNT_TWELVE(0.00)[16];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FROM_NO_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-0.988];
-	PRECEDENCE_BULK(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	R_DKIM_NA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[gnstark@salutedevices.com,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[salutedevices.com:+];
+	NEURAL_HAM(-0.00)[-0.996];
 	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	FROM_NEQ_ENVFROM(0.00)[dongxuyang@eswincomputing.com,linux-pwm@vger.kernel.org]
-X-Rspamd-Queue-Id: 82E96386C86
+	MID_RHS_MATCH_FROM(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 331CC388965
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Xuyang Dong <dongxuyang@eswincomputing.com>
+Hello Xianwei Zhao
 
-The dwc pwm controller can be used in non-PCI systems, so allow
-either platform or OF based probing.
+On 3/31/26 10:59, Xianwei Zhao wrote:
+> Hi George,
+> 
+> On 2026/3/31 15:33, George Stark wrote:
+>> Hello Martin, Xianwei
+>>
+>>
+>> On 3/31/26 10:10, Xianwei Zhao wrote:
+>>> Hi Martin,
+>>>      I confirmed with Junyi Zhao that the current implementation counts
+>>> from zero, so this submission is correct.
+>>> We agree this should be fixed and will address it in a follow-up patch.
+>>> Thanks for pointing it out.
+>>>
+>>> On 2026/3/31 05:54, Martin Blumenstingl wrote:
+>>>> Hi Xianwei Zhao,
+>>>>
+>>>> thanks for your contribution!
+>>>>
+>>>> On Thu, Mar 26, 2026 at 7:35 AM Xianwei Zhao via B4 Relay
+>>>> <devnull+xianwei.zhao.amlogic.com@kernel.org>  wrote:
+>>>>> Add bindings and driver support Amlogic S7/S7D/S6 SoCs.
+>>>> There is an old report that got lost, stating that the current
+>>
+>> Xianwei Zhao thanks for the confirmation.
+>> I am the author of the old report and the corresponding patch and it's
+>> not lost. So if the patch is correct I'll be glad to add relevant
+>> tested-by tags.
+>>
+> 
+> I will use your patch and won't send a separate one.
+> Do you mean I should add a Tested-by tag to your patch?
 
-The controller is reset only when no PWM channel is enabled.
-Otherwise, clocks are enabled and the runtime PM state is updated
-to reflect the active hardware configuration.
+Yes since you've confirmed the problem exists then your tested-by tag 
+would be appropriate. And I'm ok if you resend the patch. Thanks.
 
-Co-developed-by: Ben Dooks <ben.dooks@codethink.co.uk>
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-Signed-off-by: Xiang Xu <xuxiang@eswincomputing.com>
-Signed-off-by: Guosheng Wang <wangguosheng@eswincomputing.com>
-Signed-off-by: Xuyang Dong <dongxuyang@eswincomputing.com>
----
- drivers/pwm/Kconfig        |  10 ++
- drivers/pwm/Makefile       |   1 +
- drivers/pwm/pwm-dwc-core.c | 101 ++++++++---
- drivers/pwm/pwm-dwc-of.c   | 331 +++++++++++++++++++++++++++++++++++++
- drivers/pwm/pwm-dwc.h      |  25 ++-
- 5 files changed, 439 insertions(+), 29 deletions(-)
- create mode 100644 drivers/pwm/pwm-dwc-of.c
+>>>> pwm-meson driver has an off-by-one error with the hi and lo fields:
+>>>> [0]
+>>>> Since you are working on bringing up a new platform: is this something
+>>>> you can verify in your lab?
+>>>> To be clear: I'm not expecting you to work on this ad-hoc or bring a
+>>>> patch into this series. However, it would be great if you could verify
+>>>> if the findings from [0] are correct and send an updated patch in
+>>>> future.
+>>>>
+>>>> Thank you and best regards
+>>>> Martin 
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 6f3147518376..50aea24b6168 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -249,6 +249,16 @@ config PWM_DWC
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-dwc.
-
-+config PWM_DWC_OF
-+	tristate "DesignWare PWM Controller (OF bus)"
-+	depends on HAS_IOMEM && (OF || COMPILE_TEST)
-+	select PWM_DWC_CORE
-+	help
-+	  PWM driver for Synopsys DWC PWM Controller on an OF bus or
-+	  a platform bus.
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-dwc-of.
-+
- config PWM_EP93XX
- 	tristate "Cirrus Logic EP93xx PWM support"
- 	depends on ARCH_EP93XX || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 0dc0d2b69025..470411a7e5ea 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -20,6 +20,7 @@ obj-$(CONFIG_PWM_CRC)		+= pwm-crc.o
- obj-$(CONFIG_PWM_CROS_EC)	+= pwm-cros-ec.o
- obj-$(CONFIG_PWM_DWC_CORE)	+= pwm-dwc-core.o
- obj-$(CONFIG_PWM_DWC)		+= pwm-dwc.o
-+obj-$(CONFIG_PWM_DWC_OF)	+= pwm-dwc-of.o
- obj-$(CONFIG_PWM_EP93XX)	+= pwm-ep93xx.o
- obj-$(CONFIG_PWM_FSL_FTM)	+= pwm-fsl-ftm.o
- obj-$(CONFIG_PWM_GPIO)		+= pwm-gpio.o
-diff --git a/drivers/pwm/pwm-dwc-core.c b/drivers/pwm/pwm-dwc-core.c
-index 6dabec93a3c6..55dd503842c3 100644
---- a/drivers/pwm/pwm-dwc-core.c
-+++ b/drivers/pwm/pwm-dwc-core.c
-@@ -12,6 +12,7 @@
- #define DEFAULT_SYMBOL_NAMESPACE "dwc_pwm"
-
- #include <linux/bitops.h>
-+#include <linux/clk.h>
- #include <linux/export.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-@@ -44,21 +45,52 @@ static int __dwc_pwm_configure_timer(struct dwc_pwm *dwc,
- 	u32 high;
- 	u32 low;
-
--	/*
--	 * Calculate width of low and high period in terms of input clock
--	 * periods and check are the result within HW limits between 1 and
--	 * 2^32 periods.
--	 */
--	tmp = DIV_ROUND_CLOSEST_ULL(state->duty_cycle, dwc->clk_ns);
--	if (tmp < 1 || tmp > (1ULL << 32))
--		return -ERANGE;
--	low = tmp - 1;
--
--	tmp = DIV_ROUND_CLOSEST_ULL(state->period - state->duty_cycle,
--				    dwc->clk_ns);
--	if (tmp < 1 || tmp > (1ULL << 32))
--		return -ERANGE;
--	high = tmp - 1;
-+	if (dwc->clk)
-+		dwc->clk_rate = clk_get_rate(dwc->clk);
-+
-+	if (dwc->features & DWC_TIM_CTRL_0N100PWM_EN) {
-+		/*
-+		 * Calculate width of low and high period in terms of input
-+		 * clock periods and check are the result within HW limits
-+		 * between 0 and 2^32 periods.
-+		 */
-+		tmp = state->duty_cycle * dwc->clk_rate;
-+		tmp = DIV_ROUND_UP_ULL(tmp, NSEC_PER_SEC);
-+		if (tmp >= (1ULL << 32))
-+			return -ERANGE;
-+
-+		if (pwm->args.polarity == PWM_POLARITY_INVERSED)
-+			high = tmp;
-+		else
-+			low = tmp;
-+
-+		tmp = (state->period - state->duty_cycle) * dwc->clk_rate;
-+		tmp = DIV_ROUND_UP_ULL(tmp, NSEC_PER_SEC);
-+		if (tmp >= (1ULL << 32))
-+			return -ERANGE;
-+
-+		if (pwm->args.polarity == PWM_POLARITY_INVERSED)
-+			low = tmp;
-+		else
-+			high = tmp;
-+	} else {
-+		/*
-+		 * Calculate width of low and high period in terms of input
-+		 * clock periods and check are the result within HW limits
-+		 * between 1 and 2^32 periods.
-+		 */
-+		tmp = state->duty_cycle * dwc->clk_rate;
-+		tmp = DIV_ROUND_UP_ULL(tmp, NSEC_PER_SEC);
-+		if (tmp < 1 || tmp > (1ULL << 32))
-+			return -ERANGE;
-+		low = tmp - 1;
-+
-+		tmp = (state->period - state->duty_cycle) * dwc->clk_rate;
-+		tmp = DIV_ROUND_UP_ULL(tmp, NSEC_PER_SEC);
-+		if (tmp < 1 || tmp > (1ULL << 32))
-+			return -ERANGE;
-+		high = tmp - 1;
-+	}
-
- 	/*
- 	 * Specification says timer usage flow is to disable timer, then
-@@ -74,6 +106,7 @@ static int __dwc_pwm_configure_timer(struct dwc_pwm *dwc,
- 	 * width of low period and latter the width of high period in terms
- 	 * multiple of input clock periods:
- 	 * Width = ((Count + 1) * input clock period).
-+	 * Width = (Count * input clock period) : supported 0% and 100%).
- 	 */
- 	dwc_pwm_writel(dwc, low, DWC_TIM_LD_CNT(pwm->hwpwm));
- 	dwc_pwm_writel(dwc, high, DWC_TIM_LD_CNT2(pwm->hwpwm));
-@@ -85,6 +118,9 @@ static int __dwc_pwm_configure_timer(struct dwc_pwm *dwc,
- 	 * periods are set by Load Count registers.
- 	 */
- 	ctrl = DWC_TIM_CTRL_MODE_USER | DWC_TIM_CTRL_PWM;
-+	if (dwc->features & DWC_TIM_CTRL_0N100PWM_EN)
-+		ctrl |= DWC_TIM_CTRL_0N100PWM_EN;
-+
- 	dwc_pwm_writel(dwc, ctrl, DWC_TIM_CTRL(pwm->hwpwm));
-
- 	/*
-@@ -121,11 +157,17 @@ static int dwc_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 			     struct pwm_state *state)
- {
- 	struct dwc_pwm *dwc = to_dwc_pwm(chip);
-+	unsigned long clk_rate;
- 	u64 duty, period;
- 	u32 ctrl, ld, ld2;
-
- 	pm_runtime_get_sync(pwmchip_parent(chip));
-
-+	if (dwc->clk)
-+		dwc->clk_rate = clk_get_rate(dwc->clk);
-+
-+	clk_rate = dwc->clk_rate;
-+
- 	ctrl = dwc_pwm_readl(dwc, DWC_TIM_CTRL(pwm->hwpwm));
- 	ld = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT(pwm->hwpwm));
- 	ld2 = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT2(pwm->hwpwm));
-@@ -137,17 +179,32 @@ static int dwc_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 	 * based on the timer load-count only.
- 	 */
- 	if (ctrl & DWC_TIM_CTRL_PWM) {
--		duty = (ld + 1) * dwc->clk_ns;
--		period = (ld2 + 1)  * dwc->clk_ns;
--		period += duty;
-+		if (dwc->features & DWC_TIM_CTRL_0N100PWM_EN) {
-+			if (pwm->args.polarity == PWM_POLARITY_INVERSED)
-+				duty = ld2;
-+			else
-+				duty = ld;
-+			period = (u64)ld + ld2;
-+		} else {
-+			duty = ld + 1;
-+			period = ld2 + 1;
-+			period += duty;
-+		}
- 	} else {
--		duty = (ld + 1) * dwc->clk_ns;
-+		duty = ld + 1;
- 		period = duty * 2;
- 	}
-
- 	state->polarity = PWM_POLARITY_INVERSED;
--	state->period = period;
--	state->duty_cycle = duty;
-+	/*
-+	 * If the ld register is at its maximum value. The duty value is
-+	 * 4,294,967,295 (0xFFFF FFFF). The product (duty * NSEC_PER_SEC)
-+	 * is guaranteed to be less than 2^64.
-+	 */
-+	duty *= NSEC_PER_SEC;
-+	period *= NSEC_PER_SEC;
-+	state->period = DIV_ROUND_UP_ULL(period, clk_rate);
-+	state->duty_cycle = DIV_ROUND_UP_ULL(duty, clk_rate);
-
- 	pm_runtime_put_sync(pwmchip_parent(chip));
-
-@@ -169,7 +226,7 @@ struct pwm_chip *dwc_pwm_alloc(struct device *dev)
- 		return chip;
- 	dwc = to_dwc_pwm(chip);
-
--	dwc->clk_ns = 10;
-+	dwc->clk_rate = NSEC_PER_SEC / 10;
- 	chip->ops = &dwc_pwm_ops;
-
- 	return chip;
-diff --git a/drivers/pwm/pwm-dwc-of.c b/drivers/pwm/pwm-dwc-of.c
-new file mode 100644
-index 000000000000..dc3361f44121
---- /dev/null
-+++ b/drivers/pwm/pwm-dwc-of.c
-@@ -0,0 +1,331 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * DesignWare PWM Controller driver OF
-+ *
-+ * Copyright (C) 2026 SiFive, Inc.
-+ */
-+
-+#define DEFAULT_SYMBOL_NAMESPACE "dwc_pwm_of"
-+
-+#include <linux/clk.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/pwm.h>
-+#include <linux/reset.h>
-+
-+#include "pwm-dwc.h"
-+
-+static int dwc_pwm_plat_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct dwc_pwm_drvdata *data;
-+	u32 ctrl[DWC_TIMERS_TOTAL];
-+	struct pwm_chip *chip;
-+	struct dwc_pwm *dwc;
-+	bool pwm_en = false;
-+	u32 nr_pwm, tim_id;
-+	unsigned int i;
-+	int ret;
-+
-+	data = devm_kzalloc(dev, struct_size(data, chips, 1), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	chip = dwc_pwm_alloc(dev);
-+	if (IS_ERR(chip))
-+		return dev_err_probe(dev, -ENOMEM, "failed to alloc pwm\n");
-+
-+	dwc = to_dwc_pwm(chip);
-+
-+	dwc->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(dwc->base))
-+		return PTR_ERR(dwc->base);
-+
-+	if (!device_property_read_u32(dev, "snps,pwm-number", &nr_pwm)) {
-+		if (nr_pwm > DWC_TIMERS_TOTAL)
-+			dev_warn
-+			(dev, "too many PWMs (%d) specified, capping at %d\n",
-+			nr_pwm, chip->npwm);
-+		else
-+			chip->npwm = nr_pwm;
-+	}
-+
-+	dwc->bus_clk = devm_clk_get(dev, "bus");
-+	if (IS_ERR(dwc->bus_clk))
-+		return dev_err_probe(dev, PTR_ERR(dwc->bus_clk),
-+				     "failed to get bus clock\n");
-+
-+	dwc->clk = devm_clk_get(dev, "timer");
-+	if (IS_ERR(dwc->clk))
-+		return dev_err_probe(dev, PTR_ERR(dwc->clk),
-+				     "failed to get timer clock\n");
-+
-+	ret = devm_clk_rate_exclusive_get(dev, dwc->clk);
-+	if (ret)
-+		return dev_err_probe(dev, ret,
-+				     "failed to get exclusive rate\n");
-+
-+	dwc->clk_rate = clk_get_rate(dwc->clk);
-+
-+	dwc->rst = devm_reset_control_get_optional_exclusive(dev, NULL);
-+	if (IS_ERR(dwc->rst))
-+		return dev_err_probe(dev, PTR_ERR(dwc->rst),
-+				     "failed to get reset control\n");
-+
-+	ret = clk_prepare_enable(dwc->bus_clk);
-+	if (ret)
-+		return dev_err_probe(dev, ret,
-+				     "failed to enable bus clock\n");
-+
-+	ret = clk_prepare_enable(dwc->clk);
-+	if (ret) {
-+		dev_err(dev, "failed to enable timer clock\n");
-+		goto disable_busclk;
-+	}
-+
-+	/*
-+	 * Check all channels to see if any channel is enabled.
-+	 * Read the control register of each channel and extract the enable bit
-+	 */
-+	for (i = 0; i < chip->npwm; i++) {
-+		ctrl[i] = dwc_pwm_readl(dwc, DWC_TIM_CTRL(i)) & DWC_TIM_CTRL_EN;
-+		if (ctrl[i])
-+			pwm_en = true;
-+	}
-+
-+	/* Only issue reset when all channels are disabled */
-+	if (!pwm_en) {
-+		ret = reset_control_reset(dwc->rst);
-+		if (ret) {
-+			dev_err(dev, "failed to reset\n");
-+			goto disable_clk;
-+		}
-+	}
-+
-+	/* init PWM feature */
-+	dwc->features = 0;
-+	/*
-+	 * Support for 0% and 100% duty cycle mode was added in version 2.11a
-+	 * and later.
-+	 */
-+	tim_id = dwc_pwm_readl(dwc, DWC_TIMERS_COMP_VERSION);
-+	if (tim_id >= DWC_TIM_VERSION_ID_2_11A)
-+		dwc->features |= DWC_TIM_CTRL_0N100PWM_EN;
-+
-+	ret = devm_pwmchip_add(dev, chip);
-+	if (ret) {
-+		dev_err(dev, "failed to add pwm chip");
-+		goto reset_assert;
-+	}
-+
-+	data->chips[0] = chip;
-+	dev_set_drvdata(dev, data);
-+
-+	/*
-+	 * If any PWM channel is enabled, mark device active and hold runtime PM
-+	 * references for each enabled channel. Otherwise, gate the clocks.
-+	 */
-+	if (pwm_en) {
-+		pm_runtime_set_active(dev);
-+		for (i = 0; i < chip->npwm; i++) {
-+			if (ctrl[i])
-+				pm_runtime_get_noresume(dev);
-+		}
-+	} else {
-+		clk_disable_unprepare(dwc->clk);
-+		clk_disable_unprepare(dwc->bus_clk);
-+	}
-+
-+	pm_runtime_enable(dev);
-+
-+	return 0;
-+
-+reset_assert:
-+	reset_control_assert(dwc->rst);
-+disable_clk:
-+	clk_disable_unprepare(dwc->clk);
-+disable_busclk:
-+	clk_disable_unprepare(dwc->bus_clk);
-+
-+	return ret;
-+}
-+
-+static void dwc_pwm_plat_remove(struct platform_device *pdev)
-+{
-+	struct dwc_pwm_drvdata *data = platform_get_drvdata(pdev);
-+	struct pwm_chip *chip = data->chips[0];
-+	struct dwc_pwm *dwc = to_dwc_pwm(chip);
-+	bool pwm_en = false;
-+	unsigned int idx;
-+	bool pm_flags;
-+
-+	/*
-+	 * Resume the device if it is runtime suspended to allow
-+	 * safe register access.
-+	 */
-+	pm_flags = pm_runtime_status_suspended(&pdev->dev);
-+	if (pm_flags)
-+		pm_runtime_get_sync(&pdev->dev);
-+
-+	for (idx = 0; idx < chip->npwm; idx++) {
-+		if (dwc_pwm_readl(dwc, DWC_TIM_CTRL(idx)) & DWC_TIM_CTRL_EN) {
-+			pwm_en = true;
-+			pm_runtime_put_noidle(&pdev->dev);
-+		}
-+	}
-+
-+	/*
-+	 * Re-suspend the device if it was runtime suspended prior to
-+	 * the register access.
-+	 */
-+	if (pm_flags)
-+		pm_runtime_put_sync(&pdev->dev);
-+
-+	if (pwm_en) {
-+		clk_disable_unprepare(dwc->clk);
-+		clk_disable_unprepare(dwc->bus_clk);
-+	}
-+
-+	pm_runtime_disable(&pdev->dev);
-+	reset_control_assert(dwc->rst);
-+}
-+
-+static int dwc_pwm_runtime_suspend(struct device *dev)
-+{
-+	struct dwc_pwm_drvdata *data = dev_get_drvdata(dev);
-+	struct pwm_chip *chip = data->chips[0];
-+	struct dwc_pwm *dwc = to_dwc_pwm(chip);
-+
-+	clk_disable_unprepare(dwc->clk);
-+	clk_disable_unprepare(dwc->bus_clk);
-+
-+	return 0;
-+}
-+
-+static int dwc_pwm_runtime_resume(struct device *dev)
-+{
-+	struct dwc_pwm_drvdata *data = dev_get_drvdata(dev);
-+	struct pwm_chip *chip = data->chips[0];
-+	struct dwc_pwm *dwc = to_dwc_pwm(chip);
-+	int ret;
-+
-+	ret = clk_prepare_enable(dwc->bus_clk);
-+	if (ret) {
-+		dev_err(dev, "failed to enable bus clock: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(dwc->clk);
-+	if (ret) {
-+		dev_err(dev, "failed to enable timer clock: %d\n", ret);
-+		clk_disable_unprepare(dwc->bus_clk);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int dwc_pwm_suspend(struct device *dev)
-+{
-+	struct dwc_pwm_drvdata *data = dev_get_drvdata(dev);
-+	struct pwm_chip *chip = data->chips[0];
-+	struct dwc_pwm *dwc = to_dwc_pwm(chip);
-+	unsigned int idx;
-+	int ret;
-+
-+	if (pm_runtime_status_suspended(dev)) {
-+		ret = dwc_pwm_runtime_resume(dev);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	for (idx = 0; idx < chip->npwm; idx++) {
-+		if (chip->pwms[idx].state.enabled)
-+			return -EBUSY;
-+
-+		dwc->ctx[idx].cnt = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT(idx));
-+		dwc->ctx[idx].cnt2 = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT2(idx));
-+		dwc->ctx[idx].ctrl = dwc_pwm_readl(dwc, DWC_TIM_CTRL(idx));
-+	}
-+
-+	ret = dwc_pwm_runtime_suspend(dev);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int dwc_pwm_resume(struct device *dev)
-+{
-+	struct dwc_pwm_drvdata *data = dev_get_drvdata(dev);
-+	struct pwm_chip *chip = data->chips[0];
-+	struct dwc_pwm *dwc = to_dwc_pwm(chip);
-+	unsigned int idx;
-+	bool pm_flags;
-+	int ret;
-+
-+	/* Check if device was runtime suspended before system resume */
-+	pm_flags = pm_runtime_status_suspended(dev);
-+	if (pm_flags) {
-+		/*
-+		 * Use PM framework to resume device
-+		 * (calls dwc_pwm_runtime_resume)
-+		 */
-+		ret = pm_runtime_get_sync(dev);
-+		if (ret)
-+			return ret;
-+	} else {
-+		/*
-+		 * Device was active, but clocks might be off after system sleep
-+		 * Call runtime_resume directly to restore hardware state
-+		 */
-+		ret = dwc_pwm_runtime_resume(dev);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	for (idx = 0; idx < chip->npwm; idx++) {
-+		dwc_pwm_writel(dwc, dwc->ctx[idx].cnt, DWC_TIM_LD_CNT(idx));
-+		dwc_pwm_writel(dwc, dwc->ctx[idx].cnt2, DWC_TIM_LD_CNT2(idx));
-+		dwc_pwm_writel(dwc, dwc->ctx[idx].ctrl, DWC_TIM_CTRL(idx));
-+	}
-+
-+	if (pm_flags) {
-+		/* Balance the refcount taken by pm_runtime_get_sync
-+		 * if it was used
-+		 */
-+		ret = pm_runtime_put_sync(dev);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops dwc_pwm_pm_ops = {
-+	RUNTIME_PM_OPS(dwc_pwm_runtime_suspend, dwc_pwm_runtime_resume, NULL)
-+	SYSTEM_SLEEP_PM_OPS(dwc_pwm_suspend, dwc_pwm_resume)
-+};
-+
-+static const struct of_device_id dwc_pwm_dt_ids[] = {
-+	{ .compatible = "snps,dw-apb-timers-pwm2" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, dwc_pwm_dt_ids);
-+
-+static struct platform_driver dwc_pwm_plat_driver = {
-+	.driver = {
-+		.name = "dwc-pwm",
-+		.pm = pm_ptr(&dwc_pwm_pm_ops),
-+		.of_match_table = dwc_pwm_dt_ids,
-+	},
-+	.probe = dwc_pwm_plat_probe,
-+	.remove = dwc_pwm_plat_remove,
-+};
-+
-+module_platform_driver(dwc_pwm_plat_driver);
-+
-+MODULE_ALIAS("platform:dwc-pwm-of");
-+MODULE_AUTHOR("Ben Dooks <ben.dooks@codethink.co.uk>");
-+MODULE_DESCRIPTION("DesignWare PWM Controller");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/pwm/pwm-dwc.h b/drivers/pwm/pwm-dwc.h
-index 1562594e7f85..75f7c2d031c4 100644
---- a/drivers/pwm/pwm-dwc.h
-+++ b/drivers/pwm/pwm-dwc.h
-@@ -26,12 +26,19 @@ MODULE_IMPORT_NS("dwc_pwm");
- #define DWC_TIMERS_TOTAL	8
-
- /* Timer Control Register */
--#define DWC_TIM_CTRL_EN		BIT(0)
--#define DWC_TIM_CTRL_MODE	BIT(1)
--#define DWC_TIM_CTRL_MODE_FREE	(0 << 1)
--#define DWC_TIM_CTRL_MODE_USER	(1 << 1)
--#define DWC_TIM_CTRL_INT_MASK	BIT(2)
--#define DWC_TIM_CTRL_PWM	BIT(3)
-+#define DWC_TIM_CTRL_EN			BIT(0)
-+#define DWC_TIM_CTRL_MODE		BIT(1)
-+#define DWC_TIM_CTRL_MODE_FREE		(0 << 1)
-+#define DWC_TIM_CTRL_MODE_USER		BIT(1)
-+#define DWC_TIM_CTRL_INT_MASK		BIT(2)
-+#define DWC_TIM_CTRL_PWM		BIT(3)
-+#define DWC_TIM_CTRL_0N100PWM_EN	BIT(4)
-+
-+/*
-+ * The version 2.11a and later add "Pulse Width Modulation with
-+ * 0% and 100% Duty Cycle".
-+ */
-+#define DWC_TIM_VERSION_ID_2_11A	0x3231312a
-
- struct dwc_pwm_info {
- 	unsigned int nr;
-@@ -52,8 +59,12 @@ struct dwc_pwm_ctx {
-
- struct dwc_pwm {
- 	void __iomem *base;
--	unsigned int clk_ns;
-+	struct clk *bus_clk;
-+	struct clk *clk;
-+	unsigned long clk_rate;
-+	struct reset_control *rst;
- 	struct dwc_pwm_ctx ctx[DWC_TIMERS_TOTAL];
-+	u32 features;
- };
-
- static inline struct dwc_pwm *to_dwc_pwm(struct pwm_chip *chip)
---
-2.34.1
-
+-- 
+Best regards
+George
 
