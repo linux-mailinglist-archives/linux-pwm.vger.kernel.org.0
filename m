@@ -1,310 +1,345 @@
-Return-Path: <linux-pwm+bounces-8463-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8466-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qEFXIyyZz2nmxQYAu9opvQ
-	(envelope-from <linux-pwm+bounces-8463-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Fri, 03 Apr 2026 12:40:44 +0200
+	id QPQ9JHCez2kTyAYAu9opvQ
+	(envelope-from <linux-pwm+bounces-8466-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Fri, 03 Apr 2026 13:03:12 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E451B3935CC
-	for <lists+linux-pwm@lfdr.de>; Fri, 03 Apr 2026 12:40:43 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 453EF3937AA
+	for <lists+linux-pwm@lfdr.de>; Fri, 03 Apr 2026 13:03:12 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A79FD3002B5B
-	for <lists+linux-pwm@lfdr.de>; Fri,  3 Apr 2026 10:40:42 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id C4B8E3022F4F
+	for <lists+linux-pwm@lfdr.de>; Fri,  3 Apr 2026 11:03:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71D8D37F8DB;
-	Fri,  3 Apr 2026 10:40:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3677E3AE1BC;
+	Fri,  3 Apr 2026 11:03:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b="Jn0Ay6Y+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DGRY/D5+"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from PH7PR06CU001.outbound.protection.outlook.com (mail-westus3azolkn19010018.outbound.protection.outlook.com [52.103.23.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E204117A30A;
-	Fri,  3 Apr 2026 10:40:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.103.23.18
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775212841; cv=fail; b=fdTw/juMKBfhJZDjXBAnZBNY7op/OiCs30ZFA88XhcNGU5scT3ICVFTKMDnpYyq/qVXey0uLiYxTvRBNx7MprGTZiI8mTGiFIiGZOy8VFhMGptsNaRgWR0dSZ7bEvRGgfr1t2o7fctOC/CkG8QXtZPYXuDu6g6oXuhfNr/06fMU=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775212841; c=relaxed/simple;
-	bh=2VbXIFG+2r2hsGc/1QTTwYbz7xjVcWECpDOKUmIvA/w=;
-	h=Message-ID:Date:Subject:To:Cc:References:From:In-Reply-To:
-	 Content-Type:MIME-Version; b=QJDH1fyLJPJAQufDCIXMAe48B6tycLIOQaczV1fCxa5vyY+Dnljokvn0+jhF77D1GXx2P8ZD7lFhu4rgar+KAoHM5L6OaT/pA7PstqRrEfPqZWEiVzsH7EghU1o6VMAXjQ5B6OGg4Q2s/L8dvmphILgdR51HLEJYEZpo2fXCFqk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com; spf=pass smtp.mailfrom=outlook.com; dkim=pass (2048-bit key) header.d=outlook.com header.i=@outlook.com header.b=Jn0Ay6Y+; arc=fail smtp.client-ip=52.103.23.18
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=outlook.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=outlook.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=JlbOKJ3ZUE4LQRXJ6b/jkpQn8GgZkcuuswnYnrldjAqABd3+YzZQ32YDoMI78UTbQlW2mnlyeIkZuZXNRINUGvhfdrvhkw7AqGwEPLp4Cx9FNcLbc6z8Kuyz1Mt9UnDTGKwxXHzzEJDuR54PXsjgpcGOf4bNxTQIENDZ3HHHmvER1bI8WkNqLAHBHY4TNGw8qY4us9h1Gq0JzmmJUaS/oAiqH0je0nPKpALMqMoOEx/dMsz0PTUJUlAFLMh52rSZqD1ZWZ5xHti8ykHKy4gnH9r5dgxEh+0A2WbVVf41SooLdporDZPoGGWSrXmiTA1rGTvr558nGR8n39fwODeObw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Yi8671fXhw4P+NTtGZOQdAPfKUvTa39OWKMmF6+3P+s=;
- b=Mz+AaUEcxcsDk1HT34fZGp+JkbweAieIq9I7hapznlcTsxnaz2xRh04QGaFaGfScBEzl7N79XpsLSEpkc+X/Nw6Joz+53yxDe3wRprHY8TaB6HaFdplwXbCqrtNd7KqCXrFReAivf7r8jj2rrqGN5d+qj6yJOBERc5pBul5LuqO0Uch6IRMhWH0g7EWOIeDbSaCATuBm2dJPU4Thuz1nwO925+c5fFOesuCpHvJBs9VsThIy01OvbYT7T5/bnmz/ha6f+HEtfcTok2VwzRNDwXsqpo+PuROvhcmXPrtwJwHWT2cu7mtOOiAF8Cpb6+n3WPMW2cBuqwmFu9+fqAuoLg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=outlook.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Yi8671fXhw4P+NTtGZOQdAPfKUvTa39OWKMmF6+3P+s=;
- b=Jn0Ay6Y+abT7nbr0563o+FzK4rkt7fD2eNzXkAu9kqNOgnV1ZR32C0ZAT4Be/uRNivFT8uYWBVdZ5UoLjf2E7IZ3FVyPW/VkYG74Fmko14thwsR1Q3SlsI4UR3IoA9kL8Oi94spA/tdSwfnwUnzIPcVMgcnhZhACs7icwC5iBQ0JxrdfKC8enWazLrOSRWRu6ZwKfOrV16ZMRV5yclmgOuK+4eUXhAKXg19onlA2SNmN8CbKQkxml+bYq6h1G8n9BtWaFGt6hn36JVejZc/aDP6d4ZAadrPT4/u+5wXF9V4ksV2aqrlgag+DegvMxVsOzJxCKIBmircX1tUa/d/kkg==
-Received: from DS7PR19MB8883.namprd19.prod.outlook.com (2603:10b6:8:253::16)
- by DM4PR19MB5833.namprd19.prod.outlook.com (2603:10b6:8:64::22) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.21; Fri, 3 Apr
- 2026 10:40:38 +0000
-Received: from DS7PR19MB8883.namprd19.prod.outlook.com
- ([fe80::5880:19f:c819:c921]) by DS7PR19MB8883.namprd19.prod.outlook.com
- ([fe80::5880:19f:c819:c921%4]) with mapi id 15.20.9769.018; Fri, 3 Apr 2026
- 10:40:37 +0000
-Message-ID:
- <DS7PR19MB8883555F6B620250D1CB55689D5EA@DS7PR19MB8883.namprd19.prod.outlook.com>
-Date: Fri, 3 Apr 2026 12:40:32 +0200
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v20 2/6] pwm: driver for qualcomm ipq6018 pwm block
-To: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Baruch Siach <baruch@tkos.co.il>,
- Bjorn Andersson <andersson@kernel.org>,
- Konrad Dybcio <konradybcio@kernel.org>, linux-arm-msm@vger.kernel.org,
- linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-kernel@vger.kernel.org, Devi Priya <quic_devipriy@quicinc.com>,
- Baruch Siach <baruch.siach@siklu.com>
-References: <20260204-ipq-pwm-v20-0-91733011a3d1@outlook.com>
- <20260204-ipq-pwm-v20-2-91733011a3d1@outlook.com>
- <ac6MP-O2MNDkleZB@monoceros>
-Content-Language: en-US
-From: George Moussalem <george.moussalem@outlook.com>
-In-Reply-To: <ac6MP-O2MNDkleZB@monoceros>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: AM0PR02CA0119.eurprd02.prod.outlook.com
- (2603:10a6:20b:28c::16) To DS7PR19MB8883.namprd19.prod.outlook.com
- (2603:10b6:8:253::16)
-X-Microsoft-Original-Message-ID:
- <68af78ee-a4f4-4009-8879-d703322ad141@outlook.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A9137CD3A;
+	Fri,  3 Apr 2026 11:03:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1775214188; cv=none; b=NKbbKlnyecNOHH1p2xJqeVtY019iddX2/alakY3xnsRw2L7AZD8dsY92qrdKmzV4oPSSV8/pCmkD9iRT7wZN0iLZ2ebY6dp48YqxJ9v1/qVVBhiiM+3fJAUKfAbLH8ZM5LjH7Mgk+PJbM1IJJC4lAvckG8j2Wq5QoPtyzkvw7rQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1775214188; c=relaxed/simple;
+	bh=e8UCeVlyE7LiPTUQG7GWYv5hsUN5zhmvmrFc6kisRRg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=iMViMwPVJwo7G2N9K52PXEPpJraeEwrZBkOFaeAeh+/ue2yllUb02efrc06BKT5yYBNQRygBm3TdPWmNNee7r8SuOh0lMdhWXO4zpncYjYjhIjj6jRaGIDgZQj5PqOrJDU7mbIPygmZrpP85bIhOvItyBKO0bRS+O7fFfc6iFDk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DGRY/D5+; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 878A7C4CEF7;
+	Fri,  3 Apr 2026 11:03:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775214187;
+	bh=e8UCeVlyE7LiPTUQG7GWYv5hsUN5zhmvmrFc6kisRRg=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=DGRY/D5+l/D1FvlBzaQpn4+1oDbTXs8ArT6B9TaEmhaXx5+ikP0KYOy2GqsP/LAiz
+	 TZCpRD9sempIlhAHMcOHHhTqaHTw6C66R5KSxcGzP7qsmV70DcWxPKFboUaEBo+aja
+	 9md+Kx7tFaFhbDbzObC0YS5MKz394uBlgmGAoWocZNewAGGEivGuM9Tpk5tvo2XpzE
+	 t7fIMk0alcJIey9PbKtVHvwLQ2QHQXevEg4K7M4NSDPM+XKbe3a6i/8YxI3mKPY6M3
+	 YP308kQL/YKESxEIux0Xnd+f4Rn19eHftVWEvUrXvTFlGlr1HotZkhKPDbYVDe3bQY
+	 SCyvu8mbg/jzw==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 701E5E7E370;
+	Fri,  3 Apr 2026 11:03:07 +0000 (UTC)
+From: Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org>
+Subject: [PATCH v6 0/4] iio: adc: ad4691: add driver for AD4691
+ multichannel SAR ADC family
+Date: Fri, 03 Apr 2026 14:03:01 +0300
+Message-Id: <20260403-ad4692-multichannel-sar-adc-driver-v6-0-fa2a01a57c4e@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-Exchange-MessageSentRepresentingType: 1
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS7PR19MB8883:EE_|DM4PR19MB5833:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7eb05ff9-bbc0-4aa1-14d9-08de916d7112
-X-MS-Exchange-SLBlob-MailProps:
-	LVbdfIC7uFAyHke/CE1Ui/FW7barhRQEMAui95HjfkUTK1+6L5XYX/aAYMacBpa7yFJU6gek+D5o0/ReG+h4CyT988WVABVID1tfhaQFylisQjt/qPwSjohtgV+rkQsju7sQlaaFU9N/fyE4AV4LcE+Symj8C63i75LLvaF897IhuQAF0Gy68An7FxTTuhb77dfapbFj+bIM6QQIfaWuoprN4P16YR5Sw/RsyKQaVMuH26L44EQDa0w5L2QolugmtpypHi/XuLdDu6+mkPbebFNE+tC8byTE4Olm9KQ2Rz3mt4SoTC8BBZoRgcDifBrTHduUH/2t1oHML4dggGskEq9vIdA2eKklsTS4Ycy5gZRSjZCGlzaEtoPARLqXfi5dTMMncWBe4gYvhVbmkLAsli/ry0ixd213c5iHkoiJ7AyDnRwzwEZZL+cvip7dYEpF1y7VbcbgnqJZW1ai5voCojP2jRtT3Ycc2aIzYV25OxGP/FyfNxz3jqO66BBEndtf0vdgdBECXQcQ7uKw3AXLw2Pwkc2JpLv163gjUzln2kZrb3DSmW8nh8GzRRweyjnDuKp6GO0DWxuM9Fntt4bN6EmrdXsSxIcHuFLbneAG51ofk7+FYdK2IOZRYFqxvvAgXn5tTTBhCIY+t+PdVTSrVXL2HxAlZjMX9A9Ddao8bJy1oIILEv419hzZR6hLkeKDwVFFXiozRlBgKFsQXH1sGyD8zIpmdr0gHbIGNfoO2b2Rq2VzMchUYg==
-X-Microsoft-Antispam:
-	BCL:0;ARA:14566002|41001999006|12121999013|19110799012|23021999003|37011999003|461199028|8060799015|6090799003|5072599009|15080799012|40105399003|52005399003|3412199025|440099028|26121999003;
-X-Microsoft-Antispam-Message-Info:
-	=?utf-8?B?SENrTnhYWHNXRkw5ODhWK0VTUWFWQmU2a2NBNVlsMGMrUlB2UllCK05xNFlY?=
- =?utf-8?B?V3hsZm9Mb09yQ05INlNMcU5qbERwMDdIMjFTSFIyc3lWRUFnM1l2QTlYakRC?=
- =?utf-8?B?cVdwdHY0eGZzeVFGWTE2TEFERjFRQXdUUzMvbkdkeG9yQXNwRXhuY2VBdk05?=
- =?utf-8?B?VFVleFZhRXZxNCt0SHM1bko1WHgzdTBkc0dVVGI4N1J0MHdYTFVLT3VCQUNs?=
- =?utf-8?B?NUZxM0U5L0cxVUY0VnY1Uk00S0FJdjJkdzFZa0JtYTJEemhSbmRSZmlvTEpO?=
- =?utf-8?B?aVlNZDZaRVVjWkNibmI5UUJ0SXNQWlBGc2g4YXR5RVRzWEVRRG1lQXdqbnh2?=
- =?utf-8?B?QzhDZkRSMFMxby93UFRrczZaeEtodU9zdXM5b3JsMHNwZUs2SlVsOTZGKzJ0?=
- =?utf-8?B?MVBZK2hJSTZ0ZnFwYVdiSXdSUWl4SjNsVm5VZU41VTRjbElVcXlNK2NIVEtV?=
- =?utf-8?B?L1kyUktQQm9JUTlJZzNiV1BlSG1UL1lhd3ZiaXQzRWh4YVgvV1pQM3B1QWpx?=
- =?utf-8?B?azdqcmh0V2JSeHRUOVFaM2o0eFl2SHJCZ1JaVVhCVUc5bnNjSitoWXlOTUdI?=
- =?utf-8?B?TGdZZ0wwYUd2THU1eXp2ekVrZG53OVc3dnVMYjk1ektVSStaMzQ5VzVNL2RP?=
- =?utf-8?B?bUp0Y3JXNUtoTzV4TjZJT2tXWjJXQ0NkSW9DZHFLcDlpSjFmUWFKZGlYWExy?=
- =?utf-8?B?R3JKdDZrZTd4SzNrMFRoMmhSODZwWHBWZktSeXVRVzZhMUROS1dxQ3l4bmlQ?=
- =?utf-8?B?SGpkcDgrSnd6NUtKaG9Qd2RWbWVuc0RxalgycGpqdk8vZEZFbWxMV3l3OHVv?=
- =?utf-8?B?RWpIcDhZSlYwYkRpVHNOVEhwZU9aZHd3SzdUcExNZ3cxYk1qeENDNmc3NWNP?=
- =?utf-8?B?cEZWMFRMUVJYeXpESlVqckEzUFEvNGRwMG1DdjBuRzZJL3hEczBMTTMwbEV2?=
- =?utf-8?B?MjZDTXhCbjQ5UXZ1L1RSYVpJYmRwNWJ0azVMU3ljbGduU2tmdmpGU282WmlM?=
- =?utf-8?B?aG5ZNFZrU1VJdkdnNnc1dlJud0graWxyN3kxcmdlSUQvYWxFT1A2aTMzVEtz?=
- =?utf-8?B?RDU2Zk85MVlLOEpENVlCZktVQUFXZVN4UytKOWcxcmg5YlN0dnp5aTB3RGRM?=
- =?utf-8?B?YVlaRDBVa3JmODhINkZlTDZ3b2w3MGRLb0NWaGR4MEN5Zk1YRlFsSU9YYlB3?=
- =?utf-8?B?OVEyMkJpb2tRd29OcFFhS3UvbUZPNUVnanBtTXdaTm1lUmpwUEhzSVpJaDlV?=
- =?utf-8?B?bGc4SjVaY3QwcG0wREhsMHhlbmNIME1VK2tJeVM3SHVkWWNaVVlGVmtqUDR3?=
- =?utf-8?B?Ymw5b3VmS0tDVGUwTm5wY3YyOExTL1hMQTR6L2ZJNDR3Sit0M1FtN01qWC9L?=
- =?utf-8?B?Q1Q3S09ETjZNTC9UZ0dsUG91a0lJbEhVRENLTlhQRHkyZzhyTmJMc2V0SVo5?=
- =?utf-8?Q?sYodsWSC?=
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?ZGZMMUFsOGxUaFVMUTdoY1BMUFlWdVpNYjlnOG1xWG9sQUY5S2V0VnhnMW94?=
- =?utf-8?B?SEIrbDFWcnd5T3M2Ukw1ZXZrOHViZGoxM1RGajBWbWxEbDVQblU3Sk11Ly9V?=
- =?utf-8?B?WW5NTzAyRWFFWEdTTk13MmlaYTIyUlVEdVo0YVFkYnNhMGNvTWtOZG1WcU1V?=
- =?utf-8?B?bzBmdVNrdFlJUDFENlBZYW5LVHoyZWcrK3dIbDhCRktnS1ZQUHpCM3d1MXNa?=
- =?utf-8?B?ZjVjeDNYamp4S0lLenBDbVMzQlQ3T0JMSFFJYnJCZGoxMlIxSzBFNXBLZ3M0?=
- =?utf-8?B?VHAxVUM1Um5EYTZWRVVaRjBmM2tSdDR0WFlrZ1JGZDlFcHVmUkNFUFJYR1ZH?=
- =?utf-8?B?eGZFd0R0b3c0eG01cWdiSnVPcHNrQml6WFdkeEJxdmN5UEs4U24yUExjK2FY?=
- =?utf-8?B?dmxPM3lvZ2hjZlFnMEZFZTNRTEZPcnFGcUxPNDN3ZVlLWnBuNHRLMEI4NWk2?=
- =?utf-8?B?Y2xzbCt0NGhvUkFYNUFGVGxMRFpMTlFZWkFTdzhXR1Vjb2hDSU9JdFZ0OXky?=
- =?utf-8?B?bituU3VVc2Z4V1ZJZEtDQWlGNmk2enZEeFh3bmZIaWdpK3FxeGkraGNxS0hl?=
- =?utf-8?B?S0hVV29ZajlWQWR2Y0dvT0ZkdXJYYUlIZWdyei9iWVJuRllzWHcwNDMrZWxX?=
- =?utf-8?B?Y0JUYnpKaVNWTnFheXBJdzRVemNPclc2WnVjbWdSSDVYRDRTM3N3RDJGdUZt?=
- =?utf-8?B?YlEwcEtsRWFaK2lWOWtSNjFXbEhFVDh6amQrb0lZd2dJYU5jakhYWlg2MytF?=
- =?utf-8?B?WFlPZkRLT2tjMjJBak9PUHdGVmVTZDk2ZkdsM1RaU1RMbjVzdk9GZUZxMWo0?=
- =?utf-8?B?YTN0dnVZT0l1cHVRWFJzc0locVlITXlzU1hHZW1mTG01ZlI1UVRMck9MUS93?=
- =?utf-8?B?V3YwelhyeVJ0a0N1S0JWYm0xRmxoOEJsUTVLdEdpL1d3N204T25HelNmU09O?=
- =?utf-8?B?MFUzSWRnK2tOY3FOT29HRGlZZWwra004aTY2WTN3R3RtT1ZQcUEwbkN0Zm1r?=
- =?utf-8?B?dDE0Yk41cERGVFp5MHU1aldBcUcxTVJGWUpMeDlJNUU2TzBRUFlrWk45cUVu?=
- =?utf-8?B?T3A3Zmc0bDZudEtSQkxXc1JxUVlkWVVSM2pOdW5EMm5iNC9KY3VuZWxXN1kx?=
- =?utf-8?B?UXRZUU1BdFA1QVUwcWlsb3pWTGNRakZhMWtjamx4cDJsVnF1Ni9KQUxPU2tu?=
- =?utf-8?B?eDF5N2N5eDZMakxJYlZBbFRwb21JaXR6OFNIdlJ3ampWOUlqUlBXUit1bStT?=
- =?utf-8?B?SWl0Y1lyKzdnT2VOWUQ2VWIrR0FmOVdiUUFidHFxQVh2U2t6TnQ0NWFQbHlh?=
- =?utf-8?B?YWwrVlQrcVd3NThBOVNrWE9HZHNVM2VZcUZKMzRUOWNxNHJqdmRGM05TWUJ6?=
- =?utf-8?B?ZkpMZEI1SCthT2J6NWIzY2diVklpaXFvaHlLRXhnN3RLamw1d2RvbkhlN3ZZ?=
- =?utf-8?B?NVE0UGlQdS9OcU4zK1dzY0drSjV0TEhXNjU2Y0ZLZ1kwbk9xb2dqVWkzZU96?=
- =?utf-8?B?MUszQ3VPMWl1N0hGclZOQ3dZT2h0bGdtbkxWa3pwWitPazJiZlcySlR3OTZB?=
- =?utf-8?B?WXhpRGwrSXVHRGRqcC8wbUJQc29VS3U4Nk9GMHNZMFBkQ0orcFJEZzViOGl4?=
- =?utf-8?B?LzBCSEI3WERQdk16KzVhK1IybXo4NktWZXVZTzRwM3dlNTJ3Wm9qc00xTlls?=
- =?utf-8?B?WHNHSHNNTDNCNUpXQmYvRWxoZmpMQy9GYnZWL2piZWUzRUdKNmc3OE85MzZ6?=
- =?utf-8?B?d1BYV1RXdnh2RDFzVHNDUXJwRmY4bFpuK2ppVzBrc1RYaDhZUVBiUHZmQnFE?=
- =?utf-8?B?UXd4S1NLTUxFNVRaQ2xHUmdab2x4UU9iRzRDdXBYbWZCcnFBRStUekRCT2hR?=
- =?utf-8?B?dW9HZWhsdjZ5VmpBM2VrcGlmY3JROVFWVHRiTldwYm5TN0E9PQ==?=
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7eb05ff9-bbc0-4aa1-14d9-08de916d7112
-X-MS-Exchange-CrossTenant-AuthSource: DS7PR19MB8883.namprd19.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2026 10:40:37.6978
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg:
-	00000000-0000-0000-0000-000000000000
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM4PR19MB5833
-X-Spamd-Result: default: False [1.34 / 15.00];
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAGaez2kC/43OTWrDMBAF4KsErauiGUmW3FXvUbLQzyQROHaQU
+ pESfPfKgYKLN2ZW7zF8M09WKCcq7OPwZJlqKmkaW+jeDixc3HgmnmLLDAV2QgrkLqquR379Hu5
+ p2Rhp4MXl1gcec6qUubGkolIRlUfWoFumU3q8jnwdW76kcp/yz+tmhaX94/UevgIXXMoOsXc2h
+ mA+3eiG6fwepitb/IorE8QuE5sZe++tI68JtqZcm3KXKZvpVQQVLTiwsDHVysR9f6pmCo0BhG5
+ j3MbUa9PsMnUzAU7G9pGU8fafOc/zL3WTeSwlAgAA
+X-Change-ID: 20260302-ad4692-multichannel-sar-adc-driver-78e4d44d24b2
+To: Lars-Peter Clausen <lars@metafoo.de>, 
+ Michael Hennerich <Michael.Hennerich@analog.com>, 
+ Jonathan Cameron <jic23@kernel.org>, David Lechner <dlechner@baylibre.com>, 
+ =?utf-8?q?Nuno_S=C3=A1?= <nuno.sa@analog.com>, 
+ Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, 
+ Linus Walleij <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, 
+ Philipp Zabel <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, 
+ Shuah Khan <skhan@linuxfoundation.org>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, 
+ linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org, 
+ Radu Sabau <radu.sabau@analog.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1775214183; l=11808;
+ i=radu.sabau@analog.com; s=20260220; h=from:subject:message-id;
+ bh=e8UCeVlyE7LiPTUQG7GWYv5hsUN5zhmvmrFc6kisRRg=;
+ b=yDO84jXBRZUJFy3+VsC/jXtXAxgYjxFTUkc/0fmsLyob66sCxcan3Vgo2RH28Nzl2QStFh4Ft
+ Bjzb1TMMcGTBJU1QHwkikxWlkid10T7aajbTtb+afeO3CUAaLrVyYn7
+X-Developer-Key: i=radu.sabau@analog.com; a=ed25519;
+ pk=lDPQHgn9jTdt0vo58Na9lLxLaE2mb330if71Cn+EvFU=
+X-Endpoint-Received: by B4 Relay for radu.sabau@analog.com/20260220 with
+ auth_id=642
+X-Original-From: Radu Sabau <radu.sabau@analog.com>
+Reply-To: radu.sabau@analog.com
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[outlook.com,none];
-	R_DKIM_ALLOW(-0.20)[outlook.com:s=selector1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8463-lists,linux-pwm=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[13];
-	FORGED_MUA_MAILLIST(0.00)[];
-	FREEMAIL_FROM(0.00)[outlook.com];
+	TAGGED_FROM(0.00)[bounces-8466-lists,linux-pwm=lfdr.de,radu.sabau.analog.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_TO(0.00)[metafoo.de,analog.com,kernel.org,baylibre.com,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org];
 	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[24];
+	FROM_HAS_DN(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[george.moussalem@outlook.com,linux-pwm@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,linux-pwm@vger.kernel.org];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	DKIM_TRACE(0.00)[outlook.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,outlook.com:dkim]
-X-Rspamd-Queue-Id: E451B3935CC
+	HAS_REPLYTO(0.00)[radu.sabau@analog.com];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 453EF3937AA
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Uwe,
+This series adds support for the Analog Devices AD4691 family of
+high-speed, low-power multichannel successive approximation register
+(SAR) ADCs with an SPI-compatible serial interface.
 
-On 4/2/2026 5:35 PM, Uwe Kleine-König wrote:
-> Hello,
-> 
-> I applied the patch and reviewed it in my editor. Here is the resulting
-> diff:
-> 
-> diff --git a/drivers/pwm/pwm-ipq.c b/drivers/pwm/pwm-ipq.c
-> index b944ecb456d5..4818d0170d53 100644
-> --- a/drivers/pwm/pwm-ipq.c
-> +++ b/drivers/pwm/pwm-ipq.c
-> @@ -97,9 +97,10 @@ static int ipq_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  	if (state->polarity != PWM_POLARITY_NORMAL)
->  		return -EINVAL;
->  
-> -	if (!ipq_chip->clk_rate)
-> -		return -EINVAL;
-> -
-> +	/*
-> +	 * XXX Why? A comment please. (Is this already covered by the checks
-> +	 * below?)
-> +	 */
+The family includes:
+  - AD4691: 16-channel, 500 kSPS
+  - AD4692: 16-channel, 1 MSPS
+  - AD4693: 8-channel, 500 kSPS
+  - AD4694: 8-channel, 1 MSPS
 
-This check can be safely removed as it is indeed covered by the check
-where the period_ns is limited to IPQ_PWM_MAX_PERIOD_NS which equals to
-NSEC_PER_SEC as per macro definition above.
+The devices support two operating modes, auto-detected from the device
+tree:
+  - CNV Burst Mode: external PWM drives CNV independently of SPI;
+                    DATA_READY on a GP pin signals end of conversion
+  - Manual Mode: CNV tied to SPI CS; each SPI transfer reads
+                 the previous conversion result and starts the
+                 next (pipelined N+1 scheme)
 
->  	if (state->period < DIV64_U64_ROUND_UP(NSEC_PER_SEC,
->  					       ipq_chip->clk_rate))
->  		return -ERANGE;
-> @@ -107,18 +108,29 @@ static int ipq_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  	period_ns = min(state->period, IPQ_PWM_MAX_PERIOD_NS);
->  	duty_ns = min(state->duty_cycle, period_ns);
->  
-> +	/*
-> +	 * Pick the maximal value for PWM_DIV that still allows a
-> +	 * 100% relative duty cycle. This allows a fine grained
-> +	 * selection of duty cycles.
-> +	 */
->  	pwm_div = IPQ_PWM_MAX_DIV - 1;
-> +
-> +	/*
-> +	 * XXX mul_u64_u64_div_u64 returns an u64, this might overflow the
-> +	 * unsigned int pre_div.
-> +	 */
+A new driver is warranted rather than extending ad4695: the AD4691
+data path uses an accumulator-register model — results are read from
+AVG_IN registers, with ACC_MASK, ADC_SETUP, DEVICE_SETUP, and
+GPIO_MODE registers controlling the sequencer — none of which exist
+in AD4695. CNV Burst Mode (PWM drives CNV independently of SPI) and
+Manual Mode (pipelined N+1 transfers) also have no equivalent in
+AD4695's command-embedded single-cycle protocol.
 
-Theoretically, yes, but in practice it won't due to above constraints.
-Take the max period of 10^9 (NSEC_PER_SEC) * max clock rate of 10^9 (1
-GHz), then the numerator becomes 10^18. Divide that by 10^9
-(NSEC_PER_SEC) * 65,535 (IPQ_PWM_MAX_DIV) and that fits well into a
-32-bit integer.
+The series is structured as follows:
+  1/4 - DT bindings (YAML schema) and MAINTAINERS entry
+  2/4 - Initial driver: register map via custom regmap callbacks,
+        IIO read_raw/write_raw, both operating modes, single-channel
+        reads via internal oscillator (Autonomous Mode)
+  3/4 - Triggered buffer support: IRQ-driven (DATA_READY on a GP pin
+        selected via interrupt-names) for CNV Burst Mode; external IIO
+        trigger for Manual Mode to handle the pipelined N+1 SPI protocol
+  4/4 - SPI Engine offload support: DMA-backed high-throughput
+        capture path using the SPI offload subsystem
 
->  	pre_div = mul_u64_u64_div_u64(period_ns, ipq_chip->clk_rate,
->  				      (u64)NSEC_PER_SEC * (pwm_div + 1));
-> -	pre_div = (pre_div > 0) ? pre_div - 1 : 0;
-> +
-> +	if (!pre_div)
-> +		return -ERANGE;
-> +
-> +	pre_div -= 1;
->  
->  	if (pre_div > IPQ_PWM_MAX_DIV)
->  		pre_div = IPQ_PWM_MAX_DIV;
->  
-> -	/*
-> -	 * high duration = pwm duty * (pwm div + 1)
-> -	 * pwm duty = duty_ns / period_ns
-> -	 */
-> +	/* pwm duty = HI_DUR * (PRE_DIV + 1) / clk_rate */
->  	hi_dur = mul_u64_u64_div_u64(duty_ns, ipq_chip->clk_rate,
->  				     (u64)(pre_div + 1) * NSEC_PER_SEC);
->  
-> @@ -161,6 +173,10 @@ static int ipq_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
->  	pre_div = FIELD_GET(IPQ_PWM_REG1_PRE_DIV, reg1);
->  
->  	effective_div = (u64)(pre_div + 1) * (pwm_div + 1);
-> +
-> +	/*
-> +	 * effective_div <= 0x100000000, so the multiplication doesn't overflow.
-> +	 */
->  	state->period = DIV64_U64_ROUND_UP(effective_div * NSEC_PER_SEC,
->  					   ipq_chip->clk_rate);
->  
-> @@ -210,6 +226,8 @@ static int ipq_pwm_probe(struct platform_device *pdev)
->  		return dev_err_probe(dev, ret, "Failed to lock clock rate\n");
->  
->  	pwm->clk_rate = clk_get_rate(clk);
-> +	if (!pwm->clk_rate)
-> +		return dev_err_probe(dev, -EINVAL, "Failed due to clock rate being zero\n");
->  
->  	chip->ops = &ipq_pwm_ops;
->  
-> 
-> Comments with XXX need more code adaptions (or a comment why my concern
-> isn't justified).
+Datasheets:
+  https://www.analog.com/en/products/ad4691.html
+  https://www.analog.com/en/products/ad4692.html
+  https://www.analog.com/en/products/ad4693.html
+  https://www.analog.com/en/products/ad4694.html
 
-Do you want me to send a v21 or can you apply the diff in your tree with
-above deletion and comment?
+Signed-off-by: Radu Sabau <radu.sabau@analog.com>
+---
+Changes in v6:
+- Replace device.h with dev_printk.h + device/devres.h; add array_size.h
+- Rename osc_freqs[] → osc_freqs_Hz[] with explicit [0xN] index designators
+- Move loop variable into for() declaration in set_sampling_freq
+- Convert multi-line block comment to single-line in single_shot_read
+- Replace (u16)~ cast with ~BIT() & GENMASK(15, 0) for ACC_MASK_REG write;
+  GENMASK(15, 0) is still needed, otherwise maximum value condition line
+  in reg_write() would fail.
+- Extract osc_idx/period_us temporaries in single_shot_read; add comment
+- Use devm_regulator_bulk_get_enable() for avdd + vio supplies
+- Reformat reset_gpio_probe() comment; remove (GPIOD_OUT_HIGH) detail
+- Extract REF_CTRL value into temporary before regmap_update_bits
+- Use regmap_assign_bits for OSC_FREQ_REG in config
+- Remove ad4691_free_scan_bufs NULL assignments; they are not checked.
+- Replace indio_dev->masklength with iio_get_masklength() throughout
+- Fix spi_optimize_message error path to use goto err in preenable
+- Add iio_buffer_enabled() guard in sampling_frequency_store and
+  set_oversampling_ratio
+- Move ad4691_gpio_setup call from ad4691_config into
+  setup_triggered_buffer after IRQ lookup; remove duplicate
+  fwnode_irq_get_byname loop
+- Replace oversampling ratio search loop with is_power_of_2 + ilog2
+- Link to v5: https://lore.kernel.org/r/20260327-ad4692-multichannel-sar-adc-driver-v5-0-11f789de47b8@analog.com
 
-> 
-> Best regards
-> Uwe
+Changes in v5:
+- Reorder datasheets numerically
+- Fix interrupt-names: use enum with minItems/maxItems
+- Remove if/then block requiring interrupts — driver detail, not hardware constraint
+- Remove redundant .shift = 0 from channel macro
+- Write max_rate comparison as 1 * HZ_PER_MHZ
+- Invert set_sampling_freq loop to use continue
+- Fix fsleep() line break; remove blank line in read_raw
+- Reorder supply init: vio immediately after avdd
+- Move comment rewrites and OSC_FREQ_REG condition into the base driver patch
+- Add bit-15 READ comment in reg_read
+- Rewrite ldo-in handling with cleaner if/else-if pattern
+- Drop redundant refbuf_en = false; invert if (!rst) in reset
+- Drop reset_control_assert() — GPIO already asserted at probe
+- Use regmap_update_bits/assign_bits in config
+- Remove tab-column alignment of state struct members
+- Declare osc_freqs[] as const int, eliminating explicit casts
+- Drop obvious AUTONOMOUS mode comment
+- Rename ACC_COUNT_LIMIT → ACC_DEPTH_IN to match datasheet
+- Use bitmap_weight()/bitmap_read() for active_scan_mask access;
+  add #include <linux/bitmap.h>
+- Fix channel macro line-continuation tab alignment
+- Use IIO_CHAN_SOFT_TIMESTAMP(8) for 8-channel variants
+- Use aligned_s64 ts in scan struct
+- Add comment explaining start-index removal in set_sampling_freq
+- Remove trailing comma after NULL in buffer_attrs[]
+- Add IRQF_NO_AUTOEN rationale comment
+- Remove unreachable manual_mode guards in sampling_frequency_show/store
+- Remove st->trig; use indio_dev->trig directly
+- Move max_speed_hz param to the offload patch where it is used
+- Use DIV_ROUND_UP for CNV period; use compound pwm_state initializer
+- Move offload fields into a separately allocated sub-struct
+- Build TX words via u8* byte-fill; fixes sparse __be32 warnings
+- Add three scan types (NORMAL/OFFLOAD_CNV/OFFLOAD_MANUAL) with
+  get_current_scan_type; triggered buffer path uses storagebits=16
+- Fix IIO_CHAN_INFO_SCALE: use iio_get_current_scan_type() for realbits
+- Add MODULE_IMPORT_NS("IIO_DMAENGINE_BUFFER")
+- Add Documentation/iio/ad4691.rst
+- Link to v4: https://lore.kernel.org/r/20260320-ad4692-multichannel-sar-adc-driver-v4-0-052c1050507a@analog.com
+
+Changes in v4:
+- dt-bindings: add avdd-supply (required) and ldo-in-supply (optional);
+  rename vref-supply → ref-supply, vrefin-supply → refin-supply;
+  corrected reset-gpios polarity (active-high → active-low); remove
+  clocks and pwm-names; extend interrupts to up to 4 GP pins with
+  interrupt-names "gp0".."gp3"; reduce #trigger-source-cells to
+  const: 1 (GP pin number); add gpio-controller / #gpio-cells = <2>;
+  drop adi,ad4691.h header; update binding examples
+- driver: rename CNV Clock Mode → CNV Burst Mode throughout
+- driver: add avdd-supply (required) and ldo-in-supply; track ref vs.
+  refin supply for REFBUF_EN; set LDO_EN in DEVICE_SETUP when ldo-in
+  is present; add software reset fallback via SPI_CONFIG_A register
+- driver: merge ACC_MASK1_REG / ACC_MASK2_REG into ACC_MASK_REG with
+  a single ADDR_DESCENDING 16-bit SPI write
+- driver: remove clocks usage; set PWM rate directly without ref clock
+- driver: rename chip info structs (ad4691_chip_info etc.); rename
+  *chip → *info in state struct; replace adc_mode enum with manual_mode
+  bool; replace ktime sampling_period with u32 cnv_period_ns
+- driver: move IIO_CHAN_INFO_SAMP_FREQ to info_mask_separate with an
+  available list for the internal oscillator frequency
+- driver: use regcache MAPLE instead of RBTREE
+- triggered buffer: derive DATA_READY GP pin from interrupt-names in
+  firmware ("gp0".."gp3") instead of assuming GP0
+- triggered buffer: use regmap_update_bits for DEVICE_SETUP mode toggle
+  to avoid clobbering LDO_EN when toggling MANUAL_MODE bit
+- triggered buffer: split buffer setup ops into separate Manual and
+  CNV Burst variants (mirrors offload path structure)
+- SPI offload: promote channel storagebits from 16 to 32 to match DMA
+  word size; introduce ad4691_manual_channels[] with shift=16 (data in
+  upper 16 bits of the 32-bit word); update triggered-buffer paths to
+  the same layout for consistency
+- SPI offload: derive GP pin from trigger-source args[0] instead of
+  hardcoding GP0; split offload buffer setup ops per mode
+- replace put_unaligned_be32() + FIELD_PREP() with cpu_to_be32() and
+  plain bit-shift ops for SPI offload message construction
+- multiple reviewer-requested code style and correctness fixes
+  (Andy Shevchenko, Nuno Sá, Uwe Kleine-König, David Lechner)
+- Link to v3: https://lore.kernel.org/r/20260313-ad4692-multichannel-sar-adc-driver-v3-0-b4d14d81a181@analog.com
+
+Changes in v3:
+- Replace GPIO reset handling with reset controller framework
+- Replace two regmap_write() calls for ACC_MASK1/ACC_MASK2 with regmap_bulk_write()
+- Move conv_us declaration closer to its first use
+- Derive spi_device/dev from regmap instead of storing st->spi
+- ad4691_trigger_handler(): use guard(mutex)() and iio_for_each_active_channel()
+- ad4691_setup_triggered_buffer(): return -ENOMEM/-ENOENT directly instead of
+  wrapping in dev_err_probe(); fix fwnode_irq_get() check (irq <= 0 → irq < 0)
+- Add GENMASK defines for SPI offload 32-bit message layout; replace manual
+  bit-shifts with put_unaligned_be32() + FIELD_PREP()
+- Use DIV_ROUND_CLOSEST_ULL() instead of div64_u64()
+- ad4691_set_sampling_freq(): fix indentation; drop unnecessary else after return
+- ad4691_probe(): use PTR_ERR_OR_ZERO() for devm_spi_offload_get()
+- Link to v2: https://lore.kernel.org/r/20260310-ad4692-multichannel-sar-adc-driver-v2-0-d9bb8aeb5e17@analog.com
+
+Changes in v2:
+- Drop adi,spi-mode DT property; operating mode now auto-detected
+  from pwms presence (CNV Clock Mode if present, Manual Mode if not)
+- Reduce from 5 operating modes to 2 (CNV Clock Mode, Manual Mode);
+  Autonomous, SPI Burst and CNV Burst modes removed as user-selectable
+  modes; Autonomous Mode is now the internal idle/single-shot state
+- Single-shot read_raw always uses internal oscillator (Autonomous
+  Mode), independent of the configured buffer mode
+- Replace bulk regulator API with devm_regulator_get_enable() and
+  devm_regulator_get_enable_read_voltage()
+- Use guard(mutex) and IIO_DEV_ACQUIRE_DIRECT_MODE scoped helpers
+- Replace enum + indexed chip_info array with named chip_info structs
+- Remove product_id field and hardware ID check from probe
+- Factor IIO_CHAN_INFO_RAW body into ad4691_single_shot_read() helper
+- Use fwnode_irq_get(dev_fwnode(dev), 0); drop interrupt-names from
+  DT binding
+- Use devm_clk_get_enabled(dev, NULL); drop clock-names from DT
+  binding
+- Use spi_write_then_read() for DMA-safe register writes
+- Use put_unaligned_be16() for SPI header construction
+- fsleep() instead of usleep_range() in single-shot path
+- storagebits 24->32 for manual-mode channels (uniform DMA layout)
+- Collect full scan into vals[16], single iio_push_to_buffers_with_ts()
+- Use pf->timestamp instead of iio_get_time_ns() in trigger handler
+- Remove IRQF_TRIGGER_FALLING (comes from firmware/DT)
+- Fix offload xfer array size ([17]: N channels + 1 state reset)
+- Drop third DT binding example per reviewer request
+- Link to v1: https://lore.kernel.org/r/20260305-ad4692-multichannel-sar-adc-driver-v1-0-336229a8dcc7@analog.com
+
+---
+Radu Sabau (4):
+      dt-bindings: iio: adc: add AD4691 family
+      iio: adc: ad4691: add initial driver for AD4691 family
+      iio: adc: ad4691: add triggered buffer support
+      iio: adc: ad4691: add SPI offload support
+
+ .../devicetree/bindings/iio/adc/adi,ad4691.yaml    |  162 ++
+ Documentation/iio/ad4691.rst                       |  259 +++
+ Documentation/iio/index.rst                        |    1 +
+ MAINTAINERS                                        |    9 +
+ drivers/iio/adc/Kconfig                            |   14 +
+ drivers/iio/adc/Makefile                           |    1 +
+ drivers/iio/adc/ad4691.c                           | 1685 ++++++++++++++++++++
+ 7 files changed, 2131 insertions(+)
+---
+base-commit: 11439c4635edd669ae435eec308f4ab8a0804808
+change-id: 20260302-ad4692-multichannel-sar-adc-driver-78e4d44d24b2
 
 Best regards,
-George
+-- 
+Radu Sabau <radu.sabau@analog.com>
+
 
 
