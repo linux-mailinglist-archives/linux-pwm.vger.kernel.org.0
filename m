@@ -1,210 +1,179 @@
-Return-Path: <linux-pwm+bounces-8472-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8473-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aFxrJc/Oz2m50gYAu9opvQ
-	(envelope-from <linux-pwm+bounces-8472-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Fri, 03 Apr 2026 16:29:35 +0200
+	id kGeIDHIf0WmmFgcAu9opvQ
+	(envelope-from <linux-pwm+bounces-8473-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Sat, 04 Apr 2026 16:25:54 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8FE273953DC
-	for <lists+linux-pwm@lfdr.de>; Fri, 03 Apr 2026 16:29:34 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id CB71339B5C4
+	for <lists+linux-pwm@lfdr.de>; Sat, 04 Apr 2026 16:25:53 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id AED7230138F2
-	for <lists+linux-pwm@lfdr.de>; Fri,  3 Apr 2026 14:29:10 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 983B9300D687
+	for <lists+linux-pwm@lfdr.de>; Sat,  4 Apr 2026 14:25:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13D6F3C5DDA;
-	Fri,  3 Apr 2026 14:29:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D2135296BDC;
+	Sat,  4 Apr 2026 14:25:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="Fz4Q0Yyn"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20251104.gappssmtp.com header.i=@baylibre-com.20251104.gappssmtp.com header.b="T+tHPtq/"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com [209.85.167.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DA953C5DB4
-	for <linux-pwm@vger.kernel.org>; Fri,  3 Apr 2026 14:29:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFBB6291864
+	for <linux-pwm@vger.kernel.org>; Sat,  4 Apr 2026 14:25:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775226544; cv=none; b=GoFm0nKc/ubLE59XpuF8VQPMS8zWO57sRmU2nwIhR9lTTAD7tNrGKVAGpYMzr1q2PwEfzMOAHtEelEOmKgtvs7EB5UETppNzZeDd1y8u73mAR0BdgqAwEdA8uUnXWEhmzHBMoDoJ5es49pC2f03NDsCYOAV8tV9P9a8KZRgxiBw=
+	t=1775312748; cv=none; b=j/sXFk4bcXdtbKfsn+Dpv8TWe8JMIDB6okXyAV15U8W2W0hDslB6t2Q7ShR6goYAVciUdLnmfJYWoI0f4YAyDpq4+zDw8h/Ah6yXqVrdGk335HzedJ8rwIB4PY4WpFZUMuz1XPpXsTJmDYUyx0mh5G1+iNkQjSIk5DCHy5qcX/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775226544; c=relaxed/simple;
-	bh=Nzx14HACRM0d0HjpzRQyGv4cu3F3Ed1W2tIIdEaeORY=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=JqdEev8zNSbLmaFHN20vBMf+21CpXtQIO+32kwH1lHSWtj6eleS553BskncAdDZRUjq22LjScZynUPo7RNZ71kWIq7+VuaPgKhomFOsy6juBh1+DWcAfwcy3SRVlvT3lBEVKpqbVchliObGUg3c1Pk9fAAoBlFwSn48DL3Mne+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=Fz4Q0Yyn; arc=none smtp.client-ip=209.85.128.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
-Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-486fc4725f0so19755945e9.1
-        for <linux-pwm@vger.kernel.org>; Fri, 03 Apr 2026 07:29:02 -0700 (PDT)
+	s=arc-20240116; t=1775312748; c=relaxed/simple;
+	bh=YDHQQIkUtIMA5RuVXX+SK+ZopnAIz0IH3aZAqaHI9pk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=awrcqZbuehkfW16guhD5w5k9MlRie7ysVimswv2mpZTLXk5YrmPzz2y4Vai+FTJ6Fsu2rtsMCvs/q2IUjAitoIMWGREe+honJQuPXdoHIdk3ZOXjhTIV4kiBXc4bRv/osVaZJ17emp0RWWN0KeaZ9x25xLDLGx4ikwyfg95gMrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20251104.gappssmtp.com header.i=@baylibre-com.20251104.gappssmtp.com header.b=T+tHPtq/; arc=none smtp.client-ip=209.85.167.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-oi1-f178.google.com with SMTP id 5614622812f47-46fb6d65c28so338366b6e.0
+        for <linux-pwm@vger.kernel.org>; Sat, 04 Apr 2026 07:25:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1775226541; x=1775831341; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=2tgGNuvlVR75U6twtOQ2sB+iKcvPJAVB1mzayebN+L4=;
-        b=Fz4Q0Yyn6FO/m+VS7ye5rW6FILOj/ZSIZdyr7n+Kas6qiws+s56pKJuVpvqVZ1Z+dB
-         VWd9Tofts8VZqg/m//1codfxwLZYE9H4cK+zeI5f9j7hMgeeEKUIET7kgeAdLXW3Q7+k
-         8zRSUXb9v1ik+gpONMWAvownDdRcCBimoGE+IVLVLtMXLSOraBCDlcw52jD0GaIYIZ5m
-         BkQVXstJ3C+y/7yj3BgcV15q0+vqtfqwOfTs2Om1w8oM4xGaRvtbzVl3K6AQr/pUia3V
-         P1Ynz4Ph4IV5MdnpAZnRlM7VcpbMIAOppvDJtYpOYoO54j0GrXsduqHuD57XsDTy20dt
-         XsAA==
+        d=baylibre-com.20251104.gappssmtp.com; s=20251104; t=1775312745; x=1775917545; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=DG8ZLzSkLL5KxGbpBt+cYKmm52XpYZesZWRmcIu235A=;
+        b=T+tHPtq/ZJmrz/x0hon6ubvef3dyaaHhk1GRRXgW8y8HepFtZGYjfJcUQczd3MEkSt
+         2Agviun9Cf5EYKtk9j0IqUraHya5+cWg7jpTqs6odctBlL2Zz+DNQ/uNqQMe9wgH193o
+         z3zeYYVklZaMQki3yiMddob47zunpO6AWKU8n5PWDQ6LxULv6X3f1wcyghb+It/+xjWX
+         z9PNVkRx7eWxmjJNLwRnRuJlliHjZbQNuYTor2Ij+hbvfTGn47XIa2O2GDia9HEi0TFp
+         QBOE28LuVqSi18lbs2VxGAN1lYamyOifHSPJ/JYonO7K4FYFJ/G3E8jlIr/y0xjtfZ+C
+         UNXw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1775226541; x=1775831341;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=2tgGNuvlVR75U6twtOQ2sB+iKcvPJAVB1mzayebN+L4=;
-        b=Ap4Kx53LY/n6MsLGVtAX5Y2uHjBgpbse5E1+L7MTOXxuotXpZcovlhxcFuf1g3+Ubl
-         fpgwH0ihkiAMUvSVa6BOldXWMki6jZCWRTyi1JOo6/gzNtKSoCz9AAenxfPCtyHG9Z1S
-         kZ+j3stWpMLR0U3xt4E3CMLE0Y1O21rb/hem6Y0nAXRjkau8vqVG8oWfuwr5+krb5ppw
-         j5BlKhm2YyK3uBz05AODy1e4fK0UZJwQCl8FG3wVdty99eEjAwnyRczM10ejqdvPqiHK
-         Hd+f4O1dlrKytQGNPMZ3j4LwUPtTRsaHyeLiBm+5S9AZ7Y8FmaxqxQ6INN52/DjL/2ZO
-         kHNg==
-X-Forwarded-Encrypted: i=1; AJvYcCUHQ+8/qs0udwzfDqOKIKzKzLORqrq7ogSqMxarhkygFifxGte5sks2MSnWNfn346qR0JxZr9jStXM=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yz63c4EzLrPd6STBCkkiVVigGPmdbhEPXevyUK9d2ZETGw7DGEQ
-	atPI6+8kED2icKFQH2iWo79WRAymnYa390OUWXAKGMGJUz0VL6iCAph4oNOoZavWes8=
-X-Gm-Gg: ATEYQzw1tduObe9ZvqBdAvOV51PlSY3qbsTe6jXgWGzFoNshEM6w0b18+VZC7CxyDlr
-	lSSF2H9jRVjII1ty0mTQl7CXiowPEM57xvuIKqCYIDXn2iLotyjdqOxqUL5PCoRfwZSV0awJeHT
-	YcBugMu9V6Sd57ADQsE554FQmx3WhFQzsSCkAz/0xyuyT5Zr8zgExIOGOIpEarGNcGA0840Dg5i
-	T0mElBAg3TD7JO9aD3plVW64/NhD0+Ge8qZOWQ+NGT0L+022H/CG1Ci0xX4nDYSJj7+ZRqw2UQe
-	0Ga+iiJCskscywuRAEciLOoUlpnNH77ohMBPnaWplUINa7P5hZQxtPZKJBWH6vzA6dh7Z/ol3dL
-	9WocgJUV0aWwY5O3/AFAmGD3cj3HVaAaTlon8C/ZLHMnMMKBMVoEhR5MeJ1g2tDeQxjCwfnyma3
-	2dxYWzx0w8+AKH0ZCeGcjq/kJdtn7dpqVpV+r3ZgSPxr8rAq25Htzyd7WPbpxpw6DKnLpG5Ee9C
-	jF+oxM=
-X-Received: by 2002:a05:600c:1394:b0:485:3cef:d6ea with SMTP id 5b1f17b1804b1-488994a7a76mr49414895e9.13.1775226540607;
-        Fri, 03 Apr 2026 07:29:00 -0700 (PDT)
-Received: from localhost (host-79-33-140-232.retail.telecomitalia.it. [79.33.140.232])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4888a72baa8sm142747135e9.15.2026.04.03.07.29.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Apr 2026 07:29:00 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	linux-pwm@vger.kernel.org,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Andrea della Porta <andrea.porta@suse.com>,
-	devicetree@vger.kernel.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Naushir Patuck <naush@raspberrypi.com>,
-	Stanimir Varbanov <svarbanov@suse.de>
-Subject: [PATCH 3/3] arm64: dts: broadcom: rp1: Add PWM node
-Date: Fri,  3 Apr 2026 16:31:56 +0200
-Message-ID: <ef79e974c6680202294a4cfde7cc791753bf1b3e.1775223441.git.andrea.porta@suse.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <cover.1775223441.git.andrea.porta@suse.com>
-References: <cover.1775223441.git.andrea.porta@suse.com>
+        d=1e100.net; s=20251104; t=1775312745; x=1775917545;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=DG8ZLzSkLL5KxGbpBt+cYKmm52XpYZesZWRmcIu235A=;
+        b=nDoiG8fdhzP9n88Xa0W09e6N6ZgnkoUfcnR+uG4WHa8g8cnHeBYru5ytg50v14lx6U
+         GAZKMJW5+h6gQbrviwdqORIuQZy1YiO9tiHScNarj5J1RiNTdeEYHw2T7fcIgTITaAr8
+         qB9GyPt8fVARQteyIuav0Sl1HguawhgAcR8G+aDkDl79O5VUB81AclIFLbQkz92Lc/oJ
+         CQI9mmtofE+xeHuHPQcQuPwp1FGHhWTfjxJI2ljsYz9ms3/cfZP40itX+tBXAEEVeXFo
+         fPYC66eFwXwxI5nJiON+Vy8zBWeDLdKVVGOwSp8Puq+wb4I8hkWfMYwYW0aPqzJEj01N
+         Gnug==
+X-Forwarded-Encrypted: i=1; AJvYcCVrShlEBSwKrHRZ7TnoXQBJ/VJWGXwZGkfAf9D+WnSGCLUEhqGCMQmztTahxX/a3iJufFXCJPjcEI0=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yxtm7wSK+yBjwz1B0Xk5Dzy390v5hqUseZRmJJ9MtGmhVePcOkN
+	mvqiSnmnieUdoaFuqVPOaaQoZ0T3Z34q3y+xbMoNbcWOR9HiKFhXRsxOhQmCMahHSyY=
+X-Gm-Gg: AeBDietbTPWspmvBLUDr4z6s7EskzK5h3ODNzD9O+MaJGt53DHla5mG3WCvFnmC49lo
+	mg/wWYDWziz+sc6r+BzRkJS7J3XU+c/V18tP08UuhuOBwlbjmUZulxLVEwYLyqQDEpJrYpIBXJU
+	Ijj5GSRlVfIX2zStEGr6/55GvixygEXquNnXmvV3jrvLFH+ED23WOf8IudRMxhSgt9pER75cXR0
+	tkLVoX0EbesGIa0RHTqh1Ay8NmsD6Blxdz32pv4KNPyx5mWXdRzTs80YfdksOUsdbX4TEKa7jwG
+	n4rr3om+HGD17qMhFpGDTno3gcu7gR21Sue0n9swvIr72sLp97LTBe7u6jqyQXS8u+Ypr3dbnob
+	SHTeaS5RuBWgUqZNZWLJf+I20KEWwceARgm6YbsYJUiG1bSGV+sfFvqiFaAJZLV7n/Ma5AiWtO4
+	OobEWWnLYhY3MpYreU2I1Zdfp3/IgdmFo34E5zIGL5hWqRgOe13Rt3W1jg5ggMIqOQCb9YXdhk4
+	g==
+X-Received: by 2002:a05:6808:1206:b0:46a:8dd5:3a4f with SMTP id 5614622812f47-46ef5002b8dmr3010289b6e.5.1775312744846;
+        Sat, 04 Apr 2026 07:25:44 -0700 (PDT)
+Received: from ?IPV6:2600:8803:e7e4:500:e14e:bcc6:3f95:26eb? ([2600:8803:e7e4:500:e14e:bcc6:3f95:26eb])
+        by smtp.gmail.com with ESMTPSA id 5614622812f47-46f0f4e16a9sm2936944b6e.4.2026.04.04.07.25.41
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 04 Apr 2026 07:25:43 -0700 (PDT)
+Message-ID: <e4ddf44e-3189-4d4a-9184-13b0560195dd@baylibre.com>
+Date: Sat, 4 Apr 2026 09:25:41 -0500
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [0.84 / 15.00];
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v6 2/4] iio: adc: ad4691: add initial driver for AD4691
+ family
+To: radu.sabau@analog.com, Lars-Peter Clausen <lars@metafoo.de>,
+ Michael Hennerich <Michael.Hennerich@analog.com>,
+ Jonathan Cameron <jic23@kernel.org>, =?UTF-8?Q?Nuno_S=C3=A1?=
+ <nuno.sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
+ <ukleinek@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
+ Mark Brown <broonie@kernel.org>, Linus Walleij <linusw@kernel.org>,
+ Bartosz Golaszewski <brgl@kernel.org>, Philipp Zabel
+ <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>,
+ Shuah Khan <skhan@linuxfoundation.org>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org,
+ linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org
+References: <20260403-ad4692-multichannel-sar-adc-driver-v6-0-fa2a01a57c4e@analog.com>
+ <20260403-ad4692-multichannel-sar-adc-driver-v6-2-fa2a01a57c4e@analog.com>
+Content-Language: en-US
+From: David Lechner <dlechner@baylibre.com>
+In-Reply-To: <20260403-ad4692-multichannel-sar-adc-driver-v6-2-fa2a01a57c4e@analog.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[suse.com,quarantine];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=google];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[baylibre-com.20251104.gappssmtp.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8472-lists,linux-pwm=lfdr.de];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8473-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[suse.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andrea.porta@suse.com,linux-pwm@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[analog.com,metafoo.de,kernel.org,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	DMARC_NA(0.00)[baylibre.com];
+	RCPT_COUNT_TWELVE(0.00)[23];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[baylibre-com.20251104.gappssmtp.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dlechner@baylibre.com,linux-pwm@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	DBL_PROHIBIT(0.00)[2.99.224.160:email];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,suse.de:email,0.0.0.1:email,2.101.103.64:email]
-X-Rspamd-Queue-Id: 8FE273953DC
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: CB71339B5C4
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Stanimir Varbanov <svarbanov@suse.de>
+On 4/3/26 6:03 AM, Radu Sabau via B4 Relay wrote:
+> From: Radu Sabau <radu.sabau@analog.com>
+> 
+> Add support for the Analog Devices AD4691 family of high-speed,
+> low-power multichannel SAR ADCs: AD4691 (16-ch, 500 kSPS),
+> AD4692 (16-ch, 1 MSPS), AD4693 (8-ch, 500 kSPS) and
+> AD4694 (8-ch, 1 MSPS).
+> 
+> The driver implements a custom regmap layer over raw SPI to handle the
+> device's mixed 1/2/3/4-byte register widths and uses the standard IIO
+> read_raw/write_raw interface for single-channel reads.
+> 
+> The chip idles in Autonomous Mode so that single-shot read_raw can use
+> the internal oscillator without disturbing the hardware configuration.
+> 
+> Three voltage supply domains are managed: avdd (required), vio, and a
+> reference supply on either the REF pin (ref-supply, external buffer)
+> or the REFIN pin (refin-supply, uses the on-chip reference buffer;
+> REFBUF_EN is set accordingly). Hardware reset is performed via
+> the reset controller framework; a software reset through SPI_CONFIG_A
+> is used as fallback when no hardware reset is available.
+> 
+> Accumulator channel masking for single-shot reads uses ACC_MASK_REG via
+> an ADDR_DESCENDING SPI write, which covers both mask bytes in a single
+> 16-bit transfer.
+> 
+> Signed-off-by: Radu Sabau <radu.sabau@analog.com>
+> ---
+This patch looks in good shape. Although I wouldn't mind using
+MEGA/MICRO, etc. more in numbers with more than 3 or 4 zeros.
 
-The RP1 chipset used on the Raspberry Pi 5 features an integrated
-PWM controller to drive the cooling fan.
+Reviewed-by: David Lechner <dlechner@baylibre.com>
 
-Add the corresponding DT node for this PWM controller.
-
-Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
-Co-developed-by: Andrea della Porta <andrea.porta@suse.com>
-Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
----
- arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts | 12 ++++++++++++
- arch/arm64/boot/dts/broadcom/rp1-common.dtsi     | 10 ++++++++++
- 2 files changed, 22 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-index 2856082814462..a4e5ba23bf536 100644
---- a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-+++ b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-@@ -64,12 +64,24 @@ phy1: ethernet-phy@1 {
- };
- 
- &rp1_gpio {
-+	fan_pwm_default_state: fan-pwm-default-state {
-+		function = "pwm1";
-+		pins = "gpio45";
-+		bias-pull-down;
-+	};
-+
- 	usb_vbus_default_state: usb-vbus-default-state {
- 		function = "vbus1";
- 		groups = "vbus1";
- 	};
- };
- 
-+&rp1_pwm {
-+	pinctrl-0 = <&fan_pwm_default_state>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
- &rp1_usb0 {
- 	pinctrl-0 = <&usb_vbus_default_state>;
- 	pinctrl-names = "default";
-diff --git a/arch/arm64/boot/dts/broadcom/rp1-common.dtsi b/arch/arm64/boot/dts/broadcom/rp1-common.dtsi
-index 5a815c3797945..7e78501e62b0c 100644
---- a/arch/arm64/boot/dts/broadcom/rp1-common.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/rp1-common.dtsi
-@@ -56,6 +56,16 @@ rp1_eth: ethernet@40100000 {
- 		#size-cells = <0>;
- 	};
- 
-+	rp1_pwm: pwm@4009c000 {
-+		compatible = "raspberrypi,rp1-pwm";
-+		reg = <0x00 0x4009c000  0x0 0x100>;
-+		clocks = <&rp1_clocks RP1_CLK_PWM1>;
-+		assigned-clocks = <&rp1_clocks RP1_CLK_PWM1>;
-+		assigned-clock-rates = <50000000>;
-+		#pwm-cells = <3>;
-+		status = "disabled";
-+	};
-+
- 	rp1_usb0: usb@40200000 {
- 		compatible = "snps,dwc3";
- 		reg = <0x00 0x40200000  0x0 0x100000>;
--- 
-2.35.3
 
 
