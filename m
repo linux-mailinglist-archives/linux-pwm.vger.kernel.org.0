@@ -1,255 +1,290 @@
-Return-Path: <linux-pwm+bounces-8498-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8502-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id TsBWCg/f02lxngcAu9opvQ
-	(envelope-from <linux-pwm+bounces-8498-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Mon, 06 Apr 2026 18:27:59 +0200
+	id gL3bE4AX1GksqwcAu9opvQ
+	(envelope-from <linux-pwm+bounces-8502-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Mon, 06 Apr 2026 22:28:48 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63AE63A5492
-	for <lists+linux-pwm@lfdr.de>; Mon, 06 Apr 2026 18:27:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BB4C83A7363
+	for <lists+linux-pwm@lfdr.de>; Mon, 06 Apr 2026 22:28:47 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BA92C3002FA6
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 Apr 2026 16:27:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 73C573026324
+	for <lists+linux-pwm@lfdr.de>; Mon,  6 Apr 2026 20:25:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2B1B438AC7D;
-	Mon,  6 Apr 2026 16:27:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E13CF30EF89;
+	Mon,  6 Apr 2026 20:25:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b="2pDhEJYT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FgBx1ekO"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from box.trvn.ru (box.trvn.ru [45.141.101.25])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A149930EF9B;
-	Mon,  6 Apr 2026 16:27:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.141.101.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3F032F619D;
+	Mon,  6 Apr 2026 20:25:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775492876; cv=none; b=L1vjHk8q/ov0hC2DZ8yzidgO35SHBGS9htYP7kRI9XMD3gToSsxTKqy5AcTVrzM40rE5N5SEfcY4aW0C35wDev+XPdjAdAdP2zccP7HpUluS1nkcnbQSYtxyuJlJk+mMEIiTKH2lKOjAQg3azjEiq/RD+QHhuw1t3KsZGOQ9Drg=
+	t=1775507137; cv=none; b=nktYEINRcTvzH00eB4z55ulyLimgpogkGEwBWDTLyiHD3luTUO38kcaxObz3pAMCWtWUYf2eSiI/TW5Jc66Ojx1AkPIO8F4eEk4zh+5AKLxCHOYVjwHSUJG/b5nE9WfvtAeKeHKLeVpzwkztmhj9xOw3k6F40vwqPxNtP2MK7kM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775492876; c=relaxed/simple;
-	bh=RVnjW7CD2ecBRU87/pB8wigS1EWW6WYzVGDWe2uBPl0=;
-	h=MIME-Version:Date:From:To:Cc:Subject:In-Reply-To:References:
-	 Message-ID:Content-Type; b=YIXpicoJD6nkKPcmftNoFbfZwzKZqWzwbBYJA8p3jl/GxjTXkSpZL7mGV91BZxXjTCyGxWtdKXibfDmImIVDA9lNBCT1r7EaOfsycFzfqKoMA7qnIrBLJL0gOsRCzKIapOCnBClwzU2UZMdECbPFGAjfOTveinWNXVjv7B2hs4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru; spf=pass smtp.mailfrom=trvn.ru; dkim=pass (2048-bit key) header.d=trvn.ru header.i=@trvn.ru header.b=2pDhEJYT; arc=none smtp.client-ip=45.141.101.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=trvn.ru
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=trvn.ru
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=trvn.ru; s=mail;
-	t=1775492416; bh=RVnjW7CD2ecBRU87/pB8wigS1EWW6WYzVGDWe2uBPl0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=2pDhEJYTGguKAHIryfNB3cWmhxeJK+qm9BERexNa8oWwmgCed72Ul3dn0XnaHKv7S
-	 QQbjRu+ADwCj14p5f9Fna2OLxFc/oHhm2u2fwStLHCZubKp1/T2l7iwWA+//V64+C0
-	 2GXoK1kLZ5Ua6p4w9b1fUhU8CUaa9kNUssOvXa+ygkqQirrwRueUsPLooObVeWi75D
-	 n5YeiYUHh8bX81HTwTy1ojxQZ9PuS0ufkXsCOcvK3YKpPIAJ/epK0L0wlHtLYiTvHH
-	 ssdD0LfBD6E4w8Tk8rwgs5K9kMGM/i7dqEOp1TYy9Pu0XfvjC42U0T1hwit997PIK5
-	 HF84HSJ+dK/sg==
-Received: from authenticated-user (box.trvn.ru [45.141.101.25])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by box.trvn.ru (Postfix) with ESMTPSA id DB5C871601;
-	Mon,  6 Apr 2026 21:20:16 +0500 (+05)
+	s=arc-20240116; t=1775507137; c=relaxed/simple;
+	bh=SDhHc8Gdlrhgi2kS2fCmPzPir3jVgVnkcwYGV6/fk9M=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=nW58hFznvZeDe45S6pal+85BPFcdpquPQczCCMpXTgZwdC8pn7VG3WdPcLFSsNlrm57f+4fqlJMNXkAyf9lwKg2V+Xnk0z1VbSuYpGT3VQ0HNANM3cRVz9JVR0DSmgH5PGzqKa1ueZ/pbM6PlQsmr6kL/QRBvcHcLFgmaR0SlQM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FgBx1ekO; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 3F2D0C4CEF7;
+	Mon,  6 Apr 2026 20:25:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1775507137;
+	bh=SDhHc8Gdlrhgi2kS2fCmPzPir3jVgVnkcwYGV6/fk9M=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=FgBx1ekOUTiEsWsUrAoqOOdI/IWsOCVAScIt2qcejLH9Pj0ziRhibBhStbzF6O6QM
+	 j/vGVVgblX9bfnBuRJDjPNZa88To1XUTZP4k9HjPYTZ2CXNuiHixvrBOX9DXRB2OFk
+	 puq1gFoHX6TRe1hEU0dfcRBS3zkF9bOFvKmQvnnfvJBrjx2va5MCPz4p+IUgsnPXp5
+	 UVNMf7f9jTPcqczljd5qrkBkSHkOaGeso6fYsjffhsih4YlhEld1SXbbmpQu71/5y+
+	 gZsUsrdtlD4N7V020P/9hXD4rYbXri8nfC/Xtr3xRLnaBpi2bdl8Wn1OLSLBQe3qCV
+	 +0hzdgksoIs/g==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FFD7FB5164;
+	Mon,  6 Apr 2026 20:25:37 +0000 (UTC)
+From: George Moussalem via B4 Relay <devnull+george.moussalem.outlook.com@kernel.org>
+Subject: [PATCH v21 0/6] Add PWM support for IPQ chipsets
+Date: Mon, 06 Apr 2026 22:24:37 +0200
+Message-Id: <20260406-ipq-pwm-v21-0-6ed1e868e4c2@outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Date: Mon, 06 Apr 2026 21:20:16 +0500
-From: Nikita Travkin <nikita@trvn.ru>
-To: Xilin Wu <sophon@radxa.com>
-Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, linux-pwm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 2/2] pwm: clk-pwm: add GPIO and pinctrl support for
- constant output levels
-In-Reply-To: <20260406-clk-pwm-gpio-v1-2-40d2f3a20aff@radxa.com>
-References: <20260406-clk-pwm-gpio-v1-0-40d2f3a20aff@radxa.com>
- <20260406-clk-pwm-gpio-v1-2-40d2f3a20aff@radxa.com>
-Message-ID: <41d54477e46354664360931ffcbeda11@trvn.ru>
-X-Sender: nikita@trvn.ru
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-B4-Tracking: v=1; b=H4sIAIUW1GkC/23O0U7DMAwF0F+Z+kwm22malKf9B0KoTRwWQZcu3
+ QrT1H8nrTRWxB6d+FzfazFwCjwUz5trkXgMQ4iHPBA+bQq7bw7vLILLDwUBKaiJROiPov/qhDV
+ WK4uldoqKvN0n9uF7iXp5zbNPsROnfeLm5iUCKKxAKdhSSRK0EiiO52DfXD7dp3DZzVM42K2N3
+ Ry6D8MppstSb8Rqzl6a5CT8bZI/BAgJ4ElqBq7MLp5PnzF+LDFzmRH12pqV1dnWrSslO2+11w+
+ sWVmqV9Zky65lb9i3reEHtr5bpPXdOluUrdVQWls16r8luNkKCMq7JZg7o5YSEBvp8K+dpukHU
+ CXzXtgBAAA=
+X-Change-ID: 20250922-ipq-pwm-c8c75c147d52
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Bjorn Andersson <andersson@kernel.org>, 
+ Konrad Dybcio <konradybcio@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, linux-pwm@vger.kernel.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ George Moussalem <george.moussalem@outlook.com>, 
+ Devi Priya <quic_devipriy@quicinc.com>, 
+ Baruch Siach <baruch.siach@siklu.com>, 
+ Konrad Dybcio <konrad.dybcio@oss.qualcomm.com>, 
+ Dmitry Baryshkov <dmitry.baryshkov@oss.qualcomm.com>, 
+ Bjorn Andersson <andersson@kernel.org>, 
+ Krzysztof Kozlowski <krzk@kernel.org>
+X-Mailer: b4 0.15.1
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1775507135; l=6465;
+ i=george.moussalem@outlook.com; s=20260406; h=from:subject:message-id;
+ bh=SDhHc8Gdlrhgi2kS2fCmPzPir3jVgVnkcwYGV6/fk9M=;
+ b=3JWHAb2VwyMun5FJ77dftxXSowjvRhsNsVjt17VuQmMMMLEZFy8r7ueQeWewK2OLqnScZg2nh
+ KbGnOSdD2R7AOkqDVyp9wzw3F+8kVUYIL8kGu794NbXzZ5C5OHuwPuP
+X-Developer-Key: i=george.moussalem@outlook.com; a=ed25519;
+ pk=uqspem3ahtBvPEBuxVbyyXT/0Vp3JNb/mo1EPbmBzWg=
+X-Endpoint-Received: by B4 Relay for george.moussalem@outlook.com/20260406
+ with auth_id=722
+X-Original-From: George Moussalem <george.moussalem@outlook.com>
+Reply-To: george.moussalem@outlook.com
+X-Spamd-Result: default: False [1.34 / 15.00];
+	FREEMAIL_REPLYTO_NEQ_FROM(2.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[trvn.ru,quarantine];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[trvn.ru:s=mail];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[trvn.ru:+];
-	RCVD_COUNT_THREE(0.00)[4];
-	TAGGED_FROM(0.00)[bounces-8498-lists,linux-pwm=lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8502-lists,linux-pwm=lfdr.de,george.moussalem.outlook.com];
 	RCVD_TLS_LAST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	NEURAL_HAM(-0.00)[-1.000];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_REPLYTO(0.00)[outlook.com];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	NEURAL_HAM(-0.00)[-0.998];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[nikita@trvn.ru,linux-pwm@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,linux-pwm@vger.kernel.org];
+	FREEMAIL_CC(0.00)[vger.kernel.org,outlook.com,quicinc.com,siklu.com,oss.qualcomm.com,kernel.org];
 	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: 63AE63A5492
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	HAS_REPLYTO(0.00)[george.moussalem@outlook.com];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[msgid.link:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,outlook.com:email,outlook.com:replyto,outlook.com:mid]
+X-Rspamd-Queue-Id: BB4C83A7363
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Xilin Wu писал(а) 06.04.2026 20:50:
-> The clk-pwm driver cannot guarantee a defined output level when the
-> PWM is disabled or when 0%/100% duty cycle is requested, because the
-> pin state when the clock is stopped is hardware-dependent.
-> 
-> Add optional GPIO and pinctrl support: when a GPIO descriptor and
-> pinctrl states ("default" for clock mux, "gpio" for GPIO mode) are
-> provided in the device tree, the driver switches the pin to GPIO mode
-> and drives the appropriate level for disabled/0%/100% states. For
-> normal PWM output, the pin is switched back to its clock function mux.
-> 
-> If no GPIO is provided, the driver falls back to the original
-> clock-only behavior.
-> 
-> Signed-off-by: Xilin Wu <sophon@radxa.com>
-> ---
->  drivers/pwm/pwm-clk.c | 72 ++++++++++++++++++++++++++++++++++++++++++++++-----
->  1 file changed, 66 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-clk.c b/drivers/pwm/pwm-clk.c
-> index f8f5af57acba..99821fae54e7 100644
-> --- a/drivers/pwm/pwm-clk.c
-> +++ b/drivers/pwm/pwm-clk.c
-> @@ -10,12 +10,15 @@
->   * Limitations:
->   * - Due to the fact that exact behavior depends on the underlying
->   *   clock driver, various limitations are possible.
-> - * - Underlying clock may not be able to give 0% or 100% duty cycle
-> - *   (constant off or on), exact behavior will depend on the clock.
-> - * - When the PWM is disabled, the clock will be disabled as well,
-> - *   line state will depend on the clock.
+Add PWM driver and binding support for IPQ chipsets.
+Also, add nodes to add support for pwm in ipq6018, ipq5018, ipq5332, and
+ipq9574.
 
-nit: I think those limitations would still stand for existing
-users, perhaps we could just add "... unless gpio pinctrl state
-is supplied" to these two?
+I've picked up work based on Devi's last submission (v15) which dates
+back to 05 October 2023 as below SoCs are still active.
 
->   * - The clk API doesn't expose the necessary calls to implement
->   *   .get_state().
-> + *
-> + * Optionally, a GPIO descriptor and pinctrl states ("default" and
-> + * "gpio") can be provided. When a constant output level is needed
-> + * (0% duty, 100% duty, or disabled), the driver switches the pin to
-> + * GPIO mode and drives the appropriate level. For normal PWM output
-> + * the pin is switched back to its clock function mux. If no GPIO is
-> + * provided, the driver falls back to the original clock-only behavior.
->   */
->  
->  #include <linux/kernel.h>
-> @@ -25,11 +28,17 @@
->  #include <linux/of.h>
->  #include <linux/platform_device.h>
->  #include <linux/clk.h>
-> +#include <linux/gpio/consumer.h>
-> +#include <linux/pinctrl/consumer.h>
->  #include <linux/pwm.h>
->  
->  struct pwm_clk_chip {
->  	struct clk *clk;
->  	bool clk_enabled;
-> +	struct pinctrl *pinctrl;
-> +	struct pinctrl_state *pins_default;  /* clock function mux */
-> +	struct pinctrl_state *pins_gpio;     /* GPIO mode */
-> +	struct gpio_desc *gpiod;
->  };
->  
->  static inline struct pwm_clk_chip *to_pwm_clk_chip(struct pwm_chip *chip)
-> @@ -45,14 +54,36 @@ static int pwm_clk_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  	u32 rate;
->  	u64 period = state->period;
->  	u64 duty_cycle = state->duty_cycle;
-> +	bool constant_level = false;
-> +	int gpio_value = 0;
->  
->  	if (!state->enabled) {
-> -		if (pwm->state.enabled) {
-> +		constant_level = true;
-> +		gpio_value = 0;
-> +	} else if (state->duty_cycle == 0) {
-> +		constant_level = true;
-> +		gpio_value = (state->polarity == PWM_POLARITY_INVERSED) ? 1 : 0;
-> +	} else if (state->duty_cycle >= state->period) {
-> +		constant_level = true;
-> +		gpio_value = (state->polarity == PWM_POLARITY_INVERSED) ? 0 : 1;
-> +	}
-> +
-> +	if (constant_level) {
-> +		if (pcchip->gpiod) {
-> +			pinctrl_select_state(pcchip->pinctrl, pcchip->pins_gpio);
-> +			gpiod_direction_output(pcchip->gpiod, gpio_value);
+Signed-off-by: George Moussalem <george.moussalem@outlook.com>
+---
+Changes in v21:
+- Added macro definition for minimum supported period and lower bound check to ensure a valid period 
+- Added code comment to explain why pre_div won't overflow
+- Link to v20: https://patch.msgid.link/20260204-ipq-pwm-v20-0-91733011a3d1@outlook.com
 
-Is this the same case as below where gpio state has to be set
-before we can control it, or can we swap those so we first
-put gpio into a known state and only then mux it to the pad?
+Changes in v20:
+- Updated IPQ_PWM_MAX_DIV macro definition to use FIELD_MAX
+- Removed clk struct from ipq_pwm struct and added clk_rate field
+  instead which is set during probe.
+- Consolidated config_div_and_duty into ipq_pwm_apply
+- Fixed arithmetic overflows in apply and get_state
+- Fixed off-by-one in divider calculation
+- Enabled 100% relative duty cycle support
+- Aligned continuation on next lines relative to opening parentheses
+- Return 0 instead of ret in probe
+- Link to v19: https://lore.kernel.org/r/20251128-ipq-pwm-v19-0-13bc704cc6a5@outlook.com
+
+Changes in v19:
+- Changed pwm-cells property in dt bindings from 2 to 3 as per Uwe's
+  recommendation
+- Added hardware notes and limitations based on own findings as
+  requested. NOTE: there's no publically available datasheet though.
+- Expanded comment on REG1_UPDATE to indicate that when this bit is set,
+  values for div and pre-div take effect. The hardware automatically
+  unsets it when the change is completed.
+- Added newline between MACRO definition and next comment
+- In config_div_and_duty, used mul_u64_u64_div_u64 to avoid overflow
+- Removed unncessary restriction of pwm_div to MAX_DIV - 1 after testing
+- Constrain pre_div to MAX_DIV is pre_div calculated is > MAX_DIV
+- Use of mul_u64_u64_div_u64 in .apply
+- Skip calculation of period and duty cycle when PWM_ENABLE REG is unset
+- Set duty cycle to period value when calculated duty cycle > period to
+  return a valid config
+- Removed .npwm as it's taken care of in devm_pwmchip_alloc
+- Added call to devm_clk_rate_exclusive_get to lock the clock rate
+- Start all kernel messages with a capital letter and end with \n.
+- Changed pwm-cells property in all dtsi from 2->3 for in scope IPQ SOCs
+- Link to v18: https://lore.kernel.org/r/20251029-ipq-pwm-v18-0-edbef8efbb8e@outlook.com
+
+Changes in v18:
+- Updated maintainer info in binding
+- Squashed dt bindings patches into the first for adding compatibles for
+  IPQ5018, IPQ5332, and IPQ9574
+- Link to v17: https://lore.kernel.org/r/20251008-ipq-pwm-v17-0-9bd43edfc7f7@outlook.com
+
+Changes in v17:
+- Picked up RB tags from Dmitry and Rob
+- Removed unnecessary code comments
+- Corrected reg property in PWM node in ipq6018 DTS in line with
+  expected nr of bytes for address and size cells
+- Link to v16: https://lore.kernel.org/r/20251001-ipq-pwm-v16-0-300f237e0e68@outlook.com
+
+Changes in v16:
+- Removed reg description in bindings as the offset is not relative to
+  the TCSR region anymore since simple-mfd support was dropped and PWM
+  nodes defined as their own nodes, not child nodes. Updated the example
+  too.
+- Dropped patch to add simple-mfd support to the qcom,tcsr bindings
+- Simplified code to calculate divs and duty cycle as per Uwe's comments
+- Removed unused pwm_chip struct from ipq_pwm_chip struct
+- Removed unnecessary cast as per Uwe's comment
+- Replaced devm_clk_get & clk_prepare_enable by devm_clk_get_enabled
+- Replaced pwmchip_add by devm_pwmchip_add and removed .remove function
+- Removed .owner from driver struct
+- Added compatibles to the bindings and nodes to the device trees to add
+  PWM support in the IPQ5018, IPQ5332, and IPQ9574 SoCs
+- Link to v15: https://lore.kernel.org/r/20231005160550.2423075-1-quic_devipriy@quicinc.com
+
+Changes in v15:
+- No change
+- Link to v14: https://lore.kernel.org/r/20231005033053.2626465-1-quic_devipriy@quicinc.com
+
+Changes in v14:
+- Picked up the R-b tag
+- Link to v13: https://lore.kernel.org/r/20231004090449.256229-1-quic_devipriy@quicinc.com
+
+Changes in v13:
+- Updated the file name to match the compatible
+- Sorted the properties and updated the order in the required field
+- Dropped the syscon node from examples
+- Link to v12: https://lore.kernel.org/r/20230925065915.3467964-1-quic_devipriy@quicinc.com
+
+Changes in v12:
+- Picked up the R-b tag
+
+Changes in v11:
+- No change
+
+Changes in v10:
+- No change
+
+Changes in v9:
+- Add 'ranges' property to example (Rob)
+- Drop label in example (Rob)
+
+Changes in v8:
+- Add size cell to 'reg' (Rob)
+
+Changes in v7:
+- Use 'reg' instead of 'offset' (Rob)
+- Drop 'clock-names' and 'assigned-clock*' (Bjorn)
+- Use single cell address/size in example node (Bjorn)
+- Move '#pwm-cells' lower in example node (Bjorn)
+- List 'reg' as required
+
+Changes in v6:
+- Device node is child of TCSR; remove phandle (Rob Herring)
+- Add assigned-clocks/assigned-clock-rates (Uwe Kleine-König)
+
+Changes in v5:
+- Use qcom,pwm-regs for phandle instead of direct regs (Bjorn
+    Andersson, Kathiravan T)
+
+Changes in v4:
+- Update the binding example node as well (Rob Herring's bot)
+
+Changes in v3:
+- s/qcom,pwm-ipq6018/qcom,ipq6018-pwm/ (Rob Herring)
+
+Changes in v2:
+- Make #pwm-cells const (Rob Herring)
+
+---
+
+---
+Devi Priya (3):
+      dt-bindings: pwm: add IPQ6018 binding
+      pwm: driver for qualcomm ipq6018 pwm block
+      arm64: dts: qcom: ipq6018: add pwm node
+
+George Moussalem (3):
+      arm64: dts: qcom: ipq5018: add pwm node
+      arm64: dts: qcom: ipq5332: add pwm node
+      arm64: dts: qcom: ipq9574: add pwm node
+
+ .../devicetree/bindings/pwm/qcom,ipq6018-pwm.yaml  |  51 ++++
+ arch/arm64/boot/dts/qcom/ipq5018.dtsi              |  10 +
+ arch/arm64/boot/dts/qcom/ipq5332.dtsi              |  10 +
+ arch/arm64/boot/dts/qcom/ipq6018.dtsi              |  10 +
+ arch/arm64/boot/dts/qcom/ipq9574.dtsi              |  10 +
+ drivers/pwm/Kconfig                                |  12 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-ipq.c                              | 259 +++++++++++++++++++++
+ 8 files changed, 363 insertions(+)
+---
+base-commit: 2febe6e6ee6e34c7754eff3c4d81aa7b0dcb7979
+change-id: 20250922-ipq-pwm-c8c75c147d52
+
+Best regards,
+--  
+George Moussalem <george.moussalem@outlook.com>
 
 
-Thanks for improving this driver,
-Nikita
-
-> +		}
-> +		if (pcchip->clk_enabled) {
->  			clk_disable(pcchip->clk);
->  			pcchip->clk_enabled = false;
->  		}
->  		return 0;
-> -	} else if (!pwm->state.enabled) {
-> +	}
-> +
-> +	if (pcchip->gpiod)
-> +		pinctrl_select_state(pcchip->pinctrl, pcchip->pins_default);
-> +
-> +	if (!pcchip->clk_enabled) {
->  		ret = clk_enable(pcchip->clk);
->  		if (ret)
->  			return ret;
-> @@ -97,6 +128,35 @@ static int pwm_clk_probe(struct platform_device *pdev)
->  		return dev_err_probe(&pdev->dev, PTR_ERR(pcchip->clk),
->  				     "Failed to get clock\n");
->  
-> +	pcchip->pinctrl = devm_pinctrl_get(&pdev->dev);
-> +	if (IS_ERR(pcchip->pinctrl)) {
-> +		ret = PTR_ERR(pcchip->pinctrl);
-> +		pcchip->pinctrl = NULL;
-> +		if (ret == -EPROBE_DEFER)
-> +			return ret;
-> +	} else {
-> +		pcchip->pins_default = pinctrl_lookup_state(pcchip->pinctrl,
-> +							    PINCTRL_STATE_DEFAULT);
-> +		pcchip->pins_gpio = pinctrl_lookup_state(pcchip->pinctrl,
-> +							 "gpio");
-> +		if (IS_ERR(pcchip->pins_default) || IS_ERR(pcchip->pins_gpio))
-> +			pcchip->pinctrl = NULL;
-> +	}
-> +
-> +	/*
-> +	 * Switch to GPIO pinctrl state before requesting the GPIO.
-> +	 * The driver core has already applied the "default" state, which
-> +	 * muxes the pin to the clock function and claims it.  We must
-> +	 * release that claim first so that gpiolib can request the pin.
-> +	 */
-> +	if (pcchip->pinctrl)
-> +		pinctrl_select_state(pcchip->pinctrl, pcchip->pins_gpio);
-> +
-> +	pcchip->gpiod = devm_gpiod_get_optional(&pdev->dev, NULL, GPIOD_ASIS);
-> +	if (IS_ERR(pcchip->gpiod))
-> +		return dev_err_probe(&pdev->dev, PTR_ERR(pcchip->gpiod),
-> +				     "Failed to get gpio\n");
-> +
->  	chip->ops = &pwm_clk_ops;
->  
->  	ret = pwmchip_add(chip);
 
