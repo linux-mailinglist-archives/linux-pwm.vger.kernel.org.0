@@ -1,63 +1,74 @@
-Return-Path: <linux-pwm+bounces-8537-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8538-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KEVXNjnO12mrTAgAu9opvQ
-	(envelope-from <linux-pwm+bounces-8537-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Thu, 09 Apr 2026 18:05:13 +0200
+	id QNsWBd7P12mrTAgAu9opvQ
+	(envelope-from <linux-pwm+bounces-8538-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Thu, 09 Apr 2026 18:12:14 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7CCAC3CD583
-	for <lists+linux-pwm@lfdr.de>; Thu, 09 Apr 2026 18:05:09 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5705F3CD75F
+	for <lists+linux-pwm@lfdr.de>; Thu, 09 Apr 2026 18:12:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B63F8307BA7D
-	for <lists+linux-pwm@lfdr.de>; Thu,  9 Apr 2026 15:52:05 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 776B730160D1
+	for <lists+linux-pwm@lfdr.de>; Thu,  9 Apr 2026 15:57:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0CB6D3DEFE3;
-	Thu,  9 Apr 2026 15:51:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 09680331209;
+	Thu,  9 Apr 2026 15:57:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HnZdWYrL"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tD+Traxk"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DB30322A;
-	Thu,  9 Apr 2026 15:51:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5D462F83A2;
+	Thu,  9 Apr 2026 15:57:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1775749882; cv=none; b=am+ybxoOXdQ64NYcyorCu3Pwx5L7iZIp4pjpdPbXDEzLOL+kZJWbAOvX9+Xg0nVEUD/7mBr0scRtC+Rg7nX4khYw7QaUElzU2OH+9IINiC8+OtP2vHhOs99e54t2nABdGX/DSM1gtXPCaOQNuGpJhN3AzR3hmlPMpzlnW7cmh9U=
+	t=1775750232; cv=none; b=crMY1ud/zaoJCbnSx/bAZFJAtrIE6+pcZWIoMIRsd5ncFe1kUtxhM7kgCT17AY1IqxnC4DQJsLZ+yo1GyhZ98EWVyOyPHzyKy6pz844F8g4iY6uThl+gNzMyidPDHOkQrX1CunvcxT0V3RtcrWP0CbXWmU9SkSIEhbBALATG88o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1775749882; c=relaxed/simple;
-	bh=hB0eWWESHHTJR+dU00r4L7DsK/AgrZD+1lM9AWRiaOI=;
+	s=arc-20240116; t=1775750232; c=relaxed/simple;
+	bh=WR+qzP41usMsL+U2CHUcv+sT27DtSgM6KltIpwfZcnY=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=K1IRW1uDtb9ydWJj2jDc1nSCfMG0gLpQrnP9K8U6p4ddWOUUb0h02MaRt/m7AgbdfrEBA0wuULY5ziVZ24o20ARW3DV8AUOSHIe/PKjYNRj429Ot+B4Bb5O+hY8fbW8YXfXAgJr4b68ZjsP3vKujsJ+GLI+PzriWqa3hN2zCmU4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HnZdWYrL; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EE03C4CEF7;
-	Thu,  9 Apr 2026 15:51:19 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=GMJkXW5qszJ5WEAjzZPsgLI4jcmmayMXNupt+lhNzjXMytmcCgYigQjOPbnmDWzlTNUSLQ+YE8kdmAktT5laiGzWYsLmko8JGs4EeDpw6GZ8fWgH6fvLbzcmE2P+YWtJizWpp3UjMxCo9hrxLdoD5GzZ1tNf6bRwGpvo6E1Z98c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tD+Traxk; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 768C0C4CEF7;
+	Thu,  9 Apr 2026 15:57:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1775749881;
-	bh=hB0eWWESHHTJR+dU00r4L7DsK/AgrZD+1lM9AWRiaOI=;
+	s=k20201202; t=1775750232;
+	bh=WR+qzP41usMsL+U2CHUcv+sT27DtSgM6KltIpwfZcnY=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HnZdWYrLyuo5Vu7I8Lb4+H9UxgMVIODfowMSezczofLBmciAEKlEvGBI2GD1/BY/S
-	 Lc9bPzXyUMGQNC3m0LNtyP83I0jgNNBqwmNNVaJfHG2i+0ya8LP+jLhs0sVUgGQnpe
-	 IllaXyA7M1alX6ZBI6nYaqzIwloJ8qJF1dqCmstEc/Z/UcC/JdC9EFa1bRVZZv9G4t
-	 ubwC9NseG/pP7sq1i5cpqaCCICjV0IhrqBUkWuvvHEwJsnImMvh0jZPsjEv3bR6Cc3
-	 Cy75PT7kJQ1tL/hIRinUwV3R14HzNOTfAxmm4f2h80R6md/lwOv8VB25JZ/Gdnhsju
-	 4AyUh3sv55GPw==
-Date: Thu, 9 Apr 2026 16:51:17 +0100
+	b=tD+TraxkBSWzV1OrvrD/QSp3BLnXIyQ/r5VEw6Ssz3oVkX62k9yBe3TLQioa/1soi
+	 pwx5mlxqS6foCBa5LNeuMMUU16bHPdrWEfieNxK+dyyT+lyEaiFtCE2rRc+83+PC5a
+	 K/2pOvpJ0ECptyYkObH3plHWEH1NYAkS6HHUESwGZki2P/UqMiwpiIZjucJN39BENx
+	 OBo4WsN5BqX+ULmrxtpN3dIJnAgIXmLrFEp5Co2xDwD5ek+foaAd2xxGQHGc7qHwRt
+	 Xqb9KwwQypnh1KRJ3vALlj/mwQqaexs+JkfB5teKHDpMco9wLLTzVsA+gA/tSA3FGc
+	 FYT/GUmKcq9yQ==
+Date: Thu, 9 Apr 2026 16:57:06 +0100
 From: Conor Dooley <conor@kernel.org>
-To: Xilin Wu <sophon@radxa.com>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Rob Herring <robh@kernel.org>,
+To: radu.sabau@analog.com
+Cc: Lars-Peter Clausen <lars@metafoo.de>,
+	Michael Hennerich <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	David Lechner <dlechner@baylibre.com>,
+	Nuno =?iso-8859-1?Q?S=E1?= <nuno.sa@analog.com>,
+	Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
 	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>, Nikita Travkin <nikita@trvn.ru>,
-	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH 1/2] dt-bindings: pwm: clk-pwm: add optional GPIO and
- pinctrl properties
-Message-ID: <20260409-delicate-simile-aeb987caa126@spud>
-References: <20260406-clk-pwm-gpio-v1-0-40d2f3a20aff@radxa.com>
- <20260406-clk-pwm-gpio-v1-1-40d2f3a20aff@radxa.com>
+	Conor Dooley <conor+dt@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>, linux-iio@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-doc@vger.kernel.org
+Subject: Re: [PATCH v7 1/6] dt-bindings: iio: adc: add AD4691 family
+Message-ID: <20260409-headwear-condense-c119f423095b@spud>
+References: <20260409-ad4692-multichannel-sar-adc-driver-v7-0-be375d4df2c5@analog.com>
+ <20260409-ad4692-multichannel-sar-adc-driver-v7-1-be375d4df2c5@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -65,149 +76,142 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="vqaEmz6ZUNR8yPit"
+	protocol="application/pgp-signature"; boundary="6AiVT6msxNHZX0tI"
 Content-Disposition: inline
-In-Reply-To: <20260406-clk-pwm-gpio-v1-1-40d2f3a20aff@radxa.com>
+In-Reply-To: <20260409-ad4692-multichannel-sar-adc-driver-v7-1-be375d4df2c5@analog.com>
 X-Spamd-Result: default: False [-2.26 / 15.00];
 	SIGNED_PGP(-2.00)[];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8537-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8538-lists,linux-pwm=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[24];
+	FREEMAIL_CC(0.00)[metafoo.de,analog.com,kernel.org,baylibre.com,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org,vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,linux-pwm@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,microchip.com:email]
-X-Rspamd-Queue-Id: 7CCAC3CD583
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[devicetree.org:url,analog.com:email,analog.com:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,microchip.com:email]
+X-Rspamd-Queue-Id: 5705F3CD75F
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 
---vqaEmz6ZUNR8yPit
+--6AiVT6msxNHZX0tI
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 06, 2026 at 11:50:01PM +0800, Xilin Wu wrote:
-> The clk-pwm driver cannot produce constant output levels (0% or 100%
-> duty cycle, or disabled state) through the clock hardware alone - the
-> actual pin level when the clock is off is undefined and
-> hardware-dependent.
+On Thu, Apr 09, 2026 at 06:28:22PM +0300, Radu Sabau via B4 Relay wrote:
+> From: Radu Sabau <radu.sabau@analog.com>
 >=20
-> Document optional gpios, pinctrl-names, pinctrl-0, and pinctrl-1
-> properties that allow the driver to switch the pin between clock
-> function mux (for normal PWM output) and GPIO mode (to drive a
-> deterministic constant level).
+> Add DT bindings for the Analog Devices AD4691 family of multichannel
+> SAR ADCs (AD4691, AD4692, AD4693, AD4694).
 >=20
-> Signed-off-by: Xilin Wu <sophon@radxa.com>
+> The binding describes the hardware connections:
+>=20
+> - Power domains: avdd-supply (required), vio-supply, ref-supply or
+>   refin-supply (external reference; the REFIN path enables the
+>   internal reference buffer), and an optional ldo-in-supply, that if
+>   absent, means the on-chip internal LDO will be used.
+>=20
+> - Optional PWM on the CNV pin selects CNV Burst Mode; when absent,
+>   Manual Mode is assumed with CNV tied to SPI CS.
+>=20
+> - An optional reset GPIO (reset-gpios) for hardware reset.
+>=20
+> - Up to four GP pins (gp0..gp3) usable as interrupt sources,
+>   identified in firmware via interrupt-names "gp0".."gp3".
+>=20
+> - gpio-controller with #gpio-cells =3D <2> for GP pin GPIO usage.
+>=20
+> - #trigger-source-cells =3D <1>: one cell selecting the GP pin number
+>   (0-3) used as the SPI offload trigger source.
+>=20
+> Two binding examples are provided: CNV Burst Mode with SPI offload
+> (DMA data acquisition driven by DATA_READY on a GP pin), and Manual
+> Mode for CPU-driven triggered-buffer or single-shot capture.
+>=20
+> Signed-off-by: Radu Sabau <radu.sabau@analog.com>
+> ---
+>  .../devicetree/bindings/iio/adc/adi,ad4691.yaml    | 162 +++++++++++++++=
+++++++
+>  MAINTAINERS                                        |   7 +
+>  2 files changed, 169 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad4691.yaml b/=
+Documentation/devicetree/bindings/iio/adc/adi,ad4691.yaml
+> new file mode 100644
+> index 000000000000..81d2ca4e0e22
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad4691.yaml
+> @@ -0,0 +1,162 @@
+> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/adc/adi,ad4691.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices AD4691 Family Multichannel SAR ADCs
+> +
+> +maintainers:
+> +  - Radu Sabau <radu.sabau@analog.com>
+> +
+> +description: |
+> +  The AD4691 family are high-speed, low-power, multichannel successive
+> +  approximation register (SAR) analog-to-digital converters (ADCs) with
+> +  an SPI-compatible serial interface. The ADC supports CNV Burst Mode,
+> +  where an external PWM drives the CNV pin, and Manual Mode, where CNV
+> +  is directly tied to the SPI chip-select.
+> +
+> +  Datasheets:
+> +    * https://www.analog.com/en/products/ad4691.html
+> +    * https://www.analog.com/en/products/ad4692.html
+> +    * https://www.analog.com/en/products/ad4693.html
+> +    * https://www.analog.com/en/products/ad4694.html
+> +
+> +$ref: /schemas/spi/spi-peripheral-props.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,ad4691
+> +      - adi,ad4692
+> +      - adi,ad4693
+> +      - adi,ad4694
 
-This seems reasonable enough to me, but the PWM maintainers should
-defintely make sure this fits the ideology of the device.
+Please add a note to the commit message about why these devices are not
+compatible. With that,
 Acked-by: Conor Dooley <conor.dooley@microchip.com>
 pw-bot: not-applicable
 
-> ---
->  Documentation/devicetree/bindings/pwm/clk-pwm.yaml | 36 ++++++++++++++++=
-+++++-
->  1 file changed, 35 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/pwm/clk-pwm.yaml b/Documen=
-tation/devicetree/bindings/pwm/clk-pwm.yaml
-> index ec1768291503..2a0e3e02d27b 100644
-> --- a/Documentation/devicetree/bindings/pwm/clk-pwm.yaml
-> +++ b/Documentation/devicetree/bindings/pwm/clk-pwm.yaml
-> @@ -15,6 +15,11 @@ description: |
->    It's often possible to control duty-cycle of such clocks which makes t=
-hem
->    suitable for generating PWM signal.
-> =20
-> +  Optionally, a GPIO and pinctrl states can be provided. When a constant
-> +  output level is needed (0%, 100%, or disabled), the pin is switched to
-> +  GPIO mode to drive the level directly. For normal PWM output the pin is
-> +  switched back to its clock function mux.
-> +
->  allOf:
->    - $ref: pwm.yaml#
-> =20
-> @@ -29,6 +34,26 @@ properties:
->    "#pwm-cells":
->      const: 2
-> =20
-> +  gpios:
-> +    description:
-> +      Optional GPIO used to drive a constant level when the PWM output is
-> +      disabled or set to 0% / 100% duty cycle. When provided, pinctrl st=
-ates
-> +      "default" (clock mux) and "gpio" must also be defined.
-> +    maxItems: 1
-> +
-> +  pinctrl-names: true
-> +
-> +  pinctrl-0:
-> +    description: Pin configuration for clock function mux (normal PWM).
-> +    maxItems: 1
-> +
-> +  pinctrl-1:
-> +    description: Pin configuration for GPIO mode (constant level output).
-> +    maxItems: 1
-> +
-> +dependencies:
-> +  gpios: [ pinctrl-0, pinctrl-1 ]
-> +
->  unevaluatedProperties: false
-> =20
->  required:
-> @@ -41,6 +66,15 @@ examples:
->        compatible =3D "clk-pwm";
->        #pwm-cells =3D <2>;
->        clocks =3D <&gcc 0>;
-> -      pinctrl-names =3D "default";
-> +    };
-> +
-> +  - |
-> +    pwm {
-> +      compatible =3D "clk-pwm";
-> +      #pwm-cells =3D <2>;
-> +      clocks =3D <&gcc 0>;
-> +      pinctrl-names =3D "default", "gpio";
->        pinctrl-0 =3D <&pwm_clk_flash_default>;
-> +      pinctrl-1 =3D <&pwm_clk_flash_gpio>;
-> +      gpios =3D <&tlmm 32 0>;
->      };
->=20
-> --=20
-> 2.53.0
->=20
-
---vqaEmz6ZUNR8yPit
+--6AiVT6msxNHZX0tI
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCadfK9QAKCRB4tDGHoIJi
-0sSaAP9vvdqzucIMwzCAvF0iTFADxj0er61PAqFEmTSuCEkk7AEAqHP8OlNVB4yF
-HnZfU4XNEA1EfWbYNkaSaB5ziBgzXAg=
-=dw+x
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCadfMUgAKCRB4tDGHoIJi
+0g4LAQCDFiL/WYpD2A+CMZGioBuUJdp7MxiycZ1eF9K+aAushQD+K4LkAPI6pd7C
+hvPe16l+EF68AU12LiKpOM8XZ7AdZAg=
+=it+N
 -----END PGP SIGNATURE-----
 
---vqaEmz6ZUNR8yPit--
+--6AiVT6msxNHZX0tI--
 
