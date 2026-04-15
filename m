@@ -1,718 +1,354 @@
-Return-Path: <linux-pwm+bounces-8585-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8586-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UGEsLB5h32k0SQAAu9opvQ
-	(envelope-from <linux-pwm+bounces-8585-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Apr 2026 11:57:50 +0200
+	id 8F4GHniN32l5VAAAu9opvQ
+	(envelope-from <linux-pwm+bounces-8586-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Apr 2026 15:07:04 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id DAD12402FCE
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Apr 2026 11:57:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 21597404AAA
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Apr 2026 15:07:04 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 74F66305EE53
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Apr 2026 09:51:13 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4EC263053DFE
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Apr 2026 13:03:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D4BEB2FE056;
-	Wed, 15 Apr 2026 09:51:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6C0A638B122;
+	Wed, 15 Apr 2026 13:03:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b="YxBfiL5w"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [207.46.229.174])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DFF4B49620;
-	Wed, 15 Apr 2026 09:51:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.46.229.174
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776246672; cv=none; b=qWhxtiYERv4U1vAYfGofhdlC3FABt48gJOiUKG4rdwiw4GnGoUIxPqNZ/dOeyryHB+aHv0lkGv3qBVF4SHMfma22ub71twbU0DE+50WnxHxyyrwX+26ZDoiSak5vb4jwr6KiA9jF9KDoFiErJWRLLlt5u6Q9R+1prQfr3GebgSc=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776246672; c=relaxed/simple;
-	bh=VUquTY4vqK1VOCtMG1frYn5ZLFXkegg2p20hUGdlkS8=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=B70gLRk3vTQhfNDJhGN7Y/Y8lgYH2cDZVf0ga8od47hUqBQsnWEfQE9PTHNqdv3mEnDoisZzbKVg9IcCKi2l6BGvJgsN5cRYbd3SanpZTfuR28jNqIJvSFK4hxtTQOAnfZqcUhBd0eZW++L+WJj1rSisP3+1Qof5Fmg+IJJw1x0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=207.46.229.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
-Received: from E0005152DT.eswin.cn (unknown [10.12.96.41])
-	by app2 (Coremail) with SMTP id TQJkCgCXraB8X99pUOMRAA--.15449S2;
-	Wed, 15 Apr 2026 17:50:54 +0800 (CST)
-From: dongxuyang@eswincomputing.com
-To: ukleinek@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	ben-linux@fluff.org,
-	ben.dooks@codethink.co.uk,
-	p.zabel@pengutronix.de,
-	linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: ningyu@eswincomputing.com,
-	linmin@eswincomputing.com,
-	xuxiang@eswincomputing.com,
-	wangguosheng@eswincomputing.com,
-	pinkesh.vaghela@einfochips.com,
-	Xuyang Dong <dongxuyang@eswincomputing.com>
-Subject: [PATCH v4 2/2] pwm: dwc: add of/platform support
-Date: Wed, 15 Apr 2026 17:50:46 +0800
-Message-Id: <20260415095046.1652-1-dongxuyang@eswincomputing.com>
-X-Mailer: git-send-email 2.31.1.windows.1
-In-Reply-To: <20260415094908.1539-1-dongxuyang@eswincomputing.com>
-References: <20260415094908.1539-1-dongxuyang@eswincomputing.com>
+Received: from mx0b-00128a01.pphosted.com (mx0b-00128a01.pphosted.com [148.163.139.77])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB9BA38A73C;
+	Wed, 15 Apr 2026 13:03:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=148.163.139.77
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776258237; cv=fail; b=XGkCOoXngEeA2uPQQ+ic+6ytzJDe2okD00uIYiHxfi/mTfjCIMWyFU78JRVz6D7oyEpCC3U1nH+4mncc01k6wndAPfUc/i1jh5Fr+XmCtc4dlRV+BX7gCUtedIRLQ/I7D39ejK3jNpa/eOpLOEGbm8Q314FE5orwcBtkyUM7fHc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776258237; c=relaxed/simple;
+	bh=4L3U9lMmcKco7SbcAfyT67XDbaJa9Kh6CXXXmII7siY=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=gX/nPVl4OuJoM7735XC/QaSueDvA2FGioq4MZ18Gbz7zpd9tOQtgqmqj3yzIXHVcmtlQlG0aMpYgAbcZbmn7jbuhlUKiUF2O3dOd83kV13USJAAE4rJ5wZFUrDTrvyus8pwilsmO4bqrWWD96/P0s6MuX+NyT/K8a1zA13NZmuw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=analog.com; spf=pass smtp.mailfrom=analog.com; dkim=pass (2048-bit key) header.d=analog.com header.i=@analog.com header.b=YxBfiL5w; arc=fail smtp.client-ip=148.163.139.77
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=analog.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=analog.com
+Received: from pps.filterd (m0167090.ppops.net [127.0.0.1])
+	by mx0b-00128a01.pphosted.com (8.18.1.11/8.18.1.11) with ESMTP id 63F7hXXC1444387;
+	Wed, 15 Apr 2026 09:03:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=analog.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=DKIM; bh=4L3U9
+	lMmcKco7SbcAfyT67XDbaJa9Kh6CXXXmII7siY=; b=YxBfiL5wh0D2b5ECx2N8z
+	Bd6PEhciEiDupiyFrGRhxuFGuv0Edzr37BwuVAIwbzf7qCuVdzLiczL9qoJrsTcW
+	iFHwyuxIB1OaMQYv39HbuFPjdiD/fer8IwbP3fNTwxn8wuSgBgOg2n8sSoPuJqZB
+	iitXTswl19dC0umGSLZ+ihvlBVZf2DAoOnVlFJAT7d4oOQhAKaEI1uL4ehwj71PF
+	Fff7tZ8fZehF4fT0hVZ2IWJFO99S0S5Q7+JFLxs1mdbpWh/WIWub4UHWsfW7txWB
+	TUVWB4NEzMSO2oxFOXbPx1iGn2q6doKt2bYGn8Egl3Aq9ftAvf+JSuDE87jXJbgm
+	g==
+Received: from mw6pr02cu001.outbound.protection.outlook.com (mail-westus2azon11012013.outbound.protection.outlook.com [52.101.48.13])
+	by mx0b-00128a01.pphosted.com (PPS) with ESMTPS id 4dh84rp3kh-2
+	(version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
+	Wed, 15 Apr 2026 09:03:19 -0400 (EDT)
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=qX1CNzpPM0m7k4YPppyie2XhVHnVrWrex9dqH5OB4gB9JHLmov9qU/u+UrKLKSaGNvcleCiR5R2PpfkVZY4r/rML3I1p0raMadIcUsx+HLiRMzMsnVXplIkdoVl1nM1qSE16s6ehEiABzgBIeY9ukX4JYoTqe8oJY8elRFDOag2K2V2JRqsECnMOOJK3u6O2yaceBQ39NGQYXoWgrEWagmUWMhFSTj9VI92KS/kDOc8gvN40kLnBE419dR9zRuHu4mu7OlKlLdco+ThPQfWi6zpAyNOsbVjk1SFwTuzFpgNuB+GkW+CzEHlsI0qpkCFCtkmOy/DyNgfSxp2n802Ezw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=4L3U9lMmcKco7SbcAfyT67XDbaJa9Kh6CXXXmII7siY=;
+ b=m9p+Uc3jBqJA+PYrS8+HXGTrbLOmAcTi1Jz23ii8jqAJ8JAcamzoT5kM9kDJxgolFyZ+aXMNqxBxNrivimvDMZEF2JhQBZf+Ec41a8mqZ9ypWKRmAiI2vjTtu2r/F5rRJgdZmwohkTFRapYwkhbut1njfxDqWr7WjRe8xbU8z5UQgZvlJxk9EJ6AGjS/UVAUfUnviJxFhtlkzJjcP46xzIsp9lnd9JGSjbbPasSPG5Op4DO8UDr2iLJeD4ZvOD+hChnMXGyabxPtpTjlVYBIwEiH0sb8DOq/nk++NAU1laLq90JP+nQwnJtjo+ObsoQ794SOk7SVsm3L6PV6hQTMXQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+Received: from LV9PR03MB8414.namprd03.prod.outlook.com (2603:10b6:408:367::23)
+ by PH8PR03MB989150.namprd03.prod.outlook.com (2603:10b6:510:3b3::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.48; Wed, 15 Apr
+ 2026 13:03:17 +0000
+Received: from LV9PR03MB8414.namprd03.prod.outlook.com
+ ([fe80::d661:7c16:d052:cc81]) by LV9PR03MB8414.namprd03.prod.outlook.com
+ ([fe80::d661:7c16:d052:cc81%6]) with mapi id 15.20.9769.046; Wed, 15 Apr 2026
+ 13:03:17 +0000
+From: "Sabau, Radu bogdan" <Radu.Sabau@analog.com>
+To: =?utf-8?B?TnVubyBTw6E=?= <noname.nuno@gmail.com>,
+        David Lechner
+	<dlechner@baylibre.com>
+CC: Jonathan Cameron <jic23@kernel.org>, Lars-Peter Clausen <lars@metafoo.de>,
+        "Hennerich, Michael" <Michael.Hennerich@analog.com>,
+        "Sa, Nuno"
+	<Nuno.Sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+        Rob Herring
+	<robh@kernel.org>,
+        Krzysztof Kozlowski <krzk+dt@kernel.org>,
+        Conor Dooley
+	<conor+dt@kernel.org>,
+        =?utf-8?B?VXdlIEtsZWluZS1Lw7ZuaWc=?=
+	<ukleinek@kernel.org>,
+        Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
+	<broonie@kernel.org>,
+        Linus Walleij <linusw@kernel.org>,
+        Bartosz Golaszewski
+	<brgl@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        Jonathan Corbet
+	<corbet@lwn.net>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Subject: RE: [PATCH v7 5/6] iio: adc: ad4691: add oversampling support
+Thread-Topic: [PATCH v7 5/6] iio: adc: ad4691: add oversampling support
+Thread-Index:
+ AQHcyDWKLXLdMUxvy0qzqrU5i7lMELXYzdoAgALtoICAAuQOgIAAD3yAgAEiJICAAEYbkA==
+Date: Wed, 15 Apr 2026 13:03:16 +0000
+Message-ID:
+ <LV9PR03MB8414CFF38DAD2BEB7AE3E704F7222@LV9PR03MB8414.namprd03.prod.outlook.com>
+References:
+ <20260409-ad4692-multichannel-sar-adc-driver-v7-0-be375d4df2c5@analog.com>
+ <20260409-ad4692-multichannel-sar-adc-driver-v7-5-be375d4df2c5@analog.com>
+ <742b1821-9103-414e-a860-c2e8d5406e35@baylibre.com>
+ <20260412185821.739e477f@jic23-huawei>
+ <LV9PR03MB8414E0A68C5676302909E220F7252@LV9PR03MB8414.namprd03.prod.outlook.com>
+ <b352b76c-8047-4a1f-8b83-db8144466c36@baylibre.com> <ad9J9C5K7tyxuztU@nsa>
+In-Reply-To: <ad9J9C5K7tyxuztU@nsa>
+Accept-Language: en-US
+Content-Language: en-GB
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: LV9PR03MB8414:EE_|PH8PR03MB989150:EE_
+x-ms-office365-filtering-correlation-id: a15409c5-4c2b-489e-197a-08de9aef5c56
+x-ld-processed: eaa689b4-8f87-40e0-9c6f-7228de4d754a,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|7416014|376014|1800799024|38070700021|18002099003|56012099003|22082099003|18096099003;
+x-microsoft-antispam-message-info:
+ F7f0txgT2aguTJAB+gCeE2EMfIAlGlH9fM1spxZig7GRVk85TS3Cysnx+ZhkmIkZvP0vcLIvdIz0d992DqYsJTmZzZOfF7RXU+xE+eF0Lcql8mRyVeZV+jeHjMBZKrRRVChOd2q9C8wnld+iw+lwEW70efRA3YyRF8m0HsS44tI1m/vTKn99yhh3Px3oJvuSTnBntF1b3/mAApNNUI3mR7zoiwpq8VAXYKm7+ke1w9e2Tey8L0qhiEgRNFBtNfC27yRQ6DDsVt8TyDUvIMt6AEe/WKqMOpZjpHQXjXKpTQ1Zs6rGiBj6ewoIT82bpm5VzvWQ47vAQTZAnEL71GWTl1o5XySW5DdGMjSxhAffUClNI4YZIA5ij9XbiKrEU+HExDXfxhN7WrYszDGQZvdplq8WOwV/uzKudLhyxR7GQ1eEi3Q0FMbSCFMJg++Y2iMXcAH1vDOtakXPIcTJPfCDznewDLl/rfr56fyPrZJsMhDS/VnYD7NVULPdm9z2YAC+dcnWRKEp/IKLcvWKdA9uQSG4ZU5gqF7QoAQ7w3go1hHJ74ioC219Ia88GYHYYPFbDZhTqn6CzjaI9JR8U9RzpDGE7mUsGdfgKUrOMQlArYnakUnHxFmHHx1L242kpFoK0eA8WTbg2ci7g0P4amKIbutE2iRjiLpN3DIQepVW8T2neSjEAbt5gtn9SuLBBQLqOg7CtGmC4aMVpG8IHCynqVy2qvJY0lHlG70fB4vh9IY7N+fQ37r2NAF53cHBpXWhcnFKJTrRN/81dCIeI+iOfauLfBbSFsOH6VBDczHUSSM=
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV9PR03MB8414.namprd03.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(376014)(1800799024)(38070700021)(18002099003)(56012099003)(22082099003)(18096099003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?utf-8?B?emlYUVp6RnNXQUtlaXlZVkUzaUlpdjZzWkhZcjd3N2I1MHMyS1RUQWFsNmZE?=
+ =?utf-8?B?cy81WWxBSXVwYjByRHREV2RCZ21iSk9xTXpsbm9iOHBRZE0vWmkvWk5lVmpG?=
+ =?utf-8?B?alBOa1BmNGpXUisxeFZiTHh5U2s1QmhHK1ZBeVVVekkwQURsZ2tHNnlSd3kr?=
+ =?utf-8?B?b2RBZkNoWGQ1RzZyd0pvY21haTRDT3Bzd3l5L2JHRnJDeXk2bDVBYllac1M4?=
+ =?utf-8?B?MkJoZE44TDg1bDlJc1BPdjNYck5PZGdpWmI4azZkL3pWQ0UrdGQybk9yQkcv?=
+ =?utf-8?B?ZTdXNjhuRjdKTFo0aU1qM3ZaTGFmWnhDWDV5Um0zUjRZbFVIZE1yZjdkVXBH?=
+ =?utf-8?B?eE1jUkF3ZndXZG80R0dJYzZUQlAvbER5dTVlcHFsYTUxR0VGZGVaZ2NzU0Yz?=
+ =?utf-8?B?UTJWRVpKcG1MQWxpLzRucjVDUHZTYVZYVW4zUE1uMng2QUpKSWRzYXcvQ0xi?=
+ =?utf-8?B?MWFSTkUxOXR3SVF4cDM2U3hZdnpsamU3RklvSnlucHV6UDJXVFowaGdBVlZD?=
+ =?utf-8?B?eTZmVGpTSElUWFRtZnZueURmUmNldnBKcVhydDZSUTVsUVFDWkxSVW9HTDFN?=
+ =?utf-8?B?dTArcHZLeER1VEhoNHVrVU5LZm9ZNEJyRVpDcGprSS9MaXh3OWMyMTZkK1B1?=
+ =?utf-8?B?bERTSkZjZEtpdEJMVzIrY2tvK1VRbXdxcDYxa3V6WU1Qc25ZcmFxVHE1TU1u?=
+ =?utf-8?B?dGg2TDQ4cHN4dytxeER1eUhYV3ArNytaV2N6RFgwVFFKWmtOcGE2N0JNcnN5?=
+ =?utf-8?B?QkFkTC9uOTlsOWdLU2htaHBOTCtQdGluOUVHSlRZYkQ5bzRZVkI2bkFUZTg2?=
+ =?utf-8?B?OTNWbW8zdmJWKy9QYVIwQjYrNGdKSGwxTms1bXQ4TEJ2c2NtdjVKNmZrZjkv?=
+ =?utf-8?B?NUFvcTlXMEJWUWlURVV0bFVuVkUxOEc1MWVwRmVJSEJEcGpHM1hwRW5Bb3Za?=
+ =?utf-8?B?ZlFFbjM4Q3ZaSG1YSkRUdXA1a0tpUGlNRGdPN1Fwem42RENZK2VrMGcvdWV1?=
+ =?utf-8?B?ZWZpRDIwUzA0aEVpUmlZT0tzazRoMEoxb3J3c1BXUm0ycnR6NlJLK1B4K01E?=
+ =?utf-8?B?R1poY3JvUGplcTlTR0NhVDU3WlV6Mkg4a3RZRENKZHovbmJXNGFESjZUNHh5?=
+ =?utf-8?B?N3RmMGVDQ2NvN1JyRzFLMDcwMDFOa3MyUEJmbk12elNRZ3ZJY0ZVMjc5Skly?=
+ =?utf-8?B?YzlQQUtWa2dUS1V3Z3N4enQ4OHhkZWh4SWFjbmdCbitqUk1kQ0YvOGJHNEQr?=
+ =?utf-8?B?RzMrUE5GUUprZCtPWnlpY0VMV1BEMmVYZVljWHdtaHdyb1FBRmorOEw2YVI3?=
+ =?utf-8?B?dHlDZ2tqYkYvVWN1eVB1NjdjRWFPeVRyU3VZeW5CL1FndVlMTEtOaXMrZTVW?=
+ =?utf-8?B?eUFyMk1PcndhUS8ycEljdHlyNDYvT0VEdmZLZit0aEJNdFljRWlTZC9BVEx4?=
+ =?utf-8?B?cWpBTHRlUTlYSk1YSFdmT04xcG9FdGpBYXB1dk53TmxzU3pyclVvSERvRzFl?=
+ =?utf-8?B?T3o5d2Z6QzRTZm54bG9RWXlkdjVLaGpzZVRkYXc1L0ZYdkdIbndXRGUrUmx2?=
+ =?utf-8?B?cmpDVExwNFlFQnFZMUU5bG9mWDFXTi9nOEE1cXMvcVN3TUJzSGlBNnNPYTB1?=
+ =?utf-8?B?aFVTYVFDa2U0dytlVUpJbG15ZVkyMUNBRzVxaXpIZkhwdEYrYVZKVGE4SGFV?=
+ =?utf-8?B?c3IwMXE4UzVSb0E5ZWpPdW5Ocmg1MXkvOFV3T3ptamNHZFNkajZBMXJEU3NT?=
+ =?utf-8?B?THREUW1hNW9WNUxrWDFRU09OcWZRU3RZeTZ4MlRGTjErRDh4bUd5UnYrODJF?=
+ =?utf-8?B?WWdGZzRiMXZGRkZVOUlVd2UwN3pRVEtyaDcwUFl0WUw4aCtaaHJWTHZyNU9z?=
+ =?utf-8?B?eDNzaXlFclNxYk9ER3czQTZId2V1VTlkNEpLazVMcmRacmVVRy8xS2l6Q0FD?=
+ =?utf-8?B?dWNaYWNoR2ZTbUsxTXVBdGF2YWx2YmpoZFpxNlZ3dE1GSk5PTWFPVnBXTU1o?=
+ =?utf-8?B?K2hGcUVEbThLQTc3VHRtS3pjdGdQbmpXSDNKMGxjS1NOWjc5blNPMVdJL24x?=
+ =?utf-8?B?L3Znb1V0Zy9rZSs3enpaMG1jVy9xK2hpZytwU2RNVEl6NUsxR0J3RWR2SmhS?=
+ =?utf-8?B?VHhrZ2Jjd2NiSkJmT1kvOEZOQ0ZhMDlDeXQwcFdNekFGVWRrNFI2dndQMm8w?=
+ =?utf-8?B?a1I4MldXYm1WcERJWC93VW91Tmk1cWg3YVlEM0dLaHc5TlROR3IwSVVGeEdj?=
+ =?utf-8?B?VEF4UnlGNy9jREZ3WGJhbUlXY0N6aDJUK3ZMNGNLU0N2azduUExxc0NUU0Vy?=
+ =?utf-8?B?YVBrNC92Qlc2Ulc2T0VxcmtzOXBRRk1YaVZROTBSQUp4QURuNDdQQT09?=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:TQJkCgCXraB8X99pUOMRAA--.15449S2
-X-Coremail-Antispam: 1UD129KBjvAXoW3ur1rZF1Utr48XFW3uryxuFg_yoW8Ar18Ko
-	WIkr1fWw18K3Z3J392ka42gayjvw4kt34fCr1rWF4DC3Z8Zw15AFWUK3yYgw1Sqw1YyFWx
-	Ar4xXr13AF4fJw18n29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-	AaLaJ3UjIYCTnIWjp_UUUYK7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20EY4v20xva
-	j40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2
-	x7M28EF7xvwVC0I7IYx2IY67AKxVWDJVCq3wA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8
-	Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_GcCE3s1l84ACjcxK6I8E87Iv6xkF7I0E14v26r
-	xl6s0DM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj
-	6xIIjxv20xvE14v26r126r1DMcIj6I8E87Iv67AKxVWUJVW8JwAm72CE4IkC6x0Yz7v_Jr
-	0_Gr1lF7xvr2IYc2Ij64vIr41lF7I21c0EjII2zVCS5cI20VAGYxC7M4IIrI8v6xkF7I0E
-	8cxan2IY04v7M4kE6xkIj40Ew7xC0wCY1x0262kKe7AKxVWUtVW8ZwCY02Avz4vE-syl42
-	xK82IYc2Ij64vIr41l4I8I3I0E4IkC6x0Yz7v_Jr0_Gr1lx2IqxVAqx4xG67AKxVWUJVWU
-	GwC20s026x8GjcxK67AKxVWUGVWUWwC2zVAF1VAY17CE14v26r4a6rW5MIIYrxkI7VAKI4
-	8JMIIF0xvE2Ix0cI8IcVAFwI0_Jr0_JF4lIxAIcVC0I7IYx2IY6xkF7I0E14v26r4j6F4U
-	MIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I
-	8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUOHUqUUUUU
-X-CM-SenderInfo: pgrqw5xx1d0w46hv4xpqfrz1xxwl0woofrz/
-X-Spamd-Result: default: False [1.54 / 15.00];
+X-Exchange-RoutingPolicyChecked:
+	ITo3EnRd0SugDzEYDe/a9bpRJyWTHDBMnp21FEJycPCg1pIJ8eW6iwzKtRiSKuAO+Z3lgsRS2Cxc4Tf45uWi8Oq7nrY3Rg5UowvSaPQNhFFtPeD7rPMzr+spI2U7PJVBu7OkmGgR+Re7w6FOdUHFw2M1t+zOGghQlErt3VH7YYoicYsZGQctodLo6EzRiUcdyOYPOE/907nUNM2YU/eABoEVVX0XTJLP1uSI2eaAta1zjBO8MPaCQA8of6naTn/2qVOZ+WhqMJm7TlXC1SDJCmohS0GQWg4cEdT2rOi0x3uLVhiXx0MPqEepTV9epZa1BwfCO/HwflxL5qyM8bK0lg==
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: LV9PR03MB8414.namprd03.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a15409c5-4c2b-489e-197a-08de9aef5c56
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2026 13:03:17.0052
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kMVqRwL9n8rgSFOeiQPHtEWUNIufEVGdGTr7v6nrxV2+DDybdYm+h5V9+4Hd5L8rEfoWYBGUccwfJCvXZbE9DQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH8PR03MB989150
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjYwNDE1MDEyMSBTYWx0ZWRfXwxTdSLuEHp+a
+ FNvqpdF5MeW6KdujwBeTJL4JDSWD/zC9E2bhNgJWLcppObFHqTW0FDxHfYwABawNoeAF8gtZvwq
+ oKlzDEk8VXADeNsDXfvl6d9yUa5l1YcX3Aov4IGImuy+irnCYhOQgzaSIV+SIncoeGlkdpCaevF
+ lDGInTmR5XTxwzgSZ1Kg2BApyAKwTpzi8WtivGwt7Zx2WVg7bUJeBkRbJrCVtXF9lCunM4je6Bu
+ 66IGfY/uO0vdZiP/nNrU7RlKupCmLppUYA2BxlWe32uk6xlfabMT9CS2/DU943OMfOFf7ug8ggE
+ lJv9bzPDGxdoHGQVkXpv6ir0pbyoVK1vjmLNgKEKEUmvqxA8RWE1gfkU8ydo/27lLqv7zEnY2a9
+ KHfh6ZK2V8mc65lF3A/i6WI8i/PNjP0t9TN+CuDBA6pvoFKk3HoVSf8zVcLWsTwCwEar7Vl2Q3y
+ Yhb9ZuD+olzrzeOXJ/A==
+X-Proofpoint-GUID: B3aoRSBOHr3g5Oilt-8QAYZGV01VMnUc
+X-Proofpoint-ORIG-GUID: B3aoRSBOHr3g5Oilt-8QAYZGV01VMnUc
+X-Authority-Analysis: v=2.4 cv=R/kz39RX c=1 sm=1 tr=0 ts=69df8c97 cx=c_pps
+ a=xOYz1KraVtwoi73AohHYLg==:117 a=z/mQ4Ysz8XfWz/Q5cLBRGdckG28=:19
+ a=lCpzRmAYbLLaTzLvsPZ7Mbvzbb8=:19 a=xqWC_Br6kY4A:10 a=IkcTkHD0fZMA:10
+ a=A5OVakUREuEA:10 a=VkNPw1HP01LnGYTKEx00:22 a=0sLvza09kfJOxVLZPwjg:22
+ a=_jAD5XSDOtq9-5Nde2OG:22 a=pGLkceISAAAA:8 a=leaUJgLpUCMiP1JXjMUA:9
+ a=QEXdDO2ut3YA:10
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1143,Hydra:6.1.51,FMLib:17.12.100.49
+ definitions=2026-04-15_01,2026-04-13_04,2025-10-01_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0
+ clxscore=1015 impostorscore=0 bulkscore=0 malwarescore=0 adultscore=0
+ suspectscore=0 spamscore=0 priorityscore=1501 phishscore=0 lowpriorityscore=0
+ classifier=typeunknown authscore=0 authtc= authcc= route=outbound adjust=0
+ reason=mlx scancount=1 engine=8.22.0-2604070000 definitions=main-2604150121
+X-Spamd-Result: default: False [1.44 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[analog.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[analog.com:s=DKIM];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
+	MIME_BASE64_TEXT(0.10)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-8585-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	DMARC_NA(0.00)[eswincomputing.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FROM_NO_DN(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dongxuyang@eswincomputing.com,linux-pwm@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-8586-lists,linux-pwm=lfdr.de];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[analog.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com,baylibre.com];
+	RCPT_COUNT_TWELVE(0.00)[24];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[kernel.org,metafoo.de,analog.com,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org,vger.kernel.org];
+	DKIM_TRACE(0.00)[analog.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-0.871];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[Radu.Sabau@analog.com,linux-pwm@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	R_DKIM_NA(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	MISSING_XM_UA(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[codethink.co.uk:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,eswincomputing.com:mid,eswincomputing.com:email]
-X-Rspamd-Queue-Id: DAD12402FCE
+	RCVD_COUNT_SEVEN(0.00)[7]
+X-Rspamd-Queue-Id: 21597404AAA
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Xuyang Dong <dongxuyang@eswincomputing.com>
-
-The dwc pwm controller can be used in non-PCI systems, so allow
-either platform or OF based probing.
-
-The controller is reset only when no PWM channel is enabled.
-Otherwise, clocks are enabled and the runtime PM state is updated
-to reflect the active hardware configuration.
-
-Co-developed-by: Ben Dooks <ben.dooks@codethink.co.uk>
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-Signed-off-by: Xiang Xu <xuxiang@eswincomputing.com>
-Signed-off-by: Guosheng Wang <wangguosheng@eswincomputing.com>
-Signed-off-by: Xuyang Dong <dongxuyang@eswincomputing.com>
----
- drivers/pwm/Kconfig        |  10 ++
- drivers/pwm/Makefile       |   1 +
- drivers/pwm/pwm-dwc-core.c | 101 ++++++++---
- drivers/pwm/pwm-dwc-of.c   | 331 +++++++++++++++++++++++++++++++++++++
- drivers/pwm/pwm-dwc.h      |  25 ++-
- 5 files changed, 439 insertions(+), 29 deletions(-)
- create mode 100644 drivers/pwm/pwm-dwc-of.c
-
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 6f3147518376..50aea24b6168 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -249,6 +249,16 @@ config PWM_DWC
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-dwc.
- 
-+config PWM_DWC_OF
-+	tristate "DesignWare PWM Controller (OF bus)"
-+	depends on HAS_IOMEM && (OF || COMPILE_TEST)
-+	select PWM_DWC_CORE
-+	help
-+	  PWM driver for Synopsys DWC PWM Controller on an OF bus or
-+	  a platform bus.
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-dwc-of.
-+
- config PWM_EP93XX
- 	tristate "Cirrus Logic EP93xx PWM support"
- 	depends on ARCH_EP93XX || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 0dc0d2b69025..470411a7e5ea 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -20,6 +20,7 @@ obj-$(CONFIG_PWM_CRC)		+= pwm-crc.o
- obj-$(CONFIG_PWM_CROS_EC)	+= pwm-cros-ec.o
- obj-$(CONFIG_PWM_DWC_CORE)	+= pwm-dwc-core.o
- obj-$(CONFIG_PWM_DWC)		+= pwm-dwc.o
-+obj-$(CONFIG_PWM_DWC_OF)	+= pwm-dwc-of.o
- obj-$(CONFIG_PWM_EP93XX)	+= pwm-ep93xx.o
- obj-$(CONFIG_PWM_FSL_FTM)	+= pwm-fsl-ftm.o
- obj-$(CONFIG_PWM_GPIO)		+= pwm-gpio.o
-diff --git a/drivers/pwm/pwm-dwc-core.c b/drivers/pwm/pwm-dwc-core.c
-index 6dabec93a3c6..55dd503842c3 100644
---- a/drivers/pwm/pwm-dwc-core.c
-+++ b/drivers/pwm/pwm-dwc-core.c
-@@ -12,6 +12,7 @@
- #define DEFAULT_SYMBOL_NAMESPACE "dwc_pwm"
- 
- #include <linux/bitops.h>
-+#include <linux/clk.h>
- #include <linux/export.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-@@ -44,21 +45,52 @@ static int __dwc_pwm_configure_timer(struct dwc_pwm *dwc,
- 	u32 high;
- 	u32 low;
- 
--	/*
--	 * Calculate width of low and high period in terms of input clock
--	 * periods and check are the result within HW limits between 1 and
--	 * 2^32 periods.
--	 */
--	tmp = DIV_ROUND_CLOSEST_ULL(state->duty_cycle, dwc->clk_ns);
--	if (tmp < 1 || tmp > (1ULL << 32))
--		return -ERANGE;
--	low = tmp - 1;
--
--	tmp = DIV_ROUND_CLOSEST_ULL(state->period - state->duty_cycle,
--				    dwc->clk_ns);
--	if (tmp < 1 || tmp > (1ULL << 32))
--		return -ERANGE;
--	high = tmp - 1;
-+	if (dwc->clk)
-+		dwc->clk_rate = clk_get_rate(dwc->clk);
-+
-+	if (dwc->features & DWC_TIM_CTRL_0N100PWM_EN) {
-+		/*
-+		 * Calculate width of low and high period in terms of input
-+		 * clock periods and check are the result within HW limits
-+		 * between 0 and 2^32 periods.
-+		 */
-+		tmp = state->duty_cycle * dwc->clk_rate;
-+		tmp = DIV_ROUND_UP_ULL(tmp, NSEC_PER_SEC);
-+		if (tmp >= (1ULL << 32))
-+			return -ERANGE;
-+
-+		if (pwm->args.polarity == PWM_POLARITY_INVERSED)
-+			high = tmp;
-+		else
-+			low = tmp;
-+
-+		tmp = (state->period - state->duty_cycle) * dwc->clk_rate;
-+		tmp = DIV_ROUND_UP_ULL(tmp, NSEC_PER_SEC);
-+		if (tmp >= (1ULL << 32))
-+			return -ERANGE;
-+
-+		if (pwm->args.polarity == PWM_POLARITY_INVERSED)
-+			low = tmp;
-+		else
-+			high = tmp;
-+	} else {
-+		/*
-+		 * Calculate width of low and high period in terms of input
-+		 * clock periods and check are the result within HW limits
-+		 * between 1 and 2^32 periods.
-+		 */
-+		tmp = state->duty_cycle * dwc->clk_rate;
-+		tmp = DIV_ROUND_UP_ULL(tmp, NSEC_PER_SEC);
-+		if (tmp < 1 || tmp > (1ULL << 32))
-+			return -ERANGE;
-+		low = tmp - 1;
-+
-+		tmp = (state->period - state->duty_cycle) * dwc->clk_rate;
-+		tmp = DIV_ROUND_UP_ULL(tmp, NSEC_PER_SEC);
-+		if (tmp < 1 || tmp > (1ULL << 32))
-+			return -ERANGE;
-+		high = tmp - 1;
-+	}
- 
- 	/*
- 	 * Specification says timer usage flow is to disable timer, then
-@@ -74,6 +106,7 @@ static int __dwc_pwm_configure_timer(struct dwc_pwm *dwc,
- 	 * width of low period and latter the width of high period in terms
- 	 * multiple of input clock periods:
- 	 * Width = ((Count + 1) * input clock period).
-+	 * Width = (Count * input clock period) : supported 0% and 100%).
- 	 */
- 	dwc_pwm_writel(dwc, low, DWC_TIM_LD_CNT(pwm->hwpwm));
- 	dwc_pwm_writel(dwc, high, DWC_TIM_LD_CNT2(pwm->hwpwm));
-@@ -85,6 +118,9 @@ static int __dwc_pwm_configure_timer(struct dwc_pwm *dwc,
- 	 * periods are set by Load Count registers.
- 	 */
- 	ctrl = DWC_TIM_CTRL_MODE_USER | DWC_TIM_CTRL_PWM;
-+	if (dwc->features & DWC_TIM_CTRL_0N100PWM_EN)
-+		ctrl |= DWC_TIM_CTRL_0N100PWM_EN;
-+
- 	dwc_pwm_writel(dwc, ctrl, DWC_TIM_CTRL(pwm->hwpwm));
- 
- 	/*
-@@ -121,11 +157,17 @@ static int dwc_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 			     struct pwm_state *state)
- {
- 	struct dwc_pwm *dwc = to_dwc_pwm(chip);
-+	unsigned long clk_rate;
- 	u64 duty, period;
- 	u32 ctrl, ld, ld2;
- 
- 	pm_runtime_get_sync(pwmchip_parent(chip));
- 
-+	if (dwc->clk)
-+		dwc->clk_rate = clk_get_rate(dwc->clk);
-+
-+	clk_rate = dwc->clk_rate;
-+
- 	ctrl = dwc_pwm_readl(dwc, DWC_TIM_CTRL(pwm->hwpwm));
- 	ld = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT(pwm->hwpwm));
- 	ld2 = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT2(pwm->hwpwm));
-@@ -137,17 +179,32 @@ static int dwc_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 	 * based on the timer load-count only.
- 	 */
- 	if (ctrl & DWC_TIM_CTRL_PWM) {
--		duty = (ld + 1) * dwc->clk_ns;
--		period = (ld2 + 1)  * dwc->clk_ns;
--		period += duty;
-+		if (dwc->features & DWC_TIM_CTRL_0N100PWM_EN) {
-+			if (pwm->args.polarity == PWM_POLARITY_INVERSED)
-+				duty = ld2;
-+			else
-+				duty = ld;
-+			period = (u64)ld + ld2;
-+		} else {
-+			duty = ld + 1;
-+			period = ld2 + 1;
-+			period += duty;
-+		}
- 	} else {
--		duty = (ld + 1) * dwc->clk_ns;
-+		duty = ld + 1;
- 		period = duty * 2;
- 	}
- 
- 	state->polarity = PWM_POLARITY_INVERSED;
--	state->period = period;
--	state->duty_cycle = duty;
-+	/*
-+	 * If the ld register is at its maximum value. The duty value is
-+	 * 4,294,967,295 (0xFFFF FFFF). The product (duty * NSEC_PER_SEC)
-+	 * is guaranteed to be less than 2^64.
-+	 */
-+	duty *= NSEC_PER_SEC;
-+	period *= NSEC_PER_SEC;
-+	state->period = DIV_ROUND_UP_ULL(period, clk_rate);
-+	state->duty_cycle = DIV_ROUND_UP_ULL(duty, clk_rate);
- 
- 	pm_runtime_put_sync(pwmchip_parent(chip));
- 
-@@ -169,7 +226,7 @@ struct pwm_chip *dwc_pwm_alloc(struct device *dev)
- 		return chip;
- 	dwc = to_dwc_pwm(chip);
- 
--	dwc->clk_ns = 10;
-+	dwc->clk_rate = NSEC_PER_SEC / 10;
- 	chip->ops = &dwc_pwm_ops;
- 
- 	return chip;
-diff --git a/drivers/pwm/pwm-dwc-of.c b/drivers/pwm/pwm-dwc-of.c
-new file mode 100644
-index 000000000000..b6edddbfb2c6
---- /dev/null
-+++ b/drivers/pwm/pwm-dwc-of.c
-@@ -0,0 +1,331 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * DesignWare PWM Controller driver OF
-+ *
-+ * Copyright (C) 2026 SiFive, Inc.
-+ */
-+
-+#define DEFAULT_SYMBOL_NAMESPACE "dwc_pwm_of"
-+
-+#include <linux/clk.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/pwm.h>
-+#include <linux/reset.h>
-+
-+#include "pwm-dwc.h"
-+
-+static int dwc_pwm_plat_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct dwc_pwm_drvdata *data;
-+	u32 ctrl[DWC_TIMERS_TOTAL];
-+	struct pwm_chip *chip;
-+	struct dwc_pwm *dwc;
-+	bool pwm_en = false;
-+	u32 nr_pwm, tim_id;
-+	unsigned int i;
-+	int ret;
-+
-+	data = devm_kzalloc(dev, struct_size(data, chips, 1), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	chip = dwc_pwm_alloc(dev);
-+	if (IS_ERR(chip))
-+		return dev_err_probe(dev, -ENOMEM, "failed to alloc pwm\n");
-+
-+	dwc = to_dwc_pwm(chip);
-+
-+	dwc->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(dwc->base))
-+		return PTR_ERR(dwc->base);
-+
-+	if (!device_property_read_u32(dev, "snps,pwm-number", &nr_pwm)) {
-+		if (nr_pwm > DWC_TIMERS_TOTAL)
-+			dev_warn
-+			(dev, "too many PWMs (%d) specified, capping at %d\n",
-+			nr_pwm, chip->npwm);
-+		else
-+			chip->npwm = nr_pwm;
-+	}
-+
-+	dwc->bus_clk = devm_clk_get(dev, "bus");
-+	if (IS_ERR(dwc->bus_clk))
-+		return dev_err_probe(dev, PTR_ERR(dwc->bus_clk),
-+				     "failed to get bus clock\n");
-+
-+	dwc->clk = devm_clk_get(dev, "timer");
-+	if (IS_ERR(dwc->clk))
-+		return dev_err_probe(dev, PTR_ERR(dwc->clk),
-+				     "failed to get timer clock\n");
-+
-+	ret = devm_clk_rate_exclusive_get(dev, dwc->clk);
-+	if (ret)
-+		return dev_err_probe(dev, ret,
-+				     "failed to get exclusive rate\n");
-+
-+	dwc->clk_rate = clk_get_rate(dwc->clk);
-+
-+	dwc->rst = devm_reset_control_array_get_optional_exclusive(dev);
-+	if (IS_ERR(dwc->rst))
-+		return dev_err_probe(dev, PTR_ERR(dwc->rst),
-+				     "failed to get reset control\n");
-+
-+	ret = clk_prepare_enable(dwc->bus_clk);
-+	if (ret)
-+		return dev_err_probe(dev, ret,
-+				     "failed to enable bus clock\n");
-+
-+	ret = clk_prepare_enable(dwc->clk);
-+	if (ret) {
-+		dev_err(dev, "failed to enable timer clock\n");
-+		goto disable_busclk;
-+	}
-+
-+	/*
-+	 * Check all channels to see if any channel is enabled.
-+	 * Read the control register of each channel and extract the enable bit
-+	 */
-+	for (i = 0; i < chip->npwm; i++) {
-+		ctrl[i] = dwc_pwm_readl(dwc, DWC_TIM_CTRL(i)) & DWC_TIM_CTRL_EN;
-+		if (ctrl[i])
-+			pwm_en = true;
-+	}
-+
-+	/* Only issue reset when all channels are disabled */
-+	if (!pwm_en) {
-+		ret = reset_control_reset(dwc->rst);
-+		if (ret) {
-+			dev_err(dev, "failed to reset\n");
-+			goto disable_clk;
-+		}
-+	}
-+
-+	/* init PWM feature */
-+	dwc->features = 0;
-+	/*
-+	 * Support for 0% and 100% duty cycle mode was added in version 2.11a
-+	 * and later.
-+	 */
-+	tim_id = dwc_pwm_readl(dwc, DWC_TIMERS_COMP_VERSION);
-+	if (tim_id >= DWC_TIM_VERSION_ID_2_11A)
-+		dwc->features |= DWC_TIM_CTRL_0N100PWM_EN;
-+
-+	ret = devm_pwmchip_add(dev, chip);
-+	if (ret) {
-+		dev_err(dev, "failed to add pwm chip");
-+		goto reset_assert;
-+	}
-+
-+	data->chips[0] = chip;
-+	dev_set_drvdata(dev, data);
-+
-+	/*
-+	 * If any PWM channel is enabled, mark device active and hold runtime PM
-+	 * references for each enabled channel. Otherwise, gate the clocks.
-+	 */
-+	if (pwm_en) {
-+		pm_runtime_set_active(dev);
-+		for (i = 0; i < chip->npwm; i++) {
-+			if (ctrl[i])
-+				pm_runtime_get_noresume(dev);
-+		}
-+	} else {
-+		clk_disable_unprepare(dwc->clk);
-+		clk_disable_unprepare(dwc->bus_clk);
-+	}
-+
-+	pm_runtime_enable(dev);
-+
-+	return 0;
-+
-+reset_assert:
-+	reset_control_assert(dwc->rst);
-+disable_clk:
-+	clk_disable_unprepare(dwc->clk);
-+disable_busclk:
-+	clk_disable_unprepare(dwc->bus_clk);
-+
-+	return ret;
-+}
-+
-+static void dwc_pwm_plat_remove(struct platform_device *pdev)
-+{
-+	struct dwc_pwm_drvdata *data = platform_get_drvdata(pdev);
-+	struct pwm_chip *chip = data->chips[0];
-+	struct dwc_pwm *dwc = to_dwc_pwm(chip);
-+	bool pwm_en = false;
-+	unsigned int idx;
-+	bool pm_flags;
-+
-+	/*
-+	 * Resume the device if it is runtime suspended to allow
-+	 * safe register access.
-+	 */
-+	pm_flags = pm_runtime_status_suspended(&pdev->dev);
-+	if (pm_flags)
-+		pm_runtime_get_sync(&pdev->dev);
-+
-+	for (idx = 0; idx < chip->npwm; idx++) {
-+		if (dwc_pwm_readl(dwc, DWC_TIM_CTRL(idx)) & DWC_TIM_CTRL_EN) {
-+			pwm_en = true;
-+			pm_runtime_put_noidle(&pdev->dev);
-+		}
-+	}
-+
-+	/*
-+	 * Re-suspend the device if it was runtime suspended prior to
-+	 * the register access.
-+	 */
-+	if (pm_flags)
-+		pm_runtime_put_sync(&pdev->dev);
-+
-+	if (pwm_en) {
-+		clk_disable_unprepare(dwc->clk);
-+		clk_disable_unprepare(dwc->bus_clk);
-+	}
-+
-+	pm_runtime_disable(&pdev->dev);
-+	reset_control_assert(dwc->rst);
-+}
-+
-+static int dwc_pwm_runtime_suspend(struct device *dev)
-+{
-+	struct dwc_pwm_drvdata *data = dev_get_drvdata(dev);
-+	struct pwm_chip *chip = data->chips[0];
-+	struct dwc_pwm *dwc = to_dwc_pwm(chip);
-+
-+	clk_disable_unprepare(dwc->clk);
-+	clk_disable_unprepare(dwc->bus_clk);
-+
-+	return 0;
-+}
-+
-+static int dwc_pwm_runtime_resume(struct device *dev)
-+{
-+	struct dwc_pwm_drvdata *data = dev_get_drvdata(dev);
-+	struct pwm_chip *chip = data->chips[0];
-+	struct dwc_pwm *dwc = to_dwc_pwm(chip);
-+	int ret;
-+
-+	ret = clk_prepare_enable(dwc->bus_clk);
-+	if (ret) {
-+		dev_err(dev, "failed to enable bus clock: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(dwc->clk);
-+	if (ret) {
-+		dev_err(dev, "failed to enable timer clock: %d\n", ret);
-+		clk_disable_unprepare(dwc->bus_clk);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int dwc_pwm_suspend(struct device *dev)
-+{
-+	struct dwc_pwm_drvdata *data = dev_get_drvdata(dev);
-+	struct pwm_chip *chip = data->chips[0];
-+	struct dwc_pwm *dwc = to_dwc_pwm(chip);
-+	unsigned int idx;
-+	int ret;
-+
-+	if (pm_runtime_status_suspended(dev)) {
-+		ret = dwc_pwm_runtime_resume(dev);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	for (idx = 0; idx < chip->npwm; idx++) {
-+		if (chip->pwms[idx].state.enabled)
-+			return -EBUSY;
-+
-+		dwc->ctx[idx].cnt = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT(idx));
-+		dwc->ctx[idx].cnt2 = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT2(idx));
-+		dwc->ctx[idx].ctrl = dwc_pwm_readl(dwc, DWC_TIM_CTRL(idx));
-+	}
-+
-+	ret = dwc_pwm_runtime_suspend(dev);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int dwc_pwm_resume(struct device *dev)
-+{
-+	struct dwc_pwm_drvdata *data = dev_get_drvdata(dev);
-+	struct pwm_chip *chip = data->chips[0];
-+	struct dwc_pwm *dwc = to_dwc_pwm(chip);
-+	unsigned int idx;
-+	bool pm_flags;
-+	int ret;
-+
-+	/* Check if device was runtime suspended before system resume */
-+	pm_flags = pm_runtime_status_suspended(dev);
-+	if (pm_flags) {
-+		/*
-+		 * Use PM framework to resume device
-+		 * (calls dwc_pwm_runtime_resume)
-+		 */
-+		ret = pm_runtime_get_sync(dev);
-+		if (ret < 0)
-+			return ret;
-+	} else {
-+		/*
-+		 * Device was active, but clocks might be off after system sleep
-+		 * Call runtime_resume directly to restore hardware state
-+		 */
-+		ret = dwc_pwm_runtime_resume(dev);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	for (idx = 0; idx < chip->npwm; idx++) {
-+		dwc_pwm_writel(dwc, dwc->ctx[idx].cnt, DWC_TIM_LD_CNT(idx));
-+		dwc_pwm_writel(dwc, dwc->ctx[idx].cnt2, DWC_TIM_LD_CNT2(idx));
-+		dwc_pwm_writel(dwc, dwc->ctx[idx].ctrl, DWC_TIM_CTRL(idx));
-+	}
-+
-+	if (pm_flags) {
-+		/* Balance the refcount taken by pm_runtime_get_sync
-+		 * if it was used
-+		 */
-+		ret = pm_runtime_put_sync(dev);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops dwc_pwm_pm_ops = {
-+	RUNTIME_PM_OPS(dwc_pwm_runtime_suspend, dwc_pwm_runtime_resume, NULL)
-+	SYSTEM_SLEEP_PM_OPS(dwc_pwm_suspend, dwc_pwm_resume)
-+};
-+
-+static const struct of_device_id dwc_pwm_dt_ids[] = {
-+	{ .compatible = "snps,dw-apb-timers-pwm2" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, dwc_pwm_dt_ids);
-+
-+static struct platform_driver dwc_pwm_plat_driver = {
-+	.driver = {
-+		.name = "dwc-pwm",
-+		.pm = pm_ptr(&dwc_pwm_pm_ops),
-+		.of_match_table = dwc_pwm_dt_ids,
-+	},
-+	.probe = dwc_pwm_plat_probe,
-+	.remove = dwc_pwm_plat_remove,
-+};
-+
-+module_platform_driver(dwc_pwm_plat_driver);
-+
-+MODULE_ALIAS("platform:dwc-pwm-of");
-+MODULE_AUTHOR("Ben Dooks <ben.dooks@codethink.co.uk>");
-+MODULE_DESCRIPTION("DesignWare PWM Controller");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/pwm/pwm-dwc.h b/drivers/pwm/pwm-dwc.h
-index 1562594e7f85..75f7c2d031c4 100644
---- a/drivers/pwm/pwm-dwc.h
-+++ b/drivers/pwm/pwm-dwc.h
-@@ -26,12 +26,19 @@ MODULE_IMPORT_NS("dwc_pwm");
- #define DWC_TIMERS_TOTAL	8
- 
- /* Timer Control Register */
--#define DWC_TIM_CTRL_EN		BIT(0)
--#define DWC_TIM_CTRL_MODE	BIT(1)
--#define DWC_TIM_CTRL_MODE_FREE	(0 << 1)
--#define DWC_TIM_CTRL_MODE_USER	(1 << 1)
--#define DWC_TIM_CTRL_INT_MASK	BIT(2)
--#define DWC_TIM_CTRL_PWM	BIT(3)
-+#define DWC_TIM_CTRL_EN			BIT(0)
-+#define DWC_TIM_CTRL_MODE		BIT(1)
-+#define DWC_TIM_CTRL_MODE_FREE		(0 << 1)
-+#define DWC_TIM_CTRL_MODE_USER		BIT(1)
-+#define DWC_TIM_CTRL_INT_MASK		BIT(2)
-+#define DWC_TIM_CTRL_PWM		BIT(3)
-+#define DWC_TIM_CTRL_0N100PWM_EN	BIT(4)
-+
-+/*
-+ * The version 2.11a and later add "Pulse Width Modulation with
-+ * 0% and 100% Duty Cycle".
-+ */
-+#define DWC_TIM_VERSION_ID_2_11A	0x3231312a
- 
- struct dwc_pwm_info {
- 	unsigned int nr;
-@@ -52,8 +59,12 @@ struct dwc_pwm_ctx {
- 
- struct dwc_pwm {
- 	void __iomem *base;
--	unsigned int clk_ns;
-+	struct clk *bus_clk;
-+	struct clk *clk;
-+	unsigned long clk_rate;
-+	struct reset_control *rst;
- 	struct dwc_pwm_ctx ctx[DWC_TIMERS_TOTAL];
-+	u32 features;
- };
- 
- static inline struct dwc_pwm *to_dwc_pwm(struct pwm_chip *chip)
--- 
-2.34.1
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBOdW5vIFPDoSA8bm9uYW1lLm51
+bm9AZ21haWwuY29tPg0KPiBTZW50OiBXZWRuZXNkYXksIEFwcmlsIDE1LCAyMDI2IDExOjIxIEFN
+DQoNCi4uLg0KDQo+ID4gPg0KPiA+ID4gTW9yZSB0aGFuIHRoaXMsIGlmIHRoZSBPU1IgaXMgMzIg
+dGhlIG1heGltdW0gZWZmZWN0aXZlIHJhdGUgd291bGQgYmUNCj4gMzEyNTAsIHNvIDI1a0h6DQo+
+ID4gPiB3b3VsZCBtYWtlIGl0IHRoZSBjbG9zZXMgYXZhaWxhYmxlIG9uZS4gSWYgdGhlIHVzZXIg
+d291bGQgc2VsZWN0IDFNSHogZnJvbQ0KPiB0aGUgYXZhaWxhYmxlDQo+ID4gPiBsaXN0IGl0IHdv
+dWxkIGJlIHdlaXJkIEkgd291bGQgc2F5LiBTbyBwZXJoYXBzIGEgc29sdXRpb24gZm9yIHRoaXMg
+aXMgdG8gZGlzcGxheQ0KPiB0aGUgYXZhaWwgbGlzdA0KPiA+ID4gZGVwZW5kaW5nIG9uIHRoZSBz
+ZXQgT1NSIHZhbHVlLg0KPiA+DQo+ID4gWWVzLCB0aGUgYXZhaWxhYmxlIGxpc3Qgc2hvdWxkIHJl
+ZmxlY3QgdGhlIGN1cnJlbnQgc3RhdGUgb2YgYW55IG90aGVyIGF0dHJpYnV0ZXMNCj4gPiB0aGF0
+IGFmZmVjdCBpdC4NCj4gDQo+IElNTywgdGhlIGFib3ZlIG1ha2VzIHRvdGFsIHNlbnNlIHRvIG1l
+Lg0KPiANCj4gLSBOdW5vIFPDoQ0KPiANCg0KSGkgZXZlcnlvbmUgYW5kIHRoYW5rIHlvdSBzbyBt
+dWNoIGZvciB5b3VyIGZlZWRiYWNrIQ0KDQpBZnRlciB0aGlua2luZyB0aGlzIHRocm91Z2ggY2Fy
+ZWZ1bGx5IGFuZCB0ZXN0aW5nIG9uIGhhcmR3YXJlIChhZDQ2OTIpLCBoZXJlIGlzDQp0aGUgZGVz
+aWduIEkgaGF2ZSBpbiBtaW5kOg0KDQppbl92b2x0YWdlTl9zYW1wbGluZ19mcmVxdWVuY3kgPSBl
+ZmZlY3RpdmUgcmF0ZSA9IGBvc2NfZnJlcSAvIG9zcltOXWA6DQoNClRoZSBjaGlwIGhhcyBhIHNp
+bmdsZSBpbnRlcm5hbCBvc2NpbGxhdG9yIHNocmVkIGJ5IGFsbCBjaGFubmVsczsgZWFjaCBjaGFu
+bmVsDQppbmRlcGVuZGVudGx5IGFjY3VtdWxhdGluZyBvc2NbTl0gb3NjaWxsYXRvciBjeWNsZXMg
+YmVmb3JlIHByb2R1Y2luZyBhIHJlc3VsdC4NCg0KV3JpdGluZyBpbl92b2x0YWdlTl9zYW1wbGlu
+Z19mcmVxdWVuY3kgPSBmcmVxOg0KDQpUaGUgZHJpdmVyIGNvbXB1dGVzIHRoZSBuZWVkZWRfb3Nj
+ID0gZnJlcSAqIG9zcltOXSBhbmQgc25hcHMgZG93biB0byB0aGUgbGFyZ2VzdA0KYXZhaWxhYmxl
+IG9zY2lsbGF0b3IgdGFibGUgZW50cnkgc2F0aXNmeWluZyBib3RoIGBvc2MgPD0gbmVlZGVkX29z
+Y2AgYW5kIGFuIGV4YWN0DQpkaXZpc2lvbiB0byBvc3IuIFRoZSBkaXZpc2liaWxpdHkgY29uc3Ry
+YWludCBlbnN1cmVzIHRoZSByZWFkLWJhY2sgaXMgYWx3YXlzIGFuIGV4YWN0DQppbnRlZ2VyLg0K
+VGhlIHJlc3VsdCBpcyBzdG9yZWQgaW4gYSBzaW5nbGUgc2hhcmVkIGB0YXJnZXRfb3NjX2ZyZXFf
+SHpgIC0gd3JpdGluZyB0aGUgYXR0cmlidXRlDQpmb3IgYW55IGNoYW5uZWwgY2hhbmdlcyB0aGUg
+c2hhcmVkIG9zY2lsbGF0b3IgYW5kIHRoZXJlZm9yZSB0aGUgcmVhZC1iYWNrIG9mIGFsbA0Kb3Ro
+ZXIgY2hhbm5lbHMuDQoNCmluX3ZvbHRhZ2VOX3NhbXBsaW5nX2ZyZXF1ZW5jeV9hdmFpbGFibGU6
+DQoNCkNvbXB1dGVkIGR5bmFtaWNhbGx5IGZyb20gdGhlIGNoYW5uZWwncyBjdXJyZW50IE9TUi4g
+VGhlIGxpc3QgbmF0dXJhbGx5IGJlY29tZXMNCnNwYXJzZXIgYXMgT1NSIGluY3JlYXNlcywgY2Fw
+cGluZyBhdCBgbWF4X3JhdGUgLyBvc3JbTl1gIHdoaWNoIGlzIGV4YWN0bHkgdGhlIGNoaXAncw0K
+YmVoYXZpb3VyLCBhbmQgdGhlcmVmb3JlIG1vcmUgaW50dWl0aXZlIGZvciB0aGUgdXNlci4NCg0K
+T1NDX0ZSRVFfUkVHIHdyaXRlIHRpbWluZzoNCg0KYHRhcmdldF9vc2NfZnJlcV9IemAgaXMgd3Jp
+dHRlbiB0byBoYXJkd2FyZSBhdCB0d28gcG9pbnRzOg0KLSBTaW5nbGUtc2hvdCByZWFkOiBpbW1l
+ZGlhdGVseSBiZWZvcmUgc3RhcnRpbmcgYWNjdW11bGF0aW9uLg0KLSBDTlYgYnVzcnQgYnVmZmVy
+IGVuYWJsZTogaW5zaWRlIGVudGVyX2NvbnZlcnNpb25fbW9kZSwgYWZ0ZXIgdGhlIG1hbnVhbCBt
+b2RlDQplYXJseSByZXR1cm4gKG1hbnVhbCBtb2RlIHVzZXMgU1BJIENTIHRvZ2dsaW5nLCBub3Qg
+dGhlIGludGVybmFsIG9zY2lsbGF0b3IsIHNvIHRoZQ0Kd3JpdGUgaXMgc2tpcHBlZCB0aGVyZSku
+DQoNClRoaXMga2VlcHMgdGhlIGRlZmZlcmVkLXdyaXRlIGJlbmVmaXQgLSBib3RoIHNhbXBsaW5n
+X2ZyZXF1ZW5jeSBhbmQgb3NyIGNhbiBiZQ0Kc2V0IGluIGFueSBvcmRlciBiZWZvcmUgZW5hYmxp
+bmcgdGhlIGJ1ZmZlci9zaW5nbGUtc2hvdCByZWFkaW5nLg0KDQpCdWZmZXIgTW9kZToNCg0KQWZ0
+ZXIgZGVzaXJlZCByYXRlcy9vc3IgYXJlIHNldCBieSB0aGUgdXNlciBmb3IgZWFjaCBjaGFubmVs
+LCByZWFkaW5nIGJhY2sgdGhlIHNhbXBsaW5nDQpmcmVxdWVuY3kgb2YgZWFjaCBjaGFubmVsIGdp
+dmVzIGhpbSB0aGUgdHJ1ZSBlZmZlY3RpdmUgcmF0ZSBmb3IgZWFjaC4gVGhlcmVmb3JlDQpoZSBj
+YW4gdXNlIHRoYXQgaW5mb3JtYXRpb24gaW4gb3JkZXIgdG8gc2V0IHRoZSBidWZmZXIgc2FtcGxp
+bmcgZnJlcXVlbmN5IGFjY29yZGluZ2x5DQphbmQgaGVscGluZyBoaW0gdXNlIHRoZSBjaGlwIHdp
+dGggY29ycmVjdCBzeW5jaHJvbml6YXRpb24gbW9yZSBpbnR1aXRpdmVseS4NCg0KSSBoYXZlIGFs
+c28gcGVyZm9ybWVkIHRoZSBuZXh0IHRlc3QgdXNpbmcgdGhlIGhhcmR3YXJlIGFuZCBnb3QgY29y
+cmVjdCByZXN1bHRzOg0KLSB0ZXN0IGNhc2UgKGFkNDY5MiwgMU1IeiBtYXhpbXVtIGludGVybmFs
+IG9zY2lsbGF0b3IgcmF0ZSk6DQoNCjEuIFNldCBjaGFubmVsIDAgT1NSPTMyLiBBdmFpbGFibGUg
+bGlzdDogezMxMjUwLCAxNTYyNSwgMTI1MDAsIDYyNTAsIDMxMjV9Lg0KICAgIFdyaXRlIHNhbXBs
+aW5nX2ZyZXF1ZW5jeT0xMDAwMCAobm90IGluIHRoZSBsaXN0KSAtPiBzbmFwcyB0byA2MjUwIChv
+c2M9MjAwMDAwSHopLg0KICAgIENvcnJlY3QgcmVhZGJhY2sgPSA2MjUwLg0KMi4gU2V0IGNoYW5u
+ZWwgMSBPU1I9NC4gUmVhZCBjaGFubmVsIDEgc2FtcGxpbmcgZnJlcXVlbmN5IC0+IDUwMDAwICg9
+MjAwMDAwLzQpLg0KICAgIFNoYXJlZCBvc2NpbGxhdG9yIGNvcnJlY3RseSByZWZsZWN0ZWQgYWNy
+b3NzIGNoYW5uZWxzLg0KMy4gQ2hhbmdlIGNoYW5uZWwgMCBPU1IgZnJvbSAzMiB0byA4LiBEcml2
+ZXIgcmVjb21wdXRlcyBhcyBmb2xsb3dzIDogZWZmZWN0aXZlIHN0YXlzDQogICAgNjI1MCBhcyBi
+ZWZvcmUgYW5kIG5lZWRlZF9vc2MgYmVjb21lcyA1MDAwMCwgZXhhY3QgdGFibGUgaGl0LiBSZWFk
+YmFjayBjaGFubmVsIDA6DQogICAgNjI1MCAocmF0ZSBwcmVzZXJ2ZWQpLiBSZWFkYmFjayBjaGFu
+bmVsIDEgKE9TUj00KTogMTI1MDAuIChvc2NpbGxhdG9yIGNoYW5nZSB2aXNpYmxlKS4NCiAgICBU
+aGUgc2FtcGxpbmcgZm9yIGNoYW5uZWwgMCBjYW4gYmUgb2YgY291cnNlIHNldCB0byBhbm90aGVy
+IGF2YWlsYWJsZSB2YWx1ZSBhcyB3ZWxsIGFuZA0KICAgIE1ha2UgbWF0Y2ggd2l0aCB0aGUgaW5p
+dGlhbCByZXF1ZXN0ZWQgNTBrIG9mIGNoYW5uZWwgMS4gKGluIHRoaXMgY2FzZSwgc2V0IGNoYW5u
+ZWwgMCB0bw0KICAgIDI1aykuDQo0LiAtRUlOVkFMIHJlamVjdGlvbiBpcyBhdG9taWM6IHdpdGgg
+T1NSPTEgYW5kIFNGPTEyNTAgYXQgc3RhcnQgZm9yIGxldHMgc2F5IGNoYW5uZWwgMCwgd3JpdGlu
+Zw0KICAgIE9TUj0zMiBpcyByZWplY3RlZCBzaW5jZSB0aGUgbmVlZGVkX29zYz00MDAwMCwgd2hp
+Y2ggaXMgbm90IGEgdGFibGUgZW50cnkgYW5kIGFsc28gaGFzIG5vDQogICAgdGFibGUgZW50cnkg
+PD0gNDAwMDAgdGhhdCBpcyBkaXZpc2libGUgYnkgMzIpLiBCb3RoIE9TUiBhbmQgU0YgcmVtYWlu
+IHVuY2hhbmdlZC4gUmFpc2luZyBTRg0KICAgIHRvIDUwMDAwMCBmaXJzdCB0aGVuIHdyaXRpbmcg
+T1NSPTMyIHN1Y2NlZWRzIC0gb3NjIHNuYXBzIHRvIDEwMDAwMDAsIHJlYWRiYWNrIFNGPTMxMjUw
+Lg0KICAgIA0KICAgIEluICg0KSBjYXNlIHdlIGNvdWxkIHN0aWxsIGxldCB0aGUgdXNlciBoYXZl
+IGl0cyBzYW1wbGluZyBmcmVxdWVuY3kgYXMgaXMgKDEyNTAvMzI9MzkuMDYyNSksDQogICAgdGhv
+dWdoIGl0IHdvbid0IHJlc3VsdCBpbiBhIHByZWNpc2UgdHJ1ZSBpbnRlZ2VyIHZhbHVlLCBidXQg
+YSByb3VuZGVkICgzOSkgb25lLCBhbmQgd2hlbg0KICAgIG90aGVyIGNoYW5uZWwgd291bGQgaGF2
+ZSBPU1IvcmF0ZSBjaGFuZ2VkIGl0IHdvdWxkIGltcGx5IGEgbWVzc3kgY2hhbmdlIGluIHRoZSBw
+cmV2aW91cw0KICAgIGNoYW5uZWwncyBTRiBhbmQgcmVxdWlyaW5nIGEgbm9uLWV4aXN0ZW50L21h
+dGNoaW5nIGludGVybmFsIG9zYyB2YWx1ZSAobW9zdCBvZiB0aGUgdGltZXMNCiAgICBhIGZsb2F0
+IG9uZSksIGFuZCB0cnVlIFNGIHdvdWxkIGJlIGxvc3QuDQoNCkRvIHlvdSBndXlzIHRoaW5rIHRo
+aXMgYXBwcm9hY2ggc3VpdHMgdGhlIGJlc3Q/DQoNClRoYW5rcywNClJhZHUNCg0KICAgID4NCj4g
+PiA+DQo+ID4gPiBMaW5raW5nIHRoZSB0d28gdG9nZXRoZXIgaXMgcGVyaGFwcyB3cm9uZyB0byBi
+ZWdpbiB3aXRoIGZyb20gbXkgZW5kLA0KPiBzaW5jZSBpbiB0aGlzDQo+ID4gPiBkcml2ZXIncyBj
+YXNlLCB0aGUgcGVyLWNoYW5uZWwgc2FtcGxpbmcgZnJlcXVlbmN5IGlzIGNvbnRyb2xsZWQgYnkg
+dGhlDQo+IGludGVybmFsIG9zY2lsbGF0b3INCj4gPiA+IHdoaWNoIGhhcyBzdGF0aWMgYXZhaWxh
+YmxlIHZhbHVlcy4gU28gcGVyaGFwcyBzYW1wbGluZyBmcmVxdWVuY3kgc2hvdWxkIGJlDQo+IHNl
+cGFyYXRlLCBhbmQNCj4gPiA+IE9TUiBzZXBhcmF0ZSBhcyB3ZWxsLCB3aGljaCB3b3VsZCBtYWtl
+IGV2ZXJ5dGhpbmcgY2xlYW5lci4NCj4gPiA+DQo+ID4gPiBJbmRlZWQsIHRoZSBlZmZlY3RpdmUg
+cmF0ZSBpcyBjaGFuZ2VkIGJ5IE9TUiwgYnV0IHBlcmhhcHMgdGhhdCBpcyBzb21ldGhpbmcNCj4g
+dGhlIHVzZXINCj4gPiA+IHNob3VsZCBiZSBhd2FyZSBvZiwgc2luY2UgdGhlIHNhbXBsaW5nIGZy
+ZXF1ZW5jeSBpcyB0aGUgcmF0ZSBhdCB3aGljaCB0aGUNCj4gY2hhbm5lbCBzYW1wbGVzDQo+ID4g
+PiAoMSBzYW1wbGUgcGVyIHBlcmlvZCkgYW5kIE9TUiBpcyBob3cgbWFueSB0aW1lcyB0aGUgY2hh
+bm5lbCBzYW1wbGVzDQo+IHVwb24gYSBmaW5hbCBzYW1wbGUNCj4gPiA+IGlzIHRvIGJlIHJlYWQu
+IFRoZSB1c2VyIGFscmVhZHkgaGFzIHRvIHRha2UgdGhpcyBpbnRvIGFjY291bnQgd2hlbiBzZXR0
+aW5nDQo+IHRoZSBidWZmZXINCj4gPiA+IHNhbXBsaW5nIGZyZXF1ZW5jeSwgc28gaXQgd291bGQg
+bWFrZSBzZW5zZSB0byB0YWtlIHRoaXMgaW50byBhY2NvdW50IGhlcmUNCj4gdG9vLg0KPiA+DQo+
+ID4gV2UgY2FuJ3QgY2hhbmdlIHRoZSBkZWZpbml0aW9uIG9mIHRoZSBJSU8gQUJJIGp1c3QgdG8g
+bWFrZSBvbmUgZHJpdmVyIHNpbXBsZXINCj4gPiB0byBpbXBsZW1lbnQuIFRoZSBPU1IgYW5kIHNh
+bXBsZSByYXRlIGNhbid0IGJlIGNvbXBsZXRlbHkgaW5kZXBlbmRlbnQuDQo+ID4NCj4gPiBJZiB5
+b3Ugd2FudCB0byBsZWF2ZSBpdCB0aGUgd2F5IGl0IGlzIGN1cnJlbnRseSBpbXBsZW1lbnRlZCB0
+aG91Z2gsIHRoYXQgaXMNCj4gZmluZS4NCj4gPg0KPiA+ID4NCj4gPiA+IFBsZWFzZSBsZXQgbWUg
+a25vdyB5b3UgdGhvdWdodHMgb24gdGhpcywNCj4gPiA+IFJhZHUNCj4gPg0K
 
