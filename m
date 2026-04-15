@@ -1,89 +1,58 @@
-Return-Path: <linux-pwm+bounces-8582-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8583-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 8AIgONRb32n1RwAAu9opvQ
-	(envelope-from <linux-pwm+bounces-8582-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Apr 2026 11:35:16 +0200
+	id QEdSDcVg32k0SQAAu9opvQ
+	(envelope-from <linux-pwm+bounces-8583-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Apr 2026 11:56:21 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id EB7CF402A3D
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Apr 2026 11:35:14 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id F0A35402F76
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Apr 2026 11:56:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id DAC6C3012CDC
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Apr 2026 09:34:54 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 4554831294E1
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Apr 2026 09:49:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4CC2131B80E;
-	Wed, 15 Apr 2026 09:34:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=snu.ac.kr header.i=@snu.ac.kr header.b="lpHlEmA7"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1B1D733F5BD;
+	Wed, 15 Apr 2026 09:49:45 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0938C33A71B
-	for <linux-pwm@vger.kernel.org>; Wed, 15 Apr 2026 09:34:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [13.76.78.106])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 13AC533A9E2;
+	Wed, 15 Apr 2026 09:49:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=13.76.78.106
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776245693; cv=none; b=Cm2Y+topP4yjVLv+JSVEMYnp5FBLhq65CNdpXzda7IFA9ILV9ukBCvWW0/DKjqVOe3vMHKY0ckW0fewOZrHm94tI7KWU+1JcREUXda5PoTYryBf7dJ+3F85ZCPNmsS5q3RjnmHVW7tb2tfaTNxOJcn9vv6JKd5v2x2bRIFYG4pw=
+	t=1776246584; cv=none; b=e0S5dBSuyXOjiOiInRWbVkE+U1/pM+GvJ31HTaAannSjJ9Z2ArHMOlxvkm2AP2UsdrA0OQDOutQ6XIJi4oWQecS3c53zaLQoKrzHNUQFEnbV4k7WWyHU/kg6bTA/83zHg63NYuFcj70b8KL3ZSbOygPoQjio7OEitzJ1lBHbOlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776245693; c=relaxed/simple;
-	bh=jVmeTwzk9PJAUrS4SAHiGQddsG+3lg47R5zNpb3K/Rg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=iHsEcvXYGf7ZOAup/GouUYLCPFd5ENRyVvVlA1v32gCZatdeKWR4nG5aOVEjb/ejoThVmqy37s3dFbKp9bYd148d/j5rr65rCoQ31ja4gFNEks3paPiTD9Ix+Vd8Ls78XdbYz4O4D1W/Nt8blQOEVKoLZqwvaF1OYITgobxScN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=snu.ac.kr; spf=pass smtp.mailfrom=snu.ac.kr; dkim=pass (1024-bit key) header.d=snu.ac.kr header.i=@snu.ac.kr header.b=lpHlEmA7; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=snu.ac.kr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=snu.ac.kr
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2ad9a9be502so40088645ad.0
-        for <linux-pwm@vger.kernel.org>; Wed, 15 Apr 2026 02:34:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=snu.ac.kr; s=google; t=1776245688; x=1776850488; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=b3b8a9yRsPwuBMnRE7k+9xNpDjqVfRCXwrD7bmNetW0=;
-        b=lpHlEmA7YmA1epbGH1jUegZ0n+QtskT70HqAu8QGrffpuFldfQUXkjAHQPl9O8pMsS
-         o7ikp5TCm/Dw65Kur990XAr0Sib6svkgm2H7NZfZMIggIL2Am/m1NJ/SqknCVVDzBvUz
-         nrofrnlaDjXQN1p4j4TGJ3Dfcj4Fs2FR0So0E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776245688; x=1776850488;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=b3b8a9yRsPwuBMnRE7k+9xNpDjqVfRCXwrD7bmNetW0=;
-        b=p6ia2fpma261ffjdMFA6+zbLJ+qRPHb0IhxtBxBvj/ZAfEXnq6zbnhyelTb1h/uGjc
-         1qqH/rT0BFW60bsWFAEYMxHvP0Sc3x4AxTWCk1Ti4FDvCpGIQwcWDQAXmSxDmhqI+dVQ
-         cSlyMm4NzF9lByD14xIwyYRmznfeOJapLLn4CBS4y4bKjtzBElYugA/5vJDWDr4ocmz9
-         TRFBPQDUQqoGdWIJANxMt3Yu/7f7oVrMBh7zlrBc8j0eHOb9HykIMF9VLgkcbIz5eETp
-         JUpSnDQ9qx1N/yrkQvkPyMHBEARzLSuPUFoJCZOfJKf7jef9tNvRYQBuwA2A7pIDFNRq
-         Px3A==
-X-Forwarded-Encrypted: i=1; AFNElJ+s08dwIMhjAOmUGAjPaTQDVVupJDdkTCOTir4ERqAy4cgZpkadc69kOTTj+RVbEPHIQxkVL+ZYeJU=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzZkPPpzDhCU/9na9WCU9eRuoV3/Ltr5TrIUavfP2m9gCtZpTot
-	swQMQI9F8HWpjFRRTyTG/lKgy7e4BKascKGkynrG2p0nPPilFjl4V8toPvbjE0KIyt4=
-X-Gm-Gg: AeBDievX4mhaLW7DHoRlb/mPdD6lNEyyxGDsgpWnSZZZ5Unv5NuKQjtKnf8dXJorDx/
-	PgZXZ9YeD69i14z/n8NCGINLaFDM7wqXpIznuXC+AoKll2qFN6TLI4UbKdjdqQhRs82VF1YMUQF
-	a4MKuW/UOfEgcLlxLkJqg6w4KlFXvL3F5I/UXeGel6lXKFhjQa9IYMgKkd7ojFJmRkNEfZCipVb
-	lr03E+0qHCOwN+6eELdcaJqM1AR8PN1d+wPNdwEjfjg0BN9sQTnJRhYZpRYg8k6/lHQIypTRhUM
-	4/63I1p+NImmJDY8GkpRYBHmJitAB2pPuJxl6QdRiZemBveMIfPChS9QE906dNsbVfDGf1MRyh7
-	Mp07aTnSq6c+GTSh6uQnEcyQBWDrvtB3qPJ+13IIggAimYPtJuAPUaAW2q4FTCU07mM0qirJBWd
-	cp7cCYlaaF3mB5cf4Y0712c9D8X9fLaGXIdG3r1l2/tzIYy+sufkesfC3HUsAAxed1yZgZPaWTk
-	Scme/rH
-X-Received: by 2002:a17:902:d507:b0:2b4:5cd0:b6c3 with SMTP id d9443c01a7336-2b45cd0bb63mr148252015ad.29.1776245688376;
-        Wed, 15 Apr 2026 02:34:48 -0700 (PDT)
-Received: from nunu.. (nunu.snu.ac.kr. [147.46.112.82])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b47826e1b7sm15311575ad.49.2026.04.15.02.34.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2026 02:34:47 -0700 (PDT)
-From: Sangyun Kim <sangyun.kim@snu.ac.kr>
-To: ukleinek@kernel.org
-Cc: nicolas.ferre@microchip.com,
-	alexandre.belloni@bootlin.com,
-	claudiu.beznea@tuxon.dev,
+	s=arc-20240116; t=1776246584; c=relaxed/simple;
+	bh=DYVFNdk+djD8K61KVIPUXoIqm13LT4O06uqmf+HTNoY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=OjT9V6ecONQfOzo+x4GKfTT9yoXxle1fSz9+1CnRa8v7Pf8eqxxAQgVcJKB61G9I+ZPCq0/4MY+2Q+pyJ89Nl0TolPMC5zc1yfnKAW/2jG1iW6Th+jkM73nwc4cfN+h40M17Su8IkLXhA0MtGeAl1pp955m56C75971IH4CSVoU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=13.76.78.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from E0005152DT.eswin.cn (unknown [10.12.96.41])
+	by app2 (Coremail) with SMTP id TQJkCgBXbaAWX99pReMRAA--.51076S2;
+	Wed, 15 Apr 2026 17:49:12 +0800 (CST)
+From: dongxuyang@eswincomputing.com
+To: ukleinek@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	ben-linux@fluff.org,
+	ben.dooks@codethink.co.uk,
+	p.zabel@pengutronix.de,
 	linux-pwm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
+	devicetree@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH] pwm: atmel-tcb: Fix sleeping function called from invalid context
-Date: Wed, 15 Apr 2026 18:34:33 +0900
-Message-Id: <20260415093433.2359955-1-sangyun.kim@snu.ac.kr>
-X-Mailer: git-send-email 2.34.1
+Cc: ningyu@eswincomputing.com,
+	linmin@eswincomputing.com,
+	xuxiang@eswincomputing.com,
+	wangguosheng@eswincomputing.com,
+	pinkesh.vaghela@einfochips.com,
+	Xuyang Dong <dongxuyang@eswincomputing.com>
+Subject: [PATCH v4 0/2] Update designware pwm driver
+Date: Wed, 15 Apr 2026 17:49:08 +0800
+Message-Id: <20260415094908.1539-1-dongxuyang@eswincomputing.com>
+X-Mailer: git-send-email 2.31.1.windows.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -91,105 +60,160 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-CM-TRANSID:TQJkCgBXbaAWX99pReMRAA--.51076S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxAF1rZw4rXw1xJF1ktr4fZrb_yoWrKrWxpF
+	W8KrWakrWkWrySgan7X3W8uFyYq3Z5JF4UKwn5Ga4UZw1Yy3yUJrZY9Fy5tF9Fvr4kWFyY
+	yryfGa129a4YyF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkF7I0En4kS14v26r1q6r43MxkIecxEwVCm-wCF04
+	k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
+	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr4
+	1lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l
+	IxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4
+	A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUHCJQUUUUU=
+X-CM-SenderInfo: pgrqw5xx1d0w46hv4xpqfrz1xxwl0woofrz/
+X-Spamd-Result: default: False [1.54 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[snu.ac.kr,none];
 	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[snu.ac.kr:s=google];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sangyun.kim@snu.ac.kr,linux-pwm@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-8582-lists,linux-pwm=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[snu.ac.kr:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCVD_COUNT_FIVE(0.00)[5];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	NEURAL_HAM(-0.00)[-0.999];
-	TO_DN_NONE(0.00)[];
-	TAGGED_RCPT(0.00)[linux-pwm];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: EB7CF402A3D
+	TAGGED_FROM(0.00)[bounces-8583-lists,linux-pwm=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	DMARC_NA(0.00)[eswincomputing.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FROM_NO_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dongxuyang@eswincomputing.com,linux-pwm@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-0.928];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	R_DKIM_NA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:email,eswincomputing.com:mid,eswincomputing.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: F0A35402F76
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-atmel_tcb_pwm_apply() holds tcbpwmc->lock as a spinlock via
-guard(spinlock)() and then calls atmel_tcb_pwm_config(), which calls
-clk_get_rate() twice. clk_get_rate() acquires clk_prepare_lock (a
-mutex), so this is a sleep-in-atomic-context violation.
+From: Xuyang Dong <dongxuyang@eswincomputing.com>
 
-On CONFIG_DEBUG_ATOMIC_SLEEP kernels every pwm_apply_state() that
-enables or reconfigures the PWM triggers a "BUG: sleeping function
-called from invalid context" warning.
+There is already a patch [1] for the DesignWare PWM driver,
+which is posted by Ben and still under review.
+Based on this patch, this series is a continuation of [1]
+to add support for IP versions 2.11a and later, which
+includes support for "Pulse Width Modulation with 0%
+and 100% Duty Cycle".
 
-All callers of tcbpwmc->lock (the .request and .apply callbacks) run in
-process context and only need mutual exclusion against each other, so
-use a mutex instead of a spinlock and allow the sleeping calls inside
-atmel_tcb_pwm_config().
+Supported chips:
+ESWIN EIC7700 series SoC.
 
-Fixes: 37f7707077f5 ("pwm: atmel-tcb: Fix race condition and convert to guards")
-Signed-off-by: Sangyun Kim <sangyun.kim@snu.ac.kr>
----
- drivers/pwm/pwm-atmel-tcb.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+Test:
+Tested this patch on the Sifive HiFive Premier P550 (which uses the EIC7700
+SoC).
 
-diff --git a/drivers/pwm/pwm-atmel-tcb.c b/drivers/pwm/pwm-atmel-tcb.c
-index f9ff78ba122d..6405e82d9f10 100644
---- a/drivers/pwm/pwm-atmel-tcb.c
-+++ b/drivers/pwm/pwm-atmel-tcb.c
-@@ -17,6 +17,7 @@
- #include <linux/ioport.h>
- #include <linux/io.h>
- #include <linux/mfd/syscon.h>
-+#include <linux/mutex.h>
- #include <linux/platform_device.h>
- #include <linux/pwm.h>
- #include <linux/of.h>
-@@ -47,7 +48,7 @@ struct atmel_tcb_channel {
- };
- 
- struct atmel_tcb_pwm_chip {
--	spinlock_t lock;
-+	struct mutex lock;
- 	u8 channel;
- 	u8 width;
- 	struct regmap *regmap;
-@@ -81,7 +82,7 @@ static int atmel_tcb_pwm_request(struct pwm_chip *chip,
- 	tcbpwm->period = 0;
- 	tcbpwm->div = 0;
- 
--	guard(spinlock)(&tcbpwmc->lock);
-+	guard(mutex)(&tcbpwmc->lock);
- 
- 	regmap_read(tcbpwmc->regmap, ATMEL_TC_REG(tcbpwmc->channel, CMR), &cmr);
- 	/*
-@@ -335,7 +336,7 @@ static int atmel_tcb_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	int duty_cycle, period;
- 	int ret;
- 
--	guard(spinlock)(&tcbpwmc->lock);
-+	guard(mutex)(&tcbpwmc->lock);
- 
- 	if (!state->enabled) {
- 		atmel_tcb_pwm_disable(chip, pwm, state->polarity);
-@@ -438,7 +439,7 @@ static int atmel_tcb_pwm_probe(struct platform_device *pdev)
- 	if (err)
- 		goto err_gclk;
- 
--	spin_lock_init(&tcbpwmc->lock);
-+	mutex_init(&tcbpwmc->lock);
- 
- 	err = pwmchip_add(chip);
- 	if (err < 0)
--- 
+[1] https://lore.kernel.org/lkml/20230907161242.67190-1-ben.dooks@codethink.co.uk/
+
+Updates:
+  Change in v4:
+  - YAML:
+    - Change maxItems from 1 to 2. As there is a corresponding reset signal
+      for each clock domain, the effective maxItems of the resets property
+      is set to 2.
+    - Update the YAML commit message to describe the hardware.
+  - Driver:
+    - Replace devm_reset_control_get_optional_exclusive() with
+      devm_reset_control_array_get_optional_exclusive(). Since the number
+      of reset signals has increased from one to two.
+
+  - Link to v3: https://lore.kernel.org/all/20260402091718.1608-1-dongxuyang@eswincomputing.com/
+
+  Change in v3:
+  - YAML:
+    - Added a clear justification for the optional resets property. It is
+      required to support proper controller initialization when no PWM
+      channel is active at boot time, while allowing the driver to skip
+      reset deassertion if any channel is already enabled.
+  - Driver:
+    - Update the boundary value check of tmp in __dwc_pwm_configure_timer()
+      for DWC_TIM_CTRL_0N100PWM_EN.
+    - Replace 'sizeof(struct dwc_pwm_drvdata)' with
+      'struct_size(data, chips, 1)'.
+    - Drop devm_clk_get_enabled() in favor of devm_clk_get() with explicit
+      clk_prepare_enable() and clk_disable_unprepare() allowing runtime PM
+      to manage clock state.
+    - Replace devm_reset_control_get_optional_exclusive_deasserted() with
+      devm_reset_control_get_optional_exclusive() and issue a full reset via
+      reset_control_reset() only when no PWM channel is active at probe time.
+    - Detect bootloader-enabled PWM channels by reading the enable bit, and
+      initialize runtime PM as active for those channels by calling
+      pm_runtime_set_active() and pm_runtime_get_noresume().
+    - Remove autosuspend as it is not required for this driver.
+    - Use explicit pm_runtime_enable() and pm_runtime_disable() instead of
+      the managed devm_pm_runtime_enable() variant to ensure correct cleanup.
+    - On device removal, recheck the channel enable status. If any channel
+      remains active, call pm_runtime_put_noidle() before disabling clocks
+      via clk_disable_unprepare().
+      Resume device before register access during removal if it is runtime
+      suspended, and re-suspend it afterward.
+    - If device is suspended, resume it before register access during system
+      resume/suspend.
+    - Use pm_ptr() instead of pm_sleep_ptr() for correct PM operation.
+
+  - Link to v2: https://lore.kernel.org/all/20260306093000.2065-1-dongxuyang@eswincomputing.com/
+
+  Change in v2:
+  - YAML:
+    - Remove eswin,eic7700-pwm.yaml. Use snps,dw-apb-timers-pwm2.yaml.
+      The description in snps,dw-apb-timers-pwm2.yaml is better.
+    - Add the resets property as optional, as defined in the databook.
+    - Remove snps,pwm-full-range-enable as no additional property is needed.
+  - Driver:
+    - Change the file from pwm-dwc-eic7700.c to pwm-dwc-of.c from [1].
+    - Define DWC_TIM_VERSION_ID_2_11A 2.11a as the baseline version.
+    - Enable the 0% and 100% duty cycle mode by setting dwc->feature if
+      the version read from the TIMERS_COMP_VERSION register is later
+      than or equal to DWC_TIM_VERSION_ID_2_11A.
+    - Use the DIV_ROUND_UP_ULL() to calculate width in the .apply and
+      .get_state.
+    - Additionally, Power Management (PM) support has been added to the
+      pwm-dwc-of.c driver.
+    - Drop the headers that are not used.
+    - Use devm_clk_get_enabled() instead of devm_clk_get().
+    - Drop of_match_ptr.
+    - Fix build error with 1ULL << 32.
+      Reported-by: kernel test robot <lkp@intel.com>
+      Closes: https://lore.kernel.org/oe-kbuild-all/202512061720.j31AsgM7-lkp@intel.com/
+
+  - Link to v1: https://lore.kernel.org/all/20251205090411.1388-1-dongxuyang@eswincomputing.com/
+  - Link to v9: https://lore.kernel.org/lkml/20230907161242.67190-1-ben.dooks@codethink.co.uk/
+
+Xuyang Dong (2):
+  dt-bindings: pwm: dwc: add reset optional
+  pwm: dwc: add of/platform support
+
+ .../bindings/pwm/snps,dw-apb-timers-pwm2.yaml |   3 +
+ drivers/pwm/Kconfig                           |  10 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-dwc-core.c                    | 101 ++++--
+ drivers/pwm/pwm-dwc-of.c                      | 331 ++++++++++++++++++
+ drivers/pwm/pwm-dwc.h                         |  25 +-
+ 6 files changed, 442 insertions(+), 29 deletions(-)
+ create mode 100644 drivers/pwm/pwm-dwc-of.c
+
+--
 2.34.1
+
 
