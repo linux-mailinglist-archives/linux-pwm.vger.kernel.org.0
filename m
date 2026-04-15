@@ -1,195 +1,160 @@
-Return-Path: <linux-pwm+bounces-8591-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8592-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id ECfIMkan32nQXQAAu9opvQ
-	(envelope-from <linux-pwm+bounces-8591-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Apr 2026 16:57:10 +0200
+	id +JFnJ86r32mOXgAAu9opvQ
+	(envelope-from <linux-pwm+bounces-8592-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Apr 2026 17:16:30 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 55D1B40590A
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Apr 2026 16:57:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 49375405C48
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Apr 2026 17:16:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3FFC53072863
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Apr 2026 14:50:37 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 2733D312A609
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Apr 2026 15:10:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAEBD175A6D;
-	Wed, 15 Apr 2026 14:50:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B46A83DBD4D;
+	Wed, 15 Apr 2026 15:09:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20251104.gappssmtp.com header.i=@baylibre-com.20251104.gappssmtp.com header.b="GRkgRyOZ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oh15y+Iq"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E5C83290D2
-	for <linux-pwm@vger.kernel.org>; Wed, 15 Apr 2026 14:50:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903112F1FFC;
+	Wed, 15 Apr 2026 15:09:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776264635; cv=none; b=BW4vEt4PMfFdBGBRrPVUjrN26VWimN+UPBmQvdKV8XCBCLqgxfOeaWXt9pib6sy+jMLHNFV3LADuD7kL4N2pbKO0mYKDojKA/aXjFGf+yZlw5AT+CMiuv4jx7qJq0LD3O/JYGt/KxZx7/XoGwxi6JQ1DA290Z/xT2AesxTFgpZY=
+	t=1776265794; cv=none; b=iwhSNi4Bmr1Q5gnytnRfbU/saAic+ZEvh1ImZmfC5bzUk6ZT+9ZgZJl1v7GGBkRWTv+LiV2eKfJnDyprjnh5iFOALSIP4or1KSW4ElGrrt3b5d6/iNl79ln1v2uqal+HWtcib0IBGYOAOQAAds/FxacnFe/jE/j0PQPXcKqyDGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776264635; c=relaxed/simple;
-	bh=9qJeHZRbSFduELxueyX7SDFPcOQZv0zK9BdhVLKRq8s=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=fxp6aW6VltU/FHt3vqe2nfFw9lugAYB4+MEc9AwSK/X1/RISk3zf2LyowBeiXnWsI+thotMo2fWRch2J9Yh/k8/09yCWRebmk6V0WrBsG+LvuRYmMXb7q9XvPHX9umfS3FgB9/c1WoPdMTtewMOaZlB25aPcF5m48exljsKBGZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20251104.gappssmtp.com header.i=@baylibre-com.20251104.gappssmtp.com header.b=GRkgRyOZ; arc=none smtp.client-ip=209.85.221.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wr1-f43.google.com with SMTP id ffacd0b85a97d-43d0deb7ad5so5447347f8f.2
-        for <linux-pwm@vger.kernel.org>; Wed, 15 Apr 2026 07:50:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20251104.gappssmtp.com; s=20251104; t=1776264633; x=1776869433; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dN1czsyDMNwwt/ST8KAAFfEC2IVqy3l0935RmxW/E4s=;
-        b=GRkgRyOZHpwWoqmiVFdXBpE4UqrOjYOyBPwzPZeiLouk9x9c+VkfP01wXhu3aNnYi9
-         FtMwKadwBcwnx5TLNBc16NS+8/iKzFPTx5yG9i++vbcUPEFj+dZbmcnL1XW9RNDQLGGG
-         glM77umT+mDS9or2/WiYznQQLEP0ATwtMEshHey5L6gbyVfrZPD+8tpZIAeIu2Xxg6Aj
-         cTtSaae8L7MoAXl7I5R8MYhwPnAUfl1lrM9OGVSaCQezTP0/dWGSULnXCst/0uDc957n
-         dSqw4ycX8yiyglLDuY/LIMSp3QykBckO/Qs8XNtFnY7IZaklTMeyuRr/zRXalzae2OYS
-         10Gw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776264633; x=1776869433;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=dN1czsyDMNwwt/ST8KAAFfEC2IVqy3l0935RmxW/E4s=;
-        b=o5UREYAU1qKnMwT7gQ4xC0Dg0kAeLbZkFpCxNHPCzKMWE/lyjLcdJf+X/8itRbAYlv
-         /Kn1QTFiGnOFAmEtsZCX1w9cjURRTS6Qgds3VjiOpA4u34WkvizqlrHFK5XRMi1PMJ5g
-         Iw2RqvwvoLnKMmTOzrw9k+jj1UkGoKeez17dXBAXOat1hBTUPnZSGsKjK1vcbih2SZoR
-         XtKtu2eSrwFXuuKI2PjHVXL61HOK2IggyEjmkRCz7BFstfVVKTV/ebsUL8m6Sismz3r+
-         1EMvW0OmIu7M+1DW2Qvhj2beOiyoqCsmlzftg50xMmwJpxhD5Oftl1Jsgh8mDB3OVsLg
-         W+jA==
-X-Gm-Message-State: AOJu0YwSGzh1YGY7iWwve6VV7bK4eyFDOCogqmzdYNBjMDolvEuA6uLW
-	EaKzOXOqWFbFSnCgB+LpWcUXqRwQlhmPfgsBIS3agQ/8EFtqCMXuFeBcFhB0vHoVJis=
-X-Gm-Gg: AeBDievNsD0GLD45uw/BaBdHH+zdpR3mde3BOLtenNCYcmZ6R18WG03cv1cEojiHA8D
-	5xTrCGjH/YEF8S1FNX6PKwNZgBZP/ujvC9ZZdzxqmApTe4UjPnnZm5WoO7roL8nn1Km3NnlLKFt
-	2VX+OiPrfSAsN/ONp6G84kmYsebY3gokcteeM6jp7wVtDA8PmCt5gApLAXAQX7PxdIZvhbN04IF
-	jUqujkLaJYVogAXeM4t+gYvMr+D7eoJalISjfokKO+C2J8dZd+vCRiqy3GlEnuTPp7i1AmM7ajH
-	Qoa4fRj+kxj8R+jEnOTQhZg74bGRcyrc9wpzyB4dq/HcoTE+b+BUypRAn6E0eZ5hAAWS6GFTpCO
-	MkoVirgJ5WQ/dq4SFkKkSX9bkamT2obZYKc3vyEbvPOClTkQbk+dHez8ac5bdvVxnTHDb1fWQwV
-	aePUxzYis4RGnrBpgBOGxBP8vq5BoJPgAjYfo/OmwA7uWcjISxyQ9roo8uQqkFYHR26al6l43ED
-	x2Jyq+rJ2AaSe8=
-X-Received: by 2002:a05:6000:2884:b0:43d:7147:f51 with SMTP id ffacd0b85a97d-43d71471152mr23644870f8f.26.1776264632805;
-        Wed, 15 Apr 2026 07:50:32 -0700 (PDT)
-Received: from localhost (p200300f65f20eb084c777289617ec110.dip0.t-ipconnect.de. [2003:f6:5f20:eb08:4c77:7289:617e:c110])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-43ead33d6e9sm6002565f8f.1.2026.04.15.07.50.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Apr 2026 07:50:32 -0700 (PDT)
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Fabrice Gasnier <fabrice.gasnier@foss.st.com>,
-	Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-	Alexandre Torgue <alexandre.torgue@foss.st.com>
-Cc: linux-pwm@vger.kernel.org,
-	linux-stm32@st-md-mailman.stormreply.com
-Subject: [PATCH v1 2/2] pwm: stm32: Make use of mul_u64_u64_div_u64_roundup()
-Date: Wed, 15 Apr 2026 16:50:13 +0200
-Message-ID:  <788319f0fff963feca4df3c5fcdd471dcf70ccdf.1776264104.git.u.kleine-koenig@baylibre.com>
-X-Mailer: git-send-email 2.47.3
-In-Reply-To: <cover.1776264104.git.u.kleine-koenig@baylibre.com>
-References: <cover.1776264104.git.u.kleine-koenig@baylibre.com>
+	s=arc-20240116; t=1776265794; c=relaxed/simple;
+	bh=KCG8cdPVc9jRDsdzNql7/57RznYdhKNf91J2Z2mqsh8=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=TLn+DiCy0Jb8IKwmeeZA+ywQtPp1nmn5dFgnrVMDnxA6qnbTXy+o+mtrlLg5FPWjkmvjl2Sn3cisz9kwMbqm27PPOnWCFrPxxl5Cvinpcdi+8zEdOKg5zLLTHySPo0Jzr/dXNY2KCkM+uDm3EFdx+lN0uhA06wa64ClbvK5TvUE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oh15y+Iq; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B31AC2BCB4;
+	Wed, 15 Apr 2026 15:09:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1776265794;
+	bh=KCG8cdPVc9jRDsdzNql7/57RznYdhKNf91J2Z2mqsh8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=oh15y+Iq+fXE/Fa3dXgFXNh21sPDrUGip6cCiu2raR12q2phTTC+sT8cvj8W/CDJv
+	 IXmfgmuJF5fyf40Y37ng8nO8lpggv4maxk9JWDx/poECPuzsxf5uC4vVryl0ESm0A8
+	 uBRLnR5uosqFiPxV2VTzE9R0r+6ipmITo2u2REU6skbRbRQQGi2UtyJU+lPYKNx/yW
+	 ziWxyyCcOv22ak6bInHEeamVDAxzaERIK+iuk240UWAFAkuT3yPeafWU0jczxxXybA
+	 K9Hg5j0an5ct1WqgF6nEVuWLDiN8fKKsgfUOBaZ41LoEVTK1lrYIjoILxKHcZGYE0n
+	 zKPj45SSx86Lg==
+Date: Wed, 15 Apr 2026 16:09:49 +0100
+From: Conor Dooley <conor@kernel.org>
+To: dongxuyang@eswincomputing.com
+Cc: ukleinek@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, ben-linux@fluff.org, ben.dooks@codethink.co.uk,
+	p.zabel@pengutronix.de, linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ningyu@eswincomputing.com, linmin@eswincomputing.com,
+	xuxiang@eswincomputing.com, wangguosheng@eswincomputing.com,
+	pinkesh.vaghela@einfochips.com
+Subject: Re: [PATCH v4 1/2] dt-bindings: pwm: dwc: add reset optional
+Message-ID: <20260415-reacquire-handstand-d1923af82c9d@spud>
+References: <20260415094908.1539-1-dongxuyang@eswincomputing.com>
+ <20260415095020.1597-1-dongxuyang@eswincomputing.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2329; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=9qJeHZRbSFduELxueyX7SDFPcOQZv0zK9BdhVLKRq8s=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBp36Wq+0h8W3DUxZQpoIufXzY1woEyJ2vEcI6Ty gE7fVgqv/2JATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCad+lqgAKCRCPgPtYfRL+ TvXYCACHODrtzojzM+GDH+KQoXVs9juGlZQxs8Z09ps0/buJOG5/BuNanRDVteKwiGuD1lPSqw/ EDTDA7D8CPKFNhCisbvPeHB/EFl1IWJkLsD6M8dXvVdLMNzBhN1lNQtdBbxVI3800i4L5FQEx0n HwxnQG082WB04KVIjZ1vTW5Tg/nowjwM10bxYnIW3UOEY0kxAij8/84WzxQ/Nf7VgT4UVuYZnKJ /hKuqIua8QIlJmM21WZpG43NSwSQ3rUUSCSvVLBxfVculBsw9zy3STZ2YPJpBL3krO/H3L9DE2G FWHIDoN33CFxASh65+tEq68zFKRcnvVpPDM/LBt+F7qFQz3T
-X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [0.84 / 15.00];
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="PLShwbF4Er3TfYyf"
+Content-Disposition: inline
+In-Reply-To: <20260415095020.1597-1-dongxuyang@eswincomputing.com>
+X-Spamd-Result: default: False [-2.26 / 15.00];
+	SIGNED_PGP(-2.00)[];
 	SUSPICIOUS_RECIPS(1.50)[];
-	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_DKIM_ALLOW(-0.20)[baylibre-com.20251104.gappssmtp.com:s=20251104];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8592-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[foss.st.com,gmail.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DMARC_NA(0.00)[baylibre.com];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-8591-lists,linux-pwm=lfdr.de];
-	DKIM_TRACE(0.00)[baylibre-com.20251104.gappssmtp.com:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[u.kleine-koenig@baylibre.com,linux-pwm@vger.kernel.org];
-	RCPT_COUNT_FIVE(0.00)[5];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-pwm];
-	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[baylibre.com:mid,baylibre.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,baylibre-com.20251104.gappssmtp.com:dkim]
-X-Rspamd-Queue-Id: 55D1B40590A
+	MISSING_XM_UA(0.00)[];
+	TO_DN_NONE(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,linux-pwm@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[eswincomputing.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 49375405C48
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-When the driver was converted to the waveform API the need for this
-function arised but at that time this function didn't exist yet. In the
-meantime it's available, so switch to the global function and drop the
-driver specific implementation.
 
-Signed-off-by: Uwe Kleine-König <u.kleine-koenig@baylibre.com>
----
- drivers/pwm/pwm-stm32.c | 27 +++++----------------------
- 1 file changed, 5 insertions(+), 22 deletions(-)
+--PLShwbF4Er3TfYyf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/pwm/pwm-stm32.c b/drivers/pwm/pwm-stm32.c
-index 935257a890b0..c708e4a7ad70 100644
---- a/drivers/pwm/pwm-stm32.c
-+++ b/drivers/pwm/pwm-stm32.c
-@@ -193,22 +193,6 @@ static int stm32_pwm_round_waveform_tohw(struct pwm_chip *chip,
- 	return ret;
- }
- 
--/*
-- * This should be moved to lib/math/div64.c. Currently there are some changes
-- * pending to mul_u64_u64_div_u64. Uwe will care for that when the dust settles.
-- */
--static u64 stm32_pwm_mul_u64_u64_div_u64_roundup(u64 a, u64 b, u64 c)
--{
--	u64 res = mul_u64_u64_div_u64(a, b, c);
--	/* Those multiplications might overflow but it doesn't matter */
--	u64 rem = a * b - c * res;
--
--	if (rem)
--		res += 1;
--
--	return res;
--}
--
- static int stm32_pwm_round_waveform_fromhw(struct pwm_chip *chip,
- 					   struct pwm_device *pwm,
- 					   const void *_wfhw,
-@@ -223,16 +207,15 @@ static int stm32_pwm_round_waveform_fromhw(struct pwm_chip *chip,
- 		u64 ccr_ns;
- 
- 		/* The result doesn't overflow for rate >= 15259 */
--		wf->period_length_ns = stm32_pwm_mul_u64_u64_div_u64_roundup(((u64)wfhw->psc + 1) * (wfhw->arr + 1),
--									     NSEC_PER_SEC, rate);
-+		wf->period_length_ns = mul_u64_u64_div_u64_roundup(((u64)wfhw->psc + 1) * (wfhw->arr + 1),
-+								   NSEC_PER_SEC, rate);
- 
--		ccr_ns = stm32_pwm_mul_u64_u64_div_u64_roundup(((u64)wfhw->psc + 1) * wfhw->ccr,
--							       NSEC_PER_SEC, rate);
-+		ccr_ns = mul_u64_u64_div_u64_roundup(((u64)wfhw->psc + 1) * wfhw->ccr, NSEC_PER_SEC, rate);
- 
- 		if (wfhw->ccer & TIM_CCER_CCxP(ch + 1)) {
- 			wf->duty_length_ns =
--				stm32_pwm_mul_u64_u64_div_u64_roundup(((u64)wfhw->psc + 1) * (wfhw->arr + 1 - wfhw->ccr),
--								      NSEC_PER_SEC, rate);
-+				mul_u64_u64_div_u64_roundup(((u64)wfhw->psc + 1) * (wfhw->arr + 1 - wfhw->ccr),
-+							    NSEC_PER_SEC, rate);
- 
- 			wf->duty_offset_ns = ccr_ns;
- 		} else {
--- 
-2.47.3
+On Wed, Apr 15, 2026 at 05:50:20PM +0800, dongxuyang@eswincomputing.com wro=
+te:
+> From: Xuyang Dong <dongxuyang@eswincomputing.com>
+>=20
+> The DesignWare PWM includes separate reset signals dedicated to each clock
+> domain:
+> The presetn signal resets logic in pclk domain.
+> The timer_N_resetn signal resets logic in the timer_N_clk domain.
+> The resets are active-low.
+>=20
+> Signed-off-by: Xuyang Dong <dongxuyang@eswincomputing.com>
 
+This commit implies that your hardware differs from existing devices,
+I think you should add a device-specific compatible.
+
+> ---
+>  .../devicetree/bindings/pwm/snps,dw-apb-timers-pwm2.yaml       | 3 +++
+>  1 file changed, 3 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/pwm/snps,dw-apb-timers-pwm=
+2.yaml b/Documentation/devicetree/bindings/pwm/snps,dw-apb-timers-pwm2.yaml
+> index 7523a89a1773..a8bbad0360f8 100644
+> --- a/Documentation/devicetree/bindings/pwm/snps,dw-apb-timers-pwm2.yaml
+> +++ b/Documentation/devicetree/bindings/pwm/snps,dw-apb-timers-pwm2.yaml
+> @@ -43,6 +43,9 @@ properties:
+>        - const: bus
+>        - const: timer
+> =20
+> +  resets:
+> +    maxItems: 2
+> +
+>    snps,pwm-number:
+>      $ref: /schemas/types.yaml#/definitions/uint32
+>      description: The number of PWM channels configured for this instance
+> --=20
+> 2.34.1
+>=20
+
+--PLShwbF4Er3TfYyf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCad+qPAAKCRB4tDGHoIJi
+0ifKAQC2Qc9/PX+2nsoGaciKkiI2QG1DN1VGhdlrzM4rBOQSBQEApmJ24kx2JyYT
+qA4Rx+0R2WrsJpKZevK7o5CAlD12xgQ=
+=swXi
+-----END PGP SIGNATURE-----
+
+--PLShwbF4Er3TfYyf--
 
