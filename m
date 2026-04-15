@@ -1,63 +1,59 @@
-Return-Path: <linux-pwm+bounces-8592-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8593-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +JFnJ86r32mOXgAAu9opvQ
-	(envelope-from <linux-pwm+bounces-8592-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Apr 2026 17:16:30 +0200
+	id 2CkfEQys32mOXgAAu9opvQ
+	(envelope-from <linux-pwm+bounces-8593-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Apr 2026 17:17:32 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 49375405C48
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Apr 2026 17:16:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 78674405C92
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Apr 2026 17:17:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2733D312A609
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Apr 2026 15:10:46 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BA55130DEE2B
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Apr 2026 15:12:41 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B46A83DBD4D;
-	Wed, 15 Apr 2026 15:09:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4EE653D890F;
+	Wed, 15 Apr 2026 15:12:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oh15y+Iq"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="We3/qUEx"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 903112F1FFC;
-	Wed, 15 Apr 2026 15:09:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B04A3D88E9;
+	Wed, 15 Apr 2026 15:12:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776265794; cv=none; b=iwhSNi4Bmr1Q5gnytnRfbU/saAic+ZEvh1ImZmfC5bzUk6ZT+9ZgZJl1v7GGBkRWTv+LiV2eKfJnDyprjnh5iFOALSIP4or1KSW4ElGrrt3b5d6/iNl79ln1v2uqal+HWtcib0IBGYOAOQAAds/FxacnFe/jE/j0PQPXcKqyDGQ=
+	t=1776265960; cv=none; b=AGqPRwgYTnyQpk7Kz4nCgp/s8ICKtT8Wy+Ac+p4tZGRkk5U8h3ZcesMhSSC0ndFLb/l55MNCwgZFzJiUz14aIRMj1uEas2+DnUWrtHEDzemNVHH4mrcIDSmsdZ9QKe6C2OBzxcArS/PnP71475RxnPB7G9Q/wsREkvBFazLHvmA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776265794; c=relaxed/simple;
-	bh=KCG8cdPVc9jRDsdzNql7/57RznYdhKNf91J2Z2mqsh8=;
+	s=arc-20240116; t=1776265960; c=relaxed/simple;
+	bh=YUJjqqhI9gnFtU556Ey/dqmGHfXQ9/59t0+1jgwdbIc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=TLn+DiCy0Jb8IKwmeeZA+ywQtPp1nmn5dFgnrVMDnxA6qnbTXy+o+mtrlLg5FPWjkmvjl2Sn3cisz9kwMbqm27PPOnWCFrPxxl5Cvinpcdi+8zEdOKg5zLLTHySPo0Jzr/dXNY2KCkM+uDm3EFdx+lN0uhA06wa64ClbvK5TvUE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oh15y+Iq; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B31AC2BCB4;
-	Wed, 15 Apr 2026 15:09:51 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=YoWiEdkkNTESo+kVRKEFlBTai7lWqsR6m8J1uhbaFwmFc6Df4G6ZNODlXIUWCOWZOGRKVgthnF75HFC8fdgn66rHb5MMjW1UhuX5RqjCmB8uYnRnIH48ljGkjlL6SGI4eaCBGKSrCCcYyn/0R40gnvOq+5L910N1k4lsrE0GSD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=We3/qUEx; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71C8BC19424;
+	Wed, 15 Apr 2026 15:12:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776265794;
-	bh=KCG8cdPVc9jRDsdzNql7/57RznYdhKNf91J2Z2mqsh8=;
+	s=k20201202; t=1776265959;
+	bh=YUJjqqhI9gnFtU556Ey/dqmGHfXQ9/59t0+1jgwdbIc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=oh15y+Iq+fXE/Fa3dXgFXNh21sPDrUGip6cCiu2raR12q2phTTC+sT8cvj8W/CDJv
-	 IXmfgmuJF5fyf40Y37ng8nO8lpggv4maxk9JWDx/poECPuzsxf5uC4vVryl0ESm0A8
-	 uBRLnR5uosqFiPxV2VTzE9R0r+6ipmITo2u2REU6skbRbRQQGi2UtyJU+lPYKNx/yW
-	 ziWxyyCcOv22ak6bInHEeamVDAxzaERIK+iuk240UWAFAkuT3yPeafWU0jczxxXybA
-	 K9Hg5j0an5ct1WqgF6nEVuWLDiN8fKKsgfUOBaZ41LoEVTK1lrYIjoILxKHcZGYE0n
-	 zKPj45SSx86Lg==
-Date: Wed, 15 Apr 2026 16:09:49 +0100
-From: Conor Dooley <conor@kernel.org>
-To: dongxuyang@eswincomputing.com
-Cc: ukleinek@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, ben-linux@fluff.org, ben.dooks@codethink.co.uk,
-	p.zabel@pengutronix.de, linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ningyu@eswincomputing.com, linmin@eswincomputing.com,
-	xuxiang@eswincomputing.com, wangguosheng@eswincomputing.com,
-	pinkesh.vaghela@einfochips.com
-Subject: Re: [PATCH v4 1/2] dt-bindings: pwm: dwc: add reset optional
-Message-ID: <20260415-reacquire-handstand-d1923af82c9d@spud>
-References: <20260415094908.1539-1-dongxuyang@eswincomputing.com>
- <20260415095020.1597-1-dongxuyang@eswincomputing.com>
+	b=We3/qUExm3NpUuEfh+Nhj5vfjEkZVXtEmFHLQMxarih9Vs8InW4IRliQcLEOcOFyA
+	 q9ee479sSUDglZ0g/gHnfTVfMyf1d7XaRingMYQrql8Ib3cg1ogN4bmH1cssTbStuq
+	 6sjwatgxMEmdyEfkT1FedUiekoNhAOGd2FOMosvmw30nkw2DBoIdjDzMqkZCStPbkY
+	 v3wYDC4KL+DJjwsByqKnjVBWFMfaAMqE8NT/PUjsbmwM+mkcaxrqLCRJJTwX9y6xYb
+	 UP6H1XrO4Gao346aaHQeNVXboGUjer7IXZSGE7guY2SLXGeQFepnX/ub6+NeAPmH6+
+	 ZZLPF2E+p2gfA==
+Date: Wed, 15 Apr 2026 17:12:37 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Sangyun Kim <sangyun.kim@snu.ac.kr>
+Cc: nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, 
+	claudiu.beznea@tuxon.dev, linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pwm: atmel-tcb: Fix sleeping function called from
+ invalid context
+Message-ID: <ad-nOb2Tj9PombuN@monoceros>
+References: <20260415093433.2359955-1-sangyun.kim@snu.ac.kr>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -65,96 +61,117 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="PLShwbF4Er3TfYyf"
+	protocol="application/pgp-signature"; boundary="hke3yhwg6rcplifn"
 Content-Disposition: inline
-In-Reply-To: <20260415095020.1597-1-dongxuyang@eswincomputing.com>
-X-Spamd-Result: default: False [-2.26 / 15.00];
+In-Reply-To: <20260415093433.2359955-1-sangyun.kim@snu.ac.kr>
+X-Spamd-Result: default: False [-3.76 / 15.00];
 	SIGNED_PGP(-2.00)[];
-	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MIME_GOOD(-0.20)[multipart/signed,text/plain];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8592-lists,linux-pwm=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8593-lists,linux-pwm=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	MISSING_XM_UA(0.00)[];
-	TO_DN_NONE(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,linux-pwm@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ukleinek@kernel.org,linux-pwm@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[eswincomputing.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 49375405C48
+	TAGGED_RCPT(0.00)[linux-pwm];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,snu.ac.kr:email]
+X-Rspamd-Queue-Id: 78674405C92
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 
---PLShwbF4Er3TfYyf
-Content-Type: text/plain; charset=us-ascii
+--hke3yhwg6rcplifn
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] pwm: atmel-tcb: Fix sleeping function called from
+ invalid context
+MIME-Version: 1.0
 
-On Wed, Apr 15, 2026 at 05:50:20PM +0800, dongxuyang@eswincomputing.com wro=
-te:
-> From: Xuyang Dong <dongxuyang@eswincomputing.com>
->=20
-> The DesignWare PWM includes separate reset signals dedicated to each clock
-> domain:
-> The presetn signal resets logic in pclk domain.
-> The timer_N_resetn signal resets logic in the timer_N_clk domain.
-> The resets are active-low.
->=20
-> Signed-off-by: Xuyang Dong <dongxuyang@eswincomputing.com>
+Hello Sangyun (I hope this is the right part of your name to address
+you, feel free to tell me, when I'm wrong),
 
-This commit implies that your hardware differs from existing devices,
-I think you should add a device-specific compatible.
-
-> ---
->  .../devicetree/bindings/pwm/snps,dw-apb-timers-pwm2.yaml       | 3 +++
->  1 file changed, 3 insertions(+)
+On Wed, Apr 15, 2026 at 06:34:33PM +0900, Sangyun Kim wrote:
+> atmel_tcb_pwm_apply() holds tcbpwmc->lock as a spinlock via
+> guard(spinlock)() and then calls atmel_tcb_pwm_config(), which calls
+> clk_get_rate() twice. clk_get_rate() acquires clk_prepare_lock (a
+> mutex), so this is a sleep-in-atomic-context violation.
 >=20
-> diff --git a/Documentation/devicetree/bindings/pwm/snps,dw-apb-timers-pwm=
-2.yaml b/Documentation/devicetree/bindings/pwm/snps,dw-apb-timers-pwm2.yaml
-> index 7523a89a1773..a8bbad0360f8 100644
-> --- a/Documentation/devicetree/bindings/pwm/snps,dw-apb-timers-pwm2.yaml
-> +++ b/Documentation/devicetree/bindings/pwm/snps,dw-apb-timers-pwm2.yaml
-> @@ -43,6 +43,9 @@ properties:
->        - const: bus
->        - const: timer
-> =20
-> +  resets:
-> +    maxItems: 2
-> +
->    snps,pwm-number:
->      $ref: /schemas/types.yaml#/definitions/uint32
->      description: The number of PWM channels configured for this instance
-> --=20
-> 2.34.1
+> On CONFIG_DEBUG_ATOMIC_SLEEP kernels every pwm_apply_state() that
+> enables or reconfigures the PWM triggers a "BUG: sleeping function
+> called from invalid context" warning.
 >=20
+> All callers of tcbpwmc->lock (the .request and .apply callbacks) run in
+> process context and only need mutual exclusion against each other, so
+> use a mutex instead of a spinlock and allow the sleeping calls inside
+> atmel_tcb_pwm_config().
+>=20
+> Fixes: 37f7707077f5 ("pwm: atmel-tcb: Fix race condition and convert to g=
+uards")
+> Signed-off-by: Sangyun Kim <sangyun.kim@snu.ac.kr>
 
---PLShwbF4Er3TfYyf
+The issue is real. I first thought the lock isn't needed at all and can
+better be dropped, but the chip lock doesn't cover .request().
+
+It would be great if you could rework the patch to keep the spinlock and
+instead make use of clk_rate_exclusive_get() at probe time and then
+store the rate in struct atmel_tcb_pwm_chip.
+
+Or alternatively drop the lock and call guard(pwmchip)(chip) in
+=2Erequest(). (This however would require to move the GUARD definition to
+a header.)
+
+Without the mutex we could then do:
+
+diff --git a/drivers/pwm/pwm-atmel-tcb.c b/drivers/pwm/pwm-atmel-tcb.c
+index f9ff78ba122d..70856be12517 100644
+--- a/drivers/pwm/pwm-atmel-tcb.c
++++ b/drivers/pwm/pwm-atmel-tcb.c
+@@ -431,6 +431,7 @@ static int atmel_tcb_pwm_probe(struct platform_device *=
+pdev)
+ 	}
+=20
+ 	chip->ops =3D &atmel_tcb_pwm_ops;
++	chip->atomic =3D true;
+ 	tcbpwmc->channel =3D channel;
+ 	tcbpwmc->width =3D config->counter_width;
+=20
+which is nice for some usages.
+
+Best regards
+Uwe
+
+--hke3yhwg6rcplifn
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCad+qPAAKCRB4tDGHoIJi
-0ifKAQC2Qc9/PX+2nsoGaciKkiI2QG1DN1VGhdlrzM4rBOQSBQEApmJ24kx2JyYT
-qA4Rx+0R2WrsJpKZevK7o5CAlD12xgQ=
-=swXi
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmnfquIACgkQj4D7WH0S
+/k5QGgf6Aix/HhyOFhirW2v/a+a0tm/TCx7DqpvHmb1q0YHSZSdtt7HvjJ37NgYQ
+kezD4YvZad2gWuxD3NoHSxFpX8UYQxMmmbCrEVu/WChDCal7YjulEgE9CYWT+xpl
+dRUaJjHJc58fH7TpxFk6iiaM8AGJSABE9AVxihKaWXap/ISTkSfw0JKGhKhiuHJU
+XBJZpTGoe2s7FcnlEkIPB7PBcMrjwTuK0B7Q9BtqC2WX4mP80qVBnLCKNYg05AS/
+vmJzkfrDKn4Ph99Aljg8Fx1HIyCBkLvlomCvbJcpFd4+/5AjAxtYRsfNy+ZqyrHa
+Sat6wL0g7ayLDFmwh1aVTGW21o6Sew==
+=CSDc
 -----END PGP SIGNATURE-----
 
---PLShwbF4Er3TfYyf--
+--hke3yhwg6rcplifn--
 
