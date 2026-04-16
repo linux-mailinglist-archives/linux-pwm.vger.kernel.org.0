@@ -1,51 +1,51 @@
-Return-Path: <linux-pwm+bounces-8613-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8614-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id IMuaEFDk4GlhnAAAu9opvQ
-	(envelope-from <linux-pwm+bounces-8613-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Thu, 16 Apr 2026 15:29:52 +0200
+	id 8NI1DMHk4GlhnAAAu9opvQ
+	(envelope-from <linux-pwm+bounces-8614-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Thu, 16 Apr 2026 15:31:45 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 975F840ED76
-	for <lists+linux-pwm@lfdr.de>; Thu, 16 Apr 2026 15:29:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id A291840EDBB
+	for <lists+linux-pwm@lfdr.de>; Thu, 16 Apr 2026 15:31:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8455A3009179
-	for <lists+linux-pwm@lfdr.de>; Thu, 16 Apr 2026 13:23:57 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id ACB79316C8F8
+	for <lists+linux-pwm@lfdr.de>; Thu, 16 Apr 2026 13:24:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D8ACA37F8AF;
-	Thu, 16 Apr 2026 13:23:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9010E3909B2;
+	Thu, 16 Apr 2026 13:24:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V3htEgr3"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R1PbFdr5"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B31011B4156;
-	Thu, 16 Apr 2026 13:23:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B6BB3B1B3;
+	Thu, 16 Apr 2026 13:24:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776345836; cv=none; b=qTKCUKGuIDvpKtYSVZpaOvSuWsGmd91YRTL6wqYs11/CFFSLFC+v3OetOj17pZNdFpRAL3MoQE3yxOhXKYnQI/0HJZ9LXFElwy6gjxKvF+IeiKGuIt313g+KqYIhn7BYHqRP3I61BB/sUX7T70gRv9Cr+kVyydAvniT39bS5hvU=
+	t=1776345865; cv=none; b=CBA/nUh6AxUsTHeRYflyHcOujEKmxthe74ZFNJiHQBZGoi1I2+VHS7hqE/zG3Emvwh9kptdwwabeVWnsomZiurVR8is4ghQIxLu5FY35ms9SLAUTw5LJBjdbL/HxngSQzfAI4IaxFXVR4ghIKn1W+mMRlgFTngudICpQCpeZfHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776345836; c=relaxed/simple;
-	bh=hRG0FCm6KyojBfsw43WXkNV/SeyMVXmuLRWjbFZGyAA=;
+	s=arc-20240116; t=1776345865; c=relaxed/simple;
+	bh=So18fWYUJPi+8pxch5HDhbtM/r2zyEI6RevbEtDfr7k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rtJUPAUI5oWLzwy/CsuHNwSUM3hk+JcPuWtGc4pboJVIT4pWgwy9wVu150229IdIvvb6rdi/7RYFxf7+LPrz+2k312z/awsjCF+55DzM+04lRUZjM8XgJo31BUgmHeMxdgI39f6UqvPOtwCRwL6axjWRyX+LIipULXwJUJzOXSM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V3htEgr3; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28706C2BCB3;
-	Thu, 16 Apr 2026 13:23:51 +0000 (UTC)
+	 In-Reply-To:Content-Type; b=my8G9ms1BrivYOQPkawhKhMJdwS7mWjFYGl1EI47AhIIklfPRAuZsYt2HRZKMvsL6NTq8BlKIg58zxpptDSm16FAZl3OSpx5Mc6fR5oYviZGXxy+AGThLZcS9UktTHkNAgYwzdzOAU8SWkz2OKH2s9subkX6cQCtyGmlbKiv/TQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R1PbFdr5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78FAAC2BCAF;
+	Thu, 16 Apr 2026 13:24:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776345836;
-	bh=hRG0FCm6KyojBfsw43WXkNV/SeyMVXmuLRWjbFZGyAA=;
+	s=k20201202; t=1776345864;
+	bh=So18fWYUJPi+8pxch5HDhbtM/r2zyEI6RevbEtDfr7k=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=V3htEgr3U6Hl02hgVlxHlZCHcEAK+VzRxoAUIOg1891yaNp0rKd1XEYUjFEWPLpvJ
-	 lgU3d+fktrPpQ/801ayhOYvS55aGst6ye05W66jnjamENWi9IeU7/TiG+G3bUrsHFa
-	 /7UyirdvSCk7SCS8VMQpmuSl+e0FHPJ/KYrhRgPLEC+YpYOpFcxjvc/HXZIpSPDt9M
-	 n3K6EGAfAy9+x9n/wtD1alR1zIxGd6AXch5yixnstWaODmtxdxfkQeuCyk8T1DoZ2p
-	 pbx3Dr/q1u3/D0mGG9niSuGqfauCx4c9ronSCfr0db+yGtyGWcn7grFwLb0KbBXLFb
-	 UymibCp3qCdFA==
-Message-ID: <e9904440-b08d-4f9d-8d66-121633289695@kernel.org>
-Date: Thu, 16 Apr 2026 15:23:49 +0200
+	b=R1PbFdr5+E9Kl2J4tb4SlIbBZmhJvGQloYDgqncCyHVgMmZ6kq0aTiUhrH45mId7a
+	 o37uNXEGFku/0qpVpWySoWFicjCp625AXY3FrZemyxX0k+VfuMUpvMwE8UoxsdTWFn
+	 PgxqEgxFxASWON3AsbyVSrxC1FqA1IY2FnqKl4UNSowEoTGBeoK6f2Kga19XO2yMKi
+	 KBGP3iObjpHL1ttIGRchI3dmvjmAApv7nWrjX9ObL4KRCkyxetMT2nwiEda2ZEUuHZ
+	 KQurO+tTVwAigwu0sMxHbCexsTbOH3QqC5slHZrrS+z3C2CaqRVs6XL7D+vOYTsRZG
+	 4C1hyu9nTry6Q==
+Message-ID: <8918c9bb-f62d-482e-ad0f-6515c6e9a78b@kernel.org>
+Date: Thu, 16 Apr 2026 15:24:18 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -53,8 +53,8 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v5 4/4] MAINTAINERS: Add entry on Allwinner sun8i/H616 PWM
- driver
+Subject: Re: [PATCH v5 1/4] dt-bindings: pwm: allwinner: add h616 pwm
+ compatible
 To: Richard Genoud <richard.genoud@bootlin.com>,
  =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
@@ -66,9 +66,10 @@ Cc: Paul Kocialkowski <paulk@sys-base.io>,
  John Stultz <jstultz@google.com>, Joao Schim <joao@schimsalabim.eu>,
  bigunclemax@gmail.com, linux-pwm@vger.kernel.org,
  devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
- linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org,
+ Conor Dooley <conor.dooley@microchip.com>
 References: <20260416131419.3152419-1-richard.genoud@bootlin.com>
- <20260416131419.3152419-5-richard.genoud@bootlin.com>
+ <20260416131419.3152419-2-richard.genoud@bootlin.com>
 From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
 Autocrypt: addr=krzk@kernel.org; keydata=
@@ -114,7 +115,7 @@ Autocrypt: addr=krzk@kernel.org; keydata=
  jWt87ecuHlpL3uuQ0ZZNWqHgZoQLXoqC2ZV5KrtKWb/jyiFX/sxSrodALf0zf+tfHv0FZWT2
  zHjUqd0t4njD/UOsuIMOQn4Ig0SdivYPfZukb5cdasKJukG1NOpbW7yRNivaCnfZz6dTawXw
  XRIV/KDsHQiyVxKvN73bThKhONkcX2LWuD928tAR6XMM2G5ovxLe09vuOzzfTWQDsm++9UKF a/A=
-In-Reply-To: <20260416131419.3152419-5-richard.genoud@bootlin.com>
+In-Reply-To: <20260416131419.3152419-2-richard.genoud@bootlin.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -127,14 +128,14 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8613-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8614-lists,linux-pwm=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FREEMAIL_TO(0.00)[bootlin.com,kernel.org,gmail.com,sholland.org,pengutronix.de];
-	RCPT_COUNT_TWELVE(0.00)[19];
+	RCPT_COUNT_TWELVE(0.00)[20];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[sys-base.io,bootlin.com,google.com,schimsalabim.eu,gmail.com,vger.kernel.org,lists.infradead.org,lists.linux.dev];
+	FREEMAIL_CC(0.00)[sys-base.io,bootlin.com,google.com,schimsalabim.eu,gmail.com,vger.kernel.org,lists.infradead.org,lists.linux.dev,microchip.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
@@ -145,19 +146,28 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-pwm,dt];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 975F840ED76
+	DBL_BLOCKED_OPENRESOLVER(0.00)[microchip.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: A291840EDBB
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 On 16/04/2026 15:14, Richard Genoud wrote:
-> Add myself as maintainer of Allwinner SUN8I PWM driver.
+> Allwinner H616 PWM block is quite different from the A10 or H6, but at
+> the end, it uses the same clocks as the H6; so the sun4i pwm binding can
+> be used.
+> It has 6 channels than can generate PWM waveforms.
+> If the bypass is enabled (one bypass per channel) the output is no more
+> a PWM waveform, but a clock that can (and is) used as input for other
+> devices, like the AC300 PHY.
 > 
+> Acked-by: Conor Dooley <conor.dooley@microchip.com>
 > Tested-by: John Stultz <jstultz@google.com>
 
-Please drop or help me understand how one can test maintainers change?
-Build process tools are not testing.
 
+Please drop or help me understand how one can test bindings on the
+device? Build process tools are not testing.
+
+Don't blindly copy tags from cover letter.
 
 Best regards,
 Krzysztof
