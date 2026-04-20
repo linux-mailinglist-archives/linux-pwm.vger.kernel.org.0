@@ -1,265 +1,242 @@
-Return-Path: <linux-pwm+bounces-8643-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8644-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id WC1cBfwE5mkJqgEAu9opvQ
-	(envelope-from <linux-pwm+bounces-8643-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Mon, 20 Apr 2026 12:50:36 +0200
+	id CD5nIJYW5mnCrQEAu9opvQ
+	(envelope-from <linux-pwm+bounces-8644-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Mon, 20 Apr 2026 14:05:42 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C33142999C
-	for <lists+linux-pwm@lfdr.de>; Mon, 20 Apr 2026 12:50:35 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 01CB442A69E
+	for <lists+linux-pwm@lfdr.de>; Mon, 20 Apr 2026 14:05:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0C86B3090842
-	for <lists+linux-pwm@lfdr.de>; Mon, 20 Apr 2026 10:44:41 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id CC0BD303102C
+	for <lists+linux-pwm@lfdr.de>; Mon, 20 Apr 2026 12:02:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1377339EF0B;
-	Mon, 20 Apr 2026 10:43:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0D98A39EF09;
+	Mon, 20 Apr 2026 12:02:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qe6bMvOB"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="JznioJN5"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f52.google.com (mail-wr1-f52.google.com [209.85.221.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E774939DBE2
-	for <linux-pwm@vger.kernel.org>; Mon, 20 Apr 2026 10:43:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.52
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776681828; cv=none; b=UumzXtAeGudOrbP5BeVRRLn7s3dhKUrtpT1I1SCFYyVjUmT7T3BzGl6+m4VXVrQaH8iLOcvon9XhARAXWo/7EDB4PutBGYWzbncNCw9pBtG9v7Sy2A6ur8q54t2hsRvfxlrvWe71Fb2D9m+5n+pDB8Am9tmafc8vAmf+DKpxe38=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776681828; c=relaxed/simple;
-	bh=2izCtwVg2FbMrCF9D0GFBTIEFINhlDmb1BO3OtT2pMM=;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51DD81E5724;
+	Mon, 20 Apr 2026 12:02:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1776686563; cv=pass; b=X7RPqDugmrC/xhDLPDBZYzJRj5WF7lfQ6ay1NNfFW7Dr28tB/WRG41xN2XybU49x0bsCdzkaHNt25OkAcQ6WBqIJt91PyPXbMck2OuRle672WlNguHDLXQkH8HZi4xPVdVmugJDrwrXFx/KyHgZcqf2BZ+Us+b0N3GdOapg8s6U=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1776686563; c=relaxed/simple;
+	bh=RcPc1OlRKwWMBhXzycGc+rGrbxc0ZUaYQ6Zh6lfuvmc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KRxdBYICv9B2d9Ha6Z5zZPxdntISZ49g8w8qqx/IL03MHUfH8HOWyjqGbjuh650FmMunfzMeXcJOMP1ZEjUq/V7t9BfAG0sAo8/782fnZmAyE0gkOrv57pcbgUZjfuJyKQjtxe3AgCN0ynYeNz6fDdFGACuiwe7yQzglYhZ1hmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Qe6bMvOB; arc=none smtp.client-ip=209.85.221.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-wr1-f52.google.com with SMTP id ffacd0b85a97d-43cfbd17589so2173846f8f.0
-        for <linux-pwm@vger.kernel.org>; Mon, 20 Apr 2026 03:43:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1776681824; x=1777286624; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aaXdFUrPKp/aeXuJhYhtKOEu72sa7QrupczRt752uE0=;
-        b=Qe6bMvOBdtpLbY53loJ+cQkepeWM4SIg/K10YTyJEagIWcPJcJsH9GsLdQbeKR0ACi
-         yXY0f5CrS8kDdif2gTIXcET3mXWEOPcecK3Hns+4dJhBuu/TkPtEOHTfJqjdlTfBGWx4
-         M4Q8INcvzeTVkJ1zZIrehYoTs/eyF4npqj8m5UnCU+4c0odrm13WBWxQI++V6cUoyOso
-         c9AwYF4daauEUQpP7FwpliSYhrgUS44Blvs9O3Ed0OuwkpKOe0BCdgmHwFEJmQsj05Hc
-         2iN4LNDgjlke/PD3/A8GXqmseb7Avty0z6MO8hX4boWJJHQPJF8w+GWFbmmwyEKGkYbe
-         GECA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776681824; x=1777286624;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=aaXdFUrPKp/aeXuJhYhtKOEu72sa7QrupczRt752uE0=;
-        b=D4oHWSjBq3EqJgtzKVf07FazJ0JmOq6LkXwvMvnJ7JDvnpK8U50FyrpGZesw/wfqQl
-         dVvx8Y/978loiWZms0KTapaiolOsnqqBYDonlW487IJ7KBl6chEkDUt002QSW0ro8jmp
-         T8L1SkeUtmrdApYaWTZrRxCBc0b3q36tcrJlFxFy6sE417TAw3jpbwauM3QRXLuhHeAo
-         eamTAbVT1PbVcCvR7PtjKJUydkpQVuLZeHupMOTkgrnJCVGj1VVlFzQ7m/rV4XLJT8gW
-         nnCqePwM1JJjFswgWkObW6omEUSJafaVLdTV78xImWhQKC2cSwmRoXsDE/N3T4rZ8A7k
-         3+2w==
-X-Forwarded-Encrypted: i=1; AFNElJ8/M5Rz+tFyDYZHjz7RiT2nm+PMNg/g61ya0FbKJ2hB4P+hTQQxhAqLYhUrnsUMJRxLZ95m7SHPZC4=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yyv3W4aByNAUB+umHdix76YBdJFbnOk6uFMZDpQ7t0FuGSUh4Fk
-	nEl9wY8OBpkxj4idLvxudSthBgG6p4VZ+qEvyG5XhZW/KC7nbYl40Ycq
-X-Gm-Gg: AeBDievVrBGVJxtVPRYrpZnA3EJT6FK4nBTatYIk2Dk1ojxWdwDKMsVU5sy1YxyPhvV
-	PpuFBuCZECp+7cp1SJQ1/3bh5XHz9OrL2H8OfTo5SS4LOr8UvDYvVXcr6uBULSbV7tovTHECsBD
-	lK0CNhcbX0iv2ySzTsRZaL16xgis9zhU/3ViJwIjn07ciSz0wRx+rA2+pNPTorctb4LC3PqeNLy
-	ZxuiShjjY8Kv8e+Mj2PkK/qeF2kw+wPBpPJZHFFQUOQHbPguerLF9n5pfuH76ulzuyxfqMfmsVO
-	vPv8EZI0uuucqYSUMsTlQU9V2ECdSsuLCz4o5GCFSrcZJQq5K/zz/qO5qtIs9wi1sh0OssNRo6+
-	JZhR8N1ro4lwkoSz5zQlxRkRdAqjsE+PvUjZTy0lP/xojbHH0CSiNNrjdID2KIKrlYj7c8e03TU
-	AgTc1bIjAub1V612QOn3Ll+/QC9/v5GIEKiZVHqGCATTIs6SzOY1SlcvPjpUU=
-X-Received: by 2002:a05:6000:288c:b0:43e:a69b:d804 with SMTP id ffacd0b85a97d-43fe3df26b1mr20158317f8f.29.1776681824064;
-        Mon, 20 Apr 2026 03:43:44 -0700 (PDT)
-Received: from localhost.localdomain ([2a00:23c4:a758:8a01:5f3e:f914:6f8c:72c3])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-43fe4c221cdsm28038301f8f.0.2026.04.20.03.43.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Apr 2026 03:43:43 -0700 (PDT)
-From: Biju <biju.das.au@gmail.com>
-X-Google-Original-From: Biju <biju.das.jz@bp.renesas.com>
-To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Philipp Zabel <p.zabel@pengutronix.de>,
-	Geert Uytterhoeven <geert+renesas@glider.be>,
-	Magnus Damm <magnus.damm@gmail.com>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>,
-	linux-pwm@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	linux-renesas-soc@vger.kernel.org,
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	Biju Das <biju.das.au@gmail.com>,
-	Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
-Subject: [PATCH v5 9/9] pwm: rzg2l-gpt: Add RZ/G3E support
-Date: Mon, 20 Apr 2026 11:43:26 +0100
-Message-ID: <20260420104332.153640-10-biju.das.jz@bp.renesas.com>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20260420104332.153640-1-biju.das.jz@bp.renesas.com>
-References: <20260420104332.153640-1-biju.das.jz@bp.renesas.com>
+	 MIME-Version:Content-Type; b=VjjHD28xLE3+f67qIfDi8bqVitJoldRsvnpT99PYQ3LG0qr49cn2UhkIjKeXOlNN/77BOk3Fdzdeoo8l/3gq7h34MSDU+3z0c85gMUKGLL+tUQuASpudg54dMQ3QE7sLOm5TxtwPzqLjXMn2uANf1Ppz1fsuRYvW2+JjIJ0tA2Q=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=JznioJN5; arc=pass smtp.client-ip=136.143.188.112
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+ARC-Seal: i=1; a=rsa-sha256; t=1776686532; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=D4wV3c/yZdK1eU7KT/phx0dwslxU6lVYK+XH3o6odSa2T2bsmVNuPGkpPokO9odCGebd1VL6x+JQmJochSSU2+ZygtUA8PJjzyUuX0A9Qrl0XWGmVojg77UaxS/3Sny5w7IefWTfwjsdGx5f10vKP7mNZOOq3/lOb08dGJ1R+HE=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1776686532; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=x5mFNmk8QCjW303+12nnTbEnOf0gTpLfX0AgHqHSXVk=; 
+	b=O4SRXC9WiJ06iz4jU46oIS5HKKrQZDbZtgXUWFYVGQe2rswu3bj3BkygH+aWXgqxyyPaddoz9B1yPHO/KFVDzIh7GqYMIRjQejUCYGzFYaYlP5w7SL1/EArLcQBvCc9zv7INEtZGigKIoJ6D0I7RXLUuoYFc0bOQaEYeUm3rmnU=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
+	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1776686531;
+	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
+	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
+	bh=x5mFNmk8QCjW303+12nnTbEnOf0gTpLfX0AgHqHSXVk=;
+	b=JznioJN5R98NhLocaRwmQa8qpR7kvDOKjtwdelsT7L3l+7wbXLNSQEEGVvn+u95v
+	UZwrLnpD0cFG5havrVDsKzAvRnbR7/565GTMHbXmCLQpi0wwBdn9P0HWyPwh07tJV4A
+	s58b6CDl+WyyoJFKqUp6qGkh+0pcHFfjfmEpk9Mw=
+Received: by mx.zohomail.com with SMTPS id 1776686529459133.0396587303926;
+	Mon, 20 Apr 2026 05:02:09 -0700 (PDT)
+From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+To: William Breathitt Gray <wbg@kernel.org>
+Cc: William Breathitt Gray <wbg@kernel.org>,
+ Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
+ Lee Jones <lee@kernel.org>, kernel@collabora.com,
+ Jonas Karlman <jonas@kwiboo.se>, Alexey Charkov <alchark@gmail.com>,
+ linux-rockchip@lists.infradead.org, linux-pwm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Subject: Re: [PATCH v3 4/5] counter: Add rockchip-pwm-capture driver
+Date: Mon, 20 Apr 2026 14:02:03 +0200
+Message-ID: <oA6h2S_2RQulBS91CKXxhw@collabora.com>
+In-Reply-To: <20251206093419.40067-1-wbg@kernel.org>
+References:
+ <20251027-rk3576-pwm-v3-4-654a5cb1e3f8@collabora.com>
+ <20251206093419.40067-1-wbg@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="utf-8"
 X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[collabora.com,none];
+	CTE_CASE(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[collabora.com:s=zohomail];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8643-lists,linux-pwm=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[bp.renesas.com,vger.kernel.org,gmail.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_TO(0.00)[kernel.org,pengutronix.de,glider.be,gmail.com];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	TAGGED_FROM(0.00)[bounces-8644-lists,linux-pwm=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_CC(0.00)[kernel.org,sntech.de,collabora.com,kwiboo.se,gmail.com,lists.infradead.org,vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[bijudasau@gmail.com,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-pwm,renesas];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FROM_HAS_DN(0.00)[]
-X-Rspamd-Queue-Id: 6C33142999C
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[nicolas.frattaroli@collabora.com,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[collabora.com:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[collabora.com:dkim,collabora.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 01CB442A69E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-From: Biju Das <biju.das.jz@bp.renesas.com>
+Hi,
 
-Add RZ/G3E GPT support. It has multiple clocks and resets compared to
-RZ/G2L. Also prescale field width and factor for calculating prescale
-are different.
+finally got an opportunity to work on this again.
 
-Reviewed-by: Tommaso Merciai <tommaso.merciai.xr@bp.renesas.com>
-Signed-off-by: Biju Das <biju.das.jz@bp.renesas.com>
----
-v4->v5:
- * No change.
-v3->v4:
- * Added RZG3E_GTCR_TPCS bit definition for RZ/G3E and added to
-   rzg3e_data.
-v2->v3:
- * No change.
-v1->v2:
- * Added link to hardware manual
- * Updated limitation section
- * Collected tag 
----
- drivers/pwm/pwm-rzg2l-gpt.c | 47 +++++++++++++++++++++++++++++++++++--
- 1 file changed, 45 insertions(+), 2 deletions(-)
+I'll respond to some things in-line. If a review isn't directly
+addressed, you can assume I acknowledge it and will address it
+in the next revision with no further comment needed.
 
-diff --git a/drivers/pwm/pwm-rzg2l-gpt.c b/drivers/pwm/pwm-rzg2l-gpt.c
-index de68c02b2d50..8cb3e67f4fdb 100644
---- a/drivers/pwm/pwm-rzg2l-gpt.c
-+++ b/drivers/pwm/pwm-rzg2l-gpt.c
-@@ -6,15 +6,21 @@
-  *
-  * Hardware manual for this IP can be found here
-  * https://www.renesas.com/eu/en/document/mah/rzg2l-group-rzg2lc-group-users-manual-hardware-0?language=en
-+ * https://www.renesas.com/en/document/mah/rzg3e-group-users-manual-hardware
-  *
-  * Limitations:
-  * - Counter must be stopped before modifying Mode and Prescaler.
-  * - When PWM is disabled, the output is driven to inactive.
-  * - While the hardware supports both polarities, the driver (for now)
-  *   only handles normal polarity.
-- * - General PWM Timer (GPT) has 8 HW channels for PWM operations and
-- *   each HW channel have 2 IOs.
-+ * - For RZ/G2L, the General PWM Timer (GPT) has 8 HW channels for PWM
-+     operations and each HW channel have 2 IOs (GTIOCn{A, B}).
-  * - Each IO is modelled as an independent PWM channel.
-+ * - For RZ/G3E, the General PWM Timer (GPT) has 16 HW channels for PWM
-+     operations (GPT0: 8 channels, GPT1: 8 Channels) and each HW channel
-+     have 4 IOs (GTIOCn{A,AN,B,BN}). The 2 extra IOs GTIOCnAN and GTIOCnBN
-+     in RZ/G3E are anti-phase signals of GTIOCnA and GTIOCnB. The
-+     anti-phase signals of RZ/G3E are not modelled as PWM channel.
-  * - When both channels are used, disabling the channel on one stops the
-  *   other.
-  * - When both channels are used, the period of both IOs in the HW channel
-@@ -48,6 +54,7 @@
- #define RZG2L_GTCR_CST		BIT(0)
- #define RZG2L_GTCR_MD		GENMASK(18, 16)
- #define RZG2L_GTCR_TPCS		GENMASK(26, 24)
-+#define RZG3E_GTCR_TPCS		GENMASK(26, 23)
- 
- #define RZG2L_GTCR_MD_SAW_WAVE_PWM_MODE	FIELD_PREP(RZG2L_GTCR_MD, 0)
- 
-@@ -160,6 +167,27 @@ static u8 rzg2l_gpt_calculate_prescale(u64 period_ticks)
- 	return prescale;
- }
- 
-+static u8 rzg3e_gpt_calculate_prescale(u64 period_ticks)
-+{
-+	u32 prescaled_period_ticks;
-+	u8 prescale;
-+
-+	prescaled_period_ticks = period_ticks >> 32;
-+	if (prescaled_period_ticks >= 64 && prescaled_period_ticks < 256) {
-+		prescale = 6;
-+	} else if (prescaled_period_ticks >= 256 && prescaled_period_ticks < 1024) {
-+		prescale = 8;
-+	} else if (prescaled_period_ticks >= 1024) {
-+		prescale = 10;
-+	} else {
-+		prescale = fls(prescaled_period_ticks);
-+		if (prescale > 1)
-+			prescale -= 1;
-+	}
-+
-+	return prescale;
-+}
-+
- static int rzg2l_gpt_request(struct pwm_chip *chip, struct pwm_device *pwm)
- {
- 	struct rzg2l_gpt_chip *rzg2l_gpt = to_rzg2l_gpt_chip(chip);
-@@ -545,6 +573,14 @@ static int rzg2l_gpt_probe(struct platform_device *pdev)
- 	if (IS_ERR(rstc))
- 		return dev_err_probe(dev, PTR_ERR(rstc), "Cannot deassert reset control\n");
- 
-+	rstc = devm_reset_control_get_optional_exclusive_deasserted(dev, "rst_s");
-+	if (IS_ERR(rstc))
-+		return dev_err_probe(dev, PTR_ERR(rstc), "Cannot deassert rst_s reset\n");
-+
-+	clk = devm_clk_get_optional_enabled(dev, "bus");
-+	if (IS_ERR(clk))
-+		return dev_err_probe(dev, PTR_ERR(clk), "Cannot get bus clock\n");
-+
- 	clk = devm_clk_get_enabled(dev, NULL);
- 	if (IS_ERR(clk))
- 		return dev_err_probe(dev, PTR_ERR(clk), "Cannot get clock\n");
-@@ -587,6 +623,12 @@ static int rzg2l_gpt_probe(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct rzg2l_gpt_info rzg3e_data = {
-+	.calculate_prescale = rzg3e_gpt_calculate_prescale,
-+	.gtcr_tpcs = RZG3E_GTCR_TPCS,
-+	.prescale_mult = 1,
-+};
-+
- static const struct rzg2l_gpt_info rzg2l_data = {
- 	.calculate_prescale = rzg2l_gpt_calculate_prescale,
- 	.gtcr_tpcs = RZG2L_GTCR_TPCS,
-@@ -594,6 +636,7 @@ static const struct rzg2l_gpt_info rzg2l_data = {
- };
- 
- static const struct of_device_id rzg2l_gpt_of_table[] = {
-+	{ .compatible = "renesas,r9a09g047-gpt", .data = &rzg3e_data },
- 	{ .compatible = "renesas,rzg2l-gpt", .data = &rzg2l_data },
- 	{ /* Sentinel */ }
- };
--- 
-2.43.0
+On Saturday, 6 December 2025 10:34:17 Central European Summer Time William Breathitt Gray wrote:
+> > +struct rockchip_pwm_capture {
+> > +	struct rockchip_mfpwm_func *pwmf;
+> > +	struct counter_device *counter;
+> 
+> Is this structure member used at all? If not, you should just remove it.
+
+The counter member is used in the interrupt handler. I actually
+noticed that I request the interrupt before pc->counter is set,
+so if an interrupt fires before the probe function finishes then
+I think the handler would run with a NULL counter member. Oops,
+I'll rectify that.
+
+> > +	bool is_enabled;
+> 
+> Does this device offer some way to probe whether PWM capture mode is
+> enabled? I suspect so, because I see PWM_ENABLE.pwm_en enables the
+> channel and PWM_CTRL.pwm_mode selects capture mode, so perhaps we're
+> able to read the current state of those registers. If you're able to
+> read those registers to determine the enable state, I'd suggest wrapping
+> that into a helper function and calling it when you need to determine
+> whether the capture mode is currently enabled.
+
+I'm going to read the hardware state in the next revision, you're right
+that this is generally a better idea.
+
+> 
+> If we're not able to probe the enable state, is it safe to assume we're
+> in a disabled state when the module loads, or should we ensure it by
+> unconditionally disabling PWM capture mode during
+> rockchip_pwm_capture_probe()?
+
+In my next revision, I've now modified it to mfpwm_acquire if the hardware
+state has the counter enabled during probe. This sounds niche but I'm also
+doing this on the PWM output side, where Uwe rightfully pointed out that
+a bootloader may have enabled PWM output in hardware and Linux needs to
+recognise that state without any heavy-handed actions. For the counter
+PWM capture side, resetting it to a known state wouldn't be disruptive in
+the same way as it would be for PWM output, but I think it's a good idea
+to keep the state as-is since we can read it.
+
+> [... snip ...]
+
+> > +static int rkpwmc_count_read(struct counter_device *counter,
+> > +			     struct counter_count *count, u64 *value)
+> > +{
+> > +	struct rockchip_pwm_capture *pc = counter_priv(counter);
+> > +
+> > +	guard(spinlock)(&pc->enable_lock);
+> > +
+> > +	if (!pc->is_enabled) {
+> > +		*value = 0;
+> > +		return 0;
+> > +	}
+> 
+> I don't think there's a need to check whether capture mode is disabled.
+> The user should be aware of the enable state of the Count by checking
+> the respective "enable" attribute; and if they ignore that, a value of
+> "0" doesn't inherently tell them that the Count is disabled which makes
+> it moot to do so. I'd suggest just removing this check entirely and
+> returning the register values unconditionally.
+
+I see what you're going for, but if the counter isn't enabled, we can't
+rely in the counter having an mfpwm_acquire, and consequently, we can't
+rely on the PWM core clock being on, which is required for reading the
+registers.
+
+In my next revision, I'll still be returning 0 if the counter is disabled,
+but the is_enabled member is gone, so there's a new function called
+rkpwmc_acquire_if_enabled to still make this correct.
+
+I could of course also extend the core driver to let me poke at these
+non-shared registers without exclusive control over the hardware, but
+that may be more trouble than it's worth.
+
+I'll also no longer return 0 on bogus count IDs when the counter is
+disabled.
+
+> > +
+> > +	switch (count->id) {
+> > +	case COUNT_LPC:
+> > +		*value = mfpwm_reg_read(pc->pwmf->base, PWMV4_REG_LPC);
+> > +		return 0;
+> > +	case COUNT_HPC:
+> > +		*value = mfpwm_reg_read(pc->pwmf->base, PWMV4_REG_HPC);
+> > +		return 0;
+> > +	default:
+> > +		return -EINVAL;
+> > +	}
+> > +}
+> > +
+> > +static const struct counter_ops rkpwmc_ops = {
+> > +	.count_read = rkpwmc_count_read,
+> > +};
+> 
+> You should implement a signal_read() callback if its possible to probe
+> the current state of PWM Clock. You should implement action_read() if
+> its possible to probe the current polarity of "pwm_in" in order to set
+> which Synapse is currently active.
+
+Unfortunately, it doesn't seem like the hardware allows direct access to
+read the signal. "pwm_in" as it appears in the block diagram seems to be
+an entirely internal signal that's not accessible through MMIO.
+
+Thank you for the reviews!
+
+Kind regards,
+Nicolas Frattaroli
+
+> 
+> William Breathitt Gray
+> 
+> [^1] https://opensource.rock-chips.com/images/3/36/Rockchip_RK3506_TRM_Part_1_V1.2-20250811.pdf
+> 
+
+
+
 
 
