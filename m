@@ -1,145 +1,361 @@
-Return-Path: <linux-pwm+bounces-8651-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8652-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wKs+MtpU5mkDuwEAu9opvQ
-	(envelope-from <linux-pwm+bounces-8651-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Mon, 20 Apr 2026 18:31:22 +0200
+	id eNAOIYJV5mkDuwEAu9opvQ
+	(envelope-from <linux-pwm+bounces-8652-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Mon, 20 Apr 2026 18:34:10 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4B42742F92F
-	for <lists+linux-pwm@lfdr.de>; Mon, 20 Apr 2026 18:31:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C6E4642FA2C
+	for <lists+linux-pwm@lfdr.de>; Mon, 20 Apr 2026 18:34:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id A0CBE35D4396
-	for <lists+linux-pwm@lfdr.de>; Mon, 20 Apr 2026 14:44:31 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 92EB63628CDF
+	for <lists+linux-pwm@lfdr.de>; Mon, 20 Apr 2026 14:47:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B01C3B7B61;
-	Mon, 20 Apr 2026 13:44:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4AC552FE05B;
+	Mon, 20 Apr 2026 13:53:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="e0yYgZgA"
+	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="hNZb0nWP"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 300D513C9C4;
-	Mon, 20 Apr 2026 13:44:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6253F2FD1D0;
+	Mon, 20 Apr 2026 13:53:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776692685; cv=pass; b=DRrwrZas53dwhailMYd/MZMk4gIXoEBT2lHyvz/t11LbN3yxR9cpmYt9vzZCcoWNLnL2qmyZsCDsVVuSsFulrvrC1bRjvXOjhwZeJoy9KRUodZCiZK0/S8gqXdDA7PYus5AiQwSXsedB7SopRvzeorrFE7tqoJfSkFrqtbq7m1Q=
+	t=1776693238; cv=pass; b=Ow0qst1M0W19BIErk9CD2w20Ve/2pf26mloDzNt8NdCAwJdXW4II2XBFy1WNPQJECF8u8uMro4RdQjYt1QMFwn5tdtuMV629ER1o1xEZYAGkDhEYwBoolC60izqrrP/S3nDdb/qL9hDs7/qNm0i/RV0B08OQeh6fLmyvNb7lb9I=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776692685; c=relaxed/simple;
-	bh=sNIWRbAV3+NPzvh4QoLTVBs2+aGwD7SqO1y5ZMLcUjg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=Uxr6KZwFHa0kpYsKF7XJbda0Wf6HwKAbc47jUDe1hrosAcscua2yC+pNbWn+o1v0GIq2vQ3TuZhq1UluG9jMxWJJ51UdoJwnaxDSHJGylMR/wszbAYEPs42P72c4NvTC7bibEAoyYBmLivoyY2xhFqAfNYjrqGYc0N8GJlLbee0=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=e0yYgZgA; arc=pass smtp.client-ip=136.143.188.112
+	s=arc-20240116; t=1776693238; c=relaxed/simple;
+	bh=AOJe3CuLjxf2eHyx2/Ymtyb10idbVjyb7oKSzqH1yBo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=lJkS+pZmRn3M/5hRNcfXckkgWxBKkDxWKJ00dAytZq+z9BlG9J9zM9EqF/Ycq/KptTskDK69cvBpdJ3CLuoarrppcn1OBVQRBKnLj0IPl1fInGWrmOOXEajv6cJa+5PXdkM1ur336aHAVwbXV/dqiBssPV2HqpGmiXXI7Vrt03o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=hNZb0nWP; arc=pass smtp.client-ip=136.143.188.112
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1776692659; cv=none; 
+ARC-Seal: i=1; a=rsa-sha256; t=1776693208; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=mkcwrM2zd34qpqDcVR6YMrm683IYTNFwsnrcnqxXc6QfyMACLBM9776F9ysKorGVEK2v5XKxTUkCdbYJ6JhqCK5ofdRtXhBB7y3/inV66/60tpz48tRUzv0+CT35vpax+hIbjgCWck7D/Ykfy+RzBKYTUeW6pruZk5FLjaYBmSI=
+	b=HNcAcjva049tmOftgDfccB0LJdwBE3ils8xoWACsWWwnUpgNwJJFeXselsXuQmxzf5EwdL1PSAlbvpYKntNdgLs0jCD4lxueWVcNTme75fIAK8QyXperFQGpXejM8mNyDfK3SZedGrNjJA2S/fpoyv0wMLzFhlmzjf+T4oKLNCs=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1776692659; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=1V3GuJpNnFWJCfMVIGdTdAgiX6h8PD58kcy6YMlRmyg=; 
-	b=WB27jklrsxoT2MtVUad/IT9wsRm0zzUx4og1biUR0t3/KOxIYvo9noN98ctcKY1s/WbEIkh5GzANyH9DmMvMmL43k2mAQje762NCtJfK8E2wdIG9MmEksSVV2jK7CSFLtuIiNJXFY/6rEuXZ/vS45r9nL8lo/hadSfpD5z485j4=
+	t=1776693208; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=Le1fvxwzT+XpTlOORK9GCCBvKqaDoLHsvoJjKJsDdD0=; 
+	b=mPCWGiTzD+4vejp4cNx0ggmGXqqlHaTvxBpKVXb1+R15hi0zvVG4IsFNkUi89kGMUGXkelPJ9c2USedAQAClJWm437gHWJaXr3XlqCTnyIMPyb6TjJLKzK6TQ2F2HusRNld1xZJtHKol9l3sXpzWwP32iOgtbJdPMEtjWcxnGGU=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
 	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1776692658;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1776693208;
 	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=1V3GuJpNnFWJCfMVIGdTdAgiX6h8PD58kcy6YMlRmyg=;
-	b=e0yYgZgAY6nsZsSsAPvVGSdH5P1MJJs7vvPiCsZXWVYhL0E7HOLvx/sKsb+q3sVl
-	WgOsEKk9ClrKgrH30latvBAEHpcZ1enwaenfSQnr8RKUtPozJWIb+FrdjyLKRzNrXb/
-	AzxJGRCZ3swvSlmNxhyq9Wtin00TR6wgOyfwZUMI=
-Received: by mx.zohomail.com with SMTPS id 1776692658154201.29359424090717;
-	Mon, 20 Apr 2026 06:44:18 -0700 (PDT)
+	h=From:From:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:To:To:Cc:Cc:Reply-To;
+	bh=Le1fvxwzT+XpTlOORK9GCCBvKqaDoLHsvoJjKJsDdD0=;
+	b=hNZb0nWP8Ht6hp/r5cqgqJEGPn+HoAmPRljkKrOXvMxxEPz5IwzoYmOpyBExzp4E
+	o1b7p0pf6PWNRa6yKKGUTErXFwYTp8QEb7JfHNyeQ2BQGHlK3y93drOCG133ygdliAr
+	T9BM8GfLJ0vJx2+jy9h/H6d7J1ii6aMeBRb8B+zQ=
+Received: by mx.zohomail.com with SMTPS id 1776693206475139.18881717334955;
+	Mon, 20 Apr 2026 06:53:26 -0700 (PDT)
 From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-To: Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Lee Jones <lee@kernel.org>, William Breathitt Gray <wbg@kernel.org>,
- Damon Ding <damon.ding@rock-chips.com>
-Cc: kernel@collabora.com, Jonas Karlman <jonas@kwiboo.se>,
- Alexey Charkov <alchark@gmail.com>, linux-rockchip@lists.infradead.org,
- linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-iio@vger.kernel.org
-Subject: Re: [PATCH v4 3/5] pwm: Add rockchip PWMv4 driver
-Date: Mon, 20 Apr 2026 15:44:13 +0200
-Message-ID: <AP7g6gy2QFms8ov59vex7A@collabora.com>
-In-Reply-To: <20260420-rk3576-pwm-v4-3-421738c7bf28@collabora.com>
-References:
- <20260420-rk3576-pwm-v4-0-421738c7bf28@collabora.com>
- <20260420-rk3576-pwm-v4-3-421738c7bf28@collabora.com>
+Subject: [PATCH v5 0/6] Add Rockchip RK3576 PWM Support Through MFPWM
+Date: Mon, 20 Apr 2026 15:52:37 +0200
+Message-Id: <20260420-rk3576-pwm-v5-0-ae7cfbbe5427@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
 Content-Type: text/plain; charset="utf-8"
-X-Spamd-Result: default: False [-0.16 / 15.00];
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/23PTW7DIBAF4KtYrEs1DBjcrHqPKgvA4wY1Ngl2a
+ KrIdy9x+mc1yzfS92bmwkZKgUa2qS4sUQ5jiEMJ9UPF/M4Or8RDWzJDwBoUGJ7eZG00P7z3XGm
+ jhWuhJWtZAYdEXTgvZS/bW050PJXO6TZkzo7Efez7MG2qgc4TL70aFAK7gl0Yp5g+lmOyWMTX3
+ ubv3iw4cKuesNEevW3o2cf93rqY7GMpX6oy/nINuOJ45VpJ5cCTBn+Pyx8uAFdfZ1m4rpWtvRM
+ ku+YeV998eW7FVeEKhZGNN67Df3ye508kfjx7lgEAAA==
+X-Change-ID: 20250407-rk3576-pwm-46761bd0deaa
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>, 
+ Lee Jones <lee@kernel.org>, William Breathitt Gray <wbg@kernel.org>, 
+ Damon Ding <damon.ding@rock-chips.com>
+Cc: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>, 
+ kernel@collabora.com, Jonas Karlman <jonas@kwiboo.se>, 
+ Alexey Charkov <alchark@gmail.com>, linux-rockchip@lists.infradead.org, 
+ linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+ linux-iio@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>
+X-Mailer: b4 0.15.2
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
 	DMARC_POLICY_ALLOW(-0.50)[collabora.com,none];
-	CTE_CASE(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[collabora.com:s=zohomail];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	TAGGED_FROM(0.00)[bounces-8651-lists,linux-pwm=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_CC(0.00)[collabora.com,kwiboo.se,gmail.com,lists.infradead.org,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-8652-lists,linux-pwm=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	FREEMAIL_CC(0.00)[collabora.com,kwiboo.se,gmail.com,lists.infradead.org,vger.kernel.org,microchip.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[nicolas.frattaroli@collabora.com,linux-pwm@vger.kernel.org];
 	DKIM_TRACE(0.00)[collabora.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
 	MID_RHS_MATCH_FROM(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,collabora.com:email,collabora.com:dkim,collabora.com:mid]
-X-Rspamd-Queue-Id: 4B42742F92F
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,sntech.de:email,infradead.org:email,msgid.link:url,rock-chips.com:email,collabora.com:email,collabora.com:dkim,collabora.com:mid]
+X-Rspamd-Queue-Id: C6E4642FA2C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Monday, 20 April 2026 15:35:21 Central European Summer Time Nicolas Frattaroli wrote:
-> The Rockchip RK3576 brings with it a new PWM IP, in downstream code
-> referred to as "v4". This new IP is different enough from the previous
-> Rockchip IP that I felt it necessary to add a new driver for it, instead
-> of shoehorning it in the old one.
-> 
-> Add this new driver, based on the PWM core's waveform APIs. Its platform
-> device is registered by the parent mfpwm driver, from which it also
-> receives a little platform data struct, so that mfpwm can guarantee that
-> all the platform device drivers spread across different subsystems for
-> this specific hardware IP do not interfere with each other.
-> 
-> Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> ---
->  MAINTAINERS                            |   2 +
->  drivers/counter/Kconfig                |  11 +
->  drivers/counter/Makefile               |   1 +
->  drivers/counter/rockchip-pwm-capture.c | 307 ++++++++++++++++++++++++++
->  drivers/pwm/Kconfig                    |  11 +
->  drivers/pwm/Makefile                   |   1 +
->  drivers/pwm/pwm-rockchip-v4.c          | 383 +++++++++++++++++++++++++++++++++
->  7 files changed, 716 insertions(+)
-> 
+This series introduces support for some of the functions of the new PWM
+silicon found on Rockchip's RK3576 SoC. Due to the wide range of
+functionalities offered by it, including many parts which this series'
+first iteration does not attempt to implement for now. The drivers are
+modelled as an MFD, with no leakage of the MFD-ness into the binding, as
+it's a Linux implementation detail.
 
-Ah jeez, I accidentally squashed the counter driver into this commit.
-time to send out a v5, please ignore this.
+Here's some of the features of the hardware:
+- Continuous PWM output (implemented in this series)
+- One-shot/Finite repetition PWM output
+- PWM capture by counting high/low cycles (implemented in this series)
+- Sending IR transmissions in several TV remote protocols
+- Generating an interrupt based on the input being one of 16
+  user-specified values ("Power key capture")
+- Biphasic counter support
+- Using the hardware to measure a clock signal's frequency
+- Using the hardware to count a clock signal's pulses
+- Generating PWM output waveforms through a user-specified lookup table
 
+As you can tell, there's a lot. I've focused on continuous PWM output
+for now as the most important one for things like controlling fans. The
+PWM capture driver is an added bonus, because I needed at least two
+drivers to test things. Anyone doing consumer electronic devices like
+TVs based on the RK3576 may need to do the power key stuff at some
+stage, as it can be used to wake up the SoC with an IR remote. The IR
+transmission stuff in general may be a funny weekend project for someone
+at some point; I assume it's there so TV boxes can turn on and off TVs
+without needing the HDMI control stuff.
 
+At first, I considered simply integrating support for this new IP into
+the old pwm-rockchip driver, as the downstream vendor kernel did.
+However, the IP is significantly different from previous iterations.
+Especially if the goal is to support some of the additional
+functionality that the new silicon brings, doing it all in a single pwm
+driver would be untenable. Especially one that already supports other
+hardware with a way different set of registers.
+
+Hence, the mfpwm pattern: each device functionality is its own driver,
+and they all get registered as MFD cells by the parent mfpwm MFD driver,
+which is the one that binds to the DT compatible. Each device function
+driver then has to _acquire and _release the hardware when it needs
+control of it. If some other device function is using the device
+already, -EBUSY is returned, which the device function driver can then
+forward to the user and everyone is happy.
+
+The PWM output driver, pwm-rockchip-v4, uses the new waveform APIs. I
+thought while writing a new driver that I might as well use the new
+APIs.
+
+The PWM capture driver, implemented as a counter driver, is somewhat
+primitive, in that it doesn't make use of things like the biphasic
+counter support or clock measuring, but it serves as a good way to
+showcase and test the mutual exclusion that the mfpwm framework tries to
+achieve. It directly exposes the HPC/LPC counts as counters. Shoutouts
+to the counter subsystem's documentation by the way, it is some of the
+best subsystem documentation I've come across so far, and was a great
+help.
+
+All instances of the PWM controller have three clocks that they can pick
+and choose to derive the PWM signal from. One is the default PLL from
+the CRU, one is the 24 MHz crystal oscillator (gated by the CRU), and
+one is an RC oscillator (also gated by the CRU). Each PWM channel can
+switch between these with a clock selection register in the PWM register
+range, hence this is implemented as a clock mux.
+
+Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+---
+Changes in v5:
+- Fix the accidentally squashed counter driver patch, please refer to
+  "Changes in v4"
+- Link to v4: https://patch.msgid.link/20260420-rk3576-pwm-v4-0-421738c7bf28@collabora.com
+
+Changes in v4:
+- Fix MAINTAINERS entry for mfpwm
+- Make mfpwm core driver depend on ARCH_ROCKCHIP || COMPILE_TEST
+- Remove redundant Kconfig deps from pwm output and counter
+- mfpwm core: Introduce mfpwm_get_mode
+- mfpwm core: Rename pwm out to rockchip-pwm-v4
+- mfpwm core: Remove leftover commented out code
+- pwm output: Rename to rockchip-pwm-v4
+- pwm output: Rework round_wf_tohw:
+  - Pass wf/wfhw into round_params
+  - If wfhw->period is 0, don't do the offset clamping calculation to
+    avoid underflow
+  - Return -ERANGE in a theoretical future where the clock is that high
+  - Change debug print
+- pwm output: Change fromhw debug print to conform to other PWM drivers
+- pwm output: Adjust comments at the start of the file
+- pwm output: Store rate in wfhw struct
+- pwm output: Get rid of unnecessary initialization of locals
+- pwm output: Round up in fromhw
+- pwm output: Use common is_enabled helper in read_wf
+- pwm output: put exclusive rate and clk_disable on unlikely error path
+- pwm output: Set of_node_reused on this device, rather than the parent,
+  and set its device node to the parent node
+- pwm output: Make failure to acquire PWM in probe an error rather than
+  a warning
+- pwm output: Re-do error handling in probe function to drop clock and
+  mfpwm on failure
+- counter: Get rid of enable_lock and is_enabled, read this from hw regs
+- counter: Request IRQ after setting up the counter device
+- counter: Acquire mfpwm if counter hardware is enabled at module probe
+  time
+- counter: Rework signals, synapses and counts
+- Add patch to describe the Radxa ROCK 4D's PWM-controlled fan in DT
+- Link to v3: https://lore.kernel.org/r/20251027-rk3576-pwm-v3-0-654a5cb1e3f8@collabora.com
+
+Changes in v3:
+- Move drivers to using MFD; MFPWM now lives in the mfd tree as
+  requested by Lee Jones
+- Use the new FIELD_PREP_WM16 macros, and rebase onto next-20251027
+- Get rid of some unused hardware version accessor inline functions
+- pwm-rockchip-v4 pwm output: use devm_pwmchip_add and get rid of the
+  driver remove callback that's no longer needed
+- pwm-rockchip-v4 pwm output: use the parent MFD device's OF node, so
+  that referencing the pwm node in DT works correctly (ty Heiko)
+- pwm-rockchip-v4 pwm output: add link to public TRM for the hardware in
+  comment at the start of the file
+- pwm-rockchip-v4 pwm output: Capitalise first letter in kernel messages
+- pwm-rockchip-v4 pwm output: get rid of unnecessary mul_u64_u64_div_u64
+  calls where the operands cannot produce an overflow, turning it into a
+  regular u64 division
+- pwm-rockchip-v4 pwm output: simplify round_rate functions
+- pwm-rockchip-v4 pwm output: remove redundant duty <= period check
+- pwm-rockchip-v4 pwm output: print input parameters in tohw/fromhw in
+  debug statement
+- pwm-rockchip-v4 pwm output: clarify the offset < (period - duty) thing
+  being dictated by hardware with a comment in the limitations list and
+  near where the check is
+- pwm-rockchip-v4 pwm output: remove pointless mfpwm_acquire/release
+  calls in the fromhw/tohw functions, as they don't actually protect
+  against anything
+- pwm-rockchip-capture counter: expose HPC and LPC directly, and fire a
+  change-of-state event on the appropriate channel on interrupt
+- pwm-rockchip-capture counter: remove all the captures_left and delayed
+  worker cruft
+- pwm-rockchip-capture counter: use MFD parent's OF node
+- pwm-rockchip-capture counter: change intsts ^ clr to != and add a
+  comment explaining why there's no mask here
+- Link to v2: https://lore.kernel.org/r/20250602-rk3576-pwm-v2-0-a6434b0ce60c@collabora.com
+
+Changes in v2:
+- bindings: make osc required (as it's present in all instances of the
+  hardware I'm aware of) and add the rc clock as well. I thought it
+  wasn't present on some instances of the PWM IP due to the vendor SoC
+  dtsi, but checking the CRU made me realise those clocks do exist for
+  all instances. Did not include Conor's R-b as this constitutes a
+  substantial enough change to necessitate a re-review
+- move bitfield write-enable mask macros into bitfield.h by replacing
+  the original rockchip-specific utils header patch with a bitfield.h
+  patch.
+- mfpwm: change all instances of WARN to be dev_warn instead, as we have
+  a device pointer.
+- mfpwm: replace the ad-hoc clock mux implementation that used a sysfs
+  interface with a generic clk-mux.
+- mfpwm: add the rc clock
+- mfpwm: rename all the pwmv4_ prefixed functions to have the
+  rockchip_pwm_v4_ prefix instead
+- mfpwm: remove the pwmclk indirection, hand chosen_clk to pwmf
+- mfpwm: move to use the new bitfield macros for the WE mask
+- mfpwm: mark reg access inline functions as static to fix build errors
+- pwm-rockchip-v4 pwm output: replace mult_frac with mul_u64_u64_div_u64
+- pwm-rockchip-v4 pwm output: don't return error if parameters are out
+  of range, just set them to the maximum
+- pwm-rockchip-v4 pwm output: add rate to debug message
+- pwm-rockchip-v4 pwm output: if rate is 0 and pwm is disabled, set
+  waveform parameters to 0. The clock is expected to not have a rate in
+  this case.
+- pwm-rockchip-v4 pwm output: add pwmchip_remove in remove callback,
+  which also necessitated using chip as the platdata instead of the
+  driver private struct
+- pwm-rockchip-v4 pwm output: rework PWMV4_CTRL_UPDATE_EN since it never
+  needs to be set to 0 by the driver
+- pwm-rockchip-v4 pwm output: add a limitations list
+- pwm-rockchip-v4 pwm output: handle initial hardware state during
+  probe, enabling the pwm clock if the PWM is on and in continuous mode
+- pwm-rockchip-v4 pwm output: rename pwmv4_is_enabled to use the
+  rockchip_pwm_v4_ prefix instead
+- pwm-rockchip-v4 pwm output: remove pwmclk indirection, use clk API
+  directly
+- pwm-rockchip-v4 pwm output: no longer claim the chip as being atomic,
+  as the clk_rate_exclusive_get calls may sleep.
+- rockchip-pwm-capture counter: remove pwmclk indirection, use clk API
+  directly
+- rockchip-pwm-capture counter: replace mult_frac with
+  mul_u64_u64_div_u64
+- rockchip-pwm-capture counter: don't output periods/duty cycles if the
+  period is longer than the chosen timeout; this works around the
+  hardware cycle counter seemingly being impossible to clear
+- dts: added osc and rc to every pwm node
+- dts: reordered properties in pwm0 to be sorted
+- Link to v1: https://lore.kernel.org/r/20250408-rk3576-pwm-v1-0-a49286c2ca8e@collabora.com
+
+To: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
+To: Uwe Kleine-König <ukleinek@kernel.org>
+To: Rob Herring <robh@kernel.org>
+To: Krzysztof Kozlowski <krzk+dt@kernel.org>
+To: Conor Dooley <conor+dt@kernel.org>
+To: Heiko Stuebner <heiko@sntech.de>
+To: Lee Jones <lee@kernel.org>
+To: William Breathitt Gray <wbg@kernel.org>
+To: Damon Ding <damon.ding@rock-chips.com>
+Cc: kernel@collabora.com
+Cc: Jonas Karlman <jonas@kwiboo.se>
+Cc: Alexey Charkov <alchark@gmail.com>
+Cc: linux-rockchip@lists.infradead.org
+Cc: linux-pwm@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-iio@vger.kernel.org
+
+---
+Nicolas Frattaroli (6):
+      dt-bindings: pwm: Add a new binding for rockchip,rk3576-pwm
+      mfd: Add Rockchip mfpwm driver
+      pwm: Add rockchip PWMv4 driver
+      counter: Add rockchip-pwm-capture driver
+      arm64: dts: rockchip: add PWM nodes to RK3576 SoC dtsi
+      arm64: dts: rockchip: Add cooling fan to ROCK 4D
+
+ .../bindings/pwm/rockchip,rk3576-pwm.yaml          |  77 ++++
+ MAINTAINERS                                        |  11 +
+ arch/arm64/boot/dts/rockchip/rk3576-rock-4d.dts    |  50 +++
+ arch/arm64/boot/dts/rockchip/rk3576.dtsi           | 208 +++++++++
+ drivers/counter/Kconfig                            |  11 +
+ drivers/counter/Makefile                           |   1 +
+ drivers/counter/rockchip-pwm-capture.c             | 307 ++++++++++++++
+ drivers/mfd/Kconfig                                |  16 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/rockchip-mfpwm.c                       | 357 ++++++++++++++++
+ drivers/pwm/Kconfig                                |  11 +
+ drivers/pwm/Makefile                               |   1 +
+ drivers/pwm/pwm-rockchip-v4.c                      | 383 +++++++++++++++++
+ include/linux/mfd/rockchip-mfpwm.h                 | 470 +++++++++++++++++++++
+ 14 files changed, 1904 insertions(+)
+---
+base-commit: 77a9bb0193d790fb71c0edfc567bddc1b56fb3ff
+change-id: 20250407-rk3576-pwm-46761bd0deaa
+
+Best regards,
+--  
+Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
 
 
