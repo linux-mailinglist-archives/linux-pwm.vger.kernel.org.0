@@ -1,61 +1,59 @@
-Return-Path: <linux-pwm+bounces-8662-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8663-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +ENpFBA452no5QEAu9opvQ
-	(envelope-from <linux-pwm+bounces-8662-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Tue, 21 Apr 2026 10:40:48 +0200
+	id qDMlCWRL52lW6QEAu9opvQ
+	(envelope-from <linux-pwm+bounces-8663-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Tue, 21 Apr 2026 12:03:16 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id B692B438484
-	for <lists+linux-pwm@lfdr.de>; Tue, 21 Apr 2026 10:40:47 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 77EC0439466
+	for <lists+linux-pwm@lfdr.de>; Tue, 21 Apr 2026 12:03:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 89C103000539
-	for <lists+linux-pwm@lfdr.de>; Tue, 21 Apr 2026 08:40:46 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 7688C3007226
+	for <lists+linux-pwm@lfdr.de>; Tue, 21 Apr 2026 10:03:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 354E83845BA;
-	Tue, 21 Apr 2026 08:40:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6D75138A739;
+	Tue, 21 Apr 2026 10:03:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SzC6Xztf"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qQG0/tMw"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 118382BEC2C;
-	Tue, 21 Apr 2026 08:40:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A7E226B777;
+	Tue, 21 Apr 2026 10:03:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776760844; cv=none; b=ciPJU7J8x2s6wFZvlfwhxZopyJlSc9gBMWDeFigqXH/dTfotKps28NRBfQ5gfknj5LsfwOpz0XAl4uHLrEvvo6yLHyX5izPid1sjFTYjTDnDH1gHk5751OU0KM5XpaKuoj0QgF73n99ktQtpH1DCXGumm/MM52Xr20+TZGmkar0=
+	t=1776765790; cv=none; b=K8rAOzdE0vvrv2QId8na28zkg83r8quHw/mIwIKg7aAtNbz09HlKEsbii5IMUZObTwL4i8qSiXL/WGYVoFNegflcloeXkT8Pmy0upJMbiQsYvySwcj87AQICowTQLUIqEzQEp5TqhKpzxdeFr2NhaJ5Z1GbMCPW9DBBrOFOyiEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776760844; c=relaxed/simple;
-	bh=lL3SJ4yZxxEUPCjY46/+Bu+YW/+d5zITDGjxgFXBhII=;
+	s=arc-20240116; t=1776765790; c=relaxed/simple;
+	bh=h8bBtL8wg0AUNi1WT9ANodeYN11xYl4pCaescAzyOEs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZacAs8fp5vMDCuTfjgXqA/0/IUCjvl4NXiS6G9Qu9kLubJAy6FFlGQ2YfRWzK7wTg5gc2vmt6kFKv+FjIcQi+U0qNohQfn3jxWHVlGAEagTzv3wklmn9e8aQ9IdnTU++m33p4WzalHr6OCVFtWbPXS0e1VRDo+4G7DnWnm1BK2w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SzC6Xztf; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B0FAC2BCB0;
-	Tue, 21 Apr 2026 08:40:43 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=T1eGGtprEaj88Z6aom+MrZU8qty7HmK9fG1YQcppvsT6SBa5DAmFmIqY39bkX7MUFT0kPQKr2zwxtVz0x9jVX3PNqcfyocWB2wUpR6dhZaHdi4cWioMd0eJNCzqDYIo5aAwz/XIXXuMeOWyndPFG/guUM3IxnBWD5S09tOhh6aE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qQG0/tMw; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 854D1C2BCB0;
+	Tue, 21 Apr 2026 10:03:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1776760843;
-	bh=lL3SJ4yZxxEUPCjY46/+Bu+YW/+d5zITDGjxgFXBhII=;
+	s=k20201202; t=1776765789;
+	bh=h8bBtL8wg0AUNi1WT9ANodeYN11xYl4pCaescAzyOEs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SzC6XztfzndYSOI55OmDnpZ/1JcxoZZ2x9Q7BXBmfsoSE4ypbyrZvxnrhM2EEszRB
-	 Jw2ofqE0x6tgWwKO4RgLTIiiy1de60Dm+/BRdvUUsdIeaisJ+KwhkMME93FupDXLrZ
-	 ZTADOE6UxrUdFT0QTRQOK+8N2U2bhrP94dfkpDQtHMPw1/tf3ybTq+l45u9wZJt4u4
-	 YJOMNGEkAzyuQdyt+dOZsI3Pbmg8eg+IVvzr5HsjVby4tJCYG16AOicND95F/mxI5I
-	 zf/0+kUBi3ATarUYyVhOdLmnrpXIen3GoFj1OacygtLrFKfMqXcaWYOI6zUN1wBpOu
-	 6HwBosiIJ1G6g==
-Date: Tue, 21 Apr 2026 10:40:41 +0200
+	b=qQG0/tMwatxMZrEvf71uCyQ9L9h2IqZeHaeTrpd+HtygTsWrxla4333AoVfaOObGd
+	 un4aFiu0wX9Mwzaqy4WnSspCp3uqT7fqE5I4HoYgKozggWKp5J4hmSFhzDGl/6tsnD
+	 08M/5ZfP6ixH07O0H81frcmMLCl54ITJ4g9aMonn6nhpqV4s7qA+ICuM1XmjCzmD2U
+	 cuXDgrYMyAolVFf8H6JwB3UrMAEroIXckIKD/90rReraJ0O1lD2SLVsmKpYxZj1ldF
+	 R02djVEpL0WpGjxoM7DliH2WoAZnfvufo5xg9ZJnPLmCwcybrqJU8XE7YewfE6Dush
+	 qSCnpr+DwD6mw==
+Date: Tue, 21 Apr 2026 12:03:07 +0200
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Cosmin-Gabriel Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
-Cc: "biju.das.au" <biju.das.au@gmail.com>, 
-	Biju Das <biju.das.jz@bp.renesas.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH v5 4/9] pwm: rzg2l-gpt: Convert to waveform callbacks
-Message-ID: <aec2GeV_aP6rOtFg@monoceros>
-References: <20260420104332.153640-5-biju.das.jz@bp.renesas.com>
- <TYRPR01MB156193428AFA2FE631556EEDA852F2@TYRPR01MB15619.jpnprd01.prod.outlook.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-mips@vger.kernel.org, linux-pwm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v1 1/1] pwm: jz4740: Drop unused include
+Message-ID: <aedJDX0ONKhgTD1k@monoceros>
+References: <20260320220755.3237369-1-andriy.shevchenko@linux.intel.com>
+ <ab3GbpMDeH9RbVOm@ashevche-desk.local>
+ <aeX3oUzDqWSOTTsN@ashevche-desk.local>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -63,132 +61,104 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="dufzpb2udqlmhipg"
+	protocol="application/pgp-signature"; boundary="l46nedz5l4ekkshy"
 Content-Disposition: inline
-In-Reply-To: <TYRPR01MB156193428AFA2FE631556EEDA852F2@TYRPR01MB15619.jpnprd01.prod.outlook.com>
+In-Reply-To: <aeX3oUzDqWSOTTsN@ashevche-desk.local>
 X-Spamd-Result: default: False [-3.76 / 15.00];
 	SIGNED_PGP(-2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[gmail.com,bp.renesas.com,vger.kernel.org,glider.be];
-	TAGGED_FROM(0.00)[bounces-8662-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8663-lists,linux-pwm=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
+	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	FROM_HAS_DN(0.00)[];
 	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[ukleinek@kernel.org,linux-pwm@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[linux-pwm];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-pwm,renesas];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_MAILLIST(0.00)[]
-X-Rspamd-Queue-Id: B692B438484
+	RCPT_COUNT_FIVE(0.00)[5];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
+X-Rspamd-Queue-Id: 77EC0439466
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
 
---dufzpb2udqlmhipg
+--l46nedz5l4ekkshy
 Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v5 4/9] pwm: rzg2l-gpt: Convert to waveform callbacks
+Subject: Re: [PATCH v1 1/1] pwm: jz4740: Drop unused include
 MIME-Version: 1.0
 
-Hello Cosmin,
+Hello Andy,
 
-On Mon, Apr 20, 2026 at 05:55:07PM +0000, Cosmin-Gabriel Tanislav wrote:
-> > @@ -291,21 +286,26 @@ static int rzg2l_gpt_config(struct pwm_chip *chip=
-, struct pwm_device *pwm,
-> >  	if (rzg2l_gpt->channel_request_count[ch] > 1) {
-> >  		u8 sibling_ch =3D rzg2l_gpt_sibling(pwm->hwpwm);
+On Mon, Apr 20, 2026 at 12:53:37PM +0300, Andy Shevchenko wrote:
+> On Sat, Mar 21, 2026 at 12:13:06AM +0200, Andy Shevchenko wrote:
+> > On Fri, Mar 20, 2026 at 11:07:55PM +0100, Andy Shevchenko wrote:
+> > > This driver includes the legacy header <linux/gpio.h> but does
+> > > not use any symbols from it. Drop the inclusion.
 > >=20
-> > -		if (rzg2l_gpt_is_ch_enabled(rzg2l_gpt, sibling_ch)) {
-> > +		if (rzg2l_gpt_is_ch_enabled(rzg2l_gpt, sibling_ch, NULL)) {
-> >  			if (period_ticks < rzg2l_gpt->period_ticks[ch])
-> > -				return -EBUSY;
-> > +				is_small_second_period =3D true;
-> >=20
-> >  			period_ticks =3D rzg2l_gpt->period_ticks[ch];
-> >  		}
-> >  	}
-> >=20
-> > -	prescale =3D rzg2l_gpt_calculate_prescale(period_ticks);
-> > -	pv =3D rzg2l_gpt_calculate_pv_or_dc(period_ticks, prescale);
-> > +	wfhw->prescale =3D rzg2l_gpt_calculate_prescale(period_ticks);
-> > +	pv =3D rzg2l_gpt_calculate_pv_or_dc(period_ticks, wfhw->prescale);
-> > +	wfhw->gtpr =3D pv;
-> > +	wfhw->gtccr =3D 0;
-> > +	if (is_small_second_period)
-> > +		return 1;
-> >=20
-> > -	duty_ticks =3D mul_u64_u64_div_u64(state->duty_cycle, rzg2l_gpt->rate=
-_khz, USEC_PER_SEC);
-> > -	if (duty_ticks > period_ticks)
-> > -		duty_ticks =3D period_ticks;
-> > -	dc =3D rzg2l_gpt_calculate_pv_or_dc(duty_ticks, prescale);
-> > +	duty_ticks =3D mul_u64_u64_div_u64(wf->duty_length_ns, rzg2l_gpt->rat=
-e_khz, USEC_PER_SEC);
-> > +	if (duty_ticks > RZG2L_MAX_TICKS)
-> > +		duty_ticks =3D RZG2L_MAX_TICKS;
+> > Sorry, this is just a 1:1 copy of the previous message sent by a mistak=
+e.
+> > Use whatever you want, though, they are absolutely identical (body wise=
+).
 >=20
-> I know this change from > period_ticks to > RZG2L_MAX_TICKS has been
-> suggested by you, Uwe, but is this correct if period_ticks was set to a
-> smaller value in the earlier sibling channel condition?
+> Uwe, can this be applied?
 
-Indeed this is irritating. I assume I missed that and take the blame for
-the wrong suggestions. Depending on how hardware copes with such a
-configuration it might be ok to keep the code as is, but a comment would
-be justified in this case.
+No it cannot:
 
-> >  	/*
-> >  	 * GPT counter is shared by multiple channels, we cache the period ti=
-cks
-> > @@ -314,6 +314,61 @@ static int rzg2l_gpt_config(struct pwm_chip *chip,=
- struct pwm_device *pwm,
-> >  	 */
-> >  	rzg2l_gpt->period_ticks[ch] =3D period_ticks;
-> >=20
->=20
-> This should be part of rzg2l_gpt_write_waveform().
->=20
-> Otherwise, if pwm_round_waveform_might_sleep() is called without=20
-> pwm_set_waveform_might_sleep() being called immediately after with the
-> rounded waveform, the software state will become out of sync with the
-> hardware state.
+	$ git checkout pwm/for-next
+	...
 
-Indeed, the tohw and fromhw callbacks must have no side effects.
-There isn't a set_waveform call after each round_waveform.
+	$ b4 am ...
+
+	$ git am ./20260320_andriy_shevchenko_pwm_jz4740_drop_unused_include.mbx
+	Applying: pwm: jz4740: Drop unused include
+	error: patch failed: drivers/pwm/pwm-jz4740.c:10
+	error: drivers/pwm/pwm-jz4740.c: patch does not apply
+	Patch failed at 0001 pwm: jz4740: Drop unused include
+	hint: Use 'git am --show-current-patch=3Ddiff' to see the failed patch
+	hint: When you have resolved this problem, run "git am --continue".
+	hint: If you prefer to skip this patch, run "git am --skip" instead.
+	hint: To restore the original branch and stop patching, run "git am --abor=
+t".
+	hint: Disable this message with "git config advice.mergeConflict false"
+
+That is because I applied the patch from the other thread :-D
+It's commit 8ab1fc910415 ("pwm: jz4740: Drop unused include") and
+already landed in Linus' tree.
 
 Best regards
 Uwe
 
---dufzpb2udqlmhipg
+--l46nedz5l4ekkshy
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmnnN/4ACgkQj4D7WH0S
-/k55fwf/eQ1tR2L/cExPpeN3IcGsA/GSnPWIoXhrgRYLZ9129Yk5xZ5uEHTEQqTj
-uQrEcGpmvEi8Hb/lhcU+7K949Aye1EMdmrXOSlUtTMNDNegENcfE9rnA8Ewi+auA
-uxJfcWzZnlf0eFvAbvdi4qzXOEu2Hd5MwxAW3Hz4sEi8hY7KjcsXe/7y1ThVyua/
-m0N88Cq056JkWGvX8wZJMq7DXGdTkAnKfjoAmsGnJF7zIuC+7OVRJmGz9W5JiuDy
-rm/bw2zx9GGPrG0qYNmIkXFT+qPfG3/QpcaF8Co0TimwzntEiBQURjHOuQkB+Ww4
-vVe2dEoMVQzoGPFszVXM2mmOvT/ltw==
-=1ObM
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmnnS1gACgkQj4D7WH0S
+/k4hJAf+N+zheM8wJ6dzvp22BGjP36cLUg7IVoYnxQdevYY3h80O6LqbnciQDPdF
+mfjZ4GziW+TjiMIoqrRBD5OUML4la7iSm3bZQeR3g80wczwUqNRs5vvwu9ltqA4b
+iT22l6yxSELgC2u6UAGTWqdKpLq4Y85FT20WDUvTevgX7rItkTFksd/z4SKPcp0P
+WfEE9+eh1uR5jIHXfNCamiVqTNR1z/pdmK376XfTKqLfQVgBQ3Mw2NQk2eBH/vKo
+G/i76kuB2/tNgo1OMlN2zILHk0CLEOoSZe9kEuCRj+I0eP/XOd0F11LH4tbijwa2
+EwSISKIMfNPAPJKY4Wx3qviN2aOutw==
+=PkhM
 -----END PGP SIGNATURE-----
 
---dufzpb2udqlmhipg--
+--l46nedz5l4ekkshy--
 
