@@ -1,229 +1,262 @@
-Return-Path: <linux-pwm+bounces-8668-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8669-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CL5MGldU6GkcJQIAu9opvQ
-	(envelope-from <linux-pwm+bounces-8668-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Wed, 22 Apr 2026 06:53:43 +0200
+	id 8LjCEbyH6Gk6LgIAu9opvQ
+	(envelope-from <linux-pwm+bounces-8669-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Wed, 22 Apr 2026 10:33:00 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 52CEA442066
-	for <lists+linux-pwm@lfdr.de>; Wed, 22 Apr 2026 06:53:41 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id AE4714437CD
+	for <lists+linux-pwm@lfdr.de>; Wed, 22 Apr 2026 10:32:59 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 35E6A305580B
-	for <lists+linux-pwm@lfdr.de>; Wed, 22 Apr 2026 04:49:48 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 7416830154B5
+	for <lists+linux-pwm@lfdr.de>; Wed, 22 Apr 2026 08:32:58 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id ED3672652A2;
-	Wed, 22 Apr 2026 04:49:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 014B0306D2A;
+	Wed, 22 Apr 2026 08:32:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=snu.ac.kr header.i=@snu.ac.kr header.b="G8K0zuPy"
+	dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b="dYe/VE6O"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-wm1-f50.google.com (mail-wm1-f50.google.com [209.85.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D5A0277007
-	for <linux-pwm@vger.kernel.org>; Wed, 22 Apr 2026 04:49:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BBBF3BF673
+	for <linux-pwm@vger.kernel.org>; Wed, 22 Apr 2026 08:32:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1776833387; cv=none; b=LEmxtxojnu9YDZy9YBqV1ZSluwSH3j9DDUyffaJbjPAz5EbIYmrHeqbESAm3ZvUbBbOw7fCqL1zbBTSFy80A1SV9EeGr4wOVkzoLtqwLMN+WvTrbUNHgD1Zyv7AlqBJ269A4pduxgGwql4zC4SVRfojLnqYIDKHyBMC6EFWbRKA=
+	t=1776846776; cv=none; b=eInlGWlUYJ0gfbpObxhevlIUPLtFd1cKpMUp/rPCoI5YlH8hDw1JHs0PIci//GJzGoywHASR5I5CMzte4KXjMrb9Kftu6rzSYF8Rr4doOYn63iPgV9mgBuD5rDt0YwGGwl9ALHgj3+4zsFjAvJnb6IqYmqq+N9PNRsuETMeM4FM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1776833387; c=relaxed/simple;
-	bh=amoFYOXNj6ai1aoDXuC/QErgGvTREL0GtwLWXrsqXcg=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=EGIwkr96dotw3YDPtiadc6DmS8dnOOx0xM1Qd1K6stamlO59sOQ5PvPu5gcSQYQXnAo3GpZnEYH3qoOsLsofRPEqvwmigG23OVOl7/ZgivWvH/N1l5mrSyKiLWo+l6bNgda6q6b12g8KRI9lPbe7E6KQbAbXhj63/LJAvr4agoI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=snu.ac.kr; spf=pass smtp.mailfrom=snu.ac.kr; dkim=pass (1024-bit key) header.d=snu.ac.kr header.i=@snu.ac.kr header.b=G8K0zuPy; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=snu.ac.kr
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=snu.ac.kr
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2b23fcf90b2so48265585ad.3
-        for <linux-pwm@vger.kernel.org>; Tue, 21 Apr 2026 21:49:44 -0700 (PDT)
+	s=arc-20240116; t=1776846776; c=relaxed/simple;
+	bh=/k/tVJdTvLjvL2XSx3QMTYtMpRbrIE1/jOVJ8MJxqz0=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=HhQJdC7Z4qRmzpNuZUKD+vm4gra05ZI/rzi38FLI+48ym9yNO26yqBTmUlXg3IS3KTzoo6AsTVQa1HZjauJ8hS1d6dOSRE8QqWPQECtTuFobUYpEE+jpV3s0XiHTxBS0HHT4XYd8E/0ddzoc13hJBmJWUWLveT09xnxITpVHmM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=dYe/VE6O; arc=none smtp.client-ip=209.85.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.com
+Received: by mail-wm1-f50.google.com with SMTP id 5b1f17b1804b1-48a3e9862f0so18975845e9.1
+        for <linux-pwm@vger.kernel.org>; Wed, 22 Apr 2026 01:32:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=snu.ac.kr; s=google; t=1776833383; x=1777438183; darn=vger.kernel.org;
+        d=suse.com; s=google; t=1776846774; x=1777451574; darn=vger.kernel.org;
         h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:from:to
+         :mime-version:references:message-id:subject:cc:to:date:from:from:to
          :cc:subject:date:message-id:reply-to;
-        bh=9eH4zus6aRXEsE79ZbJPuyaxQ8dOTtTmwWEdDWPv4Bs=;
-        b=G8K0zuPyRoYkvUe1EhM8NUBt1tHMZNeAVQzrApmScGaRhFM7njB6UGnaiwfwgjAmOC
-         CM73MJ+rbWI/NlfQLPlC7w4OxNmWIlX7X9NVAyUEiqmLc542HHFo2nkiuN4fSCkHC/uE
-         ZFe0ocnFcZvmT9r1j3UIMsYh4NgRt3RkXEwE4=
+        bh=1EMnjefoZVtE6qyXWNiSeQYJ6N4rmREqzBA+4f1h/1g=;
+        b=dYe/VE6OlF78FFO9tXRqPaBYeAsgNGUFcHmxz4qWWQEe/YDULylkjMvDBes8T1DPAw
+         UM8cG9paDocEMFligJuZYq1F5TOqxM4lh3l1grGmj4sXqtmqt0Ynsrg1F88RSfXC2ZUn
+         uMAwpPHUad/LE+JLShwYTDnnUvfsoZiCuk2nxVnLVoAiVRdoz3+/T0Wy2MR7VVCVbzrR
+         W5Ab5BNVoO2wm2+eshbfdlsTR0FzxML6CMnN32kY64QloQ5GtV8D3CLzNYfXTE8kpFFa
+         GilF94tUKJ1jsVPhVBP6E7lwNCgMg8vGGVP8M99dJdLRClROs2iMCD6+OczJDM0QWZ5X
+         Cj4A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1776833383; x=1777438183;
+        d=1e100.net; s=20251104; t=1776846774; x=1777451574;
         h=in-reply-to:content-transfer-encoding:content-disposition
-         :mime-version:references:message-id:subject:cc:to:from:date:x-gm-gg
+         :mime-version:references:message-id:subject:cc:to:date:from:x-gm-gg
          :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=9eH4zus6aRXEsE79ZbJPuyaxQ8dOTtTmwWEdDWPv4Bs=;
-        b=X6h6ox8A1YhO1mXernxYZssiF2m1j5Etaqu+kStOuE46JZIUjc3tNUMQAWM7A1v0Vo
-         sg6fGIMzQHrsRUJCH1eZtla9q0iIGs7DGDVX5brSkFxOmw3lkLv7VNWDfTlzVZlImraq
-         rqDx04dnd/QsGy28J3ePpvqkCRGwHfv1edDXmT4cI38vcnyRkdX+JJk35UowXTjh9FmL
-         gQrTlM74nX7h4hL79Pvz/e4Gk1tWmwFmezqvnipvz51sat9hY6PTrUQjuIK7r15KOrKK
-         emA9FmzrXznq9m8LXMImPxd1CbmbF+Ex/qiPodcGP2j21S+qMNltnVCdN79WErQfY0gI
-         w4yw==
-X-Forwarded-Encrypted: i=1; AFNElJ80sg5lo9ogfRo69362a8Ffq9Fw2mmdMEv49Ky/33nVkskyEQcZMxex3B+xwzQWpBRhr2zOIg7b7ZI=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwWbvwNV2uvIZviNETcFJQP4oyvRHMNE6DRti0/E+mMGN+QSy9B
-	tVYdEyf0Dz4rWCCDbcKCS/9v+71iG4j7deMxAcvgCm+0PnZ/gv0OtFbXikGL7JTMy54=
-X-Gm-Gg: AeBDiesfG8r14o/iLmCoW9pp+pHnKE8Gxmj8Zo7WRzUyXx8N1Vco1VVkBgTXovr9rMv
-	tAIzRpCexUd6wmuFGDwR4xKU23ROzmy3YNsShnd9FW+4gl0DVYP2cfx0P/XzE+oJ0lL26OElCfd
-	yedmG6XWcUbmqCJ5EZBXvFBahe3rMtCClnleQGV5FsF6H5e7MQQq2iFP9G0LmRAVFyUUqjR+eNp
-	CduntMz57ZqvszEuDZVLzlOpH4tsmvNE1uK5jkH8x0Be4RZLaxVi3Y4GHT+fZIq5udQ4xExsf9K
-	E2zBT7zrgbTOXUgWnw4ncXoEv9aCcez0+W3sVNGWTk3flBib53VtiZ6PqL6MapFw1wwPlZMamkb
-	FvQxIvV9ndW2/uC/8Pfhq6t9Y+ay4sja9OSD4ogmaf6aLTpCbajJI+ci27VWQ+wwRvLEGELsGMy
-	ApK2g6VGXuTrUzhCvxBBtQqum1pf9sCTlVKLKlR8GwUVCACcJgXMoFVIQRYbVeggu/nb7jJq3fv
-	w==
-X-Received: by 2002:a17:902:f9cf:b0:2b2:50e1:f104 with SMTP id d9443c01a7336-2b5f9e64c18mr142624095ad.3.1776833383473;
-        Tue, 21 Apr 2026 21:49:43 -0700 (PDT)
-Received: from localhost (nunu.snu.ac.kr. [147.46.112.82])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2b5fab208d4sm160434605ad.55.2026.04.21.21.49.42
+        bh=1EMnjefoZVtE6qyXWNiSeQYJ6N4rmREqzBA+4f1h/1g=;
+        b=XHjReFo3Rck780uxGdN+u+or0O49OgdY3PA2q7Fg6YfpuJTmQeMmd5ML8dx2pOWr2O
+         gmZJDOShKKoZ7nMLLnvdtpP/omD70tnoOR65bkcaPOWCkl+3ASfQ6hQoj6R3vHqOBwhX
+         r6dlGG+UbijOoZSFf2jlTPCHiWs1wf3heawn01Dpi1qMr+bvFIznG2gMEqzeoEC8Agho
+         MsGW5uTg9Vs+wLQ7+RsN3+BVpupTfpyAK3LkWCICxmsF8xu4+UwuHCBWDY0psf4ZhOv3
+         yfV8YrHoursJrm6tUlAwqsri6ew5B+UEGkTHOPDtJmSFOokKrqdD/XY6tDlA89Qu9/dX
+         eO/A==
+X-Forwarded-Encrypted: i=1; AFNElJ8P3RoiTINKafom2DBcQAph4WlpTPB2TMitFKRDADMldVa44Ufu2nM2J86Inp+Oj3hvK3uj2gKNDZA=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw9OymoXllTV8oDrZC1fMPSm2CA7CfNMUxpqe9b050bJ2Pm1XRu
+	jx47MGh1r0V5WSXjg/p+rWeOfDCehToLDMFLHTQZyq3SkG77DQYM0uDWkQ7GiMDATR8=
+X-Gm-Gg: AeBDieuTXYRSEhaCppgySmkj4HnJz58NrPTL051cl9OwEsEJ/xFZM5zcGprwHIYktR9
+	jqW3I1a3QIwidIvnvxaBWFhyjj6m7wMIzc68zw3Wlk4ruRqhYgRSy6usucuAmHPy3YH9OxEUAif
+	5QWeP4hHcxnbJodoZQPdaHqSBJDmMIjiam4wfkoCIDnj3cOxGxKgNeSHFyzyU8c+GkCdSqfbBwJ
+	mFKLQUZ/scYMTWvxMurLLerT73P0nYMbAYcFT6hFbBpKUg0DiS+FSfxXxgW5wNDe81saMLrchsF
+	q58tVrT9rkPckXTlyKZSmiPs4aOKdePT1v6dw9GrDpbmy3PL27CqPRpxUD2KFgJGmQWSr3HlOly
+	PGN4eLxBH2agxMcS5q2aO3KH11fPhOcWlmXjAsPlWjrlDoGyed5M79VFJasj9774YXDitJGy4bL
+	AcdyFvTggRwZB8tXTZEdUSj31Kmc98uGFvDrddtkQq3gNVglBuWPEytxq2oAYSBJF19yoEyZ5wI
+	TE6fcQ=
+X-Received: by 2002:a05:600c:3b2a:b0:48a:534a:eed8 with SMTP id 5b1f17b1804b1-48a534af0ffmr110795305e9.1.1776846773750;
+        Wed, 22 Apr 2026 01:32:53 -0700 (PDT)
+Received: from localhost (host-79-33-140-232.retail.telecomitalia.it. [79.33.140.232])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-488fb7b2634sm135796275e9.28.2026.04.22.01.32.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 21 Apr 2026 21:49:43 -0700 (PDT)
-Date: Wed, 22 Apr 2026 13:49:40 +0900
-From: Sangyun Kim <sangyun.kim@snu.ac.kr>
-To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com,
-	claudiu.beznea@tuxon.dev, linux-pwm@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] pwm: atmel-tcb: Cache clock rates and mark chip as
- atomic
-Message-ID: <20260422044940.tse3ek7jlv3x2dbt@nunu>
-References: <20260415093433.2359955-1-sangyun.kim@snu.ac.kr>
- <20260419080838.3192357-1-sangyun.kim@snu.ac.kr>
- <aedfEzeRH5tH0-Fb@monoceros>
+        Wed, 22 Apr 2026 01:32:53 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Wed, 22 Apr 2026 10:36:04 +0200
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>
+Cc: Andrea della Porta <andrea.porta@suse.com>, linux-pwm@vger.kernel.org,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Naushir Patuck <naush@raspberrypi.com>,
+	Stanimir Varbanov <svarbanov@suse.de>, mbrugger@suse.com
+Subject: Re: [PATCH v2 2/3] pwm: rp1: Add RP1 PWM controller driver
+Message-ID: <aeiIdLL48Wn_svGZ@apocalypse>
+References: <cover.1775829499.git.andrea.porta@suse.com>
+ <0d99317b9150310dfbd98de1cb2a890f0bffe7cd.1775829499.git.andrea.porta@suse.com>
+ <adkrHkANCzxO8KUP@monoceros>
+ <aeC6U7D6TfWm8JPx@apocalypse>
+ <aeDmk-t5Lc1zpkg9@monoceros>
+ <aeH373a_xmr6fnAy@apocalypse>
+ <aeIGxfQ7AoIVR5n6@monoceros>
+ <aeZUAaQkHGqBL8st@apocalypse>
+ <aeeMp1XBDxSZ1qrl@monoceros>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <aedfEzeRH5tH0-Fb@monoceros>
-X-Spamd-Result: default: False [-1.66 / 15.00];
+In-Reply-To: <aeeMp1XBDxSZ1qrl@monoceros>
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[suse.com,quarantine];
 	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[snu.ac.kr,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[snu.ac.kr:s=google];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=google];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8668-lists,linux-pwm=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	DKIM_TRACE(0.00)[snu.ac.kr:+];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8669-lists,linux-pwm=lfdr.de];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sangyun.kim@snu.ac.kr,linux-pwm@vger.kernel.org];
-	MISSING_XM_UA(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andrea.porta@suse.com,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[suse.com:+];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-pwm];
-	RCPT_COUNT_SEVEN(0.00)[7];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
-X-Rspamd-Queue-Id: 52CEA442066
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	TO_DN_SOME(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,suse.com:dkim]
+X-Rspamd-Queue-Id: AE4714437CD
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, Apr 21, 2026 at 01:40:55 PM +0200, Uwe Kleine-KÃ¶nig wrote:
->Hello Sangyun,
-
 Hi Uwe,
-Thanks for the review.
 
->
->On Sun, Apr 19, 2026 at 05:08:38PM +0900, Sangyun Kim wrote:
->> @@ -438,16 +441,33 @@ static int atmel_tcb_pwm_probe(struct platform_device *pdev)
->>  	if (err)
->>  		goto err_gclk;
->>
->> +	err = clk_rate_exclusive_get(tcbpwmc->clk);
->> +	if (err)
->> +		goto err_disable_clk;
->> +
->> +	err = clk_rate_exclusive_get(tcbpwmc->slow_clk);
->> +	if (err)
->> +		goto err_clk_unlock;
->> +
->> +	tcbpwmc->rate = clk_get_rate(tcbpwmc->clk);
->> +	tcbpwmc->slow_rate = clk_get_rate(tcbpwmc->slow_clk);
->> +
->
->Only one concern left: clk_get_rate() should only be called on enabled
->clocks. I don't know the architecture details and how expensive it is to
->have .clk enabled (or if it's enabled anyhow).
->
->If you're ok, I'd squash the following diff into your patch:
+On 16:50 Tue 21 Apr     , Uwe Kleine-König wrote:
+> Hello Andrea,
+> 
+> On Mon, Apr 20, 2026 at 06:27:45PM +0200, Andrea della Porta wrote:
+> > On 12:50 Fri 17 Apr     , Uwe Kleine-König wrote:
+> > > What happens if sync is asserted while a disabled channel didn't
+> > > complete the last period yet?
+> > 
+> > The output stops immediately without waiting for the current period to finish.
+> 
+> This is a good info for the Limitations block.
 
-That makes sense. clk_get_rate() should indeed only be used on enabled
-clocks, and your change is the simplest way to ensure correctness while
-respecting the clk API constraints. Iâ€™m happy with squashing your diff
-into my patch.
+Yup, already added, plus a couple other edge cases.
+ 
+> 
+> > > Maybe it's worth to test the following procedure for updating duty and
+> > > period:
+> > > 
+> > > 	disable channel
+> > > 	configure duty
+> > > 	configure period
+> > > 	enable
+> > > 	set update flag
+> > > 
+> > > Assumint disable is delayed until the end of the currently running
+> > > period, the effect of this procedure might be that no glitch happens if
+> > > the update flag is asserted before the currently running period ends and
+> > > the anormality is reduced to a longer inactive state if the updates are
+> > > not that lucky (in contrast to more severe glitches).
+> > 
+> > The disable isn't delayed as explained above. Setting just the new period/duty
+> > (which do not depend on the sync bit) correctly waits for the end of the current
+> > period without noticeable glitches (tested with a scope).
+> 
+> So if you happen to change both and one is done before the end of the
+> current period and the other shortly afterwards (which might happen as
+> those are configured in two different registers and the update trigger
+> isn't used), you get a mixed output for one cycle, right? If yes, please
+> also mention that in the Limitations paragraph.
 
->
->diff --git a/drivers/pwm/pwm-atmel-tcb.c b/drivers/pwm/pwm-atmel-tcb.c
->index 1a2832f1ace2..3d30aeab507e 100644
->--- a/drivers/pwm/pwm-atmel-tcb.c
->+++ b/drivers/pwm/pwm-atmel-tcb.c
->@@ -437,13 +437,17 @@ static int atmel_tcb_pwm_probe(struct platform_device *pdev)
-> 	tcbpwmc->channel = channel;
-> 	tcbpwmc->width = config->counter_width;
->
->-	err = clk_prepare_enable(tcbpwmc->slow_clk);
->+	err = clk_prepare_enable(tcbpwmc->clk);
-> 	if (err)
-> 		goto err_gclk;
->
->+	err = clk_prepare_enable(tcbpwmc->slow_clk);
->+	if (err)
->+		goto err_disable_clk;;
->+
-> 	err = clk_rate_exclusive_get(tcbpwmc->clk);
-> 	if (err)
->-		goto err_disable_clk;
->+		goto err_disable_slow_clk;
->
-> 	err = clk_rate_exclusive_get(tcbpwmc->slow_clk);
-> 	if (err)
->@@ -469,6 +473,9 @@ static int atmel_tcb_pwm_probe(struct platform_device *pdev)
-> 	clk_rate_exclusive_put(tcbpwmc->clk);
->
-> err_disable_clk:
->+	clk_disable_unprepare(tcbpwmc->clk);
->+
->+err_disable_slow_clk:
-> 	clk_disable_unprepare(tcbpwmc->slow_clk);
->
-> err_gclk:
->@@ -492,6 +499,7 @@ static void atmel_tcb_pwm_remove(struct platform_device *pdev)
->
-> 	clk_rate_exclusive_put(tcbpwmc->slow_clk);
-> 	clk_rate_exclusive_put(tcbpwmc->clk);
->+	clk_disable_unprepare(tcbpwmc->clk);
-> 	clk_disable_unprepare(tcbpwmc->slow_clk);
-> 	clk_put(tcbpwmc->gclk);
-> 	clk_put(tcbpwmc->clk);
->
->
->This has the downside that clk is kept enabled the whole driver
->lifetime, but that's the easiest way to make your fix honor the clk API
->constraints. This allows to fast-track the patch fixing the sleeping
->function called from invalid context issue and the optimisation can then
->be addressed with more time during the next development cycles.
+Confirmed, tested with the scope and a very long period time.
 
-Keeping the clock enabled for the driver lifetime is acceptable for now
-to fast-track the fix, and we can revisit potential optimizations in a
-follow-up patch.
+> 
+> > > > Let's say that teh user want 10 tick period, we have to use
+> > > > 9 instead to account for the extra tick at the end, so that the complete period
+> > > > contains that extra tick?
+> > > 
+> > > I would describe that a bit differently, but in general: yes.
+> > > 
+> > > The more straight forward description is that setting
+> > > 
+> > > 	RP1_PWM_RANGE(pwm->hwpwm) := x
+> > > 
+> > > results in a period of x + 1 ticks.
+> > 
+> > Exactly. So whatever the user request I have to subtract one from the value
+> > to be written to the RANGE register.
+> 
+> Unless the calculation is already rounded to 0, in that case don't
+> subtract 1 and let the tohw callback return 1.
 
-Thanks again for the suggestion.
+Sure.
 
->
->Best regards
->Uwe
+> 
+> > > > This also means that if we ask for 100% duty cycle, the output waveform will
+> > > > have the high part of the signal lasting one tick less than expected.a I guess
+> > > > this is the accepted compromise.
+> > > 
+> > > I assume you considered something like:
+> > > 
+> > > 	RP1_PWM_RANGE(pwm->hwpwm) := 17
+> > > 	RP1_PWM_DUTY(pwm->hwpwm) := 18
+> > > 
+> > > to get a 100% relative duty?
+> > 
+> > Ah right! It's working fine and I've got 100% duty. So at hw register level
+> > the duty can be greater that the period.
+> 
+> In that case please make sure to not use the maximal value for
+> RP1_PWM_RANGE(pwm->hwpwm) to ensure that for each (possible) period
+> length a 100% relative duty cycle can be configured.
 
-Best regards,
-Sangyun
+Ack.
+
+> 
+> > > My (not so well articulated) point is: Please be stringent about clock
+> > > handling to not bank up technical dept more than necessary and such that
+> > > the driver can be made unbindable if and when syscons grow
+> > > that feature. Optionally wail at the syscon guys :-)
+> > 
+> > Hmmm not sure I've understood your point: is it a requirement that the driver
+> > must be unbindable? In this case I should avoid registering the syscon. Or
+> > should I just provide a .remove callback in case there will be a way to
+> > unregister the syscon (even if this callback will not be called as of now)?
+> 
+> It's a requirement to properly manage the resources you allocate. If a
+> driver isn't unbindable due to restrictions of other subsystems that's
+> unfortunate and I don't like it, but I wouldn't block a patch because of
+> that.
+
+I totally agree, of course. From a practical perspective I take it as "even
+if it's not ideal, you don't need to do further coding action on that side".
+
+Many thanks,
+Andrea
+ 
+
+> 
+> Best regards
+> Uwe
+
+
 
