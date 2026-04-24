@@ -1,280 +1,238 @@
-Return-Path: <linux-pwm+bounces-8682-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8683-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id uMYTCQYy62lfJwAAu9opvQ
-	(envelope-from <linux-pwm+bounces-8682-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Fri, 24 Apr 2026 11:04:06 +0200
+	id XshcDPA762mWKAAAu9opvQ
+	(envelope-from <linux-pwm+bounces-8683-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Fri, 24 Apr 2026 11:46:24 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8798845BD71
-	for <lists+linux-pwm@lfdr.de>; Fri, 24 Apr 2026 11:04:00 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 29C0445C6F6
+	for <lists+linux-pwm@lfdr.de>; Fri, 24 Apr 2026 11:46:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7DFF43013695
-	for <lists+linux-pwm@lfdr.de>; Fri, 24 Apr 2026 09:01:58 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id C0639300186C
+	for <lists+linux-pwm@lfdr.de>; Fri, 24 Apr 2026 09:46:19 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A60731D366;
-	Fri, 24 Apr 2026 09:01:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b="I/kJD8c4"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E4C0C2DCF67;
+	Fri, 24 Apr 2026 09:46:16 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from OS0P286CU010.outbound.protection.outlook.com (mail-japanwestazon11011065.outbound.protection.outlook.com [40.107.74.65])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7754B361DCB;
-	Fri, 24 Apr 2026 09:01:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.74.65
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777021317; cv=fail; b=j/WpgsuX2KARshjWKjqTldNJq7P4mJGMX1FI4d2eQgF0Ycof0rQUWEwLZhjdUoE7KXiUUhp+IzhYGCDgg9gFfYcPo7lZUpz8abFV3LLaDysIGE4dm1wP2yf9EsdDMOkPDsFu5H6EnyU06vlKwel14VHsKRSO3v3hw9GtJWXq/2U=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777021317; c=relaxed/simple;
-	bh=XwO5R/j9Qbcn3pRqa6m1jplxMRQ2H8Nq+HwKs+4afXE=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=WpQI1nfBG39Xsh2OkBR7gkl2PzE9zJmTRLrDAOnXeznID9foD/ZMfFZU9frEzOgsFpaO5o4BhEALNJgdsNdCfGxbbg1RAUAruOTZbgeLRHizb4wjL0lqQgWIIHerbt6Gzsr7cdboyrXsjQbs++I2Ja4n5+ntS5ZoVFBHWJVrNr4=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=I/kJD8c4; arc=fail smtp.client-ip=40.107.74.65
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bp.renesas.com
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MEuczCWj6QtE4yStP4RNquyP9VxA4sjFwZm6ZdEoUQMEED1ZLGDXgNnTw10ZHxpdalL009BVUn72KeMQ3wcuGWUIaHyc54ztXO3iHs5AytpXEG5KuCQU3HslfEeYvUMJtLIonsOupnpN7g4an8ijBGG3USeCQ2ThMT0/2J1yqRjA2dV0T+RsBVyMJk0VA3Qx6RIkxSDA5NpWZAXvHn0TugFolHqVkXnPTIVvQqay/SqZJsTeZsAXNmtFzi2ua9b0eiWua6wu+JSypm01Kziy1fmILv3FtZ2PFaOpRm2Azx6JQdxoFtAt43AkJAwY2mEqBfHEh+BNEvqz6+8TnGcj6g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=nsyywVjNuJFaGyBQx8KCpbI8oCU6iwwtfOAQbgGiEFY=;
- b=VEYRt+03+3mS8nlF1f9yx4f/ckos7fs0cy+rW4h8fR5c9nRKTvwOpKBx7WyGDBoAUx1TCd6B3VgMxzErNhWt6/3t9vIJSWvaxRqZG64G+o2cWbx5ZEU4AkIHG3kIFOdqyEu5GTPBAq4mW6L9wFYk2lYQsK94MYI0tYwabep2JpFXUWUrks8iw5XCMWWkrGANfBqDsVr2/+LuEUpzgEBa8sBjbDycLAEIcqukWjWBmSOSqfL9q/z+7KcMN2YWrqlAgb/OOqrjaYb3B48xUQDThE+SAbExArknPeoe52pNWKoT5rWvh2RWop6hVvI/G3+LqriikzD9UpyCXotOynnFqg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=nsyywVjNuJFaGyBQx8KCpbI8oCU6iwwtfOAQbgGiEFY=;
- b=I/kJD8c4AOeCjWqhE7uyHK7fTMUBiuohNs7rma3FBIzGObHAtBgsOOR3DmocuprKEZqALEAO9Zbxchb5QYoQvPSbu64XCLp+TMk5Bf9Zw+HTrw0gWsTBW4LqdhUkhKPRnXRwY3vEYLoqHOAQtjTLi68ntKneSQdB7b0ELW+S5Bc=
-Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com (2603:1096:400:3d0::7)
- by OSCPR01MB15439.jpnprd01.prod.outlook.com (2603:1096:604:3b5::8) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9769.48; Fri, 24 Apr
- 2026 09:01:51 +0000
-Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com
- ([fe80::87d1:4928:d55:97de]) by TY3PR01MB11346.jpnprd01.prod.outlook.com
- ([fe80::87d1:4928:d55:97de%4]) with mapi id 15.20.9846.021; Fri, 24 Apr 2026
- 09:01:51 +0000
-From: Biju Das <biju.das.jz@bp.renesas.com>
-To: =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= <ukleinek@kernel.org>, Cosmin-Gabriel
- Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
-CC: biju.das.au <biju.das.au@gmail.com>, "linux-pwm@vger.kernel.org"
-	<linux-pwm@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>,
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH v5 4/9] pwm: rzg2l-gpt: Convert to waveform callbacks
-Thread-Topic: [PATCH v5 4/9] pwm: rzg2l-gpt: Convert to waveform callbacks
-Thread-Index: AQHc0LKQvlxtyV3slUeJAFuTBfcm3LXoPECAgAD3bICABLoNcA==
-Date: Fri, 24 Apr 2026 09:01:51 +0000
-Message-ID:
- <TY3PR01MB11346D2A5AD3D030E806594CF862B2@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-References: <20260420104332.153640-5-biju.das.jz@bp.renesas.com>
- <TYRPR01MB156193428AFA2FE631556EEDA852F2@TYRPR01MB15619.jpnprd01.prod.outlook.com>
- <aec2GeV_aP6rOtFg@monoceros>
-In-Reply-To: <aec2GeV_aP6rOtFg@monoceros>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=bp.renesas.com;
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TY3PR01MB11346:EE_|OSCPR01MB15439:EE_
-x-ms-office365-filtering-correlation-id: 728e0ce2-e904-45a4-2189-08dea1e0202c
-x-ld-processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|1800799024|366016|376014|56012099003|22082099003|18002099003|38070700021;
-x-microsoft-antispam-message-info:
- olRVsCPHRQ9KUV0UeQTKK9H2p847Ye6FWsc13+yBXz44mZ5P1AhkwFUrt7qcGvi2zqjiI3LZmXEO2aQUflkAOz3xTIXZGXxtonI+E9sSfHVa4cacZqLnMN75ggDPhd7F+CBUyWuVTapa8fjSfuvUGLfMqm3sdSIUZxGJoxBfjYQ5Np3HzIba3D5988OThszPCipTwyGAPWTV/7tcpuPmpZ33/DrwALq92VYnt8KaABA7E5SvuLploC1jTDPHnItwqZMJTkI9U3efOLk3IsohdEm4aGRvD0NywwRsGMnvL8IhSMJQ7vPzlcFIGCInHCtoMI1m5suYv9hEF9evwaBic4iGXb3VEkWFDiy6xFKQuHbPcU7hxzrTalvO24dOFuFI3C4uefPiY/qaCHiRNPeDCrbNdW1nvjpUluJbMLJkly++lYPw7aGaQnwrn8J2z+3ZRE1lyWZw5z8POxgu7eV46otdZPiEHcZ9BZgu5KwPZb1+1RoB8RqgSJBuWb6HYXUVT7xs8JoejCbT2ZhCA/grrUTcRCjkzjrvzIRoQAxTVhUVL6lelz2wkzoVuyDaYPQ5QOYB96l4POb+VASD0WIfT88TPC4I2wq6WZXVcFiJBJ5yXZrMQAicr2H9ynideJYjRdbLIqnkHumDMKFPO8bSSGYvZPUynyb7CAl3H4eugLCl31tdWek/iEccal+HI8bTJDHIj/jGrDX4oKBLo3sRzg45KmjFCYJYCYlEDVDaLPGn6+3HQ7iyXSVzeNOQZjUGQp9EYyf+k6gmdbfhxXrYqJekavUNYXEuLcONIrpw0F4=
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY3PR01MB11346.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(56012099003)(22082099003)(18002099003)(38070700021);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?XmKU9ddATwZ9n8j2O/E6eGDwsNFoG9LhmoqyL4uenb6kZptiYrkXAlTnte?=
- =?iso-8859-1?Q?xDNAQJASirtRCsIDBaxdWXXNZFsYlnr85SJBr5RyTTVHSk9fC1w9RJo1bH?=
- =?iso-8859-1?Q?6YMTbcs2UiCT226YPLUGM9ywHnPFdOqbCX7S6NRrmvnXvDerbs9mdTzi8M?=
- =?iso-8859-1?Q?/NsV96B/3TquczjKW/WT1UP/w9W3oPv6CA653DzyeXJi2h0ucVmmuuroYv?=
- =?iso-8859-1?Q?LLtZfk9HT05H9AppIq+UUP3kRO00+iq2wXwJ7kso0cpM+E8dFPTRuR1X9P?=
- =?iso-8859-1?Q?tpNbDtQGyvQ8Mn2AudcLP1I7bFKd2kTIpnQr+mmL+K5hbWaWIWo3pltCf3?=
- =?iso-8859-1?Q?fYmTZwUjLvTrXnwiilsMFH0Pc+Q4R4j0jNKLVJHSXu/x0M/Chr76AOT+PQ?=
- =?iso-8859-1?Q?hA6KZ3gQQNipVmBH3rlfRBtsueRC04J+ati98CFrWKGIR5L2UeEH5QBI0h?=
- =?iso-8859-1?Q?u2ob/vbLuKi7oFIb/FIvtpmTLCIOsmCpgX/JI8Cawfy78JE9Qv/mNmV1Fk?=
- =?iso-8859-1?Q?MiYGpMtIW2AIDITJSRt8hZdDbUgRBHU8Y0sIBoFKCQuERLfBQoyTgbESK+?=
- =?iso-8859-1?Q?w7Yfa4vO0vckyRgcnEmKJa4wqy+IZyYBDQQwnKFmeygJUtBLEVG16WDN4M?=
- =?iso-8859-1?Q?lTM9IogdQos35kKCalvEejQgY/cYtSqPTfUirToC8HT52POgDI3v23Muuc?=
- =?iso-8859-1?Q?FZmjNjeQenbkFVoFIo4RYQX2ak0dkL3BhvLpVBysSJlDsJ2tczcMsawDsb?=
- =?iso-8859-1?Q?o+SwKJqI941vWGAAB2k0iRjCOFcoCIWqwo1886ebOQi0idzRiWb+GF11q/?=
- =?iso-8859-1?Q?qtNnPIOwb9E2fJDtHtji6wccfN1T17HArarVM6fmNU1mkKxE4tQb6A8ZsV?=
- =?iso-8859-1?Q?jUaXxK3yunl0CZE4tyOTH0nc6uwEvoKdd6+Os36BqyyB1NBJ6c1CVwyVRI?=
- =?iso-8859-1?Q?FxgucSczs9t2x7N4jx10ax2/eSJNL79L7o2OJs/LWEWrmfW/gSA6pbo/s/?=
- =?iso-8859-1?Q?CitxmKgBdMB3v3/z3NU4lx8ryzRswOytDaA25gZIEAMNW+JJ5tk2zj6GmT?=
- =?iso-8859-1?Q?NKhDhyrS9Od4OunacWfZE3+RMRFG+lulFOpxvtJtdTL9KGY9ZvzKGKAsEF?=
- =?iso-8859-1?Q?mjtWgP1NpP7fP6H71zzzdSw7DvIt0kNjJQYPiKl0addFhujOBkhKGvRimY?=
- =?iso-8859-1?Q?XL9WHtaVEMk9R1OShPDIuPFmhzsDi6jQijKR00GcONGR1Dk7QYaccV8eFL?=
- =?iso-8859-1?Q?RHGZ/7JwWjjXDCkUy4joTe80YY6k8CIBrD1ku6MbcW3fMWU6SzRG2JgJJJ?=
- =?iso-8859-1?Q?WhTUjuHS/rod90qZLNN3WvJOiaplQO7afEQKh6Vkoe+IbY9aSpg8rTA2lK?=
- =?iso-8859-1?Q?YoxakoMSoz6/AI9S/B1OdgeR3Gjup1lpCPip0l99EdJ1TqudOTZ61sAya9?=
- =?iso-8859-1?Q?ekOvn5rf5QoO1A/H8I+SG09cUSGpwS3V24ZMSaWzUrj3FL+aSyG5ks/cdJ?=
- =?iso-8859-1?Q?8zDbScq+lMy8U2OH+YP6dlXY2JBwjzhi1EAuZNP/JcY6b8LgxJgd8sELSE?=
- =?iso-8859-1?Q?7XDHI6LAVmHeEAfV5H/ntJLsKIrmw0+ewxQx/ODYqtnwXiVk3MqwOKLh1M?=
- =?iso-8859-1?Q?SKWIXbbRCfnSUH6vPSBsjIJo7oRoLJlVhFFg0593FSK0kuThYQHDyisN6Z?=
- =?iso-8859-1?Q?zXIShFlW0HXGfDJ003Wq4VXV3gUN1vnH4snPxuYd3eCn8GUWg/YX3wU6Rv?=
- =?iso-8859-1?Q?rksidBNU/pTl70A0A5sF+cXv9vImWoDPqr7D0L9frCghMaoYiq9HhflOb1?=
- =?iso-8859-1?Q?F9I83DesiQ=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Received: from zg8tmja2lje4os4yms4ymjma.icoremail.net (zg8tmja2lje4os4yms4ymjma.icoremail.net [206.189.21.223])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E40F6299AB1;
+	Fri, 24 Apr 2026 09:46:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=206.189.21.223
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777023976; cv=none; b=BNOoq4YmSf3c19nkmaDhySqe6O13LKWBLLJHfAZ0rCZJyMDfS5NzjeMe8ceRaDGr840B4BfyZj0kXcywbuser/IGmSJq5w168CPQhhTX0Gf3LHF6McQM+SeEZjkLQkVRv8dsBV23TgZKu7UNwlLT/YrvlcNLcjTUkhWqRMf46uA=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777023976; c=relaxed/simple;
+	bh=Sn3D37GAgGchiJZ5RnlRQ/jMCdPZMKl3bDcfaqJRm8s=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=I854wN6X7bLXGxNWWNkMQXrFCn8pQqWFLmG9jTr4k/UhWVhJYxhPHYwS4rXia92ufrOmib6+IkSUrfCQtyz3/JkkqcOKe9HVbA8XBwGhTkoL+9WRkcNEeeKeykOFxjwxgH66h3Beb+JESABw/Jec/qx797arxYLE1u268p5ZGH4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=206.189.21.223
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from E0005152DT.eswin.cn (unknown [10.12.96.41])
+	by app1 (Coremail) with SMTP id TAJkCgB3DHG_O+tpllcUAA--.11719S2;
+	Fri, 24 Apr 2026 17:45:47 +0800 (CST)
+From: dongxuyang@eswincomputing.com
+To: ukleinek@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	ben-linux@fluff.org,
+	ben.dooks@codethink.co.uk,
+	p.zabel@pengutronix.de,
+	linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: ningyu@eswincomputing.com,
+	linmin@eswincomputing.com,
+	xuxiang@eswincomputing.com,
+	wangguosheng@eswincomputing.com,
+	pinkesh.vaghela@einfochips.com,
+	Xuyang Dong <dongxuyang@eswincomputing.com>
+Subject: [PATCH v6 0/2] Update designware pwm driver
+Date: Fri, 24 Apr 2026 17:45:29 +0800
+Message-Id: <20260424094529.1691-1-dongxuyang@eswincomputing.com>
+X-Mailer: git-send-email 2.31.1.windows.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY3PR01MB11346.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 728e0ce2-e904-45a4-2189-08dea1e0202c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 24 Apr 2026 09:01:51.7655
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: zqqnuE0Wewgec4LaPxUv1vPXC00x3FZ3FVEn2x805xBunZHl6lkDIME8XG0yG75o16HRrnXeoxgd1YB4Nv+FUlAYyAyhuxrHYlFsmJov2dY=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSCPR01MB15439
-X-Rspamd-Queue-Id: 8798845BD71
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:TAJkCgB3DHG_O+tpllcUAA--.11719S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxKFyUArW8Ary5XFW8Ary7Jrb_yoW7CF4DpF
+	W8GryakrWkWryIgan7X3W8uFyYqan3JF4UKwn5J3W7Zwn0y3yUXrZY9F15tFyqvr4kWryY
+	ya4fG3W2ka4YyF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBv14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26w1j6s0DM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4U
+	JVWxJr1l84ACjcxK6I8E87Iv67AKxVW0oVCq3wA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+	CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+	2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbVWUJV
+	W8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2
+	Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkF7I0En4kS14v26r1q6r43MxkIecxEwVCm-wCF04
+	k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18
+	MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64vIr4
+	1lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Gr0_Cr1l
+	IxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4
+	A2jsIEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUXJ5wUUUUU=
+X-CM-SenderInfo: pgrqw5xx1d0w46hv4xpqfrz1xxwl0woofrz/
+X-Rspamd-Queue-Id: 29C0445C6F6
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [1.34 / 15.00];
+X-Spamd-Result: default: False [1.54 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[renesas.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[bp.renesas.com:s=selector1];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FREEMAIL_CC(0.00)[gmail.com,vger.kernel.org,glider.be,bp.renesas.com];
-	TAGGED_FROM(0.00)[bounces-8682-lists,linux-pwm=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[bp.renesas.com:+];
-	MISSING_XM_UA(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8683-lists,linux-pwm=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	DMARC_NA(0.00)[eswincomputing.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	MAILSPIKE_FAIL(0.00)[172.234.253.10:query timed out];
+	RCVD_COUNT_THREE(0.00)[4];
+	FROM_NO_DN(0.00)[];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[biju.das.jz@bp.renesas.com,linux-pwm@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[dongxuyang@eswincomputing.com,linux-pwm@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TAGGED_RCPT(0.00)[linux-pwm,renesas];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,bp.renesas.com:dkim,TY3PR01MB11346.jpnprd01.prod.outlook.com:mid]
+	NEURAL_HAM(-0.00)[-0.977];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	R_DKIM_NA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,eswincomputing.com:mid,eswincomputing.com:email,intel.com:email]
 
-Hi Uwe/Cosmin,
+From: Xuyang Dong <dongxuyang@eswincomputing.com>
 
-Thanks for the feedback.
+There is already a patch [1] for the DesignWare PWM driver,
+which is posted by Ben and still under review.
+Based on this patch, this series is a continuation of [1]
+to add support for IP versions 2.11a and later, which
+includes support for "Pulse Width Modulation with 0%
+and 100% Duty Cycle".
 
-> -----Original Message-----
-> From: Uwe Kleine-K=F6nig <ukleinek@kernel.org>
-> Sent: 21 April 2026 09:41
-> Subject: Re: [PATCH v5 4/9] pwm: rzg2l-gpt: Convert to waveform callbacks
->=20
-> Hello Cosmin,
->=20
-> On Mon, Apr 20, 2026 at 05:55:07PM +0000, Cosmin-Gabriel Tanislav wrote:
-> > > @@ -291,21 +286,26 @@ static int rzg2l_gpt_config(struct pwm_chip *ch=
-ip, struct pwm_device *pwm,
-> > >  	if (rzg2l_gpt->channel_request_count[ch] > 1) {
-> > >  		u8 sibling_ch =3D rzg2l_gpt_sibling(pwm->hwpwm);
-> > >
-> > > -		if (rzg2l_gpt_is_ch_enabled(rzg2l_gpt, sibling_ch)) {
-> > > +		if (rzg2l_gpt_is_ch_enabled(rzg2l_gpt, sibling_ch, NULL)) {
-> > >  			if (period_ticks < rzg2l_gpt->period_ticks[ch])
-> > > -				return -EBUSY;
-> > > +				is_small_second_period =3D true;
-> > >
-> > >  			period_ticks =3D rzg2l_gpt->period_ticks[ch];
-> > >  		}
-> > >  	}
-> > >
-> > > -	prescale =3D rzg2l_gpt_calculate_prescale(period_ticks);
-> > > -	pv =3D rzg2l_gpt_calculate_pv_or_dc(period_ticks, prescale);
-> > > +	wfhw->prescale =3D rzg2l_gpt_calculate_prescale(period_ticks);
-> > > +	pv =3D rzg2l_gpt_calculate_pv_or_dc(period_ticks, wfhw->prescale);
-> > > +	wfhw->gtpr =3D pv;
-> > > +	wfhw->gtccr =3D 0;
-> > > +	if (is_small_second_period)
-> > > +		return 1;
-> > >
-> > > -	duty_ticks =3D mul_u64_u64_div_u64(state->duty_cycle, rzg2l_gpt->ra=
-te_khz, USEC_PER_SEC);
-> > > -	if (duty_ticks > period_ticks)
-> > > -		duty_ticks =3D period_ticks;
-> > > -	dc =3D rzg2l_gpt_calculate_pv_or_dc(duty_ticks, prescale);
-> > > +	duty_ticks =3D mul_u64_u64_div_u64(wf->duty_length_ns, rzg2l_gpt->r=
-ate_khz, USEC_PER_SEC);
-> > > +	if (duty_ticks > RZG2L_MAX_TICKS)
-> > > +		duty_ticks =3D RZG2L_MAX_TICKS;
-> >
-> > I know this change from > period_ticks to > RZG2L_MAX_TICKS has been
-> > suggested by you, Uwe, but is this correct if period_ticks was set to
-> > a smaller value in the earlier sibling channel condition?
->=20
-> Indeed this is irritating. I assume I missed that and take the blame for =
-the wrong suggestions.
-> Depending on how hardware copes with such a configuration it might be ok =
-to keep the code as is, but a
-> comment would be justified in this case.
+Supported chips:
+ESWIN EIC7700 series SoC.
 
-Please confirm
+Test:
+Tested this patch on the Sifive HiFive Premier P550 (which uses the EIC7700
+SoC).
 
- /*
-  * duty_ticks were clampled to match either period_ticks of this
-  * channel or an active sibling channel's period_ticks.
-  */
-if (duty_ticks > period_ticks)
-	duty_ticks =3D period_ticks;
+[1] https://lore.kernel.org/lkml/20230907161242.67190-1-ben.dooks@codethink.co.uk/
 
->=20
-> > >  	/*
-> > >  	 * GPT counter is shared by multiple channels, we cache the period
-> > > ticks @@ -314,6 +314,61 @@ static int rzg2l_gpt_config(struct pwm_chi=
-p *chip, struct pwm_device
-> *pwm,
-> > >  	 */
-> > >  	rzg2l_gpt->period_ticks[ch] =3D period_ticks;
-> > >
-> >
-> > This should be part of rzg2l_gpt_write_waveform().
+Updates:
+  Changes in v6:
+  - YAML:
+    - Drop the resets property and its items description for eswin,eic7700-pwm.
+      Keep the required.
 
-Also, if we move this to rzg2l_gpt_write_waveform() there is a rounding
-error possible as we need to use hardware register to calculate
-rzg2l_gpt->period_ticks[ch].
+  - Link to v5: https://lore.kernel.org/all/20260423083644.1168-1-dongxuyang@eswincomputing.com/
 
-Can you please confirm, is it ok for you?
+  Changes in v5:
+  - YAML:
+    - Add 'eswin,eic7700-pwm' compatible string.
+    - Add the items description for the resets property and set minItems to 1.
+    - Require resets property with exactly 1 reset for eswin,eic7700-pwm compatible.
+  - Driver:
+    - Add support for 'eswin,eic7700-pwm' compatible.
+    - Add structure dwc_pwm_plat_data to manage the API for obtaining resets.
 
+  - Link to v4: https://lore.kernel.org/all/20260415094908.1539-1-dongxuyang@eswincomputing.com/
 
-> >
-> > Otherwise, if pwm_round_waveform_might_sleep() is called without
-> > pwm_set_waveform_might_sleep() being called immediately after with the
-> > rounded waveform, the software state will become out of sync with the
-> > hardware state.
->=20
-> Indeed, the tohw and fromhw callbacks must have no side effects.
-> There isn't a set_waveform call after each round_waveform.
+  Changes in v4:
+  - YAML:
+    - Change maxItems from 1 to 2. As there is a corresponding reset signal
+      for each clock domain, the effective maxItems of the resets property
+      is set to 2.
+    - Update the YAML commit message to describe the hardware.
+  - Driver:
+    - Replace devm_reset_control_get_optional_exclusive() with
+      devm_reset_control_array_get_optional_exclusive(). Since the number
+      of reset signals has increased from one to two, we need to use the
+      array API to acquire them.
 
-Ok.
+  - Link to v3: https://lore.kernel.org/all/20260402091718.1608-1-dongxuyang@eswincomputing.com/
 
+  Changes in v3:
+  - YAML:
+    - Added a clear justification for the optional resets property. It is
+      required to support proper controller initialization when no PWM
+      channel is active at boot time, while allowing the driver to skip
+      reset deassertion if any channel is already enabled.
+  - Driver:
+    - Update the boundary value check of tmp in __dwc_pwm_configure_timer()
+      for DWC_TIM_CTRL_0N100PWM_EN.
+    - Replace 'sizeof(struct dwc_pwm_drvdata)' with
+      'struct_size(data, chips, 1)'.
+    - Drop devm_clk_get_enabled() in favor of devm_clk_get() with explicit
+      clk_prepare_enable() and clk_disable_unprepare() allowing runtime PM
+      to manage clock state.
+    - Replace devm_reset_control_get_optional_exclusive_deasserted() with
+      devm_reset_control_get_optional_exclusive() and issue a full reset via
+      reset_control_reset() only when no PWM channel is active at probe time.
+    - Detect bootloader-enabled PWM channels by reading the enable bit, and
+      initialize runtime PM as active for those channels by calling
+      pm_runtime_set_active() and pm_runtime_get_noresume().
+    - Remove autosuspend as it is not required for this driver.
+    - Use explicit pm_runtime_enable() and pm_runtime_disable() instead of
+      the managed devm_pm_runtime_enable() variant to ensure correct cleanup.
+    - On device removal, recheck the channel enable status. If any channel
+      remains active, call pm_runtime_put_noidle() before disabling clocks
+      via clk_disable_unprepare().
+      Resume device before register access during removal if it is runtime
+      suspended, and re-suspend it afterward.
+    - If device is suspended, resume it before register access during system
+      resume/suspend.
+    - Use pm_ptr() instead of pm_sleep_ptr() for correct PM operation.
 
-Cheers,
-Biju
+  - Link to v2: https://lore.kernel.org/all/20260306093000.2065-1-dongxuyang@eswincomputing.com/
+
+  Changes in v2:
+  - YAML:
+    - Remove eswin,eic7700-pwm.yaml. Use snps,dw-apb-timers-pwm2.yaml.
+      The description in snps,dw-apb-timers-pwm2.yaml is better.
+    - Add the resets property as optional, as defined in the databook.
+    - Remove snps,pwm-full-range-enable as no additional property is needed.
+  - Driver:
+    - Change the file from pwm-dwc-eic7700.c to pwm-dwc-of.c from [1].
+    - Define DWC_TIM_VERSION_ID_2_11A 2.11a as the baseline version.
+    - Enable the 0% and 100% duty cycle mode by setting dwc->feature if
+      the version read from the TIMERS_COMP_VERSION register is later
+      than or equal to DWC_TIM_VERSION_ID_2_11A.
+    - Use the DIV_ROUND_UP_ULL() to calculate width in the .apply and
+      .get_state.
+    - Additionally, Power Management (PM) support has been added to the
+      pwm-dwc-of.c driver.
+    - Drop the headers that are not used.
+    - Use devm_clk_get_enabled() instead of devm_clk_get().
+    - Drop of_match_ptr.
+    - Fix build error with 1ULL << 32.
+      Reported-by: kernel test robot <lkp@intel.com>
+      Closes: https://lore.kernel.org/oe-kbuild-all/202512061720.j31AsgM7-lkp@intel.com/
+
+  - Link to v1: https://lore.kernel.org/all/20251205090411.1388-1-dongxuyang@eswincomputing.com/
+  - Link to v9: https://lore.kernel.org/lkml/20230907161242.67190-1-ben.dooks@codethink.co.uk/
+
+Xuyang Dong (2):
+  dt-bindings: pwm: dwc: add optional reset
+  pwm: dwc: add of/platform support
+
+ .../bindings/pwm/snps,dw-apb-timers-pwm2.yaml |  25 +-
+ drivers/pwm/Kconfig                           |  10 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-dwc-core.c                    | 101 +++--
+ drivers/pwm/pwm-dwc-of.c                      | 346 ++++++++++++++++++
+ drivers/pwm/pwm-dwc.h                         |  25 +-
+ 6 files changed, 475 insertions(+), 33 deletions(-)
+ create mode 100644 drivers/pwm/pwm-dwc-of.c
+
+--
+2.34.1
+
 
