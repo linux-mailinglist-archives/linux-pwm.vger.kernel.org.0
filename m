@@ -1,139 +1,188 @@
-Return-Path: <linux-pwm+bounces-8690-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8691-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id iD9/NpGl62mrPwAAu9opvQ
-	(envelope-from <linux-pwm+bounces-8690-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Fri, 24 Apr 2026 19:17:05 +0200
+	id 8HyRBrcB7WnmeAAAu9opvQ
+	(envelope-from <linux-pwm+bounces-8691-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Sat, 25 Apr 2026 20:02:31 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7EBE0461C40
-	for <lists+linux-pwm@lfdr.de>; Fri, 24 Apr 2026 19:17:05 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 654204672EB
+	for <lists+linux-pwm@lfdr.de>; Sat, 25 Apr 2026 20:02:30 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4030C301AA6C
-	for <lists+linux-pwm@lfdr.de>; Fri, 24 Apr 2026 17:03:25 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 92A1A3056D12
+	for <lists+linux-pwm@lfdr.de>; Sat, 25 Apr 2026 17:53:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D442333E355;
-	Fri, 24 Apr 2026 17:03:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6A0A039B943;
+	Sat, 25 Apr 2026 17:50:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HVBywPu0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FVxMT9NE"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0C7033E346;
-	Fri, 24 Apr 2026 17:03:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 340E539B497;
+	Sat, 25 Apr 2026 17:50:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777050204; cv=none; b=QWUy2XR+E3ZOIudNSVj5TDrk/Nfp45C3d1cwsehAux7ih2bcCA9m06dzkfljSecStEFV2oma0hLnE2X6hg9Q60Y63QqCoL9T10VykGGOL9MUawY42A/p54sAHMpJk9oQvHHjpNNe97GIOQHHzgyJvu1e74V+tdhZeEcK5+dG12M=
+	t=1777139443; cv=none; b=OP32vKwXBca76w3II3BUSchtv17oAKG5SlQCDBXKAPy/g54gCJieK6pKwmvgtJNJ/j8tayYaOl3RbDRvIA5/wOCuT25tUiqb+tx5OA7gLZXB54/Rjh0MP2jMtZetRmo3Y4HsV/D6KxH01WtzajjA9dhFmtkGI0ztuLk0S5v8qp4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777050204; c=relaxed/simple;
-	bh=+zvcRDJW+a8wr84kODBlsWngBSTqsiTt6oprKiUbkd4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=aryDEWNzJwk6wF/5hSyi909yGlG0E2LrPrft417Amz0uPtiKBMs97Rf00UAbue+DUtX2KdmJMJrI4RHwzJ2sF+6S1bwWn+VuxAt+FdsYoVb17OehDkgrxDupSs95GAulC8KxfSi5Qx35Q5OOuGbDND5dSIcJOzfPTAk7tf64/Mg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HVBywPu0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E5A4C19425;
-	Fri, 24 Apr 2026 17:03:21 +0000 (UTC)
+	s=arc-20240116; t=1777139443; c=relaxed/simple;
+	bh=Eq1gWbdZCyBkPLyU8ZI7KGDNpjNSiEaS1D+uvztVezk=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=sBO0RWbRPzFy35H7frU7629+M6G3PXBpSMYCFT6uFavNZfX56a0kh52inzbU8B3LTYiBi6xGhdbN3u45/boL4A+6lFppx6XdROQmyyj3yr4S+oi5JV/slMVcKuEjllVB/NEAjBrkks/hvN3VcL4qSJeyVU7xpkjwW8NR5f86kcg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FVxMT9NE; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF8C5C4AF1C;
+	Sat, 25 Apr 2026 17:50:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777050204;
-	bh=+zvcRDJW+a8wr84kODBlsWngBSTqsiTt6oprKiUbkd4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=HVBywPu0avecCGEl4Ex/jIh9zWyBDQW54AJyKgh4ySETy+uR2BBcYCMhfny6/eCNn
-	 J/mh0acu0C+ysXG+FOLcLItVi+n64tNiEl80aGgOAxoxn42mxrmR/ybpStSmueaiW+
-	 ohWw6XHCFCSuY21dut5TvMDB9UK05mAzz7w1J+WbN43OOXLbA7Nmkm6rHakqsKSQjb
-	 GcWVoMq4osfY7cBy5yUdUHDOH33ZPVKfd7dTijiYHanMVJP6R10KiuURvRCMYKsQf9
-	 qd8AWpkbuYEuIcbN7P3TZ2a8EKqZ+H9XAki7+JYQd1WfIvcsLR+Uq+QcP5Bhxnnrut
-	 fjqoUy0wxuBSA==
-Date: Fri, 24 Apr 2026 18:03:19 +0100
-From: Conor Dooley <conor@kernel.org>
-To: dongxuyang@eswincomputing.com
-Cc: ukleinek@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, ben-linux@fluff.org, ben.dooks@codethink.co.uk,
-	p.zabel@pengutronix.de, linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ningyu@eswincomputing.com, linmin@eswincomputing.com,
-	xuxiang@eswincomputing.com, wangguosheng@eswincomputing.com,
-	pinkesh.vaghela@einfochips.com
-Subject: Re: [PATCH v6 1/2] dt-bindings: pwm: dwc: add optional reset
-Message-ID: <20260424-these-ozone-687a8ddfb009@spud>
-References: <20260424094529.1691-1-dongxuyang@eswincomputing.com>
- <20260424095435.1721-1-dongxuyang@eswincomputing.com>
+	s=k20201202; t=1777139442;
+	bh=Eq1gWbdZCyBkPLyU8ZI7KGDNpjNSiEaS1D+uvztVezk=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=FVxMT9NETDxJ0HO1pCnX4MSfJsyyRyC0Fbn1Ja0AOjAkO/s9g0NF0cN8kd7e/JGQW
+	 WQICJhgz8AR+HBSG/FADsC0A2SnH6qRZt/CRW2uwVBrRVGK18Xge55RFJjSCDIktM2
+	 4fGZt8E4nxSFgx58l7hR3XfZi3XzHL1ohjsn9J+B2cjkdKMjpwvz1fOPlEtwYhyy0r
+	 X5TkXeskeHTWIZKvJl+6v86LKI2TiD/X73qMlu+YxVlbWQ1O5BISKtQe2CLaFJ42NI
+	 d2RrSQtwMN9arEXeuALwEkTgey1H97RsYm/GMaNkpJMrJIRCAfRi70pIxHaOciEN1H
+	 xN7XmJLdM6+Og==
+Date: Sat, 25 Apr 2026 18:50:28 +0100
+From: Jonathan Cameron <jic23@kernel.org>
+To: Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org>
+Cc: radu.sabau@analog.com, Lars-Peter Clausen <lars@metafoo.de>, Michael
+ Hennerich <Michael.Hennerich@analog.com>, David Lechner
+ <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy
+ Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Uwe
+ =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>, Liam Girdwood
+ <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Linus Walleij
+ <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Philipp Zabel
+ <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
+ <skhan@linuxfoundation.org>, linux-iio@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
+ linux-doc@vger.kernel.org
+Subject: Re: [PATCH v8 3/6] iio: adc: ad4691: add triggered buffer support
+Message-ID: <20260425185028.6023661e@jic23-huawei>
+In-Reply-To: <20260416-ad4692-multichannel-sar-adc-driver-v8-3-c415bd048fa3@analog.com>
+References: <20260416-ad4692-multichannel-sar-adc-driver-v8-0-c415bd048fa3@analog.com>
+	<20260416-ad4692-multichannel-sar-adc-driver-v8-3-c415bd048fa3@analog.com>
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="MEX2CKlYXH7ukGta"
-Content-Disposition: inline
-In-Reply-To: <20260424095435.1721-1-dongxuyang@eswincomputing.com>
-X-Rspamd-Queue-Id: 7EBE0461C40
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Rspamd-Queue-Id: 654204672EB
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.26 / 15.00];
-	SIGNED_PGP(-2.00)[];
+X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8690-lists,linux-pwm=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-8691-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[24];
+	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	MISSING_XM_UA(0.00)[];
-	TO_DN_NONE(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,linux-pwm@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[jic23@kernel.org,linux-pwm@vger.kernel.org];
+	FREEMAIL_CC(0.00)[analog.com,metafoo.de,baylibre.com,kernel.org,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org,vger.kernel.org];
+	TAGGED_RCPT(0.00)[linux-pwm,radu.sabau.analog.com,dt];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	RCPT_COUNT_TWELVE(0.00)[16]
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,analog.com:email]
 
+On Thu, 16 Apr 2026 12:18:48 +0300
+Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org> wrote:
 
---MEX2CKlYXH7ukGta
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Apr 24, 2026 at 05:54:35PM +0800, dongxuyang@eswincomputing.com wro=
-te:
-> From: Xuyang Dong <dongxuyang@eswincomputing.com>
+> From: Radu Sabau <radu.sabau@analog.com>
 >=20
-> The DesignWare PWM includes separate reset signals dedicated to each clock
-> domain:
-> The presetn signal resets logic in pclk domain.
-> The timer_N_resetn signal resets logic in the timer_N_clk domain.
-> The resets are active-low.
+> Add buffered capture support using the IIO triggered buffer framework.
 >=20
-> EIC7700 use DesignWare IP for PWM controllers. Add ESWIN EIC7700 support
->  in snps,dw-apb-timers-pwm2.yaml
+> CNV Burst Mode: the GP pin identified by interrupt-names in the device
+> tree is configured as DATA_READY output. The IRQ handler stops
+> conversions and fires the IIO trigger; the trigger handler executes a
+> pre-built SPI message that reads all active channels from the AVG_IN
+> accumulator registers and then resets accumulator state and restarts
+> conversions for the next cycle.
 >=20
-> Signed-off-by: Xuyang Dong <dongxuyang@eswincomputing.com>
+> Manual Mode: CNV is tied to SPI CS so each transfer simultaneously
+> reads the previous result and starts the next conversion (pipelined
+> N+1 scheme). At preenable time a pre-built, optimised SPI message of
+> N+1 transfers is constructed (N channel reads plus one NOOP to drain
+> the pipeline). The trigger handler executes the message in a single
+> spi_sync() call and collects the results. An external trigger (e.g.
+> iio-trig-hrtimer) is required to drive the trigger at the desired
+> sample rate.
+>=20
+> Both modes share the same trigger handler and push a complete scan =E2=80=
+=94
+> one u16 slot per channel at its scan_index position, followed by a
+> timestamp =E2=80=94 to the IIO buffer via iio_push_to_buffers_with_ts().
+>=20
+> The CNV Burst Mode sampling frequency (PWM period) is exposed as a
+> buffer-level attribute via IIO_DEVICE_ATTR.
+>=20
+> Signed-off-by: Radu Sabau <radu.sabau@analog.com>
+Hi Radu,
 
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-pw-bot: not-applicable
+A couple of comments inline, but only for things to change
+if you end up doing a v9 for other reasons.
 
---MEX2CKlYXH7ukGta
-Content-Type: application/pgp-signature; name="signature.asc"
+thanks,
 
------BEGIN PGP SIGNATURE-----
+Jonathan
 
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCaeuiVwAKCRB4tDGHoIJi
-0ke8AQDsqvVmHsVm2RxCKnn08rY1ct5a8O/DE6vT0o1xcb5//wEA4ADri995kMBU
-hzrm9A0EEiY/bBMMGL+x9jMSzNfrFwY=
-=t87B
------END PGP SIGNATURE-----
+> ---
+>  drivers/iio/adc/Kconfig  |   2 +
+>  drivers/iio/adc/ad4691.c | 537 +++++++++++++++++++++++++++++++++++++++++=
+++++--
+>  2 files changed, 524 insertions(+), 15 deletions(-)
+>=20
+> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> index 3685a03aa8dc..d498f16c0816 100644
+> --- a/drivers/iio/adc/Kconfig
+> +++ b/drivers/iio/adc/Kconfig
 
---MEX2CKlYXH7ukGta--
+> @@ -84,19 +104,23 @@ enum ad4691_ref_ctrl {
+>  	AD4691_VREF_5P0   =3D 4,
+>  };
+> =20
+> -struct ad4691_chip_info {
+> +struct ad4691_channel_info {
+>  	const struct iio_chan_spec *channels;
+
+We could mark this __counted_by_ptr()  but that's new so no drivers
+are doing so yet.  At somepoint I'll have a look at whether it's
+worth pushing it into existing drivers and if it is do this
+one at that time.  If you are respinning for other reasons though
+then nice to have.
+
+> -	const char *name;
+>  	unsigned int num_channels;
+> +};
+> +
+> +struct ad4691_chip_info {
+> +	const char *name;
+>  	unsigned int max_rate;
+> +	const struct ad4691_channel_info *sw_info;
+>  };
+I'm not going to ask you to respin just for this, but it would have
+been neater to push this factoring out of channels + num_channels
+into the previous patch.
+
 
