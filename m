@@ -1,49 +1,49 @@
-Return-Path: <linux-pwm+bounces-8715-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8716-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wPXYOavf72kiHQEAu9opvQ
-	(envelope-from <linux-pwm+bounces-8715-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 Apr 2026 00:14:03 +0200
+	id 4CNMBb/f72kHHQEAu9opvQ
+	(envelope-from <linux-pwm+bounces-8716-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 Apr 2026 00:14:23 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id AA22A47B393
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 Apr 2026 00:14:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id C0B1E47B3BE
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 Apr 2026 00:14:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 32490301653C
-	for <lists+linux-pwm@lfdr.de>; Mon, 27 Apr 2026 22:13:38 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 6EE7E300ED95
+	for <lists+linux-pwm@lfdr.de>; Mon, 27 Apr 2026 22:13:48 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6BA953AD512;
-	Mon, 27 Apr 2026 22:13:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A011B3AD53F;
+	Mon, 27 Apr 2026 22:13:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XtvLu9O5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YnO230/X"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44D1D3ACEE1;
-	Mon, 27 Apr 2026 22:13:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A0413ACEFE;
+	Mon, 27 Apr 2026 22:13:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777328004; cv=none; b=SwMo+4GNQfP6fRhRQmOecFMxUnczuiy19eo1wkyTRbu3IRIcDKmOaa79Mpsuj7JbyhBQyfHkSw3jaI7kj5BFKkkTYq4rIStVxpZoQsnL6YQBqSmwr+TE/pYssapuurij+ZKiZS9KGlb0Eag2bbsEK7YPbAcJ2LvpKWbZtrOaAX0=
+	t=1777328010; cv=none; b=kDyl/CdAkSMwRAcQRtoiBdGCPNCtNyL8Sqx3ZpwDiuJ3cSm6cyPTPPP4ahHngwIxddfF02GfzNXNyyWZsCNO+fRFtymukxK/gQu3chcr1tgXqIo94TqbcZm0jjDp4zAeTFBySjA3pXmMTs8a0YVd8TCLf1zCpNIr96RO20vrp6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777328004; c=relaxed/simple;
-	bh=SbAAS0eADHxx3DW9A0GSuIcQ7Z1EZxALrR6avIv2uEo=;
+	s=arc-20240116; t=1777328010; c=relaxed/simple;
+	bh=Ax3xwk04aGwKxPdkslM0oEwfMzNKZapM3aM+lkIWrMQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UAW8zJHHtk7Eupa0rrR7Zj9qUHaTXNXS1Ue7vOml+xfkp0f5wg+RkYOgcwMusRpc7rXmKlW/ZXlNOhZbYHxXhMFCd094tRIKS4T9gCQjDMMzNP7JzuLpRD0Esi3U3dmRtX5Heaf3BVPVuUvrb45nS29tF0j0JJToBGYY0sS4l9U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XtvLu9O5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0439AC2BCB6;
-	Mon, 27 Apr 2026 22:13:17 +0000 (UTC)
+	 MIME-Version; b=SZUVtYHfG9BwKxM9kqYUE7+2mQVpPGwf6oZO1vZjJHkMU2pA5+kq42q+UidFLXlzSZ6/RFSH9Uddm55axq/mV2dJ0CyhX9yPAKkbFZuyYkW+4RS1LeKVIO7Dg/Kq6ERqJBFIQlfO53KzPstHRlWpXmlA7reS3Uq1WKFB1KGmXsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YnO230/X; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E832C2BCB5;
+	Mon, 27 Apr 2026 22:13:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777328003;
-	bh=SbAAS0eADHxx3DW9A0GSuIcQ7Z1EZxALrR6avIv2uEo=;
+	s=k20201202; t=1777328010;
+	bh=Ax3xwk04aGwKxPdkslM0oEwfMzNKZapM3aM+lkIWrMQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XtvLu9O5wx83IVLI0xcCL+XYbcSgk9I7l5pDwudA4ugR8IetY1J7ZP8JkK3RelTx5
-	 9wTDlKBWIrCIzCj6fGlPo0d134QQy+1a8G64zqw0nXox7H4WuwbbuHHEtbZb3rUp76
-	 S8QO3p/shJ/YSjj/FQadgMGjxkAQnTb5JQnAyRLY/eE0qWrZ2/a6Eby8IUzWQgfUN4
-	 tTyMV5R0+Eb8qIRq3NaiIvBBqMnn98jHE8LInbEGqkNa4YKnVchAzZRlHv63azmKQN
-	 TMfNpFFYWlfzuY6MVl6jB9vf17xFKY92pFKUuQECSdJP6djwmw/oZ83bYpDKdmB3r5
-	 weUJforu5dQ7w==
+	b=YnO230/XG6ZJElTZX0PkzIyd40DOrsF6s2I8DP2WYVvPn3+hNTYrJmCsXUIP2OhNa
+	 z8ESPWFYRBc8Nn698cRa+oeCjeSk3YoVusYQMt9rvQ9RL9yCJENMq0OFuJ1NO030tA
+	 XjW7BnEIqXwA9DLqtkuaUSr70K3fHUqVeK4tEa0Y3ROLqspJQfwlKf8ywsCHbC/PwB
+	 2pKsVeJx891r/Zo5TmcCNnQ76+8oi0YNx+BOkKYyWGb1+BV3Ej8BcOFNAygrq4DVz1
+	 PXGW8J3oB+D2oGPQwK4miDKgfdKqUvSHOw2X+vrCuKo6XLSIxh5gTLh5TMpMw4cxjS
+	 Hn8S5l6Bq7qnQ==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -76,9 +76,9 @@ Cc: driver-core@lists.linux.dev,
 	linux-pci@vger.kernel.org,
 	rust-for-linux@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH 12/24] rust: platform: make Driver trait lifetime-parameterized
-Date: Tue, 28 Apr 2026 00:11:10 +0200
-Message-ID: <20260427221155.2144848-13-dakr@kernel.org>
+Subject: [PATCH 13/24] rust: auxiliary: make Driver trait lifetime-parameterized
+Date: Tue, 28 Apr 2026 00:11:11 +0200
+Message-ID: <20260427221155.2144848-14-dakr@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260427221155.2144848-1-dakr@kernel.org>
 References: <20260427221155.2144848-1-dakr@kernel.org>
@@ -89,7 +89,7 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: AA22A47B393
+X-Rspamd-Queue-Id: C0B1E47B3BE
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [0.84 / 15.00];
@@ -105,7 +105,7 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCPT_COUNT_TWELVE(0.00)[31];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8715-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8716-lists,linux-pwm=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -123,227 +123,69 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,forlt:email]
 
-Make platform::Driver take a lifetime parameter 'a that ties device
+Make auxiliary::Driver take a lifetime parameter 'a that ties device
 resources to the binding scope.
 
 Internally, Adapter<T: Driver> becomes Adapter<F: ForLt> with a bound
-for<'a> F::Of<'a>: Driver<'a>; module_platform_driver! wraps the driver
+for<'a> F::Of<'a>: Driver<'a>; module_auxiliary_driver! wraps the driver
 type in ForLt!() so drivers don't have to.
 
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- drivers/cpufreq/rcpufreq_dt.rs       | 10 +--
- drivers/gpu/drm/tyr/driver.rs        | 10 +--
- drivers/pwm/pwm_th1520.rs            | 10 +--
- rust/kernel/cpufreq.rs               |  8 +--
- rust/kernel/driver.rs                |  9 ++-
- rust/kernel/io/mem.rs                | 16 ++---
- rust/kernel/platform.rs              | 92 ++++++++++++++++++----------
- samples/rust/rust_debugfs.rs         | 10 +--
- samples/rust/rust_driver_platform.rs | 12 ++--
- samples/rust/rust_i2c_client.rs      | 12 ++--
- samples/rust/rust_soc.rs             | 12 ++--
- 11 files changed, 116 insertions(+), 85 deletions(-)
+ drivers/gpu/drm/nova/driver.rs        |  9 ++--
+ rust/kernel/auxiliary.rs              | 59 ++++++++++++++++++---------
+ samples/rust/rust_driver_auxiliary.rs | 12 ++++--
+ 3 files changed, 54 insertions(+), 26 deletions(-)
 
-diff --git a/drivers/cpufreq/rcpufreq_dt.rs b/drivers/cpufreq/rcpufreq_dt.rs
-index f17bf64c22e2..06c05f946829 100644
---- a/drivers/cpufreq/rcpufreq_dt.rs
-+++ b/drivers/cpufreq/rcpufreq_dt.rs
-@@ -195,18 +195,18 @@ fn register_em(policy: &mut cpufreq::Policy) {
- kernel::of_device_table!(
-     OF_TABLE,
-     MODULE_OF_TABLE,
--    <CPUFreqDTDriver as platform::Driver>::IdInfo,
-+    <CPUFreqDTDriver as platform::Driver<'_>>::IdInfo,
-     [(of::DeviceId::new(c"operating-points-v2"), ())]
+diff --git a/drivers/gpu/drm/nova/driver.rs b/drivers/gpu/drm/nova/driver.rs
+index b1af0a099551..183d0e679a0b 100644
+--- a/drivers/gpu/drm/nova/driver.rs
++++ b/drivers/gpu/drm/nova/driver.rs
+@@ -42,18 +42,21 @@ pub(crate) struct NovaData {
+ kernel::auxiliary_device_table!(
+     AUX_TABLE,
+     MODULE_AUX_TABLE,
+-    <NovaDriver as auxiliary::Driver>::IdInfo,
++    <NovaDriver as auxiliary::Driver<'_>>::IdInfo,
+     [(
+         auxiliary::DeviceId::new(NOVA_CORE_MODULE_NAME, AUXILIARY_NAME),
+         ()
+     )]
  );
  
--impl platform::Driver for CPUFreqDTDriver {
-+impl<'a> platform::Driver<'a> for CPUFreqDTDriver {
+-impl auxiliary::Driver for NovaDriver {
++impl<'a> auxiliary::Driver<'a> for NovaDriver {
      type IdInfo = ();
-     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
+     const ID_TABLE: auxiliary::IdTable<Self::IdInfo> = &AUX_TABLE;
  
-     fn probe(
--        pdev: &platform::Device<Core>,
--        _id_info: Option<&Self::IdInfo>,
--    ) -> impl PinInit<Self, Error> {
-+        pdev: &'a platform::Device<Core>,
-+        _id_info: Option<&'a Self::IdInfo>,
+-    fn probe(adev: &auxiliary::Device<Core>, _info: &Self::IdInfo) -> impl PinInit<Self, Error> {
++    fn probe(
++        adev: &'a auxiliary::Device<Core>,
++        _info: &'a Self::IdInfo,
 +    ) -> impl PinInit<Self, Error> + 'a {
-         cpufreq::Registration::<CPUFreqDTDriver>::new_foreign_owned(pdev.as_ref())?;
-         Ok(Self {})
-     }
-diff --git a/drivers/gpu/drm/tyr/driver.rs b/drivers/gpu/drm/tyr/driver.rs
-index 279710b36a10..7cc47ec76863 100644
---- a/drivers/gpu/drm/tyr/driver.rs
-+++ b/drivers/gpu/drm/tyr/driver.rs
-@@ -82,21 +82,21 @@ fn issue_soft_reset(dev: &Device<Bound>, iomem: &Devres<IoMem>) -> Result {
- kernel::of_device_table!(
-     OF_TABLE,
-     MODULE_OF_TABLE,
--    <TyrPlatformDriverData as platform::Driver>::IdInfo,
-+    <TyrPlatformDriverData as platform::Driver<'_>>::IdInfo,
-     [
-         (of::DeviceId::new(c"rockchip,rk3588-mali"), ()),
-         (of::DeviceId::new(c"arm,mali-valhall-csf"), ())
-     ]
- );
+         let data = try_pin_init!(NovaData { adev: adev.into() });
  
--impl platform::Driver for TyrPlatformDriverData {
-+impl<'a> platform::Driver<'a> for TyrPlatformDriverData {
-     type IdInfo = ();
-     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
- 
-     fn probe(
--        pdev: &platform::Device<Core>,
--        _info: Option<&Self::IdInfo>,
--    ) -> impl PinInit<Self, Error> {
-+        pdev: &'a platform::Device<Core>,
-+        _info: Option<&'a Self::IdInfo>,
-+    ) -> impl PinInit<Self, Error> + 'a {
-         let core_clk = Clk::get(pdev.as_ref(), Some(c"core"))?;
-         let stacks_clk = OptionalClk::get(pdev.as_ref(), Some(c"stacks"))?;
-         let coregroup_clk = OptionalClk::get(pdev.as_ref(), Some(c"coregroup"))?;
-diff --git a/drivers/pwm/pwm_th1520.rs b/drivers/pwm/pwm_th1520.rs
-index ddd44a5ce497..7139f3f4373d 100644
---- a/drivers/pwm/pwm_th1520.rs
-+++ b/drivers/pwm/pwm_th1520.rs
-@@ -310,18 +310,18 @@ fn drop(self: Pin<&mut Self>) {
- kernel::of_device_table!(
-     OF_TABLE,
-     MODULE_OF_TABLE,
--    <Th1520PwmPlatformDriver as platform::Driver>::IdInfo,
-+    <Th1520PwmPlatformDriver as platform::Driver<'_>>::IdInfo,
-     [(of::DeviceId::new(c"thead,th1520-pwm"), ())]
- );
- 
--impl platform::Driver for Th1520PwmPlatformDriver {
-+impl<'a> platform::Driver<'a> for Th1520PwmPlatformDriver {
-     type IdInfo = ();
-     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
- 
-     fn probe(
--        pdev: &platform::Device<Core>,
--        _id_info: Option<&Self::IdInfo>,
--    ) -> impl PinInit<Self, Error> {
-+        pdev: &'a platform::Device<Core>,
-+        _id_info: Option<&'a Self::IdInfo>,
-+    ) -> impl PinInit<Self, Error> + 'a {
-         let dev = pdev.as_ref();
-         let request = pdev.io_request_by_index(0).ok_or(ENODEV)?;
- 
-diff --git a/rust/kernel/cpufreq.rs b/rust/kernel/cpufreq.rs
-index d8d26870bea2..ac59cdfd633c 100644
---- a/rust/kernel/cpufreq.rs
-+++ b/rust/kernel/cpufreq.rs
-@@ -886,14 +886,14 @@ fn register_em(_policy: &mut Policy) {
- ///     }
- /// }
- ///
--/// impl platform::Driver for SampleDriver {
-+/// impl<'a> platform::Driver<'a> for SampleDriver {
- ///     type IdInfo = ();
- ///     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = None;
- ///
- ///     fn probe(
--///         pdev: &platform::Device<Core>,
--///         _id_info: Option<&Self::IdInfo>,
--///     ) -> impl PinInit<Self, Error> {
-+///         pdev: &'a platform::Device<Core>,
-+///         _id_info: Option<&'a Self::IdInfo>,
-+///     ) -> impl PinInit<Self, Error> + 'a {
- ///         cpufreq::Registration::<SampleDriver>::new_foreign_owned(pdev.as_ref())?;
- ///         Ok(Self {})
- ///     }
-diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
-index 91490040d77e..03974690406b 100644
---- a/rust/kernel/driver.rs
-+++ b/rust/kernel/driver.rs
-@@ -13,7 +13,7 @@
- //! The main driver interface is defined by a bus specific driver trait. For instance:
- //!
- //! ```ignore
--//! pub trait Driver: Send {
-+//! pub trait Driver<'a>: Send {
- //!     /// The type holding information about each device ID supported by the driver.
- //!     type IdInfo: 'static;
- //!
-@@ -24,10 +24,13 @@
- //!     const ACPI_ID_TABLE: Option<acpi::IdTable<Self::IdInfo>> = None;
- //!
- //!     /// Driver probe.
--//!     fn probe(dev: &Device<device::Core>, id_info: &Self::IdInfo) -> impl PinInit<Self, Error>;
-+//!     fn probe(
-+//!         dev: &'a Device<device::Core>,
-+//!         id_info: &'a Self::IdInfo,
-+//!     ) -> impl PinInit<Self, Error> + 'a;
- //!
- //!     /// Driver unbind (optional).
--//!     fn unbind(dev: &Device<device::Core>, this: Pin<&Self>) {
-+//!     fn unbind(dev: &'a Device<device::Core>, this: Pin<&'a Self>) {
- //!         let _ = (dev, this);
- //!     }
- //! }
-diff --git a/rust/kernel/io/mem.rs b/rust/kernel/io/mem.rs
-index 7dc78d547f7a..a483e59054e8 100644
---- a/rust/kernel/io/mem.rs
-+++ b/rust/kernel/io/mem.rs
-@@ -60,13 +60,13 @@ pub(crate) unsafe fn new(device: &'a Device<Bound>, resource: &'a Resource) -> S
-     /// };
-     /// struct SampleDriver;
-     ///
--    /// impl platform::Driver for SampleDriver {
-+    /// impl<'a> platform::Driver<'a> for SampleDriver {
-     ///    # type IdInfo = ();
-     ///
-     ///    fn probe(
--    ///       pdev: &platform::Device<Core>,
--    ///       info: Option<&Self::IdInfo>,
--    ///    ) -> impl PinInit<Self, Error> {
-+    ///       pdev: &'a platform::Device<Core>,
-+    ///       info: Option<&'a Self::IdInfo>,
-+    ///    ) -> impl PinInit<Self, Error> + 'a {
-     ///       let offset = 0; // Some offset.
-     ///
-     ///       // If the size is known at compile time, use [`Self::iomap_sized`].
-@@ -124,13 +124,13 @@ pub fn iomap_exclusive_sized<const SIZE: usize>(
-     /// };
-     /// struct SampleDriver;
-     ///
--    /// impl platform::Driver for SampleDriver {
-+    /// impl<'a> platform::Driver<'a> for SampleDriver {
-     ///    # type IdInfo = ();
-     ///
-     ///    fn probe(
--    ///       pdev: &platform::Device<Core>,
--    ///       info: Option<&Self::IdInfo>,
--    ///    ) -> impl PinInit<Self, Error> {
-+    ///       pdev: &'a platform::Device<Core>,
-+    ///       info: Option<&'a Self::IdInfo>,
-+    ///    ) -> impl PinInit<Self, Error> + 'a {
-     ///       let offset = 0; // Some offset.
-     ///
-     ///       // Unlike [`Self::iomap_sized`], here the size of the memory region
-diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
-index ae648304eb5b..ec41886b0ba3 100644
---- a/rust/kernel/platform.rs
-+++ b/rust/kernel/platform.rs
-@@ -44,33 +44,45 @@
+         let drm = drm::Device::<Self>::new(adev.as_ref(), data)?;
+diff --git a/rust/kernel/auxiliary.rs b/rust/kernel/auxiliary.rs
+index 8a278ddb5b95..f593a21a16be 100644
+--- a/rust/kernel/auxiliary.rs
++++ b/rust/kernel/auxiliary.rs
+@@ -38,22 +38,34 @@
  };
  
- /// An adapter for the registration of platform drivers.
+ /// An adapter for the registration of auxiliary drivers.
 -pub struct Adapter<T: Driver>(T);
 +///
 +/// `F` is a [`ForLt`](trait@ForLt) type that maps lifetimes to the driver's device
 +/// private data type, i.e. `F::Of<'a>` is the driver struct parameterized by `'a`. The macro
-+/// `module_platform_driver!` generates this automatically via `ForLt!()`.
++/// `module_auxiliary_driver!` generates this automatically via `ForLt!()`.
 +pub struct Adapter<F>(PhantomData<F>);
  
  // SAFETY:
- // - `bindings::platform_driver` is a C type declared as `repr(C)`.
+ // - `bindings::auxiliary_driver` is a C type declared as `repr(C)`.
 -// - `T` is the type of the driver's device private data.
 +// - `F::Of<'static>` is the stored type of the driver's device private data.
- // - `struct platform_driver` embeds a `struct device_driver`.
+ // - `struct auxiliary_driver` embeds a `struct device_driver`.
  // - `DEVICE_DRIVER_OFFSET` is the correct byte offset to the embedded `struct device_driver`.
 -unsafe impl<T: Driver + 'static> driver::DriverLayout for Adapter<T> {
 +unsafe impl<F> driver::DriverLayout for Adapter<F>
@@ -351,7 +193,7 @@ index ae648304eb5b..ec41886b0ba3 100644
 +    F: ForLt + 'static,
 +    for<'a> F::Of<'a>: Driver<'a>,
 +{
-     type DriverType = bindings::platform_driver;
+     type DriverType = bindings::auxiliary_driver;
 -    type DriverData = ForLt!(T);
 +    type DriverData = F;
      const DEVICE_DRIVER_OFFSET: usize = core::mem::offset_of!(Self::DriverType, driver);
@@ -366,22 +208,18 @@ index ae648304eb5b..ec41886b0ba3 100644
 +    for<'a> F::Of<'a>: Driver<'a>,
 +{
      unsafe fn register(
-         pdrv: &Opaque<Self::DriverType>,
+         adrv: &Opaque<Self::DriverType>,
          name: &'static CStr,
-         module: &'static ThisModule,
-     ) -> Result {
--        let of_table = match T::OF_ID_TABLE {
-+        let of_table = match <F::Of<'static> as Driver<'static>>::OF_ID_TABLE {
-             Some(table) => table.as_ptr(),
-             None => core::ptr::null(),
-         };
+@@ -64,7 +76,7 @@ unsafe fn register(
+             (*adrv.get()).name = name.as_char_ptr();
+             (*adrv.get()).probe = Some(Self::probe_callback);
+             (*adrv.get()).remove = Some(Self::remove_callback);
+-            (*adrv.get()).id_table = T::ID_TABLE.as_ptr();
++            (*adrv.get()).id_table = <F::Of<'static> as Driver<'static>>::ID_TABLE.as_ptr();
+         }
  
--        let acpi_table = match T::ACPI_ID_TABLE {
-+        let acpi_table = match <F::Of<'static> as Driver<'static>>::ACPI_ID_TABLE {
-             Some(table) => table.as_ptr(),
-             None => core::ptr::null(),
-         };
-@@ -94,19 +106,23 @@ unsafe fn unregister(pdrv: &Opaque<Self::DriverType>) {
+         // SAFETY: `adrv` is guaranteed to be a valid `DriverType`.
+@@ -79,7 +91,11 @@ unsafe fn unregister(adrv: &Opaque<Self::DriverType>) {
      }
  }
  
@@ -391,142 +229,75 @@ index ae648304eb5b..ec41886b0ba3 100644
 +    F: ForLt + 'static,
 +    for<'a> F::Of<'a>: Driver<'a>,
 +{
-     extern "C" fn probe_callback(pdev: *mut bindings::platform_device) -> kernel::ffi::c_int {
-         // SAFETY: The platform bus only ever calls the probe callback with a valid pointer to a
-         // `struct platform_device`.
-         //
-         // INVARIANT: `pdev` is valid for the duration of `probe_callback()`.
-         let pdev = unsafe { &*pdev.cast::<Device<device::CoreInternal>>() };
--        let info = <Self as driver::Adapter<'_>>::id_info(pdev.as_ref());
+     extern "C" fn probe_callback(
+         adev: *mut bindings::auxiliary_device,
+         id: *const bindings::auxiliary_device_id,
+@@ -93,12 +109,12 @@ extern "C" fn probe_callback(
+         // SAFETY: `DeviceId` is a `#[repr(transparent)`] wrapper of `struct auxiliary_device_id`
+         // and does not add additional invariants, so it's safe to transmute.
+         let id = unsafe { &*id.cast::<DeviceId>() };
+-        let info = T::ID_TABLE.info(id.index());
  
          from_result(|| {
--            let data = T::probe(pdev, info);
-+            let info = <Self as driver::Adapter<'_>>::id_info(pdev.as_ref());
-+            let data = <F::Of<'_> as Driver<'_>>::probe(pdev, info);
+-            let data = T::probe(adev, info);
++            let info = <F::Of<'_> as Driver<'_>>::ID_TABLE.info(id.index());
++            let data = <F::Of<'_> as Driver<'_>>::probe(adev, info);
  
--            pdev.as_ref().set_drvdata::<ForLt!(T)>(data)?;
-+            pdev.as_ref().set_drvdata::<F>(data)?;
+-            adev.as_ref().set_drvdata::<ForLt!(T)>(data)?;
++            adev.as_ref().set_drvdata::<F>(data)?;
              Ok(0)
          })
      }
-@@ -119,28 +135,34 @@ extern "C" fn remove_callback(pdev: *mut bindings::platform_device) {
-         let pdev = unsafe { &*pdev.cast::<Device<device::CoreInternal>>() };
+@@ -111,19 +127,21 @@ extern "C" fn remove_callback(adev: *mut bindings::auxiliary_device) {
+         let adev = unsafe { &*adev.cast::<Device<device::CoreInternal>>() };
  
          // SAFETY: `remove_callback` is only ever called after a successful call to
 -        // `probe_callback`, hence it's guaranteed that `Device::set_drvdata()` has been called
 -        // and stored a `Pin<KBox<T>>`.
--        let data = unsafe { pdev.as_ref().drvdata_borrow::<ForLt!(T)>() };
+-        let data = unsafe { adev.as_ref().drvdata_borrow::<ForLt!(T)>() };
 +        // `probe_callback`, hence it's guaranteed that drvdata has been set.
-+        let data = unsafe { pdev.as_ref().drvdata_borrow::<F>() };
++        let data = unsafe { adev.as_ref().drvdata_borrow::<F>() };
  
--        T::unbind(pdev, data);
-+        <F::Of<'_> as Driver<'_>>::unbind(pdev, data);
+-        T::unbind(adev, data);
++        <F::Of<'_> as Driver<'_>>::unbind(adev, data);
      }
  }
  
--impl<'a, T: Driver + 'static> driver::Adapter<'a> for Adapter<T> {
--    type IdInfo = T::IdInfo;
-+impl<'a, F> driver::Adapter<'a> for Adapter<F>
-+where
-+    F: ForLt + 'static,
-+    for<'b> F::Of<'b>: Driver<'b>,
-+{
-+    type IdInfo = <F::Of<'a> as Driver<'a>>::IdInfo;
- 
-     fn of_id_table() -> Option<of::IdTable<Self::IdInfo>> {
--        T::OF_ID_TABLE
-+        <F::Of<'a> as Driver<'a>>::OF_ID_TABLE
-     }
- 
-     fn acpi_id_table() -> Option<acpi::IdTable<Self::IdInfo>> {
--        T::ACPI_ID_TABLE
-+        <F::Of<'a> as Driver<'a>>::ACPI_ID_TABLE
-     }
- }
- 
- /// Declares a kernel module that exposes a single platform driver.
- ///
-+/// The `type` field accepts a driver type, optionally with a lifetime placeholder `'_` for
-+/// lifetime-parameterized drivers. The macro wraps it in [`ForLt!`] automatically.
-+///
- /// # Examples
- ///
- /// ```ignore
-@@ -152,10 +174,16 @@ fn acpi_id_table() -> Option<acpi::IdTable<Self::IdInfo>> {
- ///     license: "GPL v2",
- /// }
- /// ```
-+///
-+/// [`ForLt!`]: macro@ForLt
-+/// [`ForLt`]: trait@ForLt
+ /// Declares a kernel module that exposes a single auxiliary driver.
  #[macro_export]
- macro_rules! module_platform_driver {
+ macro_rules! module_auxiliary_driver {
 -    ($($f:tt)*) => {
--        $crate::module_driver!(<T>, $crate::platform::Adapter<T>, { $($f)* });
+-        $crate::module_driver!(<T>, $crate::auxiliary::Adapter<T>, { $($f)* });
 +    (type: $type:ty, $($rest:tt)*) => {
-+        $crate::module_driver!(<T>, $crate::platform::Adapter<T>, {
++        $crate::module_driver!(<T>, $crate::auxiliary::Adapter<T>, {
 +            type: $crate::types::ForLt!($type),
 +            $($rest)*
 +        });
      };
  }
  
-@@ -178,7 +206,7 @@ macro_rules! module_platform_driver {
- /// kernel::of_device_table!(
- ///     OF_TABLE,
- ///     MODULE_OF_TABLE,
--///     <MyDriver as platform::Driver>::IdInfo,
-+///     <MyDriver as platform::Driver<'_>>::IdInfo,
- ///     [
- ///         (of::DeviceId::new(c"test,device"), ())
- ///     ]
-@@ -187,26 +215,26 @@ macro_rules! module_platform_driver {
- /// kernel::acpi_device_table!(
- ///     ACPI_TABLE,
- ///     MODULE_ACPI_TABLE,
--///     <MyDriver as platform::Driver>::IdInfo,
-+///     <MyDriver as platform::Driver<'_>>::IdInfo,
- ///     [
- ///         (acpi::DeviceId::new(c"LNUXBEEF"), ())
- ///     ]
- /// );
+@@ -195,7 +213,7 @@ macro_rules! auxiliary_device_table {
+ /// The auxiliary driver trait.
  ///
--/// impl platform::Driver for MyDriver {
-+/// impl<'a> platform::Driver<'a> for MyDriver {
- ///     type IdInfo = ();
- ///     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
- ///     const ACPI_ID_TABLE: Option<acpi::IdTable<Self::IdInfo>> = Some(&ACPI_TABLE);
- ///
- ///     fn probe(
--///         _pdev: &platform::Device<Core>,
--///         _id_info: Option<&Self::IdInfo>,
--///     ) -> impl PinInit<Self, Error> {
-+///         _pdev: &'a platform::Device<Core>,
-+///         _id_info: Option<&'a Self::IdInfo>,
-+///     ) -> impl PinInit<Self, Error> + 'a {
- ///         Err(ENODEV)
- ///     }
- /// }
- ///```
--pub trait Driver: Send {
+ /// Drivers must implement this trait in order to get an auxiliary driver registered.
+-pub trait Driver {
 +pub trait Driver<'a>: Send {
-     /// The type holding driver private data about each device id supported by the driver.
-     // TODO: Use associated_type_defaults once stabilized:
-     //
-@@ -226,9 +254,9 @@ pub trait Driver: Send {
-     /// Called when a new platform device is added or discovered.
-     /// Implementers should attempt to initialize the device here.
-     fn probe(
--        dev: &Device<device::Core>,
--        id_info: Option<&Self::IdInfo>,
--    ) -> impl PinInit<Self, Error>;
+     /// The type holding information about each device id supported by the driver.
+     ///
+     /// TODO: Use associated_type_defaults once stabilized:
+@@ -209,7 +227,10 @@ pub trait Driver {
+     /// Auxiliary driver probe.
+     ///
+     /// Called when an auxiliary device is matches a corresponding driver.
+-    fn probe(dev: &Device<device::Core>, id_info: &Self::IdInfo) -> impl PinInit<Self, Error>;
++    fn probe(
 +        dev: &'a Device<device::Core>,
-+        id_info: Option<&'a Self::IdInfo>,
++        id_info: &'a Self::IdInfo,
 +    ) -> impl PinInit<Self, Error> + 'a;
  
-     /// Platform driver unbind.
+     /// Auxiliary driver unbind.
      ///
-@@ -240,7 +268,7 @@ fn probe(
+@@ -221,7 +242,7 @@ pub trait Driver {
      /// operations to gracefully tear down the device.
      ///
      /// Otherwise, release operations for driver resources should be performed in `Self::drop`.
@@ -535,150 +306,43 @@ index ae648304eb5b..ec41886b0ba3 100644
          let _ = (dev, this);
      }
  }
-diff --git a/samples/rust/rust_debugfs.rs b/samples/rust/rust_debugfs.rs
-index 0963efe19f93..0d88a9aaa957 100644
---- a/samples/rust/rust_debugfs.rs
-+++ b/samples/rust/rust_debugfs.rs
-@@ -111,19 +111,19 @@ fn from_str(s: &str) -> Result<Self> {
- kernel::acpi_device_table!(
-     ACPI_TABLE,
-     MODULE_ACPI_TABLE,
--    <RustDebugFs as platform::Driver>::IdInfo,
-+    <RustDebugFs as platform::Driver<'_>>::IdInfo,
-     [(acpi::DeviceId::new(c"LNUXBEEF"), ())]
+diff --git a/samples/rust/rust_driver_auxiliary.rs b/samples/rust/rust_driver_auxiliary.rs
+index f57b2b03adb6..d35963ac7fa4 100644
+--- a/samples/rust/rust_driver_auxiliary.rs
++++ b/samples/rust/rust_driver_auxiliary.rs
+@@ -26,16 +26,19 @@
+ kernel::auxiliary_device_table!(
+     AUX_TABLE,
+     MODULE_AUX_TABLE,
+-    <AuxiliaryDriver as auxiliary::Driver>::IdInfo,
++    <AuxiliaryDriver as auxiliary::Driver<'_>>::IdInfo,
+     [(auxiliary::DeviceId::new(MODULE_NAME, AUXILIARY_NAME), ())]
  );
  
--impl platform::Driver for RustDebugFs {
-+impl<'a> platform::Driver<'a> for RustDebugFs {
+-impl auxiliary::Driver for AuxiliaryDriver {
++impl<'a> auxiliary::Driver<'a> for AuxiliaryDriver {
      type IdInfo = ();
-     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = None;
-     const ACPI_ID_TABLE: Option<acpi::IdTable<Self::IdInfo>> = Some(&ACPI_TABLE);
  
-     fn probe(
--        pdev: &platform::Device<Core>,
--        _info: Option<&Self::IdInfo>,
--    ) -> impl PinInit<Self, Error> {
-+        pdev: &'a platform::Device<Core>,
-+        _info: Option<&'a Self::IdInfo>,
-+    ) -> impl PinInit<Self, Error> + 'a {
-         RustDebugFs::new(pdev).pin_chain(|this| {
-             this.counter.store(91, Relaxed);
-             {
-diff --git a/samples/rust/rust_driver_platform.rs b/samples/rust/rust_driver_platform.rs
-index f2229d176fb9..cf9177bf3202 100644
---- a/samples/rust/rust_driver_platform.rs
-+++ b/samples/rust/rust_driver_platform.rs
-@@ -88,26 +88,26 @@ struct SampleDriver {
- kernel::of_device_table!(
-     OF_TABLE,
-     MODULE_OF_TABLE,
--    <SampleDriver as platform::Driver>::IdInfo,
-+    <SampleDriver as platform::Driver<'_>>::IdInfo,
-     [(of::DeviceId::new(c"test,rust-device"), Info(42))]
- );
+     const ID_TABLE: auxiliary::IdTable<Self::IdInfo> = &AUX_TABLE;
  
- kernel::acpi_device_table!(
-     ACPI_TABLE,
-     MODULE_ACPI_TABLE,
--    <SampleDriver as platform::Driver>::IdInfo,
-+    <SampleDriver as platform::Driver<'_>>::IdInfo,
-     [(acpi::DeviceId::new(c"LNUXBEEF"), Info(0))]
- );
- 
--impl platform::Driver for SampleDriver {
-+impl<'a> platform::Driver<'a> for SampleDriver {
-     type IdInfo = Info;
-     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
-     const ACPI_ID_TABLE: Option<acpi::IdTable<Self::IdInfo>> = Some(&ACPI_TABLE);
- 
-     fn probe(
--        pdev: &platform::Device<Core>,
--        info: Option<&Self::IdInfo>,
--    ) -> impl PinInit<Self, Error> {
-+        pdev: &'a platform::Device<Core>,
-+        info: Option<&'a Self::IdInfo>,
-+    ) -> impl PinInit<Self, Error> + 'a {
-         let dev = pdev.as_ref();
- 
-         dev_dbg!(dev, "Probe Rust Platform driver sample.\n");
-diff --git a/samples/rust/rust_i2c_client.rs b/samples/rust/rust_i2c_client.rs
-index 8d2c12e535b0..342755df8b95 100644
---- a/samples/rust/rust_i2c_client.rs
-+++ b/samples/rust/rust_i2c_client.rs
-@@ -88,14 +88,14 @@ struct SampleDriver {
- kernel::of_device_table!(
-     OF_TABLE,
-     MODULE_OF_TABLE,
--    <SampleDriver as platform::Driver>::IdInfo,
-+    <SampleDriver as platform::Driver<'_>>::IdInfo,
-     [(of::DeviceId::new(c"test,rust-device"), ())]
- );
- 
- kernel::acpi_device_table!(
-     ACPI_TABLE,
-     MODULE_ACPI_TABLE,
--    <SampleDriver as platform::Driver>::IdInfo,
-+    <SampleDriver as platform::Driver<'_>>::IdInfo,
-     [(acpi::DeviceId::new(c"LNUXBEEF"), ())]
- );
- 
-@@ -104,15 +104,15 @@ struct SampleDriver {
- const BOARD_INFO: i2c::I2cBoardInfo =
-     i2c::I2cBoardInfo::new(c"rust_driver_i2c", SAMPLE_I2C_CLIENT_ADDR);
- 
--impl platform::Driver for SampleDriver {
-+impl<'a> platform::Driver<'a> for SampleDriver {
-     type IdInfo = ();
-     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
-     const ACPI_ID_TABLE: Option<acpi::IdTable<Self::IdInfo>> = Some(&ACPI_TABLE);
- 
-     fn probe(
--        pdev: &platform::Device<device::Core>,
--        _info: Option<&Self::IdInfo>,
--    ) -> impl PinInit<Self, Error> {
-+        pdev: &'a platform::Device<device::Core>,
-+        _info: Option<&'a Self::IdInfo>,
+-    fn probe(adev: &auxiliary::Device<Core>, _info: &Self::IdInfo) -> impl PinInit<Self, Error> {
++    fn probe(
++        adev: &'a auxiliary::Device<Core>,
++        _info: &'a Self::IdInfo,
 +    ) -> impl PinInit<Self, Error> + 'a {
          dev_info!(
-             pdev.as_ref(),
-             "Probe Rust I2C Client registration sample.\n"
-diff --git a/samples/rust/rust_soc.rs b/samples/rust/rust_soc.rs
-index 8079c1c48416..16f1e4bcfa36 100644
---- a/samples/rust/rust_soc.rs
-+++ b/samples/rust/rust_soc.rs
-@@ -24,26 +24,26 @@ struct SampleSocDriver {
- kernel::of_device_table!(
-     OF_TABLE,
-     MODULE_OF_TABLE,
--    <SampleSocDriver as platform::Driver>::IdInfo,
-+    <SampleSocDriver as platform::Driver<'_>>::IdInfo,
-     [(of::DeviceId::new(c"test,rust-device"), ())]
- );
+             adev,
+             "Probing auxiliary driver for auxiliary device with id={}\n",
+@@ -123,7 +126,8 @@ struct SampleModule {
+     #[allow(clippy::type_complexity)]
+     _pci_driver: driver::Registration<pci::Adapter<ForLt!(ParentDriver)>>,
+     #[pin]
+-    _aux_driver: driver::Registration<auxiliary::Adapter<AuxiliaryDriver>>,
++    #[allow(clippy::type_complexity)]
++    _aux_driver: driver::Registration<auxiliary::Adapter<ForLt!(AuxiliaryDriver)>>,
+ }
  
- kernel::acpi_device_table!(
-     ACPI_TABLE,
-     MODULE_ACPI_TABLE,
--    <SampleSocDriver as platform::Driver>::IdInfo,
-+    <SampleSocDriver as platform::Driver<'_>>::IdInfo,
-     [(acpi::DeviceId::new(c"LNUXBEEF"), ())]
- );
- 
--impl platform::Driver for SampleSocDriver {
-+impl<'a> platform::Driver<'a> for SampleSocDriver {
-     type IdInfo = ();
-     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
-     const ACPI_ID_TABLE: Option<acpi::IdTable<Self::IdInfo>> = Some(&ACPI_TABLE);
- 
-     fn probe(
--        pdev: &platform::Device<Core>,
--        _info: Option<&Self::IdInfo>,
--    ) -> impl PinInit<Self, Error> {
-+        pdev: &'a platform::Device<Core>,
-+        _info: Option<&'a Self::IdInfo>,
-+    ) -> impl PinInit<Self, Error> + 'a {
-         dev_dbg!(pdev, "Probe Rust SoC driver sample.\n");
- 
-         let pdev = pdev.into();
+ impl InPlaceModule for SampleModule {
 -- 
 2.54.0
 
