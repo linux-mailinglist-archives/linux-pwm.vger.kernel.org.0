@@ -1,49 +1,49 @@
-Return-Path: <linux-pwm+bounces-8725-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8726-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CPxqNj3k72kFHgEAu9opvQ
-	(envelope-from <linux-pwm+bounces-8725-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 Apr 2026 00:33:33 +0200
+	id 8DcoD4Pg72kHHQEAu9opvQ
+	(envelope-from <linux-pwm+bounces-8726-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 Apr 2026 00:17:39 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3D91747B84A
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 Apr 2026 00:33:33 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id D173F47B4D9
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 Apr 2026 00:17:38 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E2BCE319B1B9
-	for <lists+linux-pwm@lfdr.de>; Mon, 27 Apr 2026 22:15:30 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id E65903035E48
+	for <lists+linux-pwm@lfdr.de>; Mon, 27 Apr 2026 22:15:39 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D1FA6401A09;
-	Mon, 27 Apr 2026 22:14:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 24F7B401A1E;
+	Mon, 27 Apr 2026 22:14:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BqDRm9LT"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B4Wy1KVG"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 901EB3B19D4;
-	Mon, 27 Apr 2026 22:14:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFBDC3AE183;
+	Mon, 27 Apr 2026 22:14:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777328067; cv=none; b=hmLKQhSJNr5U/BBAmd4pt6SHrXqIpbXz/j2+cA7Ep1hXbM7clvXTH9GvKqWnbFBSS5NSFM9v2/+V3mGwz2dnCocU4ijXdaXHKMs5ByEygFay/b5GhEfVe2UBV0hj7+E9O0w3GSv6pmS8NzBim001G6lMv2rBVZAMB9TUnRF44jA=
+	t=1777328074; cv=none; b=EbfthtNvB4TxPoj1Ur6859Z685sXecFI+ZRmzZmL6I2at3mEoNj2uys112MAV9mOrikqpOGWZ26sGFqYFQrxkuv8xyBk10QfPK+ckxdy6Rn011B1ODESv+LFztRVZND5WduJvk/CmOb9mC49D+DlUqZfNcI1nV3hkJq/Xkn1xo4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777328067; c=relaxed/simple;
-	bh=hYy8LQDnO+hisbOptHtgqKp36k1YyJTGix7eeoo2qKk=;
+	s=arc-20240116; t=1777328074; c=relaxed/simple;
+	bh=3Y4jgtQFS1dMkKwizJ/kytTN4rfwuMJ6Fr3rkFzLank=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=a7auGlE90LnSGD3byLYli0X76YCfzM3JWJzQXPVV4kDrOMfb++w2Ikzj1EQqRn2AhNPCBzhPDFErpZBFykm/hf+k9PMgyCNb/+GK7TviJQL8/myRmYs+vzycU3k/DSWs7aYzew4qmzj3jDzxynj18laNfhCI+HVEnE/LZ1xsVCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BqDRm9LT; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AFB6C2BCB5;
-	Mon, 27 Apr 2026 22:14:20 +0000 (UTC)
+	 MIME-Version; b=i46AdG2uuoAKjRnzLJo2csfCXW/i42aEEDtkHsZ7DIM0pqqVFug2EP+JSYUOuqrStUvHHfCRYL2OQC1YAkATTGdjFrAyyky46vg0BGcbslvxtf9PSzEBvrbfJRDEt5DV1qCm71Ll86VgzDxP5Q2Wv8Ya8WH1VXmJnCfbIL7fc70=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B4Wy1KVG; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90922C19425;
+	Mon, 27 Apr 2026 22:14:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777328067;
-	bh=hYy8LQDnO+hisbOptHtgqKp36k1YyJTGix7eeoo2qKk=;
+	s=k20201202; t=1777328073;
+	bh=3Y4jgtQFS1dMkKwizJ/kytTN4rfwuMJ6Fr3rkFzLank=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BqDRm9LTAxT+LFyHHIuPW75dzJcoI9Ybx7Pav2R3kJM6ezZK8ghNMm+Vgu0kZDyZK
-	 1LudCaJgONM+Un6S/kbl7SB8Mcga8LywZ7inQvNuX1KcK7KaSNDiyXC7DBPDVdTKor
-	 0q2svsR7Us01zcKWz6u/qqn6vkMogrDSopGHpgCW5TGai40EemoNAzP0c0nAQAfQN4
-	 l2N+0gniTfMs4GFNXBcrNGkoZtep7KOXCrc+BN9b5PlcSlhqV7AuaookXi4u61d0b9
-	 TflB5dPw/5CUgL0yAScR61V23nWsROYxBmcBHmPPDz34QgZrIkEkjFfH5hf1xXxnE3
-	 DpmWxroqy3GiQ==
+	b=B4Wy1KVGfeNbp6Dt+rvDiw8edx31HNXJTJqeVmBLQ4y5ANPxgjDpgr61KAeWXJ/jC
+	 6Vns2yDV17GvYmbiaG3DXD4NfG/9eyGdP3OuF4XFtE0OPfg+XgYqKaW26Ukoc8FI+s
+	 pE44TP/BrjMZsmA+mzo25XeLlGNx6VblNyrbZ3kGqIV1OjN3m7PEo2Xqn8BBDPg6b/
+	 sjAY4OkBNam75q9uxZPdPNK7qIR8h7WUkjRQEYoELitutB7KsIUMj2phUwEW7tHXn3
+	 5KTFo/gvhoxUHpiJ8uMN6JuI8cwmrTy5FZp+y9emB+oXf6PS1NY4aLfOlSmJVVnBGE
+	 fgLFqIwoBZMEA==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -75,11 +75,10 @@ Cc: driver-core@lists.linux.dev,
 	linux-pwm@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	rust-for-linux@vger.kernel.org,
-	Danilo Krummrich <dakr@kernel.org>,
-	Eliot Courtney <ecourtney@nvidia.com>
-Subject: [PATCH REF 22/24] gpu: nova-core: unregister sysmem flush page from Drop
-Date: Tue, 28 Apr 2026 00:11:20 +0200
-Message-ID: <20260427221155.2144848-23-dakr@kernel.org>
+	Danilo Krummrich <dakr@kernel.org>
+Subject: [PATCH REF 23/24] gpu: nova-core: replace ARef<Device> with &'a Device in SysmemFlush
+Date: Tue, 28 Apr 2026 00:11:21 +0200
+Message-ID: <20260427221155.2144848-24-dakr@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260427221155.2144848-1-dakr@kernel.org>
 References: <20260427221155.2144848-1-dakr@kernel.org>
@@ -90,153 +89,89 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 3D91747B84A
-X-Rspamd-Action: add header
+X-Rspamd-Queue-Id: D173F47B4D9
+X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [10.34 / 15.00];
-	URIBL_BLACK(7.50)[self.bar:url];
+X-Spamd-Result: default: False [0.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	BAD_REP_POLICIES(0.10)[];
 	HAS_LIST_UNSUB(-0.01)[];
+	RCPT_COUNT_TWELVE(0.00)[31];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8725-lists,linux-pwm=lfdr.de];
-	R_DKIM_ALLOW(0.00)[kernel.org:s=k20201202];
-	RCVD_COUNT_THREE(0.00)[4];
-	RCPT_COUNT_TWELVE(0.00)[32];
-	FREEMAIL_TO(0.00)[linuxfoundation.org,kernel.org,nvidia.com,google.com,intel.com,linaro.org,samsung.com,gmail.com,arm.com,posteo.de,garyguo.net,protonmail.com,umich.edu];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	TAGGED_FROM(0.00)[bounces-8726-lists,linux-pwm=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	GREYLIST(0.00)[pass,body];
-	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	FREEMAIL_TO(0.00)[linuxfoundation.org,kernel.org,nvidia.com,google.com,intel.com,linaro.org,samsung.com,gmail.com,arm.com,posteo.de,garyguo.net,protonmail.com,umich.edu];
 	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	TAGGED_RCPT(0.00)[linux-pwm];
 	FROM_NEQ_ENVFROM(0.00)[dakr@kernel.org,linux-pwm@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	R_SPF_ALLOW(0.00)[+ip6:2600:3c0a:e001:db::/64:c];
-	ARC_ALLOW(0.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	NEURAL_SPAM(0.00)[0.568];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,nvidia.com:email,self.bar:url]
-X-Spam: Yes
+	TAGGED_RCPT(0.00)[linux-pwm];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 
-Now that SysmemFlush can borrow the Bar via HRT lifetime, store a &'a
-Bar0 reference and implement Drop to automatically unregister the
-sysmem flush page. This removes the need for manual unregister() calls
-and the Gpu::unbind() method.
+Now that SysmemFlush is lifetime-parameterized, the ARef<Device> is
+unnecessary -- a plain &'a Device reference suffices.
 
-Reported-by: Eliot Courtney <ecourtney@nvidia.com>
-Closes: https://lore.kernel.org/all/20260409-fix-systemflush-v1-1-a1d6c968f17c@nvidia.com/
-Fixes: 6554ad65b589 ("gpu: nova-core: register sysmem flush page")
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- drivers/gpu/nova-core/driver.rs |  4 ----
- drivers/gpu/nova-core/fb.rs     | 22 ++++++++++------------
- drivers/gpu/nova-core/gpu.rs    |  9 +--------
- 3 files changed, 11 insertions(+), 24 deletions(-)
+ drivers/gpu/nova-core/fb.rs | 9 ++++-----
+ 1 file changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/gpu/nova-core/driver.rs b/drivers/gpu/nova-core/driver.rs
-index ec9cecb30f63..401ae213991f 100644
---- a/drivers/gpu/nova-core/driver.rs
-+++ b/drivers/gpu/nova-core/driver.rs
-@@ -111,8 +111,4 @@ fn probe(
-             }))
-         })
-     }
--
--    fn unbind(_pdev: &'a pci::Device<Core>, this: Pin<&'a Self>) {
--        this.gpu.unbind();
--    }
- }
 diff --git a/drivers/gpu/nova-core/fb.rs b/drivers/gpu/nova-core/fb.rs
-index bdd5eed760e1..cbc42e98afca 100644
+index cbc42e98afca..e5a2c9d42f27 100644
 --- a/drivers/gpu/nova-core/fb.rs
 +++ b/drivers/gpu/nova-core/fb.rs
-@@ -46,21 +46,20 @@
- /// Because of this, the sysmem flush memory page must be registered as early as possible during
- /// driver initialization, and before any falcon is reset.
- ///
--/// Users are responsible for manually calling [`Self::unregister`] before dropping this object,
--/// otherwise the GPU might still use it even after it has been freed.
--pub(crate) struct SysmemFlush {
-+pub(crate) struct SysmemFlush<'a> {
+@@ -15,8 +15,7 @@
+         Alignable,
+         Alignment, //
+     },
+-    sizes::*,
+-    sync::aref::ARef, //
++    sizes::*, //
+ };
+ 
+ use crate::{
+@@ -49,7 +48,7 @@
+ pub(crate) struct SysmemFlush<'a> {
      /// Chipset we are operating on.
      chipset: Chipset,
-     device: ARef<device::Device>,
-+    bar: &'a Bar0,
+-    device: ARef<device::Device>,
++    device: &'a device::Device,
+     bar: &'a Bar0,
      /// Keep the page alive as long as we need it.
      page: CoherentHandle,
- }
- 
--impl SysmemFlush {
-+impl<'a> SysmemFlush<'a> {
+@@ -58,7 +57,7 @@ pub(crate) struct SysmemFlush<'a> {
+ impl<'a> SysmemFlush<'a> {
      /// Allocate a memory page and register it as the sysmem flush page.
      pub(crate) fn register(
-         dev: &device::Device<device::Bound>,
--        bar: &Bar0,
-+        bar: &'a Bar0,
+-        dev: &device::Device<device::Bound>,
++        dev: &'a device::Device<device::Bound>,
+         bar: &'a Bar0,
          chipset: Chipset,
      ) -> Result<Self> {
-         let page = CoherentHandle::alloc(dev, kernel::page::PAGE_SIZE, GFP_KERNEL)?;
-@@ -70,19 +69,18 @@ pub(crate) fn register(
+@@ -68,7 +67,7 @@ pub(crate) fn register(
+ 
          Ok(Self {
              chipset,
-             device: dev.into(),
-+            bar,
+-            device: dev.into(),
++            device: dev,
+             bar,
              page,
          })
-     }
-+}
- 
--    /// Unregister the managed sysmem flush page.
--    ///
--    /// In order to gracefully tear down the GPU, users must make sure to call this method before
--    /// dropping the object.
--    pub(crate) fn unregister(&self, bar: &Bar0) {
-+impl Drop for SysmemFlush<'_> {
-+    fn drop(&mut self) {
-         let hal = hal::fb_hal(self.chipset);
- 
--        if hal.read_sysmem_flush_page(bar) == self.page.dma_handle() {
--            let _ = hal.write_sysmem_flush_page(bar, 0).inspect_err(|e| {
-+        if hal.read_sysmem_flush_page(self.bar) == self.page.dma_handle() {
-+            let _ = hal.write_sysmem_flush_page(self.bar, 0).inspect_err(|e| {
-                 dev_warn!(
-                     &self.device,
-                     "failed to unregister sysmem flush page: {:?}\n",
-diff --git a/drivers/gpu/nova-core/gpu.rs b/drivers/gpu/nova-core/gpu.rs
-index 922197f2aeef..ff9a90a46609 100644
---- a/drivers/gpu/nova-core/gpu.rs
-+++ b/drivers/gpu/nova-core/gpu.rs
-@@ -228,7 +228,7 @@ pub(crate) struct Gpu<'a> {
-     bar: &'a Bar0,
-     /// System memory page required for flushing all pending GPU-side memory writes done through
-     /// PCIE into system memory, via sysmembar (A GPU-initiated HW memory-barrier operation).
--    sysmem_flush: SysmemFlush,
-+    sysmem_flush: SysmemFlush<'a>,
-     /// GSP falcon instance, used for GSP boot up and cleanup.
-     gsp_falcon: Falcon<GspFalcon>,
-     /// SEC2 falcon instance, used for GSP boot up and cleanup.
-@@ -271,11 +271,4 @@ pub(crate) fn new(
-             _: { gsp.boot(pdev, bar, spec.chipset, gsp_falcon, sec2_falcon)? },
-         })
-     }
--
--    /// Called when the corresponding [`Device`](device::Device) is unbound.
--    ///
--    /// Note: This method must only be called from `Driver::unbind`.
--    pub(crate) fn unbind(&self) {
--        self.sysmem_flush.unregister(self.bar);
--    }
- }
 -- 
 2.54.0
 
