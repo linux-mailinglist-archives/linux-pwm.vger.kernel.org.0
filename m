@@ -1,256 +1,295 @@
-Return-Path: <linux-pwm+bounces-8702-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8703-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0CLeOAif72kbDQEAu9opvQ
-	(envelope-from <linux-pwm+bounces-8702-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Mon, 27 Apr 2026 19:38:16 +0200
+	id 2NlUJjrf72kHHQEAu9opvQ
+	(envelope-from <linux-pwm+bounces-8703-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 Apr 2026 00:12:10 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 601C4477C29
-	for <lists+linux-pwm@lfdr.de>; Mon, 27 Apr 2026 19:38:16 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1FEAF47B23D
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 Apr 2026 00:12:10 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D00EB308FC43
-	for <lists+linux-pwm@lfdr.de>; Mon, 27 Apr 2026 17:36:07 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D05F930182B9
+	for <lists+linux-pwm@lfdr.de>; Mon, 27 Apr 2026 22:12:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A30AC3E51E3;
-	Mon, 27 Apr 2026 17:36:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 825263A7F45;
+	Mon, 27 Apr 2026 22:12:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b="Zk7ogawB"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z7nbSyXy"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from sender4-pp-f112.zoho.com (sender4-pp-f112.zoho.com [136.143.188.112])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FE52369970;
-	Mon, 27 Apr 2026 17:36:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=136.143.188.112
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777311366; cv=pass; b=DD0pler385LyEYW8abMyu6n/p9b1H0Z3uznIC/dKQA5/uBRED4xACmdcd0YM2/uptwFDM9gIkRTLZCbZMHGMbybuKtrJrkLu7JKH6jdLTxxTi+nvEPBx9kU5GpLntCevgtZbDz4Twj6AzU+OL66dfjM+HUnZ12ynyA2Op46jJRs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777311366; c=relaxed/simple;
-	bh=nr5ilqN014BdeoWLjGf8aQJGuYGOGF0K4mmsCEMvF4I=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=REqVpqi8FlD4KvWz97Vzqv/Sfwju7ORsGrgP+gKkumpLns+cJbk1O0CM5Aa2f4/rwCvzh6kedc3iKQ/sUFV+a6U9+n3HhnnHFDGWFJ7Y9UoL2VtxFE85xvsb/+84WPurcP1lhCOBOBG9DJ+VX8n3jNRfm9gR38XdPBuM4Sv+QoQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=nicolas.frattaroli@collabora.com header.b=Zk7ogawB; arc=pass smtp.client-ip=136.143.188.112
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
-ARC-Seal: i=1; a=rsa-sha256; t=1777311340; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=AD31+MNPTHWPoTYCQMpX7n3R0Er4g3R9tw0h41WKv3hmOvvgViSemwhfzgvt0V/Xr18hI/13AuZ0oc0jPRO1vaW8c/KDAqRL2r30pWhwGATOtKWmuq12DKZQQTOg1LqmiiHzVlG6YN2u+grPU4bwOqHmSMG/tOYf69jDCalMJLw=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1777311340; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=UmdZibbd/+Riw2ttNnhE20ZsNtrexm4/ybN5Xvwgvow=; 
-	b=LXggAq9qe3W+IUdyL2SssQt6RWKdrnslU1yGMFBo6D1XXM6lNMqddmD0wdndgrl7EWNOY6exIK0HAQ6yvlpkbRDJCviTPe9oD481ycqCzL3J9zoN6jg2Deoji6iwl5sUZScIEeeKqVMnoeHYRZ/tLdLuJClButw5EBNT31hnOHE=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=nicolas.frattaroli@collabora.com;
-	dmarc=pass header.from=<nicolas.frattaroli@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1777311340;
-	s=zohomail; d=collabora.com; i=nicolas.frattaroli@collabora.com;
-	h=From:From:To:To:Cc:Cc:Subject:Subject:Date:Date:Message-ID:In-Reply-To:References:MIME-Version:Content-Transfer-Encoding:Content-Type:Message-Id:Reply-To;
-	bh=UmdZibbd/+Riw2ttNnhE20ZsNtrexm4/ybN5Xvwgvow=;
-	b=Zk7ogawB1ZqlMX1b33i7nQ48RAsz7BPFAlhFSMtpmi8D4JtbDjXDFb4ZwdMH1rlr
-	lehBH8gAk6rM/QAG7ZaQYWhFns4VQdtZ3tGA53rooZDa9H+oXX7voL4Z8XxCgCBA45i
-	s9i7M6LHzBfPYjGKSjicMwGrYclXUYxOUUbKXPDc=
-Received: by mx.zohomail.com with SMTPS id 1777311337704981.5046370792685;
-	Mon, 27 Apr 2026 10:35:37 -0700 (PDT)
-From: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-To: Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>,
- Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
- Conor Dooley <conor+dt@kernel.org>, Heiko Stuebner <heiko@sntech.de>,
- Lee Jones <lee@kernel.org>, William Breathitt Gray <wbg@kernel.org>,
- Damon Ding <damon.ding@rock-chips.com>
-Cc: kernel@collabora.com, Jonas Karlman <jonas@kwiboo.se>,
- Alexey Charkov <alchark@gmail.com>, linux-rockchip@lists.infradead.org,
- linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
- linux-iio@vger.kernel.org
-Subject: Re: [PATCH v5 4/6] counter: Add rockchip-pwm-capture driver
-Date: Mon, 27 Apr 2026 19:35:32 +0200
-Message-ID: <q0kG3ZZyT92lQlYsvZD_qg@collabora.com>
-In-Reply-To: <91eed9a4-4dc3-4846-baf3-e9cef53be79b@rock-chips.com>
-References:
- <20260420-rk3576-pwm-v5-0-ae7cfbbe5427@collabora.com>
- <20260420-rk3576-pwm-v5-4-ae7cfbbe5427@collabora.com>
- <91eed9a4-4dc3-4846-baf3-e9cef53be79b@rock-chips.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5ADA43A6B81;
+	Mon, 27 Apr 2026 22:12:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1777327928; cv=none; b=kRHGdOhG3yLOlFvJ0sStknNUPVzXWtI4CAmoF4p7fPta1qlH8q0nr2aGQViq3UjdGMxZMOe2lNUocT8OU4I7xlB0ifV7IG4Cz9B9PImX78kWguAbVHBjoePbPvJkBvn+Cb2MYvnb4YBNX+3V+9FeUDUbQ0oNgaXAOE14hOVJ1Wg=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1777327928; c=relaxed/simple;
+	bh=0thXPdShB3t5adcBz1VkWyZ33OoOiYeBGZx1pE9VSCE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bcIrznXy4Fbv2wVTXg02DT8cUU+DXiZC0ovZh5hNFr1z4eWUdqG8224FAxlUnorx1Q1lOTLUN+UYCPKupe3aXGbD5vMAkpgrkZrCpHFxrNfkoFSQtAa/f0Y21Igvabg/M4viNv3b2C1oDp6AEC2b22Jfw30w02mq6eSA/XMtKXc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z7nbSyXy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49D48C19425;
+	Mon, 27 Apr 2026 22:12:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1777327928;
+	bh=0thXPdShB3t5adcBz1VkWyZ33OoOiYeBGZx1pE9VSCE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Z7nbSyXy34HFoImwriB49Cku0ZZoA0kXlQ6jBhSYj9BVkWR7Sn4VlBPH3sZXjPE2g
+	 m8dDBnZVc9okYF8//vnRWpYKv+KYnEwt15cL/SiYb52pls2wZlLE6lBEIOl45Mx5Zj
+	 HRBPuaBrspJtiVYckLKyxs3+F3dl5L819mk1eokoINgUZkq37Ca5e6nGwXM1KvaqrB
+	 7UqWXRUUhhm5V/a0HyxMqqjubV2YBMvL81XPNZ/piO9nWLFwyVjwUYT6PwzsLsNTbz
+	 HUtlrVffhg+N9YbCvVgdnQVM5Tpznoon8co4YJxeDtDTMw9z6O2kfn/XUXwQMiPp00
+	 I2RG39QWsSeoA==
+From: Danilo Krummrich <dakr@kernel.org>
+To: gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	acourbot@nvidia.com,
+	aliceryhl@google.com,
+	david.m.ertman@intel.com,
+	ira.weiny@intel.com,
+	leon@kernel.org,
+	viresh.kumar@linaro.org,
+	m.wilczynski@samsung.com,
+	ukleinek@kernel.org,
+	bhelgaas@google.com,
+	kwilczynski@kernel.org,
+	abdiel.janulgue@gmail.com,
+	robin.murphy@arm.com,
+	markus.probst@posteo.de,
+	ojeda@kernel.org,
+	boqun@kernel.org,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	lossin@kernel.org,
+	a.hindborg@kernel.org,
+	tmgross@umich.edu
+Cc: driver-core@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	nova-gpu@lists.linux.dev,
+	dri-devel@lists.freedesktop.org,
+	linux-pm@vger.kernel.org,
+	linux-pwm@vger.kernel.org,
+	linux-pci@vger.kernel.org,
+	rust-for-linux@vger.kernel.org,
+	Danilo Krummrich <dakr@kernel.org>
+Subject: [PATCH 00/24] rust: device: Higher-Ranked Lifetime Types for device drivers
+Date: Tue, 28 Apr 2026 00:10:58 +0200
+Message-ID: <20260427221155.2144848-1-dakr@kernel.org>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="utf-8"
-X-Rspamd-Queue-Id: 601C4477C29
+Content-Transfer-Encoding: 8bit
+X-Rspamd-Queue-Id: 1FEAF47B23D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
+X-Spamd-Result: default: False [0.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[collabora.com,none];
-	CTE_CASE(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[collabora.com:s=zohomail];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_MISSING_CHARSET(0.50)[];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[17];
-	TAGGED_FROM(0.00)[bounces-8702-lists,linux-pwm=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
+	RCPT_COUNT_TWELVE(0.00)[31];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8703-lists,linux-pwm=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_CC(0.00)[collabora.com,kwiboo.se,gmail.com,lists.infradead.org,vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	FUZZY_RATELIMITED(0.00)[rspamd.com];
+	FREEMAIL_TO(0.00)[linuxfoundation.org,kernel.org,nvidia.com,google.com,intel.com,linaro.org,samsung.com,gmail.com,arm.com,posteo.de,garyguo.net,protonmail.com,umich.edu];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[nicolas.frattaroli@collabora.com,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[collabora.com:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	FROM_NEQ_ENVFROM(0.00)[dakr@kernel.org,linux-pwm@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[collabora.com:email,collabora.com:dkim,collabora.com:mid,rock-chips.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-pwm];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 
-Hi Damon,
+Currently, Rust device drivers access device resources such as PCI BAR mappings
+and I/O memory regions through Devres<T>.
 
-On Sunday, 26 April 2026 12:55:20 Central European Summer Time Damon Ding wrote:
-> Hi Nicolas,
-> 
-> On 4/20/2026 9:52 PM, Nicolas Frattaroli wrote:
-> > Among many other things, Rockchip's new PWMv4 IP in the RK3576 supports
-> > PWM capture functionality.
-> > 
-> > Add a basic driver for this that works to expose HPC/LPC counts and
-> > state change events to userspace through the counter framework. It's
-> > quite basic, but works well enough to demonstrate the device function
-> > exclusion stuff that mfpwm does, in order to eventually support all the
-> > functions of this device in drivers within their appropriate subsystems,
-> > without them interfering with each other.
-> > 
-> > Signed-off-by: Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> > ---
-> >   MAINTAINERS                            |   1 +
-> >   drivers/counter/Kconfig                |  11 ++
-> >   drivers/counter/Makefile               |   1 +
-> >   drivers/counter/rockchip-pwm-capture.c | 307 +++++++++++++++++++++++++++++++++
-> >   4 files changed, 320 insertions(+)
-> > 
-> 
-> For functional validation, I connected PWM0/PWM1 (continuous output)
-> to PWM2 (capture input) pairwise.
-> 
-> I enabled the counter via:
-> /sys/bus/counter/devices/counter0/count0/enable
-> 
-> Then I verified the functionality by reading the count values from:
-> /sys/bus/counter/devices/counter0/count0/count
-> /sys/bus/counter/devices/counter0/count1/count
-> 
-> Tested-by: Damon Ding <damon.ding@rock-chips.com>
+Devres::access() provides zero-overhead access by taking a &Device<Bound>
+reference as proof that the device is still bound. Since a &Device<Bound> is
+available in almost all contexts by design, Devres is mostly a type-system level
+proof that the resource is valid, but it can also be used from scopes without
+this guarantee through its try_access() accessor.
 
-Thanks for testing! To make sure a bug on the pwm output driver won't
-be cancelled out by an equivalent bug in the counter driver, I did
-my counter driver testing by using an RK3588 as the source of the
-PWM signal, with the two boards sharing a common ground. Maybe I
-should get a proper function generator. :)
+This works well in general, but has a few limitations:
 
-> BTW: Is there any user-space test tool similar to libpwm for the
-> counter subsystem?
+  - Every access to a device resource goes through Devres::access(), which
+    despite zero cost, adds boilerplate to every access site.
 
-I've tried looking for this as well, and couldn't find anything. If
-it exists then adding a mention of it to generic-counter.rst would
-be in order I think.
+  - Destructors do not receive a &Device<Bound>, so they must use try_access(),
+    which can fail. In practice the access succeeds if teardown ordering is
+    correct, but the type system can't express this, forcing drivers to handle a
+    failure path that should never be taken.
 
-> 
-> ......
-> > diff --git a/drivers/counter/rockchip-pwm-capture.c b/drivers/counter/rockchip-pwm-capture.c
-> > new file mode 100644
-> > index 000000000000..09a92f2bc409
-> > --- /dev/null
-> > +++ b/drivers/counter/rockchip-pwm-capture.c
-> > @@ -0,0 +1,307 @@
-> > +// SPDX-License-Identifier: GPL-2.0-or-later
-> > +/*
-> > + * Copyright (c) 2025 Collabora Ltd.
-> > + *
-> > + * A counter driver for the Pulse-Width-Modulation (PWM) hardware found on
-> > + * Rockchip SoCs such as the RK3576, internally referred to as "PWM v4". It
-> > + * allows for measuring the high cycles and low cycles of a PWM signal through
-> > + * the generic counter framework, while guaranteeing exclusive use over the
-> > + * MFPWM device while the counter is enabled.
-> > + *
-> > + * Authors:
-> > + *     Nicolas Frattaroli <nicolas.frattaroli@collabora.com>
-> > + */
-> > +
-> > +#include <linux/cleanup.h>
-> > +#include <linux/counter.h>
-> > +#include <linux/devm-helpers.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/mfd/rockchip-mfpwm.h>
-> > +#include <linux/mod_devicetable.h>
-> > +#include <linux/of.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/spinlock.h>
-> > +
-> > +#define RKPWMC_INT_MASK			(PWMV4_INT_LPC | PWMV4_INT_HPC)
-> > +
-> > +struct rockchip_pwm_capture {
-> > +	struct rockchip_mfpwm_func *pwmf;
-> > +	struct counter_device *counter;
-> > +};
-> > +
-> > +static struct counter_signal rkpwmc_signals[] = {
-> > +	{
-> > +		.id = 0,
-> > +		.name = "PWM Clock"
-> > +	},
-> > +};
-> > +
-> > +static const enum counter_synapse_action rkpwmc_hpc_lpc_actions[] = {
-> > +	COUNTER_SYNAPSE_ACTION_BOTH_EDGES,
-> > +	COUNTER_SYNAPSE_ACTION_NONE,
-> > +};
-> 
-> For the capture function, it uses the PWM's reference clock (dclk) as 
-> the time base to measure how many reference cycles the high and low 
-> levels of the input waveform last respectively.
-> 
-> I find it a bit strange to set COUNTER_SYNAPSE_ACTION_BOTH_EDGES for 
-> counting. If we treat the input waveform as a sequence of square waves 
-> sampled by dclk cycles, it feels like we should count on a single edge 
-> (rising edge only) rather than both edges.
-> 
+  - Sharing a resource across components (e.g. passing a BAR to a sub-component)
+    requires Arc<Devres<T>>.
 
-Yeah, that's a good point. I think I've been struggling to wrap my head
-around what the signal is and what the synapse should trigger on because
-the signal isn't something exposed in this case.
+  - Device references must be stored as ARef<Device> rather than plain &Device
+    borrows.
 
-Your explanation makes sense, and perhaps I should rename
-rkpwmc_hpc_lpc_actions as well. Currently it makes it seem like HPC
-and LPC are the signal, when actually the waveform is the signal, HPC
-and LPC are the counts, and the synapse is a sample every dclk spotting
-a transition if I understand this correctly.
+These limitations stem from the driver's bus device private data being 'static
+-- the driver struct cannot borrow from the device reference it receives in
+probe(), even though it structurally cannot outlive the device binding.
 
-> > +
-> > +static struct counter_synapse rkpwmc_pwm_synapses[] = {
-> > +	{
-> > +		.actions_list = rkpwmc_hpc_lpc_actions,
-> > +		.num_actions = ARRAY_SIZE(rkpwmc_hpc_lpc_actions),
-> > +		.signal = &rkpwmc_signals[0]
-> > +	},
-> > +};
-> > +
-> 
-> Best regards,
-> Damon
-> 
+This series introduces Higher-Ranked Lifetime Types (HRT) for Rust device
+drivers. An HRT is a type that is generic over a lifetime -- it does not have a
+fixed lifetime, but can be instantiated with any lifetime chosen by the caller.
 
-Kind regards,
-Nicolas Frattaroli
+Rust does not directly support types that are generic over a lifetime as type
+parameters; the ForLt trait (contributed by Gary Guo) encodes this internally.
 
+The module_*_driver! macros handle the wrapping, so driver authors just write
+struct MyDriver<'a> and impl Driver<'a>.
+
+With HRT, driver structs carry a lifetime parameter tied to the device binding
+scope -- the interval of a bus device being bound to a driver. Device resources
+like pci::Bar<'a> and IoMem<'a> are handed out with this lifetime, so the
+compiler enforces at build time that they do not escape the binding scope.
+
+Before:
+
+	struct MyDriver {
+	    pdev: ARef<pci::Device>,
+	    bar: Devres<pci::Bar<BAR_SIZE>>,
+	}
+
+	let io = self.bar.access(dev)?;
+	io.read32(OFFSET);
+
+After:
+
+	struct MyDriver<'a> {
+	    pdev: &'a pci::Device,
+	    bar: pci::Bar<'a, BAR_SIZE>,
+	}
+
+	self.bar.read32(OFFSET);
+
+Lifetime-parameterized device resources can be put into a Devres at any point
+via Bar::into_devres() / IoMem::into_devres(), providing the exact same
+semantics as before. This is useful for resources shared across subsystem
+boundaries where revocation is needed.
+
+This also synergizes with the upcoming self-referential initialization support
+in pin-init, which allows one field of the driver struct to borrow another
+during initialization without unsafe code.
+
+The same pattern is applied to auxiliary device registration data as a first
+example beyond bus device private data. Registration<F: ForLt> can hold
+lifetime-parameterized data tied to the parent driver's binding scope. Since the
+auxiliary bus guarantees that the parent remains bound while the auxiliary
+device is registered, the registration data can safely borrow the parent's
+device resources.
+
+More generally, binding resource lifetimes to a registration scope applies to
+every registration that is scoped to a driver binding -- auxiliary devices,
+class devices, IRQ handlers, workqueues.
+
+A follow-up series extends this to class device registrations, starting with
+DRM, so that class device callbacks (IOCTLs, etc.) can safely access device
+resources through the separate registration data bound to the registration's
+lifetime without Devres indirection.
+
+The series contains a few driver patches for reference, indicated by the REF
+suffix.
+
+Thanks to Gary for coming up with the ForLt implementation; thanks to Alice for
+the early discussions around lifetime-parameterized private data that helped
+shape the direction of this work.
+
+This series depends on [1].
+
+[1] https://lore.kernel.org/driver-core/20260427221002.2143861-1-dakr@kernel.org/
+
+Danilo Krummrich (23):
+  rust: driver core: drop drvdata before devres release
+  rust: devres: add ForLt support to Devres
+  rust: device: generalize drvdata methods over ForLt
+  rust: driver: make Adapter trait lifetime-parameterized
+  rust: pci: implement Sync for Device<Bound>
+  rust: platform: implement Sync for Device<Bound>
+  rust: auxiliary: implement Sync for Device<Bound>
+  rust: usb: implement Sync for Device<Bound>
+  rust: device: implement Sync for Device<Bound>
+  rust: pci: make Driver trait lifetime-parameterized
+  rust: platform: make Driver trait lifetime-parameterized
+  rust: auxiliary: make Driver trait lifetime-parameterized
+  rust: auxiliary: generalize Registration over ForLt
+  samples: rust: rust_driver_auxiliary: showcase lifetime-bound
+    registration data
+  rust: usb: make Driver trait lifetime-parameterized
+  rust: i2c: make Driver trait lifetime-parameterized
+  rust: pci: make Bar lifetime-parameterized
+  rust: io: make IoMem and ExclusiveIoMem lifetime-parameterized
+  samples: rust: rust_driver_pci: use HRT lifetime for Bar
+  gpu: nova-core: use HRT lifetime for Bar
+  gpu: nova-core: unregister sysmem flush page from Drop
+  gpu: nova-core: replace ARef<Device> with &'a Device in SysmemFlush
+  gpu: drm: tyr: use HRT lifetime for IoMem
+
+Gary Guo (1):
+  rust: types: add `ForLt` trait for higher-ranked lifetime support
+
+ drivers/base/dd.c                     |   2 +-
+ drivers/cpufreq/rcpufreq_dt.rs        |  10 +-
+ drivers/gpu/drm/nova/driver.rs        |   9 +-
+ drivers/gpu/drm/tyr/driver.rs         |  24 ++-
+ drivers/gpu/drm/tyr/gpu.rs            |  62 ++++---
+ drivers/gpu/drm/tyr/regs.rs           |  21 +--
+ drivers/gpu/nova-core/driver.rs       |  48 ++---
+ drivers/gpu/nova-core/fb.rs           |  31 ++--
+ drivers/gpu/nova-core/gpu.rs          |  32 +---
+ drivers/gpu/nova-core/nova_core.rs    |   4 +-
+ drivers/pwm/pwm_th1520.rs             |  14 +-
+ include/linux/device/driver.h         |   4 +-
+ rust/Makefile                         |   1 +
+ rust/kernel/auxiliary.rs              | 144 ++++++++++-----
+ rust/kernel/cpufreq.rs                |   8 +-
+ rust/kernel/device.rs                 |  84 ++++++---
+ rust/kernel/devres.rs                 |  31 +++-
+ rust/kernel/driver.rs                 |  44 +++--
+ rust/kernel/i2c.rs                    | 121 ++++++++-----
+ rust/kernel/io/mem.rs                 | 118 ++++++-------
+ rust/kernel/pci.rs                    |  88 +++++++---
+ rust/kernel/pci/io.rs                 |  50 +++---
+ rust/kernel/platform.rs               | 101 +++++++----
+ rust/kernel/types.rs                  |   4 +
+ rust/kernel/types/for_lt.rs           | 117 +++++++++++++
+ rust/kernel/usb.rs                    |  93 ++++++----
+ rust/macros/for_lt.rs                 | 242 ++++++++++++++++++++++++++
+ rust/macros/lib.rs                    |  12 ++
+ samples/rust/rust_debugfs.rs          |  10 +-
+ samples/rust/rust_dma.rs              |   9 +-
+ samples/rust/rust_driver_auxiliary.rs |  53 ++++--
+ samples/rust/rust_driver_i2c.rs       |  18 +-
+ samples/rust/rust_driver_pci.rs       |  93 +++++-----
+ samples/rust/rust_driver_platform.rs  |  12 +-
+ samples/rust/rust_driver_usb.rs       |  14 +-
+ samples/rust/rust_i2c_client.rs       |  12 +-
+ samples/rust/rust_soc.rs              |  12 +-
+ 37 files changed, 1182 insertions(+), 570 deletions(-)
+ create mode 100644 rust/kernel/types/for_lt.rs
+ create mode 100644 rust/macros/for_lt.rs
+
+-- 
+2.54.0
 
 
