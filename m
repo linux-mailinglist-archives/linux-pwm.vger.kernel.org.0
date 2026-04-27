@@ -1,49 +1,49 @@
-Return-Path: <linux-pwm+bounces-8709-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8710-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KO3WMSbg72kHHQEAu9opvQ
-	(envelope-from <linux-pwm+bounces-8709-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 Apr 2026 00:16:06 +0200
+	id kLPxKWbf72kiHQEAu9opvQ
+	(envelope-from <linux-pwm+bounces-8710-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 Apr 2026 00:12:54 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 75DFA47B45A
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 Apr 2026 00:16:06 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5191347B2BC
+	for <lists+linux-pwm@lfdr.de>; Tue, 28 Apr 2026 00:12:54 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 775F0301AF67
-	for <lists+linux-pwm@lfdr.de>; Mon, 27 Apr 2026 22:12:46 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id BCAB13004F0F
+	for <lists+linux-pwm@lfdr.de>; Mon, 27 Apr 2026 22:12:53 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 55A1A3A9626;
-	Mon, 27 Apr 2026 22:12:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC7413AB283;
+	Mon, 27 Apr 2026 22:12:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oCnJZRBa"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fhs4XRkL"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D9863793BB;
-	Mon, 27 Apr 2026 22:12:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F0C3793BB;
+	Mon, 27 Apr 2026 22:12:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777327966; cv=none; b=H2pc/z3/h3F8isEb8SvTVNYOQOVKfZrzfWRlYBRV3vO/UTVKCma58NP4oqkEPpqnOeYdnj18Tr2s7ypGZ1P0trRidDW1/gvyVNVrQGRu9YOcqDwIgjDftjhryZV+fmAFlkFINiGZcEca3SPGi2aZZdS7r7YUfWQldBL7RVyb2vQ=
+	t=1777327972; cv=none; b=LNI7Mwt8YiLXTErZ3nNoZWk2D2DOtmSrHpGVPTRimpsRBm76W21RB2ujPmfeooeZn9po+aC5aZw3FUqtLS+oOFbwElmd2ldREjkwMRprJwnVaWkWA7O2AS+sdz4J6Ah5ZaoOfM/3jYb3Z2YjjtK3hlEk23T+NAq6dYaIGKmoZzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777327966; c=relaxed/simple;
-	bh=VjAUar7iUek881IcjlBLE2afDi6SB1mE1iW+SiRaRgw=;
+	s=arc-20240116; t=1777327972; c=relaxed/simple;
+	bh=ZL0zZCof376hKMo9gCVpVeB8x9AGCrUGR4sSsGtHfmE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qYVOfz6tiqPUosqjNiHrRGt/zAVNMxJbkU3k21VrlDr9cb0KqiU7JTo/1tAjL9FOiybIq1yOFdqLZS0q2Gj8KUINzpdPqY0os/oWherHD7Zr2wz5Blsmrz+oTDw9oUrxvxWeoK7rWEbUoBlBPKEJLFBerfRJCsvC8N0uPbKZ8kI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oCnJZRBa; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 058CAC2BCB5;
-	Mon, 27 Apr 2026 22:12:39 +0000 (UTC)
+	 MIME-Version; b=eNXzx/f/IATUdoCQGba8IUCGKoaX4IXICDxR0v4RXfz/6XGs/pC8OesGvjfdA6RJ48aqfP2UolqcG9pk9i6xxepFHPb43oEULySTCIfBxF8tMHB1+eFN/4B5DY12OGZWJgELqkRqo9Qy3rFqiFvBc9ZpBrN22RpMF9+JFdq2NCs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fhs4XRkL; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FDFDC19425;
+	Mon, 27 Apr 2026 22:12:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777327965;
-	bh=VjAUar7iUek881IcjlBLE2afDi6SB1mE1iW+SiRaRgw=;
+	s=k20201202; t=1777327972;
+	bh=ZL0zZCof376hKMo9gCVpVeB8x9AGCrUGR4sSsGtHfmE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oCnJZRBads/lxnPJyOs/wfgySb4LDK/YI9GTuIrbTSkZDDYkhdCWrgrhVIb+8LoGb
-	 qGleP9nvxlQYxx7/YOlp7kI+HgtwfZPC6ejrIZCL7Xm1o/2S93HM4+1ynCqG/0QizI
-	 JijgQxV1ZP/khPzZNLzpLcSUZo+Tdzw//DiAWxl6TKy1GP5uBme7gJ/7I+7kwCoM/Y
-	 KiuyZgij4uT8KjUBzszseotZ2/+nSmH6rj8Scxz0fMn9RKvRSvESUtxYxNa6XpMq32
-	 673yrs5Tsck645DlzkvHvU+rPuWJP80lvWxrW3Jc89t/oJSFJBHHA0huwYlikiUru7
-	 M4x6oELI2KMHg==
+	b=fhs4XRkLdj6f/yxZNfHY6NuvcXE6SzB2cRVRxBtKOZ+l1bM47Btenuklj8PnO7Euf
+	 khfDpJdzT032Ikvv4at1RhXzxCH+/+1Uvn3f7KoeMRwvTKb+zkfMZUb7u1o/pCbF0d
+	 /dEr7ZJPu53xD9cenRMXcnCj8FI+xI+R4kKbUj6YbyPkIH9SsuNQaDDYtB7ifcWCS0
+	 gGzh7PfW+xelHhV9gbUUJTnsKh7Zt0j6wVOd87hRgmZwoLvA/OLNIh+TCTHjl8t+Cx
+	 /C5H5XJL/M7py5KzI5XsYcqHQpa4xfxahE7QsRiLg7qI+JtkTIyO5t2GIE48cKwSEh
+	 hsBF0GHxBhvdA==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -76,9 +76,9 @@ Cc: driver-core@lists.linux.dev,
 	linux-pci@vger.kernel.org,
 	rust-for-linux@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH 06/24] rust: pci: implement Sync for Device<Bound>
-Date: Tue, 28 Apr 2026 00:11:04 +0200
-Message-ID: <20260427221155.2144848-7-dakr@kernel.org>
+Subject: [PATCH 07/24] rust: platform: implement Sync for Device<Bound>
+Date: Tue, 28 Apr 2026 00:11:05 +0200
+Message-ID: <20260427221155.2144848-8-dakr@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260427221155.2144848-1-dakr@kernel.org>
 References: <20260427221155.2144848-1-dakr@kernel.org>
@@ -89,7 +89,7 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 75DFA47B45A
+X-Rspamd-Queue-Id: 5191347B2BC
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [0.84 / 15.00];
@@ -99,13 +99,13 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCPT_COUNT_TWELVE(0.00)[31];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8709-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8710-lists,linux-pwm=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
@@ -120,31 +120,31 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-pwm];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 
-Implement Sync for Device<Bound> in addition to Device<Normal>. The
-underlying struct pci_dev is the same; Bound is a zero-sized type-state
-marker that does not affect thread safety.
+Device<Bound> uses the same underlying struct platform_device as
+Device<Normal>; Bound is a zero-sized type-state marker that does not
+affect thread safety.
 
-This is needed for pci::Bar to hold &'a Device<Bound> (required for
-Bar::into_devres()) while remaining Send.
+This is needed for drivers to store &'a platform::Device<Bound> in their
+HRT private data while remaining Send.
 
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- rust/kernel/pci.rs | 4 ++++
+ rust/kernel/platform.rs | 4 ++++
  1 file changed, 4 insertions(+)
 
-diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-index fe5148f41d8b..6f82f2e6c74f 100644
---- a/rust/kernel/pci.rs
-+++ b/rust/kernel/pci.rs
-@@ -526,3 +526,7 @@ unsafe impl Send for Device {}
+diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
+index 1585b6a1ac45..ae648304eb5b 100644
+--- a/rust/kernel/platform.rs
++++ b/rust/kernel/platform.rs
+@@ -564,3 +564,7 @@ unsafe impl Send for Device {}
  // SAFETY: `Device` can be shared among threads because all methods of `Device`
  // (i.e. `Device<Normal>) are thread safe.
  unsafe impl Sync for Device {}
 +
-+// SAFETY: Same as `Device<Normal>` -- the underlying `struct pci_dev` is the same;
++// SAFETY: Same as `Device<Normal>` -- the underlying `struct platform_device` is the same;
 +// `Bound` is a zero-sized type-state marker that does not affect thread safety.
 +unsafe impl Sync for Device<device::Bound> {}
 -- 
