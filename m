@@ -1,135 +1,153 @@
-Return-Path: <linux-pwm+bounces-8743-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8744-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0DPgEdD48GkpbgEAu9opvQ
-	(envelope-from <linux-pwm+bounces-8743-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 Apr 2026 20:13:36 +0200
+	id wJuINJHQ8WlrkgEAu9opvQ
+	(envelope-from <linux-pwm+bounces-8744-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Wed, 29 Apr 2026 11:34:09 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A578948A873
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 Apr 2026 20:13:35 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 32F39491F8D
+	for <lists+linux-pwm@lfdr.de>; Wed, 29 Apr 2026 11:34:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 4E6D23026C2A
-	for <lists+linux-pwm@lfdr.de>; Tue, 28 Apr 2026 18:13:07 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CED1030C7FED
+	for <lists+linux-pwm@lfdr.de>; Wed, 29 Apr 2026 09:30:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C82E477988;
-	Tue, 28 Apr 2026 18:13:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AvXobuaI"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0FA93C3C17;
+	Wed, 29 Apr 2026 09:30:26 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C945B47279F;
-	Tue, 28 Apr 2026 18:13:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [52.229.168.213])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 661613BD25E;
+	Wed, 29 Apr 2026 09:30:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.229.168.213
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777399984; cv=none; b=Q0fsh4fGBGlSlNfILqYS55zzNtukA36iUs9UIh7boqO6iaKk3g+vePiD2d1gnuWOxppfj9q95ZkN8HQ78OcMCzUoO/vUJSRM0gRcqjTd/tUpXwqMtjqWGXcaZCDK3jbk3qYTqf82QJEzZMj79DdoWjmrUtRa0ZvSfA+wGvZhwrs=
+	t=1777455026; cv=none; b=Cy5ravnIxAMOvPE9TN1zmS7FuPHI8NBHV6B8FRtYKxmq3NtSynIlULHFdnsoyZLYMLWBOgZFFuse/vXjmH/aZYpgkXL4bW2FQ3TucQDMIWdsveIVLGhuw+GVLdGCYSfbrfaKXcVatilIiieOKVQ2qK50ktl0mSKAvldWEfpCMr4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777399984; c=relaxed/simple;
-	bh=adKxGlnFh2v7arFvCaA/DguA8JQxujgHW5DfTnIH2J4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=J0JlBMCI4aWUvGo1lkelcLd75j+gge/3VSvc4JEVXJkrPs2vyYQMWy5UXzVmkcYVzRPXIzcTVCWlwYL3Hi7oTQ0orJ3/pR53x84l3BxYiQnYNaE1JdQM9Nw6r6jLMdRTgq3rOVPR2aBnFU9qq4jbnQ1PEVkXxhFawnoPk3dTOZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AvXobuaI; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0A84AC2BCAF;
-	Tue, 28 Apr 2026 18:13:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777399984;
-	bh=adKxGlnFh2v7arFvCaA/DguA8JQxujgHW5DfTnIH2J4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=AvXobuaISYzinZhJRSeIkCZzTjMI4MAbx+KCxmIVkw/nChIU2xDLsKnIbFVVcKiHi
-	 6/jqaGsY+BInAZEWc0ij2gzmuEZKlhnmkd2+8ghnLtcb+ErmIaj5ZVTwrpMobTI/fM
-	 gZ4hmZVdW7etub9+XioSiYGS6GAh4LnoH04v4OPYsE536zaXMSDafmPLcJsTsgSBYz
-	 bEwWQWfD5TShe3oEjYrIqeTHQ7EbCS5bdAVAFEUO1O+MXBKnQ6wl7S8iHzohp8CMyL
-	 nw5oV5wZOp4RVQH0imqGnsYVLVspGihuMcmZsXYWK9mEjBVXb7WkYKkDQezhYET4bI
-	 rnWzPAdfpDIqA==
-Date: Tue, 28 Apr 2026 19:12:59 +0100
-From: Conor Dooley <conor@kernel.org>
-To: Yixun Lan <dlan@kernel.org>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Duje =?utf-8?Q?Mihanovi=C4=87?= <duje@dujemihanovic.xyz>,
-	linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	spacemit@lists.linux.dev
-Subject: Re: [PATCH v2 1/2] dt-bindings: pwm: marvell,pxa-pwm: Add SpacemiT
- K3 PWM support
-Message-ID: <20260428-operate-satin-367dd5a42ff5@spud>
-References: <20260428-03-k3-pwm-drv-v2-0-a532bbe45556@kernel.org>
- <20260428-03-k3-pwm-drv-v2-1-a532bbe45556@kernel.org>
+	s=arc-20240116; t=1777455026; c=relaxed/simple;
+	bh=7kgD4cBDoa9BDLuThA7ZzUozXm/+LOVRP4yAm/zV6z8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
+	 MIME-Version:Message-ID; b=O6vgcBTT06Igxd+6Gq8vm+KO1KfTGTY1sNkU1/DgmHT0oaTNo2VsWUn1SohD+70T8GZgCo1KUGY8KpMkzquqG6fgQhm+mCp+GIfHMpnkxmYYlUkmIdYrwdINIIR1HE8lGDV0dZvSEQw96Yk7ta4xwGLQRUq9H75nnyfvhFw+U74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=52.229.168.213
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=eswincomputing.com
+Received: from dongxuyang$eswincomputing.com ( [10.12.96.41] ) by
+ ajax-webmail-app2 (Coremail) ; Wed, 29 Apr 2026 17:30:00 +0800 (GMT+08:00)
+Date: Wed, 29 Apr 2026 17:30:00 +0800 (GMT+08:00)
+X-CM-HeaderCharset: UTF-8
+From: "Xuyang Dong" <dongxuyang@eswincomputing.com>
+To: "Krzysztof Kozlowski" <krzk@kernel.org>
+Cc: ukleinek@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+	conor+dt@kernel.org, ben-linux@fluff.org, ben.dooks@codethink.co.uk,
+	p.zabel@pengutronix.de, linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+	ningyu@eswincomputing.com, linmin@eswincomputing.com,
+	xuxiang@eswincomputing.com, wangguosheng@eswincomputing.com,
+	pinkesh.vaghela@einfochips.com
+Subject: Re: Re: [PATCH v6 1/2] dt-bindings: pwm: dwc: add optional reset
+X-Priority: 3
+X-Mailer: Coremail Webmail Server Version 2024.2-cmXT6 build
+ 20241203(6b039d88) Copyright (c) 2002-2026 www.mailtech.cn
+ mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
+In-Reply-To: <7bd6129a-dd37-48e8-a54c-cc149a2b84a2@kernel.org>
+References: <20260424094529.1691-1-dongxuyang@eswincomputing.com>
+ <20260424095435.1721-1-dongxuyang@eswincomputing.com>
+ <ee58a5d6-9268-445c-a270-1f4a49b49c6e@kernel.org>
+ <622e18f1.5bb3.19dd36d0c40.Coremail.dongxuyang@eswincomputing.com>
+ <7bd6129a-dd37-48e8-a54c-cc149a2b84a2@kernel.org>
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="hbZz409LMBfc1SqO"
-Content-Disposition: inline
-In-Reply-To: <20260428-03-k3-pwm-drv-v2-1-a532bbe45556@kernel.org>
-X-Rspamd-Queue-Id: A578948A873
+Message-ID: <1ac7fae4.5c66.19dd892ec4d.Coremail.dongxuyang@eswincomputing.com>
+X-Coremail-Locale: zh_CN
+X-CM-TRANSID:TQJkCgAnPqGYz_FpCq8VAA--.5067W
+X-CM-SenderInfo: pgrqw5xx1d0w46hv4xpqfrz1xxwl0woofrz/1tbiAQEMAmnw4RseG
+	QAAsq
+X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
+	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
+	daVFxhVjvjDU=
+X-Rspamd-Queue-Id: 32F39491F8D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.26 / 15.00];
-	SIGNED_PGP(-2.00)[];
+X-Spamd-Result: default: False [1.14 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
+	MIME_BASE64_TEXT(0.10)[];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8743-lists,linux-pwm=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	DMARC_NA(0.00)[eswincomputing.com];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-8744-lists,linux-pwm=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[conor@kernel.org,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCPT_COUNT_SEVEN(0.00)[11];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-pwm,dt];
 	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[microchip.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dongxuyang@eswincomputing.com,linux-pwm@vger.kernel.org];
+	HAS_X_PRIO_THREE(0.00)[3];
+	NEURAL_HAM(-0.00)[-0.861];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	R_DKIM_NA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[eswincomputing.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 
-
---hbZz409LMBfc1SqO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Apr 28, 2026 at 10:46:50AM +0000, Yixun Lan wrote:
-> The PWM controller in SpacemiT K3 SoC reuse the same IP as previous K1
-> generation, while the difference is that one additional bus clock is
-> added.
->=20
-> Signed-off-by: Yixun Lan <dlan@kernel.org>
-
-Acked-by: Conor Dooley <conor.dooley@microchip.com>
-pw-bot: not-applicable
-
---hbZz409LMBfc1SqO
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYKAB0WIQRh246EGq/8RLhDjO14tDGHoIJi0gUCafD4qwAKCRB4tDGHoIJi
-0mGaAQDq6P9TZl3HphQpeRKzTA/sPmsbvxle6zYX9nGyqTyAAQD/b2AVulWdGL2k
-O2A8UPpyX7n62Inet7X+4JjZD9TyBA0=
-=bCnk
------END PGP SIGNATURE-----
-
---hbZz409LMBfc1SqO--
+PiA+Pj4gIAo+ID4+PiArYWxsT2Y6Cj4gPj4+ICsgIC0gJHJlZjogcHdtLnlhbWwjCj4gPj4+ICsK
+PiA+Pj4gKyAgLSBpZjoKPiA+Pj4gKyAgICAgIHByb3BlcnRpZXM6Cj4gPj4+ICsgICAgICAgIGNv
+bXBhdGlibGU6Cj4gPj4+ICsgICAgICAgICAgY29udGFpbnM6Cj4gPj4+ICsgICAgICAgICAgICBj
+b25zdDogZXN3aW4sZWljNzcwMC1wd20KPiA+Pgo+ID4+IFNhbWUgcHJvYmxlbSBhcyB2MyB3aGlj
+aCBJIGNvbW1lbnRlZC4gSSBkbyBub3QgdW5kZXJzdGFuZCB3aHkgeW91ciBuZXcKPiA+PiBkZXZp
+Y2UgaGFzIGFsc28gMSByZXNldC4KPiA+Pgo+ID4+IFlvdXIgY29tbWl0IG1zZyBNVVNUIGV4cGxh
+aW4gd2h5IDEgcmVzZXQgaXMgdmFsaWQuCj4gPj4KPiA+IAo+ID4gSGkgS3J6eXN6dG9mLAo+ID4g
+Cj4gPiBBbHRob3VnaCB0aGUgUFdNIElQIHN1cHBvcnRzIHR3byBjbG9jayBkb21haW5zLCBlYWNo
+IHJlcXVpcmluZyBhIHJlc2V0LMKgCj4gPiB0aGUgRUlDNzcwMCBpbXBsZW1lbnRhdGlvbiB1c2Vz
+IHRoZSBzYW1lIGNsb2NrIGRvbWFpbiBmb3IgYm90aCBjbG9ja8KgCj4gPiBzaWduYWxzLiBUaGVy
+ZWZvcmUsIHRoZSBlaWM3NzAwLXB3bSBvbmx5IHN1cHBvcnRzIG9uZSByZXNldC4KPiA+Cj4gCj4g
+SWYgd2Ugc3BlYWsgYWJvdXQgZWljNzcwMCwgZXhwbGFpbiB3aHkgaXQgaGFzIHR3byByZXNldHMg
+bm93LCBhY2NvcmRpbmcKPiB0byBzY2hlbWEsIGV2ZW4gdGhvdWdoIHlvdSBzYXkgaXQgaGFzIG5v
+dC4KPiAKPiBCdXQgSSB3YXMgc3BlYWtpbmcgYWJvdXQgZHctYXBiLXRpbWVycy1wd20sIHdoaWNo
+IGhhcyBvbmUgcmVzZXQgYXMgd2VsbCEKPiBXaHkgeW91IGFyZSBub3QgaGF2aW5nIHByb3BlciBj
+b25zdHJhaW50cz8gUGxlYXNlIHJlYWQgd3JpdGluZyBiaW5kaW5ncwo+IGRvY3VtZW50Lgo+IAoK
+SGkgS3J6eXN6dG9mLAoKTGV0IG1lIGNsYXJpZnkgdGhlIHJlc2V0IHNpZ25hbHMuCsKgIC0gc25w
+cyxkdy1hcGItdGltZXJzLXB3bTI6IElQIHNwZWMgaGFzIDIgb3B0aW9uYWwgcmVzZXQgc2lnbmFs
+cyAob25lIHBlcgpjbG9jayBkb21haW4pLCBTb0MgdmVuZG9yIGRlY2lkZXMgd2hldGhlciB0byB3
+aXJlIHRoZW0g4oCUIHNvIG1heEl0ZW1zOiAyLMKgCm9wdGlvbmFsIGluIHJlcXVpcmVkLgrCoCAt
+IGVzd2luLGVpYzc3MDAtcHdtOiBTb0MgcGh5c2ljYWxseSB0aWVzIGJvdGggc2lnbmFscyB0byBv
+bmUgcmVzZXQg4oCUIHNvCmV4YWN0bHkgMSwgcmVxdWlyZWQuCgpTbyBJIHRoaW5rIHRoZSBjb3Jy
+ZWN0IHBhdGNoIHNob3VsZCBiZSBsaWtlIHRoaXM6Ck1vZGlmeSB0aGUgY29tbWl0IG1lc3NhZ2Ug
+YXMgZm9sbG93czoKClRoZSBEZXNpZ25XYXJlIFBXTSBJUCBoYXMgdXAgdG8gdHdvIG9wdGlvbmFs
+IHJlc2V0IHNpZ25hbHMsIG9uZSBwZXIgY2xvY2sKZG9tYWluIChwcmVzZXRuIGZvciBwY2xrLCB0
+aW1lcl9OX3Jlc2V0biBmb3IgdGltZXJfTl9jbGspLgpTb0MgdmVuZG9ycyBkZWNpZGVzIHRvIHdp
+cmUgdGhlbSwgc28gbWF4SXRlbXM6IDIgaXMgdGhlIHVwcGVyIGJvdW5kIGZvcsKgCnRoZSBnZW5l
+cmljIHNucHMsZHctYXBiLXRpbWVycy1wd20yIGNvbXBhdGlibGUuCgpUaGUgRVNXSU4gRUlDNzcw
+MCB0aWVzIGJvdGggcmVzZXQgZG9tYWlucyB0byBhIHNpbmdsZSBwaHlzaWNhbCByZXNldMKgCnNp
+Z25hbCwgc28gZXhhY3RseSBvbmUgcmVzZXQgaXMgcmVxdWlyZWQuIEFkZCBtYXhJdGVtczogMSB0
+byB0aGUgaWYtdGhlbsKgCmJsb2NrIGZvciBlc3dpbixlaWM3NzAwLXB3bSB0byBlbmZvcmNlIHRo
+aXMuCgpNb2RpZnkgdGhlIFlBTUwgYXMgZm9sbG93czoKCi1hbGxPZjoKLcKgIC0gJHJlZjogcHdt
+LnlhbWwjCi0KwqBwcm9wZXJ0aWVzOgrCoCDCoGNvbXBhdGlibGU6Ci3CoCDCoCBjb25zdDogc25w
+cyxkdy1hcGItdGltZXJzLXB3bTIKK8KgIMKgIGVudW06CivCoCDCoCDCoCAtIHNucHMsZHctYXBi
+LXRpbWVycy1wd20yCivCoCDCoCDCoCAtIGVzd2luLGVpYzc3MDAtcHdtCgrCoCDCoHJlZzoKwqAg
+wqAgwqBtYXhJdGVtczogMQpAQCAtNDMsNiArNDIsMTMgQEAgcHJvcGVydGllczoKwqAgwqAgwqAg
+wqAtIGNvbnN0OiBidXMKwqAgwqAgwqAgwqAtIGNvbnN0OiB0aW1lcgoKK8KgIHJlc2V0czoKK8Kg
+IMKgIG1pbkl0ZW1zOiAxCivCoCDCoCBtYXhJdGVtczogMgorCsKgIMKgc25wcyxwd20tbnVtYmVy
+OgrCoCDCoCDCoCRyZWY6IC9zY2hlbWFzL3R5cGVzLnlhbWwjL2RlZmluaXRpb25zL3VpbnQzMgrC
+oCDCoCDCoGRlc2NyaXB0aW9uOiBUaGUgbnVtYmVyIG9mIFBXTSBjaGFubmVscyBjb25maWd1cmVk
+IGZvciB0aGlzIGluc3RhbmNlCkBAIC01NCw2ICs2MCwyMSBAQCByZXF1aXJlZDoKwqAgwqAtIGNs
+b2NrcwrCoCDCoC0gY2xvY2stbmFtZXMKCithbGxPZjoKK8KgIC0gJHJlZjogcHdtLnlhbWwjCisK
+K8KgIC0gaWY6CivCoCDCoCDCoCBwcm9wZXJ0aWVzOgorwqAgwqAgwqAgwqAgY29tcGF0aWJsZToK
+K8KgIMKgIMKgIMKgIMKgIGNvbnRhaW5zOgorwqAgwqAgwqAgwqAgwqAgwqAgY29uc3Q6IGVzd2lu
+LGVpYzc3MDAtcHdtCivCoCDCoCB0aGVuOgorwqAgwqAgwqAgcHJvcGVydGllczoKK8KgIMKgIMKg
+IMKgIHJlc2V0czoKK8KgIMKgIMKgIMKgIMKgIG1heEl0ZW1zOiAxCivCoCDCoCDCoCByZXF1aXJl
+ZDoKK8KgIMKgIMKgIMKgIC0gcmVzZXRzCisKwqBhZGRpdGlvbmFsUHJvcGVydGllczogZmFsc2UK
+CkRvIHlvdSB0aGluayB0aGlzIG1vZGlmaWNhdGlvbiBpcyBtb3JlIGFwcHJvcHJpYXRlPwoKQmVz
+dCByZWdhcmRzLApYdXlhbmcgRG9uZwo=
 
