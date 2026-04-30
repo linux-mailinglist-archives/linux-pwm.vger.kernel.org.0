@@ -1,55 +1,55 @@
-Return-Path: <linux-pwm+bounces-8752-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8753-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CKt2F/Es82mwxgEAu9opvQ
-	(envelope-from <linux-pwm+bounces-8752-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Thu, 30 Apr 2026 12:20:33 +0200
+	id iGcrNe0t82m8yAEAu9opvQ
+	(envelope-from <linux-pwm+bounces-8753-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Thu, 30 Apr 2026 12:24:45 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id B6FA54A0B9A
-	for <lists+linux-pwm@lfdr.de>; Thu, 30 Apr 2026 12:20:32 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D96354A0C92
+	for <lists+linux-pwm@lfdr.de>; Thu, 30 Apr 2026 12:24:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 5F967300B127
-	for <lists+linux-pwm@lfdr.de>; Thu, 30 Apr 2026 10:16:57 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id D9D13302E22D
+	for <lists+linux-pwm@lfdr.de>; Thu, 30 Apr 2026 10:17:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F050401A00;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 6B6A0401A11;
 	Thu, 30 Apr 2026 10:16:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aF0PmbOm"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GNDVP0hB"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E7883FFACF;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2777E3FFADA;
 	Thu, 30 Apr 2026 10:16:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777544208; cv=none; b=JdcwErnpx/n8b+PbqmQwKp1M7d38+ECOfTme/YlVkgwppPYKEeUHvboDPhbPH+XrROxSuqypYSYnlKO3ppdOYNkFaQPmuAjJQUtrQv/38wEW+5VaUtskEoasQ5k2AXQQf+X4E0VHsANIfBcgy0YfhMkuWBJMgKbqDCUYWRc2WKQ=
+	t=1777544208; cv=none; b=lql8A0YHnADzXaOP+IfYKp8AmDqOTBKgkw9qwaIhjCqsDoJVWZZ/NLByRO1rgaFMqaUJVgrh/Y6eYhhWUWpuWQa5Q/paNcoe5Z5/Iv/6rBeOiIIFl2LCVd7Z2xBm66yybXmZSfx/e5+BIqbBkiG0AMDgT78uu3xCwr21iBMpVAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1777544208; c=relaxed/simple;
-	bh=EHuvopexSeRVlcwEXyjWd1GQ2g2LtnNBdcwC5YzWpPQ=;
+	bh=TjLO42re0i6kcbnPAhDuPMCXPMVV1s735AYXgr5LxYw=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=E+cH7jHNidVuEp2q4f03jDTuYqLXlZ8NKTd1ESyPVtxNmEIcHfQe9yoss+pTlxZTTbcDOzOmIrs6GXOAKMoccN4We4ivBohP+HCI2oQeFYx66KUq6jNwftpENKaHLk0kneh7m+bpL0rZmIZ+AbhLVEVAiUEJUIU5G10/cZRTlj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aF0PmbOm; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPS id CBCAEC32786;
+	 In-Reply-To:To:Cc; b=RyJmXPu2TpiIharIGN7z0MxBTJuF8e8ooUXqXJfhrX/tyAuM0qxGCpVm9VSqm9WyEH1l6elHhB8AkMICETc7N51Vnu5UrFvASPWPqBxM6s5XmNQ5t+Om4g9D5pEfWa1WZZNdZlCSiM9yRr7o7K+P6+f4M14J6ixV0kqK2H3e4Fs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GNDVP0hB; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id DAAC4C2BCFD;
 	Thu, 30 Apr 2026 10:16:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777544207;
-	bh=EHuvopexSeRVlcwEXyjWd1GQ2g2LtnNBdcwC5YzWpPQ=;
+	s=k20201202; t=1777544208;
+	bh=TjLO42re0i6kcbnPAhDuPMCXPMVV1s735AYXgr5LxYw=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=aF0PmbOmVKXvDSwk3YPmFnOK1fAhMExF4sMGwzEkntOK5gL2N53VbMe6RBoc0Ht02
-	 rLbnhDKBBCcdAyF7HLKYC8dDzFR5cAGF3KeWr9gTgHcqLbEhnHGV3xQ3u9AnjLqhgM
-	 RvKpTk0leuclDYewLehrOfC2PZbndbb1gscGpTI+rBvqoJEgPxXeZOX2OOkjFQG4/Q
-	 Dh34BzAdlq8jyILJ663f7Xi8dYj3MgRxwEdfLsQ3PsZ2HlnPMGIYnkchzwAfkn2owV
-	 Al6XPeJX/TaYDRvYjeiyUShXH/dhHLRFP+nhyYjFvrmXLAQIqfwzgzd1fE6HFfx3Rf
-	 5eRDDXs+a8eEA==
+	b=GNDVP0hBCU0gwpxAfHtoXw77BKyLcV5KWCHU4K2jUWY94dsmT8oHyymvkrZOWopG4
+	 r8Mu5Q6Ir+qrr+5Dl9kDhtQLH4OddvVVicmMlz8OWEaMZSD+XeAAbS7vQ9lg8IuKDi
+	 rBamu6gV5qh/sOk7csCBN6P0yOPmBhP48Zjnhoyo+sFDrkiAXKlwabH1IX13Axw3vU
+	 haHwIsjDvIiwbvUHt3EIrbANunWxqZB7TzWQgg6BNTEgiU5KVczDAbj2rzoC9zJX4W
+	 p59bgYhJckNUZM38DRNEsRudODqEQ7oybLlzevA5SJxGctHaTH0NVs3lxkaZFfImfx
+	 l04NL4V8uff3Q==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE109CD13DA;
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF47CCFA13;
 	Thu, 30 Apr 2026 10:16:47 +0000 (UTC)
 From: Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org>
-Date: Thu, 30 Apr 2026 13:16:47 +0300
-Subject: [PATCH v9 5/6] iio: adc: ad4691: add oversampling support
+Date: Thu, 30 Apr 2026 13:16:48 +0300
+Subject: [PATCH v9 6/6] docs: iio: adc: ad4691: add driver documentation
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -58,7 +58,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Message-Id: <20260430-ad4692-multichannel-sar-adc-driver-v9-5-33e439e4fb87@analog.com>
+Message-Id: <20260430-ad4692-multichannel-sar-adc-driver-v9-6-33e439e4fb87@analog.com>
 References: <20260430-ad4692-multichannel-sar-adc-driver-v9-0-33e439e4fb87@analog.com>
 In-Reply-To: <20260430-ad4692-multichannel-sar-adc-driver-v9-0-33e439e4fb87@analog.com>
 To: Lars-Peter Clausen <lars@metafoo.de>, 
@@ -78,514 +78,302 @@ Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
  linux-gpio@vger.kernel.org, linux-doc@vger.kernel.org, 
  Radu Sabau <radu.sabau@analog.com>
 X-Mailer: b4 0.14.3
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1777544205; l=16594;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1777544205; l=9306;
  i=radu.sabau@analog.com; s=20260220; h=from:subject:message-id;
- bh=0JqFgPXT/pSc/azsS3SVsIgLYVPy3HjP+PLMt+JCrRM=;
- b=/Fs1HDRYOP2dCJpWNaCQhHMISkKoD318p+ZIKRp45lib3HF6KRRKXmZc8NBbTyFkwC4/HnSBj
- jLhOLQY8aLjDTv9fSJJ42UT5z4OPsMgL/BfhRnYROMTrKcoOIe5f5Aq
+ bh=8iXZp0x1X1defWWuJJgYTk6WrDF1PVndw2AvlFcwSLA=;
+ b=GOldAqQrUypbvpafnuuJZA3+S5WQFTGZAJ1cfroK0ltdhZnnr9tSSIUHcIp9qJghTUpWu8obu
+ Qra/scBEpIBDIjKRKjYVF4hEOf5dr9UyjL19XkDxgwzuCqrrq9Pqtdg
 X-Developer-Key: i=radu.sabau@analog.com; a=ed25519;
  pk=lDPQHgn9jTdt0vo58Na9lLxLaE2mb330if71Cn+EvFU=
 X-Endpoint-Received: by B4 Relay for radu.sabau@analog.com/20260220 with
  auth_id=642
 X-Original-From: Radu Sabau <radu.sabau@analog.com>
 Reply-To: radu.sabau@analog.com
-X-Rspamd-Queue-Id: B6FA54A0B9A
+X-Rspamd-Queue-Id: D96354A0C92
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [4.84 / 15.00];
+	SEM_URIBL(3.50)[0.0.0.0:email];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
+	BAD_REP_POLICIES(0.10)[];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8752-lists,linux-pwm=lfdr.de,radu.sabau.analog.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[metafoo.de,analog.com,kernel.org,baylibre.com,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org];
-	TO_DN_SOME(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[24];
 	FROM_HAS_DN(0.00)[];
-	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8753-lists,linux-pwm=lfdr.de,radu.sabau.analog.com];
+	RCVD_TLS_LAST(0.00)[];
+	R_DKIM_ALLOW(0.00)[kernel.org:s=k20201202];
+	GREYLIST(0.00)[pass,body];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	FREEMAIL_TO(0.00)[metafoo.de,analog.com,kernel.org,baylibre.com,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org];
+	RCPT_COUNT_TWELVE(0.00)[24];
+	MIME_TRACE(0.00)[0:+];
+	DMARC_POLICY_ALLOW(0.00)[kernel.org,quarantine];
 	DKIM_TRACE(0.00)[kernel.org:+];
+	HAS_REPLYTO(0.00)[radu.sabau@analog.com];
 	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,linux-pwm@vger.kernel.org];
 	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	HAS_REPLYTO(0.00)[radu.sabau@analog.com];
+	R_SPF_ALLOW(0.00)[+ip6:2600:3c15:e001:75::/64:c];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	ARC_ALLOW(0.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[analog.com:email,analog.com:replyto,analog.com:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	NEURAL_SPAM(0.00)[0.391];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,0.0.0.0:email,analog.com:mid,analog.com:email,analog.com:replyto,analog.com:url]
 
 From: Radu Sabau <radu.sabau@analog.com>
 
-Add per-channel oversampling ratio (OSR) support for CNV burst mode.
-The accumulator depth register (ACC_DEPTH_IN) is programmed with the
-selected OSR at buffer enable time and before each single-shot read.
-
-Supported OSR values: 1, 2, 4, 8, 16, 32.
-
-Introduce AD4691_MANUAL_CHANNEL() for manual mode channels, which do
-not expose the oversampling ratio attribute since OSR is not applicable
-in that mode. A separate manual_channels array is added to
-struct ad4691_channel_info and selected at probe time; offload paths
-reuse the same arrays with num_channels capping access before the soft
-timestamp entry.
-
-in_voltageN_sampling_frequency represents the effective output rate for
-channel N, defined as osc_freq / osr[N]. The chip has one internal
-oscillator shared by all channels; each channel independently
-accumulates osr[N] oscillator cycles before producing a result.
-
-Writing sampling_frequency computes needed_osc = freq * osr[N] and
-snaps down to the largest oscillator table entry that satisfies both
-osc <= needed_osc and osc % osr[N] == 0, guaranteeing an exact integer
-read-back. The result is stored in target_osc_freq_Hz and written to
-OSC_FREQ_REG at buffer enable and single-shot time, so sampling_frequency
-and oversampling_ratio can be set in any order.
-
-in_voltageN_sampling_frequency_available is computed dynamically from
-the channel's current OSR, listing only oscillator table entries that
-divide evenly by osr[N], expressed as effective rates. The list becomes
-sparser as OSR increases, capping at max_rate / osr[N].
-
-Writing oversampling_ratio stores the new OSR for that channel;
-target_osc_freq_Hz is left unchanged. The effective rate read back via
-in_voltageN_sampling_frequency becomes target_osc_freq_Hz / new_osr
-automatically. The two attributes are orthogonal: sampling_frequency
-controls the oscillator, oversampling_ratio controls the averaging depth.
-
-OSR defaults to 1 (no accumulation) for all channels.
+Add RST documentation for the AD4691 family ADC driver covering
+supported devices, IIO channels, operating modes, oversampling,
+reference voltage, LDO supply, reset, GP pins, SPI offload support,
+and buffer data format.
 
 Signed-off-by: Radu Sabau <radu.sabau@analog.com>
 ---
- drivers/iio/adc/ad4691.c | 251 +++++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 221 insertions(+), 30 deletions(-)
+ Documentation/iio/ad4691.rst | 205 +++++++++++++++++++++++++++++++++++++++++++
+ Documentation/iio/index.rst  |   1 +
+ MAINTAINERS                  |   1 +
+ 3 files changed, 207 insertions(+)
 
-diff --git a/drivers/iio/adc/ad4691.c b/drivers/iio/adc/ad4691.c
-index 50d81d87d4a0..45605a97a403 100644
---- a/drivers/iio/adc/ad4691.c
-+++ b/drivers/iio/adc/ad4691.c
-@@ -115,6 +115,7 @@ enum ad4691_ref_ctrl {
- 
- struct ad4691_channel_info {
- 	const struct iio_chan_spec *channels __counted_by_ptr(num_channels);
-+	const struct iio_chan_spec *manual_channels __counted_by_ptr(num_channels);
- 	unsigned int num_channels;
- };
- 
-@@ -125,7 +126,34 @@ struct ad4691_chip_info {
- 	const struct ad4691_channel_info *offload_info;
- };
- 
-+/* CNV burst mode channel — exposes oversampling ratio. */
- #define AD4691_CHANNEL(ch)						\
-+	{								\
-+		.type = IIO_VOLTAGE,					\
-+		.indexed = 1,						\
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |		\
-+				      BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO) | \
-+				      BIT(IIO_CHAN_INFO_SAMP_FREQ),	\
-+		.info_mask_separate_available =				\
-+				      BIT(IIO_CHAN_INFO_OVERSAMPLING_RATIO) | \
-+				      BIT(IIO_CHAN_INFO_SAMP_FREQ),	\
-+		.info_mask_shared_by_all = BIT(IIO_CHAN_INFO_SCALE),	\
-+		.channel = ch,						\
-+		.scan_index = ch,					\
-+		.scan_type = {						\
-+			.sign = 'u',					\
-+			.realbits = 16,					\
-+			.storagebits = 16,				\
-+			.endianness = IIO_BE,				\
-+		},							\
-+	}
+diff --git a/Documentation/iio/ad4691.rst b/Documentation/iio/ad4691.rst
+new file mode 100644
+index 000000000000..38e2ad28a713
+--- /dev/null
++++ b/Documentation/iio/ad4691.rst
+@@ -0,0 +1,205 @@
++.. SPDX-License-Identifier: GPL-2.0-only
 +
-+/*
-+ * Manual mode channel — no oversampling ratio attribute. OSR is not
-+ * supported in manual mode; ACC_DEPTH_IN is not configured during manual
-+ * buffer enable.
-+ */
-+#define AD4691_MANUAL_CHANNEL(ch)					\
- 	{								\
- 		.type = IIO_VOLTAGE,					\
- 		.indexed = 1,						\
-@@ -176,25 +204,65 @@ static const struct iio_chan_spec ad4693_channels[] = {
- 	IIO_CHAN_SOFT_TIMESTAMP(8),
- };
- 
-+static const struct iio_chan_spec ad4691_manual_channels[] = {
-+	AD4691_MANUAL_CHANNEL(0),
-+	AD4691_MANUAL_CHANNEL(1),
-+	AD4691_MANUAL_CHANNEL(2),
-+	AD4691_MANUAL_CHANNEL(3),
-+	AD4691_MANUAL_CHANNEL(4),
-+	AD4691_MANUAL_CHANNEL(5),
-+	AD4691_MANUAL_CHANNEL(6),
-+	AD4691_MANUAL_CHANNEL(7),
-+	AD4691_MANUAL_CHANNEL(8),
-+	AD4691_MANUAL_CHANNEL(9),
-+	AD4691_MANUAL_CHANNEL(10),
-+	AD4691_MANUAL_CHANNEL(11),
-+	AD4691_MANUAL_CHANNEL(12),
-+	AD4691_MANUAL_CHANNEL(13),
-+	AD4691_MANUAL_CHANNEL(14),
-+	AD4691_MANUAL_CHANNEL(15),
-+	IIO_CHAN_SOFT_TIMESTAMP(16),
-+};
++=============
++AD4691 driver
++=============
 +
-+static const struct iio_chan_spec ad4693_manual_channels[] = {
-+	AD4691_MANUAL_CHANNEL(0),
-+	AD4691_MANUAL_CHANNEL(1),
-+	AD4691_MANUAL_CHANNEL(2),
-+	AD4691_MANUAL_CHANNEL(3),
-+	AD4691_MANUAL_CHANNEL(4),
-+	AD4691_MANUAL_CHANNEL(5),
-+	AD4691_MANUAL_CHANNEL(6),
-+	AD4691_MANUAL_CHANNEL(7),
-+	IIO_CHAN_SOFT_TIMESTAMP(8),
-+};
++ADC driver for Analog Devices Inc. AD4691 family of multichannel SAR ADCs.
++The module name is ``ad4691``.
 +
-+static const int ad4691_oversampling_ratios[] = { 1, 2, 4, 8, 16, 32 };
 +
- static const struct ad4691_channel_info ad4691_sw_info = {
- 	.channels = ad4691_channels,
-+	.manual_channels = ad4691_manual_channels,
- 	.num_channels = ARRAY_SIZE(ad4691_channels),
- };
- 
- static const struct ad4691_channel_info ad4693_sw_info = {
- 	.channels = ad4693_channels,
-+	.manual_channels = ad4693_manual_channels,
- 	.num_channels = ARRAY_SIZE(ad4693_channels),
- };
- 
- static const struct ad4691_channel_info ad4691_offload_info = {
- 	.channels = ad4691_channels,
--	/* Exclude the soft timestamp entry; num_channels caps access. */
-+	/*
-+	 * Offload paths share the SW channel arrays. num_channels caps access
-+	 * before the soft timestamp entry, so no separate array is needed.
-+	 */
-+	.manual_channels = ad4691_manual_channels,
- 	.num_channels = ARRAY_SIZE(ad4691_channels) - 1,
- };
- 
- static const struct ad4691_channel_info ad4693_offload_info = {
- 	.channels = ad4693_channels,
--	/* Exclude the soft timestamp entry; num_channels caps access. */
-+	.manual_channels = ad4693_manual_channels,
- 	.num_channels = ARRAY_SIZE(ad4693_channels) - 1,
- };
- 
-@@ -269,6 +337,19 @@ struct ad4691_state {
- 	int irq;
- 	int vref_uV;
- 	u32 cnv_period_ns;
-+	/*
-+	 * Snapped oscillator frequency (Hz) shared by all channels. Set when
-+	 * sampling_frequency or oversampling_ratio is written; written to
-+	 * OSC_FREQ_REG at buffer enable and single-shot time so both attributes
-+	 * can be set in any order. Reading in_voltageN_sampling_frequency
-+	 * returns target_osc_freq_Hz / osr[N] — the effective rate for that
-+	 * channel given its oversampling ratio.
-+	 */
-+	u32 target_osc_freq_Hz;
-+	/* Per-channel oversampling ratio; always 1 in manual mode. */
-+	u8 osr[16];
-+	/* Scratch buffer for read_avail SAMP_FREQ; content is OSR-dependent. */
-+	int samp_freq_avail[ARRAY_SIZE(ad4691_osc_freqs_Hz)];
- 
- 	bool manual_mode;
- 	bool refbuf_en;
-@@ -489,6 +570,18 @@ static const struct regmap_config ad4691_regmap_config = {
- 	.cache_type = REGCACHE_MAPLE,
- };
- 
-+/* Write target_osc_freq_Hz to OSC_FREQ_REG. Called at use time. */
-+static int ad4691_write_osc_freq(struct ad4691_state *st)
-+{
-+	unsigned int i;
++Supported devices
++=================
 +
-+	for (i = 0; i < ARRAY_SIZE(ad4691_osc_freqs_Hz); i++) {
-+		if (ad4691_osc_freqs_Hz[i] == st->target_osc_freq_Hz)
-+			return regmap_write(st->regmap, AD4691_OSC_FREQ_REG, i);
-+	}
-+	return -EINVAL;
-+}
++The following chips are supported by this driver:
 +
- /*
-  * Index 0 in ad4691_osc_freqs_Hz is 1 MHz — valid only for AD4692/AD4694
-  * (max_rate == 1 MHz). AD4691/AD4693 cap at 500 kHz so their valid range
-@@ -499,36 +592,58 @@ static unsigned int ad4691_samp_freq_start(const struct ad4691_chip_info *info)
- 	return (info->max_rate == 1 * HZ_PER_MHZ) ? 0 : 1;
- }
- 
--static int ad4691_get_sampling_freq(struct ad4691_state *st, int *val)
-+/*
-+ * Find the largest oscillator table entry that is both <= needed_osc and
-+ * evenly divisible by osr (guaranteeing an integer effective rate on
-+ * read-back). Returns 0 if no such entry exists in the chip's valid range.
-+ */
-+static unsigned int ad4691_find_osc_freq(struct ad4691_state *st,
-+					 unsigned int needed_osc,
-+					 unsigned int osr)
- {
--	unsigned int reg_val;
--	int ret;
-+	unsigned int start = ad4691_samp_freq_start(st->info);
- 
--	ret = regmap_read(st->regmap, AD4691_OSC_FREQ_REG, &reg_val);
--	if (ret)
--		return ret;
-+	for (unsigned int i = start; i < ARRAY_SIZE(ad4691_osc_freqs_Hz); i++) {
-+		if ((unsigned int)ad4691_osc_freqs_Hz[i] > needed_osc)
-+			continue;
-+		if (ad4691_osc_freqs_Hz[i] % osr != 0)
-+			continue;
-+		return ad4691_osc_freqs_Hz[i];
-+	}
-+	return 0;
-+}
- 
--	*val = ad4691_osc_freqs_Hz[FIELD_GET(AD4691_OSC_FREQ_MASK, reg_val)];
-+static int ad4691_get_sampling_freq(struct ad4691_state *st, u8 osr, int *val)
-+{
-+	*val = st->target_osc_freq_Hz / osr;
- 	return IIO_VAL_INT;
- }
- 
--static int ad4691_set_sampling_freq(struct iio_dev *indio_dev, int freq)
-+static int ad4691_set_sampling_freq(struct iio_dev *indio_dev,
-+				    struct iio_chan_spec const *chan, int freq)
- {
- 	struct ad4691_state *st = iio_priv(indio_dev);
--	unsigned int start = ad4691_samp_freq_start(st->info);
-+	unsigned int osr = st->osr[chan->channel];
-+	unsigned int found;
- 
- 	IIO_DEV_ACQUIRE_DIRECT_MODE(indio_dev, claim);
- 	if (IIO_DEV_ACQUIRE_FAILED(claim))
- 		return -EBUSY;
- 
--	for (unsigned int i = start; i < ARRAY_SIZE(ad4691_osc_freqs_Hz); i++) {
--		if (ad4691_osc_freqs_Hz[i] != freq)
--			continue;
--		return regmap_update_bits(st->regmap, AD4691_OSC_FREQ_REG,
--					  AD4691_OSC_FREQ_MASK, i);
--	}
-+	if (freq <= 0 || (unsigned int)freq > st->info->max_rate / osr)
-+		return -EINVAL;
- 
--	return -EINVAL;
-+	found = ad4691_find_osc_freq(st, (unsigned int)freq * osr, osr);
-+	if (!found)
-+		return -EINVAL;
++* `AD4691 <https://www.analog.com/en/products/ad4691.html>`_ — 16-channel, 500 kSPS
++* `AD4692 <https://www.analog.com/en/products/ad4692.html>`_ — 16-channel, 1 MSPS
++* `AD4693 <https://www.analog.com/en/products/ad4693.html>`_ — 8-channel, 500 kSPS
++* `AD4694 <https://www.analog.com/en/products/ad4694.html>`_ — 8-channel, 1 MSPS
 +
-+	/*
-+	 * Store the snapped oscillator frequency; OSC_FREQ_REG is written at
-+	 * buffer enable and single-shot time so that sampling_frequency and
-+	 * oversampling_ratio can be set in any order.
-+	 */
-+	st->target_osc_freq_Hz = found;
-+	return 0;
- }
- 
- static int ad4691_read_avail(struct iio_dev *indio_dev,
-@@ -540,10 +655,30 @@ static int ad4691_read_avail(struct iio_dev *indio_dev,
- 	unsigned int start = ad4691_samp_freq_start(st->info);
- 
- 	switch (mask) {
--	case IIO_CHAN_INFO_SAMP_FREQ:
--		*vals = &ad4691_osc_freqs_Hz[start];
-+	case IIO_CHAN_INFO_SAMP_FREQ: {
-+		unsigned int osr = st->osr[chan->channel];
-+		int n = 0;
 +
-+		/*
-+		 * Only oscillator frequencies evenly divisible by the channel's
-+		 * OSR yield an integer effective rate; expose those as effective
-+		 * rates (osc / osr) so the user works entirely in output-sample
-+		 * space.
-+		 */
-+		for (unsigned int i = start; i < ARRAY_SIZE(ad4691_osc_freqs_Hz); i++) {
-+			if (ad4691_osc_freqs_Hz[i] % osr != 0)
-+				continue;
-+			st->samp_freq_avail[n++] = ad4691_osc_freqs_Hz[i] / osr;
-+		}
-+		*vals = st->samp_freq_avail;
- 		*type = IIO_VAL_INT;
--		*length = ARRAY_SIZE(ad4691_osc_freqs_Hz) - start;
-+		*length = n;
-+		return IIO_AVAIL_LIST;
-+	}
-+	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-+		*vals = ad4691_oversampling_ratios;
-+		*type = IIO_VAL_INT;
-+		*length = ARRAY_SIZE(ad4691_oversampling_ratios);
- 		return IIO_AVAIL_LIST;
- 	default:
- 		return -EINVAL;
-@@ -554,7 +689,7 @@ static int ad4691_single_shot_read(struct iio_dev *indio_dev,
- 				   struct iio_chan_spec const *chan, int *val)
- {
- 	struct ad4691_state *st = iio_priv(indio_dev);
--	unsigned int reg_val, osc_idx, period_us;
-+	unsigned int reg_val, period_us;
- 	int ret;
- 
- 	guard(mutex)(&st->lock);
-@@ -575,7 +710,12 @@ static int ad4691_single_shot_read(struct iio_dev *indio_dev,
- 	if (ret)
- 		return ret;
- 
--	ret = regmap_read(st->regmap, AD4691_OSC_FREQ_REG, &reg_val);
-+	ret = regmap_write(st->regmap, AD4691_ACC_DEPTH_IN(chan->channel),
-+			   st->osr[chan->channel]);
-+	if (ret)
-+		return ret;
++IIO channels
++============
 +
-+	ret = ad4691_write_osc_freq(st);
- 	if (ret)
- 		return ret;
- 
-@@ -583,9 +723,12 @@ static int ad4691_single_shot_read(struct iio_dev *indio_dev,
- 	if (ret)
- 		return ret;
- 
--	osc_idx = FIELD_GET(AD4691_OSC_FREQ_MASK, reg_val);
--	/* Wait 2 oscillator periods for the conversion to complete. */
--	period_us = DIV_ROUND_UP(2UL * USEC_PER_SEC, ad4691_osc_freqs_Hz[osc_idx]);
-+	/*
-+	 * Wait osr + 1 oscillator periods: osr for accumulation, +1 for the
-+	 * pipeline margin (one extra period ensures the final result is ready).
-+	 */
-+	period_us = DIV_ROUND_UP((unsigned long)(st->osr[chan->channel] + 1) * USEC_PER_SEC,
-+				 st->target_osc_freq_Hz);
- 	fsleep(period_us);
- 
- 	ret = regmap_write(st->regmap, AD4691_OSC_EN_REG, 0);
-@@ -620,7 +763,10 @@ static int ad4691_read_raw(struct iio_dev *indio_dev,
- 		return ad4691_single_shot_read(indio_dev, chan, val);
- 	}
- 	case IIO_CHAN_INFO_SAMP_FREQ:
--		return ad4691_get_sampling_freq(st, val);
-+		return ad4691_get_sampling_freq(st, st->osr[chan->channel], val);
-+	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
-+		*val = st->osr[chan->channel];
-+		return IIO_VAL_INT;
- 	case IIO_CHAN_INFO_SCALE:
- 		*val = st->vref_uV / (MICRO / MILLI);
- 		*val2 = chan->scan_type.realbits;
-@@ -634,9 +780,29 @@ static int ad4691_write_raw(struct iio_dev *indio_dev,
- 			    struct iio_chan_spec const *chan,
- 			    int val, int val2, long mask)
- {
-+	struct ad4691_state *st = iio_priv(indio_dev);
++Each physical ADC input maps to one IIO voltage channel. The AD4691 and AD4692
++expose 16 channels (``voltage0`` through ``voltage15``); the AD4693 and AD4694
++expose 8 channels (``voltage0`` through ``voltage7``).
 +
- 	switch (mask) {
- 	case IIO_CHAN_INFO_SAMP_FREQ:
--		return ad4691_set_sampling_freq(indio_dev, val);
-+		return ad4691_set_sampling_freq(indio_dev, chan, val);
-+	case IIO_CHAN_INFO_OVERSAMPLING_RATIO: {
-+		IIO_DEV_ACQUIRE_DIRECT_MODE(indio_dev, claim);
-+		if (IIO_DEV_ACQUIRE_FAILED(claim))
-+			return -EBUSY;
++All channels share a common scale (``in_voltage_scale``), derived from the
++reference voltage. Each channel independently exposes:
 +
-+		for (unsigned int i = 0; i < ARRAY_SIZE(ad4691_oversampling_ratios); i++) {
-+			if (ad4691_oversampling_ratios[i] != val)
-+				continue;
-+			/*
-+			 * Store the new OSR; target_osc_freq_Hz is unchanged.
-+			 * The effective rate read back via in_voltageN_sampling_frequency
-+			 * becomes target_osc_freq_Hz / new_osr automatically.
-+			 */
-+			st->osr[chan->channel] = val;
-+			return 0;
-+		}
-+		return -EINVAL;
-+	}
- 	default:
- 		return -EINVAL;
- 	}
-@@ -691,6 +857,10 @@ static int ad4691_enter_conversion_mode(struct ad4691_state *st)
- 		return regmap_update_bits(st->regmap, AD4691_DEVICE_SETUP,
- 					  AD4691_MANUAL_MODE, AD4691_MANUAL_MODE);
- 
-+	ret = ad4691_write_osc_freq(st);
-+	if (ret)
-+		return ret;
++* ``in_voltageN_raw`` — single-shot ADC result
++* ``in_voltageN_sampling_frequency`` — per-channel effective output rate,
++  defined as the internal oscillator frequency divided by the channel's
++  oversampling ratio. Writing this attribute selects the nearest achievable
++  rate for the current OSR; the value read back reflects the actual rate after
++  snapping to the closest valid oscillator entry.
++* ``in_voltageN_sampling_frequency_available`` — list of achievable effective
++  rates for the channel's current oversampling ratio. The list updates
++  dynamically when the oversampling ratio changes.
 +
- 	ret = regmap_update_bits(st->regmap, AD4691_ADC_SETUP,
- 				 AD4691_ADC_MODE_MASK, AD4691_CNV_BURST_MODE);
- 	if (ret)
-@@ -844,6 +1014,12 @@ static int ad4691_cnv_burst_buffer_preenable(struct iio_dev *indio_dev)
- 	if (ret)
- 		goto err_unoptimize;
- 
-+	iio_for_each_active_channel(indio_dev, i) {
-+		ret = regmap_write(st->regmap, AD4691_ACC_DEPTH_IN(i), st->osr[i]);
-+		if (ret)
-+			goto err_unoptimize;
-+	}
++The following attributes are only available in CNV Burst Mode:
 +
- 	ret = ad4691_enter_conversion_mode(st);
- 	if (ret)
- 		goto err_unoptimize;
-@@ -995,6 +1171,12 @@ static int ad4691_cnv_burst_offload_buffer_postenable(struct iio_dev *indio_dev)
- 	if (ret)
- 		return ret;
- 
-+	iio_for_each_active_channel(indio_dev, bit) {
-+		ret = regmap_write(st->regmap, AD4691_ACC_DEPTH_IN(bit), st->osr[bit]);
-+		if (ret)
-+			return ret;
-+	}
++* ``in_voltageN_oversampling_ratio`` — per-channel hardware oversampling depth;
++  see `Oversampling`_ below.
++* ``in_voltageN_oversampling_ratio_available`` — valid ratios: 1, 2, 4, 8, 16,
++  32.
 +
- 	ret = ad4691_enter_conversion_mode(st);
- 	if (ret)
- 		return ret;
-@@ -1361,6 +1543,8 @@ static int ad4691_config(struct ad4691_state *st)
- 	if (ret)
- 		return dev_err_probe(dev, ret, "Failed to write OSC_FREQ\n");
- 
-+	st->target_osc_freq_Hz = ad4691_osc_freqs_Hz[ad4691_samp_freq_start(st->info)];
 +
- 	ret = regmap_update_bits(st->regmap, AD4691_ADC_SETUP,
- 				 AD4691_ADC_MODE_MASK, AD4691_AUTONOMOUS_MODE);
- 	if (ret)
-@@ -1518,6 +1702,7 @@ static int ad4691_probe(struct spi_device *spi)
- 	st = iio_priv(indio_dev);
- 	st->spi = spi;
- 	st->info = spi_get_device_match_data(spi);
-+	memset(st->osr, 1, sizeof(st->osr));
++Operating modes
++===============
++
++The driver supports two operating modes, selected automatically from the
++device tree at probe time.
++
++Manual Mode
++-----------
++
++Selected when no ``pwms`` property is present in the device tree. The CNV pin
++is tied to the SPI chip-select: every CS assertion triggers a conversion and
++returns the previous result. A user-defined IIO trigger (e.g. hrtimer trigger)
++drives the buffer.
++
++Oversampling is not supported in Manual Mode.
++
++CNV Burst Mode
++--------------
++
++Selected when a ``pwms`` property is present in the device tree. A PWM drives
++the CNV pin at the configured conversion rate. A GP pin wired to the SoC and
++declared in the device tree signals DATA_READY at the end of each burst,
++triggering a readout of all active channel results into the IIO buffer.
++
++The buffer output rate is controlled by the ``sampling_frequency`` attribute
++on the IIO buffer. In practice the PWM rate should be set low enough to allow
++the SPI readout to complete before the next conversion burst begins.
++
++Autonomous Mode (idle / single-shot)
++-------------------------------------
++
++When the IIO buffer is disabled, ``in_voltageN_raw`` reads perform a single
++conversion on the requested channel using the internal oscillator. The
++oscillator is started and stopped around each read to save power.
++
++
++Oversampling
++============
++
++In CNV Burst Mode each channel has an independent hardware accumulator that
++averages a configurable number of successive conversions. The result is always
++returned as a 16-bit mean, so ``realbits`` and ``storagebits`` are unaffected
++by the oversampling ratio. Valid ratios are 1, 2, 4, 8, 16 and 32; the default
++is 1 (no averaging). Oversampling is not supported in Manual Mode.
++
++.. code-block:: bash
++
++    # Set oversampling ratio to 16 on channel 0
++    echo 16 > /sys/bus/iio/devices/iio:device0/in_voltage0_oversampling_ratio
++
++    # Read the resulting effective sampling frequency
++    cat /sys/bus/iio/devices/iio:device0/in_voltage0_sampling_frequency
++
++Writing ``oversampling_ratio`` stores the new depth for that channel;
++the internal oscillator is unaffected. The effective rate read back via
++``in_voltageN_sampling_frequency`` becomes ``osc_freq / new_osr``
++automatically. ``oversampling_ratio`` and ``sampling_frequency`` are
++orthogonal: one controls averaging depth, the other controls the oscillator.
++
++All channels share one internal oscillator. Writing ``sampling_frequency`` for
++any channel updates the oscillator and therefore affects the effective rate
++read back from all other channels.
++
++
++Reference voltage
++=================
++
++The driver supports two reference configurations, mutually exclusive:
++
++* **External reference** (``ref-supply``): a voltage between 2.4 V and 5.25 V
++  supplied externally.
++* **Buffered internal reference** (``refin-supply``): an internal reference
++  buffer is enabled by the driver.
++
++Exactly one of ``ref-supply`` or ``refin-supply`` must be present in the
++device tree. The reference voltage determines the full-scale range reported
++via ``in_voltage_scale``.
++
++
++LDO supply
++==========
++
++The chip contains an internal LDO that powers part of the analog front-end.
++The supply configuration is mutually exclusive:
++
++* **External VDD** (``vdd-supply``): an external 1.8 V supply is used directly;
++  the internal LDO is disabled.
++* **Internal LDO** (``ldo-in-supply``): the internal LDO is enabled and fed
++  from the ``ldo-in`` regulator. Use this when no external 1.8 V VDD is present.
++
++Exactly one of ``vdd-supply`` or ``ldo-in-supply`` must be provided.
++
++
++Reset
++=====
++
++The driver supports two reset mechanisms:
++
++* **Hardware reset** (``reset-gpios`` in device tree): asserted at probe by
++  the reset controller framework.
++* **Software reset** (fallback when ``reset-gpios`` is absent): written
++  automatically at probe.
++
++
++GP pins and interrupts
++======================
++
++The chip exposes up to four general-purpose (GP) pins. In CNV Burst Mode
++(non-offload), one GP pin must be wired to an interrupt-capable SoC input and
++declared in the device tree using the ``interrupts`` and ``interrupt-names``
++properties. The ``interrupt-names`` value identifies which GP pin is used
++(``"gp0"`` through ``"gp3"``).
++
++Example device tree fragment::
++
++    adc@0 {
++        compatible = "adi,ad4692";
++        ...
++        interrupts = <17 IRQ_TYPE_LEVEL_HIGH>;
++        interrupt-parent = <&gpio0>;
++        interrupt-names = "gp0";
++    };
++
++
++SPI offload support
++===================
++
++When a SPI offload engine (e.g. the AXI SPI Engine) is present, the driver
++uses DMA-backed transfers for CPU-independent, high-throughput data capture.
++SPI offload is detected automatically at probe; if no offload hardware is
++available the driver falls back to the software triggered-buffer path.
++
++Two SPI offload sub-modes exist:
++
++CNV Burst offload
++-----------------
++
++Used when a ``pwms`` property is present and SPI offload is available. The PWM
++drives CNV at the configured rate; on DATA_READY the offload engine reads all
++active channel results and streams them directly to the IIO DMA buffer with no
++CPU involvement. The GP pin used as DATA_READY trigger is supplied by the
++trigger-source consumer at buffer enable time; no ``interrupt-names`` entry is
++required.
++
++Manual offload
++--------------
++
++Used when no ``pwms`` property is present and SPI offload is available. A
++periodic SPI offload trigger controls the conversion rate and the offload engine
++streams results directly to the IIO DMA buffer.
++
++The ``sampling_frequency`` attribute on the IIO buffer controls the trigger
++rate (in Hz). The initial rate is 100 kHz.
++
++Oversampling is not supported in Manual Mode.
++
+diff --git a/Documentation/iio/index.rst b/Documentation/iio/index.rst
+index ba3e609c6a13..007e0a1fcc5a 100644
+--- a/Documentation/iio/index.rst
++++ b/Documentation/iio/index.rst
+@@ -23,6 +23,7 @@ Industrial I/O Kernel Drivers
+    ad4000
+    ad4030
+    ad4062
++   ad4691
+    ad4695
+    ad7191
+    ad7380
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 24e4502b8292..819d8b6eb6bb 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1491,6 +1491,7 @@ S:	Supported
+ W:	https://ez.analog.com/linux-software-drivers
+ F:	Documentation/devicetree/bindings/iio/adc/adi,ad4691.yaml
+ F:	drivers/iio/adc/ad4691.c
++F:	drivers/iio/adc/ad4691.rst
  
- 	ret = devm_mutex_init(dev, &st->lock);
- 	if (ret)
-@@ -1552,11 +1737,17 @@ static int ad4691_probe(struct spi_device *spi)
- 	indio_dev->modes = INDIO_DIRECT_MODE;
- 
- 	if (spi_offload) {
--		indio_dev->channels = st->info->offload_info->channels;
-+		if (st->manual_mode)
-+			indio_dev->channels = st->info->offload_info->manual_channels;
-+		else
-+			indio_dev->channels = st->info->offload_info->channels;
- 		indio_dev->num_channels = st->info->offload_info->num_channels;
- 		ret = ad4691_setup_offload(indio_dev, st, spi_offload);
- 	} else {
--		indio_dev->channels = st->info->sw_info->channels;
-+		if (st->manual_mode)
-+			indio_dev->channels = st->info->sw_info->manual_channels;
-+		else
-+			indio_dev->channels = st->info->sw_info->channels;
- 		indio_dev->num_channels = st->info->sw_info->num_channels;
- 		ret = ad4691_setup_triggered_buffer(indio_dev, st);
- 	}
+ ANALOG DEVICES INC AD4695 DRIVER
+ M:	Michael Hennerich <michael.hennerich@analog.com>
 
 -- 
 2.43.0
