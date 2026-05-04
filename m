@@ -1,67 +1,67 @@
-Return-Path: <linux-pwm+bounces-8762-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8763-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gJ+wG6dV+GmWtAIAu9opvQ
-	(envelope-from <linux-pwm+bounces-8762-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Mon, 04 May 2026 10:15:35 +0200
+	id AAZKMpVV+GmWtAIAu9opvQ
+	(envelope-from <linux-pwm+bounces-8763-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Mon, 04 May 2026 10:15:17 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 001B04BA072
-	for <lists+linux-pwm@lfdr.de>; Mon, 04 May 2026 10:15:34 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6CB1A4BA054
+	for <lists+linux-pwm@lfdr.de>; Mon, 04 May 2026 10:15:17 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 07FFF307249E
-	for <lists+linux-pwm@lfdr.de>; Mon,  4 May 2026 08:10:22 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 5F4433005583
+	for <lists+linux-pwm@lfdr.de>; Mon,  4 May 2026 08:15:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 61C2D319847;
-	Mon,  4 May 2026 08:10:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0CAB31E82B;
+	Mon,  4 May 2026 08:15:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HVbea1nh"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="OIdyDq1H"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.20])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 798D2318EC7;
-	Mon,  4 May 2026 08:10:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A42D31C567;
+	Mon,  4 May 2026 08:15:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777882216; cv=none; b=pdt5XofwlOOYPM9ZTc+HifgOdT56VRa3bvrvpm82UPWFiVuaf6YQqIMVDbXX+TIzFqVlQF/BiRKFNSbv7AOfIw162A+xqzXDiry6+Rvu487Ir2BB9WWE9iBcN4KhwfOnlYSPomuK0VkGcmSXjYDwK/kGS/Vk9Eo4b5XlttO21+k=
+	t=1777882504; cv=none; b=tvPfFDW3r3SJUzcrTFxRxQ800pnCltVwP6dNJpQM2I6fbj6YgtOCqUC8yxgQQm7dKst3knxwoO5QFcakhFgsDdUjzZbl3/inyM18sryOehGei6bNuFtNysu0rmtSZ9Uxm7WWeJQkh4MUiN0cgcu6IrLYbYli/ooRsLvwK/aQ0DA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777882216; c=relaxed/simple;
-	bh=Aw2goGd/fJilo1nNYybeEo/I7OqMgACuWTjhFwMods4=;
+	s=arc-20240116; t=1777882504; c=relaxed/simple;
+	bh=MQv4zk7h1yV1kcpyjPkg8okaCn/5xqQSH3mz8Kx5s5g=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oE17pItpnTYVDWVMpp7EhHXS7SSgwhGn0J7Ewjbs74/lyEflyol8UGCq+4BX3T6wTPaJVuHkv9jwQDV60QwX4KieGAA/8RFuOM8lhnQ+SbBvubj3v1VFUi/5Q0zILSMdtsLcyU++ig1qUPUX8CeO/nfnt+jKFRbXP8lDrTZp/ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HVbea1nh; arc=none smtp.client-ip=198.175.65.20
+	 Content-Type:Content-Disposition:In-Reply-To; b=WZNMwI+Eu2d84wP9N66JN4OogxJHrfcIZbpeREZpooUfqwWG43HxIeWCLDkb5QD8sqt6koUP1j2Gu97QR2cv2hRZvK5LUXUc8xmhFDgoI3uWhwXT0klGGmqqq+wLR41ab8xG9aGMAkEYQjA1DQcmZVvswgmNOD6LCwdcMQm9yC8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=OIdyDq1H; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1777882214; x=1809418214;
+  t=1777882503; x=1809418503;
   h=date:from:to:cc:subject:message-id:references:
-   mime-version:content-transfer-encoding:in-reply-to;
-  bh=Aw2goGd/fJilo1nNYybeEo/I7OqMgACuWTjhFwMods4=;
-  b=HVbea1nhIwye6rLGUk7aI/W/gORp6BcotpbuqM6ZIo7WRSAEtJcjXZbY
-   KlqKKreXrVuNmdEBIfdVL9WiOjZvBLvkeja7evBdll8pAPTIhQZNr/HXV
-   CKgus8K/C1UEiJPuosQnHiNnHS7aCBrFTL+oY2OsVKqBtDb0fxKJu4DCq
-   6b7sEzH2Zvf7rJroi9qytG1MyDalRh70LleOjOsXih/mqqeQV2iZj16QB
-   GnUzMt9UT+dx0icNkkG7SKwn2Hu/J5eJVqqF4b6f1yjHM+NeC1y8itrJa
-   o/9cmkyS+wTdvz2VASmBAD8mkhBzatryA76fzTdKOZg/VdfhSeWlVyPev
-   Q==;
-X-CSE-ConnectionGUID: lLNcDu3cS6ebty0Nr8mHmA==
-X-CSE-MsgGUID: kRERN/alTxuSOSfQuYCQ6w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11775"; a="78442661"
+   mime-version:in-reply-to;
+  bh=MQv4zk7h1yV1kcpyjPkg8okaCn/5xqQSH3mz8Kx5s5g=;
+  b=OIdyDq1HhppHwsIUGZPc5KegxiAwMq1oS+irH4w86k6jNx7h2ABVdrCF
+   W5JeU+oXcEbVElAr1cSRJNNgwFQ3Q5eGhCxTPLgcB2JiKetZX+YZquzAu
+   paVsQUoF9xFcIN2+rfGms5qkvXolSscFULlcatPQzv9MBVf9o66kJ2yyb
+   yLGRltJrxDw30ZIUJ35/gItiSChdtDJrKm0QuOjWWgO6xrTNslGoQAJwA
+   U9awOrMLTd3LDOTM4va9o0fp6Zw5OtvNHrq1NAPTXgsFraU/STfH70hKJ
+   +gHs/unoQXQOuJ0BAqKSlfKa/hxPqxpAtCV4jkOlhqmUH4AFOHFamGiyT
+   g==;
+X-CSE-ConnectionGUID: fmXnvuKvRXK2OJV/nZ7h+g==
+X-CSE-MsgGUID: 9m1isV8JQqKoVU/zP2XSrw==
+X-IronPort-AV: E=McAfee;i="6800,10657,11775"; a="77897936"
 X-IronPort-AV: E=Sophos;i="6.23,215,1770624000"; 
-   d="scan'208";a="78442661"
-Received: from orviesa007.jf.intel.com ([10.64.159.147])
-  by orvoesa112.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2026 01:10:13 -0700
-X-CSE-ConnectionGUID: hreLLtATR/mogtrNmMDSBg==
-X-CSE-MsgGUID: Yh+aZY+rRpW8DxwXWoF2jQ==
+   d="scan'208";a="77897936"
+Received: from orviesa003.jf.intel.com ([10.64.159.143])
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2026 01:15:02 -0700
+X-CSE-ConnectionGUID: KoN5SnOOSy6kFmdtPkX1sg==
+X-CSE-MsgGUID: aH03MOmPTL+0b5walA6uVQ==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.23,215,1770624000"; 
-   d="scan'208";a="235708240"
+   d="scan'208";a="239424698"
 Received: from hrotuna-mobl2.ger.corp.intel.com (HELO localhost) ([10.245.245.78])
-  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2026 01:10:08 -0700
-Date: Mon, 4 May 2026 11:10:05 +0300
+  by ORVIESA003-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 04 May 2026 01:14:56 -0700
+Date: Mon, 4 May 2026 11:14:54 +0300
 From: Andy Shevchenko <andriy.shevchenko@intel.com>
 To: radu.sabau@analog.com
 Cc: Lars-Peter Clausen <lars@metafoo.de>,
@@ -82,23 +82,22 @@ Cc: Lars-Peter Clausen <lars@metafoo.de>,
 	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
 	linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
 	linux-doc@vger.kernel.org
-Subject: Re: [PATCH v9 4/6] iio: adc: ad4691: add SPI offload support
-Message-ID: <afhUXf_wGVLA0P0B@ashevche-desk.local>
+Subject: Re: [PATCH v9 5/6] iio: adc: ad4691: add oversampling support
+Message-ID: <afhVfj6zo3pmLdC6@ashevche-desk.local>
 References: <20260430-ad4692-multichannel-sar-adc-driver-v9-0-33e439e4fb87@analog.com>
- <20260430-ad4692-multichannel-sar-adc-driver-v9-4-33e439e4fb87@analog.com>
+ <20260430-ad4692-multichannel-sar-adc-driver-v9-5-33e439e4fb87@analog.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20260430-ad4692-multichannel-sar-adc-driver-v9-4-33e439e4fb87@analog.com>
+In-Reply-To: <20260430-ad4692-multichannel-sar-adc-driver-v9-5-33e439e4fb87@analog.com>
 Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
  krs, Bertel Jungin Aukio 5, 02600 Espoo
-X-Rspamd-Queue-Id: 001B04BA072
+X-Rspamd-Queue-Id: 6CB1A4BA054
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.66 / 15.00];
@@ -106,12 +105,12 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
 	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	FREEMAIL_CC(0.00)[metafoo.de,analog.com,kernel.org,baylibre.com,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-8762-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8763-lists,linux-pwm=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	HAS_ORG_HEADER(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
@@ -127,131 +126,131 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	RCVD_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[linux-pwm,dt];
 	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,intel.com:dkim,ashevche-desk.local:mid]
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[intel.com:dkim,ashevche-desk.local:mid,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 
-On Thu, Apr 30, 2026 at 01:16:46PM +0300, Radu Sabau via B4 Relay wrote:
+On Thu, Apr 30, 2026 at 01:16:47PM +0300, Radu Sabau via B4 Relay wrote:
 
-> Add SPI offload support to enable DMA-based, CPU-independent data
-> acquisition using the SPI Engine offload framework.
+> Add per-channel oversampling ratio (OSR) support for CNV burst mode.
+> The accumulator depth register (ACC_DEPTH_IN) is programmed with the
+> selected OSR at buffer enable time and before each single-shot read.
 > 
-> When an SPI offload is available (devm_spi_offload_get() succeeds),
-> the driver registers a DMA engine IIO buffer and uses dedicated buffer
-> setup operations. If no offload is available the existing software
-> triggered buffer path is used unchanged.
+> Supported OSR values: 1, 2, 4, 8, 16, 32.
 > 
-> Both CNV Burst Mode and Manual Mode support offload, but use different
-> trigger mechanisms:
+> Introduce AD4691_MANUAL_CHANNEL() for manual mode channels, which do
+> not expose the oversampling ratio attribute since OSR is not applicable
+> in that mode. A separate manual_channels array is added to
+> struct ad4691_channel_info and selected at probe time; offload paths
+> reuse the same arrays with num_channels capping access before the soft
+> timestamp entry.
 > 
-> CNV Burst Mode: the SPI Engine is triggered by the ADC's DATA_READY
-> signal on the GP pin specified by the trigger-source consumer reference
-> in the device tree (one cell = GP pin number 0-3). For this mode the
-> driver acts as both an SPI offload consumer (DMA RX stream, message
-> optimization) and a trigger source provider: it registers the
-> GP/DATA_READY output via devm_spi_offload_trigger_register() so the
-> offload framework can match the '#trigger-source-cells' phandle and
-> automatically fire the SPI Engine DMA transfer at end-of-conversion.
+> in_voltageN_sampling_frequency represents the effective output rate for
+> channel N, defined as osc_freq / osr[N]. The chip has one internal
+> oscillator shared by all channels; each channel independently
+> accumulates osr[N] oscillator cycles before producing a result.
 > 
-> Manual Mode: the SPI Engine is triggered by a periodic trigger at
-> the configured sampling frequency. The pre-built SPI message uses
-> the pipelined CNV-on-CS protocol: N+1 16-bit transfers are issued
-> for N active channels (the first result is discarded as garbage from
-> the pipeline flush) and the remaining N results are captured by DMA.
+> Writing sampling_frequency computes needed_osc = freq * osr[N] and
+> snaps down to the largest oscillator table entry that satisfies both
+> osc <= needed_osc and osc % osr[N] == 0, guaranteeing an exact integer
+> read-back. The result is stored in target_osc_freq_Hz and written to
+> OSC_FREQ_REG at buffer enable and single-shot time, so sampling_frequency
+> and oversampling_ratio can be set in any order.
 > 
-> All offload transfers use 16-bit frames (bits_per_word=16, len=2).
-> The channel scan_type (storagebits=16, shift=0, IIO_BE) is shared
-> between the software triggered-buffer and offload paths; no separate
-> scan_type or channel array is needed for the offload case. The
-> ad4691_manual_channels[] array introduced in the triggered-buffer
-> commit is reused here: it hides the IIO_CHAN_INFO_OVERSAMPLING_RATIO
-> attribute, which is not applicable in Manual Mode.
-
-> Kconfig gains a dependency on IIO_BUFFER_DMAENGINE.
-
-Unneeded detail in the commit message. It's visible from the patch.
-You probably wanted to explain "why?" it's required.
+> in_voltageN_sampling_frequency_available is computed dynamically from
+> the channel's current OSR, listing only oscillator table entries that
+> divide evenly by osr[N], expressed as effective rates. The list becomes
+> sparser as OSR increases, capping at max_rate / osr[N].
+> 
+> Writing oversampling_ratio stores the new OSR for that channel;
+> target_osc_freq_Hz is left unchanged. The effective rate read back via
+> in_voltageN_sampling_frequency becomes target_osc_freq_Hz / new_osr
+> automatically. The two attributes are orthogonal: sampling_frequency
+> controls the oscillator, oversampling_ratio controls the averaging depth.
+> 
+> OSR defaults to 1 (no accumulation) for all channels.
 
 ...
 
->  #include <linux/regulator/consumer.h>
->  #include <linux/reset.h>
->  #include <linux/spi/spi.h>
-> +#include <linux/spi/offload/consumer.h>
-> +#include <linux/spi/offload/provider.h>
-
-You missed at some point types.h (in this patch or earlier).
-
->  #include <linux/units.h>
->  #include <linux/unaligned.h>
-
-...
-
-> -	/* max 16 + 1 NOOP (manual) or 2*16 + 2 (CNV burst). */
-> +	/*
-> +	 * Non-offload: max 16 + 1 NOOP (manual) or 2*16 + 2 (CNV burst).
-> +	 * Offload reuses this array — both paths are mutually exclusive.
-> +	 */
-
-Can you make sure this will be in the end result from the beginning, id est
-in the previous change put it as
-
-	/*
-	 * Non-offload: max 16 + 1 NOOP (manual) or 2*16 + 2 (CNV burst).
-	 * Offload is not supported.
-	 */
-
-OR
-
-	/*
-	 * Non-offload: max 16 + 1 NOOP (manual) or 2*16 + 2 (CNV burst).
-	 */
-
-OR
-
-	/*
-	 * max 16 + 1 NOOP (manual) or 2*16 + 2 (CNV burst).
-	 */
-
-This will minimize the churn.
-
->  	struct spi_transfer scan_xfers[34];
-
-...
-
-> +static bool ad4691_offload_trigger_match(struct spi_offload_trigger *trigger,
-> +					 enum spi_offload_trigger_type type,
-> +					 u64 *args, u32 nargs)
+> +/* Write target_osc_freq_Hz to OSC_FREQ_REG. Called at use time. */
+> +static int ad4691_write_osc_freq(struct ad4691_state *st)
 > +{
-> +	return type == SPI_OFFLOAD_TRIGGER_DATA_READY &&
-> +	       nargs == 1 && args[0] <= 3;
+> +	unsigned int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(ad4691_osc_freqs_Hz); i++) {
 
-Seems there is a room in the previous line for more.
+It can be
 
+	for (unsigned int i = 0; i < ARRAY_SIZE(ad4691_osc_freqs_Hz); i++) {
+
+> +		if (ad4691_osc_freqs_Hz[i] == st->target_osc_freq_Hz)
+> +			return regmap_write(st->regmap, AD4691_OSC_FREQ_REG, i);
+> +	}
+> +	return -EINVAL;
 > +}
 
 ...
 
-> -	ret = regmap_write(st->regmap, AD4691_ACC_MASK_REG,
-> -			   ~bitmap_read(indio_dev->active_scan_mask, 0,
-> -				iio_get_masklength(indio_dev)) & GENMASK(15, 0));
-> +	acc_mask = ~bitmap_read(indio_dev->active_scan_mask, 0,
-> +				iio_get_masklength(indio_dev)) & GENMASK(15, 0);
-> +	ret = regmap_write(st->regmap, AD4691_ACC_MASK_REG, acc_mask);
+> +/*
+> + * Find the largest oscillator table entry that is both <= needed_osc and
+> + * evenly divisible by osr (guaranteeing an integer effective rate on
+> + * read-back). Returns 0 if no such entry exists in the chip's valid range.
+> + */
+> +static unsigned int ad4691_find_osc_freq(struct ad4691_state *st,
+> +					 unsigned int needed_osc,
+> +					 unsigned int osr)
+>  {
+> +	unsigned int start = ad4691_samp_freq_start(st->info);
+>  
+> +	for (unsigned int i = start; i < ARRAY_SIZE(ad4691_osc_freqs_Hz); i++) {
+> +		if ((unsigned int)ad4691_osc_freqs_Hz[i] > needed_osc)
+> +			continue;
+> +		if (ad4691_osc_freqs_Hz[i] % osr != 0)
 
-Make it like this in the previous patch.
+' != 0' is redundant.
 
->  	if (ret)
->  		goto err_unoptimize;
+> +			continue;
+> +		return ad4691_osc_freqs_Hz[i];
+> +	}
+> +	return 0;
+> +}
+
+> +static int ad4691_get_sampling_freq(struct ad4691_state *st, u8 osr, int *val)
+> +{
+> +	*val = st->target_osc_freq_Hz / osr;
+>  	return IIO_VAL_INT;
+>  }
 
 ...
 
-> +	offload = devm_kzalloc(dev, sizeof(*offload), GFP_KERNEL);
+> -static int ad4691_set_sampling_freq(struct iio_dev *indio_dev, int freq)
+> +static int ad4691_set_sampling_freq(struct iio_dev *indio_dev,
+> +				    struct iio_chan_spec const *chan, int freq)
 
-Do you have device/devres.h already included (either explicitly or via device.h
-or platform_device.h)?
+Can you use --histogram algo when preparing patches? This might make them look
+better.
 
-> +	if (!offload)
-> +		return -ENOMEM;
+...
+
+> +	if (freq <= 0 || (unsigned int)freq > st->info->max_rate / osr)
+
+Why casting?
+
+> +		return -EINVAL;
+
+...
+
+> -	/* Wait 2 oscillator periods for the conversion to complete. */
+> -	period_us = DIV_ROUND_UP(2UL * USEC_PER_SEC, ad4691_osc_freqs_Hz[osc_idx]);
+> +	/*
+> +	 * Wait osr + 1 oscillator periods: osr for accumulation, +1 for the
+> +	 * pipeline margin (one extra period ensures the final result is ready).
+> +	 */
+> +	period_us = DIV_ROUND_UP((unsigned long)(st->osr[chan->channel] + 1) * USEC_PER_SEC,
+
+Why casting?
+
+> +				 st->target_osc_freq_Hz);
+>  	fsleep(period_us);
 
 -- 
 With Best Regards,
