@@ -1,198 +1,464 @@
-Return-Path: <linux-pwm+bounces-8767-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8768-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id KDthBIZq+GmauQIAu9opvQ
-	(envelope-from <linux-pwm+bounces-8767-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Mon, 04 May 2026 11:44:38 +0200
+	id TGGNOIZz+Gk9vgIAu9opvQ
+	(envelope-from <linux-pwm+bounces-8768-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Mon, 04 May 2026 12:23:02 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 659AD4BB29E
-	for <lists+linux-pwm@lfdr.de>; Mon, 04 May 2026 11:44:37 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 580B04BBA4A
+	for <lists+linux-pwm@lfdr.de>; Mon, 04 May 2026 12:23:02 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2B23F305044F
-	for <lists+linux-pwm@lfdr.de>; Mon,  4 May 2026 09:39:41 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 32E85304C94D
+	for <lists+linux-pwm@lfdr.de>; Mon,  4 May 2026 10:18:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54030378D77;
-	Mon,  4 May 2026 09:39:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8AD939B49E;
+	Mon,  4 May 2026 10:18:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20251104.gappssmtp.com header.i=@baylibre-com.20251104.gappssmtp.com header.b="cG2gdifd"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="TrBIaTHB"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6493737E30C
-	for <linux-pwm@vger.kernel.org>; Mon,  4 May 2026 09:39:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B8439A06F;
+	Mon,  4 May 2026 10:18:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777887579; cv=none; b=Rgm4FpE+XHkjbNR0L92nGAToXALosM+udqzoBW9dSWSe1RCukOoMcCGmCMG6NAoaBFi9g4xUZIus+BrwHiCP7yvKj9nKkFaVVZhnUXngLbVBw14vkQVhSV8+uiksbMcwXDLKS6oQEFs3HDhoV6Yo7AOMyJEOFdwJpZZaFIltgxY=
+	t=1777889918; cv=none; b=lMD5je2HZAiy/EhS9zWq7aWTIUplUVdOMZGjPdFBDmzC9AOFy1zrBsEFbuMcWHATIB13Mx1p6rED6gqJyJzMA6Y3QYZ+glIu81dGIGswOJ5TEjp0gAgF01OBP9iO1CPaGwb9f/Tddk4Bjlrv74ioU2W4oaGbMWpTVLWFZY38nNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777887579; c=relaxed/simple;
-	bh=PGTjrb2aAouyJ1vDQ+OxmfxqV9FcgNVpQoVY9ZJpj8w=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=PVvxTRKXtL2DNgMnDvdI/WRNu1Kpr0ZgwfTVT/kdji9FI1mAodXpE/+0IM9+Yh56edlK24gsiZ+55VwB/9GyFDJ+qanulUpyVdzZ5z5dPZx+kvdUHi0HKQN0kH7EoDpYXrrkbaLgcHOBDNMIf4atGo2W4MO5+S/51oCxI/0RTAk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20251104.gappssmtp.com header.i=@baylibre-com.20251104.gappssmtp.com header.b=cG2gdifd; arc=none smtp.client-ip=209.85.128.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-4891c0620bcso26835005e9.1
-        for <linux-pwm@vger.kernel.org>; Mon, 04 May 2026 02:39:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20251104.gappssmtp.com; s=20251104; t=1777887573; x=1778492373; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=PGTjrb2aAouyJ1vDQ+OxmfxqV9FcgNVpQoVY9ZJpj8w=;
-        b=cG2gdifd4W6Vf/VnZT+VcZk34JaHB+ClJAY/Riy5cAQqXpcMwqtYVsRspw517wkQRc
-         7NY8S3etoDKLsrh4LvAyQtJslHs9+q7xKgPFgEFganoskzD4knXqiad2gdTu1QQS7JUZ
-         240/ED+VoBTb2fsdj6hVj47a/CW6YA6tHIrYpPwjY860aywK0t55lcc8p+M5raH9SKiM
-         Tr0hvhYHmEfheuTQGreqbAQ8MvPVeb58vr/b9tPdf1psLQ75Y3pIY3uSaVpXznmJAT4D
-         zotierco7p/lOefSLagMtFSHbpEDD4OhGd2jWkSCs1KzBVEkdvq30vQGpAnqRcI34DS5
-         HGdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1777887573; x=1778492373;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=PGTjrb2aAouyJ1vDQ+OxmfxqV9FcgNVpQoVY9ZJpj8w=;
-        b=rheWpmj89F/9r2qdaUqUk2v0yNudCFjz3aBAH6gwN5LGoUfbM28rupFA1Uy5wzG3B6
-         IqUJEud3GeBZeC9HQUYDdR8DvMyKWZ1KdThsisgn3lJfPwcYMLvLKp1hI3yZRA43NHdV
-         OBBGM+3gVcY3tE9pAEHz73Y0ZHldTNaMgCRmegQYSeBnB3xteTn3gzQvey+xXcTeXiOx
-         ADhofFLVShxs1B0esu9bNzw9Y8e+t3DiNZcs9oJolPuCe3G4ALZy13jKjZVkJgKFNd75
-         hKXnpTP4TN3s4OgM+IXAg04ejgx3YK88XIOqcISsvgZNzfBZHLWV4tL/6R9mNcLtDYnm
-         sY0A==
-X-Gm-Message-State: AOJu0YwnC7VfvhRHllqXCoxvElerbuDsv+/upBq4DfmvPxeewk6amL2m
-	0EXFrMeBI+GGzs+7JWxylHDvk7Ok2L8ApH++isj8zNvDycqhzzFa1DkN/lXv0wKuBzTP/NaZ9N7
-	SbbpP
-X-Gm-Gg: AeBDieuolgJgj8fezS3+xVDVe0XOYBAT1s98ijSG2EPvVAht5fCdUu858krQpawQa+j
-	GUZmjfG7tUS/h1zecLWle4PEDHyvCE+TS6aYX/5L58HJl0TQ01Fn4udijhrh2kq/ONKJmHhMYJT
-	PoioXnK1sgVSlcMaVuLm0x1lBgyrdaN8hEPc5V70lXftJPA5YVGTGYcg16cJFpQ3UaNS96opgSY
-	B4xuPpHyXmc2MHzNhb+btMF7h80fqpvyHZ2bYZs8HpI93n+8SuD0EJRr0cJRsJT88N3JLna5Y2b
-	ffJLu8yrme/Nycsiks55rAi2wHnxUoVsBzbxUuyyJP3xCXoA9Bzzgi99JJVJ7KIP0+Z00gX3sph
-	uqQedq+HcN2gL6PI1owgwrfFQCJYamXYLBlhwhPddw3TdWmnffJ8cnDw/XpF9C4+9OzYB59B232
-	qDlHXr8iQYs+uirr3eohrzP0vB+DsoZ4YDml1DM7OH5GbwTDIv0ZynmJUgyjD8Jf3peeguYc5vQ
-	6aRhePiF08voxo4MfsxQvX4eoZo8RY2SZDo
-X-Received: by 2002:a05:600c:8710:b0:489:1cd2:610a with SMTP id 5b1f17b1804b1-48a9887194dmr140216835e9.9.1777887573081;
-        Mon, 04 May 2026 02:39:33 -0700 (PDT)
-Received: from localhost (p200300f65f114e08f5a4175dadf07882.dip0.t-ipconnect.de. [2003:f6:5f11:4e08:f5a4:175d:adf0:7882])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-48a822be902sm340602905e9.6.2026.05.04.02.39.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 May 2026 02:39:32 -0700 (PDT)
-Date: Mon, 4 May 2026 11:39:31 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig_=28The_Capable_Hub=29?= <u.kleine-koenig@baylibre.com>
-To: linux-pwm@vger.kernel.org
-Cc: Markus Schneider-Pargmann <msp@baylibre.com>, 
-	linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pwm: Consistently define pci_device_ids using named
- initializers
-Message-ID: <afho6JEZ0WH2d7RQ@monoceros>
-References: <20260504085535.1914668-2-u.kleine-koenig@baylibre.com>
+	s=arc-20240116; t=1777889918; c=relaxed/simple;
+	bh=m3IwP9EUP4YpRl+pQkOJzg9P6GgXjAd9jWulhfALmHQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=owKs4JmarFFzKfz5ycWEZToF2MBicow6vTiEbsF6STYA2EEXnxMTE0grfUy66mcHGpivweedGaafIy2KVtbM5r+JzFR6VX6zoWQCCzxJoAvhcZiTa2YwMBNIq6owhq9jAGto8mOr566sd58urWlGPy4ru646zFXRSUoVriXkaD4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=TrBIaTHB; arc=none smtp.client-ip=95.215.58.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+Message-ID: <9f324d14-bee4-4943-b282-fe2029a3464d@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1777889902;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=rbka3AkAOUMoynajA/9NaQsmcGpTjVTQAeBCqupUVbg=;
+	b=TrBIaTHBcc2VZNo5hUp2U8WXvMqEy/GzPsRmt+rfTgm7XCN0qan3er/jb0kL8gsyEkKaRh
+	T+2f6QQrCTU4NYwOWcC6qbHe6aZNB2b9pAlwmP6jjjALvP3ag600iDXxz/JBPR5nyASOVH
+	erYpCGtYy9CB9s4gkkjBc8E0elk+k2Q=
+Date: Mon, 4 May 2026 11:18:17 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="vs3hhftnngotlizo"
-Content-Disposition: inline
-In-Reply-To: <20260504085535.1914668-2-u.kleine-koenig@baylibre.com>
-X-Rspamd-Queue-Id: 659AD4BB29E
+Subject: Re: [PATCH 17/24] rust: i2c: make Driver trait lifetime-parameterized
+To: Danilo Krummrich <dakr@kernel.org>, gregkh@linuxfoundation.org,
+ rafael@kernel.org, acourbot@nvidia.com, aliceryhl@google.com,
+ david.m.ertman@intel.com, ira.weiny@intel.com, leon@kernel.org,
+ viresh.kumar@linaro.org, m.wilczynski@samsung.com, ukleinek@kernel.org,
+ bhelgaas@google.com, kwilczynski@kernel.org, abdiel.janulgue@gmail.com,
+ robin.murphy@arm.com, markus.probst@posteo.de, ojeda@kernel.org,
+ boqun@kernel.org, gary@garyguo.net, bjorn3_gh@protonmail.com,
+ lossin@kernel.org, a.hindborg@kernel.org, tmgross@umich.edu
+Cc: driver-core@lists.linux.dev, linux-kernel@vger.kernel.org,
+ nova-gpu@lists.linux.dev, dri-devel@lists.freedesktop.org,
+ linux-pm@vger.kernel.org, linux-pwm@vger.kernel.org,
+ linux-pci@vger.kernel.org, rust-for-linux@vger.kernel.org
+References: <20260427221155.2144848-1-dakr@kernel.org>
+ <20260427221155.2144848-18-dakr@kernel.org>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Igor Korotin <igor.korotin@linux.dev>
+In-Reply-To: <20260427221155.2144848-18-dakr@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
+X-Rspamd-Queue-Id: 580B04BBA4A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-3.26 / 15.00];
-	SIGNED_PGP(-2.00)[];
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[baylibre-com.20251104.gappssmtp.com:s=20251104];
+	DMARC_POLICY_ALLOW(-0.50)[linux.dev,none];
+	R_DKIM_ALLOW(-0.20)[linux.dev:s=key1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8767-lists,linux-pwm=lfdr.de];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8768-lists,linux-pwm=lfdr.de];
+	FREEMAIL_TO(0.00)[kernel.org,linuxfoundation.org,nvidia.com,google.com,intel.com,linaro.org,samsung.com,gmail.com,arm.com,posteo.de,garyguo.net,protonmail.com,umich.edu];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DMARC_NA(0.00)[baylibre.com];
+	RCVD_COUNT_THREE(0.00)[3];
+	RCPT_COUNT_TWELVE(0.00)[31];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[u.kleine-koenig@baylibre.com,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[baylibre-com.20251104.gappssmtp.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TAGGED_RCPT(0.00)[linux-pwm];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,baylibre-com.20251104.gappssmtp.com:dkim]
+	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[igor.korotin@linux.dev,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[linux.dev:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-pwm];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[linux.dev:email,linux.dev:dkim,linux.dev:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 
 
---vs3hhftnngotlizo
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] pwm: Consistently define pci_device_ids using named
- initializers
-MIME-Version: 1.0
 
-Hello,
+On 4/27/2026 11:11 PM, Danilo Krummrich wrote:
+> Make i2c::Driver take a lifetime parameter 'a that ties device resources
+> to the binding scope.
+> 
+> Internally, Adapter<T: Driver> becomes Adapter<F: ForLt> with a bound
+> for<'a> F::Of<'a>: Driver<'a>; module_i2c_driver! wraps the driver type
+> in ForLt!() so drivers don't have to.
+> 
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+> ---
+>   rust/kernel/i2c.rs              | 116 +++++++++++++++++++-------------
+>   samples/rust/rust_driver_i2c.rs |  18 ++---
+>   2 files changed, 78 insertions(+), 56 deletions(-)
+> 
+> diff --git a/rust/kernel/i2c.rs b/rust/kernel/i2c.rs
+> index 08d310aa9d6b..4464146d6c4d 100644
+> --- a/rust/kernel/i2c.rs
+> +++ b/rust/kernel/i2c.rs
+> @@ -92,43 +92,57 @@ macro_rules! i2c_device_table {
+>   }
+>   
+>   /// An adapter for the registration of I2C drivers.
+> -pub struct Adapter<T: Driver>(T);
+> +///
+> +/// `F` is a [`ForLt`](trait@ForLt) type that maps lifetimes to the driver's device
+> +/// private data type, i.e. `F::Of<'a>` is the driver struct parameterized by `'a`. The macro
+> +/// `module_i2c_driver!` generates this automatically via `ForLt!()`.
+> +pub struct Adapter<F>(PhantomData<F>);
+>   
+>   // SAFETY:
+>   // - `bindings::i2c_driver` is a C type declared as `repr(C)`.
+> -// - `T` is the type of the driver's device private data.
+> +// - `F::Of<'static>` is the stored type of the driver's device private data.
+>   // - `struct i2c_driver` embeds a `struct device_driver`.
+>   // - `DEVICE_DRIVER_OFFSET` is the correct byte offset to the embedded `struct device_driver`.
+> -unsafe impl<T: Driver + 'static> driver::DriverLayout for Adapter<T> {
+> +unsafe impl<F> driver::DriverLayout for Adapter<F>
+> +where
+> +    F: ForLt + 'static,
+> +    for<'a> F::Of<'a>: Driver<'a>,
+> +{
+>       type DriverType = bindings::i2c_driver;
+> -    type DriverData = ForLt!(T);
+> +    type DriverData = F;
+>       const DEVICE_DRIVER_OFFSET: usize = core::mem::offset_of!(Self::DriverType, driver);
+>   }
+>   
+>   // SAFETY: A call to `unregister` for a given instance of `DriverType` is guaranteed to be valid if
+>   // a preceding call to `register` has been successful.
+> -unsafe impl<T: Driver + 'static> driver::RegistrationOps for Adapter<T> {
+> +unsafe impl<F> driver::RegistrationOps for Adapter<F>
+> +where
+> +    F: ForLt + 'static,
+> +    for<'a> F::Of<'a>: Driver<'a>,
+> +{
+>       unsafe fn register(
+>           idrv: &Opaque<Self::DriverType>,
+>           name: &'static CStr,
+>           module: &'static ThisModule,
+>       ) -> Result {
+>           build_assert!(
+> -            T::ACPI_ID_TABLE.is_some() || T::OF_ID_TABLE.is_some() || T::I2C_ID_TABLE.is_some(),
+> +            <F::Of<'static> as Driver<'static>>::ACPI_ID_TABLE.is_some()
+> +                || <F::Of<'static> as Driver<'static>>::OF_ID_TABLE.is_some()
+> +                || <F::Of<'static> as Driver<'static>>::I2C_ID_TABLE.is_some(),
+>               "At least one of ACPI/OF/Legacy tables must be present when registering an i2c driver"
+>           );
+>   
+> -        let i2c_table = match T::I2C_ID_TABLE {
+> +        let i2c_table = match <F::Of<'static> as Driver<'static>>::I2C_ID_TABLE {
+>               Some(table) => table.as_ptr(),
+>               None => core::ptr::null(),
+>           };
+>   
+> -        let of_table = match T::OF_ID_TABLE {
+> +        let of_table = match <F::Of<'static> as Driver<'static>>::OF_ID_TABLE {
+>               Some(table) => table.as_ptr(),
+>               None => core::ptr::null(),
+>           };
+>   
+> -        let acpi_table = match T::ACPI_ID_TABLE {
+> +        let acpi_table = match <F::Of<'static> as Driver<'static>>::ACPI_ID_TABLE {
+>               Some(table) => table.as_ptr(),
+>               None => core::ptr::null(),
+>           };
+> @@ -154,7 +168,11 @@ unsafe fn unregister(idrv: &Opaque<Self::DriverType>) {
+>       }
+>   }
+>   
+> -impl<T: Driver + 'static> Adapter<T> {
+> +impl<F> Adapter<F>
+> +where
+> +    F: ForLt + 'static,
+> +    for<'a> F::Of<'a>: Driver<'a>,
+> +{
+>       extern "C" fn probe_callback(idev: *mut bindings::i2c_client) -> kernel::ffi::c_int {
+>           // SAFETY: The I2C bus only ever calls the probe callback with a valid pointer to a
+>           // `struct i2c_client`.
+> @@ -162,13 +180,12 @@ extern "C" fn probe_callback(idev: *mut bindings::i2c_client) -> kernel::ffi::c_
+>           // INVARIANT: `idev` is valid for the duration of `probe_callback()`.
+>           let idev = unsafe { &*idev.cast::<I2cClient<device::CoreInternal>>() };
+>   
+> -        let info = Self::i2c_id_info(idev)
+> -            .or_else(|| <Self as driver::Adapter<'_>>::id_info(idev.as_ref()));
+> -
+>           from_result(|| {
+> -            let data = T::probe(idev, info);
+> +            let info = Self::i2c_id_info(idev)
+> +                .or_else(|| <Self as driver::Adapter<'_>>::id_info(idev.as_ref()));
+> +            let data = <F::Of<'_> as Driver<'_>>::probe(idev, info);
+>   
+> -            idev.as_ref().set_drvdata::<ForLt!(T)>(data)?;
+> +            idev.as_ref().set_drvdata::<F>(data)?;
+>               Ok(0)
+>           })
+>       }
+> @@ -178,11 +195,10 @@ extern "C" fn remove_callback(idev: *mut bindings::i2c_client) {
+>           let idev = unsafe { &*idev.cast::<I2cClient<device::CoreInternal>>() };
+>   
+>           // SAFETY: `remove_callback` is only ever called after a successful call to
+> -        // `probe_callback`, hence it's guaranteed that `I2cClient::set_drvdata()` has been called
+> -        // and stored a `Pin<KBox<T>>`.
+> -        let data = unsafe { idev.as_ref().drvdata_borrow::<ForLt!(T)>() };
+> +        // `probe_callback`, hence it's guaranteed that drvdata has been set.
+> +        let data = unsafe { idev.as_ref().drvdata_borrow::<F>() };
+>   
+> -        T::unbind(idev, data);
+> +        <F::Of<'_> as Driver<'_>>::unbind(idev, data);
+>       }
+>   
+>       extern "C" fn shutdown_callback(idev: *mut bindings::i2c_client) {
+> @@ -190,23 +206,22 @@ extern "C" fn shutdown_callback(idev: *mut bindings::i2c_client) {
+>           let idev = unsafe { &*idev.cast::<I2cClient<device::CoreInternal>>() };
+>   
+>           // SAFETY: `shutdown_callback` is only ever called after a successful call to
+> -        // `probe_callback`, hence it's guaranteed that `Device::set_drvdata()` has been called
+> -        // and stored a `Pin<KBox<T>>`.
+> -        let data = unsafe { idev.as_ref().drvdata_borrow::<ForLt!(T)>() };
+> +        // `probe_callback`, hence it's guaranteed that drvdata has been set.
+> +        let data = unsafe { idev.as_ref().drvdata_borrow::<F>() };
+>   
+> -        T::shutdown(idev, data);
+> +        <F::Of<'_> as Driver<'_>>::shutdown(idev, data);
+>       }
+>   
+>       /// The [`i2c::IdTable`] of the corresponding driver.
+> -    fn i2c_id_table() -> Option<IdTable<<Self as driver::Adapter<'static>>::IdInfo>> {
+> -        T::I2C_ID_TABLE
+> +    fn i2c_id_table<'a>() -> Option<IdTable<<F::Of<'a> as Driver<'a>>::IdInfo>> {
+> +        <F::Of<'a> as Driver<'a>>::I2C_ID_TABLE
+>       }
+>   
+>       /// Returns the driver's private data from the matching entry in the [`i2c::IdTable`], if any.
+>       ///
+>       /// If this returns `None`, it means there is no match with an entry in the [`i2c::IdTable`].
+> -    fn i2c_id_info(dev: &I2cClient) -> Option<&'static <Self as driver::Adapter<'static>>::IdInfo> {
+> -        let table = Self::i2c_id_table()?;
+> +    fn i2c_id_info<'a>(dev: &I2cClient) -> Option<&'a <F::Of<'a> as Driver<'a>>::IdInfo> {
+> +        let table = Self::i2c_id_table::<'a>()?;
+>   
+>           // SAFETY:
+>           // - `table` has static lifetime, hence it's valid for reads
+> @@ -225,15 +240,19 @@ fn i2c_id_info(dev: &I2cClient) -> Option<&'static <Self as driver::Adapter<'sta
+>       }
+>   }
+>   
+> -impl<'a, T: Driver + 'static> driver::Adapter<'a> for Adapter<T> {
+> -    type IdInfo = T::IdInfo;
+> +impl<'a, F> driver::Adapter<'a> for Adapter<F>
+> +where
+> +    F: ForLt + 'static,
+> +    F::Of<'a>: Driver<'a>,
+> +{
+> +    type IdInfo = <F::Of<'a> as Driver<'a>>::IdInfo;
+>   
+>       fn of_id_table() -> Option<of::IdTable<Self::IdInfo>> {
+> -        T::OF_ID_TABLE
+> +        <F::Of<'a> as Driver<'a>>::OF_ID_TABLE
+>       }
+>   
+>       fn acpi_id_table() -> Option<acpi::IdTable<Self::IdInfo>> {
+> -        T::ACPI_ID_TABLE
+> +        <F::Of<'a> as Driver<'a>>::ACPI_ID_TABLE
+>       }
+>   }
+>   
+> @@ -252,8 +271,11 @@ fn acpi_id_table() -> Option<acpi::IdTable<Self::IdInfo>> {
+>   /// ```
+>   #[macro_export]
+>   macro_rules! module_i2c_driver {
+> -    ($($f:tt)*) => {
+> -        $crate::module_driver!(<T>, $crate::i2c::Adapter<T>, { $($f)* });
+> +    (type: $type:ty, $($rest:tt)*) => {
+> +        $crate::module_driver!(<T>, $crate::i2c::Adapter<T>, {
+> +            type: $crate::types::ForLt!($type),
+> +            $($rest)*
+> +        });
+>       };
+>   }
+>   
+> @@ -271,7 +293,7 @@ macro_rules! module_i2c_driver {
+>   /// kernel::acpi_device_table!(
+>   ///     ACPI_TABLE,
+>   ///     MODULE_ACPI_TABLE,
+> -///     <MyDriver as i2c::Driver>::IdInfo,
+> +///     <MyDriver as i2c::Driver<'_>>::IdInfo,
+>   ///     [
+>   ///         (acpi::DeviceId::new(c"LNUXBEEF"), ())
+>   ///     ]
+> @@ -280,7 +302,7 @@ macro_rules! module_i2c_driver {
+>   /// kernel::i2c_device_table!(
+>   ///     I2C_TABLE,
+>   ///     MODULE_I2C_TABLE,
+> -///     <MyDriver as i2c::Driver>::IdInfo,
+> +///     <MyDriver as i2c::Driver<'_>>::IdInfo,
+>   ///     [
+>   ///          (i2c::DeviceId::new(c"rust_driver_i2c"), ())
+>   ///     ]
+> @@ -289,30 +311,30 @@ macro_rules! module_i2c_driver {
+>   /// kernel::of_device_table!(
+>   ///     OF_TABLE,
+>   ///     MODULE_OF_TABLE,
+> -///     <MyDriver as i2c::Driver>::IdInfo,
+> +///     <MyDriver as i2c::Driver<'_>>::IdInfo,
+>   ///     [
+>   ///         (of::DeviceId::new(c"test,device"), ())
+>   ///     ]
+>   /// );
+>   ///
+> -/// impl i2c::Driver for MyDriver {
+> +/// impl<'a> i2c::Driver<'a> for MyDriver {
+>   ///     type IdInfo = ();
+>   ///     const I2C_ID_TABLE: Option<i2c::IdTable<Self::IdInfo>> = Some(&I2C_TABLE);
+>   ///     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
+>   ///     const ACPI_ID_TABLE: Option<acpi::IdTable<Self::IdInfo>> = Some(&ACPI_TABLE);
+>   ///
+>   ///     fn probe(
+> -///         _idev: &i2c::I2cClient<Core>,
+> -///         _id_info: Option<&Self::IdInfo>,
+> -///     ) -> impl PinInit<Self, Error> {
+> +///         _idev: &'a i2c::I2cClient<Core>,
+> +///         _id_info: Option<&'a Self::IdInfo>,
+> +///     ) -> impl PinInit<Self, Error> + 'a {
+>   ///         Err(ENODEV)
+>   ///     }
+>   ///
+> -///     fn shutdown(_idev: &i2c::I2cClient<Core>, this: Pin<&Self>) {
+> +///     fn shutdown(_idev: &'a i2c::I2cClient<Core>, _this: Pin<&'a Self>) {
+>   ///     }
+>   /// }
+>   ///```
+> -pub trait Driver: Send {
+> +pub trait Driver<'a>: Send {
+>       /// The type holding information about each device id supported by the driver.
+>       // TODO: Use `associated_type_defaults` once stabilized:
+>       //
+> @@ -335,9 +357,9 @@ pub trait Driver: Send {
+>       /// Called when a new i2c client is added or discovered.
+>       /// Implementers should attempt to initialize the client here.
+>       fn probe(
+> -        dev: &I2cClient<device::Core>,
+> -        id_info: Option<&Self::IdInfo>,
+> -    ) -> impl PinInit<Self, Error>;
+> +        dev: &'a I2cClient<device::Core>,
+> +        id_info: Option<&'a Self::IdInfo>,
+> +    ) -> impl PinInit<Self, Error> + 'a;
+>   
+>       /// I2C driver shutdown.
+>       ///
+> @@ -350,7 +372,7 @@ fn probe(
+>       /// This callback is distinct from final resource cleanup, as the driver instance remains valid
+>       /// after it returns. Any deallocation or teardown of driver-owned resources should instead be
+>       /// handled in `Self::drop`.
+> -    fn shutdown(dev: &I2cClient<device::Core>, this: Pin<&Self>) {
+> +    fn shutdown(dev: &'a I2cClient<device::Core>, this: Pin<&'a Self>) {
+>           let _ = (dev, this);
+>       }
+>   
+> @@ -364,7 +386,7 @@ fn shutdown(dev: &I2cClient<device::Core>, this: Pin<&Self>) {
+>       /// operations to gracefully tear down the device.
+>       ///
+>       /// Otherwise, release operations for driver resources should be performed in `Self::drop`.
+> -    fn unbind(dev: &I2cClient<device::Core>, this: Pin<&Self>) {
+> +    fn unbind(dev: &'a I2cClient<device::Core>, this: Pin<&'a Self>) {
+>           let _ = (dev, this);
+>       }
+>   }
+> diff --git a/samples/rust/rust_driver_i2c.rs b/samples/rust/rust_driver_i2c.rs
+> index 6be79f9e9fb5..f86c1cf7c786 100644
+> --- a/samples/rust/rust_driver_i2c.rs
+> +++ b/samples/rust/rust_driver_i2c.rs
+> @@ -15,25 +15,25 @@
+>   kernel::acpi_device_table! {
+>       ACPI_TABLE,
+>       MODULE_ACPI_TABLE,
+> -    <SampleDriver as i2c::Driver>::IdInfo,
+> +    <SampleDriver as i2c::Driver<'_>>::IdInfo,
+>       [(acpi::DeviceId::new(c"LNUXBEEF"), 0)]
+>   }
+>   
+>   kernel::i2c_device_table! {
+>       I2C_TABLE,
+>       MODULE_I2C_TABLE,
+> -    <SampleDriver as i2c::Driver>::IdInfo,
+> +    <SampleDriver as i2c::Driver<'_>>::IdInfo,
+>       [(i2c::DeviceId::new(c"rust_driver_i2c"), 0)]
+>   }
+>   
+>   kernel::of_device_table! {
+>       OF_TABLE,
+>       MODULE_OF_TABLE,
+> -    <SampleDriver as i2c::Driver>::IdInfo,
+> +    <SampleDriver as i2c::Driver<'_>>::IdInfo,
+>       [(of::DeviceId::new(c"test,rust_driver_i2c"), 0)]
+>   }
+>   
+> -impl i2c::Driver for SampleDriver {
+> +impl<'a> i2c::Driver<'a> for SampleDriver {
+>       type IdInfo = u32;
+>   
+>       const ACPI_ID_TABLE: Option<acpi::IdTable<Self::IdInfo>> = Some(&ACPI_TABLE);
+> @@ -41,9 +41,9 @@ impl i2c::Driver for SampleDriver {
+>       const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
+>   
+>       fn probe(
+> -        idev: &i2c::I2cClient<Core>,
+> -        info: Option<&Self::IdInfo>,
+> -    ) -> impl PinInit<Self, Error> {
+> +        idev: &'a i2c::I2cClient<Core>,
+> +        info: Option<&'a Self::IdInfo>,
+> +    ) -> impl PinInit<Self, Error> + 'a {
+>           let dev = idev.as_ref();
+>   
+>           dev_info!(dev, "Probe Rust I2C driver sample.\n");
+> @@ -55,11 +55,11 @@ fn probe(
+>           Ok(Self)
+>       }
+>   
+> -    fn shutdown(idev: &i2c::I2cClient<Core>, _this: Pin<&Self>) {
+> +    fn shutdown(idev: &'a i2c::I2cClient<Core>, _this: Pin<&'a Self>) {
+>           dev_info!(idev.as_ref(), "Shutdown Rust I2C driver sample.\n");
+>       }
+>   
+> -    fn unbind(idev: &i2c::I2cClient<Core>, _this: Pin<&Self>) {
+> +    fn unbind(idev: &'a i2c::I2cClient<Core>, _this: Pin<&'a Self>) {
+>           dev_info!(idev.as_ref(), "Unbind Rust I2C driver sample.\n");
+>       }
+>   }
 
-On Mon, May 04, 2026 at 10:55:35AM +0200, Uwe Kleine-K=F6nig (The Capable H=
-ub) wrote:
-> base-commit: 254f49634ee16a731174d2ae34bc50bd5f45e731
-> prerequisite-patch-id: a31e1d7b9e6310e9c453afcd2037468686cb552c
-> prerequisite-patch-id: 7779c63f16ef6f7247cdb71c89e66b27e299eb74
-> prerequisite-patch-id: 6f920b6f8c31dc0ad1689200c37680755c20ce8b
-> prerequisite-patch-id: 1fd68e883664147052540eea19769ea9e92d0138
-> prerequisite-patch-id: fff07090df18a39a361bbb091a3f17223b4606b4
-> prerequisite-patch-id: d0d54f7acecd560cdeb6ea0c0e5ae77a50695d68
-> prerequisite-patch-id: 5011234352b266242ce01fd8babbf0459bfb005b
-> prerequisite-patch-id: a935aab66aa9896437ab9d757ef9fdc859d22495
-> prerequisite-patch-id: 344256383ec67df7fbbb6e35e4301d3d14b2571f
-> prerequisite-patch-id: 14c277a51a268cdcb630d888c1bad3334018d11c
-> prerequisite-patch-id: 93f14fa1ae7c71a1389488e87bf5d4ba8dbddf84
-> prerequisite-patch-id: efe5e069be2c0c039e895fb10bbbf6510fd773e6
-> prerequisite-patch-id: 21ac68c87f24f9e1d35f3268c04e5b40f93849c7
-> prerequisite-patch-id: 84fb61dca584c253aa2e461e97df8aad59159c28
-> prerequisite-patch-id: 8e7cee5cc55dd50271326313cb258934dd8c3579
-> prerequisite-patch-id: 38526e2d87a08a78ccdefaf3261751220d645f15
-> prerequisite-patch-id: e608a54ff3511d5345f0b396fd5d8e9b003b31ec
-> prerequisite-patch-id: 4a715d89f621a2ffb364abeb15db3fa2b9b83317
-> prerequisite-patch-id: 6d049443e6399e1266e06ba412601308b0e44cdc
-> prerequisite-patch-id: a42f44b27a7bf3795c177fd5df47258463114c9d
-> prerequisite-patch-id: d8b8fe8728706b0abdae18fa7a77fbb50db89aab
-> prerequisite-patch-id: 2c85231c5c460bdbe3293d275e6e7b9c135a5e7d
-> prerequisite-patch-id: 60892ec2e01f3559dfb6791d3f13035d46b01ebb
-> prerequisite-patch-id: ed9523b310540069539cab89374600fd0b23a043
-> prerequisite-patch-id: 3619058b0eb67d71f94ae209ea44f7e6645594de
-> prerequisite-patch-id: a867be2bb1f4f5afeaf4effbcbf1a3b3d32655bb
-> prerequisite-patch-id: 1a8c38d82ef577bedd1a665b130dde53ca32fb65
+Acked-by: Igor Korotin <igor.korotin@linux.dev>
 
-This is wrong. These patches are just conversions of other subsystems
-that due to how I create the changes happen to be below the patch under
-discussion. The patch applies cleanly to the base (i.e. 7.1-rc1).
-
-:-( for having made it (maybe) harder for build bots to check this
-patch.
-
-Best regards
-Uwe
-
---vs3hhftnngotlizo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmn4aVAACgkQj4D7WH0S
-/k4jQwf+OZjRwlVoD50zXZsunqMr1T2S7BlC7eBM1Zmdui9D8UAi1Y7C0vx1ptaP
-/dq5GN033DOudJ/BY5A04wkRR5/EhAP2FILy7pCJoTTrfaf5wNLCQ6VgvEIHst/P
-mZSCyXSV62D62wgyfG8CDhcVkogkgtgQXLY2gRlNARo9B6LJ/4fqe8paqCgj1IbV
-QOblTCjTXH1a6qdy9uoizWlhyrGKx9GbNF52dYLkU7hxZsQH7JB9ezaEI7HVl3rY
-DFZykZVzYrYrtv+AFeGULpzcO0AGdZmDxJbJSeAqw+ynyBFVrVJ4kCRRWZU2Z+5t
-+WY/f8s/aqSNBzBLeV5j6jd8LAhahQ==
-=L+HC
------END PGP SIGNATURE-----
-
---vs3hhftnngotlizo--
+Cheers
+Igor
 
