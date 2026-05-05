@@ -1,50 +1,50 @@
-Return-Path: <linux-pwm+bounces-8782-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8783-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QG+AIL76+WmNFgMAu9opvQ
-	(envelope-from <linux-pwm+bounces-8782-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Tue, 05 May 2026 16:12:14 +0200
+	id oOY3Hnn7+WkYFwMAu9opvQ
+	(envelope-from <linux-pwm+bounces-8783-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Tue, 05 May 2026 16:15:21 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id E84734CF242
-	for <lists+linux-pwm@lfdr.de>; Tue, 05 May 2026 16:12:13 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6F5D84CF33D
+	for <lists+linux-pwm@lfdr.de>; Tue, 05 May 2026 16:15:20 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 3361F3020EC5
-	for <lists+linux-pwm@lfdr.de>; Tue,  5 May 2026 14:08:14 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id B90193003BC6
+	for <lists+linux-pwm@lfdr.de>; Tue,  5 May 2026 14:13:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98BB547F2C0;
-	Tue,  5 May 2026 14:08:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 653FF480328;
+	Tue,  5 May 2026 14:13:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IW1nFvhY"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SjBdfeMN"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7425D3EDAB0;
-	Tue,  5 May 2026 14:08:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D6F43E51D7;
+	Tue,  5 May 2026 14:13:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777990093; cv=none; b=HfqjBRGT5gEnw6+MS88E3yL9CL6o26bpDa44NfLw8jG+0XvVrN6Xn+/UqMawM25iE5JhNQOFVEJ8xQYok/TvIz0z+s1gyvZugSRLsVKFCzKCgN/e8jkSqprpyXZpqC8amtx94oaHfhHBZN0CJ41mrqT0u2JYn2LJNUszaGt3gjo=
+	t=1777990390; cv=none; b=oKFrrYI+9L4KnQe8FA9J6vpvUaJhWo8hSo6t+fI7V+6UJMqCbTb6Hz9MeI0dCoXeSTVVbe729zCOm9NQwCH/Spxu1zvC5ikM9MCz5c1Irk7dMCryXh/9eHbqFbyu2z8h0EdmqlyOLdNJVuG0iruF+feWkAnOkwWU6iTxUbeavWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777990093; c=relaxed/simple;
-	bh=W3QQ0Qld1r5T+DvalykwLo7CUYoKVtBgQYkk+ya1W+8=;
+	s=arc-20240116; t=1777990390; c=relaxed/simple;
+	bh=ZOjUNHe9D+ZO5F0CooExI8tSsZdiNfTkV5INJ4CerVE=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=KP4Sw4Xiiz4xnOkBWJGNUeEkUVhxgtbH+SaGpPrpfVbHIW8G9qXetkX/9A7wAUv99gf+JwU0LVSZK6V03wPbRWeW2ER3ehebCnBlDsu9lLvwaz3SXF7FU5ctJiP1F0Brg/e9leq5SJrBkdoa6nvFlvsAEnhSJf9au9htABTgIbE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IW1nFvhY; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7788C2BCB4;
-	Tue,  5 May 2026 14:08:04 +0000 (UTC)
+	 MIME-Version:Content-Type; b=h1klyghu6bjrDuvhla9ebDNDEa9c1LMAHFVYdQMEZRMrnt7JXLDkTZr2OFQZHVMoDpILdlFuUL6w4CD9ImfJVR3Np+4KldBBCRvRoLt/0royWooAzSeFBPed5rBkeLun4xtnHDJPXiGS507vRyJbPbYjRX4cmWFfodOort+BKXo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SjBdfeMN; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4403BC2BCC7;
+	Tue,  5 May 2026 14:13:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777990093;
-	bh=W3QQ0Qld1r5T+DvalykwLo7CUYoKVtBgQYkk+ya1W+8=;
+	s=k20201202; t=1777990389;
+	bh=ZOjUNHe9D+ZO5F0CooExI8tSsZdiNfTkV5INJ4CerVE=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=IW1nFvhY/22oIN2dXEJHGKy3dP/BhBB5PAO0K9SDKOL6AmGZyoR4EqEZ8mHYAl0H9
-	 T1cxlrFS83sYUgKPs1UMILbOHfS9LSHL+BbL4YXfQ+lsEo1Y4BnITBY6MWZe1+aATq
-	 JifUAef9Zyq3MjXseC0W+l2zimGV6fR0oJoqwcBsu6hrJ5LYBtaCWpCIx6VpTdcJg4
-	 gyQCz7lQkz2Ph9fkPg7A3Fq6tWhOSzhMgilKykH799uUV6EI4LLDMUJY/pptZ8JtWe
-	 7pi8Cz82q1Mp2EGg3QzplQA3U52bmndOOtiyGFbPzHgbXSsgkNqtYpm2NTRKUomg4F
-	 KSoT2wlbjGe+w==
-Date: Tue, 5 May 2026 15:07:59 +0100
+	b=SjBdfeMNsFeA/DzVO7V3Od0m+3SCPmZ9Njh5k9GhJ8Kl8Ls5l3CUBGd2DLyRDgdPA
+	 m1W/QbsW+WLQnoZIyP3lDjebDgUXuc77J/u7oEc3DmQZ3I3CA1y98jJjBvDme3nspd
+	 nOgLCDn2mvUYEd6Xh7vxCkaIvhRYXR+bIAZh5wVsJEdq04i2Ex6vG/PvyCDW9O+iaR
+	 7aVPTplnJ73nE2is15lupzekX2FvfYyW7ZYlqXzAd4XUSsvONnbN7eexACu0+2dZQZ
+	 dDYbmiLbnGEX1jiMeqE+Jh3EsJcrauJEKxjT688Crkde7QeXz/b8h2/fC14vC+34zO
+	 4EQvdLF0d1BLA==
+Date: Tue, 5 May 2026 15:12:56 +0100
 From: Jonathan Cameron <jic23@kernel.org>
 To: Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org>
 Cc: radu.sabau@analog.com, Lars-Peter Clausen <lars@metafoo.de>, Michael
@@ -60,11 +60,11 @@ Cc: radu.sabau@analog.com, Lars-Peter Clausen <lars@metafoo.de>, Michael
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
  linux-doc@vger.kernel.org
-Subject: Re: [PATCH v9 3/6] iio: adc: ad4691: add triggered buffer support
-Message-ID: <20260505150759.3f2700a0@jic23-huawei>
-In-Reply-To: <20260430-ad4692-multichannel-sar-adc-driver-v9-3-33e439e4fb87@analog.com>
+Subject: Re: [PATCH v9 4/6] iio: adc: ad4691: add SPI offload support
+Message-ID: <20260505151256.23e07d6b@jic23-huawei>
+In-Reply-To: <20260430-ad4692-multichannel-sar-adc-driver-v9-4-33e439e4fb87@analog.com>
 References: <20260430-ad4692-multichannel-sar-adc-driver-v9-0-33e439e4fb87@analog.com>
-	<20260430-ad4692-multichannel-sar-adc-driver-v9-3-33e439e4fb87@analog.com>
+	<20260430-ad4692-multichannel-sar-adc-driver-v9-4-33e439e4fb87@analog.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
@@ -72,9 +72,9 @@ List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: E84734CF242
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 6F5D84CF33D
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.16 / 15.00];
@@ -82,12 +82,12 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8782-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8783-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
@@ -101,90 +101,89 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[jic23@kernel.org,linux-pwm@vger.kernel.org];
 	FREEMAIL_CC(0.00)[analog.com,metafoo.de,baylibre.com,kernel.org,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org,vger.kernel.org];
 	TAGGED_RCPT(0.00)[linux-pwm,radu.sabau.analog.com,dt];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[analog.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
 
-On Thu, 30 Apr 2026 13:16:45 +0300
+On Thu, 30 Apr 2026 13:16:46 +0300
 Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org> wrote:
 
 > From: Radu Sabau <radu.sabau@analog.com>
->=20
-> Add buffered capture support using the IIO triggered buffer framework.
->=20
-> CNV Burst Mode: the GP pin identified by interrupt-names in the device
-> tree is configured as DATA_READY output. The IRQ handler stops
-> conversions and fires the IIO trigger; the trigger handler executes a
-> pre-built SPI message that reads all active channels from the AVG_IN
-> accumulator registers and then resets accumulator state and restarts
-> conversions for the next cycle.
->=20
-> Manual Mode: CNV is tied to SPI CS so each transfer simultaneously
-> reads the previous result and starts the next conversion (pipelined
-> N+1 scheme). At preenable time a pre-built, optimised SPI message of
-> N+1 transfers is constructed (N channel reads plus one NOOP to drain
-> the pipeline). The trigger handler executes the message in a single
-> spi_sync() call and collects the results. An external trigger (e.g.
-> iio-trig-hrtimer) is required to drive the trigger at the desired
-> sample rate.
->=20
-> Both modes share the same trigger handler and push a complete scan =E2=80=
-=94
-> one u16 slot per channel at its scan_index position, followed by a
-> timestamp =E2=80=94 to the IIO buffer via iio_push_to_buffers_with_ts().
->=20
-> The CNV Burst Mode sampling frequency (PWM period) is exposed as a
-> buffer-level attribute via IIO_DEVICE_ATTR.
->=20
+> 
+> Add SPI offload support to enable DMA-based, CPU-independent data
+> acquisition using the SPI Engine offload framework.
+> 
+> When an SPI offload is available (devm_spi_offload_get() succeeds),
+> the driver registers a DMA engine IIO buffer and uses dedicated buffer
+> setup operations. If no offload is available the existing software
+> triggered buffer path is used unchanged.
+> 
+> Both CNV Burst Mode and Manual Mode support offload, but use different
+> trigger mechanisms:
+> 
+> CNV Burst Mode: the SPI Engine is triggered by the ADC's DATA_READY
+> signal on the GP pin specified by the trigger-source consumer reference
+> in the device tree (one cell = GP pin number 0-3). For this mode the
+> driver acts as both an SPI offload consumer (DMA RX stream, message
+> optimization) and a trigger source provider: it registers the
+> GP/DATA_READY output via devm_spi_offload_trigger_register() so the
+> offload framework can match the '#trigger-source-cells' phandle and
+> automatically fire the SPI Engine DMA transfer at end-of-conversion.
+> 
+> Manual Mode: the SPI Engine is triggered by a periodic trigger at
+> the configured sampling frequency. The pre-built SPI message uses
+> the pipelined CNV-on-CS protocol: N+1 16-bit transfers are issued
+> for N active channels (the first result is discarded as garbage from
+> the pipeline flush) and the remaining N results are captured by DMA.
+> 
+> All offload transfers use 16-bit frames (bits_per_word=16, len=2).
+> The channel scan_type (storagebits=16, shift=0, IIO_BE) is shared
+> between the software triggered-buffer and offload paths; no separate
+> scan_type or channel array is needed for the offload case. The
+> ad4691_manual_channels[] array introduced in the triggered-buffer
+> commit is reused here: it hides the IIO_CHAN_INFO_OVERSAMPLING_RATIO
+> attribute, which is not applicable in Manual Mode.
+
+Probably good to call out that oversampling hasn't been introduced
+to the driver yet. This confused Sashiko ;)
+
+> 
+> Kconfig gains a dependency on IIO_BUFFER_DMAENGINE.
+> 
 > Signed-off-by: Radu Sabau <radu.sabau@analog.com>
-Another Sashiko found issue inline.
+One minor thing inline.
 
-Also it calls out that you have no validate_trigger which might mean
-another trigger is used.  Moving the irq enable to the trigger_reenable
-should solve that.
+>  static int ad4691_reg_read(void *context, unsigned int reg, unsigned int *val)
+>  {
+>  	struct spi_device *spi = context;
+> @@ -712,6 +791,7 @@ static const struct iio_buffer_setup_ops ad4691_manual_buffer_setup_ops = {
+>  static int ad4691_cnv_burst_buffer_preenable(struct iio_dev *indio_dev)
+>  {
+>  	struct ad4691_state *st = iio_priv(indio_dev);
+> +	unsigned int acc_mask;
+>  	unsigned int k, i;
+>  	int ret;
+>  
+> @@ -758,9 +838,9 @@ static int ad4691_cnv_burst_buffer_preenable(struct iio_dev *indio_dev)
+>  	if (ret)
+>  		goto err_unoptimize;
+>  
+> -	ret = regmap_write(st->regmap, AD4691_ACC_MASK_REG,
+> -			   ~bitmap_read(indio_dev->active_scan_mask, 0,
+> -				iio_get_masklength(indio_dev)) & GENMASK(15, 0));
+> +	acc_mask = ~bitmap_read(indio_dev->active_scan_mask, 0,
+> +				iio_get_masklength(indio_dev)) & GENMASK(15, 0);
 
-> +static ssize_t sampling_frequency_show(struct device *dev,
-> +				       struct device_attribute *attr,
-> +				       char *buf)
-> +{
-> +	struct iio_dev *indio_dev =3D dev_to_iio_dev(dev);
-> +	struct ad4691_state *st =3D iio_priv(indio_dev);
-> +
-> +	return sysfs_emit(buf, "%lu\n", NSEC_PER_SEC / st->cnv_period_ns);
-> +}
-> +
-> +static ssize_t sampling_frequency_store(struct device *dev,
-> +					struct device_attribute *attr,
-> +					const char *buf, size_t len)
-> +{
-> +	struct iio_dev *indio_dev =3D dev_to_iio_dev(dev);
-> +	struct ad4691_state *st =3D iio_priv(indio_dev);
-> +	int freq, ret;
-> +
-> +	ret =3D kstrtoint(buf, 10, &freq);
-I missed this but as Sashiko points out this could read in a negative
-frequency. Given that's clearly silly kstrtouint()
+Not obvious to me why this change is here.  If you want it, push back to the
+original patch that introduced this code.
 
-> +	if (ret)
-> +		return ret;
-> +
-> +	IIO_DEV_ACQUIRE_DIRECT_MODE(indio_dev, claim);
-> +	if (IIO_DEV_ACQUIRE_FAILED(claim))
-> +		return -EBUSY;
-> +
-> +
-> +	ret =3D ad4691_set_pwm_freq(st, freq);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return len;
-> +}
-> +
-> +static IIO_DEVICE_ATTR_RW(sampling_frequency, 0);
-> +
-> +static const struct iio_dev_attr *ad4691_buffer_attrs[] =3D {
-> +	&iio_dev_attr_sampling_frequency,
-> +	NULL
-> +};
+> +	ret = regmap_write(st->regmap, AD4691_ACC_MASK_REG, acc_mask);
+>  	if (ret)
+>  		goto err_unoptimize;
+>  
+> @@ -803,6 +883,209 @@ static const struct iio_buffer_setup_ops ad4691_cnv_burst_buffer_setup_ops = {
+>  	.postdisable = &ad4691_cnv_burst_buffer_postdisable,
+>  };
+
 
