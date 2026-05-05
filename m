@@ -1,50 +1,50 @@
-Return-Path: <linux-pwm+bounces-8781-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8782-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4I0/IPf4+WmNFgMAu9opvQ
-	(envelope-from <linux-pwm+bounces-8781-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Tue, 05 May 2026 16:04:39 +0200
+	id QG+AIL76+WmNFgMAu9opvQ
+	(envelope-from <linux-pwm+bounces-8782-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Tue, 05 May 2026 16:12:14 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 832A54CF048
-	for <lists+linux-pwm@lfdr.de>; Tue, 05 May 2026 16:04:38 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id E84734CF242
+	for <lists+linux-pwm@lfdr.de>; Tue, 05 May 2026 16:12:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 2F1563006024
-	for <lists+linux-pwm@lfdr.de>; Tue,  5 May 2026 14:04:16 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 3361F3020EC5
+	for <lists+linux-pwm@lfdr.de>; Tue,  5 May 2026 14:08:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4995747887A;
-	Tue,  5 May 2026 14:04:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 98BB547F2C0;
+	Tue,  5 May 2026 14:08:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LBoi3Cmj"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IW1nFvhY"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 225C835F189;
-	Tue,  5 May 2026 14:04:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7425D3EDAB0;
+	Tue,  5 May 2026 14:08:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1777989854; cv=none; b=n+VQTEUNmt5jcZD7mzdKja19UW8y8UpG+vkACgUDnKZarAUUN/bjeepWJHI/6mBBR/PH1K9gcZFa9+jihOZpolS8euFEr3GVzs9Fg6/ZKDoCadZUeA1y4lQmQtXj2Bmv4jAz+YI/crFG7xHAUhrbXKtsKo3qSSyUbaKLJV0B4sk=
+	t=1777990093; cv=none; b=HfqjBRGT5gEnw6+MS88E3yL9CL6o26bpDa44NfLw8jG+0XvVrN6Xn+/UqMawM25iE5JhNQOFVEJ8xQYok/TvIz0z+s1gyvZugSRLsVKFCzKCgN/e8jkSqprpyXZpqC8amtx94oaHfhHBZN0CJ41mrqT0u2JYn2LJNUszaGt3gjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1777989854; c=relaxed/simple;
-	bh=Ux3dNW05X+8WWEHwiwqSOeOpXAo3OQsJiO2o1/H20jg=;
+	s=arc-20240116; t=1777990093; c=relaxed/simple;
+	bh=W3QQ0Qld1r5T+DvalykwLo7CUYoKVtBgQYkk+ya1W+8=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=q0e6QgVIhGgeFC5s/I1ZzMercyc/2RnE1v6UY230LFzW9D8fbaXahHoQAW+hNX1WDkWIe3BQS++34w53XGgNHQNPC9JwHoVLizvP0p/ED6soawamtlEIykLmptOJ2lRBNALz6L6uHVYe2m6hrM8IhnF6K+i6Z+YaCKI6JxidU3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LBoi3Cmj; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48269C2BCB4;
-	Tue,  5 May 2026 14:04:04 +0000 (UTC)
+	 MIME-Version:Content-Type; b=KP4Sw4Xiiz4xnOkBWJGNUeEkUVhxgtbH+SaGpPrpfVbHIW8G9qXetkX/9A7wAUv99gf+JwU0LVSZK6V03wPbRWeW2ER3ehebCnBlDsu9lLvwaz3SXF7FU5ctJiP1F0Brg/e9leq5SJrBkdoa6nvFlvsAEnhSJf9au9htABTgIbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IW1nFvhY; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7788C2BCB4;
+	Tue,  5 May 2026 14:08:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1777989853;
-	bh=Ux3dNW05X+8WWEHwiwqSOeOpXAo3OQsJiO2o1/H20jg=;
+	s=k20201202; t=1777990093;
+	bh=W3QQ0Qld1r5T+DvalykwLo7CUYoKVtBgQYkk+ya1W+8=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=LBoi3CmjpdEPfhcnaxBDANrmzPX3Zhl92s+kYLCpISfdI4iDF0MR7jpB4p+KbIBCZ
-	 5GRhokW7f0cxRmdXab6uYxlAvvnP1P4GMaEBU9/vIHc0OnVua6eQYjV/en6ax2C/XF
-	 sel2VvwXLO8WyR5JqoiG1t3s9m71FBssTRXOuYaFEhA5A8uJNexk1KL9rbkJlvwwYJ
-	 NwODokMZwRer8Y2nD4YF3V6P+42LJauPHCYwrBJ4d/+XvdR2Yc71Z401lQcA2XeGr3
-	 L702rFlNNcOer74qeC+9TyTrUg0RbTWzzoYjwM4GNFwmTCx+1zhKXx4tzJqhs85ZBd
-	 2+bL1KcGtOMKw==
-Date: Tue, 5 May 2026 15:04:00 +0100
+	b=IW1nFvhY/22oIN2dXEJHGKy3dP/BhBB5PAO0K9SDKOL6AmGZyoR4EqEZ8mHYAl0H9
+	 T1cxlrFS83sYUgKPs1UMILbOHfS9LSHL+BbL4YXfQ+lsEo1Y4BnITBY6MWZe1+aATq
+	 JifUAef9Zyq3MjXseC0W+l2zimGV6fR0oJoqwcBsu6hrJ5LYBtaCWpCIx6VpTdcJg4
+	 gyQCz7lQkz2Ph9fkPg7A3Fq6tWhOSzhMgilKykH799uUV6EI4LLDMUJY/pptZ8JtWe
+	 7pi8Cz82q1Mp2EGg3QzplQA3U52bmndOOtiyGFbPzHgbXSsgkNqtYpm2NTRKUomg4F
+	 KSoT2wlbjGe+w==
+Date: Tue, 5 May 2026 15:07:59 +0100
 From: Jonathan Cameron <jic23@kernel.org>
 To: Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org>
 Cc: radu.sabau@analog.com, Lars-Peter Clausen <lars@metafoo.de>, Michael
@@ -61,7 +61,7 @@ Cc: radu.sabau@analog.com, Lars-Peter Clausen <lars@metafoo.de>, Michael
  linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
  linux-doc@vger.kernel.org
 Subject: Re: [PATCH v9 3/6] iio: adc: ad4691: add triggered buffer support
-Message-ID: <20260505150400.59e18fad@jic23-huawei>
+Message-ID: <20260505150759.3f2700a0@jic23-huawei>
 In-Reply-To: <20260430-ad4692-multichannel-sar-adc-driver-v9-3-33e439e4fb87@analog.com>
 References: <20260430-ad4692-multichannel-sar-adc-driver-v9-0-33e439e4fb87@analog.com>
 	<20260430-ad4692-multichannel-sar-adc-driver-v9-3-33e439e4fb87@analog.com>
@@ -74,7 +74,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: 832A54CF048
+X-Rspamd-Queue-Id: E84734CF242
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.16 / 15.00];
@@ -82,12 +82,12 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8781-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8782-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
@@ -96,15 +96,15 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
+	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jic23@kernel.org,linux-pwm@vger.kernel.org];
 	FREEMAIL_CC(0.00)[analog.com,metafoo.de,baylibre.com,kernel.org,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org,vger.kernel.org];
 	TAGGED_RCPT(0.00)[linux-pwm,radu.sabau.analog.com,dt];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[analog.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,sashiko.dev:url]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
 
 On Thu, 30 Apr 2026 13:16:45 +0300
 Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org> wrote:
@@ -138,75 +138,53 @@ Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org> wrote:
 > buffer-level attribute via IIO_DEVICE_ATTR.
 >=20
 > Signed-off-by: Radu Sabau <radu.sabau@analog.com>
-Hi Radu
+Another Sashiko found issue inline.
 
-I haven't chased it through but Sashiko is raising concerns around the
-irq enabling / disable tricks this pulling and they may well be correct.
-Please take a close look at what happens in the remove path. We may
-need some local driver logic to avoid a double disable.
+Also it calls out that you have no validate_trigger which might mean
+another trigger is used.  Moving the irq enable to the trigger_reenable
+should solve that.
 
-https://sashiko.dev/#/patchset/20260430-ad4692-multichannel-sar-adc-driver-=
-v9-0-33e439e4fb87%40analog.com
-
-> diff --git a/drivers/iio/adc/ad4691.c b/drivers/iio/adc/ad4691.c
-> index 05826b762c7f..c1e3406fef18 100644
-> --- a/drivers/iio/adc/ad4691.c
-> +++ b/drivers/iio/adc/ad4691.c
-
-
-> +
-> +static irqreturn_t ad4691_irq(int irq, void *private)
+> +static ssize_t sampling_frequency_show(struct device *dev,
+> +				       struct device_attribute *attr,
+> +				       char *buf)
 > +{
-> +	struct iio_dev *indio_dev =3D private;
+> +	struct iio_dev *indio_dev =3D dev_to_iio_dev(dev);
 > +	struct ad4691_state *st =3D iio_priv(indio_dev);
 > +
-> +	iio_trigger_poll(indio_dev->trig);
-> +	/*
-> +	 * Keep the DATA_READY IRQ disabled until the trigger handler has
-> +	 * finished reading the scan, to prevent a new assertion mid-transfer.
-> +	 * The PWM continues running uninterrupted; the IRQ is re-enabled in
-> +	 * ad4691_trigger_handler once spi_sync completes.
-> +	 *
-> +	 * IRQF_ONESHOT already masks the hardware line during this threaded
-> +	 * handler, so disable_irq_nosync here ensures the IRQ stays disabled
-> +	 * even after IRQF_ONESHOT unmasks on return.
-> +	 */
-> +	disable_irq_nosync(st->irq);
-> +
-> +	return IRQ_HANDLED;
+> +	return sysfs_emit(buf, "%lu\n", NSEC_PER_SEC / st->cnv_period_ns);
 > +}
-
 > +
-> +static irqreturn_t ad4691_trigger_handler(int irq, void *p)
+> +static ssize_t sampling_frequency_store(struct device *dev,
+> +					struct device_attribute *attr,
+> +					const char *buf, size_t len)
 > +{
-> +	struct iio_poll_func *pf =3D p;
-> +	struct iio_dev *indio_dev =3D pf->indio_dev;
+> +	struct iio_dev *indio_dev =3D dev_to_iio_dev(dev);
 > +	struct ad4691_state *st =3D iio_priv(indio_dev);
+> +	int freq, ret;
 > +
-> +	ad4691_read_scan(indio_dev, pf->timestamp);
-> +	if (!st->manual_mode)
-> +		enable_irq(st->irq);
+> +	ret =3D kstrtoint(buf, 10, &freq);
+I missed this but as Sashiko points out this could read in a negative
+frequency. Given that's clearly silly kstrtouint()
 
-I think this should be in the reenable_trigger callback rather than here.
-That's ultimately fired by iio_trigger_notify_done.
-
-Sashiko had quite a bit to say about the problem paths around the buffer
-being disabled between the interrupt and the trigger handler. I don't think
-using the reenable trigger solves that though :(  We might be able
-to fix that centrally by always reenabling the trigger before
-disconnecting it but that's rather ugly. There is a note for the async
-trigger reenabling about a driver possibly needing to be careful
-to not reenable if the whole trigger was disabled in the meantime but
-this particular race isn't covered.
-
-
-Terrible though it is we may need to have some extra infrastructure
-to avoid the double disable (assuming it is real).
-
-
-> +	iio_trigger_notify_done(indio_dev->trig);
-> +	return IRQ_HANDLED;
+> +	if (ret)
+> +		return ret;
+> +
+> +	IIO_DEV_ACQUIRE_DIRECT_MODE(indio_dev, claim);
+> +	if (IIO_DEV_ACQUIRE_FAILED(claim))
+> +		return -EBUSY;
+> +
+> +
+> +	ret =3D ad4691_set_pwm_freq(st, freq);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return len;
 > +}
-
-
+> +
+> +static IIO_DEVICE_ATTR_RW(sampling_frequency, 0);
+> +
+> +static const struct iio_dev_attr *ad4691_buffer_attrs[] =3D {
+> +	&iio_dev_attr_sampling_frequency,
+> +	NULL
+> +};
 
