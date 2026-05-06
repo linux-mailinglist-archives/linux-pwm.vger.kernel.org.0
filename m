@@ -1,49 +1,49 @@
-Return-Path: <linux-pwm+bounces-8796-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8797-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +CsAO5O4+2k0DwAAu9opvQ
-	(envelope-from <linux-pwm+bounces-8796-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Wed, 06 May 2026 23:54:27 +0200
+	id 6C1RG7i4+2k0DwAAu9opvQ
+	(envelope-from <linux-pwm+bounces-8797-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Wed, 06 May 2026 23:55:04 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 820344E0DDF
-	for <lists+linux-pwm@lfdr.de>; Wed, 06 May 2026 23:54:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 979184E0E0E
+	for <lists+linux-pwm@lfdr.de>; Wed, 06 May 2026 23:55:03 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 230F2303B4ED
-	for <lists+linux-pwm@lfdr.de>; Wed,  6 May 2026 21:51:36 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id ABDF4303FF9B
+	for <lists+linux-pwm@lfdr.de>; Wed,  6 May 2026 21:51:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id AC2843B3C14;
-	Wed,  6 May 2026 21:51:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F1B83B3C00;
+	Wed,  6 May 2026 21:51:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TnL92aUQ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WuAPpZL7"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82CFE239085;
-	Wed,  6 May 2026 21:51:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AF4E31715C;
+	Wed,  6 May 2026 21:51:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778104295; cv=none; b=gzV3EoIbaswUHwhUNzRFAfc2UMAqLgCg9hcgCU/UX0E6PYXIV/HNEFS0dLxmLKbJitTTeOk6/deClEnwE22iSj19xGXW+huuh0hC2D3kvbCvRt+of6DWUSDY/KLVak+xScqUD7HWM1eDtM1iZhyZCppawwq9rzt893AmgT0nIiQ=
+	t=1778104302; cv=none; b=X3fI4FuOcSI5JaL14srEzTzlud1is8Xnk909KEbcBPY7l9eyIZtLdwozJLWvilVnPMYZRSoG5ymuG6SnKP4YwDPU/o06bJlmbWrxOcDPYrxuuaLsjm7HBBpRlgzYa5jc0yyBcGbqxHCx63mlsgD92HQOJUTSgm3oZudD26+lDUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778104295; c=relaxed/simple;
-	bh=fI7CwTbB84GwLVWKCzG5zYfxgKsLcuvRyv0WzVH9QV8=;
+	s=arc-20240116; t=1778104302; c=relaxed/simple;
+	bh=FzCtsvvJktcwIZ1wUZhKLVgQ/60zQdzBFPdyJsVc0P4=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=LoUZ+KNYy8ij5OT+ohq6JZM0L/VaheKyQGd54C1TF6e6AkIsbxsICy74dXiXp9elW9Qg/UHixaPdMvz/kt2ZcuiiX1WpC8uz6Zn7SgP4kSesYrmD0eHa/8RZT4cAxcND5RcZQhh/9j+RgOiusiKsrWJ+Xoa4zfy96GcM+6DYZRM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TnL92aUQ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 530D4C2BCC4;
-	Wed,  6 May 2026 21:51:29 +0000 (UTC)
+	 MIME-Version; b=do4Y8x7gJQZN1vCbK5b0tmTEgn/gSnHqQ11ALq4OzZVoJI9Q6BPREzZCbtdgTQ10505Zboru5V+p9DDJJ3Nw3eEqquk2ozCXX42G17dbjUadXUI0jLPNdSrq7LzyGlX4glVbmq68H4GRbQRd2mNCYLGAkp3+A86pxl3D0bOaakA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WuAPpZL7; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4D9FC2BCC4;
+	Wed,  6 May 2026 21:51:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778104295;
-	bh=fI7CwTbB84GwLVWKCzG5zYfxgKsLcuvRyv0WzVH9QV8=;
+	s=k20201202; t=1778104302;
+	bh=FzCtsvvJktcwIZ1wUZhKLVgQ/60zQdzBFPdyJsVc0P4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TnL92aUQwSrBdEOF3K7nXMIDzArS3BUzdbQssR6a1vx8nS7LkcasmIKUGhc550zUk
-	 df+5rSDgZkdHWBX1WNoNPaesQdoFIGH512W/zldc6rOh/y93OMvA6BRIl22d7mj89D
-	 Ydh89Y6hSgMp2tBaErjhPRqvo0Gc1JopZL+DJqoDWSjxMjnHyb8usacwhAXsAYGNQL
-	 /T+p9sGBBZCokTxEVX2JF3zG3C1ydxEWxY9pTuH0MsyvHtCY1CEzgfa8h+iwGoN9cN
-	 r2DztTJIYacHakSgaOrS19mv6LPwZoHryniwCuX6EHSJqqssqBNydbYcZnVguNoW1H
-	 8278iKpzwY/kw==
+	b=WuAPpZL7RMrPTI990v7VfJ1Z6y+Tz2GFskBvnJPeEs/T1IsTAGy7BbpsS8iE7y4ln
+	 YVvhh302ow/ck+EAWzvUzrijue4EPqDJUgEkeJFW4iVndoTvnX+6Qmv7FzS7NHFpA4
+	 A5mwVMROnLBpMnX5Hb0aKGd8aFb+h+SvUOo9bnQh3pxAmJMp/3u4F7PdH0G12EO94/
+	 jKq9LfVrFK5A5AFTqKScYCMldkc/HP8gEPop0etXaEyPsoObF+v2+vvCs5JSwSyFys
+	 mMCWOLd3MUX5kmTlh2n1dzXqgI/H/Oria+jim9BAh9bu7jYHAdeWzU1/YC3a8JAYIY
+	 aJTgUobK/Ql1w==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -76,10 +76,11 @@ Cc: driver-core@lists.linux.dev,
 	linux-pm@vger.kernel.org,
 	linux-pwm@vger.kernel.org,
 	linux-pci@vger.kernel.org,
-	rust-for-linux@vger.kernel.org
-Subject: [PATCH v2 02/25] rust: types: add `ForLt` trait for higher-ranked lifetime support
-Date: Wed,  6 May 2026 23:50:38 +0200
-Message-ID: <20260506215113.851360-3-dakr@kernel.org>
+	rust-for-linux@vger.kernel.org,
+	Danilo Krummrich <dakr@kernel.org>
+Subject: [PATCH v2 03/25] rust: device: generalize drvdata methods over ForLt
+Date: Wed,  6 May 2026 23:50:39 +0200
+Message-ID: <20260506215113.851360-4-dakr@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260506215113.851360-1-dakr@kernel.org>
 References: <20260506215113.851360-1-dakr@kernel.org>
@@ -90,31 +91,31 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 820344E0DDF
+X-Rspamd-Queue-Id: 979184E0E0E
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [0.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-8796-lists,linux-pwm=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8797-lists,linux-pwm=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[33];
 	FREEMAIL_TO(0.00)[linuxfoundation.org,kernel.org,nvidia.com,google.com,intel.com,linaro.org,samsung.com,gmail.com,arm.com,posteo.de,garyguo.net,protonmail.com,umich.edu,linux.dev,collabora.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[32];
-	TO_DN_NONE(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[dakr@kernel.org,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-0.999];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-pwm];
@@ -122,478 +123,422 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	FROM_HAS_DN(0.00)[]
 X-Rspamd-Action: no action
 
-From: Gary Guo <gary@garyguo.net>
+Generalize set_drvdata(), drvdata_obtain() and drvdata_borrow() to take
+F: ForLt, enabling Higher-Ranked Lifetime Types (HRT) for device private
+data.
 
-There are a few cases, e.g. when dealing with data referencing each other,
-one might want to write code that are generic over lifetimes. For example,
-if you want take a function that takes `&'a Foo` and gives `Bar<'a>`, you
-can write:
+The data is initialized as F::Of<'bound> and stored as F::Of<'static>;
+ForLt guarantees covariance, making it sound to shorten the stored
+'static lifetime to the borrow lifetime of &self.
 
-    f: impl for<'a> FnOnce(&'a Foo) -> Bar<'a>,
-
-However, it becomes tricky when you want that function to not have a fixed
-`Bar`, but have it be generic again. In this case, one needs something that
-is generic over types that are themselves generic over lifetimes.
-
-`ForLt` provides such support. It provides a trait `ForLt` which describes
-a type generic over lifetime. One may use `ForLt::Of<'a>` to get an
-instance of a type for a specific lifetime.
-
-For the case of cross referencing, one would almost always want the
-lifetime to be covariant. Therefore this is also made a requirement for the
-`ForLt` trait, so functions with `ForLt` trait bound can assume covariance.
-
-A macro `ForLt!()` is provided to be able to obtain a type that implements
-`ForLt`. For example, `ForLt!(for<'a> Bar<'a>)` would yield a type that
-`<TheType as ForLt>::Of<'a>` is `Bar<'a>`. This also works with lifetime
-elision, e.g. `ForLt!(Bar<'_>)` or for types without lifetime at all, e.g.
-`ForLt!(u32)`.
-
-The API design draws inspiration from the higher-kinded-types [1] crate,
-however different design decision has been taken (e.g. covariance
-requirement) and the implementation is independent.
-
-License headers use "Apache-2.0 OR MIT" because I anticipate this to be
-used in pin-init crate too which is licensed as such.
-
-Link: https://docs.rs/higher-kinded-types/ [1]
-
-Signed-off-by: Gary Guo <gary@garyguo.net>
+Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- rust/Makefile               |   1 +
- rust/kernel/types.rs        |   4 +
- rust/kernel/types/for_lt.rs | 117 +++++++++++++++++
- rust/macros/for_lt.rs       | 242 ++++++++++++++++++++++++++++++++++++
- rust/macros/lib.rs          |  12 ++
- 5 files changed, 376 insertions(+)
- create mode 100644 rust/kernel/types/for_lt.rs
- create mode 100644 rust/macros/for_lt.rs
+ rust/kernel/auxiliary.rs |  7 ++--
+ rust/kernel/device.rs    | 75 ++++++++++++++++++++++++++++------------
+ rust/kernel/driver.rs    | 15 +++++---
+ rust/kernel/i2c.rs       | 13 ++++---
+ rust/kernel/pci.rs       | 11 +++---
+ rust/kernel/platform.rs  | 11 +++---
+ rust/kernel/usb.rs       | 11 +++---
+ 7 files changed, 96 insertions(+), 47 deletions(-)
 
-diff --git a/rust/Makefile b/rust/Makefile
-index b361bfedfdf0..c5a9a3339416 100644
---- a/rust/Makefile
-+++ b/rust/Makefile
-@@ -110,6 +110,7 @@ syn-cfgs := \
-     feature="parsing" \
-     feature="printing" \
-     feature="proc-macro" \
-+    feature="visit" \
-     feature="visit-mut"
- 
- syn-flags := \
-diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
-index 4329d3c2c2e5..3119401dcb9f 100644
---- a/rust/kernel/types.rs
-+++ b/rust/kernel/types.rs
-@@ -11,6 +11,10 @@
- };
- use pin_init::{PinInit, Wrapper, Zeroable};
- 
-+#[doc(hidden)]
-+pub mod for_lt;
-+pub use for_lt::ForLt;
-+
- /// Used to transfer ownership to and from foreign (non-Rust) languages.
- ///
- /// Ownership is transferred from Rust to a foreign language by calling [`Self::into_foreign`] and
-diff --git a/rust/kernel/types/for_lt.rs b/rust/kernel/types/for_lt.rs
-new file mode 100644
-index 000000000000..22b4518a115b
---- /dev/null
-+++ b/rust/kernel/types/for_lt.rs
-@@ -0,0 +1,117 @@
-+// SPDX-License-Identifier: Apache-2.0 OR MIT
-+
-+//! Provide implementation and test of the `ForLt` trait and macro.
-+//!
-+//! This module is hidden and user should just use `ForLt!` directly.
-+
-+use core::marker::PhantomData;
-+
-+/// Representation of types generic over a lifetime.
-+///
-+/// The type must be covariant over the generic lifetime, i.e. the lifetime parameter
-+/// can be soundly shorterned.
-+///
-+/// The lifetime involved must be covariant.
-+///
-+/// # Macro
-+///
-+/// It is not recommended to implement this trait directly. `ForLt!` macro is provided to obtain a
-+/// type that implements this trait.
-+///
-+/// The full syntax is
-+/// ```
-+/// # use kernel::types::ForLt;
-+/// # fn expect_lt<F: ForLt>() {}
-+/// # struct TypeThatUse<'a>(&'a ());
-+/// # expect_lt::<
-+/// ForLt!(for<'a> TypeThatUse<'a>)
-+/// # >();
-+/// ```
-+/// which gives a type so that `<ForLt!(for<'a> TypeThatUse<'a>) as ForLt>::Of<'b>`
-+/// is `TypeThatUse<'b>`.
-+///
-+/// You may also use a short-hand syntax which works similar to lifetime elision.
-+/// The macro also accepts types that does not involved lifetime at all.
-+/// ```
-+/// # use kernel::types::ForLt;
-+/// # fn expect_lt<F: ForLt>() {}
-+/// # struct TypeThatUse<'a>(&'a ());
-+/// # expect_lt::<
-+/// ForLt!(TypeThatUse<'_>) // Equivalent to `ForLt!(for<'a> TypeThatUse<'a>)`
-+/// # >();
-+/// # expect_lt::<
-+/// ForLt!(&u32) // Equivalent to `ForLt!(for<'a> &'a u32)`
-+/// # >();
-+/// # expect_lt::<
-+/// ForLt!(u32) // Equivalent to `ForLt!(for<'a> u32)`
-+/// # >();
-+/// ```
-+///
-+/// The macro will attempt to prove that the type is indeed covariant over the lifetime supplied.
-+/// When it cannot be syntactically proven, it will emit checks to ask the Rust compiler to prove
-+/// it.
-+/// ```ignore,compile_fail
-+/// # use kernel::types::ForLt;
-+/// # fn expect_lt<F: ForLt>() {}
-+/// # expect_lt::<
-+/// ForLt!(fn(&u32)) // Contravariant, will fail compilation.
-+/// # >();
-+/// ```
-+///
-+/// There is a limitation if the type refer to generic parameters; if the macro cannot prove the
-+/// covariance syntactically, the emitted checks will fail the compilation as it needs to refer to
-+/// the generic parameter but is in a separate item.
-+/// ```
-+/// # use kernel::types::ForLt;
-+/// fn expect_lt<F: ForLt>() {}
-+/// # #[allow(clippy::unnecessary_safety_comment, reason = "false positive")]
-+/// fn generic_fn<T: 'static>() {
-+///     // Syntactically proven by the macro
-+///     expect_lt::<ForLt!(&T)>();
-+///     // Syntactically proven by the macro
-+///     expect_lt::<ForLt!(&KBox<T>)>();
-+///     // Cannot be syntactically proven, need to check covariance of `KBox`
-+///     // expect_lt::<ForLt!(&KBox<&T>)>();
-+/// }
-+/// ```
-+///
-+/// # Safety
-+///
-+/// `Self::Of<'a>` must be covariant over the lifetime `'a`.
-+pub unsafe trait ForLt {
-+    /// The type parameterized by the lifetime.
-+    type Of<'a>: 'a;
-+
-+    /// Cast a reference to a shorter lifetime.
-+    #[inline(always)]
-+    fn cast_ref<'r, 'short: 'r, 'long: 'short>(long: &'r Self::Of<'long>) -> &'r Self::Of<'short> {
-+        // SAFETY: This is sound as this trait guarantees covariance.
-+        unsafe { core::mem::transmute(long) }
-+    }
-+}
-+pub use macros::ForLt;
-+
-+/// This is intended to be an "unsafe-to-refer-to" type.
-+///
-+/// Must only be used by the `ForLt!` macro.
-+///
-+/// `T` is the magic `dyn for<'a> WithLt<'a, TypeThatUse<'a>>` generated by macro.
-+///
-+/// `WF` is a type that the macro can use to assert some specific type is well-formed.
-+///
-+/// `N` is to provide the macro a place to emit arbitrary items, in case it needs to prove
-+/// additional properties.
-+#[doc(hidden)]
-+pub struct UnsafeForLtImpl<T: ?Sized, WF, const N: usize>(PhantomData<(WF, T)>);
-+
-+// This is a helper trait for implementation `ForLt` to be able to use HRTB.
-+#[doc(hidden)]
-+pub trait WithLt<'a> {
-+    type Of: 'a;
-+}
-+
-+// SAFETY: In `ForLt!` macro, a covariance proof is generated when naming `UnsafeForLtImpl`
-+// and it will fail to evaluate if the type is not covariant.
-+unsafe impl<T: ?Sized + for<'a> WithLt<'a>, WF> ForLt for UnsafeForLtImpl<T, WF, 0> {
-+    type Of<'a> = <T as WithLt<'a>>::Of;
-+}
-diff --git a/rust/macros/for_lt.rs b/rust/macros/for_lt.rs
-new file mode 100644
-index 000000000000..df2027789713
---- /dev/null
-+++ b/rust/macros/for_lt.rs
-@@ -0,0 +1,242 @@
-+// SPDX-License-Identifier: Apache-2.0 OR MIT
-+
-+use proc_macro2::{
-+    Span,
-+    TokenStream, //
-+};
-+use quote::{
-+    format_ident,
-+    quote, //
-+};
-+use syn::{
-+    parse::{
-+        Parse,
-+        ParseStream, //
-+    },
-+    visit::Visit,
-+    visit_mut::VisitMut,
-+    Lifetime,
-+    Result,
-+    Token,
-+    Type, //
-+};
-+
-+pub(crate) enum HigherRankedType {
-+    Explicit {
-+        _for_token: Token![for],
-+        _lt_token: Token![<],
-+        lifetime: Lifetime,
-+        _gt_token: Token![>],
-+        ty: Type,
-+    },
-+    Implicit {
-+        ty: Type,
-+    },
-+}
-+
-+impl Parse for HigherRankedType {
-+    fn parse(input: ParseStream<'_>) -> Result<Self> {
-+        if input.peek(Token![for]) {
-+            Ok(Self::Explicit {
-+                _for_token: input.parse()?,
-+                _lt_token: input.parse()?,
-+                lifetime: input.parse()?,
-+                _gt_token: input.parse()?,
-+                ty: input.parse()?,
-+            })
-+        } else {
-+            Ok(Self::Implicit { ty: input.parse()? })
-+        }
-+    }
-+}
-+
-+trait TypeExt {
-+    fn expand_elided_lifetime(&self, explicit_lt: &Lifetime) -> Type;
-+    fn replace_lifetime(&self, src: &Lifetime, dst: &Lifetime) -> Type;
-+    fn has_lifetime(&self, lt: &Lifetime) -> bool;
-+}
-+
-+impl TypeExt for Type {
-+    fn expand_elided_lifetime(&self, explicit_lt: &Lifetime) -> Type {
-+        struct ElidedLifetimeExpander<'a>(&'a Lifetime);
-+
-+        impl VisitMut for ElidedLifetimeExpander<'_> {
-+            fn visit_lifetime_mut(&mut self, lifetime: &mut Lifetime) {
-+                // Expand explicit `'_`
-+                if lifetime.ident == "_" {
-+                    *lifetime = self.0.clone();
-+                }
-+            }
-+
-+            fn visit_type_reference_mut(&mut self, reference: &mut syn::TypeReference) {
-+                syn::visit_mut::visit_type_reference_mut(self, reference);
-+
-+                if reference.lifetime.is_none() {
-+                    reference.lifetime = Some(self.0.clone());
-+                }
-+            }
-+        }
-+
-+        let mut ret = self.clone();
-+        ElidedLifetimeExpander(explicit_lt).visit_type_mut(&mut ret);
-+        ret
-+    }
-+
-+    fn replace_lifetime(&self, src: &Lifetime, dst: &Lifetime) -> Type {
-+        struct LifetimeReplacer<'a>(&'a Lifetime, &'a Lifetime);
-+
-+        impl VisitMut for LifetimeReplacer<'_> {
-+            fn visit_lifetime_mut(&mut self, lifetime: &mut Lifetime) {
-+                if lifetime.ident == self.0.ident {
-+                    *lifetime = self.1.clone();
-+                }
-+            }
-+        }
-+
-+        let mut ret = self.clone();
-+        LifetimeReplacer(src, dst).visit_type_mut(&mut ret);
-+        ret
-+    }
-+
-+    fn has_lifetime(&self, lt: &Lifetime) -> bool {
-+        struct HasLifetime<'a>(&'a Lifetime, bool);
-+
-+        impl Visit<'_> for HasLifetime<'_> {
-+            fn visit_lifetime(&mut self, lifetime: &Lifetime) {
-+                if lifetime.ident == self.0.ident {
-+                    self.1 = true;
-+                }
-+            }
-+        }
-+
-+        let mut visitor = HasLifetime(lt, false);
-+        visitor.visit_type(self);
-+        visitor.1
-+    }
-+}
-+
-+struct Prover<'a>(&'a Lifetime, Vec<&'a Type>);
-+
-+impl<'a> Prover<'a> {
-+    /// Prove that `ty` is covariant over `'lt`.
-+    ///
-+    /// This also needs to prove that it'll be wellformed for any instance of `'lt`.
-+    /// It can be assumed that `ty` will be wellformed if `'lt` is substituted to `'static`.
-+    fn prove(&mut self, ty: &'a Type) {
-+        match ty {
-+            Type::Paren(ty) => self.prove(&ty.elem),
-+            Type::Group(ty) => self.prove(&ty.elem),
-+
-+            // No lifetime involved
-+            Type::Never(_) => {}
-+
-+            // `[T; N]` and `[T]` is covariant over `T`.
-+            Type::Array(ty) => self.prove(&ty.elem),
-+            Type::Slice(ty) => self.prove(&ty.elem),
-+
-+            Type::Tuple(ty) => {
-+                for elem in &ty.elems {
-+                    self.prove(elem);
-+                }
-+            }
-+
-+            // `*const T` is covariant over `T`
-+            Type::Ptr(ty) if ty.const_token.is_some() => self.prove(&ty.elem),
-+
-+            // `&T` is covariant over `T` and lifetime.
-+            //
-+            // Note that if we encounter `&'other_lt T`, then we still need to make sure the type
-+            // is wellformed if `T` involves `&'lt`, so we defer to the compiler.
-+            //
-+            // This is to block cases like `ForLt!(for<'a> &'static &'a u32)`, as the presence of
-+            // the type implies `'a: 'static` but this is unsound.
-+            Type::Reference(ty)
-+                if ty.mutability.is_none() && ty.lifetime.as_ref() == Some(self.0) =>
-+            {
-+                self.prove(&ty.elem)
-+            }
-+
-+            // `&[mut] T` is covariant over lifetime.
-+            // In case we have `&[mut] NoLifetime`, we don't need to do additional checks.
-+            Type::Reference(ty) if !ty.elem.has_lifetime(self.0) => (),
-+
-+            // No mention of lifetime at all, no need to perform compiler check.
-+            ty if !ty.has_lifetime(self.0) => (),
-+
-+            // Otherwise, we need to emit checks so that compiler can determine if the types are
-+            // actually covariant.
-+            ty => self.1.push(ty),
-+        }
-+    }
-+}
-+
-+pub(crate) fn for_lt(input: HigherRankedType) -> TokenStream {
-+    let (ty, lifetime) = match input {
-+        HigherRankedType::Explicit { lifetime, ty, .. } => (ty, lifetime),
-+        HigherRankedType::Implicit { ty } => {
-+            // If there's no explicit `for<'a>` binder, inject a synthetic `'__elided` lifetime
-+            // and expand elided sites.
-+            let lifetime = Lifetime {
-+                apostrophe: Span::mixed_site(),
-+                ident: format_ident!("__elided", span = Span::mixed_site()),
-+            };
-+            (ty.expand_elided_lifetime(&lifetime), lifetime)
-+        }
-+    };
-+
-+    let mut prover = Prover(&lifetime, Vec::new());
-+    prover.prove(&ty);
-+
-+    let mut proof = Vec::new();
-+
-+    // Emit proofs for every type that requires additional compiler help in proving covariance.
-+    for (idx, required_proof) in prover.1.into_iter().enumerate() {
-+        // Insert a proof that the type is well-formed.
-+        //
-+        // This is intended to workaround a Rust compiler soundness bug related to HRTB.
-+        // https://github.com/rust-lang/rust/issues/152489
-+        //
-+        // This needs to be a struct instead of fn to avoid the implied WF bounds.
-+        let wf_proof_name = format_ident!("ProveWf{idx}");
-+        proof.push(quote!(
-+            struct #wf_proof_name<#lifetime>(
-+                ::core::marker::PhantomData<&#lifetime ()>, #required_proof
-+            );
-+        ));
-+
-+        // Insert a proof that the type is covariant.
-+        let cov_proof_name = format_ident!("prove_covariant_{idx}");
-+        proof.push(quote!(
-+            fn #cov_proof_name<'__short, '__long: '__short>(
-+                long: #wf_proof_name<'__long>
-+            ) -> #wf_proof_name<'__short> {
-+                long
-+            }
-+        ));
-+    }
-+
-+    // Make sure that the type is wellformed when substituting lifetime with `'static`.
-+    //
-+    // Currently the Rust compiler doesn't check this, see the above ProveWf documentation.
-+    //
-+    // We prefer to use this way of proving WF-ness as it can work when generics are involved.
-+    let ty_static = ty.replace_lifetime(
-+        &lifetime,
-+        &Lifetime {
-+            apostrophe: Span::mixed_site(),
-+            ident: format_ident!("static"),
-+        },
-+    );
-+
-+    quote!(
-+        ::kernel::types::for_lt::UnsafeForLtImpl::<
-+            dyn for<#lifetime> ::kernel::types::for_lt::WithLt<#lifetime, Of = #ty>,
-+            #ty_static,
-+            {
-+                #(#proof)*
-+
-+                0
-+            }
-+        >
-+    )
-+}
-diff --git a/rust/macros/lib.rs b/rust/macros/lib.rs
-index 2cfd59e0f9e7..e5f6f8318112 100644
---- a/rust/macros/lib.rs
-+++ b/rust/macros/lib.rs
-@@ -17,6 +17,7 @@
- mod concat_idents;
- mod export;
- mod fmt;
-+mod for_lt;
- mod helpers;
- mod kunit;
- mod module;
-@@ -489,3 +490,14 @@ pub fn kunit_tests(attr: TokenStream, input: TokenStream) -> TokenStream {
-         .unwrap_or_else(|e| e.into_compile_error())
-         .into()
+diff --git a/rust/kernel/auxiliary.rs b/rust/kernel/auxiliary.rs
+index 19aec94aa95b..37690fa14891 100644
+--- a/rust/kernel/auxiliary.rs
++++ b/rust/kernel/auxiliary.rs
+@@ -20,6 +20,7 @@
+     },
+     prelude::*,
+     types::{
++        ForLt,
+         ForeignOwnable,
+         Opaque, //
+     },
+@@ -46,7 +47,7 @@
+ // - `DEVICE_DRIVER_OFFSET` is the correct byte offset to the embedded `struct device_driver`.
+ unsafe impl<T: Driver + 'static> driver::DriverLayout for Adapter<T> {
+     type DriverType = bindings::auxiliary_driver;
+-    type DriverData = T;
++    type DriverData = ForLt!(T);
+     const DEVICE_DRIVER_OFFSET: usize = core::mem::offset_of!(Self::DriverType, driver);
  }
+ 
+@@ -97,7 +98,7 @@ extern "C" fn probe_callback(
+         from_result(|| {
+             let data = T::probe(adev, info);
+ 
+-            adev.as_ref().set_drvdata(data)?;
++            adev.as_ref().set_drvdata::<ForLt!(T)>(data)?;
+             Ok(0)
+         })
+     }
+@@ -112,7 +113,7 @@ extern "C" fn remove_callback(adev: *mut bindings::auxiliary_device) {
+         // SAFETY: `remove_callback` is only ever called after a successful call to
+         // `probe_callback`, hence it's guaranteed that `Device::set_drvdata()` has been called
+         // and stored a `Pin<KBox<T>>`.
+-        let data = unsafe { adev.as_ref().drvdata_borrow::<T>() };
++        let data = unsafe { adev.as_ref().drvdata_borrow::<ForLt!(T)>() };
+ 
+         T::unbind(adev, data);
+     }
+diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
+index fd50399aadea..cee61638b08c 100644
+--- a/rust/kernel/device.rs
++++ b/rust/kernel/device.rs
+@@ -10,6 +10,7 @@
+     prelude::*,
+     sync::aref::ARef,
+     types::{
++        ForLt,
+         ForeignOwnable,
+         Opaque, //
+     }, //
+@@ -202,23 +203,42 @@ pub unsafe fn as_bound(&self) -> &Device<Bound> {
+ }
+ 
+ impl Device<CoreInternal> {
+-    /// Store a pointer to the bound driver's private data.
+-    pub fn set_drvdata<T: 'static>(&self, data: impl PinInit<T, Error>) -> Result {
++    /// Store the bound driver's private data.
++    ///
++    /// `F` is the [`ForLt`] encoding of the data type. For types without a lifetime parameter,
++    /// use [`ForLt!(T)`](macro@ForLt). For lifetime-parameterized types, the data is
++    /// initialized as `F::Of<'bound>` and stored as `F::Of<'static>`; lifetimes are
++    /// erased and do not affect layout, while [`ForLt`] guarantees covariance for safe
++    /// lifetime shortening.
++    ///
++    /// [`ForLt`]: trait@ForLt
++    pub fn set_drvdata<'bound, F: ForLt>(
++        &self,
++        data: impl PinInit<F::Of<'bound>, Error>,
++    ) -> Result {
+         let data = KBox::pin_init(data, GFP_KERNEL)?;
+ 
++        // SAFETY: Lifetimes are erased and do not affect layout, so Of<'bound> and Of<'static> have
++        // identical representation. The raw pointer is type-erased through c_void anyway.
++        let ptr = KBox::into_raw(unsafe { Pin::into_inner_unchecked(data) });
 +
-+/// Obtain a type that implements `ForLt` for the given higher-ranked type.
+         // SAFETY: By the type invariants, `self.as_raw()` is a valid pointer to a `struct device`.
+-        unsafe { bindings::dev_set_drvdata(self.as_raw(), data.into_foreign().cast()) };
++        unsafe { bindings::dev_set_drvdata(self.as_raw(), ptr.cast()) };
+ 
+         Ok(())
+     }
+ 
+     /// Take ownership of the private data stored in this [`Device`].
+     ///
++    /// `F` is the [`ForLt`] encoding of the data type. The returned [`KBox`] has its lifetime
++    /// tied to `&self`, ensuring it is dropped before the device goes away.
++    ///
+     /// # Safety
+     ///
+-    /// - The type `T` must match the type of the `ForeignOwnable` previously stored by
+-    ///   [`Device::set_drvdata`].
+-    pub(crate) unsafe fn drvdata_obtain<T: 'static>(&self) -> Option<Pin<KBox<T>>> {
++    /// - `F` must match the [`ForLt`] type previously stored by [`Device::set_drvdata`].
++    ///
++    /// [`ForLt`]: trait@ForLt
++    pub(crate) unsafe fn drvdata_obtain<F: ForLt>(&self) -> Option<Pin<KBox<F::Of<'_>>>> {
+         // SAFETY: By the type invariants, `self.as_raw()` is a valid pointer to a `struct device`.
+         let ptr = unsafe { bindings::dev_get_drvdata(self.as_raw()) };
+ 
+@@ -230,24 +250,31 @@ pub(crate) unsafe fn drvdata_obtain<T: 'static>(&self) -> Option<Pin<KBox<T>>> {
+         }
+ 
+         // SAFETY:
+-        // - If `ptr` is not NULL, it comes from a previous call to `into_foreign()`.
+-        // - `dev_get_drvdata()` guarantees to return the same pointer given to `dev_set_drvdata()`
+-        //   in `into_foreign()`.
+-        Some(unsafe { Pin::<KBox<T>>::from_foreign(ptr.cast()) })
++        // - If `ptr` is not NULL, it was stored by a previous call to `set_drvdata()`, which
++        //   stores a pointer via `KBox::into_raw()`.
++        // - Lifetimes are erased and do not affect layout, so reconstructing as `F::Of<'_>`
++        //   (tied to `&self`) is sound.
++        // - `dev_get_drvdata()` guarantees to return the same pointer given to
++        //   `dev_set_drvdata()`.
++        Some(unsafe { Pin::new_unchecked(KBox::from_raw(ptr.cast())) })
+     }
+ 
+     /// Borrow the driver's private data bound to this [`Device`].
+     ///
++    /// `F` is the [`ForLt`] encoding of the data type. The returned reference has its lifetime
++    /// shortened from `'static` to `&self`'s borrow lifetime via [`ForLt::cast_ref`].
++    ///
+     /// # Safety
+     ///
+     /// - Must only be called after a preceding call to [`Device::set_drvdata`] and before the
+     ///   device is fully unbound.
+-    /// - The type `T` must match the type of the `ForeignOwnable` previously stored by
+-    ///   [`Device::set_drvdata`].
+-    pub unsafe fn drvdata_borrow<T: 'static>(&self) -> Pin<&T> {
++    /// - `F` must match the [`ForLt`] type previously stored by [`Device::set_drvdata`].
++    ///
++    /// [`ForLt`]: trait@ForLt
++    pub unsafe fn drvdata_borrow<F: ForLt>(&self) -> Pin<&F::Of<'_>> {
+         // SAFETY: `drvdata_unchecked()` has the exact same safety requirements as the ones
+         // required by this method.
+-        unsafe { self.drvdata_unchecked() }
++        unsafe { self.drvdata_unchecked::<F>() }
+     }
+ }
+ 
+@@ -258,18 +285,22 @@ impl Device<Bound> {
+     ///
+     /// - Must only be called after a preceding call to [`Device::set_drvdata`] and before
+     ///   the device is fully unbound.
+-    /// - The type `T` must match the type of the `ForeignOwnable` previously stored by
+-    ///   [`Device::set_drvdata`].
+-    unsafe fn drvdata_unchecked<T: 'static>(&self) -> Pin<&T> {
++    /// - `F` must match the [`ForLt`] type previously stored by [`Device::set_drvdata`].
++    unsafe fn drvdata_unchecked<F: ForLt>(&self) -> Pin<&F::Of<'_>> {
+         // SAFETY: By the type invariants, `self.as_raw()` is a valid pointer to a `struct device`.
+         let ptr = unsafe { bindings::dev_get_drvdata(self.as_raw()) };
+ 
+         // SAFETY:
+-        // - By the safety requirements of this function, `ptr` comes from a previous call to
+-        //   `into_foreign()`.
+-        // - `dev_get_drvdata()` guarantees to return the same pointer given to `dev_set_drvdata()`
+-        //   in `into_foreign()`.
+-        unsafe { Pin::<KBox<T>>::borrow(ptr.cast()) }
++        // - By the safety requirements of this function, `ptr` was stored by a previous call to
++        //   `set_drvdata()` via `KBox::into_raw()`.
++        // - `dev_get_drvdata()` guarantees to return the same pointer given to
++        //   `dev_set_drvdata()`.
++        let pinned: Pin<&F::Of<'static>> =
++            unsafe { Pin::<KBox<F::Of<'static>>>::borrow(ptr.cast()) };
++
++        // SAFETY: The data was pinned when stored; `cast_ref` only shortens
++        // the lifetime, so the pinning guarantee is preserved.
++        unsafe { Pin::new_unchecked(F::cast_ref(pinned.get_ref())) }
+     }
+ }
+ 
+diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
+index bb53035a1017..2ab3c0050117 100644
+--- a/rust/kernel/driver.rs
++++ b/rust/kernel/driver.rs
+@@ -99,7 +99,10 @@
+     device,
+     of,
+     prelude::*,
+-    types::Opaque,
++    types::{
++        ForLt,
++        Opaque, //
++    },
+     ThisModule, //
+ };
+ 
+@@ -112,14 +115,16 @@
+ ///
+ /// Implementors must guarantee that:
+ /// - `DriverType` is `repr(C)`,
+-/// - `DriverData` is the type of the driver's device private data.
++/// - `DriverData` is the [`ForLt`] encoding of the driver's device private data type.
+ /// - `DriverType` embeds a valid `struct device_driver` at byte offset `DEVICE_DRIVER_OFFSET`.
 +///
-+/// Please refer to the documentation of [`ForLt`] trait.
-+///
-+/// [`ForLt`]: trait.ForLt.html
-+#[proc_macro]
-+#[allow(non_snake_case)] // The macro shares the name with the trait.
-+pub fn ForLt(input: TokenStream) -> TokenStream {
-+    for_lt::for_lt(parse_macro_input!(input)).into()
-+}
++/// [`ForLt`]: trait@ForLt
+ pub unsafe trait DriverLayout {
+     /// The specific driver type embedding a `struct device_driver`.
+     type DriverType: Default;
+ 
+-    /// The type of the driver's device private data.
+-    type DriverData;
++    /// The [`ForLt`](trait@ForLt) encoding of the driver's device private data type.
++    type DriverData: ForLt;
+ 
+     /// Byte offset of the embedded `struct device_driver` within `DriverType`.
+     ///
+@@ -193,7 +198,7 @@ extern "C" fn post_unbind_callback(dev: *mut bindings::device) {
+         // be released after the driver's bus device private data is dropped.
+         //
+         // SAFETY: By the safety requirements of the `Driver` trait, `T::DriverData` is the
+-        // driver's device private data type.
++        // ForLt encoding of the driver's device private data type.
+         drop(unsafe { dev.drvdata_obtain::<T::DriverData>() });
+     }
+ 
+diff --git a/rust/kernel/i2c.rs b/rust/kernel/i2c.rs
+index 7b908f0c5a58..cde3dd7a6cc7 100644
+--- a/rust/kernel/i2c.rs
++++ b/rust/kernel/i2c.rs
+@@ -20,7 +20,10 @@
+         ARef,
+         AlwaysRefCounted, //
+     },
+-    types::Opaque, //
++    types::{
++        ForLt,
++        Opaque, //
++    }, //
+ };
+ 
+ use core::{
+@@ -98,7 +101,7 @@ macro_rules! i2c_device_table {
+ // - `DEVICE_DRIVER_OFFSET` is the correct byte offset to the embedded `struct device_driver`.
+ unsafe impl<T: Driver + 'static> driver::DriverLayout for Adapter<T> {
+     type DriverType = bindings::i2c_driver;
+-    type DriverData = T;
++    type DriverData = ForLt!(T);
+     const DEVICE_DRIVER_OFFSET: usize = core::mem::offset_of!(Self::DriverType, driver);
+ }
+ 
+@@ -165,7 +168,7 @@ extern "C" fn probe_callback(idev: *mut bindings::i2c_client) -> kernel::ffi::c_
+         from_result(|| {
+             let data = T::probe(idev, info);
+ 
+-            idev.as_ref().set_drvdata(data)?;
++            idev.as_ref().set_drvdata::<ForLt!(T)>(data)?;
+             Ok(0)
+         })
+     }
+@@ -177,7 +180,7 @@ extern "C" fn remove_callback(idev: *mut bindings::i2c_client) {
+         // SAFETY: `remove_callback` is only ever called after a successful call to
+         // `probe_callback`, hence it's guaranteed that `I2cClient::set_drvdata()` has been called
+         // and stored a `Pin<KBox<T>>`.
+-        let data = unsafe { idev.as_ref().drvdata_borrow::<T>() };
++        let data = unsafe { idev.as_ref().drvdata_borrow::<ForLt!(T)>() };
+ 
+         T::unbind(idev, data);
+     }
+@@ -189,7 +192,7 @@ extern "C" fn shutdown_callback(idev: *mut bindings::i2c_client) {
+         // SAFETY: `shutdown_callback` is only ever called after a successful call to
+         // `probe_callback`, hence it's guaranteed that `Device::set_drvdata()` has been called
+         // and stored a `Pin<KBox<T>>`.
+-        let data = unsafe { idev.as_ref().drvdata_borrow::<T>() };
++        let data = unsafe { idev.as_ref().drvdata_borrow::<ForLt!(T)>() };
+ 
+         T::shutdown(idev, data);
+     }
+diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+index af74ddff6114..fe5148f41d8b 100644
+--- a/rust/kernel/pci.rs
++++ b/rust/kernel/pci.rs
+@@ -19,7 +19,10 @@
+     },
+     prelude::*,
+     str::CStr,
+-    types::Opaque,
++    types::{
++        ForLt,
++        Opaque, //
++    },
+     ThisModule, //
+ };
+ use core::{
+@@ -64,7 +67,7 @@
+ // - `DEVICE_DRIVER_OFFSET` is the correct byte offset to the embedded `struct device_driver`.
+ unsafe impl<T: Driver + 'static> driver::DriverLayout for Adapter<T> {
+     type DriverType = bindings::pci_driver;
+-    type DriverData = T;
++    type DriverData = ForLt!(T);
+     const DEVICE_DRIVER_OFFSET: usize = core::mem::offset_of!(Self::DriverType, driver);
+ }
+ 
+@@ -115,7 +118,7 @@ extern "C" fn probe_callback(
+         from_result(|| {
+             let data = T::probe(pdev, info);
+ 
+-            pdev.as_ref().set_drvdata(data)?;
++            pdev.as_ref().set_drvdata::<ForLt!(T)>(data)?;
+             Ok(0)
+         })
+     }
+@@ -130,7 +133,7 @@ extern "C" fn remove_callback(pdev: *mut bindings::pci_dev) {
+         // SAFETY: `remove_callback` is only ever called after a successful call to
+         // `probe_callback`, hence it's guaranteed that `Device::set_drvdata()` has been called
+         // and stored a `Pin<KBox<T>>`.
+-        let data = unsafe { pdev.as_ref().drvdata_borrow::<T>() };
++        let data = unsafe { pdev.as_ref().drvdata_borrow::<ForLt!(T)>() };
+ 
+         T::unbind(pdev, data);
+     }
+diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
+index 8917d4ee499f..7ff69e3eea90 100644
+--- a/rust/kernel/platform.rs
++++ b/rust/kernel/platform.rs
+@@ -27,7 +27,10 @@
+     },
+     of,
+     prelude::*,
+-    types::Opaque,
++    types::{
++        ForLt,
++        Opaque, //
++    },
+     ThisModule, //
+ };
+ 
+@@ -50,7 +53,7 @@
+ // - `DEVICE_DRIVER_OFFSET` is the correct byte offset to the embedded `struct device_driver`.
+ unsafe impl<T: Driver + 'static> driver::DriverLayout for Adapter<T> {
+     type DriverType = bindings::platform_driver;
+-    type DriverData = T;
++    type DriverData = ForLt!(T);
+     const DEVICE_DRIVER_OFFSET: usize = core::mem::offset_of!(Self::DriverType, driver);
+ }
+ 
+@@ -103,7 +106,7 @@ extern "C" fn probe_callback(pdev: *mut bindings::platform_device) -> kernel::ff
+         from_result(|| {
+             let data = T::probe(pdev, info);
+ 
+-            pdev.as_ref().set_drvdata(data)?;
++            pdev.as_ref().set_drvdata::<ForLt!(T)>(data)?;
+             Ok(0)
+         })
+     }
+@@ -118,7 +121,7 @@ extern "C" fn remove_callback(pdev: *mut bindings::platform_device) {
+         // SAFETY: `remove_callback` is only ever called after a successful call to
+         // `probe_callback`, hence it's guaranteed that `Device::set_drvdata()` has been called
+         // and stored a `Pin<KBox<T>>`.
+-        let data = unsafe { pdev.as_ref().drvdata_borrow::<T>() };
++        let data = unsafe { pdev.as_ref().drvdata_borrow::<ForLt!(T)>() };
+ 
+         T::unbind(pdev, data);
+     }
+diff --git a/rust/kernel/usb.rs b/rust/kernel/usb.rs
+index 9c17a672cd27..9b9d3ae41087 100644
+--- a/rust/kernel/usb.rs
++++ b/rust/kernel/usb.rs
+@@ -19,7 +19,10 @@
+     },
+     prelude::*,
+     sync::aref::AlwaysRefCounted,
+-    types::Opaque,
++    types::{
++        ForLt,
++        Opaque, //
++    },
+     ThisModule, //
+ };
+ use core::{
+@@ -41,7 +44,7 @@
+ // - `DEVICE_DRIVER_OFFSET` is the correct byte offset to the embedded `struct device_driver`.
+ unsafe impl<T: Driver + 'static> driver::DriverLayout for Adapter<T> {
+     type DriverType = bindings::usb_driver;
+-    type DriverData = T;
++    type DriverData = ForLt!(T);
+     const DEVICE_DRIVER_OFFSET: usize = core::mem::offset_of!(Self::DriverType, driver);
+ }
+ 
+@@ -93,7 +96,7 @@ extern "C" fn probe_callback(
+             let data = T::probe(intf, id, info);
+ 
+             let dev: &device::Device<device::CoreInternal> = intf.as_ref();
+-            dev.set_drvdata(data)?;
++            dev.set_drvdata::<ForLt!(T)>(data)?;
+             Ok(0)
+         })
+     }
+@@ -110,7 +113,7 @@ extern "C" fn disconnect_callback(intf: *mut bindings::usb_interface) {
+         // SAFETY: `disconnect_callback` is only ever called after a successful call to
+         // `probe_callback`, hence it's guaranteed that `Device::set_drvdata()` has been called
+         // and stored a `Pin<KBox<T>>`.
+-        let data = unsafe { dev.drvdata_borrow::<T>() };
++        let data = unsafe { dev.drvdata_borrow::<ForLt!(T)>() };
+ 
+         T::disconnect(intf, data);
+     }
 -- 
 2.54.0
 
