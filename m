@@ -1,49 +1,49 @@
-Return-Path: <linux-pwm+bounces-8806-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8807-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 2NtCIpa4+2k0DwAAu9opvQ
-	(envelope-from <linux-pwm+bounces-8806-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Wed, 06 May 2026 23:54:30 +0200
+	id CBiQNqy4+2k0DwAAu9opvQ
+	(envelope-from <linux-pwm+bounces-8807-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Wed, 06 May 2026 23:54:52 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3C6024E0DE6
-	for <lists+linux-pwm@lfdr.de>; Wed, 06 May 2026 23:54:30 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 592614E0DFF
+	for <lists+linux-pwm@lfdr.de>; Wed, 06 May 2026 23:54:51 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id EB04C3022F4B
-	for <lists+linux-pwm@lfdr.de>; Wed,  6 May 2026 21:52:55 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 0FA34301D94D
+	for <lists+linux-pwm@lfdr.de>; Wed,  6 May 2026 21:53:05 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CAC963B52F0;
-	Wed,  6 May 2026 21:52:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C1CF33B47FD;
+	Wed,  6 May 2026 21:52:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vo1IzwE5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WPSEuIOI"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A513E3B3C08;
-	Wed,  6 May 2026 21:52:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D6173B3C13;
+	Wed,  6 May 2026 21:52:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778104362; cv=none; b=cllXCz4FdTPGq2YywzXHKR+BW9b20AVsZbtR241cjxs3eQPGXX6AlgtgEo0/En2L0CSaX2CrsDyBf2uvvNm2xjcR4jYYjywUiUlCaUwAO+VBCGxLrW7OTvbQTcZTcsHrqazl5um9sAZDGYeHqm8QIZfTiaa4rVKViiZ7bXPJEhw=
+	t=1778104369; cv=none; b=WJ+AeuN9M85cpk1Tzex496795iKTzgz9jqIF1iDE4B5r7MOm+uG0V57I6pNHNlz6JSxLcA94YUuC0/195r80OGFtJX9+YpIGDVKCcRSj86wj/XLHvEO5mgXqP6USdHcnAw3mWaF7DjIzmIqdcZpXTL1hx0vdOb1heukJwrhrlzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778104362; c=relaxed/simple;
-	bh=MLfMM778T9pvISlajrqiOEZI+9A8Be7jGUlckLgNLCI=;
+	s=arc-20240116; t=1778104369; c=relaxed/simple;
+	bh=/QsI18VRrkWM/0er0Ht6IXGPiMe3T+8m/tPEwZGU5xU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oPLMfiLOEJJlQ8MvvRMsGOUIo8KjSFPCs5xGsk836VsCvs+W3JEd5E9N3+I/L73uqsw5FDxz3ySdgojIcfkIasBxiTDAV7uu5n0wXuuAypgBaob9a/qWdRbkZfyXiB78c+5iqBQv+kL7FJaLoyUN7njfvRCwAYce2ex8CS485Pg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vo1IzwE5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48158C2BCC4;
-	Wed,  6 May 2026 21:52:36 +0000 (UTC)
+	 MIME-Version; b=hrP1pJ0iSOE94u2Md/kMkGtqOADZeFEjGpt2xBKXYc0UQbjkIhbjzKOswPSy8C363iWG78vpUG9SeTY2bqVf5h4mBQR08VQ/utp85pxQvBxlhMX0gveYQMtHyFol8oPcNrkZmWFmBYtPKI/vxm8/zBw1HuN49uRfwyERuvL8qCc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WPSEuIOI; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02114C2BCC9;
+	Wed,  6 May 2026 21:52:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778104362;
-	bh=MLfMM778T9pvISlajrqiOEZI+9A8Be7jGUlckLgNLCI=;
+	s=k20201202; t=1778104369;
+	bh=/QsI18VRrkWM/0er0Ht6IXGPiMe3T+8m/tPEwZGU5xU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Vo1IzwE5/2GxiHxXpRlyCshyU6iNZnsYPIJM+gjuJ3uViELs5QB0bQcjIfaHX2eXz
-	 MWO6wowOyfU9nyHXw3XLeM3NODttIhANCADb7nD+29NZpeyIT0IPKhID6ip0zI87CE
-	 his2UON8NDTeyrU2MPOTMDKtTnlA+80MN9zgFkYS/j3Wm+j6bRNUvDmpCU6plV74hy
-	 GQpjVwi6m2pIr5KTtiVrBZ2aoKQMxd7jbEHsb229AfP56LJmA+V31Z5jfTzneDBo4b
-	 wKC48Iq3v7gghLFiapaZSRke/pU3yW8WiHrEMDOas62+aXeXyao5XwZJhqzBn+uf5w
-	 Y+FwafEMtfOhQ==
+	b=WPSEuIOIw5Yoi9UWFFIZ8cjMb6orSavyW4gfg3wKuUCRAGMGsmFoaXb3fTZAzW+jt
+	 3lsol0H2mVDhm2Eu4TX214XN01cx4ec4PrmqKA/RinxBUibjudM3Y0T9i+n3kjWWLt
+	 mmR897JQkVb/hf3b33Ykuuf0NBUnfWko3v88bten+kfMjb1JjPgq39Kd73xPhQAfXs
+	 oHNTWxKJ7f3c2JkSthm9iW6H1nExAKzEfg6lvhr6U/g5CNBbq9Cx1dBF2vds2q3dVD
+	 qSfvaApH80HYC3QwZ4QjlkOEOXhu09g1OKTr/aCY2muXEDvPfHVrGixG1hUBEZlFlV
+	 u5AkHb5FrFfBw==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -78,9 +78,9 @@ Cc: driver-core@lists.linux.dev,
 	linux-pci@vger.kernel.org,
 	rust-for-linux@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v2 12/25] rust: auxiliary: make Driver trait lifetime-parameterized
-Date: Wed,  6 May 2026 23:50:48 +0200
-Message-ID: <20260506215113.851360-13-dakr@kernel.org>
+Subject: [PATCH v2 13/25] rust: auxiliary: generalize Registration over ForLt
+Date: Wed,  6 May 2026 23:50:49 +0200
+Message-ID: <20260506215113.851360-14-dakr@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260506215113.851360-1-dakr@kernel.org>
 References: <20260506215113.851360-1-dakr@kernel.org>
@@ -91,7 +91,7 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 3C6024E0DE6
+X-Rspamd-Queue-Id: 592614E0DFF
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [0.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
@@ -99,12 +99,12 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8806-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8807-lists,linux-pwm=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[33];
 	FREEMAIL_TO(0.00)[linuxfoundation.org,kernel.org,nvidia.com,google.com,intel.com,linaro.org,samsung.com,gmail.com,arm.com,posteo.de,garyguo.net,protonmail.com,umich.edu,linux.dev,collabora.com];
 	RCVD_TLS_LAST(0.00)[];
@@ -119,231 +119,226 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	NEURAL_HAM(-0.00)[-0.999];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-pwm];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
 	FROM_HAS_DN(0.00)[]
 X-Rspamd-Action: no action
 
-Make auxiliary::Driver take a lifetime parameter 'bound that ties device
-resources to the binding scope.
+Generalize Registration<T> to Registration<F: ForLt> and
+Device::registration_data<F: ForLt>() to return Pin<&F::Of<'_>>.
 
-Internally, Adapter<T: Driver> becomes Adapter<F: ForLt> with a bound
-for<'bound> F::Of<'bound>: Driver<'bound>; module_auxiliary_driver!
-wraps the driver type in ForLt!() so drivers don't have to.
+The stored 'static lifetime is shortened to the borrow lifetime of &self
+via ForLt::cast_ref; ForLt's covariance guarantee makes this sound.
 
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- drivers/gpu/drm/nova/driver.rs        |  9 ++--
- rust/kernel/auxiliary.rs              | 60 ++++++++++++++++++---------
- samples/rust/rust_driver_auxiliary.rs | 12 ++++--
- 3 files changed, 55 insertions(+), 26 deletions(-)
+ drivers/gpu/nova-core/driver.rs       |  4 +-
+ rust/kernel/auxiliary.rs              | 67 +++++++++++++++++----------
+ samples/rust/rust_driver_auxiliary.rs |  7 +--
+ 3 files changed, 50 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/gpu/drm/nova/driver.rs b/drivers/gpu/drm/nova/driver.rs
-index b1af0a099551..8e28ccad0575 100644
---- a/drivers/gpu/drm/nova/driver.rs
-+++ b/drivers/gpu/drm/nova/driver.rs
-@@ -42,18 +42,21 @@ pub(crate) struct NovaData {
- kernel::auxiliary_device_table!(
-     AUX_TABLE,
-     MODULE_AUX_TABLE,
--    <NovaDriver as auxiliary::Driver>::IdInfo,
-+    <NovaDriver as auxiliary::Driver<'_>>::IdInfo,
-     [(
-         auxiliary::DeviceId::new(NOVA_CORE_MODULE_NAME, AUXILIARY_NAME),
-         ()
-     )]
- );
- 
--impl auxiliary::Driver for NovaDriver {
-+impl<'bound> auxiliary::Driver<'bound> for NovaDriver {
-     type IdInfo = ();
-     const ID_TABLE: auxiliary::IdTable<Self::IdInfo> = &AUX_TABLE;
- 
--    fn probe(adev: &auxiliary::Device<Core>, _info: &Self::IdInfo) -> impl PinInit<Self, Error> {
-+    fn probe(
-+        adev: &'bound auxiliary::Device<Core>,
-+        _info: &'bound Self::IdInfo,
-+    ) -> impl PinInit<Self, Error> + 'bound {
-         let data = try_pin_init!(NovaData { adev: adev.into() });
- 
-         let drm = drm::Device::<Self>::new(adev.as_ref(), data)?;
-diff --git a/rust/kernel/auxiliary.rs b/rust/kernel/auxiliary.rs
-index e193ba5b7167..d2785a841380 100644
---- a/rust/kernel/auxiliary.rs
-+++ b/rust/kernel/auxiliary.rs
-@@ -38,22 +38,35 @@
+diff --git a/drivers/gpu/nova-core/driver.rs b/drivers/gpu/nova-core/driver.rs
+index d0ccfbc8d0ea..ed154cd93fa8 100644
+--- a/drivers/gpu/nova-core/driver.rs
++++ b/drivers/gpu/nova-core/driver.rs
+@@ -21,6 +21,7 @@
+         },
+         Arc,
+     },
++    types::ForLt,
  };
  
- /// An adapter for the registration of auxiliary drivers.
--pub struct Adapter<T: Driver>(T);
-+///
-+/// `F` is a [`ForLt`](trait@ForLt) type that maps lifetimes to the driver's device
-+/// private data type, i.e. `F::Of<'bound>` is the driver struct
-+/// parameterized by `'bound`. The macro `module_auxiliary_driver!`
-+/// generates this automatically via `ForLt!()`.
-+pub struct Adapter<F>(PhantomData<F>);
- 
- // SAFETY:
- // - `bindings::auxiliary_driver` is a C type declared as `repr(C)`.
--// - `T` is the type of the driver's device private data.
-+// - `F::Of<'static>` is the stored type of the driver's device private data.
- // - `struct auxiliary_driver` embeds a `struct device_driver`.
- // - `DEVICE_DRIVER_OFFSET` is the correct byte offset to the embedded `struct device_driver`.
--unsafe impl<T: Driver + 'static> driver::DriverLayout for Adapter<T> {
-+unsafe impl<F> driver::DriverLayout for Adapter<F>
-+where
-+    F: ForLt + 'static,
-+    for<'bound> F::Of<'bound>: Driver<'bound>,
-+{
-     type DriverType = bindings::auxiliary_driver;
--    type DriverData = ForLt!(T);
-+    type DriverData = F;
-     const DEVICE_DRIVER_OFFSET: usize = core::mem::offset_of!(Self::DriverType, driver);
+ use crate::gpu::Gpu;
+@@ -32,7 +33,8 @@
+ pub(crate) struct NovaCore {
+     #[pin]
+     pub(crate) gpu: Gpu,
+-    _reg: Devres<auxiliary::Registration<()>>,
++    #[allow(clippy::type_complexity)]
++    _reg: Devres<auxiliary::Registration<ForLt!(())>>,
  }
  
- // SAFETY: A call to `unregister` for a given instance of `DriverType` is guaranteed to be valid if
- // a preceding call to `register` has been successful.
--unsafe impl<T: Driver + 'static> driver::RegistrationOps for Adapter<T> {
-+unsafe impl<F> driver::RegistrationOps for Adapter<F>
-+where
-+    F: ForLt + 'static,
-+    for<'bound> F::Of<'bound>: Driver<'bound>,
-+{
-     unsafe fn register(
-         adrv: &Opaque<Self::DriverType>,
-         name: &'static CStr,
-@@ -64,7 +77,7 @@ unsafe fn register(
-             (*adrv.get()).name = name.as_char_ptr();
-             (*adrv.get()).probe = Some(Self::probe_callback);
-             (*adrv.get()).remove = Some(Self::remove_callback);
--            (*adrv.get()).id_table = T::ID_TABLE.as_ptr();
-+            (*adrv.get()).id_table = <F::Of<'static> as Driver<'static>>::ID_TABLE.as_ptr();
+ const BAR0_SIZE: usize = SZ_16M;
+diff --git a/rust/kernel/auxiliary.rs b/rust/kernel/auxiliary.rs
+index d2785a841380..cbfb32298fde 100644
+--- a/rust/kernel/auxiliary.rs
++++ b/rust/kernel/auxiliary.rs
+@@ -288,12 +288,16 @@ pub fn parent(&self) -> &device::Device<device::Bound> {
+ 
+     /// Returns a pinned reference to the registration data set by the registering (parent) driver.
+     ///
+-    /// Returns [`EINVAL`] if `T` does not match the type used by the parent driver when calling
++    /// `F` is the [`ForLt`](trait@ForLt) encoding of the data type. The returned
++    /// reference has its lifetime shortened from `'static` to `&self`'s borrow lifetime via
++    /// [`ForLt::cast_ref`].
++    ///
++    /// Returns [`EINVAL`] if `F` does not match the type used by the parent driver when calling
+     /// [`Registration::new()`].
+     ///
+     /// Returns [`ENOENT`] if no registration data has been set, e.g. when the device was
+     /// registered by a C driver.
+-    pub fn registration_data<T: 'static>(&self) -> Result<Pin<&T>> {
++    pub fn registration_data<F: ForLt>(&self) -> Result<Pin<&F::Of<'_>>> {
+         // SAFETY: By the type invariant, `self.as_raw()` is a valid `struct auxiliary_device`.
+         let ptr = unsafe { (*self.as_raw()).registration_data_rust };
+         if ptr.is_null() {
+@@ -306,18 +310,23 @@ pub fn registration_data<T: 'static>(&self) -> Result<Pin<&T>> {
+ 
+         // SAFETY: `ptr` is non-null and was set via `into_foreign()` in `Registration::new()`;
+         // `RegistrationData` is `#[repr(C)]` with `type_id` at offset 0, so reading a `TypeId`
+-        // at the start of the allocation is valid regardless of `T`.
++        // at the start of the allocation is valid regardless of `F`.
+         let type_id = unsafe { ptr.cast::<TypeId>().read() };
+-        if type_id != TypeId::of::<T>() {
++        if type_id != TypeId::of::<F::Of<'static>>() {
+             return Err(EINVAL);
          }
  
-         // SAFETY: `adrv` is guaranteed to be a valid `DriverType`.
-@@ -79,7 +92,11 @@ unsafe fn unregister(adrv: &Opaque<Self::DriverType>) {
+-        // SAFETY: The `TypeId` check above confirms that the stored type is `T`; `ptr` remains
+-        // valid until `Registration::drop()` calls `from_foreign()`.
+-        let wrapper = unsafe { Pin::<KBox<RegistrationData<T>>>::borrow(ptr) };
++        // SAFETY: The `TypeId` check above confirms that the stored type matches
++        // `F::Of<'static>`; `ptr` remains valid until `Registration::drop()` calls
++        // `from_foreign()`.
++        let wrapper = unsafe { Pin::<KBox<RegistrationData<F::Of<'static>>>>::borrow(ptr) };
+ 
+         // SAFETY: `data` is a structurally pinned field of `RegistrationData`.
+-        Ok(unsafe { wrapper.map_unchecked(|w| &w.data) })
++        let pinned: Pin<&F::Of<'static>> = unsafe { wrapper.map_unchecked(|w| &w.data) };
++
++        // SAFETY: The data was pinned when stored; `cast_ref` only shortens
++        // the lifetime, so the pinning guarantee is preserved.
++        Ok(unsafe { Pin::new_unchecked(F::cast_ref(pinned.get_ref())) })
      }
  }
  
--impl<T: Driver + 'static> Adapter<T> {
-+impl<F> Adapter<F>
-+where
-+    F: ForLt + 'static,
-+    for<'bound> F::Of<'bound>: Driver<'bound>,
-+{
-     extern "C" fn probe_callback(
-         adev: *mut bindings::auxiliary_device,
-         id: *const bindings::auxiliary_device_id,
-@@ -93,12 +110,12 @@ extern "C" fn probe_callback(
-         // SAFETY: `DeviceId` is a `#[repr(transparent)`] wrapper of `struct auxiliary_device_id`
-         // and does not add additional invariants, so it's safe to transmute.
-         let id = unsafe { &*id.cast::<DeviceId>() };
--        let info = T::ID_TABLE.info(id.index());
- 
-         from_result(|| {
--            let data = T::probe(adev, info);
-+            let info = <F::Of<'_> as Driver<'_>>::ID_TABLE.info(id.index());
-+            let data = <F::Of<'_> as Driver<'_>>::probe(adev, info);
- 
--            adev.as_ref().set_drvdata::<ForLt!(T)>(data)?;
-+            adev.as_ref().set_drvdata::<F>(data)?;
-             Ok(0)
-         })
-     }
-@@ -111,19 +128,21 @@ extern "C" fn remove_callback(adev: *mut bindings::auxiliary_device) {
-         let adev = unsafe { &*adev.cast::<Device<device::CoreInternal>>() };
- 
-         // SAFETY: `remove_callback` is only ever called after a successful call to
--        // `probe_callback`, hence it's guaranteed that `Device::set_drvdata()` has been called
--        // and stored a `Pin<KBox<T>>`.
--        let data = unsafe { adev.as_ref().drvdata_borrow::<ForLt!(T)>() };
-+        // `probe_callback`, hence it's guaranteed that drvdata has been set.
-+        let data = unsafe { adev.as_ref().drvdata_borrow::<F>() };
- 
--        T::unbind(adev, data);
-+        <F::Of<'_> as Driver<'_>>::unbind(adev, data);
-     }
- }
- 
- /// Declares a kernel module that exposes a single auxiliary driver.
- #[macro_export]
- macro_rules! module_auxiliary_driver {
--    ($($f:tt)*) => {
--        $crate::module_driver!(<T>, $crate::auxiliary::Adapter<T>, { $($f)* });
-+    (type: $type:ty, $($rest:tt)*) => {
-+        $crate::module_driver!(<T>, $crate::auxiliary::Adapter<T>, {
-+            type: $crate::types::ForLt!($type),
-+            $($rest)*
-+        });
-     };
- }
- 
-@@ -195,7 +214,7 @@ macro_rules! auxiliary_device_table {
- /// The auxiliary driver trait.
+@@ -406,43 +415,51 @@ struct RegistrationData<T> {
+ /// This type represents the registration of a [`struct auxiliary_device`]. When its parent device
+ /// is unbound, the corresponding auxiliary device will be unregistered from the system.
  ///
- /// Drivers must implement this trait in order to get an auxiliary driver registered.
--pub trait Driver {
-+pub trait Driver<'bound>: Send {
-     /// The type holding information about each device id supported by the driver.
-     ///
-     /// TODO: Use associated_type_defaults once stabilized:
-@@ -209,7 +228,10 @@ pub trait Driver {
-     /// Auxiliary driver probe.
-     ///
-     /// Called when an auxiliary device is matches a corresponding driver.
--    fn probe(dev: &Device<device::Core>, id_info: &Self::IdInfo) -> impl PinInit<Self, Error>;
-+    fn probe(
-+        dev: &'bound Device<device::Core>,
-+        id_info: &'bound Self::IdInfo,
-+    ) -> impl PinInit<Self, Error> + 'bound;
+-/// The type parameter `T` is the type of the registration data owned by the registering (parent)
+-/// driver. It can be accessed by the auxiliary driver through
+-/// [`Device::registration_data()`].
++/// The type parameter `F` is a [`ForLt`](trait@ForLt) encoding of the registration
++/// data type. For non-lifetime-parameterized types, use [`ForLt!(T)`](macro@ForLt).
++/// The data can be accessed by the auxiliary driver through [`Device::registration_data()`].
+ ///
+ /// # Invariants
+ ///
+ /// `self.adev` always holds a valid pointer to an initialized and registered
+ /// [`struct auxiliary_device`] whose `registration_data_rust` field points to a
+-/// valid `Pin<KBox<RegistrationData<T>>>`.
+-pub struct Registration<T: 'static> {
++/// valid `Pin<KBox<RegistrationData<F::Of<'static>>>>`.
++pub struct Registration<F: ForLt> {
+     adev: NonNull<bindings::auxiliary_device>,
+-    _data: PhantomData<T>,
++    _data: PhantomData<F>,
+ }
  
-     /// Auxiliary driver unbind.
+-impl<T: Send + Sync + 'static> Registration<T> {
++impl<F: ForLt> Registration<F>
++where
++    for<'a> F::Of<'a>: Send,
++{
+     /// Create and register a new auxiliary device with the given registration data.
      ///
-@@ -221,7 +243,7 @@ pub trait Driver {
-     /// operations to gracefully tear down the device.
-     ///
-     /// Otherwise, release operations for driver resources should be performed in `Self::drop`.
--    fn unbind(dev: &Device<device::Core>, this: Pin<&Self>) {
-+    fn unbind(dev: &'bound Device<device::Core>, this: Pin<&'bound Self>) {
-         let _ = (dev, this);
+     /// The `data` is owned by the registration and can be accessed through the auxiliary device
+     /// via [`Device::registration_data()`].
+-    pub fn new<E>(
+-        parent: &device::Device<device::Bound>,
++    pub fn new<'bound, E>(
++        parent: &'bound device::Device<device::Bound>,
+         name: &CStr,
+         id: u32,
+         modname: &CStr,
+-        data: impl PinInit<T, E>,
++        data: impl PinInit<F::Of<'bound>, E>,
+     ) -> Result<Devres<Self>>
+     where
+         Error: From<E>,
+     {
+         let data = KBox::pin_init::<Error>(
+             try_pin_init!(RegistrationData {
+-                type_id: TypeId::of::<T>(),
++                type_id: TypeId::of::<F::Of<'static>>(),
+                 data <- data,
+             }),
+             GFP_KERNEL,
+         )?;
+ 
++        // SAFETY: Lifetimes are erased and do not affect layout, so RegistrationData<F::Of<'bound>>
++        // and RegistrationData<F::Of<'static>> have identical representation.
++        let data: Pin<KBox<RegistrationData<F::Of<'static>>>> =
++            unsafe { core::mem::transmute(data) };
++
+         let boxed: KBox<Opaque<bindings::auxiliary_device>> = KBox::zeroed(GFP_KERNEL)?;
+         let adev = boxed.get();
+ 
+@@ -472,7 +489,9 @@ pub fn new<E>(
+         if ret != 0 {
+             // SAFETY: `registration_data` was set above via `into_foreign()`.
+             drop(unsafe {
+-                Pin::<KBox<RegistrationData<T>>>::from_foreign((*adev).registration_data_rust)
++                Pin::<KBox<RegistrationData<F::Of<'static>>>>::from_foreign(
++                    (*adev).registration_data_rust,
++                )
+             });
+ 
+             // SAFETY: `adev` is guaranteed to be a valid pointer to a
+@@ -495,7 +514,7 @@ pub fn new<E>(
      }
  }
+ 
+-impl<T: 'static> Drop for Registration<T> {
++impl<F: ForLt> Drop for Registration<F> {
+     fn drop(&mut self) {
+         // SAFETY: By the type invariant of `Self`, `self.adev.as_ptr()` is a valid registered
+         // `struct auxiliary_device`.
+@@ -503,7 +522,7 @@ fn drop(&mut self) {
+ 
+         // SAFETY: `registration_data` was set in `new()` via `into_foreign()`.
+         drop(unsafe {
+-            Pin::<KBox<RegistrationData<T>>>::from_foreign(
++            Pin::<KBox<RegistrationData<F::Of<'static>>>>::from_foreign(
+                 (*self.adev.as_ptr()).registration_data_rust,
+             )
+         });
+@@ -517,7 +536,7 @@ fn drop(&mut self) {
+ }
+ 
+ // SAFETY: A `Registration` of a `struct auxiliary_device` can be released from any thread.
+-unsafe impl<T: Send + Sync> Send for Registration<T> {}
++unsafe impl<F: ForLt> Send for Registration<F> where for<'a> F::Of<'a>: Send {}
+ 
+ // SAFETY: `Registration` does not expose any methods or fields that need synchronization.
+-unsafe impl<T: Send + Sync> Sync for Registration<T> {}
++unsafe impl<F: ForLt> Sync for Registration<F> where for<'a> F::Of<'a>: Send {}
 diff --git a/samples/rust/rust_driver_auxiliary.rs b/samples/rust/rust_driver_auxiliary.rs
-index a1b42d30580e..6baeb1dde5da 100644
+index 6baeb1dde5da..de44ba901967 100644
 --- a/samples/rust/rust_driver_auxiliary.rs
 +++ b/samples/rust/rust_driver_auxiliary.rs
-@@ -26,16 +26,19 @@
- kernel::auxiliary_device_table!(
-     AUX_TABLE,
-     MODULE_AUX_TABLE,
--    <AuxiliaryDriver as auxiliary::Driver>::IdInfo,
-+    <AuxiliaryDriver as auxiliary::Driver<'_>>::IdInfo,
-     [(auxiliary::DeviceId::new(MODULE_NAME, AUXILIARY_NAME), ())]
- );
- 
--impl auxiliary::Driver for AuxiliaryDriver {
-+impl<'bound> auxiliary::Driver<'bound> for AuxiliaryDriver {
-     type IdInfo = ();
- 
-     const ID_TABLE: auxiliary::IdTable<Self::IdInfo> = &AUX_TABLE;
- 
--    fn probe(adev: &auxiliary::Device<Core>, _info: &Self::IdInfo) -> impl PinInit<Self, Error> {
-+    fn probe(
-+        adev: &'bound auxiliary::Device<Core>,
-+        _info: &'bound Self::IdInfo,
-+    ) -> impl PinInit<Self, Error> + 'bound {
-         dev_info!(
-             adev,
-             "Probing auxiliary driver for auxiliary device with id={}\n",
-@@ -123,7 +126,8 @@ struct SampleModule {
-     #[allow(clippy::type_complexity)]
-     _pci_driver: driver::Registration<pci::Adapter<ForLt!(ParentDriver)>>,
-     #[pin]
--    _aux_driver: driver::Registration<auxiliary::Adapter<AuxiliaryDriver>>,
-+    #[allow(clippy::type_complexity)]
-+    _aux_driver: driver::Registration<auxiliary::Adapter<ForLt!(AuxiliaryDriver)>>,
+@@ -55,9 +55,10 @@ struct Data {
+     index: u32,
  }
  
- impl InPlaceModule for SampleModule {
++#[allow(clippy::type_complexity)]
+ struct ParentDriver {
+-    _reg0: Devres<auxiliary::Registration<Data>>,
+-    _reg1: Devres<auxiliary::Registration<Data>>,
++    _reg0: Devres<auxiliary::Registration<ForLt!(Data)>>,
++    _reg1: Devres<auxiliary::Registration<ForLt!(Data)>>,
+ }
+ 
+ kernel::pci_device_table!(
+@@ -100,7 +101,7 @@ fn connect(adev: &auxiliary::Device<Bound>) -> Result {
+         let dev = adev.parent();
+         let pdev: &pci::Device<Bound> = dev.try_into()?;
+ 
+-        let data = adev.registration_data::<Data>()?;
++        let data = adev.registration_data::<ForLt!(Data)>()?;
+ 
+         dev_info!(
+             dev,
 -- 
 2.54.0
 
