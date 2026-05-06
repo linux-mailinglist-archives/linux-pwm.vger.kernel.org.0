@@ -1,49 +1,49 @@
-Return-Path: <linux-pwm+bounces-8797-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8798-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6C1RG7i4+2k0DwAAu9opvQ
-	(envelope-from <linux-pwm+bounces-8797-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Wed, 06 May 2026 23:55:04 +0200
+	id IBFNIuG4+2k0DwAAu9opvQ
+	(envelope-from <linux-pwm+bounces-8798-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Wed, 06 May 2026 23:55:45 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 979184E0E0E
-	for <lists+linux-pwm@lfdr.de>; Wed, 06 May 2026 23:55:03 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id DDA054E0E4B
+	for <lists+linux-pwm@lfdr.de>; Wed, 06 May 2026 23:55:44 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id ABDF4303FF9B
-	for <lists+linux-pwm@lfdr.de>; Wed,  6 May 2026 21:51:42 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0928F30416F0
+	for <lists+linux-pwm@lfdr.de>; Wed,  6 May 2026 21:51:50 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5F1B83B3C00;
-	Wed,  6 May 2026 21:51:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AF4893B3C13;
+	Wed,  6 May 2026 21:51:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WuAPpZL7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lC59G5IQ"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3AF4E31715C;
-	Wed,  6 May 2026 21:51:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A1A431715C;
+	Wed,  6 May 2026 21:51:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778104302; cv=none; b=X3fI4FuOcSI5JaL14srEzTzlud1is8Xnk909KEbcBPY7l9eyIZtLdwozJLWvilVnPMYZRSoG5ymuG6SnKP4YwDPU/o06bJlmbWrxOcDPYrxuuaLsjm7HBBpRlgzYa5jc0yyBcGbqxHCx63mlsgD92HQOJUTSgm3oZudD26+lDUQ=
+	t=1778104309; cv=none; b=gTBgcqzcAkmqXVOV+Lt9RfEiQvsCJpKTqUKllGHt6227ERqwDyy4i4bxuFpAEsfu72e7K0lskbI1DoPxkPl/NmO4n4p0xTdhWzWB+Lrx8svCmnnbpGIYG5lvrykIB9u5JQK6wtaJQSpf4nisIJb27JRSQcRMEThFGaEvNT2BXEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778104302; c=relaxed/simple;
-	bh=FzCtsvvJktcwIZ1wUZhKLVgQ/60zQdzBFPdyJsVc0P4=;
+	s=arc-20240116; t=1778104309; c=relaxed/simple;
+	bh=CVDhFuv85MahzpR44TGGEknLyGLiFPiboA4gD9I6zS8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=do4Y8x7gJQZN1vCbK5b0tmTEgn/gSnHqQ11ALq4OzZVoJI9Q6BPREzZCbtdgTQ10505Zboru5V+p9DDJJ3Nw3eEqquk2ozCXX42G17dbjUadXUI0jLPNdSrq7LzyGlX4glVbmq68H4GRbQRd2mNCYLGAkp3+A86pxl3D0bOaakA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WuAPpZL7; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4D9FC2BCC4;
-	Wed,  6 May 2026 21:51:35 +0000 (UTC)
+	 MIME-Version; b=GI+4zdnobPW7RKEeBFJEcSz38H4WPTxzrrvw/pPnlspPuRApAXSB/58kx6wtY/9a6flUGWcFG27S3sStN9fehjKQhDa5dR0l/HyygOTeNzpPecyfrfgLc8SRUVugI+Hfhk8vlEetyQ5WQiSx4USNX3MAkUadPsg6LlXvb53ChXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lC59G5IQ; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D540C2BCFD;
+	Wed,  6 May 2026 21:51:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778104302;
-	bh=FzCtsvvJktcwIZ1wUZhKLVgQ/60zQdzBFPdyJsVc0P4=;
+	s=k20201202; t=1778104308;
+	bh=CVDhFuv85MahzpR44TGGEknLyGLiFPiboA4gD9I6zS8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WuAPpZL7RMrPTI990v7VfJ1Z6y+Tz2GFskBvnJPeEs/T1IsTAGy7BbpsS8iE7y4ln
-	 YVvhh302ow/ck+EAWzvUzrijue4EPqDJUgEkeJFW4iVndoTvnX+6Qmv7FzS7NHFpA4
-	 A5mwVMROnLBpMnX5Hb0aKGd8aFb+h+SvUOo9bnQh3pxAmJMp/3u4F7PdH0G12EO94/
-	 jKq9LfVrFK5A5AFTqKScYCMldkc/HP8gEPop0etXaEyPsoObF+v2+vvCs5JSwSyFys
-	 mMCWOLd3MUX5kmTlh2n1dzXqgI/H/Oria+jim9BAh9bu7jYHAdeWzU1/YC3a8JAYIY
-	 aJTgUobK/Ql1w==
+	b=lC59G5IQUtnI0r9rKzsfpRnjxCA4QoqhhAHTrZbDMn9NJB9otwvq6J28fuVy6FlTU
+	 pUOiPOtnFhFKeBu/0gmzCdBItP7k1DS2aTfMjfZ6HahvH38FqCuIJEjhpY0aKLdo5W
+	 nuJp+Lwns+zU1zs6qG6ppV6fPcalY8WI7V2ms+7A3s4TuJgatnoHrZZXQsU6V0maG0
+	 T4pZA3VnsL5SQq6QiH88UL/h+nENC/ZLRzODlM6leQUjLvSN8J7eNu1Of1gptHDsc4
+	 1iHZoWTm21Aa11dFgB9t5X20T8TOz1GP+Z72WWwTA6x9aQ/EwKACq2bl9D9RbIzktD
+	 fwmf1H9LDyAtg==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -78,9 +78,9 @@ Cc: driver-core@lists.linux.dev,
 	linux-pci@vger.kernel.org,
 	rust-for-linux@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v2 03/25] rust: device: generalize drvdata methods over ForLt
-Date: Wed,  6 May 2026 23:50:39 +0200
-Message-ID: <20260506215113.851360-4-dakr@kernel.org>
+Subject: [PATCH v2 04/25] rust: driver: make Adapter trait lifetime-parameterized
+Date: Wed,  6 May 2026 23:50:40 +0200
+Message-ID: <20260506215113.851360-5-dakr@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260506215113.851360-1-dakr@kernel.org>
 References: <20260506215113.851360-1-dakr@kernel.org>
@@ -91,7 +91,7 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 979184E0E0E
+X-Rspamd-Queue-Id: DDA054E0E4B
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [0.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
@@ -99,446 +99,176 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8797-lists,linux-pwm=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[33];
 	FREEMAIL_TO(0.00)[linuxfoundation.org,kernel.org,nvidia.com,google.com,intel.com,linaro.org,samsung.com,gmail.com,arm.com,posteo.de,garyguo.net,protonmail.com,umich.edu,linux.dev,collabora.com];
+	TAGGED_FROM(0.00)[bounces-8798-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[dakr@kernel.org,linux-pwm@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	NEURAL_HAM(-0.00)[-0.999];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-pwm];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	FROM_HAS_DN(0.00)[]
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-Generalize set_drvdata(), drvdata_obtain() and drvdata_borrow() to take
-F: ForLt, enabling Higher-Ranked Lifetime Types (HRT) for device private
-data.
+Parameterize the Adapter trait with a lifetime, changing the id_info(),
+of_id_info() and acpi_id_info() methods to take &'bound Device<Bound> and
+return &'bound Self::IdInfo instead of &'static.
 
-The data is initialized as F::Of<'bound> and stored as F::Of<'static>;
-ForLt guarantees covariance, making it sound to shorten the stored
-'static lifetime to the borrow lifetime of &self.
+This is needed for the ForLt conversion of bus driver traits. Once
+Driver becomes lifetime-parameterized, its IdInfo associated type may
+depend on the lifetime parameter. With Adapter<'bound>, the impl can set
+IdInfo = <F::Of<'bound> as Driver<'bound>>::IdInfo and the lifetime flows
+through naturally, avoiding the need for transmute.
+
+For the current non-lifetime-parameterized Driver trait, this is a no-op
+type relaxation; IdInfo is 'static and &'static coerces to &'bound.
 
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- rust/kernel/auxiliary.rs |  7 ++--
- rust/kernel/device.rs    | 75 ++++++++++++++++++++++++++++------------
- rust/kernel/driver.rs    | 15 +++++---
- rust/kernel/i2c.rs       | 13 ++++---
- rust/kernel/pci.rs       | 11 +++---
- rust/kernel/platform.rs  | 11 +++---
- rust/kernel/usb.rs       | 11 +++---
- 7 files changed, 96 insertions(+), 47 deletions(-)
+ rust/kernel/driver.rs   | 16 ++++++++++------
+ rust/kernel/i2c.rs      | 10 +++++-----
+ rust/kernel/platform.rs |  4 ++--
+ 3 files changed, 17 insertions(+), 13 deletions(-)
 
-diff --git a/rust/kernel/auxiliary.rs b/rust/kernel/auxiliary.rs
-index 19aec94aa95b..37690fa14891 100644
---- a/rust/kernel/auxiliary.rs
-+++ b/rust/kernel/auxiliary.rs
-@@ -20,6 +20,7 @@
-     },
-     prelude::*,
-     types::{
-+        ForLt,
-         ForeignOwnable,
-         Opaque, //
-     },
-@@ -46,7 +47,7 @@
- // - `DEVICE_DRIVER_OFFSET` is the correct byte offset to the embedded `struct device_driver`.
- unsafe impl<T: Driver + 'static> driver::DriverLayout for Adapter<T> {
-     type DriverType = bindings::auxiliary_driver;
--    type DriverData = T;
-+    type DriverData = ForLt!(T);
-     const DEVICE_DRIVER_OFFSET: usize = core::mem::offset_of!(Self::DriverType, driver);
- }
- 
-@@ -97,7 +98,7 @@ extern "C" fn probe_callback(
-         from_result(|| {
-             let data = T::probe(adev, info);
- 
--            adev.as_ref().set_drvdata(data)?;
-+            adev.as_ref().set_drvdata::<ForLt!(T)>(data)?;
-             Ok(0)
-         })
-     }
-@@ -112,7 +113,7 @@ extern "C" fn remove_callback(adev: *mut bindings::auxiliary_device) {
-         // SAFETY: `remove_callback` is only ever called after a successful call to
-         // `probe_callback`, hence it's guaranteed that `Device::set_drvdata()` has been called
-         // and stored a `Pin<KBox<T>>`.
--        let data = unsafe { adev.as_ref().drvdata_borrow::<T>() };
-+        let data = unsafe { adev.as_ref().drvdata_borrow::<ForLt!(T)>() };
- 
-         T::unbind(adev, data);
-     }
-diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
-index fd50399aadea..cee61638b08c 100644
---- a/rust/kernel/device.rs
-+++ b/rust/kernel/device.rs
-@@ -10,6 +10,7 @@
-     prelude::*,
-     sync::aref::ARef,
-     types::{
-+        ForLt,
-         ForeignOwnable,
-         Opaque, //
-     }, //
-@@ -202,23 +203,42 @@ pub unsafe fn as_bound(&self) -> &Device<Bound> {
- }
- 
- impl Device<CoreInternal> {
--    /// Store a pointer to the bound driver's private data.
--    pub fn set_drvdata<T: 'static>(&self, data: impl PinInit<T, Error>) -> Result {
-+    /// Store the bound driver's private data.
-+    ///
-+    /// `F` is the [`ForLt`] encoding of the data type. For types without a lifetime parameter,
-+    /// use [`ForLt!(T)`](macro@ForLt). For lifetime-parameterized types, the data is
-+    /// initialized as `F::Of<'bound>` and stored as `F::Of<'static>`; lifetimes are
-+    /// erased and do not affect layout, while [`ForLt`] guarantees covariance for safe
-+    /// lifetime shortening.
-+    ///
-+    /// [`ForLt`]: trait@ForLt
-+    pub fn set_drvdata<'bound, F: ForLt>(
-+        &self,
-+        data: impl PinInit<F::Of<'bound>, Error>,
-+    ) -> Result {
-         let data = KBox::pin_init(data, GFP_KERNEL)?;
- 
-+        // SAFETY: Lifetimes are erased and do not affect layout, so Of<'bound> and Of<'static> have
-+        // identical representation. The raw pointer is type-erased through c_void anyway.
-+        let ptr = KBox::into_raw(unsafe { Pin::into_inner_unchecked(data) });
-+
-         // SAFETY: By the type invariants, `self.as_raw()` is a valid pointer to a `struct device`.
--        unsafe { bindings::dev_set_drvdata(self.as_raw(), data.into_foreign().cast()) };
-+        unsafe { bindings::dev_set_drvdata(self.as_raw(), ptr.cast()) };
- 
-         Ok(())
-     }
- 
-     /// Take ownership of the private data stored in this [`Device`].
-     ///
-+    /// `F` is the [`ForLt`] encoding of the data type. The returned [`KBox`] has its lifetime
-+    /// tied to `&self`, ensuring it is dropped before the device goes away.
-+    ///
-     /// # Safety
-     ///
--    /// - The type `T` must match the type of the `ForeignOwnable` previously stored by
--    ///   [`Device::set_drvdata`].
--    pub(crate) unsafe fn drvdata_obtain<T: 'static>(&self) -> Option<Pin<KBox<T>>> {
-+    /// - `F` must match the [`ForLt`] type previously stored by [`Device::set_drvdata`].
-+    ///
-+    /// [`ForLt`]: trait@ForLt
-+    pub(crate) unsafe fn drvdata_obtain<F: ForLt>(&self) -> Option<Pin<KBox<F::Of<'_>>>> {
-         // SAFETY: By the type invariants, `self.as_raw()` is a valid pointer to a `struct device`.
-         let ptr = unsafe { bindings::dev_get_drvdata(self.as_raw()) };
- 
-@@ -230,24 +250,31 @@ pub(crate) unsafe fn drvdata_obtain<T: 'static>(&self) -> Option<Pin<KBox<T>>> {
-         }
- 
-         // SAFETY:
--        // - If `ptr` is not NULL, it comes from a previous call to `into_foreign()`.
--        // - `dev_get_drvdata()` guarantees to return the same pointer given to `dev_set_drvdata()`
--        //   in `into_foreign()`.
--        Some(unsafe { Pin::<KBox<T>>::from_foreign(ptr.cast()) })
-+        // - If `ptr` is not NULL, it was stored by a previous call to `set_drvdata()`, which
-+        //   stores a pointer via `KBox::into_raw()`.
-+        // - Lifetimes are erased and do not affect layout, so reconstructing as `F::Of<'_>`
-+        //   (tied to `&self`) is sound.
-+        // - `dev_get_drvdata()` guarantees to return the same pointer given to
-+        //   `dev_set_drvdata()`.
-+        Some(unsafe { Pin::new_unchecked(KBox::from_raw(ptr.cast())) })
-     }
- 
-     /// Borrow the driver's private data bound to this [`Device`].
-     ///
-+    /// `F` is the [`ForLt`] encoding of the data type. The returned reference has its lifetime
-+    /// shortened from `'static` to `&self`'s borrow lifetime via [`ForLt::cast_ref`].
-+    ///
-     /// # Safety
-     ///
-     /// - Must only be called after a preceding call to [`Device::set_drvdata`] and before the
-     ///   device is fully unbound.
--    /// - The type `T` must match the type of the `ForeignOwnable` previously stored by
--    ///   [`Device::set_drvdata`].
--    pub unsafe fn drvdata_borrow<T: 'static>(&self) -> Pin<&T> {
-+    /// - `F` must match the [`ForLt`] type previously stored by [`Device::set_drvdata`].
-+    ///
-+    /// [`ForLt`]: trait@ForLt
-+    pub unsafe fn drvdata_borrow<F: ForLt>(&self) -> Pin<&F::Of<'_>> {
-         // SAFETY: `drvdata_unchecked()` has the exact same safety requirements as the ones
-         // required by this method.
--        unsafe { self.drvdata_unchecked() }
-+        unsafe { self.drvdata_unchecked::<F>() }
-     }
- }
- 
-@@ -258,18 +285,22 @@ impl Device<Bound> {
-     ///
-     /// - Must only be called after a preceding call to [`Device::set_drvdata`] and before
-     ///   the device is fully unbound.
--    /// - The type `T` must match the type of the `ForeignOwnable` previously stored by
--    ///   [`Device::set_drvdata`].
--    unsafe fn drvdata_unchecked<T: 'static>(&self) -> Pin<&T> {
-+    /// - `F` must match the [`ForLt`] type previously stored by [`Device::set_drvdata`].
-+    unsafe fn drvdata_unchecked<F: ForLt>(&self) -> Pin<&F::Of<'_>> {
-         // SAFETY: By the type invariants, `self.as_raw()` is a valid pointer to a `struct device`.
-         let ptr = unsafe { bindings::dev_get_drvdata(self.as_raw()) };
- 
-         // SAFETY:
--        // - By the safety requirements of this function, `ptr` comes from a previous call to
--        //   `into_foreign()`.
--        // - `dev_get_drvdata()` guarantees to return the same pointer given to `dev_set_drvdata()`
--        //   in `into_foreign()`.
--        unsafe { Pin::<KBox<T>>::borrow(ptr.cast()) }
-+        // - By the safety requirements of this function, `ptr` was stored by a previous call to
-+        //   `set_drvdata()` via `KBox::into_raw()`.
-+        // - `dev_get_drvdata()` guarantees to return the same pointer given to
-+        //   `dev_set_drvdata()`.
-+        let pinned: Pin<&F::Of<'static>> =
-+            unsafe { Pin::<KBox<F::Of<'static>>>::borrow(ptr.cast()) };
-+
-+        // SAFETY: The data was pinned when stored; `cast_ref` only shortens
-+        // the lifetime, so the pinning guarantee is preserved.
-+        unsafe { Pin::new_unchecked(F::cast_ref(pinned.get_ref())) }
-     }
- }
- 
 diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
-index bb53035a1017..2ab3c0050117 100644
+index 2ab3c0050117..e462535f545d 100644
 --- a/rust/kernel/driver.rs
 +++ b/rust/kernel/driver.rs
-@@ -99,7 +99,10 @@
-     device,
+@@ -96,7 +96,11 @@
+ 
+ use crate::{
+     acpi,
+-    device,
++    device::{
++        self,
++        Bound,
++        Device, //
++    },
      of,
      prelude::*,
--    types::Opaque,
-+    types::{
-+        ForLt,
-+        Opaque, //
-+    },
-     ThisModule, //
- };
- 
-@@ -112,14 +115,16 @@
- ///
- /// Implementors must guarantee that:
- /// - `DriverType` is `repr(C)`,
--/// - `DriverData` is the type of the driver's device private data.
-+/// - `DriverData` is the [`ForLt`] encoding of the driver's device private data type.
- /// - `DriverType` embeds a valid `struct device_driver` at byte offset `DEVICE_DRIVER_OFFSET`.
-+///
-+/// [`ForLt`]: trait@ForLt
- pub unsafe trait DriverLayout {
-     /// The specific driver type embedding a `struct device_driver`.
-     type DriverType: Default;
- 
--    /// The type of the driver's device private data.
--    type DriverData;
-+    /// The [`ForLt`](trait@ForLt) encoding of the driver's device private data type.
-+    type DriverData: ForLt;
- 
-     /// Byte offset of the embedded `struct device_driver` within `DriverType`.
-     ///
-@@ -193,7 +198,7 @@ extern "C" fn post_unbind_callback(dev: *mut bindings::device) {
-         // be released after the driver's bus device private data is dropped.
+     types::{
+@@ -192,7 +196,7 @@ extern "C" fn post_unbind_callback(dev: *mut bindings::device) {
+         // a `struct device`.
          //
-         // SAFETY: By the safety requirements of the `Driver` trait, `T::DriverData` is the
--        // driver's device private data type.
-+        // ForLt encoding of the driver's device private data type.
-         drop(unsafe { dev.drvdata_obtain::<T::DriverData>() });
-     }
+         // INVARIANT: `dev` is valid for the duration of the `post_unbind_callback()`.
+-        let dev = unsafe { &*dev.cast::<device::Device<device::CoreInternal>>() };
++        let dev = unsafe { &*dev.cast::<Device<device::CoreInternal>>() };
  
+         // `remove()` has been completed at this point; devres resources are still valid and will
+         // be released after the driver's bus device private data is dropped.
+@@ -309,7 +313,7 @@ unsafe fn acpi_of_match_device(
+ /// of a device and a driver.
+ ///
+ /// It provides bus independent functions for device / driver interactions.
+-pub trait Adapter {
++pub trait Adapter<'bound> {
+     /// The type holding driver private data about each device id supported by the driver.
+     type IdInfo: 'static;
+ 
+@@ -319,7 +323,7 @@ pub trait Adapter {
+     /// Returns the driver's private data from the matching entry in the [`acpi::IdTable`], if any.
+     ///
+     /// If this returns `None`, it means there is no match with an entry in the [`acpi::IdTable`].
+-    fn acpi_id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
++    fn acpi_id_info(dev: &'bound Device<Bound>) -> Option<&'bound Self::IdInfo> {
+         #[cfg(not(CONFIG_ACPI))]
+         {
+             let _ = dev;
+@@ -353,7 +357,7 @@ fn acpi_id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
+     /// Returns the driver's private data from the matching entry in the [`of::IdTable`], if any.
+     ///
+     /// If this returns `None`, it means there is no match with an entry in the [`of::IdTable`].
+-    fn of_id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
++    fn of_id_info(dev: &'bound Device<Bound>) -> Option<&'bound Self::IdInfo> {
+         let table = Self::of_id_table()?;
+ 
+         #[cfg(not(any(CONFIG_OF, CONFIG_ACPI)))]
+@@ -417,7 +421,7 @@ fn of_id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
+     ///
+     /// If this returns `None`, it means that there is no match in any of the ID tables directly
+     /// associated with a [`device::Device`].
+-    fn id_info(dev: &device::Device) -> Option<&'static Self::IdInfo> {
++    fn id_info(dev: &'bound Device<Bound>) -> Option<&'bound Self::IdInfo> {
+         let id = Self::acpi_id_info(dev);
+         if id.is_some() {
+             return id;
 diff --git a/rust/kernel/i2c.rs b/rust/kernel/i2c.rs
-index 7b908f0c5a58..cde3dd7a6cc7 100644
+index cde3dd7a6cc7..208c73aa3ce3 100644
 --- a/rust/kernel/i2c.rs
 +++ b/rust/kernel/i2c.rs
-@@ -20,7 +20,10 @@
-         ARef,
-         AlwaysRefCounted, //
-     },
--    types::Opaque, //
-+    types::{
-+        ForLt,
-+        Opaque, //
-+    }, //
- };
+@@ -162,8 +162,8 @@ extern "C" fn probe_callback(idev: *mut bindings::i2c_client) -> kernel::ffi::c_
+         // INVARIANT: `idev` is valid for the duration of `probe_callback()`.
+         let idev = unsafe { &*idev.cast::<I2cClient<device::CoreInternal>>() };
  
- use core::{
-@@ -98,7 +101,7 @@ macro_rules! i2c_device_table {
- // - `DEVICE_DRIVER_OFFSET` is the correct byte offset to the embedded `struct device_driver`.
- unsafe impl<T: Driver + 'static> driver::DriverLayout for Adapter<T> {
-     type DriverType = bindings::i2c_driver;
--    type DriverData = T;
-+    type DriverData = ForLt!(T);
-     const DEVICE_DRIVER_OFFSET: usize = core::mem::offset_of!(Self::DriverType, driver);
- }
+-        let info =
+-            Self::i2c_id_info(idev).or_else(|| <Self as driver::Adapter>::id_info(idev.as_ref()));
++        let info = Self::i2c_id_info(idev)
++            .or_else(|| <Self as driver::Adapter<'_>>::id_info(idev.as_ref()));
  
-@@ -165,7 +168,7 @@ extern "C" fn probe_callback(idev: *mut bindings::i2c_client) -> kernel::ffi::c_
          from_result(|| {
              let data = T::probe(idev, info);
- 
--            idev.as_ref().set_drvdata(data)?;
-+            idev.as_ref().set_drvdata::<ForLt!(T)>(data)?;
-             Ok(0)
-         })
+@@ -198,14 +198,14 @@ extern "C" fn shutdown_callback(idev: *mut bindings::i2c_client) {
      }
-@@ -177,7 +180,7 @@ extern "C" fn remove_callback(idev: *mut bindings::i2c_client) {
-         // SAFETY: `remove_callback` is only ever called after a successful call to
-         // `probe_callback`, hence it's guaranteed that `I2cClient::set_drvdata()` has been called
-         // and stored a `Pin<KBox<T>>`.
--        let data = unsafe { idev.as_ref().drvdata_borrow::<T>() };
-+        let data = unsafe { idev.as_ref().drvdata_borrow::<ForLt!(T)>() };
  
-         T::unbind(idev, data);
+     /// The [`i2c::IdTable`] of the corresponding driver.
+-    fn i2c_id_table() -> Option<IdTable<<Self as driver::Adapter>::IdInfo>> {
++    fn i2c_id_table() -> Option<IdTable<<Self as driver::Adapter<'static>>::IdInfo>> {
+         T::I2C_ID_TABLE
      }
-@@ -189,7 +192,7 @@ extern "C" fn shutdown_callback(idev: *mut bindings::i2c_client) {
-         // SAFETY: `shutdown_callback` is only ever called after a successful call to
-         // `probe_callback`, hence it's guaranteed that `Device::set_drvdata()` has been called
-         // and stored a `Pin<KBox<T>>`.
--        let data = unsafe { idev.as_ref().drvdata_borrow::<T>() };
-+        let data = unsafe { idev.as_ref().drvdata_borrow::<ForLt!(T)>() };
  
-         T::shutdown(idev, data);
+     /// Returns the driver's private data from the matching entry in the [`i2c::IdTable`], if any.
+     ///
+     /// If this returns `None`, it means there is no match with an entry in the [`i2c::IdTable`].
+-    fn i2c_id_info(dev: &I2cClient) -> Option<&'static <Self as driver::Adapter>::IdInfo> {
++    fn i2c_id_info(dev: &I2cClient) -> Option<&'static <Self as driver::Adapter<'static>>::IdInfo> {
+         let table = Self::i2c_id_table()?;
+ 
+         // SAFETY:
+@@ -225,7 +225,7 @@ fn i2c_id_info(dev: &I2cClient) -> Option<&'static <Self as driver::Adapter>::Id
      }
-diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-index af74ddff6114..fe5148f41d8b 100644
---- a/rust/kernel/pci.rs
-+++ b/rust/kernel/pci.rs
-@@ -19,7 +19,10 @@
-     },
-     prelude::*,
-     str::CStr,
--    types::Opaque,
-+    types::{
-+        ForLt,
-+        Opaque, //
-+    },
-     ThisModule, //
- };
- use core::{
-@@ -64,7 +67,7 @@
- // - `DEVICE_DRIVER_OFFSET` is the correct byte offset to the embedded `struct device_driver`.
- unsafe impl<T: Driver + 'static> driver::DriverLayout for Adapter<T> {
-     type DriverType = bindings::pci_driver;
--    type DriverData = T;
-+    type DriverData = ForLt!(T);
-     const DEVICE_DRIVER_OFFSET: usize = core::mem::offset_of!(Self::DriverType, driver);
  }
  
-@@ -115,7 +118,7 @@ extern "C" fn probe_callback(
-         from_result(|| {
-             let data = T::probe(pdev, info);
+-impl<T: Driver + 'static> driver::Adapter for Adapter<T> {
++impl<'bound, T: Driver + 'static> driver::Adapter<'bound> for Adapter<T> {
+     type IdInfo = T::IdInfo;
  
--            pdev.as_ref().set_drvdata(data)?;
-+            pdev.as_ref().set_drvdata::<ForLt!(T)>(data)?;
-             Ok(0)
-         })
-     }
-@@ -130,7 +133,7 @@ extern "C" fn remove_callback(pdev: *mut bindings::pci_dev) {
-         // SAFETY: `remove_callback` is only ever called after a successful call to
-         // `probe_callback`, hence it's guaranteed that `Device::set_drvdata()` has been called
-         // and stored a `Pin<KBox<T>>`.
--        let data = unsafe { pdev.as_ref().drvdata_borrow::<T>() };
-+        let data = unsafe { pdev.as_ref().drvdata_borrow::<ForLt!(T)>() };
- 
-         T::unbind(pdev, data);
-     }
+     fn of_id_table() -> Option<of::IdTable<Self::IdInfo>> {
 diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
-index 8917d4ee499f..7ff69e3eea90 100644
+index 7ff69e3eea90..506731a648c2 100644
 --- a/rust/kernel/platform.rs
 +++ b/rust/kernel/platform.rs
-@@ -27,7 +27,10 @@
-     },
-     of,
-     prelude::*,
--    types::Opaque,
-+    types::{
-+        ForLt,
-+        Opaque, //
-+    },
-     ThisModule, //
- };
+@@ -101,7 +101,7 @@ extern "C" fn probe_callback(pdev: *mut bindings::platform_device) -> kernel::ff
+         //
+         // INVARIANT: `pdev` is valid for the duration of `probe_callback()`.
+         let pdev = unsafe { &*pdev.cast::<Device<device::CoreInternal>>() };
+-        let info = <Self as driver::Adapter>::id_info(pdev.as_ref());
++        let info = <Self as driver::Adapter<'_>>::id_info(pdev.as_ref());
  
-@@ -50,7 +53,7 @@
- // - `DEVICE_DRIVER_OFFSET` is the correct byte offset to the embedded `struct device_driver`.
- unsafe impl<T: Driver + 'static> driver::DriverLayout for Adapter<T> {
-     type DriverType = bindings::platform_driver;
--    type DriverData = T;
-+    type DriverData = ForLt!(T);
-     const DEVICE_DRIVER_OFFSET: usize = core::mem::offset_of!(Self::DriverType, driver);
- }
- 
-@@ -103,7 +106,7 @@ extern "C" fn probe_callback(pdev: *mut bindings::platform_device) -> kernel::ff
          from_result(|| {
              let data = T::probe(pdev, info);
- 
--            pdev.as_ref().set_drvdata(data)?;
-+            pdev.as_ref().set_drvdata::<ForLt!(T)>(data)?;
-             Ok(0)
-         })
+@@ -127,7 +127,7 @@ extern "C" fn remove_callback(pdev: *mut bindings::platform_device) {
      }
-@@ -118,7 +121,7 @@ extern "C" fn remove_callback(pdev: *mut bindings::platform_device) {
-         // SAFETY: `remove_callback` is only ever called after a successful call to
-         // `probe_callback`, hence it's guaranteed that `Device::set_drvdata()` has been called
-         // and stored a `Pin<KBox<T>>`.
--        let data = unsafe { pdev.as_ref().drvdata_borrow::<T>() };
-+        let data = unsafe { pdev.as_ref().drvdata_borrow::<ForLt!(T)>() };
- 
-         T::unbind(pdev, data);
-     }
-diff --git a/rust/kernel/usb.rs b/rust/kernel/usb.rs
-index 9c17a672cd27..9b9d3ae41087 100644
---- a/rust/kernel/usb.rs
-+++ b/rust/kernel/usb.rs
-@@ -19,7 +19,10 @@
-     },
-     prelude::*,
-     sync::aref::AlwaysRefCounted,
--    types::Opaque,
-+    types::{
-+        ForLt,
-+        Opaque, //
-+    },
-     ThisModule, //
- };
- use core::{
-@@ -41,7 +44,7 @@
- // - `DEVICE_DRIVER_OFFSET` is the correct byte offset to the embedded `struct device_driver`.
- unsafe impl<T: Driver + 'static> driver::DriverLayout for Adapter<T> {
-     type DriverType = bindings::usb_driver;
--    type DriverData = T;
-+    type DriverData = ForLt!(T);
-     const DEVICE_DRIVER_OFFSET: usize = core::mem::offset_of!(Self::DriverType, driver);
  }
  
-@@ -93,7 +96,7 @@ extern "C" fn probe_callback(
-             let data = T::probe(intf, id, info);
+-impl<T: Driver + 'static> driver::Adapter for Adapter<T> {
++impl<'bound, T: Driver + 'static> driver::Adapter<'bound> for Adapter<T> {
+     type IdInfo = T::IdInfo;
  
-             let dev: &device::Device<device::CoreInternal> = intf.as_ref();
--            dev.set_drvdata(data)?;
-+            dev.set_drvdata::<ForLt!(T)>(data)?;
-             Ok(0)
-         })
-     }
-@@ -110,7 +113,7 @@ extern "C" fn disconnect_callback(intf: *mut bindings::usb_interface) {
-         // SAFETY: `disconnect_callback` is only ever called after a successful call to
-         // `probe_callback`, hence it's guaranteed that `Device::set_drvdata()` has been called
-         // and stored a `Pin<KBox<T>>`.
--        let data = unsafe { dev.drvdata_borrow::<T>() };
-+        let data = unsafe { dev.drvdata_borrow::<ForLt!(T)>() };
- 
-         T::disconnect(intf, data);
-     }
+     fn of_id_table() -> Option<of::IdTable<Self::IdInfo>> {
 -- 
 2.54.0
 
