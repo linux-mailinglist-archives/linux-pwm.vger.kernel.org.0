@@ -1,49 +1,49 @@
-Return-Path: <linux-pwm+bounces-8809-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8810-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qGioCte4+2k0DwAAu9opvQ
-	(envelope-from <linux-pwm+bounces-8809-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Wed, 06 May 2026 23:55:35 +0200
+	id WFHdLe24+2k0DwAAu9opvQ
+	(envelope-from <linux-pwm+bounces-8810-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Wed, 06 May 2026 23:55:57 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
 Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A9F204E0E3A
-	for <lists+linux-pwm@lfdr.de>; Wed, 06 May 2026 23:55:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 3EB294E0E6B
+	for <lists+linux-pwm@lfdr.de>; Wed, 06 May 2026 23:55:57 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E9224302BBDD
-	for <lists+linux-pwm@lfdr.de>; Wed,  6 May 2026 21:53:22 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id DF563305EA14
+	for <lists+linux-pwm@lfdr.de>; Wed,  6 May 2026 21:53:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5E77C3B5305;
-	Wed,  6 May 2026 21:53:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 244793B6BFD;
+	Wed,  6 May 2026 21:53:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g+oqCDre"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c/U0zFjp"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 384D23B47C1;
-	Wed,  6 May 2026 21:53:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD4DD364052;
+	Wed,  6 May 2026 21:53:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778104383; cv=none; b=uJhbQ+Jd6ZVMqniCjtAP6HpL57Hf4BeqAM3LSeN6AuFwqNPYy6oq8FVlBBtyvt2016XMwBQrJuXDbTZUh+lnUJ6hy3tkyGKMCWRKN1n1mdvZI9cT297KYmKGUCBsqaA6mJBoKCEHafYhhkmerdB/e2nvIGHXyOteOVdQY8bBwJU=
+	t=1778104389; cv=none; b=OWb2l9LV+wUNkMRC+DpXf80Mg0zckAo5oKMudxXjOjrQr5WUf0dKrH4M0u9XcNzaZI5vMyRkBM+N4UkVGryVW2xH7U2hk7YNzv1bmRNQyWMofdopSlbAsADNAeUiXDC+CYWDbzegIYIIcrnGWDHuSqtP16UipagxPEwlnrTkpg4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778104383; c=relaxed/simple;
-	bh=8mVevI3VU2GFyXMCNKv15BqIJsRsEGfi7AurMq0Pxr0=;
+	s=arc-20240116; t=1778104389; c=relaxed/simple;
+	bh=2Eca7fHkT4mXNq9mfuLx9YKSfzIqR9YZSmP1nxSgjdA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=gcWgGLfD08JsYVb/nOrEWsOAzLHfeGlU2Qtxs1gOPvzMSH5f5TH41UFNXEbWHngKpajxrdYc7djKGPpOtJMb+XZAKEvDTIpxvYFZmnA5wVFI92ZNMCe4pwLABFjwqqUbEZHXEAawhV+ZZo9FMsy/twwEJcaVmjNfLjGLBh4D4X8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g+oqCDre; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67E64C2BCB2;
-	Wed,  6 May 2026 21:52:56 +0000 (UTC)
+	 MIME-Version; b=mjBHawDZZXAl9khGWcPIJ+zoJff6yUo6+nMzMwxlnUiCXTqk21F55wyVo0wb8GYXphWITMpfA1S7fIAofGzub/+WDeGqB0PcO9MZ3LKNFlyTfpj3eswyGCLcH2JWe0r+zzXpvOXCMpdx7ZBDWLqFiMSOzZXfl61hb3e4+tyqH6s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c/U0zFjp; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 462D1C2BCB0;
+	Wed,  6 May 2026 21:53:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778104382;
-	bh=8mVevI3VU2GFyXMCNKv15BqIJsRsEGfi7AurMq0Pxr0=;
+	s=k20201202; t=1778104389;
+	bh=2Eca7fHkT4mXNq9mfuLx9YKSfzIqR9YZSmP1nxSgjdA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=g+oqCDre+Cu2aiESBf7dxd8srf/hKwnBhb8x/s/wEh8NP8dZ4BaRC0dG8IbCwCMDq
-	 J/P/UVCB24zOMRTxxxmksShZo2ON84qYUecSU280qKanEf2PJKgjk3ptEKeXfRRLq3
-	 lUaPsx2eJRT1QV125gLGiDeE28LE8HtTJ2db1++FRenLULLG4yicOXppqBi2rPGoNA
-	 dOj0NewM4+XhAu07xDKtfvZvVUQ0ZqlsBDEjw5iY2jOxv8uUvsABpQNbtLClwcQau0
-	 iilhtyKooiFmgF9PSYMi9j2vt2V2o+7TsljfmAjDytkXXVK72Alh7gDv+LCndxUSXx
-	 LgnFMEvTLrpXQ==
+	b=c/U0zFjpQuVvANkGXt+f7jg269KYBiY/xfHKHTIewM7mkDjGNYR3IHIr4rK4JcYi8
+	 zVWWsBoXPmH6Lm+sam+HZXdXYsv9bDX1c7dMP95A7/WZJn/MtzR40bHlvRnRM32pZZ
+	 yQFLWMlEp246a65CHpumtLy9U5mtImpj/BfrwCRueOWsnjzJgcS2agZp7ZgaWriWGx
+	 gb6Szlz7fl/zK9cwm9BqM6vs6xlSg1AcyFgXtfH8UAVp/mbcEktj+opfrbP9AlUM5k
+	 oKMVXXlywUGXhD9EhWb5qOYqGiAz+XuCl4j59eTU+PdUyfkWz1phKDyIRxou/UJCe/
+	 qeyj4Hw8Xo3HQ==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -78,9 +78,9 @@ Cc: driver-core@lists.linux.dev,
 	linux-pci@vger.kernel.org,
 	rust-for-linux@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v2 15/25] rust: usb: make Driver trait lifetime-parameterized
-Date: Wed,  6 May 2026 23:50:51 +0200
-Message-ID: <20260506215113.851360-16-dakr@kernel.org>
+Subject: [PATCH v2 16/25] rust: i2c: make Driver trait lifetime-parameterized
+Date: Wed,  6 May 2026 23:50:52 +0200
+Message-ID: <20260506215113.851360-17-dakr@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260506215113.851360-1-dakr@kernel.org>
 References: <20260506215113.851360-1-dakr@kernel.org>
@@ -91,7 +91,7 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: A9F204E0E3A
+X-Rspamd-Queue-Id: 3EB294E0E6B
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [0.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
@@ -99,64 +99,66 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8809-lists,linux-pwm=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[33];
 	FREEMAIL_TO(0.00)[linuxfoundation.org,kernel.org,nvidia.com,google.com,intel.com,linaro.org,samsung.com,gmail.com,arm.com,posteo.de,garyguo.net,protonmail.com,umich.edu,linux.dev,collabora.com];
+	TAGGED_FROM(0.00)[bounces-8810-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[dakr@kernel.org,linux-pwm@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	NEURAL_HAM(-0.00)[-0.999];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-pwm];
 	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	FROM_HAS_DN(0.00)[]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[forlt:email,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,linux.dev:email]
 X-Rspamd-Action: no action
 
-Make usb::Driver take a lifetime parameter 'bound that ties device
+Make i2c::Driver take a lifetime parameter 'bound that ties device
 resources to the binding scope.
 
 Internally, Adapter<T: Driver> becomes Adapter<F: ForLt> with a bound
-for<'bound> F::Of<'bound>: Driver<'bound>; module_usb_driver! wraps the
+for<'bound> F::Of<'bound>: Driver<'bound>; module_i2c_driver! wraps the
 driver type in ForLt!() so drivers don't have to.
 
+Acked-by: Igor Korotin <igor.korotin@linux.dev>
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- rust/kernel/usb.rs              | 85 ++++++++++++++++++++-------------
- samples/rust/rust_driver_usb.rs | 14 +++---
- 2 files changed, 59 insertions(+), 40 deletions(-)
+ rust/kernel/i2c.rs              | 119 +++++++++++++++++++-------------
+ samples/rust/rust_driver_i2c.rs |  18 ++---
+ 2 files changed, 81 insertions(+), 56 deletions(-)
 
-diff --git a/rust/kernel/usb.rs b/rust/kernel/usb.rs
-index 442e456fd2d3..450be2b7c542 100644
---- a/rust/kernel/usb.rs
-+++ b/rust/kernel/usb.rs
-@@ -35,22 +35,35 @@
- };
+diff --git a/rust/kernel/i2c.rs b/rust/kernel/i2c.rs
+index 208c73aa3ce3..2216b49604b2 100644
+--- a/rust/kernel/i2c.rs
++++ b/rust/kernel/i2c.rs
+@@ -92,43 +92,58 @@ macro_rules! i2c_device_table {
+ }
  
- /// An adapter for the registration of USB drivers.
+ /// An adapter for the registration of I2C drivers.
 -pub struct Adapter<T: Driver>(T);
 +///
 +/// `F` is a [`ForLt`](trait@ForLt) type that maps lifetimes to the driver's device
 +/// private data type, i.e. `F::Of<'bound>` is the driver struct
-+/// parameterized by `'bound`. The macro `module_usb_driver!` generates
++/// parameterized by `'bound`. The macro `module_i2c_driver!` generates
 +/// this automatically via `ForLt!()`.
 +pub struct Adapter<F>(PhantomData<F>);
  
  // SAFETY:
- // - `bindings::usb_driver` is a C type declared as `repr(C)`.
+ // - `bindings::i2c_driver` is a C type declared as `repr(C)`.
 -// - `T` is the type of the driver's device private data.
 +// - `F::Of<'static>` is the stored type of the driver's device private data.
- // - `struct usb_driver` embeds a `struct device_driver`.
+ // - `struct i2c_driver` embeds a `struct device_driver`.
  // - `DEVICE_DRIVER_OFFSET` is the correct byte offset to the embedded `struct device_driver`.
 -unsafe impl<T: Driver + 'static> driver::DriverLayout for Adapter<T> {
 +unsafe impl<F> driver::DriverLayout for Adapter<F>
@@ -164,7 +166,7 @@ index 442e456fd2d3..450be2b7c542 100644
 +    F: ForLt + 'static,
 +    for<'bound> F::Of<'bound>: Driver<'bound>,
 +{
-     type DriverType = bindings::usb_driver;
+     type DriverType = bindings::i2c_driver;
 -    type DriverData = ForLt!(T);
 +    type DriverData = F;
      const DEVICE_DRIVER_OFFSET: usize = core::mem::offset_of!(Self::DriverType, driver);
@@ -179,18 +181,36 @@ index 442e456fd2d3..450be2b7c542 100644
 +    for<'bound> F::Of<'bound>: Driver<'bound>,
 +{
      unsafe fn register(
-         udrv: &Opaque<Self::DriverType>,
+         idrv: &Opaque<Self::DriverType>,
          name: &'static CStr,
-@@ -61,7 +74,7 @@ unsafe fn register(
-             (*udrv.get()).name = name.as_char_ptr();
-             (*udrv.get()).probe = Some(Self::probe_callback);
-             (*udrv.get()).disconnect = Some(Self::disconnect_callback);
--            (*udrv.get()).id_table = T::ID_TABLE.as_ptr();
-+            (*udrv.get()).id_table = <F::Of<'static> as Driver<'static>>::ID_TABLE.as_ptr();
-         }
+         module: &'static ThisModule,
+     ) -> Result {
+         build_assert!(
+-            T::ACPI_ID_TABLE.is_some() || T::OF_ID_TABLE.is_some() || T::I2C_ID_TABLE.is_some(),
++            <F::Of<'static> as Driver<'static>>::ACPI_ID_TABLE.is_some()
++                || <F::Of<'static> as Driver<'static>>::OF_ID_TABLE.is_some()
++                || <F::Of<'static> as Driver<'static>>::I2C_ID_TABLE.is_some(),
+             "At least one of ACPI/OF/Legacy tables must be present when registering an i2c driver"
+         );
  
-         // SAFETY: `udrv` is guaranteed to be a valid `DriverType`.
-@@ -76,7 +89,11 @@ unsafe fn unregister(udrv: &Opaque<Self::DriverType>) {
+-        let i2c_table = match T::I2C_ID_TABLE {
++        let i2c_table = match <F::Of<'static> as Driver<'static>>::I2C_ID_TABLE {
+             Some(table) => table.as_ptr(),
+             None => core::ptr::null(),
+         };
+ 
+-        let of_table = match T::OF_ID_TABLE {
++        let of_table = match <F::Of<'static> as Driver<'static>>::OF_ID_TABLE {
+             Some(table) => table.as_ptr(),
+             None => core::ptr::null(),
+         };
+ 
+-        let acpi_table = match T::ACPI_ID_TABLE {
++        let acpi_table = match <F::Of<'static> as Driver<'static>>::ACPI_ID_TABLE {
+             Some(table) => table.as_ptr(),
+             None => core::ptr::null(),
+         };
+@@ -154,7 +169,11 @@ unsafe fn unregister(idrv: &Opaque<Self::DriverType>) {
      }
  }
  
@@ -200,158 +220,261 @@ index 442e456fd2d3..450be2b7c542 100644
 +    F: ForLt + 'static,
 +    for<'bound> F::Of<'bound>: Driver<'bound>,
 +{
-     extern "C" fn probe_callback(
-         intf: *mut bindings::usb_interface,
-         id: *const bindings::usb_device_id,
-@@ -87,16 +104,16 @@ extern "C" fn probe_callback(
-         // INVARIANT: `intf` is valid for the duration of `probe_callback()`.
-         let intf = unsafe { &*intf.cast::<Interface<device::CoreInternal>>() };
+     extern "C" fn probe_callback(idev: *mut bindings::i2c_client) -> kernel::ffi::c_int {
+         // SAFETY: The I2C bus only ever calls the probe callback with a valid pointer to a
+         // `struct i2c_client`.
+@@ -162,13 +181,12 @@ extern "C" fn probe_callback(idev: *mut bindings::i2c_client) -> kernel::ffi::c_
+         // INVARIANT: `idev` is valid for the duration of `probe_callback()`.
+         let idev = unsafe { &*idev.cast::<I2cClient<device::CoreInternal>>() };
  
--        from_result(|| {
--            // SAFETY: `DeviceId` is a `#[repr(transparent)]` wrapper of `struct usb_device_id` and
--            // does not add additional invariants, so it's safe to transmute.
--            let id = unsafe { &*id.cast::<DeviceId>() };
-+        // SAFETY: `DeviceId` is a `#[repr(transparent)]` wrapper of `struct usb_device_id` and
-+        // does not add additional invariants, so it's safe to transmute.
-+        let id = unsafe { &*id.cast::<DeviceId>() };
+-        let info = Self::i2c_id_info(idev)
+-            .or_else(|| <Self as driver::Adapter<'_>>::id_info(idev.as_ref()));
+-
+         from_result(|| {
+-            let data = T::probe(idev, info);
++            let info = Self::i2c_id_info(idev)
++                .or_else(|| <Self as driver::Adapter<'_>>::id_info(idev.as_ref()));
++            let data = <F::Of<'_> as Driver<'_>>::probe(idev, info);
  
--            let info = T::ID_TABLE.info(id.index());
--            let data = T::probe(intf, id, info);
-+        from_result(|| {
-+            let info = <F::Of<'_> as Driver<'_>>::ID_TABLE.info(id.index());
-+            let data = <F::Of<'_> as Driver<'_>>::probe(intf, id, info);
- 
-             let dev: &device::Device<device::CoreInternal> = intf.as_ref();
--            dev.set_drvdata::<ForLt!(T)>(data)?;
-+            dev.set_drvdata::<F>(data)?;
+-            idev.as_ref().set_drvdata::<ForLt!(T)>(data)?;
++            idev.as_ref().set_drvdata::<F>(data)?;
              Ok(0)
          })
      }
-@@ -111,11 +128,10 @@ extern "C" fn disconnect_callback(intf: *mut bindings::usb_interface) {
-         let dev: &device::Device<device::CoreInternal> = intf.as_ref();
+@@ -178,11 +196,10 @@ extern "C" fn remove_callback(idev: *mut bindings::i2c_client) {
+         let idev = unsafe { &*idev.cast::<I2cClient<device::CoreInternal>>() };
  
-         // SAFETY: `disconnect_callback` is only ever called after a successful call to
+         // SAFETY: `remove_callback` is only ever called after a successful call to
+-        // `probe_callback`, hence it's guaranteed that `I2cClient::set_drvdata()` has been called
+-        // and stored a `Pin<KBox<T>>`.
+-        let data = unsafe { idev.as_ref().drvdata_borrow::<ForLt!(T)>() };
++        // `probe_callback`, hence it's guaranteed that drvdata has been set.
++        let data = unsafe { idev.as_ref().drvdata_borrow::<F>() };
+ 
+-        T::unbind(idev, data);
++        <F::Of<'_> as Driver<'_>>::unbind(idev, data);
+     }
+ 
+     extern "C" fn shutdown_callback(idev: *mut bindings::i2c_client) {
+@@ -190,23 +207,24 @@ extern "C" fn shutdown_callback(idev: *mut bindings::i2c_client) {
+         let idev = unsafe { &*idev.cast::<I2cClient<device::CoreInternal>>() };
+ 
+         // SAFETY: `shutdown_callback` is only ever called after a successful call to
 -        // `probe_callback`, hence it's guaranteed that `Device::set_drvdata()` has been called
 -        // and stored a `Pin<KBox<T>>`.
--        let data = unsafe { dev.drvdata_borrow::<ForLt!(T)>() };
+-        let data = unsafe { idev.as_ref().drvdata_borrow::<ForLt!(T)>() };
 +        // `probe_callback`, hence it's guaranteed that drvdata has been set.
-+        let data = unsafe { dev.drvdata_borrow::<F>() };
++        let data = unsafe { idev.as_ref().drvdata_borrow::<F>() };
  
--        T::disconnect(intf, data);
-+        <F::Of<'_> as Driver<'_>>::disconnect(intf, data);
+-        T::shutdown(idev, data);
++        <F::Of<'_> as Driver<'_>>::shutdown(idev, data);
+     }
+ 
+     /// The [`i2c::IdTable`] of the corresponding driver.
+-    fn i2c_id_table() -> Option<IdTable<<Self as driver::Adapter<'static>>::IdInfo>> {
+-        T::I2C_ID_TABLE
++    fn i2c_id_table<'bound>() -> Option<IdTable<<F::Of<'bound> as Driver<'bound>>::IdInfo>> {
++        <F::Of<'bound> as Driver<'bound>>::I2C_ID_TABLE
+     }
+ 
+     /// Returns the driver's private data from the matching entry in the [`i2c::IdTable`], if any.
+     ///
+     /// If this returns `None`, it means there is no match with an entry in the [`i2c::IdTable`].
+-    fn i2c_id_info(dev: &I2cClient) -> Option<&'static <Self as driver::Adapter<'static>>::IdInfo> {
+-        let table = Self::i2c_id_table()?;
++    fn i2c_id_info<'bound>(
++        dev: &I2cClient,
++    ) -> Option<&'bound <F::Of<'bound> as Driver<'bound>>::IdInfo> {
++        let table = Self::i2c_id_table::<'bound>()?;
+ 
+         // SAFETY:
+         // - `table` has static lifetime, hence it's valid for reads
+@@ -225,15 +243,19 @@ fn i2c_id_info(dev: &I2cClient) -> Option<&'static <Self as driver::Adapter<'sta
      }
  }
  
-@@ -281,29 +297,29 @@ macro_rules! usb_device_table {
- /// kernel::usb_device_table!(
- ///     USB_TABLE,
- ///     MODULE_USB_TABLE,
--///     <MyDriver as usb::Driver>::IdInfo,
-+///     <MyDriver as usb::Driver<'_>>::IdInfo,
+-impl<'bound, T: Driver + 'static> driver::Adapter<'bound> for Adapter<T> {
+-    type IdInfo = T::IdInfo;
++impl<'bound, F> driver::Adapter<'bound> for Adapter<F>
++where
++    F: ForLt + 'static,
++    F::Of<'bound>: Driver<'bound>,
++{
++    type IdInfo = <F::Of<'bound> as Driver<'bound>>::IdInfo;
+ 
+     fn of_id_table() -> Option<of::IdTable<Self::IdInfo>> {
+-        T::OF_ID_TABLE
++        <F::Of<'bound> as Driver<'bound>>::OF_ID_TABLE
+     }
+ 
+     fn acpi_id_table() -> Option<acpi::IdTable<Self::IdInfo>> {
+-        T::ACPI_ID_TABLE
++        <F::Of<'bound> as Driver<'bound>>::ACPI_ID_TABLE
+     }
+ }
+ 
+@@ -252,8 +274,11 @@ fn acpi_id_table() -> Option<acpi::IdTable<Self::IdInfo>> {
+ /// ```
+ #[macro_export]
+ macro_rules! module_i2c_driver {
+-    ($($f:tt)*) => {
+-        $crate::module_driver!(<T>, $crate::i2c::Adapter<T>, { $($f)* });
++    (type: $type:ty, $($rest:tt)*) => {
++        $crate::module_driver!(<T>, $crate::i2c::Adapter<T>, {
++            type: $crate::types::ForLt!($type),
++            $($rest)*
++        });
+     };
+ }
+ 
+@@ -271,7 +296,7 @@ macro_rules! module_i2c_driver {
+ /// kernel::acpi_device_table!(
+ ///     ACPI_TABLE,
+ ///     MODULE_ACPI_TABLE,
+-///     <MyDriver as i2c::Driver>::IdInfo,
++///     <MyDriver as i2c::Driver<'_>>::IdInfo,
  ///     [
- ///         (usb::DeviceId::from_id(0x1234, 0x5678), ()),
- ///         (usb::DeviceId::from_id(0xabcd, 0xef01), ()),
+ ///         (acpi::DeviceId::new(c"LNUXBEEF"), ())
+ ///     ]
+@@ -280,7 +305,7 @@ macro_rules! module_i2c_driver {
+ /// kernel::i2c_device_table!(
+ ///     I2C_TABLE,
+ ///     MODULE_I2C_TABLE,
+-///     <MyDriver as i2c::Driver>::IdInfo,
++///     <MyDriver as i2c::Driver<'_>>::IdInfo,
+ ///     [
+ ///          (i2c::DeviceId::new(c"rust_driver_i2c"), ())
+ ///     ]
+@@ -289,30 +314,30 @@ macro_rules! module_i2c_driver {
+ /// kernel::of_device_table!(
+ ///     OF_TABLE,
+ ///     MODULE_OF_TABLE,
+-///     <MyDriver as i2c::Driver>::IdInfo,
++///     <MyDriver as i2c::Driver<'_>>::IdInfo,
+ ///     [
+ ///         (of::DeviceId::new(c"test,device"), ())
  ///     ]
  /// );
  ///
--/// impl usb::Driver for MyDriver {
-+/// impl<'bound> usb::Driver<'bound> for MyDriver {
+-/// impl i2c::Driver for MyDriver {
++/// impl<'bound> i2c::Driver<'bound> for MyDriver {
  ///     type IdInfo = ();
- ///     const ID_TABLE: usb::IdTable<Self::IdInfo> = &USB_TABLE;
+ ///     const I2C_ID_TABLE: Option<i2c::IdTable<Self::IdInfo>> = Some(&I2C_TABLE);
+ ///     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
+ ///     const ACPI_ID_TABLE: Option<acpi::IdTable<Self::IdInfo>> = Some(&ACPI_TABLE);
  ///
  ///     fn probe(
--///         _interface: &usb::Interface<Core>,
--///         _id: &usb::DeviceId,
--///         _info: &Self::IdInfo,
+-///         _idev: &i2c::I2cClient<Core>,
+-///         _id_info: Option<&Self::IdInfo>,
 -///     ) -> impl PinInit<Self, Error> {
-+///         _interface: &'bound usb::Interface<Core>,
-+///         _id: &'bound usb::DeviceId,
-+///         _info: &'bound Self::IdInfo,
++///         _idev: &'bound i2c::I2cClient<Core>,
++///         _id_info: Option<&'bound Self::IdInfo>,
 +///     ) -> impl PinInit<Self, Error> + 'bound {
  ///         Err(ENODEV)
  ///     }
  ///
--///     fn disconnect(_interface: &usb::Interface<Core>, _data: Pin<&Self>) {}
-+///     fn disconnect(_interface: &'bound usb::Interface<Core>, _data: Pin<&'bound Self>) {}
+-///     fn shutdown(_idev: &i2c::I2cClient<Core>, this: Pin<&Self>) {
++///     fn shutdown(_idev: &'bound i2c::I2cClient<Core>, _this: Pin<&'bound Self>) {
+ ///     }
  /// }
  ///```
--pub trait Driver {
-+pub trait Driver<'bound> {
-     /// The type holding information about each one of the device ids supported by the driver.
-     type IdInfo: 'static;
- 
-@@ -315,15 +331,15 @@ pub trait Driver {
-     /// Called when a new USB interface is bound to this driver.
-     /// Implementers should attempt to initialize the interface here.
+-pub trait Driver: Send {
++pub trait Driver<'bound>: Send {
+     /// The type holding information about each device id supported by the driver.
+     // TODO: Use `associated_type_defaults` once stabilized:
+     //
+@@ -335,9 +360,9 @@ pub trait Driver: Send {
+     /// Called when a new i2c client is added or discovered.
+     /// Implementers should attempt to initialize the client here.
      fn probe(
--        interface: &Interface<device::Core>,
--        id: &DeviceId,
--        id_info: &Self::IdInfo,
+-        dev: &I2cClient<device::Core>,
+-        id_info: Option<&Self::IdInfo>,
 -    ) -> impl PinInit<Self, Error>;
-+        interface: &'bound Interface<device::Core>,
-+        id: &'bound DeviceId,
-+        id_info: &'bound Self::IdInfo,
++        dev: &'bound I2cClient<device::Core>,
++        id_info: Option<&'bound Self::IdInfo>,
 +    ) -> impl PinInit<Self, Error> + 'bound;
  
-     /// USB driver disconnect.
+     /// I2C driver shutdown.
      ///
-     /// Called when the USB interface is about to be unbound from this driver.
--    fn disconnect(interface: &Interface<device::Core>, data: Pin<&Self>);
-+    fn disconnect(interface: &'bound Interface<device::Core>, data: Pin<&'bound Self>);
- }
+@@ -350,7 +375,7 @@ fn probe(
+     /// This callback is distinct from final resource cleanup, as the driver instance remains valid
+     /// after it returns. Any deallocation or teardown of driver-owned resources should instead be
+     /// handled in `Self::drop`.
+-    fn shutdown(dev: &I2cClient<device::Core>, this: Pin<&Self>) {
++    fn shutdown(dev: &'bound I2cClient<device::Core>, this: Pin<&'bound Self>) {
+         let _ = (dev, this);
+     }
  
- /// A USB interface.
-@@ -486,7 +502,10 @@ unsafe impl Sync for Device<device::Bound> {}
- /// ```
- #[macro_export]
- macro_rules! module_usb_driver {
--    ($($f:tt)*) => {
--        $crate::module_driver!(<T>, $crate::usb::Adapter<T>, { $($f)* });
-+    (type: $type:ty, $($rest:tt)*) => {
-+        $crate::module_driver!(<T>, $crate::usb::Adapter<T>, {
-+            type: $crate::types::ForLt!($type),
-+            $($rest)*
-+        });
+@@ -364,7 +389,7 @@ fn shutdown(dev: &I2cClient<device::Core>, this: Pin<&Self>) {
+     /// operations to gracefully tear down the device.
+     ///
+     /// Otherwise, release operations for driver resources should be performed in `Self::drop`.
+-    fn unbind(dev: &I2cClient<device::Core>, this: Pin<&Self>) {
++    fn unbind(dev: &'bound I2cClient<device::Core>, this: Pin<&'bound Self>) {
+         let _ = (dev, this);
      }
  }
-diff --git a/samples/rust/rust_driver_usb.rs b/samples/rust/rust_driver_usb.rs
-index ab72e99e1274..271aaf415795 100644
---- a/samples/rust/rust_driver_usb.rs
-+++ b/samples/rust/rust_driver_usb.rs
-@@ -20,26 +20,26 @@ struct SampleDriver {
- kernel::usb_device_table!(
-     USB_TABLE,
-     MODULE_USB_TABLE,
--    <SampleDriver as usb::Driver>::IdInfo,
-+    <SampleDriver as usb::Driver<'_>>::IdInfo,
-     [(usb::DeviceId::from_id(0x1234, 0x5678), ()),]
- );
+diff --git a/samples/rust/rust_driver_i2c.rs b/samples/rust/rust_driver_i2c.rs
+index 6be79f9e9fb5..042a18305817 100644
+--- a/samples/rust/rust_driver_i2c.rs
++++ b/samples/rust/rust_driver_i2c.rs
+@@ -15,25 +15,25 @@
+ kernel::acpi_device_table! {
+     ACPI_TABLE,
+     MODULE_ACPI_TABLE,
+-    <SampleDriver as i2c::Driver>::IdInfo,
++    <SampleDriver as i2c::Driver<'_>>::IdInfo,
+     [(acpi::DeviceId::new(c"LNUXBEEF"), 0)]
+ }
  
--impl usb::Driver for SampleDriver {
-+impl<'bound> usb::Driver<'bound> for SampleDriver {
-     type IdInfo = ();
-     const ID_TABLE: usb::IdTable<Self::IdInfo> = &USB_TABLE;
+ kernel::i2c_device_table! {
+     I2C_TABLE,
+     MODULE_I2C_TABLE,
+-    <SampleDriver as i2c::Driver>::IdInfo,
++    <SampleDriver as i2c::Driver<'_>>::IdInfo,
+     [(i2c::DeviceId::new(c"rust_driver_i2c"), 0)]
+ }
+ 
+ kernel::of_device_table! {
+     OF_TABLE,
+     MODULE_OF_TABLE,
+-    <SampleDriver as i2c::Driver>::IdInfo,
++    <SampleDriver as i2c::Driver<'_>>::IdInfo,
+     [(of::DeviceId::new(c"test,rust_driver_i2c"), 0)]
+ }
+ 
+-impl i2c::Driver for SampleDriver {
++impl<'bound> i2c::Driver<'bound> for SampleDriver {
+     type IdInfo = u32;
+ 
+     const ACPI_ID_TABLE: Option<acpi::IdTable<Self::IdInfo>> = Some(&ACPI_TABLE);
+@@ -41,9 +41,9 @@ impl i2c::Driver for SampleDriver {
+     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
  
      fn probe(
--        intf: &usb::Interface<Core>,
--        _id: &usb::DeviceId,
--        _info: &Self::IdInfo,
+-        idev: &i2c::I2cClient<Core>,
+-        info: Option<&Self::IdInfo>,
 -    ) -> impl PinInit<Self, Error> {
-+        intf: &'bound usb::Interface<Core>,
-+        _id: &'bound usb::DeviceId,
-+        _info: &'bound Self::IdInfo,
++        idev: &'bound i2c::I2cClient<Core>,
++        info: Option<&'bound Self::IdInfo>,
 +    ) -> impl PinInit<Self, Error> + 'bound {
-         let dev: &device::Device<Core> = intf.as_ref();
-         dev_info!(dev, "Rust USB driver sample probed\n");
+         let dev = idev.as_ref();
  
-         Ok(Self { _intf: intf.into() })
+         dev_info!(dev, "Probe Rust I2C driver sample.\n");
+@@ -55,11 +55,11 @@ fn probe(
+         Ok(Self)
      }
  
--    fn disconnect(intf: &usb::Interface<Core>, _data: Pin<&Self>) {
-+    fn disconnect(intf: &'bound usb::Interface<Core>, _data: Pin<&'bound Self>) {
-         let dev: &device::Device<Core> = intf.as_ref();
-         dev_info!(dev, "Rust USB driver sample disconnected\n");
+-    fn shutdown(idev: &i2c::I2cClient<Core>, _this: Pin<&Self>) {
++    fn shutdown(idev: &'bound i2c::I2cClient<Core>, _this: Pin<&'bound Self>) {
+         dev_info!(idev.as_ref(), "Shutdown Rust I2C driver sample.\n");
      }
+ 
+-    fn unbind(idev: &i2c::I2cClient<Core>, _this: Pin<&Self>) {
++    fn unbind(idev: &'bound i2c::I2cClient<Core>, _this: Pin<&'bound Self>) {
+         dev_info!(idev.as_ref(), "Unbind Rust I2C driver sample.\n");
+     }
+ }
 -- 
 2.54.0
 
