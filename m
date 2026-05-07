@@ -1,370 +1,382 @@
-Return-Path: <linux-pwm+bounces-8835-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8836-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6Au3BFWC/GkcQwAAu9opvQ
-	(envelope-from <linux-pwm+bounces-8835-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Thu, 07 May 2026 14:15:17 +0200
+	id KL+8Bn6E/GmOQwAAu9opvQ
+	(envelope-from <linux-pwm+bounces-8836-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Thu, 07 May 2026 14:24:30 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id B28794E80EE
-	for <lists+linux-pwm@lfdr.de>; Thu, 07 May 2026 14:15:16 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A2B134E8270
+	for <lists+linux-pwm@lfdr.de>; Thu, 07 May 2026 14:24:29 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 115E1300678C
-	for <lists+linux-pwm@lfdr.de>; Thu,  7 May 2026 12:15:16 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0FE553011BD0
+	for <lists+linux-pwm@lfdr.de>; Thu,  7 May 2026 12:24:17 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D34AD3EFD2D;
-	Thu,  7 May 2026 12:15:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5ADEB3C6A5F;
+	Thu,  7 May 2026 12:24:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b="IZHa5p9P"
+	dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b="i6yc4tkN"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from MRWPR03CU001.outbound.protection.outlook.com (mail-francesouthazon11011020.outbound.protection.outlook.com [40.107.130.20])
+Received: from LO0P265CU003.outbound.protection.outlook.com (mail-uksouthazon11022106.outbound.protection.outlook.com [52.101.96.106])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5EEF3EF666;
-	Thu,  7 May 2026 12:15:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.130.20
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AB1E3B7B93;
+	Thu,  7 May 2026 12:24:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.96.106
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778156111; cv=fail; b=bGViZ9OSbfZS/rwMXib3RwKx13PF9Yq3bbgWt7NUMqce1ET3soeJJ5FCenro+K42bAQMQ2uEo7qVXxXRDTJVOMS3atKFXadnusna9zRZXZ5wuZ/7ILqOaNaK/RYJYLq/mGmqn1skqvmJrZgPMmZY2XIo55S3zygXFF4iDdL0CQ4=
+	t=1778156656; cv=fail; b=si/9SNBeqJ/lz+N96Ri6xdRfFuoiV90cAdjzlEz2ClZytfsaTHPrjbIt/A8QnTkfsZ1ewYYd5ZI+oQT3YmbDnlIuBORZwzpQppFUxHuQjXKv9mKZ2HLeHQlPTj6dZnOC+leqqFaY8Cvu0dUpc+dsq0E8XC88ZUEPtS4vHym7bkc=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778156111; c=relaxed/simple;
-	bh=Ensyd5Eykp10ujbn/jvUrprwoJxLrAJwDGJqD88IH4s=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:CC:References:
-	 In-Reply-To:Content-Type; b=ZgT8vss/+FJLZG2bd190b+x9lwM5lkkCMXu6VBqP0i9PObre1SrRLIO2gW02p0ftYnwWO3yqwtjJNeKjxywCjW7/zS/rbuz3nLnRHy9VJtPl3zMbGbLl16A54HIc4KcMacrQhNHNKFwInKmhJ/q2HOxnwOkYKRhI+rVZwKYqoPU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com; spf=pass smtp.mailfrom=de.bosch.com; dkim=pass (2048-bit key) header.d=de.bosch.com header.i=@de.bosch.com header.b=IZHa5p9P; arc=fail smtp.client-ip=40.107.130.20
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=de.bosch.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=de.bosch.com
+	s=arc-20240116; t=1778156656; c=relaxed/simple;
+	bh=IX2hCSFnalo7yeKaWpDIy59Pamcw9RTNzmyXN7tnPZs=;
+	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
+	 In-Reply-To:MIME-Version; b=pfkx+ndaWNY9yeUUrwlW5elJRBuBvFQucDK2SU9t3l78ZVlmz4q7HBWLZX3AnML7b1kVN9mm0MOVNP+KbVQMSfpoEYb7gqxJvgiERNuIVjzvNTLNnyB+X1Scvd3YFA0ZkP4K8f5nCEUtA/of5lrkkhCn9UrY4LAhp8HB6B2rloA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=i6yc4tkN; arc=fail smtp.client-ip=52.101.96.106
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=garyguo.net
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=MBjoEXy/7C1zMRICaV47h6Q3Yof9SsyOvLSGIVXOfhvrho1N/Pzm2DJd+NQajoiCz25REUmkbSRnUxPZwBxxS6c5GsawjKHFFAu1dnJ2u+ZEz8aJ/nAwIHVhBqcUZEiRkOQe9AZ1V4iJbxpL7HccaL8ivuY284EkXFkbkM1VgIC07gXnKzYpL3zDCB85WCdBkTa+0WrGw5PpmyhKe46S6MEjM3rKks7qx3J1/fpQsP8r/KgTm983eNl4R4HA/X9Tx3gEhQrJIOCo/qAluFfInDY5mWWUoI5k6RJQtDO1jZPZwK0EbAXTVWAG1B+HEoejk4k5i7KyYrP23aefwGaJNQ==
+ b=ZnY6E5NsSOjL1tV8yCL0n2hKbHDKo25lqzIMc4HjoAT/n/rPBu4hu2Blt82etihKtybBTTgiJoE/F+F5jw8iQboage33ZaRr/mbwhQ4YuL747m68+NKdjyPpbie+oB9wH3RTNPZSHMQPcYNf97KkOhbplU7oi9rb/ULPUrNTq26DqeS0vICvgvcz/YEomRHa97sYUfOHme6EgwJJX4hxxzldQscAxUm75Rj2V76/bdToVBBmyrqh9ORPnAww7Sj/Hm1fCMRGBhNJjE/YFhXD4zU4/VCMVAXmTDQoHtigAFqRSK9tX90Dr9sN7X5Ffbsiz11nCNunieFuinAbx3QhZA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=or9DUWWTDQ4vXa8LIf8MW/Y9uKYVWRibHd0IulGbVvQ=;
- b=xHgFsZ4tLxlfGniRjiG/hicK/qU315CK+1X2KUTdH5XJbcpXOGa4gq7PzXWQf0v0pP5rllHd5FyMDCnNh+ZpAheYhJIfqnC8ZqdwKVehXBjHu5zRLsQXnV8iGc0OCQxaorKPXSplxdBx18dd3lKy1QWyE/S7prxc48i7cAbiAk8pj2bNgT/OHkLH/qznHC79Xsc9iCi/3mBPmejtp1FakG9N+WGQr5No49OId7wH8i0codkL9RGdGIE7XLMwHuavbnNa5eOYqZ0tjKNrWLWqePviYQHx6vRZWG+zrovWq53U+WanncLqUQdLQt+8ZBwKHrkfPCgvx9gqzWo8mlqdeQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 139.15.153.206) smtp.rcpttodomain=kernel.org smtp.mailfrom=de.bosch.com;
- dmarc=pass (p=reject sp=none pct=100) action=none header.from=de.bosch.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=de.bosch.com;
- s=selector2;
+ bh=saH0XsYH+p9Utp92n8Wo7SnfH0odMFlLMpwzNwnhcRg=;
+ b=VrfHS17Vg2tAbAMfDfiZ5jD+VZGY/0FAdwx4SRuJc4oT8bz1JZDPsGqNydZ5/1sN1xfryhfGViSTw2+BR76YQeCnGu9Fg5hEPj2OdqLrlg+ZMvYirHP1m+uj3Wgalhbh2oHIasT9OCkidIbCbmZKSZ5cNl8CRcRsyLLGvsYUdpRZwIC8j+D8HLBzF35OIksGjfJYvvgW/nt09ueLKJZlBzQr3tTem8qMckQjdZZ9fAEqGZvDdbfPa7UVIOv3aNo6zxcTB+bVBP8MVGoYev8zWfVc3G6Rs+QPQ+jwtkOBY8/xbuZdfbuMAicRZdYzeuUcMzKtr49nxny2hwTRE9joxA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=garyguo.net; dmarc=pass action=none header.from=garyguo.net;
+ dkim=pass header.d=garyguo.net; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garyguo.net;
+ s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=or9DUWWTDQ4vXa8LIf8MW/Y9uKYVWRibHd0IulGbVvQ=;
- b=IZHa5p9PrKlc6pgWd8wmFkicTPaViAIGDy+Z2VPIaWDpBThhvzwmi8f0kzaW7hU3LQ3y9QnOuVLqL6MUqkijCiVxB4og7Zv2ussTYSMilR2/dwXqJsezS8kVtLSlqSswNNeRsKzswgezgH8FoBot1ewQuI7Ag+RX/w96ks9lDf9jYoAQFrF9qZwRt2x4Ms1sm2TLdSmp2J/71rbJw3gb16mhITAK/DFMVIiOy7OmECsCzWVA0Lhr4jD7kjAvoj7165J2u26aBFrD6df8LSb6GQo9+mxvbalSXTEX9jmWRcoHGy2B9Jnp7zVuC/A/jAF8Wcr9IO2dCdZvs9E8SGnioQ==
-Received: from CW1P123CA0022.GBRP123.PROD.OUTLOOK.COM (2603:10a6:400:292::13)
- by PA1PR10MB8919.EURPRD10.PROD.OUTLOOK.COM (2603:10a6:102:442::22) with
+ bh=saH0XsYH+p9Utp92n8Wo7SnfH0odMFlLMpwzNwnhcRg=;
+ b=i6yc4tkNykDsYk1gzPcf0BNP9Ed0CnzXQ0VC4/Elrlg7FEGFmUOH76WaigFMRrZ0/zlDcJTOkXWOGVP6wOCJmpkEpsckd26lyDYk3EG1SZKBEPGybHeh5AU70zV8kzEHr5tChqY2qOYHkNllL62sRPI+QkiYb6xvYoVFieH21hU=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=garyguo.net;
+Received: from LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:488::16)
+ by LO0P265MB5191.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:241::6) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.9891.17; Thu, 7 May
- 2026 12:14:54 +0000
-Received: from AMS0EPF000001A3.eurprd05.prod.outlook.com
- (2603:10a6:400:292:cafe::ca) by CW1P123CA0022.outlook.office365.com
- (2603:10a6:400:292::13) with Microsoft SMTP Server (version=TLS1_3,
- cipher=TLS_AES_256_GCM_SHA384) id 15.20.9891.17 via Frontend Transport; Thu,
- 7 May 2026 12:14:54 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 139.15.153.206)
- smtp.mailfrom=de.bosch.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=de.bosch.com;
-Received-SPF: Pass (protection.outlook.com: domain of de.bosch.com designates
- 139.15.153.206 as permitted sender) receiver=protection.outlook.com;
- client-ip=139.15.153.206; helo=eop.bosch-org.com; pr=C
-Received: from eop.bosch-org.com (139.15.153.206) by
- AMS0EPF000001A3.mail.protection.outlook.com (10.167.16.228) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.9891.9 via Frontend Transport; Thu, 7 May 2026 12:14:53 +0000
-Received: from RNGMBX3003.de.bosch.com (10.124.11.208) by eop.bosch-org.com
- (139.15.153.206) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.37; Thu, 7 May
- 2026 14:14:43 +0200
-Received: from [10.34.218.123] (10.34.218.123) by smtp.app.bosch.com
- (10.124.11.208) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.2562.37; Thu, 7 May
- 2026 14:14:42 +0200
-Message-ID: <2e1c9a71-46e7-4036-91ac-86453564b223@de.bosch.com>
-Date: Thu, 7 May 2026 14:14:36 +0200
+ 2026 12:24:09 +0000
+Received: from LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::1c3:ceba:21b4:9986]) by LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::1c3:ceba:21b4:9986%4]) with mapi id 15.20.9891.016; Thu, 7 May 2026
+ 12:24:09 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Thu, 07 May 2026 13:24:08 +0100
+Message-Id: <DICFXB4BLACF.3GTAQPRYURQCB@garyguo.net>
+Cc: <driver-core@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+ <nova-gpu@lists.linux.dev>, <dri-devel@lists.freedesktop.org>,
+ <linux-pm@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+ <linux-pci@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
+Subject: Re: [PATCH v2 04/25] rust: driver: make Adapter trait
+ lifetime-parameterized
+From: "Gary Guo" <gary@garyguo.net>
+To: "Danilo Krummrich" <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
+ <rafael@kernel.org>, <acourbot@nvidia.com>, <aliceryhl@google.com>,
+ <david.m.ertman@intel.com>, <ira.weiny@intel.com>, <leon@kernel.org>,
+ <viresh.kumar@linaro.org>, <m.wilczynski@samsung.com>,
+ <ukleinek@kernel.org>, <bhelgaas@google.com>, <kwilczynski@kernel.org>,
+ <abdiel.janulgue@gmail.com>, <robin.murphy@arm.com>,
+ <markus.probst@posteo.de>, <ojeda@kernel.org>, <boqun@kernel.org>,
+ <gary@garyguo.net>, <bjorn3_gh@protonmail.com>, <lossin@kernel.org>,
+ <a.hindborg@kernel.org>, <tmgross@umich.edu>, <igor.korotin@linux.dev>,
+ <daniel.almeida@collabora.com>
+X-Mailer: aerc 0.21.0
+References: <20260506215113.851360-1-dakr@kernel.org>
+ <20260506215113.851360-5-dakr@kernel.org>
+In-Reply-To: <20260506215113.851360-5-dakr@kernel.org>
+X-ClientProxiedBy: LO2P265CA0259.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:8a::31) To LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:488::16)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-From: Dirk Behme <dirk.behme@de.bosch.com>
-Subject: Re: [PATCH v2 00/25] rust: device: Higher-Ranked Lifetime Types for
- device drivers
-To: Danilo Krummrich <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
-	<rafael@kernel.org>, <acourbot@nvidia.com>, <aliceryhl@google.com>,
-	<david.m.ertman@intel.com>, <ira.weiny@intel.com>, <leon@kernel.org>,
-	<viresh.kumar@linaro.org>, <m.wilczynski@samsung.com>, <ukleinek@kernel.org>,
-	<bhelgaas@google.com>, <kwilczynski@kernel.org>, <abdiel.janulgue@gmail.com>,
-	<robin.murphy@arm.com>, <markus.probst@posteo.de>, <ojeda@kernel.org>,
-	<boqun@kernel.org>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
-	<lossin@kernel.org>, <a.hindborg@kernel.org>, <tmgross@umich.edu>,
-	<igor.korotin@linux.dev>, <daniel.almeida@collabora.com>
-CC: <driver-core@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
-	<nova-gpu@lists.linux.dev>, <dri-devel@lists.freedesktop.org>,
-	<linux-pm@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
-	<linux-pci@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
-References: <20260506215113.851360-1-dakr@kernel.org>
-Content-Language: en-GB
-In-Reply-To: <20260506215113.851360-1-dakr@kernel.org>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-EOPAttributedMessage: 0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: AMS0EPF000001A3:EE_|PA1PR10MB8919:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3589e9f4-1aa4-49de-5f6d-08deac323ef0
+X-MS-TrafficTypeDiagnostic: LOVP265MB8871:EE_|LO0P265MB5191:EE_
+X-MS-Office365-Filtering-Correlation-Id: 6aa2801c-a4f6-4139-9617-08deac3389ce
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|82310400026|30052699003|36860700016|376014|7416014|921020|22082099003|3023799003|56012099003|18002099003;
+	BCL:0;ARA:13230040|7416014|376014|10070799003|1800799024|366016|921020|56012099003|22082099003|18002099003|3023799003;
 X-Microsoft-Antispam-Message-Info:
-	Ss2n2D0GmthDcq3MB7nqhgHdKXbgwQefwLsKh3lFPZA0LCcbiAsrhr+uAEC9OTXK9iAwvR0JaXFtqDaTc3/A+zLESDK7PBOVYdyTCuPyBhd8xG5nj2wt5WODcTQwd94yikOdtvV8HtNRzEr0R8iSx5wwwU3aucWrM/IKQ+tFMHy9QhEfUuVMTYqyJG9m2sbHKAoYvlDzkOnVWH4TnP6SsgExkTlUjOzJDi0IHJuCGMVT2pFBv5uZooozEU2uw8HbUUQbmsImAZsGzbOpzlA9MlzI9aCAFqbyX5g9x+JSdbmrh1K9XrZVKBecaz//wKXOIGFjq00rirNduMOs5tS6n+yo/wxJuUkPBce7OG08MV1WI6nbAesIrYUHyaZYBwXpyMFK6bCy5Jp3TtDSoGvm33WoeFsKZnZeIxGzIO4/3rqbV5zNzpgxI/bmzljvnFrwKEUx2eGJ6AOiK0dR0UlxaYQBJTShuyRaqiZW1OApogn4BHvf8mzhkZNVR638CaoNIXpK5tyklkrCqaFVCHsJIMQC8oLHl/3FtEaMr9xDj4O4Es4nQ+79UcuDAqlUK/sMOtBUmvPe6hojnZ2umae+KJgeyR02aTdsLMrC5a5tk6RoTNYE4QktA4ujyEO6HkVUkGUUlTiqSeuyHnSxbLT95HHFpgEhsFTjgwf8kcULCS7oLT7qXwpKdWGHOJrnz4MEQilOGufSCyujop9/mNt9mKTc1oDY7FH2mKRavedVLH8az1YOp9LXFNlrxhENHdbB9yFkgJgvOMUBfyg2Mhp8u6mfoIV9WX/fIEZAZUa7q2Y=
+	DihueJANQeew+ghSe7kD7PRovLE5M/hxH4v2YpQstRceTL4G52aQY7v8rfm/BWmJ//ejQ2jDGFODO2z+XKpj3cunm+tgl1x1hE1vbMXohDqxtuOm05c7EYCRCHtpMtsEqoPV0dfTUQzyrMcsT5PXB8gkGtweTaycjqis9QKoGUVtKNn/ZTbh8woh0rwFKDERqjCudhrqgyiZBX5N23ADAGjJ9kV0Yeng1TRvW6S+Vmj2hhs/dLAE6halXNXhCB1/nRlkcHCl/mPDE2g3etQqhe61S24sEU2b8idLrbm15Q/TLyiHwJnOH9AW6KOc0wr8xA724m8SDSCeRWHGc9KtOy3u0hA/G5VO7wkq4fGt/mHpslI/tWFiBTe1JP0zrTibzkXKOldkJX9uQEaq0rJOv4zwK/V4lD4ZaiFk58wi8qYVTi8GhiZNCDFsyI9YokK+zyFB8N+ODIE52K6N/Jw3f+DCYeCOUf1AFEr5wSs9DSQMhru3zXwEAOKrBVCX8McyOMjAKcIyu8ZtsheVYRhuh/VJnIVkz3GwkRK2XWsufFtvM4N2Rwf4ipQ1W4+UtLMyiaaasqufteGIDFlktDkznzbmgYrQASAvRULM3LW/9+kLz/K1/6SGxjZ+X5AavraEqR9bei9KGBS0YqoHblddcM2nezvGN86x1i3Tm8VN5TYDR7wDnaZqgGdyJHK4bf378Pzb1/o3+N5sk+nJwtoPFlrKcVqfOQoK1GNjstkBLXI=
 X-Forefront-Antispam-Report:
-	CIP:139.15.153.206;CTRY:DE;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:eop.bosch-org.com;PTR:InfoDomainNonexistent;CAT:NONE;SFS:(13230040)(1800799024)(82310400026)(30052699003)(36860700016)(376014)(7416014)(921020)(22082099003)(3023799003)(56012099003)(18002099003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(10070799003)(1800799024)(366016)(921020)(56012099003)(22082099003)(18002099003)(3023799003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	PRsQUcVnYgh/AsFc1a1FXMOZLRjZbMQAorEyMcU2coHj9WIHRDQvnPsHKRr/tpDvXsBCEzTQKlpwJ3BXkk0pNGGiejiu4wrjC9hugkZxw4JjvXElUhWOHI5fwojJ0sdat1YLIJytnKACAlaWqHyt9Z78t2xv0JrO+qM38PQ87nFBie917ggAXSsJUaIwDlCVblxjXrq0FTqXqHlZa4kIJj9PYcpOs4RF7UGKc/p/oYX7BQ+T8X86vqK/nNnE7DenugJMwkZMpZ5EywJWgdt4hoGsCx4TWMqkh1TciGmeuM+JmMsBarPehqJE1YEN+44lJ8Q5XIu2jl84nNnuL1wsNSMMUowJL3FL6PXH7jy/FLIvNmUv2TOeT7g9mpXZmQ6hbcE8im7WOFUAFSzVzec3zdlpxZfCDiOdA9glp7nT3PWx34QfoBchk0s16tDUDIpF
-X-OriginatorOrg: de.bosch.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2026 12:14:53.7088
+	=?utf-8?B?TjREZkpUTGZUUlNWdmp4WVZ0TS9oeFJNd1h4MGpHUmtVWnRNRzBDNTFLblVI?=
+ =?utf-8?B?SzlwNFJIUkg0TWNabHlnbUpiRGRZb2RvZE5oc1d4cTNqbjJiQjU4S2xmTGlM?=
+ =?utf-8?B?QjA4Q1FneSt0bXo5RUtKYlpDRDFvYUVvV3piaXBxbkIvSEZ0VVVhUVFTVDh5?=
+ =?utf-8?B?OCtkdlc2NjQ1V2lINlpMR3NLMDVoVEFCWXpIWnhuS1FHSldyOFJ2SnY0cGNP?=
+ =?utf-8?B?RVl5b3ptNU9qS0ZZZFlId0hhbHp2c0dwcHROa1o0SHRNUGhSQ3dOSjMwRUNF?=
+ =?utf-8?B?d2RvMzBZaVVLTWRCZUFxUlhqRnI1ZkEvYzVRMkM0U05MSm9wN1c2OVdiQ0RZ?=
+ =?utf-8?B?VU13Y01nU2hOTEoyalhxaDA0bTlBR1ByTXZOQmsvQ0t0alVRUkpORmNwS3JS?=
+ =?utf-8?B?bE9qQ3ROb1hveGQrRVBaakdYcGY1cHlqN3cyRGpCVGxNZkRzZStZeVJQYnVP?=
+ =?utf-8?B?U2FrTGx2c0ZsQU9vVE5oeDZwR2JmcEM2QmZBVmR6cDNVdnNWb2FrRVo1ZGhH?=
+ =?utf-8?B?Znp3STAxYlBVTWxFMy9FaGtxMXlTeVg1NEV5OVhKWDhKaWxSeW51THJJWnVo?=
+ =?utf-8?B?R29DTHFERkpIdVNJdTZ0V0FESjVybk50RnQzSFYvZ2ZUQmNDNGJiYlpMSDlD?=
+ =?utf-8?B?OUZVam5ZS1RGRHNNNGVKR1BEL1lqRTFTQzlwQkNGUUJNd09uQ0FkdUlzS2k4?=
+ =?utf-8?B?bHdqTzZycVhFNjFyMStNK3NLRGNXZUozUm1vVmx4WkdSdlB1ZUthVXB3ZXVJ?=
+ =?utf-8?B?WEp4eFl5UDhpd0VmTXhaZUcySitYaHRacUdpRUJWOWJwdzdoMEpadElMYkRR?=
+ =?utf-8?B?ank5cXFOcWhlNE04d1loVUVudWhwby8xNVEwWUNMOGhjN0t0L0dEV2w0UEYw?=
+ =?utf-8?B?NFlFb28zMjlnNXJZb2hpS1NUSThPZCthTXgrMHgzTC82M2tmc0RGWDNHcHVz?=
+ =?utf-8?B?dzdUUzJ6TmtsR2hvb2hub2hibHUrTFhxRDMyRmNNY2F6azJRQ1BOTnhjaWVO?=
+ =?utf-8?B?OXRhQVhSMVBkQWdRa0o4eGR6NGh3bmRiemhrc0ZSL3NhSXhaWjZoaXZpS3Iz?=
+ =?utf-8?B?d0luZFV2aWJTTUJjKzN0ZlVFWGlISkpFT083TVVhWTJJcjNlM3h4eUVrL2Vk?=
+ =?utf-8?B?dGtieFRHQS9ybDU5cHFIbTN5aG5OS2JWRkJNQWVUM2pkd3Q1UnZRZ2F1R2sw?=
+ =?utf-8?B?QWxiSEtBbmp2SDNqa1JNdGpMSkNCM1VHNXpER1Bnb0pzQVdDa2pRZi9VYURo?=
+ =?utf-8?B?bElwc3Y4NmVYcU9TTmgrb0FwVVpFd0NhWUFZeGZoVkg1K2lJWDZtUnJaLzdl?=
+ =?utf-8?B?VDczMGNDVW16eGZQcG9JRisxbStqZHVMMzRhMXlvYVVoSlNoRTIvemZqcUFT?=
+ =?utf-8?B?bWdndjhrMjZEeVB1c2tMak1PVjJtWm1yUGtobFYzdkRKV1B5TTJFQUh3aW9J?=
+ =?utf-8?B?Q0RsSmhtRkt6cks3Uzk5QldPYkt6Z0xwZE5sRUxsVGNsS2dBM2V6bmdlNE92?=
+ =?utf-8?B?Q3RhdURCSFZKZ3A4SFRUT1NKM0VOcVBFNVhmSDh6ZzNBRHpDaFRqT3MxVHcx?=
+ =?utf-8?B?M0U0dE1VdTUrL3llNEk5bDIxK3BlamdVUEFLTjhuUTIzM095alk5TUwzeGVn?=
+ =?utf-8?B?eVhoWUJ1U2g4Rk8zbmQxakhVM0FGM3ZMajlta3dubU15TURnMkpwM3JGcEpN?=
+ =?utf-8?B?UnNLODlkUmdUQk52RDFUNjgxWmhva3JmWmh3WXJMd3A1WTNybHhqRUlndTVU?=
+ =?utf-8?B?dlUxNTg2ZGRHSFVnWHZ0R05OZ3M3TjYzSDV4VVVPb1U4V3FJVHZ0bGlaQWVj?=
+ =?utf-8?B?d0FRWjg5c3lRSW12WFhQTk5hUXdvbEdpSmNWS0JMVHlxS3NMQmg4SExyTGp5?=
+ =?utf-8?B?Y1dEenVPQlNkWVVsS1FDRkIrRHhCNnJFWXR1TVQ5R2sxdzhxbWZ1eGt1dXp3?=
+ =?utf-8?B?Vzh0WjBteTc2YWpCQkhzVnMrOHovdWlTQlVKRExUTy9PZDNsNDBuY2VqLzdE?=
+ =?utf-8?B?Y3JwZ0dadDl6aUNUR1M0NXFuUEtNcERjUTR2YVVCSXIwK056em5mbjFPODhm?=
+ =?utf-8?B?U3h5Y0RHTndibXNIblNBMU9EQ1ZKdnB4bUg1djJ3NEZNdTFBWmUzS05KTUla?=
+ =?utf-8?B?cG1DS3AwczVNWkptSllUYlI3UEwyUzMvTWxyaXJvejlCUVpCdEZNTkUza2Vh?=
+ =?utf-8?B?eWNYbnNteXhIYUd0TFhUcHQ4K2hsQmcxS05iRHlwK2JaQ2ZkZ2haOXVQK3VK?=
+ =?utf-8?B?dFFCS0l6ZGdGWVMzZHdmYnVqU0hwZ3ZRU0RHeDJxNHVBK1N1NlVZVktXemJO?=
+ =?utf-8?B?L1dzNWlhYUVuTVJsQmJIRjZva2x6ZW1kT3Nkb3E3QzlPbXFFUzVaZz09?=
+X-OriginatorOrg: garyguo.net
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6aa2801c-a4f6-4139-9617-08deac3389ce
+X-MS-Exchange-CrossTenant-AuthSource: LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 07 May 2026 12:24:08.9744
  (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3589e9f4-1aa4-49de-5f6d-08deac323ef0
-X-MS-Exchange-CrossTenant-Id: 0ae51e19-07c8-4e4b-bb6d-648ee58410f4
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=0ae51e19-07c8-4e4b-bb6d-648ee58410f4;Ip=[139.15.153.206];Helo=[eop.bosch-org.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	AMS0EPF000001A3.eurprd05.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PA1PR10MB8919
-X-Rspamd-Queue-Id: B28794E80EE
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: bbc898ad-b10f-4e10-8552-d9377b823d45
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: nn8iNDywF/ZfqdeIPZ8hN9NqQuZZhV8H/SDvi3+kd2cTldv++EVYXOm79X6KkmrUW8LvGqxAa8f63s8nhQjFSA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO0P265MB5191
+X-Rspamd-Queue-Id: A2B134E8270
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [1.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[de.bosch.com,reject];
-	R_DKIM_ALLOW(-0.20)[de.bosch.com:s=selector2];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	DMARC_POLICY_ALLOW(-0.50)[garyguo.net,none];
+	R_DKIM_ALLOW(-0.20)[garyguo.net:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8835-lists,linux-pwm=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_TO(0.00)[kernel.org,linuxfoundation.org,nvidia.com,google.com,intel.com,linaro.org,samsung.com,gmail.com,arm.com,posteo.de,garyguo.net,protonmail.com,umich.edu,linux.dev,collabora.com];
-	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[33];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,bosch.com:email,de.bosch.com:mid,de.bosch.com:dkim];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dirk.behme@de.bosch.com,linux-pwm@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-8836-lists,linux-pwm=lfdr.de];
+	FREEMAIL_TO(0.00)[kernel.org,linuxfoundation.org,nvidia.com,google.com,intel.com,linaro.org,samsung.com,gmail.com,arm.com,posteo.de,garyguo.net,protonmail.com,umich.edu,linux.dev,collabora.com];
+	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[de.bosch.com:+];
-	NEURAL_HAM(-0.00)[-0.999];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[33];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[gary@garyguo.net,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[garyguo.net:+];
+	NEURAL_HAM(-0.00)[-1.000];
 	TAGGED_RCPT(0.00)[linux-pwm];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
-	RCVD_COUNT_SEVEN(0.00)[8]
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TO_DN_SOME(0.00)[]
 X-Rspamd-Action: no action
 
-On 06.05.2026 23:50, Danilo Krummrich wrote:
-> Currently, Rust device drivers access device resources such as PCI BAR mappings
-> and I/O memory regions through Devres<T>.
-> 
-> Devres::access() provides zero-overhead access by taking a &Device<Bound>
-> reference as proof that the device is still bound. Since a &Device<Bound> is
-> available in almost all contexts by design, Devres is mostly a type-system level
-> proof that the resource is valid, but it can also be used from scopes without
-> this guarantee through its try_access() accessor.
-> 
-> This works well in general, but has a few limitations:
-> 
->    - Every access to a device resource goes through Devres::access(), which
->      despite zero cost, adds boilerplate to every access site.
-> 
->    - Destructors do not receive a &Device<Bound>, so they must use try_access(),
->      which can fail. In practice the access succeeds if teardown ordering is
->      correct, but the type system can't express this, forcing drivers to handle a
->      failure path that should never be taken.
-> 
->    - Sharing a resource across components (e.g. passing a BAR to a sub-component)
->      requires Arc<Devres<T>>.
-> 
->    - Device references must be stored as ARef<Device> rather than plain &Device
->      borrows.
-> 
-> These limitations stem from the driver's bus device private data being 'static
-> -- the driver struct cannot borrow from the device reference it receives in
-> probe(), even though it structurally cannot outlive the device binding.
-> 
-> This series introduces Higher-Ranked Lifetime Types (HRT) for Rust device
-> drivers. An HRT is a type that is generic over a lifetime -- it does not have a
-> fixed lifetime, but can be instantiated with any lifetime chosen by the caller.
-> 
-> Rust does not directly support types that are generic over a lifetime as type
-> parameters; the ForLt trait (contributed by Gary Guo) encodes this internally.
-> 
-> The module_*_driver! macros handle the wrapping, so driver authors just write
-> struct MyDriver<'a> and impl Driver<'a>.
-> 
-> With HRT, driver structs carry a lifetime parameter tied to the device binding
-> scope -- the interval of a bus device being bound to a driver. Device resources
-> like pci::Bar<'a> and IoMem<'a> are handed out with this lifetime, so the
-> compiler enforces at build time that they do not escape the binding scope.
-> 
-> Before:
-> 
-> 	struct MyDriver {
-> 	    pdev: ARef<pci::Device>,
-> 	    bar: Devres<pci::Bar<BAR_SIZE>>,
-> 	}
-> 
-> 	let io = self.bar.access(dev)?;
-> 	io.read32(OFFSET);
-> 
-> After:
-> 
-> 	struct MyDriver<'a> {
-> 	    pdev: &'a pci::Device,
-> 	    bar: pci::Bar<'a, BAR_SIZE>,
-> 	}
-> 
-> 	self.bar.read32(OFFSET);
-> 
-> Lifetime-parameterized device resources can be put into a Devres at any point
-> via Bar::into_devres() / IoMem::into_devres(), providing the exact same
-> semantics as before. This is useful for resources shared across subsystem
-> boundaries where revocation is needed.
-> 
-> This also synergizes with the upcoming self-referential initialization support
-> in pin-init, which allows one field of the driver struct to borrow another
-> during initialization without unsafe code.
-> 
-> The same pattern is applied to auxiliary device registration data as a first
-> example beyond bus device private data. Registration<F: ForLt> can hold
-> lifetime-parameterized data tied to the parent driver's binding scope. Since the
-> auxiliary bus guarantees that the parent remains bound while the auxiliary
-> device is registered, the registration data can safely borrow the parent's
-> device resources.
-> 
-> More generally, binding resource lifetimes to a registration scope applies to
-> every registration that is scoped to a driver binding -- auxiliary devices,
-> class devices, IRQ handlers, workqueues.
-> 
-> A follow-up series extends this to class device registrations, starting with
-> DRM, so that class device callbacks (IOCTLs, etc.) can safely access device
-> resources through the separate registration data bound to the registration's
-> lifetime without Devres indirection.
-> 
-> The series contains a few driver patches for reference, indicated by the REF
-> suffix.
-> 
-> Thanks to Gary for coming up with the ForLt implementation; thanks to Alice for
-> the early discussions around lifetime-parameterized private data that helped
-> shape the direction of this work.
-> 
-> This series depends on [1].
-> 
-> [1] https://lore.kernel.org/driver-core/20260505152400.3905096-1-dakr@kernel.org/
+On Wed May 6, 2026 at 10:50 PM BST, Danilo Krummrich wrote:
+> Parameterize the Adapter trait with a lifetime, changing the id_info(),
+> of_id_info() and acpi_id_info() methods to take &'bound Device<Bound> and
+> return &'bound Self::IdInfo instead of &'static.
+>
+> This is needed for the ForLt conversion of bus driver traits. Once
+> Driver becomes lifetime-parameterized, its IdInfo associated type may
+> depend on the lifetime parameter.
 
+How? The `IdInfo` is part of the ID table which is static.
 
-I have applied this series together with [1] on top of 7.1.0-rc1. I made 
-some adaptions to local changes (e.g. my ARM64 TMU interrupt test) and 
-boot tested it. Several parts this patch series touches (e.g. PCI, 
-auxiliary, gpu) I might not use or even don't have it enabled. So I 
-don't know if this is worth mentioning
+I feel that this is really just adding lifetime for the sake of adding it.
+Nothing in `Adapter` is really tied to device lifetime.
 
-Tested-by: Dirk Behme <dirk.behme@de.bosch.com>
+> With Adapter<'bound>, the impl can set
+> IdInfo =3D <F::Of<'bound> as Driver<'bound>>::IdInfo and the lifetime flo=
+ws
 
-Please feel free to ignore this, then.
+Well, I do get that you're trying to avoid writing `Driver<'static>`. This =
+is
+needed because conceptually, a `Driver` trait have a lifetime-dependent par=
+t and
+a lifetime independent part.
 
-Thanks
+`IdInfo` and `ID_TABLE` are the lifetime-independent part, and `probe` and
+`unbind` are lifetime dependent part. We really only have this issue becaus=
+e we
+use `Self` instead of an associated data for driver's data.
 
-Dirk
+The `Driver` could be more cleanly designed if expressed like this:
 
+    trait Driver {
+        type IdInfo;
+        const ID_TABLE: IdTable<Self::IdInfo>;
 
-> Changes in v2:
->    - Add 'a bound to ForLt::Of<'a> and WithLt::Of, making the lifetime bound
->      inherent to the trait; remove all F::Of<'static>: 'static where clauses
->    - Drop "rust: devres: add ForLt support to Devres"; Devres itself stays
->      unchanged -- ForLt-aware access is introduced later through DevresLt in a
->      separate series
->    - Use 'bound instead of 'a; add patches to consistently use 'bound for
->      pre-existing 'a
-> 
-> Danilo Krummrich (24):
->    rust: driver core: drop drvdata before devres release
->    rust: device: generalize drvdata methods over ForLt
->    rust: driver: make Adapter trait lifetime-parameterized
->    rust: pci: implement Sync for Device<Bound>
->    rust: platform: implement Sync for Device<Bound>
->    rust: auxiliary: implement Sync for Device<Bound>
->    rust: usb: implement Sync for Device<Bound>
->    rust: device: implement Sync for Device<Bound>
->    rust: pci: make Driver trait lifetime-parameterized
->    rust: platform: make Driver trait lifetime-parameterized
->    rust: auxiliary: make Driver trait lifetime-parameterized
->    rust: auxiliary: generalize Registration over ForLt
->    samples: rust: rust_driver_auxiliary: showcase lifetime-bound
->      registration data
->    rust: usb: make Driver trait lifetime-parameterized
->    rust: i2c: make Driver trait lifetime-parameterized
->    rust: pci: make Bar lifetime-parameterized
->    rust: io: make IoMem and ExclusiveIoMem lifetime-parameterized
->    samples: rust: rust_driver_pci: use HRT lifetime for Bar
->    rust: driver-core: rename 'a lifetime to 'bound
->    gpu: nova-core: rename 'a lifetime to 'bound
->    gpu: nova-core: use HRT lifetime for Bar
->    gpu: nova-core: unregister sysmem flush page from Drop
->    gpu: nova-core: replace ARef<Device> with &'bound Device in
->      SysmemFlush
->    gpu: drm: tyr: use HRT lifetime for IoMem
-> 
-> Gary Guo (1):
->    rust: types: add `ForLt` trait for higher-ranked lifetime support
-> 
->   drivers/base/dd.c                        |   2 +-
->   drivers/cpufreq/rcpufreq_dt.rs           |  10 +-
->   drivers/gpu/drm/nova/driver.rs           |   9 +-
->   drivers/gpu/drm/tyr/driver.rs            |  24 ++-
->   drivers/gpu/drm/tyr/gpu.rs               |  62 +++---
->   drivers/gpu/drm/tyr/regs.rs              |  21 +-
->   drivers/gpu/nova-core/driver.rs          |  48 ++---
->   drivers/gpu/nova-core/fb.rs              |  31 ++-
->   drivers/gpu/nova-core/firmware/gsp.rs    |   8 +-
->   drivers/gpu/nova-core/gpu.rs             |  38 ++--
->   drivers/gpu/nova-core/gsp/commands.rs    |  10 +-
->   drivers/gpu/nova-core/gsp/fw/commands.rs |   4 +-
->   drivers/gpu/nova-core/nova_core.rs       |   4 +-
->   drivers/pwm/pwm_th1520.rs                |  14 +-
->   include/linux/device/driver.h            |   4 +-
->   rust/Makefile                            |   1 +
->   rust/kernel/auxiliary.rs                 | 132 +++++++++----
->   rust/kernel/cpufreq.rs                   |   8 +-
->   rust/kernel/device.rs                    |  79 +++++---
->   rust/kernel/devres.rs                    |  16 +-
->   rust/kernel/driver.rs                    |  44 +++--
->   rust/kernel/i2c.rs                       | 130 +++++++-----
->   rust/kernel/io/mem.rs                    | 131 ++++++------
->   rust/kernel/pci.rs                       |  89 ++++++---
->   rust/kernel/pci/io.rs                    |  68 ++++---
->   rust/kernel/pci/irq.rs                   |  38 ++--
->   rust/kernel/platform.rs                  | 120 +++++++----
->   rust/kernel/types.rs                     |   4 +
->   rust/kernel/types/for_lt.rs              | 117 +++++++++++
->   rust/kernel/usb.rs                       |  94 +++++----
->   rust/macros/for_lt.rs                    | 242 +++++++++++++++++++++++
->   rust/macros/lib.rs                       |  12 ++
->   samples/rust/rust_debugfs.rs             |  10 +-
->   samples/rust/rust_dma.rs                 |   9 +-
->   samples/rust/rust_driver_auxiliary.rs    |  53 +++--
->   samples/rust/rust_driver_i2c.rs          |  18 +-
->   samples/rust/rust_driver_pci.rs          |  93 ++++-----
->   samples/rust/rust_driver_platform.rs     |  12 +-
->   samples/rust/rust_driver_usb.rs          |  14 +-
->   samples/rust/rust_i2c_client.rs          |  12 +-
->   samples/rust/rust_soc.rs                 |  12 +-
->   41 files changed, 1220 insertions(+), 627 deletions(-)
->   create mode 100644 rust/kernel/types/for_lt.rs
->   create mode 100644 rust/macros/for_lt.rs
-> 
+        type Data<'bound>;
 
+        fn probe<'bound>(
+            dev: &'bound Device<device::Core>,
+            id_info: &'bound Self::IdInfo,
+        ) -> impl PinInit<Self::Data<'bound>, Error> + 'bound;
+
+        ...
+    }
+
+Then there's no `Driver<'static>` at all.
+
+But even if we don't go with that design, I'd prefer using `Driver<'static>=
+` to
+giving lifetime parameters to types that shouldn't have one.
+
+> through naturally, avoiding the need for transmute.
+
+I applied the following diff and it doesn't require
+additional transmute?
+
+diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
+index 7c5148772697..4c5bc31fd71d 100644
+--- a/rust/kernel/driver.rs
++++ b/rust/kernel/driver.rs
+@@ -316,7 +316,7 @@ unsafe fn acpi_of_match_device(
+ /// of a device and a driver.
+ ///
+ /// It provides bus independent functions for device / driver interactions=
+.
+-pub trait Adapter<'bound> {
++pub trait Adapter {
+     /// The type holding driver private data about each device id supporte=
+d by the driver.
+     type IdInfo: 'static;
+=20
+@@ -326,7 +326,7 @@ pub trait Adapter<'bound> {
+     /// Returns the driver's private data from the matching entry in the [=
+`acpi::IdTable`], if any.
+     ///
+     /// If this returns `None`, it means there is no match with an entry i=
+n the [`acpi::IdTable`].
+-    fn acpi_id_info(dev: &'bound Device<Bound>) -> Option<&'bound Self::Id=
+Info> {
++    fn acpi_id_info(dev: &Device<Bound>) -> Option<&'static Self::IdInfo> =
+{
+         #[cfg(not(CONFIG_ACPI))]
+         {
+             let _ =3D dev;
+@@ -360,7 +360,7 @@ fn acpi_id_info(dev: &'bound Device<Bound>) -> Option<&=
+'bound Self::IdInfo> {
+     /// Returns the driver's private data from the matching entry in the [=
+`of::IdTable`], if any.
+     ///
+     /// If this returns `None`, it means there is no match with an entry i=
+n the [`of::IdTable`].
+-    fn of_id_info(dev: &'bound Device<Bound>) -> Option<&'bound Self::IdIn=
+fo> {
++    fn of_id_info(dev: &Device<Bound>) -> Option<&'static Self::IdInfo> {
+         let table =3D Self::of_id_table()?;
+=20
+         #[cfg(not(any(CONFIG_OF, CONFIG_ACPI)))]
+@@ -424,7 +424,7 @@ fn of_id_info(dev: &'bound Device<Bound>) -> Option<&'b=
+ound Self::IdInfo> {
+     ///
+     /// If this returns `None`, it means that there is no match in any of =
+the ID tables directly
+     /// associated with a [`device::Device`].
+-    fn id_info(dev: &'bound Device<Bound>) -> Option<&'bound Self::IdInfo>=
+ {
++    fn id_info(dev: &Device<Bound>) -> Option<&'static Self::IdInfo> {
+         let id =3D Self::acpi_id_info(dev);
+         if id.is_some() {
+             return id;
+diff --git a/rust/kernel/i2c.rs b/rust/kernel/i2c.rs
+index 5a601cba7dc0..739b97c9917d 100644
+--- a/rust/kernel/i2c.rs
++++ b/rust/kernel/i2c.rs
+@@ -183,7 +183,7 @@ extern "C" fn probe_callback(idev: *mut bindings::i2c_c=
+lient) -> kernel::ffi::c_
+=20
+         from_result(|| {
+             let info =3D Self::i2c_id_info(idev)
+-                .or_else(|| <Self as driver::Adapter<'_>>::id_info(idev.as=
+_ref()));
++                .or_else(|| <Self as driver::Adapter>::id_info(idev.as_ref=
+()));
+             let data =3D <F::Of<'_> as Driver<'_>>::probe(idev, info);
+=20
+             idev.as_ref().set_drvdata::<F>(data)?;
+@@ -243,19 +243,19 @@ fn i2c_id_info<'bound>(
+     }
+ }
+=20
+-impl<'bound, F> driver::Adapter<'bound> for Adapter<F>
++impl<F> driver::Adapter for Adapter<F>
+ where
+     F: ForLt + 'static,
+-    F::Of<'bound>: Driver<'bound>,
++    for<'bound> F::Of<'bound>: Driver<'bound>,
+ {
+-    type IdInfo =3D <F::Of<'bound> as Driver<'bound>>::IdInfo;
++    type IdInfo =3D <F::Of<'static> as Driver<'static>>::IdInfo;
+=20
+     fn of_id_table() -> Option<of::IdTable<Self::IdInfo>> {
+-        <F::Of<'bound> as Driver<'bound>>::OF_ID_TABLE
++        <F::Of<'static> as Driver<'static>>::OF_ID_TABLE
+     }
+=20
+     fn acpi_id_table() -> Option<acpi::IdTable<Self::IdInfo>> {
+-        <F::Of<'bound> as Driver<'bound>>::ACPI_ID_TABLE
++        <F::Of<'static> as Driver<'static>>::ACPI_ID_TABLE
+     }
+ }
+=20
+diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
+index f59f22283c53..f4df2e474ca0 100644
+--- a/rust/kernel/platform.rs
++++ b/rust/kernel/platform.rs
+@@ -120,7 +120,7 @@ extern "C" fn probe_callback(pdev: *mut bindings::platf=
+orm_device) -> kernel::ff
+         let pdev =3D unsafe { &*pdev.cast::<Device<device::CoreInternal>>(=
+) };
+=20
+         from_result(|| {
+-            let info =3D <Self as driver::Adapter<'_>>::id_info(pdev.as_re=
+f());
++            let info =3D <Self as driver::Adapter>::id_info(pdev.as_ref())=
+;
+             let data =3D <F::Of<'_> as Driver<'_>>::probe(pdev, info);
+=20
+             pdev.as_ref().set_drvdata::<F>(data)?;
+@@ -143,19 +143,19 @@ extern "C" fn remove_callback(pdev: *mut bindings::pl=
+atform_device) {
+     }
+ }
+=20
+-impl<'bound, F> driver::Adapter<'bound> for Adapter<F>
++impl<F> driver::Adapter for Adapter<F>
+ where
+     F: ForLt + 'static,
+     for<'b> F::Of<'b>: Driver<'b>,
+ {
+-    type IdInfo =3D <F::Of<'bound> as Driver<'bound>>::IdInfo;
++    type IdInfo =3D <F::Of<'static> as Driver<'static>>::IdInfo;
+=20
+     fn of_id_table() -> Option<of::IdTable<Self::IdInfo>> {
+-        <F::Of<'bound> as Driver<'bound>>::OF_ID_TABLE
++        <F::Of<'static> as Driver<'static>>::OF_ID_TABLE
+     }
+=20
+     fn acpi_id_table() -> Option<acpi::IdTable<Self::IdInfo>> {
+-        <F::Of<'bound> as Driver<'bound>>::ACPI_ID_TABLE
++        <F::Of<'static> as Driver<'static>>::ACPI_ID_TABLE
+     }
+ }
+=20
 
