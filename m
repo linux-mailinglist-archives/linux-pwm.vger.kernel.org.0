@@ -1,166 +1,122 @@
-Return-Path: <linux-pwm+bounces-8872-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8873-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 6B0BDfpNA2pq3AEAu9opvQ
-	(envelope-from <linux-pwm+bounces-8872-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Tue, 12 May 2026 17:57:46 +0200
+	id CGFMJ2YKBWoeRwIAu9opvQ
+	(envelope-from <linux-pwm+bounces-8873-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Thu, 14 May 2026 01:33:58 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E0035524339
-	for <lists+linux-pwm@lfdr.de>; Tue, 12 May 2026 17:57:45 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 698AD53C085
+	for <lists+linux-pwm@lfdr.de>; Thu, 14 May 2026 01:33:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 1BA4930D199C
-	for <lists+linux-pwm@lfdr.de>; Tue, 12 May 2026 15:50:00 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id D1E133019035
+	for <lists+linux-pwm@lfdr.de>; Wed, 13 May 2026 23:33:57 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7E6B53BED43;
-	Tue, 12 May 2026 15:49:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A4BD93B9618;
+	Wed, 13 May 2026 23:33:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bqe+MtoJ"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sK6GldL0"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 547A735F5E0;
-	Tue, 12 May 2026 15:49:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811F33890E8;
+	Wed, 13 May 2026 23:33:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778600996; cv=none; b=oEjaQMW6RolA6k2WiqYAz5tHUtt6hbzsKdDehkO9AAOMNhAEbv3GcUNPpnrYmRbsd1SbbBHQsbHCsoQirovf8kahnqYgjt0zgwYcAqwovj+qNyqHU7KRIrodV+6mJ1764HStP1o8fLZPqsuUi+LsG/2hn69UmY+a+fEmBMNKEHg=
+	t=1778715235; cv=none; b=CUtLCI5VbQP8zk8zwucQO3yl806juGXU+Ec3I6nSsAjtspaUtFBb+3HPSkP59KhyGzms0mRtPmadUIud244KHGSzBAihsbKe+Phv+z8NS92YW5mAo9a3HJSTO7lXVoGbm9VbL49TVAPphx7BKlyjo9e25z55/Uzhym39FujypGc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778600996; c=relaxed/simple;
-	bh=xT04KsS3vdFr5U9rnS1OIQVoQ8mPOcKNw2Vjgn0vL8o=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=W0EBCjkHGW2H9mE8pG8HhiOkXoCtONKtvmKWrcnfJC2CP7a5Z2g11pdKhUDuAIAHluP7CEEMEhpLIx7qAFd+AzcuhQvdGy1BWWGuF0CqPMf6ASPN9KiCABfKQvRgsZtLwPB3YSMFNXOpzmoDUfomq/FmZStyyTdISXGcFOUel30=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bqe+MtoJ; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9D79C2BCB0;
-	Tue, 12 May 2026 15:49:47 +0000 (UTC)
+	s=arc-20240116; t=1778715235; c=relaxed/simple;
+	bh=ABN00HzQ91S9l2mJfmg1rfw+l+o9zTlnJwwutFGLwM0=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=AM51qa9f3Uw/lm7ZPOgK83hIpzewHXKFsWukUrQ4nr0e/mm6DnpxR/sD60aDJeTzH9QQylYjykq7f1T0VaWTnsNnaBRIep/RS5N6fM+GB65JU5E13/MDpUTp7IdOQ7sN9Gn70YxEvR05JzECpOxyOsi4QB6LyaDIgE8wxr7z1N0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sK6GldL0; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1579C19425;
+	Wed, 13 May 2026 23:33:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778600996;
-	bh=xT04KsS3vdFr5U9rnS1OIQVoQ8mPOcKNw2Vjgn0vL8o=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=bqe+MtoJUKckxiSp8SbZEmLkoM0jygdg7+XXnLKdgCwg1KIV1Nj/wxMBj5dqlHWsX
-	 Bldeh+G56RqSmhFyUa9n/T1inPZLhq5zSpFCCB91toQamYQm3p1RF+lO43zAmEe+4L
-	 R6VLmWQiq76CQAKXvKAPKEiIEToLW04NIEdjqD6DCoszNgKWrU+91AJfmIgnO49Xoo
-	 4cy4mvnNPM3SjoiZdvDjbMPnpzfV06cvdahdkeSqyOwfa9N5n52q+/qiED3AHeOqFU
-	 Eer19JGdk+JVGp/rsFfyV3Btesq2riF7mMaJ15mdymmKL4/ACEVDBMNOPQvp2iPlFS
-	 Z6ArnMfFy13Tw==
-Date: Tue, 12 May 2026 16:49:42 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org>
-Cc: radu.sabau@analog.com, Lars-Peter Clausen <lars@metafoo.de>, Michael
- Hennerich <Michael.Hennerich@analog.com>, David Lechner
- <dlechner@baylibre.com>, Nuno =?UTF-8?B?U8Oh?= <nuno.sa@analog.com>, Andy
- Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Uwe
- =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>, Liam Girdwood
- <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Linus Walleij
- <linusw@kernel.org>, Bartosz Golaszewski <brgl@kernel.org>, Philipp Zabel
- <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
- <skhan@linuxfoundation.org>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-doc@vger.kernel.org
-Subject: Re: [PATCH v10 4/6] iio: adc: ad4691: add SPI offload support
-Message-ID: <20260512164942.6ef07ee9@jic23-huawei>
-In-Reply-To: <20260511-ad4692-multichannel-sar-adc-driver-v10-4-e1fbb1744e38@analog.com>
-References: <20260511-ad4692-multichannel-sar-adc-driver-v10-0-e1fbb1744e38@analog.com>
-	<20260511-ad4692-multichannel-sar-adc-driver-v10-4-e1fbb1744e38@analog.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	s=k20201202; t=1778715235;
+	bh=ABN00HzQ91S9l2mJfmg1rfw+l+o9zTlnJwwutFGLwM0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sK6GldL0bTZVqO9OPG1ev4S3c6qMvI//wfjvKk1rZ0j69abHr9hqNO7J9Mmt6n1+o
+	 PdcPGN4X7wQ80RoyXo7u+OyrlnH+PCPkf9aXiN2kXqioWMnyINK3deRFbSUoo9/1X9
+	 QwOTMFJQmxv+qWAqU686nn9BgSd0m8dQCdoPNOG3TuLdb5wMD4oUjzlZhz/brJsFFb
+	 WaIopn7fsArYBuXAaxdgUaZptS4nQuvEJvxbMazt2Sr71IRgyhSQx7MlEQ9PMIbCHG
+	 SgUrYj5yJuLmVI7EzcBTPgoZTGFf0WDFPFBuLZP3+5/7RotCIq7KhKu76iOJbBZsPF
+	 b56EUDkUpi8Ww==
+Date: Wed, 13 May 2026 18:33:52 -0500
+From: "Rob Herring (Arm)" <robh@kernel.org>
+To: Manish Baing <manishbaing2789@gmail.com>
+Cc: alexandre.torgue@foss.st.com, thierry.reding@gmail.com,
+	mcoquelin.stm32@gmail.com, linux-kernel@vger.kernel.org,
+	krzk+dt@kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+	ukleinek@kernel.org, devicetree@vger.kernel.org,
+	linux-pwm@vger.kernel.org, conor+dt@kernel.org,
+	linux-arm-kernel@lists.infradead.org, linusw@kernel.org
+Subject: Re: [PATCH v2] dt-bindings: pwm: stmpe: drop legacy binding
+Message-ID: <177871523137.2307220.3066863194193334549.robh@kernel.org>
+References: <20260508184626.15938-1-manishbaing2789@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Rspamd-Queue-Id: E0035524339
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260508184626.15938-1-manishbaing2789@gmail.com>
+X-Rspamd-Queue-Id: 698AD53C085
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
+X-Spamd-Result: default: False [0.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8872-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8873-lists,linux-pwm=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[13];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[24];
-	FROM_HAS_DN(0.00)[];
+	FREEMAIL_CC(0.00)[foss.st.com,gmail.com,vger.kernel.org,kernel.org,st-md-mailman.stormreply.com,lists.infradead.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jic23@kernel.org,linux-pwm@vger.kernel.org];
-	FREEMAIL_CC(0.00)[analog.com,metafoo.de,baylibre.com,kernel.org,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org,vger.kernel.org];
-	TAGGED_RCPT(0.00)[linux-pwm,radu.sabau.analog.com,dt];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[robh@kernel.org,linux-pwm@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,analog.com:email]
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-On Mon, 11 May 2026 14:54:16 +0300
-Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org> wrote:
 
-> From: Radu Sabau <radu.sabau@analog.com>
+On Fri, 08 May 2026 18:46:26 +0000, Manish Baing wrote:
+> The st,stmpe-pwm binding is already covered by the MFD schema
+> Documentation/devicetree/bindings/mfd/st,stmpe.yaml. Remove the
+> obsolete and redundant text binding file.
 > 
-> Add SPI offload support to enable DMA-based, CPU-independent data
-> acquisition using the SPI Engine offload framework.
+> Signed-off-by: Manish Baing <manishbaing2789@gmail.com>
+> ---
+> Changes in v2:
+> - Drop the TXT file instead of converting to YAML, as the
+>   functionality is already covered by st,stmpe.yaml.
+> - Update the commit subject and description to reflect the drop.
 > 
-> When an SPI offload is available (devm_spi_offload_get() succeeds),
-> the driver registers a DMA engine IIO buffer and uses dedicated buffer
-> setup operations. If no offload is available the existing software
-> triggered buffer path is used unchanged.
+>  .../devicetree/bindings/pwm/st,stmpe-pwm.txt   | 18 ------------------
+>  1 file changed, 18 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/pwm/st,stmpe-pwm.txt
 > 
-> Both CNV Burst Mode and Manual Mode support offload, but use different
-> trigger mechanisms:
-> 
-> CNV Burst Mode: the SPI Engine is triggered by the ADC's DATA_READY
-> signal on the GP pin specified by the trigger-source consumer reference
-> in the device tree (one cell = GP pin number 0-3). For this mode the
-> driver acts as both an SPI offload consumer (DMA RX stream, message
-> optimization) and a trigger source provider: it registers the
-> GP/DATA_READY output via devm_spi_offload_trigger_register() so the
-> offload framework can match the '#trigger-source-cells' phandle and
-> automatically fire the SPI Engine DMA transfer at end-of-conversion.
-> 
-> Manual Mode: the SPI Engine is triggered by a periodic trigger at
-> the configured sampling frequency. The pre-built SPI message uses
-> the pipelined CNV-on-CS protocol: N+1 16-bit transfers are issued
-> for N active channels (the first result is discarded as garbage from
-> the pipeline flush) and the remaining N results are captured by DMA.
-> 
-> All offload transfers use 16-bit frames (bits_per_word=16, len=2).
-> The channel scan_type (storagebits=16, shift=0) is shared between the
-> software triggered-buffer and offload paths; no separate scan_type or
-> channel array is needed for the offload case at this stage. Oversampling
-> support and mode-specific channel array distinctions are introduced in
-> the following commit.
-> 
-> IIO_BUFFER_DMAENGINE is selected because the offload path uses
-> devm_iio_dmaengine_buffer_setup_with_handle() to allocate and
-> attach the DMA RX buffer to the IIO device.
 
-More stuff from sashiko - it also not noticed the BE marking is
-in a later patch - but given you are doing 16bit words here likely
-the chan spec needs to be different.
+Acked-by: Rob Herring (Arm) <robh@kernel.org>
 
-Hohum. It then seems to have timed out.  Maybe that should be a new
-rule - if your patch set is too big for sashiko it's too big and
-complex for reviewers too ;)
-
-> 
-> Signed-off-by: Radu Sabau <radu.sabau@analog.com>
-
-I didn't really spot anything myself on this pass so just a question
-of analysing the bot output and groaning at what I missed :(
-
-Jonathan
 
