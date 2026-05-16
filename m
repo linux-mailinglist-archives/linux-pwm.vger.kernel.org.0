@@ -1,50 +1,50 @@
-Return-Path: <linux-pwm+bounces-8897-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8898-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cLfqGvm7CGra2wMAu9opvQ
-	(envelope-from <linux-pwm+bounces-8897-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Sat, 16 May 2026 20:48:25 +0200
+	id iOESGq69CGql3QMAu9opvQ
+	(envelope-from <linux-pwm+bounces-8898-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Sat, 16 May 2026 20:55:42 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 26A6855D553
-	for <lists+linux-pwm@lfdr.de>; Sat, 16 May 2026 20:48:24 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0FE6E55D650
+	for <lists+linux-pwm@lfdr.de>; Sat, 16 May 2026 20:55:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 55C77300D6A7
-	for <lists+linux-pwm@lfdr.de>; Sat, 16 May 2026 18:48:23 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id BB40E300BDA4
+	for <lists+linux-pwm@lfdr.de>; Sat, 16 May 2026 18:55:37 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 292E033E347;
-	Sat, 16 May 2026 18:48:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9D0E2342539;
+	Sat, 16 May 2026 18:55:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ru9BPIu0"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZhK1sizi"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0347405C2C;
-	Sat, 16 May 2026 18:48:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7563B28686;
+	Sat, 16 May 2026 18:55:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778957299; cv=none; b=aL3088cMxiAeW0KnvaorWd6ad+L52pdqLg5YhpYtdVkxNTm6GK+f7jTokzdAKw6sVJJ8vBqMQUM5Zb2tNEoaKoMyn6s5aoh87eo7Jzzegadc9kSKR4a07xgRLDy/Eadiq/uyTcJoByDqARSjXBopsTsuf6s0Wl3VDxySlnmNK6U=
+	t=1778957736; cv=none; b=VbUO0bxtX7u+CPfpoSS5Wk6he/e7nZnru3vdnavr2MO7DyfKtkW8NqyU1oF9WfUPdjU55T7BRaiF1/XAkqBshmpLP6RooIiZGto4dGhCSSjuwSwD4+bxTtyexwhU38bmYRGgBBLUCnpA8FJOu1jgeR8SbzG4R6jJ5MTrp54UUrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778957299; c=relaxed/simple;
-	bh=koZzu9qegl+yA6HJQumUETob9pvN+7fnQkECzRo0yzU=;
+	s=arc-20240116; t=1778957736; c=relaxed/simple;
+	bh=q/IpILmr0azoC+t0Lf2g+yybKTzBbhfe+OMXbr5vnMg=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rQ/ZX7XI5Ha2cskLCJGViho3xSmqVc6Bhn3SzJ0ALydv1L/PMnp3erQs9rVUoo7fgtk2EiUY81NSl2Sm+Pcx7DPOdYgOiSkea1fbBjs0eZeYnaZj6AMfqSlsxjwyy74d1Ka/OsxRgTvVkjV+NhkNH9t9A4xs45JRVf6xzYzlXyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ru9BPIu0; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE691C19425;
-	Sat, 16 May 2026 18:48:11 +0000 (UTC)
+	 MIME-Version:Content-Type; b=kbo1J/U1puZ/DF9hsIJjmjoGN4XEBBd4AiHXppHBZU3bfixcD/Wp3s4k4HaObYxVY2eoJvsQ/oAjyAO1zxxR/nDEsG/AKgUpWKwhDGg6uwwxmxnB89zUa99Ud9unZ35DhpGOi9NcsQFfKz/8x7TSJcvYzd1H2v/PL8jUfwnb6ho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZhK1sizi; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DDB1C19425;
+	Sat, 16 May 2026 18:55:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778957298;
-	bh=koZzu9qegl+yA6HJQumUETob9pvN+7fnQkECzRo0yzU=;
+	s=k20201202; t=1778957736;
+	bh=q/IpILmr0azoC+t0Lf2g+yybKTzBbhfe+OMXbr5vnMg=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=ru9BPIu0QchNJezGP19SrdGoGGZ7hn/s2L6pGkr0PD0PGdV6KOZMhDNN+fUYJ/wGW
-	 egMr+fwD5FpfuDkGjU7mYV7zAyqzMHaevA6W2PkxsIbslXsqDAn7Ag0ggqrlTnAkal
-	 tE4nH4bXRvbaMNc1pRZc2iEuNk77jJlZCsxhQqxT9R+FOqVCCWvKcNFEpqfKseEoRJ
-	 uZF8gKkggNOTaBpUCUe9Gw1CZlcx6TKZNxPT3xS7qaNdtWTS12YU74RJ2sB+o0kNCp
-	 t7m3QRgXcdHdqcMhOScHfmXWGfs5ByIM9oagx10sZ5LD2hV5McvFJA+dxRVi8nFYHM
-	 V/wKTc8JY7TKw==
-Date: Sat, 16 May 2026 19:48:07 +0100
+	b=ZhK1siziz+X7X/gaHEAf46XLp/wpndFW29ONEQhistZJ8LZL9NdVhquDzcCgPzRA7
+	 bYeyYR8bf5oaBqHnG4MFF7J/vDaW1WRDMr726TXGzMop61gPwHVD6HKwttfehaoLoA
+	 h7vseBAgDOF2R1upFMaCUfj+o0ws1/A5FYJEw9mg1eHlPYjnYCltvTi0BhptUvduT2
+	 9ZQ1zmnNifahl03+VVA7SFJfAiqMlxHu0iCqsxEmROOF0FY2eStn6JT/JHOpG/VQq5
+	 deKDcavTSAoCLRc5oCU4z03rHl+rmDgUp+Sn0RdZQMBSdjAowxOxCHcvXl1dC/Zb7q
+	 iT6k3kn+oWE+Q==
+Date: Sat, 16 May 2026 19:55:22 +0100
 From: Jonathan Cameron <jic23@kernel.org>
 To: Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org>
 Cc: radu.sabau@analog.com, Lars-Peter Clausen <lars@metafoo.de>, Michael
@@ -60,11 +60,11 @@ Cc: radu.sabau@analog.com, Lars-Peter Clausen <lars@metafoo.de>, Michael
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
  linux-doc@vger.kernel.org
-Subject: Re: [PATCH v11 3/6] iio: adc: ad4691: add triggered buffer support
-Message-ID: <20260516194807.3048d226@jic23-huawei>
-In-Reply-To: <20260515-ad4692-multichannel-sar-adc-driver-v11-3-eab27d852ac2@analog.com>
+Subject: Re: [PATCH v11 5/6] iio: adc: ad4691: add oversampling support
+Message-ID: <20260516195522.6792f89e@jic23-huawei>
+In-Reply-To: <20260515-ad4692-multichannel-sar-adc-driver-v11-5-eab27d852ac2@analog.com>
 References: <20260515-ad4692-multichannel-sar-adc-driver-v11-0-eab27d852ac2@analog.com>
-	<20260515-ad4692-multichannel-sar-adc-driver-v11-3-eab27d852ac2@analog.com>
+	<20260515-ad4692-multichannel-sar-adc-driver-v11-5-eab27d852ac2@analog.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
@@ -72,21 +72,21 @@ List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Rspamd-Queue-Id: 26A6855D553
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Rspamd-Queue-Id: 0FE6E55D650
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8897-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8898-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
@@ -100,151 +100,133 @@ X-Spamd-Result: default: False [-0.16 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[jic23@kernel.org,linux-pwm@vger.kernel.org];
 	FREEMAIL_CC(0.00)[analog.com,metafoo.de,baylibre.com,kernel.org,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org,vger.kernel.org];
 	TAGGED_RCPT(0.00)[linux-pwm,radu.sabau.analog.com,dt];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[analog.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-On Fri, 15 May 2026 16:31:32 +0300
+On Fri, 15 May 2026 16:31:34 +0300
 Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org> wrote:
 
 > From: Radu Sabau <radu.sabau@analog.com>
->=20
-> Add buffered capture support using the IIO triggered buffer framework.
->=20
-> CNV Burst Mode: the GP pin identified by interrupt-names in the device
-> tree is configured as DATA_READY output. The IRQ handler stops
-> conversions and fires the IIO trigger; the trigger handler executes a
-> pre-built SPI message that reads all active channels from the AVG_IN
-> accumulator registers and then resets accumulator state and restarts
-> conversions for the next cycle.
->=20
-> Manual Mode: CNV is tied to SPI CS so each transfer simultaneously
-> reads the previous result and starts the next conversion (pipelined
-> N+1 scheme). At preenable time a pre-built, optimised SPI message of
-> N+1 transfers is constructed (N channel reads plus one NOOP to drain
-> the pipeline). The trigger handler executes the message in a single
-> spi_sync() call and collects the results. An external trigger (e.g.
-> iio-trig-hrtimer) is required to drive the trigger at the desired
-> sample rate.
-See below. Sashiko noticed an issue.
-
-Note that I think the vast majority of what it came up with for this
-version is garbage. Not this one though.=20
-
-For manual mode you still register a trigger and attach it.
-That trigger never fires...
-
-I suspect it appears to all work because you just set the trigger
-for manual mode before enabling it. However makes more sense to not
-register the pointless trigger.  Just a bit of code reorg probably
-to fix this.
-
-One other thing inline from the other other sashiko bit that was 'nearly'
-right.
-
-
->=20
-> Both modes share the same trigger handler and push a complete scan =E2=80=
-=94
-> one big-endian 16-bit (__be16) slot per active channel, densely packed
-> in scan_index order, followed by a timestamp.
->=20
-> The CNV Burst Mode sampling frequency (PWM period) is exposed as a
-> buffer-level attribute via IIO_DEVICE_ATTR.
->=20
+> 
+> Add per-channel oversampling ratio (OSR) support for CNV burst mode.
+> The accumulator depth register (ACC_DEPTH_IN) is programmed with the
+> selected OSR at buffer enable time and before each single-shot read.
+> 
+> Supported OSR values: 1, 2, 4, 8, 16, 32.
+> 
+> Introduce AD4691_MANUAL_CHANNEL() for manual mode channels, which do
+> not expose the oversampling_ratio attribute since OSR is not applicable
+> in that mode. A separate manual_channels array is added to
+> struct ad4691_channel_info and selected at probe time.
+> 
+> in_voltageN_sampling_frequency represents the effective output rate for
+> channel N, defined as osc_freq / osr[N]. The chip has one internal
+> oscillator shared by all channels; each channel independently
+> accumulates osr[N] oscillator cycles before producing a result.
+> 
+> Writing sampling_frequency computes needed_osc = freq * osr[N] and
+> snaps down to the largest oscillator table entry that satisfies both
+> osc <= needed_osc and osc % osr[N] == 0, guaranteeing an exact integer
+> read-back. The result is stored in target_osc_freq_Hz and written to
+> OSC_FREQ_REG at buffer enable and single-shot time, so sampling_frequency
+> and oversampling_ratio can be set in any order.
+> 
+> in_voltageN_sampling_frequency_available is computed dynamically from
+> the channel's current OSR, listing only oscillator table entries that
+> divide evenly by osr[N], expressed as effective rates. The list becomes
+> sparser as OSR increases, capping at max_rate / osr[N].
+> 
+> Writing oversampling_ratio stores the new OSR for that channel and snaps
+> target_osc_freq_Hz to the largest oscillator table entry that is both
+> <= old_effective_rate * new_osr and evenly divisible by new_osr. This
+> preserves an integer read-back of in_voltageN_sampling_frequency after
+> the OSR change while keeping the oscillator as close as possible to the
+> previous effective rate.
+> 
+> OSR defaults to 1 (no accumulation) for all channels.
+> 
 > Signed-off-by: Radu Sabau <radu.sabau@analog.com>
 
-> =20
-> +static int ad4691_setup_triggered_buffer(struct iio_dev *indio_dev,
-> +					 struct ad4691_state *st)
-> +{
-> +	struct device *dev =3D regmap_get_device(st->regmap);
-> +	struct iio_trigger *trig;
-> +	unsigned int i;
-> +	int irq, ret;
-> +
-> +	indio_dev->channels =3D st->info->sw_info->channels;
-> +	indio_dev->num_channels =3D st->info->sw_info->num_channels;
-> +	indio_dev->info =3D st->manual_mode ? &ad4691_manual_info : &ad4691_cnv=
-_burst_info;
-> +
-> +	trig =3D devm_iio_trigger_alloc(dev, "%s-dev%d", indio_dev->name,
-> +				      iio_device_id(indio_dev));
-> +	if (!trig)
-> +		return -ENOMEM;
-> +
-> +	trig->ops =3D &ad4691_trigger_ops;
-> +	iio_trigger_set_drvdata(trig, st);
-> +
-> +	ret =3D devm_iio_trigger_register(dev, trig);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "IIO trigger register failed\n");
-> +
-> +	indio_dev->trig =3D iio_trigger_get(trig);
+Mostly to avoid others looking into it. We do indeed have some issues
+in the IIO core with races around read_avail().
+They've been there a long time and attempts to fix them haven't yet
+made it upstream.  Where possible it is better to precompute all the options
+and pick a pointer rather than copying on the fly.
 
-One place here where I think sashiko may have a point... You register a tri=
-gger
-for manual mode.  What actually makes it fire as the only code that calls
-iio_trigger_poll() is in the irq that isn't registered in this path.
+I think we can do that here but maybe I'm missing something.
 
+I'm running out of energy tonight and feel like some Eurovision silliness
+so I'm not going to do another full review today at least
 
+> ---
+>  drivers/iio/adc/ad4691.c | 381 ++++++++++++++++++++++++++++++++++++++++++-----
+>  1 file changed, 343 insertions(+), 38 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/ad4691.c b/drivers/iio/adc/ad4691.c
+> index 25f7a6939b0f..39244e0e4a2d 100644
+> --- a/drivers/iio/adc/ad4691.c
+> +++ b/drivers/iio/adc/ad4691.c
 
+>  
+>  static int ad4691_read_avail(struct iio_dev *indio_dev,
+> @@ -634,10 +802,46 @@ static int ad4691_read_avail(struct iio_dev *indio_dev,
+>  	unsigned int start = ad4691_samp_freq_start(st->info);
+>  
+>  	switch (mask) {
+> -	case IIO_CHAN_INFO_SAMP_FREQ:
+> -		*vals = &ad4691_osc_freqs_Hz[start];
+> +	case IIO_CHAN_INFO_SAMP_FREQ: {
+> +		unsigned int osr;
+> +		int n = 0;
 > +
-> +	if (st->manual_mode)
-> +		return devm_iio_triggered_buffer_setup(dev, indio_dev,
-> +						       &iio_pollfunc_store_time,
-> +						       &ad4691_trigger_handler,
-> +						       &ad4691_manual_buffer_setup_ops);
+> +		/*
+> +		 * Hold the lock while reading osr[chan] and populating the
+> +		 * scratch buffer: a concurrent oversampling_ratio write modifies
+> +		 * both target_osc_freq_Hz and osr[] under the lock, so we must
+> +		 * read osr atomically with respect to that write. The scratch
+> +		 * buffer is per-channel, so concurrent reads on different
+> +		 * channels do not race; concurrent reads on the same channel
+> +		 * would compute identical values, but holding the lock avoids
+> +		 * the formal data race.
+
+The further issue that sashiko points out is we might rip whilst the
+core is formatting this. It's actually worse than a small race as the
+consumer interface might hold the pointer indefinitely.  There are only
+a few osr values, can we precompute the lot and make this a pick?
+
+
+> +		 */
+> +		scoped_guard(mutex, &st->lock) {
+> +			osr = st->osr[chan->channel];
 > +
-> +	/*
-> +	 * The GP pin named in interrupt-names asserts at end-of-conversion.
-> +	 * The IRQ handler stops conversions and fires the IIO trigger so
-> +	 * the trigger handler can read and push the sample to the buffer.
-> +	 * The IRQ is kept disabled until the buffer is enabled.
-> +	 */
-> +	irq =3D -ENXIO;
-> +	for (i =3D 0; i < ARRAY_SIZE(ad4691_gp_names); i++) {
-> +		irq =3D fwnode_irq_get_byname(dev_fwnode(dev),
-> +					    ad4691_gp_names[i]);
-> +		if (irq > 0 || irq =3D=3D -EPROBE_DEFER)
-> +			break;
+> +			/*
+> +			 * Only oscillator frequencies evenly divisible by the
+> +			 * channel's OSR yield an integer effective rate; expose
+> +			 * those as effective rates (osc / osr) so the user works
+> +			 * entirely in output-sample space.
+> +			 */
+> +			for (unsigned int i = start;
+> +			     i < ARRAY_SIZE(ad4691_osc_freqs_Hz); i++) {
+> +				if (ad4691_osc_freqs_Hz[i] % osr)
+> +					continue;
+> +				st->samp_freq_avail[chan->channel][n++] =
+> +					ad4691_osc_freqs_Hz[i] / osr;
+> +			}
+> +		}
+> +		*vals = st->samp_freq_avail[chan->channel];
+>  		*type = IIO_VAL_INT;
+> -		*length = ARRAY_SIZE(ad4691_osc_freqs_Hz) - start;
+> +		*length = n;
+> +		return IIO_AVAIL_LIST;
 > +	}
-> +	if (irq < 0)
-> +		return dev_err_probe(dev, irq, "failed to get GP interrupt\n");
-> +
-> +	st->irq =3D irq;
-> +
-> +	ret =3D ad4691_gpio_setup(st, i);
-> +	if (ret)
-> +		return ret;
-> +
-> +	/*
-> +	 * IRQ is kept disabled until the buffer is enabled to prevent
-> +	 * spurious DATA_READY events before the SPI message is set up.
-> +	 */
-> +	ret =3D devm_request_threaded_irq(dev, irq, NULL,
-> +					&ad4691_irq,
-> +					IRQF_ONESHOT | IRQF_NO_AUTOEN,
-> +					indio_dev->name, indio_dev);
-
-Sashiko was moaning about something different but it made me look at this.
-The irq handler her calls iio_trigger_poll but in a thread.
-Either that should be a top half (so dev_request_irq() with flag to force
-no threading) or should be iio_trigger_poll_nested()
-
-I'm not sure why you weren't seeing a warning on this.
-
-> +	if (ret)
-> +		return ret;
-> +
-> +	return devm_iio_triggered_buffer_setup_ext(dev, indio_dev,
-> +						   &iio_pollfunc_store_time,
-> +						   &ad4691_trigger_handler,
-> +						   IIO_BUFFER_DIRECTION_IN,
-> +						   &ad4691_cnv_burst_buffer_setup_ops,
-> +						   ad4691_buffer_attrs);
-> +}
-
+> +	case IIO_CHAN_INFO_OVERSAMPLING_RATIO:
+> +		*vals = ad4691_oversampling_ratios;
+> +		*type = IIO_VAL_INT;
+> +		*length = ARRAY_SIZE(ad4691_oversampling_ratios);
+>  		return IIO_AVAIL_LIST;
+>  	default:
+>  		return -EINVAL;
 
