@@ -1,49 +1,49 @@
-Return-Path: <linux-pwm+bounces-8909-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8910-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QFEgHPUGCWouFgQAu9opvQ
-	(envelope-from <linux-pwm+bounces-8909-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 02:08:21 +0200
+	id iN/SAfkGCWprFgQAu9opvQ
+	(envelope-from <linux-pwm+bounces-8910-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 02:08:25 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CFD0155E943
-	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 02:08:20 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8460055E958
+	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 02:08:24 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 66ACF302617E
-	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 00:03:15 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 25475305A26E
+	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 00:03:23 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0C1921922FD;
-	Sun, 17 May 2026 00:03:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2A7E819D07A;
+	Sun, 17 May 2026 00:03:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BDs53Kno"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aw9kff+I"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9BE38F7D;
-	Sun, 17 May 2026 00:03:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0278315B135;
+	Sun, 17 May 2026 00:03:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778976192; cv=none; b=DxLV33lOaDWOCYI4P96H6s0tNLwAxO23S113BJwto7scv++sRz0udF8yAfI7ABGPv3pPbu8LwMbORk4TmYdxkGekycKQlGQOjdqt4t2zrrxK1ovdYQY0oI8OMM376cLZ2tdc9Ow3+YHHrwRwkANy+/pAOLP6ibEF4NPHClvaoGo=
+	t=1778976200; cv=none; b=F0RKtvI4axvQW3/1nnGurAkhElZfkCVy7fS3eUBTFKhUIofB8ogjl+16rR7Da0ONHERyeLOh/1pdxSATCPZE0cweYl+HeD/MUh3ShM2hEeKH1AwuDz1S3paPfudm6Suy2SsEnbUxQLFmL5UYAl3oY1LK7AvXMyUJywOQtOHi+Tw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778976192; c=relaxed/simple;
-	bh=n+WnYgY5mFfRCQlkmWsELxd/5dFRFZ1BO6cq0dizv8c=;
+	s=arc-20240116; t=1778976200; c=relaxed/simple;
+	bh=p3bMFRLG/WXBDNRXPNCA/gK8l38P0CUm/6IBzdkkBqU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=e/kf3/VACS7jBEZp4QgYOSjG+0VJsUrUN66ExtddHr5no1z7vJRG7gccslvTPUpAESuS0nWPGKJ0DmSE7Gyd23jKKuSQzSNDkNyH0j7GpvfkZ1ddDZrSHGOmGUQhRfku4VZgEU9XTIXGqYQbT7b/I01po8h1BEeZ6kP8BHTMWOA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BDs53Kno; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64A06C19425;
-	Sun, 17 May 2026 00:03:06 +0000 (UTC)
+	 MIME-Version:Content-Type; b=eyp9BMOywSHynwJA8TH3FEdI/OX7ouRllxe6JCFeoHo1XC6ZrPq0ludBMUnqg+aaUhpz+FlcPdbqWeJkgE/yv9wwT2zK6u4xcM/eFY+6yZeGgw0v8T+5Ix8htxQOOobi7w2XGMtL3EA1BSe66YZM6Dvx8flN+aptuB4TQ6g6Ito=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aw9kff+I; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34B08C19425;
+	Sun, 17 May 2026 00:03:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778976192;
-	bh=n+WnYgY5mFfRCQlkmWsELxd/5dFRFZ1BO6cq0dizv8c=;
+	s=k20201202; t=1778976199;
+	bh=p3bMFRLG/WXBDNRXPNCA/gK8l38P0CUm/6IBzdkkBqU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BDs53KnojRujvVOFr52+PT7renaUzuKsk4vqzrM0J6xvFBMN6DAxOkHco5XNLDl5C
-	 tUN5mb5tVmFNUIqsH9Cmmx2zQkwNJuio3Sn27YAZMzplRW0BefKyswLhCupRSDUjtX
-	 iApIfaDfcxN8Pl8nrfjtfUzFHC5JNUvrbTlfK6XI/tNWJy96L4U1NG0nNj6t/sWdEQ
-	 /QbTtXl1IQp2iGTq9nvnWe7cfTJa5dodSMKwKiArtZcs6wP6anGsEZi/uYhdPDcr30
-	 Zsqapl3XANoRDUEGlrrc4GiFhS3Fkppnv1MmJwwR4oEjGwcWPBxCcH84Ioq9BZbgC2
-	 Zizcu9Aln5ZKw==
+	b=aw9kff+IU/QEv7BALextbViIFqFp6F7EC0DYnzNvBo3KUGA0m9s3fnajKkS6DkFrY
+	 UExWd/s/JSS/1eNylybxCSDYAEt4w+hvFqbfu6TKe/v+AscsS7m81JMjMU4XPRJs48
+	 wLcVEQ5mFXvTqsJ2e8BN/rLE1b/kBAQ4kzO06GBANeEdDfXGoAoPxZ9Si8M0QJUBri
+	 0Bw4h5mmAeDLwHZQrpAwL8u3XgxGx3Q796FesTxUn/1/iRVMMfd51hz7wZVNGh0E0C
+	 YSp4QBbAQw0PdYBQGui9bXmEul7QfQ0MqTPuKX8GAZsIDikFOsHi8NBBIgoVE6V0dk
+	 Oj/huYWgKl9gQ==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -79,9 +79,9 @@ Cc: driver-core@lists.linux.dev,
 	linux-pci@vger.kernel.org,
 	rust-for-linux@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v3 10/27] rust: pci: make Driver trait lifetime-parameterized
-Date: Sun, 17 May 2026 02:00:58 +0200
-Message-ID: <20260517000149.3226762-11-dakr@kernel.org>
+Subject: [PATCH v3 11/27] rust: platform: make Driver trait lifetime-parameterized
+Date: Sun, 17 May 2026 02:00:59 +0200
+Message-ID: <20260517000149.3226762-12-dakr@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260517000149.3226762-1-dakr@kernel.org>
 References: <20260517000149.3226762-1-dakr@kernel.org>
@@ -91,37 +91,37 @@ List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: CFD0155E943
+X-Rspamd-Queue-Id: 8460055E958
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [0.84 / 15.00];
+X-Spamd-Result: default: False [0.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8910-lists,linux-pwm=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[34];
-	FREEMAIL_TO(0.00)[linuxfoundation.org,kernel.org,nvidia.com,google.com,intel.com,linaro.org,samsung.com,gmail.com,arm.com,posteo.de,garyguo.net,protonmail.com,umich.edu,linux.dev,collabora.com,redhat.com];
-	TAGGED_FROM(0.00)[bounces-8909-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[linuxfoundation.org,kernel.org,nvidia.com,google.com,intel.com,linaro.org,samsung.com,gmail.com,arm.com,posteo.de,garyguo.net,protonmail.com,umich.edu,linux.dev,collabora.com,redhat.com];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dakr@kernel.org,linux-pwm@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dakr@kernel.org,linux-pwm@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-pwm];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
@@ -138,58 +138,167 @@ on the methods themselves; avoiding a global lifetime on the trait impl.
 Existing drivers set type Data<'bound> = Self, preserving the current
 behavior.
 
+Acked-by: Uwe Kleine-König <ukleinek@kernel.org>
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- drivers/gpu/nova-core/driver.rs       |  9 ++++++---
- rust/kernel/pci.rs                    | 24 +++++++++++++-----------
- samples/rust/rust_dma.rs              |  7 +++++--
- samples/rust/rust_driver_auxiliary.rs |  7 +++++--
- samples/rust/rust_driver_pci.rs       |  7 +++++--
- 5 files changed, 34 insertions(+), 20 deletions(-)
+ drivers/cpufreq/rcpufreq_dt.rs       | 10 +++++-----
+ drivers/gpu/drm/tyr/driver.rs        | 10 +++++-----
+ drivers/pwm/pwm_th1520.rs            | 10 +++++-----
+ rust/kernel/cpufreq.rs               | 10 +++++-----
+ rust/kernel/io/mem.rs                | 20 ++++++++++----------
+ rust/kernel/platform.rs              | 26 +++++++++++++-------------
+ samples/rust/rust_debugfs.rs         | 10 +++++-----
+ samples/rust/rust_driver_platform.rs | 10 +++++-----
+ samples/rust/rust_i2c_client.rs      | 15 +++++++++------
+ samples/rust/rust_soc.rs             | 10 +++++-----
+ 10 files changed, 67 insertions(+), 64 deletions(-)
 
-diff --git a/drivers/gpu/nova-core/driver.rs b/drivers/gpu/nova-core/driver.rs
-index 699e27046c93..fe4eafe1ebf0 100644
---- a/drivers/gpu/nova-core/driver.rs
-+++ b/drivers/gpu/nova-core/driver.rs
-@@ -74,10 +74,13 @@ pub(crate) struct NovaCore {
+diff --git a/drivers/cpufreq/rcpufreq_dt.rs b/drivers/cpufreq/rcpufreq_dt.rs
+index b7eeb2730eb0..bd64586ceb06 100644
+--- a/drivers/cpufreq/rcpufreq_dt.rs
++++ b/drivers/cpufreq/rcpufreq_dt.rs
+@@ -201,13 +201,13 @@ fn register_em(policy: &mut cpufreq::Policy) {
  
- impl pci::Driver for NovaCore {
+ impl platform::Driver for CPUFreqDTDriver {
      type IdInfo = ();
 -    type Data = Self;
 +    type Data<'bound> = Self;
-     const ID_TABLE: pci::IdTable<Self::IdInfo> = &PCI_TABLE;
+     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
  
--    fn probe(pdev: &pci::Device<Core>, _info: &Self::IdInfo) -> impl PinInit<Self, Error> {
+-    fn probe(
+-        pdev: &platform::Device<Core>,
+-        _id_info: Option<&Self::IdInfo>,
+-    ) -> impl PinInit<Self, Error> {
 +    fn probe<'bound>(
-+        pdev: &'bound pci::Device<Core>,
-+        _info: &'bound Self::IdInfo,
++        pdev: &'bound platform::Device<Core>,
++        _id_info: Option<&'bound Self::IdInfo>,
 +    ) -> impl PinInit<Self, Error> + 'bound {
-         pin_init::pin_init_scope(move || {
-             dev_dbg!(pdev, "Probe Nova Core GPU driver.\n");
- 
-@@ -109,7 +112,7 @@ fn probe(pdev: &pci::Device<Core>, _info: &Self::IdInfo) -> impl PinInit<Self, E
-         })
+         cpufreq::Registration::<CPUFreqDTDriver>::new_foreign_owned(pdev.as_ref())?;
+         Ok(Self {})
      }
+diff --git a/drivers/gpu/drm/tyr/driver.rs b/drivers/gpu/drm/tyr/driver.rs
+index c81bf217743d..3ac3b9979264 100644
+--- a/drivers/gpu/drm/tyr/driver.rs
++++ b/drivers/gpu/drm/tyr/driver.rs
+@@ -91,13 +91,13 @@ fn issue_soft_reset(dev: &Device<Bound>, iomem: &Devres<IoMem>) -> Result {
  
--    fn unbind(pdev: &pci::Device<Core>, this: Pin<&Self>) {
-+    fn unbind<'bound>(pdev: &'bound pci::Device<Core>, this: Pin<&'bound Self>) {
-         this.gpu.unbind(pdev.as_ref());
-     }
- }
-diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-index c06ac3fb2a64..8060861199d4 100644
---- a/rust/kernel/pci.rs
-+++ b/rust/kernel/pci.rs
-@@ -64,7 +64,7 @@
+ impl platform::Driver for TyrPlatformDriverData {
+     type IdInfo = ();
+-    type Data = Self;
++    type Data<'bound> = Self;
+     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
+ 
+-    fn probe(
+-        pdev: &platform::Device<Core>,
+-        _info: Option<&Self::IdInfo>,
+-    ) -> impl PinInit<Self, Error> {
++    fn probe<'bound>(
++        pdev: &'bound platform::Device<Core>,
++        _info: Option<&'bound Self::IdInfo>,
++    ) -> impl PinInit<Self, Error> + 'bound {
+         let core_clk = Clk::get(pdev.as_ref(), Some(c"core"))?;
+         let stacks_clk = OptionalClk::get(pdev.as_ref(), Some(c"stacks"))?;
+         let coregroup_clk = OptionalClk::get(pdev.as_ref(), Some(c"coregroup"))?;
+diff --git a/drivers/pwm/pwm_th1520.rs b/drivers/pwm/pwm_th1520.rs
+index 07795910a0b5..1abf580653fa 100644
+--- a/drivers/pwm/pwm_th1520.rs
++++ b/drivers/pwm/pwm_th1520.rs
+@@ -316,13 +316,13 @@ fn drop(self: Pin<&mut Self>) {
+ 
+ impl platform::Driver for Th1520PwmPlatformDriver {
+     type IdInfo = ();
+-    type Data = Self;
++    type Data<'bound> = Self;
+     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
+ 
+-    fn probe(
+-        pdev: &platform::Device<Core>,
+-        _id_info: Option<&Self::IdInfo>,
+-    ) -> impl PinInit<Self, Error> {
++    fn probe<'bound>(
++        pdev: &'bound platform::Device<Core>,
++        _id_info: Option<&'bound Self::IdInfo>,
++    ) -> impl PinInit<Self, Error> + 'bound {
+         let dev = pdev.as_ref();
+         let request = pdev.io_request_by_index(0).ok_or(ENODEV)?;
+ 
+diff --git a/rust/kernel/cpufreq.rs b/rust/kernel/cpufreq.rs
+index 50dd2a2c3e81..208c055a39f3 100644
+--- a/rust/kernel/cpufreq.rs
++++ b/rust/kernel/cpufreq.rs
+@@ -888,13 +888,13 @@ fn register_em(_policy: &mut Policy) {
+ ///
+ /// impl platform::Driver for SampleDriver {
+ ///     type IdInfo = ();
+-///     type Data = Self;
++///     type Data<'bound> = Self;
+ ///     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = None;
+ ///
+-///     fn probe(
+-///         pdev: &platform::Device<Core>,
+-///         _id_info: Option<&Self::IdInfo>,
+-///     ) -> impl PinInit<Self, Error> {
++///     fn probe<'bound>(
++///         pdev: &'bound platform::Device<Core>,
++///         _id_info: Option<&'bound Self::IdInfo>,
++///     ) -> impl PinInit<Self, Error> + 'bound {
+ ///         cpufreq::Registration::<SampleDriver>::new_foreign_owned(pdev.as_ref())?;
+ ///         Ok(Self {})
+ ///     }
+diff --git a/rust/kernel/io/mem.rs b/rust/kernel/io/mem.rs
+index e136b676d372..1b34f7ebd929 100644
+--- a/rust/kernel/io/mem.rs
++++ b/rust/kernel/io/mem.rs
+@@ -62,12 +62,12 @@ pub(crate) unsafe fn new(device: &'a Device<Bound>, resource: &'a Resource) -> S
+     ///
+     /// impl platform::Driver for SampleDriver {
+     ///    # type IdInfo = ();
+-    ///    # type Data = Self;
++    ///    # type Data<'bound> = Self;
+     ///
+-    ///    fn probe(
+-    ///       pdev: &platform::Device<Core>,
+-    ///       info: Option<&Self::IdInfo>,
+-    ///    ) -> impl PinInit<Self, Error> {
++    ///    fn probe<'bound>(
++    ///       pdev: &'bound platform::Device<Core>,
++    ///       info: Option<&'bound Self::IdInfo>,
++    ///    ) -> impl PinInit<Self, Error> + 'bound {
+     ///       let offset = 0; // Some offset.
+     ///
+     ///       // If the size is known at compile time, use [`Self::iomap_sized`].
+@@ -127,12 +127,12 @@ pub fn iomap_exclusive_sized<const SIZE: usize>(
+     ///
+     /// impl platform::Driver for SampleDriver {
+     ///    # type IdInfo = ();
+-    ///    # type Data = Self;
++    ///    # type Data<'bound> = Self;
+     ///
+-    ///    fn probe(
+-    ///       pdev: &platform::Device<Core>,
+-    ///       info: Option<&Self::IdInfo>,
+-    ///    ) -> impl PinInit<Self, Error> {
++    ///    fn probe<'bound>(
++    ///       pdev: &'bound platform::Device<Core>,
++    ///       info: Option<&'bound Self::IdInfo>,
++    ///    ) -> impl PinInit<Self, Error> + 'bound {
+     ///       let offset = 0; // Some offset.
+     ///
+     ///       // Unlike [`Self::iomap_sized`], here the size of the memory region
+diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
+index a72ad5366931..6e4437866c30 100644
+--- a/rust/kernel/platform.rs
++++ b/rust/kernel/platform.rs
+@@ -50,7 +50,7 @@
  // - `DEVICE_DRIVER_OFFSET` is the correct byte offset to the embedded `struct device_driver`.
  unsafe impl<T: Driver> driver::DriverLayout for Adapter<T> {
-     type DriverType = bindings::pci_driver;
+     type DriverType = bindings::platform_driver;
 -    type DriverData<'bound> = T::Data;
 +    type DriverData<'bound> = T::Data<'bound>;
      const DEVICE_DRIVER_OFFSET: usize = core::mem::offset_of!(Self::DriverType, driver);
  }
  
-@@ -130,7 +130,7 @@ extern "C" fn remove_callback(pdev: *mut bindings::pci_dev) {
+@@ -118,7 +118,7 @@ extern "C" fn remove_callback(pdev: *mut bindings::platform_device) {
          // SAFETY: `remove_callback` is only ever called after a successful call to
          // `probe_callback`, hence it's guaranteed that `Device::set_drvdata()` has been called
          // and stored a `Pin<KBox<T::Data>>`.
@@ -198,48 +307,51 @@ index c06ac3fb2a64..8060861199d4 100644
  
          T::unbind(pdev, data);
      }
-@@ -279,13 +279,13 @@ macro_rules! pci_device_table {
+@@ -192,14 +192,14 @@ macro_rules! module_platform_driver {
  ///
- /// impl pci::Driver for MyDriver {
+ /// impl platform::Driver for MyDriver {
  ///     type IdInfo = ();
 -///     type Data = Self;
 +///     type Data<'bound> = Self;
- ///     const ID_TABLE: pci::IdTable<Self::IdInfo> = &PCI_TABLE;
+ ///     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
+ ///     const ACPI_ID_TABLE: Option<acpi::IdTable<Self::IdInfo>> = Some(&ACPI_TABLE);
  ///
 -///     fn probe(
--///         _pdev: &pci::Device<Core>,
--///         _id_info: &Self::IdInfo,
+-///         _pdev: &platform::Device<Core>,
+-///         _id_info: Option<&Self::IdInfo>,
 -///     ) -> impl PinInit<Self, Error> {
 +///     fn probe<'bound>(
-+///         _pdev: &'bound pci::Device<Core>,
-+///         _id_info: &'bound Self::IdInfo,
++///         _pdev: &'bound platform::Device<Core>,
++///         _id_info: Option<&'bound Self::IdInfo>,
 +///     ) -> impl PinInit<Self::Data<'bound>, Error> + 'bound {
  ///         Err(ENODEV)
  ///     }
  /// }
-@@ -302,7 +302,7 @@ pub trait Driver: Send {
+@@ -214,7 +214,7 @@ pub trait Driver: Send {
      type IdInfo: 'static;
  
      /// The type of the driver's bus device private data.
 -    type Data;
 +    type Data<'bound>: 'bound;
  
-     /// The table of device ids supported by the driver.
-     const ID_TABLE: IdTable<Self::IdInfo>;
-@@ -311,8 +311,10 @@ pub trait Driver: Send {
+     /// The table of OF device ids supported by the driver.
+     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = None;
+@@ -226,10 +226,10 @@ pub trait Driver: Send {
      ///
-     /// Called when a new pci device is added or discovered. Implementers should
-     /// attempt to initialize the device here.
--    fn probe(dev: &Device<device::Core>, id_info: &Self::IdInfo)
--        -> impl PinInit<Self::Data, Error>;
+     /// Called when a new platform device is added or discovered.
+     /// Implementers should attempt to initialize the device here.
+-    fn probe(
+-        dev: &Device<device::Core>,
+-        id_info: Option<&Self::IdInfo>,
+-    ) -> impl PinInit<Self::Data, Error>;
 +    fn probe<'bound>(
 +        dev: &'bound Device<device::Core>,
-+        id_info: &'bound Self::IdInfo,
++        id_info: Option<&'bound Self::IdInfo>,
 +    ) -> impl PinInit<Self::Data<'bound>, Error> + 'bound;
  
-     /// PCI driver unbind.
+     /// Platform driver unbind.
      ///
-@@ -324,7 +326,7 @@ fn probe(dev: &Device<device::Core>, id_info: &Self::IdInfo)
+@@ -241,7 +241,7 @@ fn probe(
      /// operations to gracefully tear down the device.
      ///
      /// Otherwise, release operations for driver resources should be performed in `Drop`.
@@ -248,68 +360,114 @@ index c06ac3fb2a64..8060861199d4 100644
          let _ = (dev, this);
      }
  }
-diff --git a/samples/rust/rust_dma.rs b/samples/rust/rust_dma.rs
-index e583c6b8390a..943655a85ec6 100644
---- a/samples/rust/rust_dma.rs
-+++ b/samples/rust/rust_dma.rs
-@@ -58,10 +58,13 @@ unsafe impl kernel::transmute::FromBytes for MyStruct {}
+diff --git a/samples/rust/rust_debugfs.rs b/samples/rust/rust_debugfs.rs
+index 478c4f693deb..5f02f2ad88b6 100644
+--- a/samples/rust/rust_debugfs.rs
++++ b/samples/rust/rust_debugfs.rs
+@@ -117,14 +117,14 @@ fn from_str(s: &str) -> Result<Self> {
  
- impl pci::Driver for DmaSampleDriver {
+ impl platform::Driver for RustDebugFs {
      type IdInfo = ();
 -    type Data = Self;
 +    type Data<'bound> = Self;
-     const ID_TABLE: pci::IdTable<Self::IdInfo> = &PCI_TABLE;
+     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = None;
+     const ACPI_ID_TABLE: Option<acpi::IdTable<Self::IdInfo>> = Some(&ACPI_TABLE);
  
--    fn probe(pdev: &pci::Device<Core>, _info: &Self::IdInfo) -> impl PinInit<Self, Error> {
+-    fn probe(
+-        pdev: &platform::Device<Core>,
+-        _info: Option<&Self::IdInfo>,
+-    ) -> impl PinInit<Self, Error> {
 +    fn probe<'bound>(
-+        pdev: &'bound pci::Device<Core>,
-+        _info: &'bound Self::IdInfo,
++        pdev: &'bound platform::Device<Core>,
++        _info: Option<&'bound Self::IdInfo>,
 +    ) -> impl PinInit<Self, Error> + 'bound {
-         pin_init::pin_init_scope(move || {
-             dev_info!(pdev, "Probe DMA test driver.\n");
+         RustDebugFs::new(pdev).pin_chain(|this| {
+             this.counter.store(91, Relaxed);
+             {
+diff --git a/samples/rust/rust_driver_platform.rs b/samples/rust/rust_driver_platform.rs
+index 6505902f8200..0760d60b7737 100644
+--- a/samples/rust/rust_driver_platform.rs
++++ b/samples/rust/rust_driver_platform.rs
+@@ -101,14 +101,14 @@ struct SampleDriver {
  
-diff --git a/samples/rust/rust_driver_auxiliary.rs b/samples/rust/rust_driver_auxiliary.rs
-index 61d5bf2e8c0d..2f57912fe87f 100644
---- a/samples/rust/rust_driver_auxiliary.rs
-+++ b/samples/rust/rust_driver_auxiliary.rs
-@@ -66,11 +66,14 @@ struct ParentDriver {
+ impl platform::Driver for SampleDriver {
+     type IdInfo = Info;
+-    type Data = Self;
++    type Data<'bound> = Self;
+     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
+     const ACPI_ID_TABLE: Option<acpi::IdTable<Self::IdInfo>> = Some(&ACPI_TABLE);
  
- impl pci::Driver for ParentDriver {
+-    fn probe(
+-        pdev: &platform::Device<Core>,
+-        info: Option<&Self::IdInfo>,
+-    ) -> impl PinInit<Self, Error> {
++    fn probe<'bound>(
++        pdev: &'bound platform::Device<Core>,
++        info: Option<&'bound Self::IdInfo>,
++    ) -> impl PinInit<Self, Error> + 'bound {
+         let dev = pdev.as_ref();
+ 
+         dev_dbg!(dev, "Probe Rust Platform driver sample.\n");
+diff --git a/samples/rust/rust_i2c_client.rs b/samples/rust/rust_i2c_client.rs
+index 5956b647294d..3ac4008a2eaa 100644
+--- a/samples/rust/rust_i2c_client.rs
++++ b/samples/rust/rust_i2c_client.rs
+@@ -106,14 +106,14 @@ struct SampleDriver {
+ 
+ impl platform::Driver for SampleDriver {
      type IdInfo = ();
 -    type Data = Self;
 +    type Data<'bound> = Self;
+     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
+     const ACPI_ID_TABLE: Option<acpi::IdTable<Self::IdInfo>> = Some(&ACPI_TABLE);
  
-     const ID_TABLE: pci::IdTable<Self::IdInfo> = &PCI_TABLE;
- 
--    fn probe(pdev: &pci::Device<Core>, _info: &Self::IdInfo) -> impl PinInit<Self, Error> {
+-    fn probe(
+-        pdev: &platform::Device<device::Core>,
+-        _info: Option<&Self::IdInfo>,
+-    ) -> impl PinInit<Self, Error> {
 +    fn probe<'bound>(
-+        pdev: &'bound pci::Device<Core>,
-+        _info: &'bound Self::IdInfo,
++        pdev: &'bound platform::Device<device::Core>,
++        _info: Option<&'bound Self::IdInfo>,
 +    ) -> impl PinInit<Self, Error> + 'bound {
-         Ok(Self {
-             _reg0: auxiliary::Registration::new(
-                 pdev.as_ref(),
-diff --git a/samples/rust/rust_driver_pci.rs b/samples/rust/rust_driver_pci.rs
-index f43c6a660b39..30b9311812f3 100644
---- a/samples/rust/rust_driver_pci.rs
-+++ b/samples/rust/rust_driver_pci.rs
-@@ -140,11 +140,14 @@ fn config_space(pdev: &pci::Device<Bound>) {
+         dev_info!(
+             pdev.as_ref(),
+             "Probe Rust I2C Client registration sample.\n"
+@@ -130,7 +130,10 @@ fn probe(
+         })
+     }
  
- impl pci::Driver for SampleDriver {
-     type IdInfo = TestIndex;
+-    fn unbind(pdev: &platform::Device<device::Core>, _this: Pin<&Self>) {
++    fn unbind<'bound>(
++        pdev: &'bound platform::Device<device::Core>,
++        _this: Pin<&'bound Self::Data<'bound>>,
++    ) {
+         dev_info!(
+             pdev.as_ref(),
+             "Unbind Rust I2C Client registration sample.\n"
+diff --git a/samples/rust/rust_soc.rs b/samples/rust/rust_soc.rs
+index a5e72582f4a2..2dfcb2131e25 100644
+--- a/samples/rust/rust_soc.rs
++++ b/samples/rust/rust_soc.rs
+@@ -37,14 +37,14 @@ struct SampleSocDriver {
+ 
+ impl platform::Driver for SampleSocDriver {
+     type IdInfo = ();
 -    type Data = Self;
 +    type Data<'bound> = Self;
+     const OF_ID_TABLE: Option<of::IdTable<Self::IdInfo>> = Some(&OF_TABLE);
+     const ACPI_ID_TABLE: Option<acpi::IdTable<Self::IdInfo>> = Some(&ACPI_TABLE);
  
-     const ID_TABLE: pci::IdTable<Self::IdInfo> = &PCI_TABLE;
- 
--    fn probe(pdev: &pci::Device<Core>, info: &Self::IdInfo) -> impl PinInit<Self, Error> {
+-    fn probe(
+-        pdev: &platform::Device<Core>,
+-        _info: Option<&Self::IdInfo>,
+-    ) -> impl PinInit<Self, Error> {
 +    fn probe<'bound>(
-+        pdev: &'bound pci::Device<Core>,
-+        info: &'bound Self::IdInfo,
++        pdev: &'bound platform::Device<Core>,
++        _info: Option<&'bound Self::IdInfo>,
 +    ) -> impl PinInit<Self, Error> + 'bound {
-         pin_init::pin_init_scope(move || {
-             let vendor = pdev.vendor_id();
-             dev_dbg!(
+         dev_dbg!(pdev, "Probe Rust SoC driver sample.\n");
+ 
+         let pdev = pdev.into();
 -- 
 2.54.0
 
