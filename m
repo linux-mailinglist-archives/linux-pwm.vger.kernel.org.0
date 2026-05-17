@@ -1,49 +1,49 @@
-Return-Path: <linux-pwm+bounces-8903-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8904-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id aPUwNSgGCWq6FQQAu9opvQ
-	(envelope-from <linux-pwm+bounces-8903-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 02:04:56 +0200
+	id sNEkDsEGCWprFgQAu9opvQ
+	(envelope-from <linux-pwm+bounces-8904-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 02:07:29 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8291A55E7BE
-	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 02:04:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9689655E908
+	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 02:07:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id CF0623038AEB
-	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 00:02:32 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 62DC1301E584
+	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 00:02:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 88EB41BF33;
-	Sun, 17 May 2026 00:02:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 487E170809;
+	Sun, 17 May 2026 00:02:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YT0czcZK"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fF+bC/vD"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6193D48CFC;
-	Sun, 17 May 2026 00:02:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 235091397;
+	Sun, 17 May 2026 00:02:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1778976152; cv=none; b=jmsmg3j/yUPSTIy+WqLisDX1MstOYISHqmfNFnxnhIqcsKgD/Ig6O0Ge9aq2SLBk5YS2RfD3XP29PBtzYpXH+bnrTKVvqoJDMFdexn9dVqk75mHDEG37XPGH0LuSw0S1bMzPWXmo0hwsj87MpoonqDwSM5Nwix3/XDfdupA4ahA=
+	t=1778976159; cv=none; b=BS+NpRXnejVU4k21H2lEr6O8gQIL/VaHi0CH9aLpjqk6NP3YRfBqFaRLYS5kcKRMQ87v7pbhesY6igbywMYRY8sx5DCeh6FXS1zDJfROCieamYp739IGi8JHuxQ08onOWQLIvi5p/EmvMCSKYw0fng3IiHV2WYe4eko8ElUQ37g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1778976152; c=relaxed/simple;
-	bh=MiTa1Y3ctLD1p+Ro2FWBi35sXSPkj2y1USn1OwULC3M=;
+	s=arc-20240116; t=1778976159; c=relaxed/simple;
+	bh=thZLruCPSaROEe6IzJj9ZMFO1gnnVjj8Zyz2NwmRVyM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=klstTL7zDOv7Y2QqFjH5ub0rpxT24tBsQtAnQjYNLS9arjl3b/DN+0APolZaAij8cxX35lhEMkm1emAsLbliDPBc5kNzeh6UVCCkNuSZVpbuqe69+Fuai6gFip/O3iXgefUyJQwDdsWI5FB9mqB3MKCR+2usq2Jp5mqL+MIffA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YT0czcZK; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B89BC2BCC7;
-	Sun, 17 May 2026 00:02:25 +0000 (UTC)
+	 MIME-Version; b=jiL9ALybstOjd2ZZenmzcl9XyKeFQ33GOgQ2avLf1Sn/zvqns3qG9U9wSNAj/U9gzdK/a3PQ4aQm+6vyxASmMLJtxfmb3wKU2gkFNcV2vWYR9IiTZbR30yAxmQuuDHG+r9jok7kYz6CcY9fbXmkG9LOrANdIGKKHPDGISHyYoZM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fF+bC/vD; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68435C2BCC9;
+	Sun, 17 May 2026 00:02:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1778976152;
-	bh=MiTa1Y3ctLD1p+Ro2FWBi35sXSPkj2y1USn1OwULC3M=;
+	s=k20201202; t=1778976158;
+	bh=thZLruCPSaROEe6IzJj9ZMFO1gnnVjj8Zyz2NwmRVyM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YT0czcZKQzPcHLoOTHR1H2cDSg4jW8AJwxOota4SINaY8FxX44G4NsdabpN9JJYlc
-	 7148Jc4M2RQBFwqsHZVnaW5cYniKVfI/d00jQF7TU6ni+7cVrsNU90UtkgYb6V4SaW
-	 89bvv+wth1oBYTgOik/qwaQYyAWf8D8XmF7jhej7DEjdKssZDJotluFPZ0sCgNuQO7
-	 YbWkYZyyuglebR46feDCPIjtaMPlaTdZ2PVSAcpZt2FolspSoZPxa6nUUdBpT6LDRg
-	 RwPEgDKxv8uSfq8RV4UFmLjhCqVfSYT5ZTWNvfBb0AYpZnK1SQQ75dQxG+AsMiO6iv
-	 9ChTZTBlGpU1w==
+	b=fF+bC/vDs3AvLgPCt2CDg4WxoOW7JSKP3CFOmWFUnEecHXdgc7rBTDqf6hW2DEg7Z
+	 SGx66WRKIo4bWIUZRT4f9l8XWYLLfOh1KJPbpEmAT0aiJ2pBKc0YNu2EzjnYT21VNV
+	 UHRL6qQ9KmEVesC4/TzjHxBL//VAujQVYKpFi2ztrfM5QQeuNOKV7FThR1N4OKy99O
+	 AXx+JKz2DxumUVVMFgwxJUK9V+r71xfvgZZbGuelNTr+77A+zprDbFFBzkPpKr04g5
+	 YigUGXgKqPj8Ymrv3VQGuPd+UNd7dkqvJdtAluejdkFQVJY7IEHz20qkbvmjmQNITv
+	 JvyUJe2eV+62A==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -79,9 +79,9 @@ Cc: driver-core@lists.linux.dev,
 	linux-pci@vger.kernel.org,
 	rust-for-linux@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>
-Subject: [PATCH v3 04/27] rust: driver core: drop drvdata before devres release
-Date: Sun, 17 May 2026 02:00:52 +0200
-Message-ID: <20260517000149.3226762-5-dakr@kernel.org>
+Subject: [PATCH v3 05/27] rust: pci: implement Sync for Device<Bound>
+Date: Sun, 17 May 2026 02:00:53 +0200
+Message-ID: <20260517000149.3226762-6-dakr@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260517000149.3226762-1-dakr@kernel.org>
 References: <20260517000149.3226762-1-dakr@kernel.org>
@@ -92,7 +92,7 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 8291A55E7BE
+X-Rspamd-Queue-Id: 9689655E908
 X-Rspamd-Server: lfdr
 X-Spamd-Result: default: False [0.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
@@ -107,7 +107,7 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCPT_COUNT_TWELVE(0.00)[34];
 	FREEMAIL_TO(0.00)[linuxfoundation.org,kernel.org,nvidia.com,google.com,intel.com,linaro.org,samsung.com,gmail.com,arm.com,posteo.de,garyguo.net,protonmail.com,umich.edu,linux.dev,collabora.com,redhat.com];
-	TAGGED_FROM(0.00)[bounces-8903-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8904-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -125,75 +125,32 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-Move the post_unbind_rust callback before devres_release_all() in
-device_unbind_cleanup().
+Implement Sync for Device<Bound> in addition to Device<Normal>.
 
-With drvdata() removed, the driver's bus device private data is only
-accessible by the owning driver itself. It is hence safe to drop the
-driver's bus device private data before devres actions are released.
+Device<Bound> uses the same underlying struct pci_dev as Device<Normal>;
+Bound is a zero-sized type-state marker that does not affect thread
+safety.
 
-This reordering is the key enabler for Higher-Ranked Lifetime Types
-(HRT) in Rust device drivers -- it allows driver structs to hold direct
-references to devres-managed resources, because the bus device private
-data (and with it all such references) is guaranteed to be dropped while
-the underlying devres resources are still alive.
-
-Without this change, devres resources would be freed first, leaving the
-driver's bus device private data with dangling references during its
-destructor.
+This is needed for drivers to store &'bound pci::Device<Bound> in their
+private data while remaining Send.
 
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- drivers/base/dd.c             | 2 +-
- include/linux/device/driver.h | 4 ++--
- rust/kernel/driver.rs         | 4 ++--
- 3 files changed, 5 insertions(+), 5 deletions(-)
+ rust/kernel/pci.rs | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/base/dd.c b/drivers/base/dd.c
-index 5799a60fd058..be59d2e13a15 100644
---- a/drivers/base/dd.c
-+++ b/drivers/base/dd.c
-@@ -593,9 +593,9 @@ static DEVICE_ATTR_RW(state_synced);
- 
- static void device_unbind_cleanup(struct device *dev)
- {
--	devres_release_all(dev);
- 	if (dev->driver->p_cb.post_unbind_rust)
- 		dev->driver->p_cb.post_unbind_rust(dev);
-+	devres_release_all(dev);
- 	arch_teardown_dma_ops(dev);
- 	kfree(dev->dma_range_map);
- 	dev->dma_range_map = NULL;
-diff --git a/include/linux/device/driver.h b/include/linux/device/driver.h
-index bbc67ec513ed..38e9a4679447 100644
---- a/include/linux/device/driver.h
-+++ b/include/linux/device/driver.h
-@@ -123,8 +123,8 @@ struct device_driver {
- 	struct driver_private *p;
- 	struct {
- 		/*
--		 * Called after remove() and after all devres entries have been
--		 * processed. This is a Rust only callback.
-+		 * Called after remove() but before devres entries are released.
-+		 * This is a Rust only callback.
- 		 */
- 		void (*post_unbind_rust)(struct device *dev);
- 	} p_cb;
-diff --git a/rust/kernel/driver.rs b/rust/kernel/driver.rs
-index 3506b4e8bff9..d8898f2115d5 100644
---- a/rust/kernel/driver.rs
-+++ b/rust/kernel/driver.rs
-@@ -193,8 +193,8 @@ extern "C" fn post_unbind_callback(dev: *mut bindings::device) {
-         // INVARIANT: `dev` is valid for the duration of the `post_unbind_callback()`.
-         let dev = unsafe { &*dev.cast::<device::Device<device::CoreInternal>>() };
- 
--        // `remove()` and all devres callbacks have been completed at this point, hence drop the
--        // driver's device private data.
-+        // `remove()` has been completed at this point; devres resources are still valid and will
-+        // be released after the driver's bus device private data is dropped.
-         //
-         // SAFETY: By the safety requirements of the `Driver` trait, `T::DriverData` is the
-         // driver's bus device private data type.
+diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+index ffaf05bf9aaa..c06ac3fb2a64 100644
+--- a/rust/kernel/pci.rs
++++ b/rust/kernel/pci.rs
+@@ -528,3 +528,7 @@ unsafe impl Send for Device {}
+ // SAFETY: `Device` can be shared among threads because all methods of `Device`
+ // (i.e. `Device<Normal>) are thread safe.
+ unsafe impl Sync for Device {}
++
++// SAFETY: Same as `Device<Normal>` -- the underlying `struct pci_dev` is the same;
++// `Bound` is a zero-sized type-state marker that does not affect thread safety.
++unsafe impl Sync for Device<device::Bound> {}
 -- 
 2.54.0
 
