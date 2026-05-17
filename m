@@ -1,63 +1,62 @@
-Return-Path: <linux-pwm+bounces-8937-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8938-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id QKy8HA73CWrgvgQAu9opvQ
-	(envelope-from <linux-pwm+bounces-8937-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 19:12:46 +0200
+	id eOFLBY/7CWpPvwQAu9opvQ
+	(envelope-from <linux-pwm+bounces-8938-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 19:31:59 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5CED5626B6
-	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 19:12:45 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8580A56294C
+	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 19:31:58 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id A9CDB3002896
-	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 17:12:44 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id EF9383021EBE
+	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 17:30:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0543C3C278B;
-	Sun, 17 May 2026 17:12:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C47123BB68E;
+	Sun, 17 May 2026 17:30:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RUrmpOI5"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZGrBiWUv"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5A053BFE31;
-	Sun, 17 May 2026 17:12:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F9F91F875A;
+	Sun, 17 May 2026 17:30:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779037962; cv=none; b=g/53H+8bLMb6FTTLVw3RG9l4NlmstGPLadSThZMynxMcrexNxaWZUlmpaf+U8mCE38IU0hNm6Vu/MwgvB8kIPLev6QVXLXi7XfxFEhnDWva7CUl0Rl5jv2wPO9pYcIXJyvMqGS9go2VAWEo9Ac5H9Zp+vS9s64x9Hyv18irU8ms=
+	t=1779039045; cv=none; b=l1K9iOxWWNc/dwqCLTLNrZL8yMhc4UiPLhI9tpJao5wXuiKc0oiP1LXM1s36RxfZW7Fp+2h9Ab9qPwSPP72GBsgsBzNBvinLfR2nwjBxiKVxqeaoPfRrD1IEH7Bby6zxu88bbDa6fFu7kvJfH0TK821gJRtbTVS6mHjkKsltOWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779037962; c=relaxed/simple;
-	bh=rZTvaM2qqzZ0+ZHapysXVlkiReT0C0YfxuSAed7oo4U=;
+	s=arc-20240116; t=1779039045; c=relaxed/simple;
+	bh=ZGmTAZXo2EykK8olmkKQqWZWO8exMidmh+IyRcRpvgc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=kymCKIz3KK1wLs3cGiDtnObkZelEzlDq4/5e1uWA2oHX44kwS/6at20+geTN9z+CqeISDAXTua3sbT+olos04g7pTYVz4WJMFTrak1UefWYVzds340UKxZVT6/d6meRGNla3Yocy4naJIAjGvWoFYRnbI/mGwF1unc+A8Xp19vs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RUrmpOI5; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0632C2BCB8;
-	Sun, 17 May 2026 17:12:41 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=mMpGds/kKh/yJa6uVhp7Av0DIHGho0dqgA6TtqlU8D9Vx4xMwk6YoK6xNEqXfQqXmtqrF9DkusXPufxqx9Lke+PfNTi9Gk5g1TUMjruJ8c8w2lEBWUrZHwC5/oU3B1C+4U2OYavh4VNhy218xvoHeUnifJFQSuGMirTtWg+Gq1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZGrBiWUv; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C230AC2BCB0;
+	Sun, 17 May 2026 17:30:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779037962;
-	bh=rZTvaM2qqzZ0+ZHapysXVlkiReT0C0YfxuSAed7oo4U=;
+	s=k20201202; t=1779039045;
+	bh=ZGmTAZXo2EykK8olmkKQqWZWO8exMidmh+IyRcRpvgc=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=RUrmpOI5z3LGWD8/mdNkUlYbcEA4ysfIOvjNwFRxSxquanwD9ZR3iTnB+zT95QL4s
-	 BmgZ3CpZXgSsU25OUFfr+ynh/HdoGAP6IPd2DjvkMbRwg0jthmTYzrzjIbZk1paajv
-	 U7tO/7oaP4A5gHOcBuSm+xDyKJHnJpvgpb3KP41K0n9NhdnMiGcfdqvyUqVK2B08ZY
-	 lrpWt9CBYbSMa16NE3SOPUm3Q3zFNuwKaKAzflJMaP7qMamAdeFVNa1GV8b8ictQD+
-	 YqCjNxbWwokvEf0AaTrKrRm23D86U0T8KhMuk5dD8Qx7BZNO7SReEPlyoX35YncqkF
-	 mPGdwlJrpqUUA==
-Date: Sun, 17 May 2026 19:12:39 +0200
+	b=ZGrBiWUvNA7PbkTVubV6qaffErs7g4Zv8oa09vpC0NZTvRwNWhhJXfUBuKypZUlwL
+	 IY05DNgKxEEslH+o3oVS2mK+Vb7rlAU1G2HGARInik0BRtcLVlSoekLGUjzYMHVGVu
+	 UBl18S6QuLuKFXO7htsj8WYKQn+QCeZAfAV27ODVxRl/Kh/sgM2hRvFyFalxYB08JS
+	 FjC2M/DsPFvkolsQetJLvvZDKkEqlFNzgx8RxTnPENElmNc70PWmSmu74Sd3aSQArq
+	 4qCtJYHipj2u1jil2otWhxx5BYHK8fGd2Wt0A4gEEns+48MiI7i5hO17SyZBEMZ1c0
+	 F7+ROoKEeYSMA==
+Date: Sun, 17 May 2026 19:30:42 +0200
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: xianwei.zhao@amlogic.com
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
-	Heiner Kallweit <hkallweit1@gmail.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
-	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
-	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-amlogic@lists.infradead.org
-Subject: Re: [PATCH v2 2/2] pwm: meson: Add support for Amlogic S7
-Message-ID: <agn2Yp3mzI7DcsyN@monoceros>
-References: <20260402-s6-s7-pwm-v2-0-657dce040956@amlogic.com>
- <20260402-s6-s7-pwm-v2-2-657dce040956@amlogic.com>
+To: Mikko Perttunen <mperttunen@nvidia.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, 
+	Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org, 
+	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
+	Thierry Reding <treding@nvidia.com>
+Subject: Re: [PATCH v4 3/7] pwm: tegra: Modify read/write accessors for
+ multi-register channel
+Message-ID: <agn6i8SmO-jwYNhM@monoceros>
+References: <20260331-t264-pwm-v4-0-c041659677cf@nvidia.com>
+ <20260331-t264-pwm-v4-3-c041659677cf@nvidia.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -65,150 +64,116 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="eenroa65e3lftv6j"
+	protocol="application/pgp-signature"; boundary="6zhznxh2tney57sm"
 Content-Disposition: inline
-In-Reply-To: <20260402-s6-s7-pwm-v2-2-657dce040956@amlogic.com>
-X-Rspamd-Queue-Id: E5CED5626B6
+In-Reply-To: <20260331-t264-pwm-v4-3-c041659677cf@nvidia.com>
+X-Rspamd-Queue-Id: 8580A56294C
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.26 / 15.00];
+X-Spamd-Result: default: False [-3.76 / 15.00];
 	SIGNED_PGP(-2.00)[];
-	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
 	MAILLIST(-0.15)[generic];
 	HAS_LIST_UNSUB(-0.01)[];
+	FREEMAIL_CC(0.00)[gmail.com,nvidia.com,kernel.org,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-8938-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8937-lists,linux-pwm=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[14];
-	FREEMAIL_CC(0.00)[kernel.org,gmail.com,linaro.org,baylibre.com,googlemail.com,vger.kernel.org,lists.infradead.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MISSING_XM_UA(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[ukleinek@kernel.org,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[11];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,amlogic.com:email]
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
 
---eenroa65e3lftv6j
+--6zhznxh2tney57sm
 Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v2 2/2] pwm: meson: Add support for Amlogic S7
+Subject: Re: [PATCH v4 3/7] pwm: tegra: Modify read/write accessors for
+ multi-register channel
 MIME-Version: 1.0
 
-Hello,
-
-On Thu, Apr 02, 2026 at 02:40:16AM +0000, Xianwei Zhao via B4 Relay wrote:
-> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+On Tue, Mar 31, 2026 at 11:12:15AM +0900, Mikko Perttunen wrote:
+> On Tegra264, each PWM instance has two registers (per channel, of which
+> there is one). Update the pwm_readl/pwm_writel helper functions to
+> take channel (as struct pwm_device *) and offset separately.
 >=20
-> Add support for Amlogic S7 PWM. Amlogic S7 different from the
-> previous SoCs, a controller includes one pwm, at the same time,
-> the controller has only one input clock source.
->=20
-> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+> Reviewed-by: Thierry Reding <treding@nvidia.com>
+> Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
 > ---
->  drivers/pwm/pwm-meson.c | 32 +++++++++++++++++++++++++++++---
->  1 file changed, 29 insertions(+), 3 deletions(-)
+>  drivers/pwm/pwm-tegra.c | 26 +++++++++++++++-----------
+>  1 file changed, 15 insertions(+), 11 deletions(-)
 >=20
-> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
-> index 8c6bf3d49753..7a43c42ef3d6 100644
-> --- a/drivers/pwm/pwm-meson.c
-> +++ b/drivers/pwm/pwm-meson.c
-> @@ -113,6 +113,7 @@ struct meson_pwm_data {
->  	int (*channels_init)(struct pwm_chip *chip);
->  	bool has_constant;
->  	bool has_polarity;
-> +	bool single_pwm;
-
-Conceptually I'd prefer a `npwm` field here. That doesn't take more
-space in memory and simplifies the logic a bit. (At the cost of having
-to adapt all already existing meson_pwm_data instances, but that's fine
-in my book.)
-
->  };
+> diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
+> index 8a330169d531..358c81cea05b 100644
+> --- a/drivers/pwm/pwm-tegra.c
+> +++ b/drivers/pwm/pwm-tegra.c
+> @@ -57,6 +57,8 @@
+>  #define PWM_SCALE_WIDTH	13
+>  #define PWM_SCALE_SHIFT	0
 > =20
->  struct meson_pwm {
-> @@ -503,6 +504,18 @@ static void meson_pwm_s4_put_clk(void *data)
->  	clk_put(clk);
+> +#define PWM_CSR_0	0
+
+Is this a register offset (of the for now single per channel register)?
+
+One thing that bothers me about this driver is that the defines are not
+prefixed by the driver name. `PWM_SCALE_WIDTH` looks more generic than
+it is.
+
+> +
+>  struct tegra_pwm_soc {
+>  	unsigned int num_channels;
+>  };
+> @@ -78,14 +80,18 @@ static inline struct tegra_pwm_chip *to_tegra_pwm_chi=
+p(struct pwm_chip *chip)
+>  	return pwmchip_get_drvdata(chip);
 >  }
 > =20
-> +static int meson_pwm_init_channels_s7(struct pwm_chip *chip)
-> +{
-> +	struct device *dev =3D pwmchip_parent(chip);
-> +	struct meson_pwm *meson =3D to_meson_pwm(chip);
-> +
-> +	meson->channels[0].clk =3D devm_clk_get(dev, NULL);
-> +	if (IS_ERR(meson->channels[0].clk))
-> +		return dev_err_probe(dev, PTR_ERR(meson->channels[0].clk),
-> +				     "Failed to get clk\n");
-> +	return 0;
-> +}
-> +
->  static int meson_pwm_init_channels_s4(struct pwm_chip *chip)
+> -static inline u32 pwm_readl(struct tegra_pwm_chip *pc, unsigned int offs=
+et)
+> +static inline u32 pwm_readl(struct pwm_device *dev, unsigned int offset)
+
+s/dev/pwm/ to match the variable naming in the rest of the driver.
+
 >  {
->  	struct device *dev =3D pwmchip_parent(chip);
-> @@ -592,6 +605,13 @@ static const struct meson_pwm_data pwm_s4_data =3D {
->  	.has_polarity =3D true,
->  };
-> =20
-> +static const struct meson_pwm_data pwm_s7_data =3D {
-> +	.channels_init =3D meson_pwm_init_channels_s7,
-> +	.has_constant =3D true,
-> +	.has_polarity =3D true,
-> +	.single_pwm =3D true,
-> +};
+> -	return readl(pc->regs + (offset << 4));
+> +	struct tegra_pwm_chip *chip =3D to_tegra_pwm_chip(dev->chip);
 > +
->  static const struct of_device_id meson_pwm_matches[] =3D {
->  	{
->  		.compatible =3D "amlogic,meson8-pwm-v2",
-> @@ -642,6 +662,10 @@ static const struct of_device_id meson_pwm_matches[]=
- =3D {
->  		.compatible =3D "amlogic,meson-s4-pwm",
->  		.data =3D &pwm_s4_data
->  	},
-> +	{
-> +		.compatible =3D "amlogic,s7-pwm",
-> +		.data =3D &pwm_s7_data
-> +	},
->  	{},
-
-If you touch that array in the next revision, please make this line:
-
-	{ }
-
-(I.e. add a space and drop the comma.)
+> +	return readl(chip->regs + (dev->hwpwm * 16) + offset);
 
 Best regards
 Uwe
 
---eenroa65e3lftv6j
+--6zhznxh2tney57sm
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmoJ9wUACgkQj4D7WH0S
-/k6z4gf8CDKq+whV8je2O5ohJtU1A9GFL80VjHGqWPlp1Vzj64QRpZCZCbBwA/Mr
-VhA7vIcUm2o6m3dGLNdz5Y6CXusEk+afjTh3eQOMgyOXCbK6gL69QQ3TU/RCGuIX
-AGorWZzjsaV9UveLX4vc2VcZHEfxNb2AWNjvOgRfWrVb82Tw9cmg5Ago9dTFaSmz
-LKS03jU9jzuo4qge4VeKniPvSp+a/5YyTGgPOpFcR8RP8/orcE5EhCSI9J4QE+Ad
-Ynysyz8gr+delAF0En9fx190Psp2HsJvaEHO8C5xDfNXWkLw0tEiWD3QZVPY5TFH
-MgfGGtsEIzVFRLKzVpfLkWRtc6Dr7Q==
-=fPc/
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmoJ+z8ACgkQj4D7WH0S
+/k77tggAmkvd/8aznlVF/z98D/zvMfKw/AW4srXVX0eqQymipnDwfc37p1/VI17x
+Pd7/ZwhQFfZ+P1VfzogJ8EA6/pxNOksSBR9qMQZnZOz6oTAiL2hmK28wKbQwfmi9
+XeGBDq+9skJAELd56MnedN2LU7RloZsb1NTf+lxvZ0m9XrDxFFzkGvIIV9HarOBi
+VMfSdTBNiiDdmEp+OS7mNsf8k5cGzi29UTRFYFRw5jiMMyuEan8Zo0K5nxdi0WmD
+fxyos5DipLOG/V7V7+EzgwSiThb6IzY60PNEPkgza4z7a1IR1h/GkTg8dARhG4Zu
+pWHKhD+KS9RbficpWoD2VwuyTUYtEA==
+=jdKS
 -----END PGP SIGNATURE-----
 
---eenroa65e3lftv6j--
+--6zhznxh2tney57sm--
 
