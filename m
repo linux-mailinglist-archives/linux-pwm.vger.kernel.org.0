@@ -1,241 +1,235 @@
-Return-Path: <linux-pwm+bounces-8940-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8941-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id YDG6Nk8VCmrgwgQAu9opvQ
-	(envelope-from <linux-pwm+bounces-8940-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 21:21:51 +0200
+	id yOtyNtghCmpMxAQAu9opvQ
+	(envelope-from <linux-pwm+bounces-8941-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 22:15:20 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 7FAE0563826
-	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 21:21:51 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 1B77C563B5C
+	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 22:15:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 01943300598D
-	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 19:21:46 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 149AC300F5D1
+	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 20:15:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A7D7A331A7E;
-	Sun, 17 May 2026 19:21:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EDEF30BBB9;
+	Sun, 17 May 2026 20:15:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20251104.gappssmtp.com header.i=@baylibre-com.20251104.gappssmtp.com header.b="WNgLu7g9"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m9IHy5yy"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-oo1-f43.google.com (mail-oo1-f43.google.com [209.85.161.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53430305660
-	for <linux-pwm@vger.kernel.org>; Sun, 17 May 2026 19:21:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD082FE074;
+	Sun, 17 May 2026 20:15:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779045698; cv=none; b=GzYOxhxE3uBIdc/OnEEq2YSppmA7mLqU/TBzPPaloiqAoFHjoexc+Dr0K2t/hwq+FOSE9R8KKEg8x/DvbjDZKywoX2P212Sdav2SWsdJnMa/4pVaonDsaq78M9lgWtIl2TQhqHnKH0eMN7+R8C3a3mnDll6HsXETQlMYSmQOcu4=
+	t=1779048917; cv=none; b=l7ZmiuQe5o2yn/pkelhp/m1x4mykOfhpKZ/H/az/5rYyMRUVt+2BGGZfbd3/GVfFZszDbCTlBAMmaQTSvjbUsoGiHnWx3/z7uykFRxTkukGG3yXzr/IGvMt7D/eOAHoQeASHh0yrs9dlhBjx6HKflaHbTIsGZY/+amnY9jIHQyU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779045698; c=relaxed/simple;
-	bh=lH1GgG6AZ3p8TFNccFcpJy8FScpxCDQooWelGA+EHCY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ni3ixQli4UVCTALYwXsmG8ioRzysE3llU5ImfvyNEig+jX0UQBX3q+2ez0KSQFxv2lEyssijbdpGqkw6CaM906Ps96FSSWHecqZD3AHaNdVLYLif4/p57W5simgLns+qSj9JtohnW8G7c8pj4NdswUdNpp6LfU+uacxAONSiI5I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre-com.20251104.gappssmtp.com header.i=@baylibre-com.20251104.gappssmtp.com header.b=WNgLu7g9; arc=none smtp.client-ip=209.85.161.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-oo1-f43.google.com with SMTP id 006d021491bc7-69d2e3b45a1so163739eaf.0
-        for <linux-pwm@vger.kernel.org>; Sun, 17 May 2026 12:21:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20251104.gappssmtp.com; s=20251104; t=1779045694; x=1779650494; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=avFUFeQjZc5s2Fh1Gw+bXzbv6Nmu8tEYY1j2IJydQzo=;
-        b=WNgLu7g9882rZjfblRCA0f7R+Si3jCbcL1IoVyJ8xem5nV0o4D+3VgpV6BfeA4DypW
-         7Vo0DDNEbaIeGQq9qpNKAXpZ3JbsRUKtkXXyQbd7LYp+UzlHtbWugKcwH9IYl6v+zreR
-         KhBLKDwI1nosZXqI7ZfeE+rJ1YwQVs/CmhQpEBtyQpi5ukocCLV7/wsBXGELBKHDcbGB
-         jQUO0U0mVjc2XXiatiROYmSGkeYuWtLX3PIGK25sItq8Y0yZxQKl3Yr3clEDHEZwTrzK
-         o/JNEU0loLdHQ2z5VhS0G0B/wYf0i1l9qJZLFJlBmossgWlMzZJb73d4iQJ+pXbLR2yZ
-         db8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779045694; x=1779650494;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=avFUFeQjZc5s2Fh1Gw+bXzbv6Nmu8tEYY1j2IJydQzo=;
-        b=PeJoh6u8xkvTaAg2NXg94aHLM0yGdkzGGkN+cL2Ui2WKfdhWhKoo+3smkP4be3X2NH
-         ATa5W1K04A1+2mI/xBo+YvfqduFe6cHyGKudTBFBPEM9VS5TsgfyEleF35vUh9QJPOp6
-         0Key5jIbIK60kuKR37mZusQ2GWSuer7A9DN2MOKPqwEBNfDojIkSz71pajQLZQNyBl2b
-         ZqVVyXsfejAWZjbsTaLmBHRDSInZxf7MWyFqQflbD730jL6dRz5mkZjAQHQG18FxvLo/
-         DrxiTx2rQIXItoVy/iiIfyj+UE9sTpwheJBdzxg9nYCx8KOb9q/u8o6oJWPfaTr+v1+I
-         BsNQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+3f3iWRkiKKGhOO7M6/6ij7ZFvUFWzQXQtrN3oEuTu7bVhC63QThjvDiBwUzILsWzPBnYNLdzJWAE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YyrJ94qa5yDrAVtAxKlaD1gbFmj1nQS1MGzLaUvbGclRyUBpfYq
-	XTf8QtYh+EGA6QByaxQo+AXSC2H10h+xX5yJaGvpK1QhPJSAQaDtWFNrNST9z0BQl/Y=
-X-Gm-Gg: Acq92OF4boRAAychUsud/WyuOiOrEEwJE2K9H4+X7aUJUJCjr8cdiXoX4KBMA2f10K0
-	SX823p/1eNEgzSbMwS3TryzQSh1uxeD34FAaJHp/zKc94tUk+QhMjzZr3DZKHSegSihfxeOyuYk
-	47rKwXSblb0pAPkFE7h7rX14GSB91QxfI+41eDuxM3ggUtaxKtzQ7F2BVyPn7pZv3bU3945/Nr5
-	xcyuJ62pQtzyLUYTChcREz6JRijivv541tIVkcgYPi3ScoV3i7N32nFiKb6B1nT1BXBs2+VDAWn
-	KBmHaPM033ROG2QbJlSg8A1r5IjbZzbeIKmQD9hqMPc5GfTNgrYUi0XDATUgs+p7d/m14b2hbc8
-	/GK1oPZV20pXGj85MsUWkEbUaM0K45MfNQ/Oth4ABX7bTdKALwP84LVb7VBAzvv1a93Wvpcc7w5
-	UwMy8HIyby2sT4HQ4QLZWh3r9ALklbv0ZI5wmEp+lZVgAvmnD+Xg6mcwsCnOkCgYSHeuaCzN5M5
-	x4aWPPSMg==
-X-Received: by 2002:a05:6820:4c0b:b0:694:8e6e:2e1c with SMTP id 006d021491bc7-69c9bfc92a9mr7692055eaf.60.1779045694287;
-        Sun, 17 May 2026 12:21:34 -0700 (PDT)
-Received: from ?IPV6:2600:8803:e7e4:500:7a4b:ddf0:f61:f58d? ([2600:8803:e7e4:500:7a4b:ddf0:f61:f58d])
-        by smtp.gmail.com with ESMTPSA id 006d021491bc7-69d045e6567sm4530406eaf.3.2026.05.17.12.21.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 17 May 2026 12:21:32 -0700 (PDT)
-Message-ID: <58a66855-9fb3-48ca-8cae-ff9277f745df@baylibre.com>
-Date: Sun, 17 May 2026 14:21:30 -0500
+	s=arc-20240116; t=1779048917; c=relaxed/simple;
+	bh=wPGlipT5EbZIEdNt7MOHiAYU0AmXy3zaPqy5WBml5x4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=cQuOIRBbqE2rga3TKMIZMzuKHSGpRex4UeTwXc9BQRlhSiAvt/G7uBiP7kgaMwlf/rd+4IDZsdJcFQn1Zsgyvki9uDRPZjGP8pamwkXShgLtrfVu7NGXdHTrCTchL1+An+X/RArHAFt5DNLkzl4dGfbfYCANMLgahRwKmMq5204=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m9IHy5yy; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D36FDC2BCB0;
+	Sun, 17 May 2026 20:15:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779048917;
+	bh=wPGlipT5EbZIEdNt7MOHiAYU0AmXy3zaPqy5WBml5x4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=m9IHy5yy0cEUZHHJNGSRFxXqJP7SBD/EyXD/oXlZHAy4p31o878utNEWToqVaQf8+
+	 /YwiiW6481YbXNrtgdPfbh/hAcOClmpdVTw4jrVCh7zv0brNy3vjmn/W/47Idypo4C
+	 2VbDjPIV2U786Sr5adfOp86IaP0Ajgpahkdo4Len+bhU15ZvQno+BwELKXmivNMFRc
+	 cYzkMBDddP3rCLlfyHWJLWpJsjIbqCL1byxE8GlFTced2LiDc0+7XTU0SDr7RZ8PFz
+	 /HKZ+A6k6AUtM8K82/JeF/zXYUO8eBxD+7m62MOT7/pc1umDohhGAYTe+Q2A4uoRsP
+	 gLNOEzkAV9Cvw==
+Date: Sun, 17 May 2026 22:15:14 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Cosmin-Gabriel Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
+Cc: Biju Das <biju.das.jz@bp.renesas.com>, 
+	William Breathitt Gray <wbg@kernel.org>, Lee Jones <lee@kernel.org>, 
+	Thierry Reding <thierry.reding@gmail.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, 
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
+	"linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>
+Subject: Re: [PATCH 1/5] pwm: rz-mtu3: fix prescale check when enabling 2nd
+ channel
+Message-ID: <agog7Z1wfrZAjHj-@monoceros>
+References: <20260130122353.2263273-1-cosmin-gabriel.tanislav.xa@renesas.com>
+ <20260130122353.2263273-2-cosmin-gabriel.tanislav.xa@renesas.com>
+ <aaqTVDQa7xn70bR_@monoceros>
+ <TYRPR01MB156191C8E77BDA44AE23A7D4F857AA@TYRPR01MB15619.jpnprd01.prod.outlook.com>
+ <TYRPR01MB156192CC838EC0B3DD66246158540A@TYRPR01MB15619.jpnprd01.prod.outlook.com>
+ <abkX1ssLhkGxryfM@monoceros>
+ <TYYPR01MB15615FA52860D81F04E42F2C48541A@TYYPR01MB15615.jpnprd01.prod.outlook.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v11 3/6] iio: adc: ad4691: add triggered buffer support
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: radu.sabau@analog.com, Lars-Peter Clausen <lars@metafoo.de>,
- Michael Hennerich <Michael.Hennerich@analog.com>,
- =?UTF-8?Q?Nuno_S=C3=A1?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?=
- <ukleinek@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>,
- Mark Brown <broonie@kernel.org>, Linus Walleij <linusw@kernel.org>,
- Bartosz Golaszewski <brgl@kernel.org>, Philipp Zabel
- <p.zabel@pengutronix.de>, Jonathan Corbet <corbet@lwn.net>,
- Shuah Khan <skhan@linuxfoundation.org>, linux-iio@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-doc@vger.kernel.org
-References: <20260515-ad4692-multichannel-sar-adc-driver-v11-0-eab27d852ac2@analog.com>
- <20260515-ad4692-multichannel-sar-adc-driver-v11-3-eab27d852ac2@analog.com>
- <9b7986e1-6550-415d-b301-33089ba10177@baylibre.com>
- <20260517132526.27c71b70@jic23-huawei>
-Content-Language: en-US
-From: David Lechner <dlechner@baylibre.com>
-In-Reply-To: <20260517132526.27c71b70@jic23-huawei>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 7FAE0563826
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="q5alohvduecpctbe"
+Content-Disposition: inline
+In-Reply-To: <TYYPR01MB15615FA52860D81F04E42F2C48541A@TYYPR01MB15615.jpnprd01.prod.outlook.com>
+X-Rspamd-Queue-Id: 1B77C563B5C
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-0.16 / 15.00];
+X-Spamd-Result: default: False [-2.26 / 15.00];
+	SIGNED_PGP(-2.00)[];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[baylibre-com.20251104.gappssmtp.com:s=20251104];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MID_RHS_NOT_FQDN(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	MIME_GOOD(-0.20)[multipart/signed,text/plain];
 	MAILLIST(-0.15)[generic];
-	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8940-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DMARC_NA(0.00)[baylibre.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[analog.com,metafoo.de,kernel.org,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org,vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[23];
-	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[baylibre-com.20251104.gappssmtp.com:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	TAGGED_FROM(0.00)[bounces-8941-lists,linux-pwm=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[bp.renesas.com,kernel.org,gmail.com,vger.kernel.org];
 	TO_DN_SOME(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dlechner@baylibre.com,linux-pwm@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	MID_RHS_MATCH_FROM(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ukleinek@kernel.org,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCPT_COUNT_SEVEN(0.00)[10];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[baylibre.com:email,baylibre.com:mid,baylibre-com.20251104.gappssmtp.com:dkim,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,analog.com:email]
+	TAGGED_RCPT(0.00)[linux-pwm];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
-On 5/17/26 7:25 AM, Jonathan Cameron wrote:
-> On Sat, 16 May 2026 12:32:51 -0500
-> David Lechner <dlechner@baylibre.com> wrote:
-> 
->> On 5/15/26 8:31 AM, Radu Sabau via B4 Relay wrote:
->>> From: Radu Sabau <radu.sabau@analog.com>
->>>
->>> Add buffered capture support using the IIO triggered buffer framework.
->>>
->>> CNV Burst Mode: the GP pin identified by interrupt-names in the device
->>> tree is configured as DATA_READY output. The IRQ handler stops
->>> conversions and fires the IIO trigger; the trigger handler executes a
->>> pre-built SPI message that reads all active channels from the AVG_IN
->>> accumulator registers and then resets accumulator state and restarts
->>> conversions for the next cycle.
->>>
->>> Manual Mode: CNV is tied to SPI CS so each transfer simultaneously
->>> reads the previous result and starts the next conversion (pipelined
->>> N+1 scheme). At preenable time a pre-built, optimised SPI message of
->>> N+1 transfers is constructed (N channel reads plus one NOOP to drain
->>> the pipeline). The trigger handler executes the message in a single
->>> spi_sync() call and collects the results. An external trigger (e.g.
->>> iio-trig-hrtimer) is required to drive the trigger at the desired
->>> sample rate.
->>>
->>> Both modes share the same trigger handler and push a complete scan —
->>> one big-endian 16-bit (__be16) slot per active channel, densely packed
->>> in scan_index order, followed by a timestamp.
->>>
->>> The CNV Burst Mode sampling frequency (PWM period) is exposed as a
->>> buffer-level attribute via IIO_DEVICE_ATTR.
->>>
->>> Signed-off-by: Radu Sabau <radu.sabau@analog.com>
-> 
->>> +
->>> +static int ad4691_manual_buffer_preenable(struct iio_dev *indio_dev)
->>> +{
->>> +	struct ad4691_state *st = iio_priv(indio_dev);
->>> +	unsigned int k, i;
->>> +	int ret;
->>> +
->>> +	memset(st->scan_xfers, 0, sizeof(st->scan_xfers));
->>> +	memset(st->scan_tx, 0, sizeof(st->scan_tx));
->>> +
->>> +	spi_message_init(&st->scan_msg);
->>> +
->>> +	k = 0;
->>> +	iio_for_each_active_channel(indio_dev, i) {
->>> +		if (i >= indio_dev->num_channels - 1)
->>> +			break; /* skip soft timestamp */  
->>
->> I don't think timestamp gets set in the scan mask. It is handled separately.
-> 
-> FWIW that is a sashiko false postive (I believe anyway!)
-> If we do hit this please shout as we have a core bug.
-> 
-> If anyone has time to look at how hard it would be to tweak
-> iio_for_each_active_channel to skip a last element timestamp that
-> would be great.
-> 
-> I think that iterates one too far which is what sashiko is tripping over.
-> 
-> I'm only keen to fix that if we can make it low cost and hid it entirely
-> from drivers.
-> 
-> Jonathan
-> 
-This is what I came up with (totally untested).
 
-Since timestamp can never be set in scan_mask/active_scan_mask, it should
-be safe to exclude it from masklength without breaking existing code.
+--q5alohvduecpctbe
+Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 1/5] pwm: rz-mtu3: fix prescale check when enabling 2nd
+ channel
+MIME-Version: 1.0
 
-I didn't check all callers of masklength/iio_get_masklength() though.
+Hello Cosmin,
 
----
-diff --git a/drivers/iio/industrialio-buffer.c b/drivers/iio/industrialio-buffer.c
-index 9d66510a1d49..17f539fc23e2 100644
---- a/drivers/iio/industrialio-buffer.c
-+++ b/drivers/iio/industrialio-buffer.c
-@@ -2300,8 +2300,10 @@ int iio_buffers_alloc_sysfs_and_mask(struct iio_dev *indio_dev)
- 	if (channels) {
- 		int ml = 0;
- 
--		for (i = 0; i < indio_dev->num_channels; i++)
--			ml = max(ml, channels[i].scan_index + 1);
-+		for (i = 0; i < indio_dev->num_channels; i++) {
-+			if (channels[i].type != IIO_TIMESTAMP)
-+				ml = max(ml, channels[i].scan_index + 1);
-+		}
- 		ACCESS_PRIVATE(indio_dev, masklength) = ml;
- 	}
- 
+On Tue, Mar 17, 2026 at 11:02:12PM +0000, Cosmin-Gabriel Tanislav wrote:
+> > From: Uwe Kleine-K=F6nig <ukleinek@kernel.org>
+> > Sent: Tuesday, March 17, 2026 11:12 AM
+> >=20
+> > On Mon, Mar 16, 2026 at 03:49:35PM +0000, Cosmin-Gabriel Tanislav wrote:
+> > > static int rz_mtu3_pwm_config(struct pwm_chip *chip, struct pwm_devic=
+e *pwm,
+> > > 			      const struct pwm_state *state)
+> > > {
+> > > 	...
+> > >
+> > > 	u32 enable_count;
+> > >
+> > > 	...
+> > >
+> > > 	/*
+> > > 	 * Account for the case where one IO is already enabled and this call
+> > > 	 * enables the second one, to prevent the prescale from being change=
+d.
+> > > 	 * If this PWM is currently disabled it will be enabled by this call,
+> > > 	 * so include it in the enable count. If it is already enabled, it h=
+as
+> > > 	 * already been accounted for.
+> > > 	 */
+> > > 	enable_count =3D rz_mtu3_pwm->enable_count[ch] + (pwm->state.enabled=
+ ? 0 : 1);
+> > >
+> > > 	...
+> > >
+> > > 	if (enable_count > 1) {
+> > > 		if (rz_mtu3_pwm->prescale[ch] > prescale)
+> > > 			return -EBUSY;
+> > >
+> > > 		prescale =3D rz_mtu3_pwm->prescale[ch];
+> > > 	}
+> > >
+> > > Please let me know what you think so we can proceed with the work
+> > > internally.
+> >=20
+> > I'd prefer the `rz_mtu3_pwm->enable_count[ch] + (pwm->state.enabled ? 0=
+ : 1);`
+> > variant. I understand that this is also the variant you prefer, so
+> > that's great, but I wouldn't stop you using the sibling option.
+>=20
+> I realized the check could be simplified quite a bit while achieving
+> the same outcome.
+>=20
+> 	if (rz_mtu3_pwm->enable_count[ch] > pwm->state.enabled) {
+> 		...
+> 	}
+>=20
+> 2 > 1 -> true, prescale gets checked when updating one of the IOs if
+> both are enabled
+>=20
+> 1 > 0 -> true, prescale gets checked when enabling the second IO
+>=20
+> 1 > 1 -> false, prescale is not checked when updating a single enabled
+> IO
+>=20
+> 0 > 0 -> false, prescale is not checked when enabling the first IO
+>=20
+> 2 > 0 and 0 > 1 -> impossible since enable_count is always in sync
+> with PWM state
 
+I didn't try to understand that, but on first glance it doesn't look
+intuitive, so needs a code comment.
 
+> > You can gain some extra points for not using pwm->state. This is a relic
+> > from the legacy pwm abstraction and doesn't make much sense with the
+> > waveform callbacks.=20
+>=20
+> I can switch from enable_count to an enable_mask in a later commit, and
+> that will allow us to both get rid of PWM state access entirely and also
+> make the sibling check more obvious, by doing something like:
+>=20
+> 	if (rz_mtu3_pwm->enable_mask[ch] & ~BIT(rz_mtu3_hwpwm_io(pwm->hwpwm))) {
+> 		...
+> 	}
+>=20
+> Which would read like "is any other IO enabled?". If yes, don't touch
+> prescale.
+>=20
+> But for the scope of these fixes we need to keep accessing PWM state as I
+> would like them to be backported to stable.
+
+ack, getting rid of pwm->state is a separate patch that should be
+addressed only after the fixes under discussion.
+=20
+> enable_mask must remain per-HW channel because it makes the enable /
+> disable checks simpler.
+>=20
+> If this sounds good to you, I will proceed with all of these changes.
+
+It does, so go.
+
+Best regards
+Uwe
+
+--q5alohvduecpctbe
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmoKIc8ACgkQj4D7WH0S
+/k7RGgf/VEvDtodT0+oisHcW2Z6vsU8mbZ6CyXyTYVCCAfxnCMh5+Pv0JrZGF0BB
+6HTuBpK3WzDLz18WhMRvuRX0lGQ0H1GdWgRhUfCRKjK3uQ0k94jqbTS3077LogCu
+KVddT3wgqd42HvVnoKKyX6kXLdhERF1feWJimAZMyN97EnCpYkXIrt6OjcqVw1uP
+CovKK1sipd9yubGD50twFyD1mvrfBgtlttGK3+jch85WrVpiEivYywkYlg50raGX
+nGLis6QRafoe/BszDCYaAYBcNBT9DV5Acs0ABucv1KcgUe2/wFXeQpyrLalaMk0+
+4c1SKThnhzLBWSP1Dh5L+TOi7CZlzw==
+=nQKn
+-----END PGP SIGNATURE-----
+
+--q5alohvduecpctbe--
 
