@@ -1,63 +1,63 @@
-Return-Path: <linux-pwm+bounces-8936-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8937-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id wLZTCIrzCWomvgQAu9opvQ
-	(envelope-from <linux-pwm+bounces-8936-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 18:57:46 +0200
+	id QKy8HA73CWrgvgQAu9opvQ
+	(envelope-from <linux-pwm+bounces-8937-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 19:12:46 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id AF8C3562570
-	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 18:57:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id E5CED5626B6
+	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 19:12:45 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 11A6B3002302
-	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 16:57:45 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id A9CDB3002896
+	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 17:12:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3A26834E774;
-	Sun, 17 May 2026 16:57:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0543C3C278B;
+	Sun, 17 May 2026 17:12:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KoE6v/gP"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RUrmpOI5"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15BA52DB781;
-	Sun, 17 May 2026 16:57:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5A053BFE31;
+	Sun, 17 May 2026 17:12:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779037064; cv=none; b=R+AU3F3qQJGwZ39z5Ve0YJlCJN6wZeQTvml7HwsueHxWEoZ0ZkadqodHfvEcNdmDFrIAVLbiuMvWfCVFCoRhOzfv++UnkZHL2iVIHFP3YbvcmFmRn7vdTjrNlHG9t6x1eNGoFMKD+Xr4xXW9iWxsJ4qHur/OKlyABn15ynEagRk=
+	t=1779037962; cv=none; b=g/53H+8bLMb6FTTLVw3RG9l4NlmstGPLadSThZMynxMcrexNxaWZUlmpaf+U8mCE38IU0hNm6Vu/MwgvB8kIPLev6QVXLXi7XfxFEhnDWva7CUl0Rl5jv2wPO9pYcIXJyvMqGS9go2VAWEo9Ac5H9Zp+vS9s64x9Hyv18irU8ms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779037064; c=relaxed/simple;
-	bh=PMcHT5ZHobjYwWhgDFQaflRfbCCg4L8Ustalhh0HCbY=;
+	s=arc-20240116; t=1779037962; c=relaxed/simple;
+	bh=rZTvaM2qqzZ0+ZHapysXVlkiReT0C0YfxuSAed7oo4U=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=jxAHiU+DYGb6AlG/GU2SHrGonn3mn+urLnPdI/MQkbURPLjHbImz/0xfxZGYTmMF9pn7L7Cg0uGM0XoIrVICAAM+xy246xMDfI8YYuGTChqwsYsM/0HfiBx5dNlemG4JUAft7dhq1xyvD5q9VIKKkeH3p1pBkWxaNHzxHMdIbIs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KoE6v/gP; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 470BFC2BCB0;
-	Sun, 17 May 2026 16:57:43 +0000 (UTC)
+	 Content-Type:Content-Disposition:In-Reply-To; b=kymCKIz3KK1wLs3cGiDtnObkZelEzlDq4/5e1uWA2oHX44kwS/6at20+geTN9z+CqeISDAXTua3sbT+olos04g7pTYVz4WJMFTrak1UefWYVzds340UKxZVT6/d6meRGNla3Yocy4naJIAjGvWoFYRnbI/mGwF1unc+A8Xp19vs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RUrmpOI5; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0632C2BCB8;
+	Sun, 17 May 2026 17:12:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779037063;
-	bh=PMcHT5ZHobjYwWhgDFQaflRfbCCg4L8Ustalhh0HCbY=;
+	s=k20201202; t=1779037962;
+	bh=rZTvaM2qqzZ0+ZHapysXVlkiReT0C0YfxuSAed7oo4U=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=KoE6v/gPoGvn4j5E8LoAt8XIslIQYFC8AAO4V5nEjvWSJxLhfVVcwDYQKyTU74aLZ
-	 UwUUpDyY8undeAXinU6it7sEM+KqeCSE4IL47PueUsZ/plWmARKbRo2+/nf9S4nRXr
-	 7yy9blwZOIazjBLSlzFXjC08z2PBdiiXg6RS6/anXLagdjIsgAr4FDVdbWS3nk5bR8
-	 toAarHF1djgWCTg3pk11DsPfMyAyT9g16XJ68lY0BJpXrhuIn6m+DYx40U2YFssl4R
-	 Z97hDeC19Iv5G2GGBdAx5G2B8KoJA2VgVtsvikQtQnZ8MYDij83saSjbZYRVH+YAOB
-	 6T074Jjv1dDUg==
-Date: Sun, 17 May 2026 18:57:40 +0200
+	b=RUrmpOI5z3LGWD8/mdNkUlYbcEA4ysfIOvjNwFRxSxquanwD9ZR3iTnB+zT95QL4s
+	 BmgZ3CpZXgSsU25OUFfr+ynh/HdoGAP6IPd2DjvkMbRwg0jthmTYzrzjIbZk1paajv
+	 U7tO/7oaP4A5gHOcBuSm+xDyKJHnJpvgpb3KP41K0n9NhdnMiGcfdqvyUqVK2B08ZY
+	 lrpWt9CBYbSMa16NE3SOPUm3Q3zFNuwKaKAzflJMaP7qMamAdeFVNa1GV8b8ictQD+
+	 YqCjNxbWwokvEf0AaTrKrRm23D86U0T8KhMuk5dD8Qx7BZNO7SReEPlyoX35YncqkF
+	 mPGdwlJrpqUUA==
+Date: Sun, 17 May 2026 19:12:39 +0200
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Biju Das <biju.das.jz@bp.renesas.com>
-Cc: Cosmin-Gabriel Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>, 
-	"biju.das.au" <biju.das.au@gmail.com>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, 
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, 
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
-Subject: Re: [PATCH v5 4/9] pwm: rzg2l-gpt: Convert to waveform callbacks
-Message-ID: <agnynFUowrOA6oqH@monoceros>
-References: <20260420104332.153640-5-biju.das.jz@bp.renesas.com>
- <TYRPR01MB156193428AFA2FE631556EEDA852F2@TYRPR01MB15619.jpnprd01.prod.outlook.com>
- <aec2GeV_aP6rOtFg@monoceros>
- <TY3PR01MB11346D2A5AD3D030E806594CF862B2@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+To: xianwei.zhao@amlogic.com
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Heiner Kallweit <hkallweit1@gmail.com>, Neil Armstrong <neil.armstrong@linaro.org>, 
+	Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+	Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+	linux-amlogic@lists.infradead.org
+Subject: Re: [PATCH v2 2/2] pwm: meson: Add support for Amlogic S7
+Message-ID: <agn2Yp3mzI7DcsyN@monoceros>
+References: <20260402-s6-s7-pwm-v2-0-657dce040956@amlogic.com>
+ <20260402-s6-s7-pwm-v2-2-657dce040956@amlogic.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -65,158 +65,150 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="hhc5aex5cenulhdj"
+	protocol="application/pgp-signature"; boundary="eenroa65e3lftv6j"
 Content-Disposition: inline
-In-Reply-To: <TY3PR01MB11346D2A5AD3D030E806594CF862B2@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-X-Rspamd-Queue-Id: AF8C3562570
+In-Reply-To: <20260402-s6-s7-pwm-v2-2-657dce040956@amlogic.com>
+X-Rspamd-Queue-Id: E5CED5626B6
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-3.76 / 15.00];
+X-Spamd-Result: default: False [-2.26 / 15.00];
 	SIGNED_PGP(-2.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64];
 	MAILLIST(-0.15)[generic];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8936-lists,linux-pwm=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FREEMAIL_CC(0.00)[renesas.com,gmail.com,vger.kernel.org,glider.be,bp.renesas.com];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	TAGGED_FROM(0.00)[bounces-8937-lists,linux-pwm=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[14];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,linaro.org,baylibre.com,googlemail.com,vger.kernel.org,lists.infradead.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[ukleinek@kernel.org,linux-pwm@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-pwm,renesas];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
 	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns]
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,amlogic.com:email]
 X-Rspamd-Action: no action
 
 
---hhc5aex5cenulhdj
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+--eenroa65e3lftv6j
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v5 4/9] pwm: rzg2l-gpt: Convert to waveform callbacks
+Subject: Re: [PATCH v2 2/2] pwm: meson: Add support for Amlogic S7
 MIME-Version: 1.0
 
-Hello Biju,
+Hello,
 
-On Fri, Apr 24, 2026 at 09:01:51AM +0000, Biju Das wrote:
-> > -----Original Message-----
-> > From: Uwe Kleine-K=F6nig <ukleinek@kernel.org>
-> > Sent: 21 April 2026 09:41
-> > Subject: Re: [PATCH v5 4/9] pwm: rzg2l-gpt: Convert to waveform callbac=
-ks
-> >=20
-> > On Mon, Apr 20, 2026 at 05:55:07PM +0000, Cosmin-Gabriel Tanislav wrote:
-> > > > @@ -291,21 +286,26 @@ static int rzg2l_gpt_config(struct pwm_chip *=
-chip, struct pwm_device *pwm,
-> > > >  	if (rzg2l_gpt->channel_request_count[ch] > 1) {
-> > > >  		u8 sibling_ch =3D rzg2l_gpt_sibling(pwm->hwpwm);
-> > > >
-> > > > -		if (rzg2l_gpt_is_ch_enabled(rzg2l_gpt, sibling_ch)) {
-> > > > +		if (rzg2l_gpt_is_ch_enabled(rzg2l_gpt, sibling_ch, NULL)) {
-> > > >  			if (period_ticks < rzg2l_gpt->period_ticks[ch])
-> > > > -				return -EBUSY;
-> > > > +				is_small_second_period =3D true;
-> > > >
-> > > >  			period_ticks =3D rzg2l_gpt->period_ticks[ch];
-> > > >  		}
-> > > >  	}
-> > > >
-> > > > -	prescale =3D rzg2l_gpt_calculate_prescale(period_ticks);
-> > > > -	pv =3D rzg2l_gpt_calculate_pv_or_dc(period_ticks, prescale);
-> > > > +	wfhw->prescale =3D rzg2l_gpt_calculate_prescale(period_ticks);
-> > > > +	pv =3D rzg2l_gpt_calculate_pv_or_dc(period_ticks, wfhw->prescale);
-> > > > +	wfhw->gtpr =3D pv;
-> > > > +	wfhw->gtccr =3D 0;
-> > > > +	if (is_small_second_period)
-> > > > +		return 1;
-> > > >
-> > > > -	duty_ticks =3D mul_u64_u64_div_u64(state->duty_cycle, rzg2l_gpt->=
-rate_khz, USEC_PER_SEC);
-> > > > -	if (duty_ticks > period_ticks)
-> > > > -		duty_ticks =3D period_ticks;
-> > > > -	dc =3D rzg2l_gpt_calculate_pv_or_dc(duty_ticks, prescale);
-> > > > +	duty_ticks =3D mul_u64_u64_div_u64(wf->duty_length_ns, rzg2l_gpt-=
->rate_khz, USEC_PER_SEC);
-> > > > +	if (duty_ticks > RZG2L_MAX_TICKS)
-> > > > +		duty_ticks =3D RZG2L_MAX_TICKS;
-> > >
-> > > I know this change from > period_ticks to > RZG2L_MAX_TICKS has been
-> > > suggested by you, Uwe, but is this correct if period_ticks was set to
-> > > a smaller value in the earlier sibling channel condition?
-> >=20
-> > Indeed this is irritating. I assume I missed that and take the blame fo=
-r the wrong suggestions.
-> > Depending on how hardware copes with such a configuration it might be o=
-k to keep the code as is, but a
-> > comment would be justified in this case.
+On Thu, Apr 02, 2026 at 02:40:16AM +0000, Xianwei Zhao via B4 Relay wrote:
+> From: Xianwei Zhao <xianwei.zhao@amlogic.com>
 >=20
-> Please confirm
+> Add support for Amlogic S7 PWM. Amlogic S7 different from the
+> previous SoCs, a controller includes one pwm, at the same time,
+> the controller has only one input clock source.
 >=20
->  /*
->   * duty_ticks were clampled to match either period_ticks of this
-
-I think it's "clamped"
-
->   * channel or an active sibling channel's period_ticks.
->   */
-> if (duty_ticks > period_ticks)
-> 	duty_ticks =3D period_ticks;
-
-I think the comment is not needed in this case. (I only wanted a comment
-if the comparison against RZG2L_MAX_TICKS was kept.)
-
-> > > >  	/*
-> > > >  	 * GPT counter is shared by multiple channels, we cache the period
-> > > > ticks @@ -314,6 +314,61 @@ static int rzg2l_gpt_config(struct pwm_c=
-hip *chip, struct pwm_device
-> > *pwm,
-> > > >  	 */
-> > > >  	rzg2l_gpt->period_ticks[ch] =3D period_ticks;
-> > > >
-> > >
-> > > This should be part of rzg2l_gpt_write_waveform().
+> Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+> ---
+>  drivers/pwm/pwm-meson.c | 32 +++++++++++++++++++++++++++++---
+>  1 file changed, 29 insertions(+), 3 deletions(-)
 >=20
-> Also, if we move this to rzg2l_gpt_write_waveform() there is a rounding
-> error possible as we need to use hardware register to calculate
-> rzg2l_gpt->period_ticks[ch].
->=20
-> Can you please confirm, is it ok for you?
+> diff --git a/drivers/pwm/pwm-meson.c b/drivers/pwm/pwm-meson.c
+> index 8c6bf3d49753..7a43c42ef3d6 100644
+> --- a/drivers/pwm/pwm-meson.c
+> +++ b/drivers/pwm/pwm-meson.c
+> @@ -113,6 +113,7 @@ struct meson_pwm_data {
+>  	int (*channels_init)(struct pwm_chip *chip);
+>  	bool has_constant;
+>  	bool has_polarity;
+> +	bool single_pwm;
 
-I don't understand that. Why is there a rounding error possible? The
-relevant thing here is that a call to the two rounding callbacks is not
-supposed to change internal state of the driver or even the hardware.
+Conceptually I'd prefer a `npwm` field here. That doesn't take more
+space in memory and simplifies the logic a bit. (At the cost of having
+to adapt all already existing meson_pwm_data instances, but that's fine
+in my book.)
+
+>  };
+> =20
+>  struct meson_pwm {
+> @@ -503,6 +504,18 @@ static void meson_pwm_s4_put_clk(void *data)
+>  	clk_put(clk);
+>  }
+> =20
+> +static int meson_pwm_init_channels_s7(struct pwm_chip *chip)
+> +{
+> +	struct device *dev =3D pwmchip_parent(chip);
+> +	struct meson_pwm *meson =3D to_meson_pwm(chip);
+> +
+> +	meson->channels[0].clk =3D devm_clk_get(dev, NULL);
+> +	if (IS_ERR(meson->channels[0].clk))
+> +		return dev_err_probe(dev, PTR_ERR(meson->channels[0].clk),
+> +				     "Failed to get clk\n");
+> +	return 0;
+> +}
+> +
+>  static int meson_pwm_init_channels_s4(struct pwm_chip *chip)
+>  {
+>  	struct device *dev =3D pwmchip_parent(chip);
+> @@ -592,6 +605,13 @@ static const struct meson_pwm_data pwm_s4_data =3D {
+>  	.has_polarity =3D true,
+>  };
+> =20
+> +static const struct meson_pwm_data pwm_s7_data =3D {
+> +	.channels_init =3D meson_pwm_init_channels_s7,
+> +	.has_constant =3D true,
+> +	.has_polarity =3D true,
+> +	.single_pwm =3D true,
+> +};
+> +
+>  static const struct of_device_id meson_pwm_matches[] =3D {
+>  	{
+>  		.compatible =3D "amlogic,meson8-pwm-v2",
+> @@ -642,6 +662,10 @@ static const struct of_device_id meson_pwm_matches[]=
+ =3D {
+>  		.compatible =3D "amlogic,meson-s4-pwm",
+>  		.data =3D &pwm_s4_data
+>  	},
+> +	{
+> +		.compatible =3D "amlogic,s7-pwm",
+> +		.data =3D &pwm_s7_data
+> +	},
+>  	{},
+
+If you touch that array in the next revision, please make this line:
+
+	{ }
+
+(I.e. add a space and drop the comma.)
 
 Best regards
 Uwe
 
---hhc5aex5cenulhdj
+--eenroa65e3lftv6j
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmoJ84IACgkQj4D7WH0S
-/k7Kpwf/UaHuPFk53WwcjQyhKqtg7TsmRF+6xbikSU6GOY5a3heaIoNXoi4xjduD
-mQCLpxzX8e5ejlvsGmHInOm0LUDLXUtNq+9rS7BWUbFX6AnXsONbkhhLFHpFiaSU
-e0JJr4Z9qcM8t9Ep3gHFc2l5Ofd8sW/tdc5UkmHo1x96SU9rxsdfXPbjxeVwH4+A
-xymwVu8vkq/lcQZ7nWuHFAqt9ujSggaXh6W5OZ2t2gLfSDSuuugn5zTRHzDuQZ+K
-HCbpq5StSFbEqKlW94qE/QKMj2Lx1Lwc+SfcR7q/DRuWn3LtkR0gSwD70i34IosO
-/DzMKFxuiXOdCW1txcqbL/qdYC1Rqw==
-=WCET
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmoJ9wUACgkQj4D7WH0S
+/k6z4gf8CDKq+whV8je2O5ohJtU1A9GFL80VjHGqWPlp1Vzj64QRpZCZCbBwA/Mr
+VhA7vIcUm2o6m3dGLNdz5Y6CXusEk+afjTh3eQOMgyOXCbK6gL69QQ3TU/RCGuIX
+AGorWZzjsaV9UveLX4vc2VcZHEfxNb2AWNjvOgRfWrVb82Tw9cmg5Ago9dTFaSmz
+LKS03jU9jzuo4qge4VeKniPvSp+a/5YyTGgPOpFcR8RP8/orcE5EhCSI9J4QE+Ad
+Ynysyz8gr+delAF0En9fx190Psp2HsJvaEHO8C5xDfNXWkLw0tEiWD3QZVPY5TFH
+MgfGGtsEIzVFRLKzVpfLkWRtc6Dr7Q==
+=fPc/
 -----END PGP SIGNATURE-----
 
---hhc5aex5cenulhdj--
+--eenroa65e3lftv6j--
 
