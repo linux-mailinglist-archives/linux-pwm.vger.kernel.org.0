@@ -1,235 +1,117 @@
-Return-Path: <linux-pwm+bounces-8941-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8942-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id yOtyNtghCmpMxAQAu9opvQ
-	(envelope-from <linux-pwm+bounces-8941-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 22:15:20 +0200
+	id wCZLN2Z4Cmo61wQAu9opvQ
+	(envelope-from <linux-pwm+bounces-8942-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Mon, 18 May 2026 04:24:38 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1B77C563B5C
-	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 22:15:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 157E25650AB
+	for <lists+linux-pwm@lfdr.de>; Mon, 18 May 2026 04:24:36 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 149AC300F5D1
-	for <lists+linux-pwm@lfdr.de>; Sun, 17 May 2026 20:15:18 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5714530234FB
+	for <lists+linux-pwm@lfdr.de>; Mon, 18 May 2026 02:23:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EDEF30BBB9;
-	Sun, 17 May 2026 20:15:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="m9IHy5yy"
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 233E2337BAC;
+	Mon, 18 May 2026 02:23:09 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from cstnet.cn (smtp25.cstnet.cn [159.226.251.25])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6AD082FE074;
-	Sun, 17 May 2026 20:15:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D36E33A029
+	for <linux-pwm@vger.kernel.org>; Mon, 18 May 2026 02:23:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.226.251.25
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779048917; cv=none; b=l7ZmiuQe5o2yn/pkelhp/m1x4mykOfhpKZ/H/az/5rYyMRUVt+2BGGZfbd3/GVfFZszDbCTlBAMmaQTSvjbUsoGiHnWx3/z7uykFRxTkukGG3yXzr/IGvMt7D/eOAHoQeASHh0yrs9dlhBjx6HKflaHbTIsGZY/+amnY9jIHQyU=
+	t=1779070989; cv=none; b=VK8KOns2FA752ImqfR2B+4Jgt2GdXKOXXVMmaidxR8ZleESa3+840Zg6d83Qfaoe5Nx0UF6SNqp615Cd6u30NhrIo98NnGSsrE7u2uMtzRxj5wcPywvyjAkorUoz01aGWgiRLpo0wmGr/11oiFBxnYTr6IZYJBVp1g7qDp5WBjU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779048917; c=relaxed/simple;
-	bh=wPGlipT5EbZIEdNt7MOHiAYU0AmXy3zaPqy5WBml5x4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cQuOIRBbqE2rga3TKMIZMzuKHSGpRex4UeTwXc9BQRlhSiAvt/G7uBiP7kgaMwlf/rd+4IDZsdJcFQn1Zsgyvki9uDRPZjGP8pamwkXShgLtrfVu7NGXdHTrCTchL1+An+X/RArHAFt5DNLkzl4dGfbfYCANMLgahRwKmMq5204=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=m9IHy5yy; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D36FDC2BCB0;
-	Sun, 17 May 2026 20:15:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779048917;
-	bh=wPGlipT5EbZIEdNt7MOHiAYU0AmXy3zaPqy5WBml5x4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m9IHy5yy0cEUZHHJNGSRFxXqJP7SBD/EyXD/oXlZHAy4p31o878utNEWToqVaQf8+
-	 /YwiiW6481YbXNrtgdPfbh/hAcOClmpdVTw4jrVCh7zv0brNy3vjmn/W/47Idypo4C
-	 2VbDjPIV2U786Sr5adfOp86IaP0Ajgpahkdo4Len+bhU15ZvQno+BwELKXmivNMFRc
-	 cYzkMBDddP3rCLlfyHWJLWpJsjIbqCL1byxE8GlFTced2LiDc0+7XTU0SDr7RZ8PFz
-	 /HKZ+A6k6AUtM8K82/JeF/zXYUO8eBxD+7m62MOT7/pc1umDohhGAYTe+Q2A4uoRsP
-	 gLNOEzkAV9Cvw==
-Date: Sun, 17 May 2026 22:15:14 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Cosmin-Gabriel Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>
-Cc: Biju Das <biju.das.jz@bp.renesas.com>, 
-	William Breathitt Gray <wbg@kernel.org>, Lee Jones <lee@kernel.org>, 
-	Thierry Reding <thierry.reding@gmail.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, 
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 
-	"linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>
-Subject: Re: [PATCH 1/5] pwm: rz-mtu3: fix prescale check when enabling 2nd
- channel
-Message-ID: <agog7Z1wfrZAjHj-@monoceros>
-References: <20260130122353.2263273-1-cosmin-gabriel.tanislav.xa@renesas.com>
- <20260130122353.2263273-2-cosmin-gabriel.tanislav.xa@renesas.com>
- <aaqTVDQa7xn70bR_@monoceros>
- <TYRPR01MB156191C8E77BDA44AE23A7D4F857AA@TYRPR01MB15619.jpnprd01.prod.outlook.com>
- <TYRPR01MB156192CC838EC0B3DD66246158540A@TYRPR01MB15619.jpnprd01.prod.outlook.com>
- <abkX1ssLhkGxryfM@monoceros>
- <TYYPR01MB15615FA52860D81F04E42F2C48541A@TYYPR01MB15615.jpnprd01.prod.outlook.com>
+	s=arc-20240116; t=1779070989; c=relaxed/simple;
+	bh=HrrAPa24V40EHH9bsffLH4Tw6EbLYMg2oVtJO5x9Vyo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=MOsQYfxpFq83Jja3ep8AE4hmmYxbVJ4pOH07lFi3AHOd1hA9zwv1ZSNnWQ6YEE+rjV+FSQCIG50CsrJqdowAfja17LNbaRrlQJSQyLzNSE/e1a2Eo7TdScgq1efo5kpUa240HyYl+jKb8gz4bgcC30ylOP2l7OODg5MqNemXN84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn; spf=pass smtp.mailfrom=iscas.ac.cn; arc=none smtp.client-ip=159.226.251.25
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=iscas.ac.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=iscas.ac.cn
+Received: from localhost (unknown [36.110.52.2])
+	by APP-05 (Coremail) with SMTP id zQCowADnfBD8dwpqqRCVEA--.152S2;
+	Mon, 18 May 2026 10:22:52 +0800 (CST)
+From: Chen Ni <nichen@iscas.ac.cn>
+To: ukleinek@kernel.org
+Cc: nicolas.ferre@microchip.com,
+	alexandre.belloni@bootlin.com,
+	claudiu.beznea@tuxon.dev,
+	linux-pwm@vger.kernel.org,
+	linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] pwm: atmel-tcb: Remove unneeded semicolon
+Date: Mon, 18 May 2026 10:21:25 +0800
+Message-ID: <20260518022251.1625520-1-nichen@iscas.ac.cn>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <agnyKRxQk5WXSTHe@monoceros>
+References: <agnyKRxQk5WXSTHe@monoceros>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="q5alohvduecpctbe"
-Content-Disposition: inline
-In-Reply-To: <TYYPR01MB15615FA52860D81F04E42F2C48541A@TYYPR01MB15615.jpnprd01.prod.outlook.com>
-X-Rspamd-Queue-Id: 1B77C563B5C
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:zQCowADnfBD8dwpqqRCVEA--.152S2
+X-Coremail-Antispam: 1UD129KBjDUn29KB7ZKAUJUUUUU529EdanIXcx71UUUUU7v73
+	VFW2AGmfu7bjvjm3AaLaJ3UjIYCTnIWjp_UUUYF7k0a2IF6FyUM7kC6x804xWl14x267AK
+	xVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0rVWrJVCq3wAFIxvE14AKwVWUJVWUGw
+	A2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK021l84ACjcxK6xIIjxv20xvE14v26ryj
+	6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r4j6F4UM28EF7xvwVC2z280aVAFwI0_Cr
+	1j6rxdM28EF7xvwVC2z280aVCY1x0267AKxVWxJr0_GcWle2I262IYc4CY6c8Ij28IcVAa
+	Y2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E2Ix0cI8IcVAFwI0_JrI_JrylYx0Ex4
+	A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJVW8JwACjcxG0xvY0x0EwIxGrwCF04k2
+	0xvY0x0EwIxGrwCF54CYxVCY1x0262kKe7AKxVWUAVWUtwCFx2IqxVCFs4IE7xkEbVWUJV
+	W8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF
+	1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6x
+	IIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG6r1j6r1xMIIF0xvE
+	x4A2jsIE14v26r1j6r4UMIIF0xvEx4A2jsIEc7CjxVAFwI0_Jr0_GrUvcSsGvfC2KfnxnU
+	UI43ZEXa7IU8XzVUUUUUU==
+X-CM-SenderInfo: xqlfxv3q6l2u1dvotugofq/
+X-Rspamd-Queue-Id: 157E25650AB
 X-Rspamd-Server: lfdr
-X-Spamd-Result: default: False [-2.26 / 15.00];
-	SIGNED_PGP(-2.00)[];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-0.46 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	MID_CONTAINS_FROM(1.00)[];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-8942-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8941-lists,linux-pwm=lfdr.de];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	DMARC_NA(0.00)[iscas.ac.cn];
 	RCVD_COUNT_THREE(0.00)[4];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FREEMAIL_CC(0.00)[bp.renesas.com,kernel.org,gmail.com,vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ukleinek@kernel.org,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-pwm];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FROM_HAS_DN(0.00)[];
+	RCPT_COUNT_FIVE(0.00)[6];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[nichen@iscas.ac.cn,linux-pwm@vger.kernel.org];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TO_DN_NONE(0.00)[];
+	R_DKIM_NA(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-pwm];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Action: no action
 
+On Sun, May 17, 2026 at 06:52:48PM +0200, Uwe Kleine-König wrote:
 
---q5alohvduecpctbe
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 1/5] pwm: rz-mtu3: fix prescale check when enabling 2nd
- channel
-MIME-Version: 1.0
+> I'd like to pick up this commit, but don't want to modify the commit log
 
-Hello Cosmin,
+> without your consent. For now this is blocked because of that.
 
-On Tue, Mar 17, 2026 at 11:02:12PM +0000, Cosmin-Gabriel Tanislav wrote:
-> > From: Uwe Kleine-K=F6nig <ukleinek@kernel.org>
-> > Sent: Tuesday, March 17, 2026 11:12 AM
-> >=20
-> > On Mon, Mar 16, 2026 at 03:49:35PM +0000, Cosmin-Gabriel Tanislav wrote:
-> > > static int rz_mtu3_pwm_config(struct pwm_chip *chip, struct pwm_devic=
-e *pwm,
-> > > 			      const struct pwm_state *state)
-> > > {
-> > > 	...
-> > >
-> > > 	u32 enable_count;
-> > >
-> > > 	...
-> > >
-> > > 	/*
-> > > 	 * Account for the case where one IO is already enabled and this call
-> > > 	 * enables the second one, to prevent the prescale from being change=
-d.
-> > > 	 * If this PWM is currently disabled it will be enabled by this call,
-> > > 	 * so include it in the enable count. If it is already enabled, it h=
-as
-> > > 	 * already been accounted for.
-> > > 	 */
-> > > 	enable_count =3D rz_mtu3_pwm->enable_count[ch] + (pwm->state.enabled=
- ? 0 : 1);
-> > >
-> > > 	...
-> > >
-> > > 	if (enable_count > 1) {
-> > > 		if (rz_mtu3_pwm->prescale[ch] > prescale)
-> > > 			return -EBUSY;
-> > >
-> > > 		prescale =3D rz_mtu3_pwm->prescale[ch];
-> > > 	}
-> > >
-> > > Please let me know what you think so we can proceed with the work
-> > > internally.
-> >=20
-> > I'd prefer the `rz_mtu3_pwm->enable_count[ch] + (pwm->state.enabled ? 0=
- : 1);`
-> > variant. I understand that this is also the variant you prefer, so
-> > that's great, but I wouldn't stop you using the sibling option.
->=20
-> I realized the check could be simplified quite a bit while achieving
-> the same outcome.
->=20
-> 	if (rz_mtu3_pwm->enable_count[ch] > pwm->state.enabled) {
-> 		...
-> 	}
->=20
-> 2 > 1 -> true, prescale gets checked when updating one of the IOs if
-> both are enabled
->=20
-> 1 > 0 -> true, prescale gets checked when enabling the second IO
->=20
-> 1 > 1 -> false, prescale is not checked when updating a single enabled
-> IO
->=20
-> 0 > 0 -> false, prescale is not checked when enabling the first IO
->=20
-> 2 > 0 and 0 > 1 -> impossible since enable_count is always in sync
-> with PWM state
+Hi Uwe,
 
-I didn't try to understand that, but on first glance it doesn't look
-intuitive, so needs a code comment.
+That is fine with me. Please go ahead and add the note to the commit log.
 
-> > You can gain some extra points for not using pwm->state. This is a relic
-> > from the legacy pwm abstraction and doesn't make much sense with the
-> > waveform callbacks.=20
->=20
-> I can switch from enable_count to an enable_mask in a later commit, and
-> that will allow us to both get rid of PWM state access entirely and also
-> make the sibling check more obvious, by doing something like:
->=20
-> 	if (rz_mtu3_pwm->enable_mask[ch] & ~BIT(rz_mtu3_hwpwm_io(pwm->hwpwm))) {
-> 		...
-> 	}
->=20
-> Which would read like "is any other IO enabled?". If yes, don't touch
-> prescale.
->=20
-> But for the scope of these fixes we need to keep accessing PWM state as I
-> would like them to be backported to stable.
+Best regards,
+Chen Ni
 
-ack, getting rid of pwm->state is a separate patch that should be
-addressed only after the fixes under discussion.
-=20
-> enable_mask must remain per-HW channel because it makes the enable /
-> disable checks simpler.
->=20
-> If this sounds good to you, I will proceed with all of these changes.
-
-It does, so go.
-
-Best regards
-Uwe
-
---q5alohvduecpctbe
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmoKIc8ACgkQj4D7WH0S
-/k7RGgf/VEvDtodT0+oisHcW2Z6vsU8mbZ6CyXyTYVCCAfxnCMh5+Pv0JrZGF0BB
-6HTuBpK3WzDLz18WhMRvuRX0lGQ0H1GdWgRhUfCRKjK3uQ0k94jqbTS3077LogCu
-KVddT3wgqd42HvVnoKKyX6kXLdhERF1feWJimAZMyN97EnCpYkXIrt6OjcqVw1uP
-CovKK1sipd9yubGD50twFyD1mvrfBgtlttGK3+jch85WrVpiEivYywkYlg50raGX
-nGLis6QRafoe/BszDCYaAYBcNBT9DV5Acs0ABucv1KcgUe2/wFXeQpyrLalaMk0+
-4c1SKThnhzLBWSP1Dh5L+TOi7CZlzw==
-=nQKn
------END PGP SIGNATURE-----
-
---q5alohvduecpctbe--
 
