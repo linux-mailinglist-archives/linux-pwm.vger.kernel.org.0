@@ -1,94 +1,97 @@
-Return-Path: <linux-pwm+bounces-8980-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8981-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UFlRLWZYC2oCGAUAu9opvQ
-	(envelope-from <linux-pwm+bounces-8980-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Mon, 18 May 2026 20:20:22 +0200
+	id gFpyCO1ZC2ovGAUAu9opvQ
+	(envelope-from <linux-pwm+bounces-8981-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Mon, 18 May 2026 20:26:53 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5FB5A572262
-	for <lists+linux-pwm@lfdr.de>; Mon, 18 May 2026 20:20:22 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id C15F85723AC
+	for <lists+linux-pwm@lfdr.de>; Mon, 18 May 2026 20:26:52 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 8BDFF308AA81
-	for <lists+linux-pwm@lfdr.de>; Mon, 18 May 2026 18:06:53 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id F2FF830208A9
+	for <lists+linux-pwm@lfdr.de>; Mon, 18 May 2026 18:26:20 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 945A838B14D;
-	Mon, 18 May 2026 18:05:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A0BA23890F8;
+	Mon, 18 May 2026 18:26:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=flowmailer.net header.i=@flowmailer.net header.b="oOv4FfQQ";
-	dkim=pass (2048-bit key) header.d=siemens-energy.com header.i=schuster.simon@siemens-energy.com header.b="dI1aE97G"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="A2T0DUHL"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mta-65-129.flowmailer.net (mta-65-129.flowmailer.net [185.136.65.129])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D84553890F0
-	for <linux-pwm@vger.kernel.org>; Mon, 18 May 2026 18:05:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.65.129
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8DC238237D;
+	Mon, 18 May 2026 18:26:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779127507; cv=none; b=EHfavc5wXnpURY2a4nIZZr1UjwezLZI3nQOoHGoAkhYkRY29Btc0oDhBsTHm3iTfEqMeDEEv4pvZOrmksrC8AylPjUiCNA6SjcypFj43k5tKx/+LScoikHf/dN7DiLYjWh1+6b96Tm4iRBOI25khzMUKSj2inyEHtwIa+1B/+Lg=
+	t=1779128780; cv=none; b=K4qKyOo+CdkeUWENeTkd4r0lLziTuYsFg+M55ficJ9WjVLE0P6nUCQviCcPdpzoHfo5JCP046pn1YltIcpN4f1FgKtpiXxm3O2s8W9lx66St9syzvZt4LhmeUDrDa8tB2I44L5+MNe9U5Vm7Op4L7HHzp3JimzOcWjdkhYCE0Gg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779127507; c=relaxed/simple;
-	bh=+rYo9RwlleK8Myvw5KVXSvl5djJdJZXOJbD7irbefyc=;
+	s=arc-20240116; t=1779128780; c=relaxed/simple;
+	bh=pbXYLQ1mwct3+ssZlrWJpr6OzTUkZbnMsQ/G5sb/T3M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=VBYrkp8Mk4dj4cpX9HxxPWJRkUIhUVVYm6vGfbQ0ro54nUdrnZpnki6v6gU3bFC4PUGYj2JeOhXq66TUso80La7MfiZZEUwbxda1PQe5gtCBfWl2qqA6CFkSaKAvIjEOFccIe9w0yfwxfmeSkN9v/l1rIM05T4YncN4JNoyR0Ro=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens-energy.com; spf=pass smtp.mailfrom=errorhandling.siemens-energy.com; dkim=pass (1024-bit key) header.d=flowmailer.net header.i=@flowmailer.net header.b=oOv4FfQQ; dkim=pass (2048-bit key) header.d=siemens-energy.com header.i=schuster.simon@siemens-energy.com header.b=dI1aE97G; arc=none smtp.client-ip=185.136.65.129
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens-energy.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=errorhandling.siemens-energy.com
-Received: by mta-65-129.flowmailer.net with ESMTPSA id 202605181724466097f7d1270019fd13
-        for <linux-pwm@vger.kernel.org>;
-        Mon, 18 May 2026 19:24:47 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=s1;
- d=flowmailer.net;
- h=from:from:sender:to:to:cc:cc:subject:subject:content-type:content-type:content-transfer-encoding:References:In-Reply-To:Date:Message-ID:MIME-Version;
- bh=/xBoFD2ZNsbMOTky3B3enP8bn+W9UZXo1Hl2aVCLXos=;
- b=oOv4FfQQlHtS5BCboX78gqtA1vOdIzc2Bde3Q6JtaXyf67I3yyl6ut16FqBNN9+Yj9rq9Z
- nyDRk4mSBg/XXlSyTrgBcXgDhCrmwyDzEj+K3hddaJfeuwolNJkOXXJ8o46GUX+ljc6wR96d
- SFujsYOnihqEglQ5vlocmhDkHNiKg=;
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm3;
- d=siemens-energy.com; i=schuster.simon@siemens-energy.com;
- h=from:from:sender:to:to:cc:cc:subject:subject:content-type:content-type:content-transfer-encoding:References:In-Reply-To:Date:Message-ID:MIME-Version;
- bh=/xBoFD2ZNsbMOTky3B3enP8bn+W9UZXo1Hl2aVCLXos=;
- b=dI1aE97GXW4w7iNDnE322TQwRLqhXPJ7u7OOtHXqPwbH7I8b7QZPUcsZ5dpM3aKOX+wuYT
- LPsjcYlVTxPExZ5kMJNCcDWODnTNTrGp6pV8qtNcwDcVLy69NW0vpvbVMGwrINlSJJ+x3xuE
- 8IjsHXj0AnDwTdczWEYMyN3ZXAMnYVljNLinrYheZqc9sCRB5uWpiqfkBE0KYz9ZVSj4gXWO
- W3XtjKRwxfg4DG16B+5mpyk1TGNVwWG+Fbcs2a0kj3mxu3xIuWEGyaVHCYP7ptwU5BzA0nrO
- 6VN6z+VVxxOzsIQ5H6Xp7Kj7GVjsxvKu6BvSATf/LyzOGeeNKmSh+lOw==;
-Date: Mon, 18 May 2026 19:24:44 +0200
-From: Simon Schuster <schuster.simon@siemens-energy.com>
-To: Peter Zijlstra <peterz@infradead.org>, Arnd Bergmann <arnd@arndb.de>,
-	Ethan Nelson-Moore <enelsonmoore@gmail.com>,
-	Dinh Nguyen <dinguyen@kernel.org>
-Cc: linux-doc@vger.kernel.org, devicetree@vger.kernel.org,
- workflows@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>,
- dmaengine@vger.kernel.org, linux-i2c@vger.kernel.org,
- linux-iio@vger.kernel.org, Netdev <netdev@vger.kernel.org>,
- linux-pci@vger.kernel.org, linux-pwm@vger.kernel.org,
- linux-hardening@vger.kernel.org, linux-kbuild@vger.kernel.org,
- "linux-csky@vger.kernel.org" <linux-csky@vger.kernel.org>, Jonathan Corbet
- <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Daniel Lezcano <daniel.lezcano@kernel.org>, Thomas
- Gleixner <tglx@kernel.org>, Alex Shi <alexs@kernel.org>, Yanteng Si
- <si.yanteng@linux.dev>, Dongliang Mu <dzm91@hust.edu.cn>, Hu Haowen
- <2023002089@link.tyut.edu.cn>, Kees Cook <kees@kernel.org>, Oleg Nesterov
- <oleg@redhat.com>, Will Deacon <will@kernel.org>, "Aneesh Kumar K.V (Arm)"
- <aneesh.kumar@kernel.org>, Andrew Morton <akpm@linux-foundation.org>,
- Nicholas Piggin <npiggin@gmail.com>, Vinod Koul <vkoul@kernel.org>, Frank
- Li <Frank.Li@kernel.org>, Dave Penkler <dpenkler@gmail.com>, Andi Shyti
- <andi.shyti@kernel.org>, Jonathan Cameron <jic23@kernel.org>, David Lechner
- <dlechner@baylibre.com>, =?ISO-8859-1?Q?Nuno_S=E1?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof
- WilczyDski <kwilczynski@kernel.org>, Andreas Oetken
- <andreas.oetken@siemens-energy.com>
-Subject: Re: [PATCH] nios2: remove the architecture
-Message-ID: <20260518172444.zyd47mcagrcwu7wt@dev-vm-schuster>
-References: <20260518042833.272221-1-enelsonmoore@gmail.com>
- <d40b1e80-37fc-4c88-9d7f-dae6458efe6c@app.fastmail.com>
- <20260518105735.GW3126523@noisy.programming.kicks-ass.net>
+	 Content-Type:Content-Disposition:In-Reply-To; b=AD7/43eDuGOoEq+T35lC4QD/Y67eyRbJR31nR957MQEP33uzEiMhdd1Os9xCmMCY3IwNa6mJtH6kuzid6b1V1V0QMwYGzZ6Tal+6X1pqp/x9GUTkgvMDhlVWjPAxjcz1/VE5QjG9NyaeTs7t4nCrxNpTKBXlgY277v65NDN6foI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=A2T0DUHL; arc=none smtp.client-ip=192.198.163.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1779128779; x=1810664779;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=pbXYLQ1mwct3+ssZlrWJpr6OzTUkZbnMsQ/G5sb/T3M=;
+  b=A2T0DUHLXSAZYQw2jRiF+UoKrVoD0sUG+NgJtbnOEQb18t2vQsGxLopw
+   YUxKWtYH8sxVruSa43cAl3BbpnZ04oBxA4nDyeKXLSbRW1afM6G4WSkr4
+   ZJObrW+BGc0Icc6onS9dZJE4WOU0QPpHzD8wHPszfE+/amcnq74W8dnKi
+   ojxajFEfbqExWClaWwZqO4rARkYfU4V+fyjqBpaVjrQhtM0PqYc19qSsI
+   3nLaQA3OGxSSKCqC+ljONKYwvx39XAdeaOkXLxRLKrsuiGC3BZF3e3Dub
+   /9Ft5tR0johwFWGFLRiCCXov2JNgAOk0WOR15314fzbbobb8vfam97s1H
+   A==;
+X-CSE-ConnectionGUID: 9qriItO/ScWlODNBpfRg1Q==
+X-CSE-MsgGUID: +k3VPqE9SVOFJAvzB/QnXg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11790"; a="90575555"
+X-IronPort-AV: E=Sophos;i="6.23,242,1770624000"; 
+   d="scan'208";a="90575555"
+Received: from orviesa007.jf.intel.com ([10.64.159.147])
+  by fmvoesa105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2026 11:26:18 -0700
+X-CSE-ConnectionGUID: O0zap/NiRba3AYD16GFVrA==
+X-CSE-MsgGUID: e9aNJkI4TGO68gsQIjE1Pw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.23,242,1770624000"; 
+   d="scan'208";a="239764455"
+Received: from fpallare-mobl4.ger.corp.intel.com (HELO localhost) ([10.245.244.3])
+  by orviesa007-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 May 2026 11:26:12 -0700
+Date: Mon, 18 May 2026 21:26:09 +0300
+From: Andy Shevchenko <andriy.shevchenko@intel.com>
+To: David Lechner <dlechner@baylibre.com>
+Cc: "Sabau, Radu bogdan" <Radu.Sabau@analog.com>,
+	Lars-Peter Clausen <lars@metafoo.de>,
+	"Hennerich, Michael" <Michael.Hennerich@analog.com>,
+	Jonathan Cameron <jic23@kernel.org>,
+	"Sa, Nuno" <Nuno.Sa@analog.com>, Andy Shevchenko <andy@kernel.org>,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Liam Girdwood <lgirdwood@gmail.com>,
+	Mark Brown <broonie@kernel.org>, Linus Walleij <linusw@kernel.org>,
+	Bartosz Golaszewski <brgl@kernel.org>,
+	Philipp Zabel <p.zabel@pengutronix.de>,
+	Jonathan Corbet <corbet@lwn.net>,
+	Shuah Khan <skhan@linuxfoundation.org>,
+	"linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+	"linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+	"linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Subject: Re: [PATCH v11 4/6] iio: adc: ad4691: add SPI offload support
+Message-ID: <agtZwbeVeZdnlXTI@ashevche-desk.local>
+References: <20260515-ad4692-multichannel-sar-adc-driver-v11-0-eab27d852ac2@analog.com>
+ <20260515-ad4692-multichannel-sar-adc-driver-v11-4-eab27d852ac2@analog.com>
+ <80f61c0b-1f36-4fee-9f76-b93f63b87abe@baylibre.com>
+ <LV9PR03MB841418AEF0059E802F7A69B2F7032@LV9PR03MB8414.namprd03.prod.outlook.com>
+ <60d66897-41cc-4f3f-afd2-64e49f0bb55e@baylibre.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -97,92 +100,77 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260518105735.GW3126523@noisy.programming.kicks-ass.net>
-X-Spamd-Result: default: False [-0.16 / 15.00];
+In-Reply-To: <60d66897-41cc-4f3f-afd2-64e49f0bb55e@baylibre.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - c/o Alberga Business Park, 6
+ krs, Bertel Jungin Aukio 5, 02600 Espoo
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[siemens-energy.com,reject];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[flowmailer.net:s=s1,siemens-energy.com:s=fm3];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	DMARC_POLICY_ALLOW(-0.50)[intel.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_DKIM_ALLOW(-0.20)[intel.com:s=Intel];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8980-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[24];
+	TAGGED_FROM(0.00)[bounces-8981-lists,linux-pwm=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	TO_DN_EQ_ADDR_SOME(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[infradead.org,arndb.de,gmail.com,kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[flowmailer.net:+,siemens-energy.com:+];
+	HAS_ORG_HEADER(0.00)[];
+	FREEMAIL_CC(0.00)[analog.com,metafoo.de,kernel.org,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org,vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[50];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[schuster.simon@siemens-energy.com,linux-pwm@vger.kernel.org];
-	FREEMAIL_CC(0.00)[vger.kernel.org,lwn.net,linuxfoundation.org,kernel.org,linux.dev,hust.edu.cn,link.tyut.edu.cn,redhat.com,linux-foundation.org,gmail.com,baylibre.com,analog.com,lunn.ch,davemloft.net,google.com,siemens-energy.com];
-	TAGGED_RCPT(0.00)[linux-pwm,dt,netdev];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andriy.shevchenko@intel.com,linux-pwm@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[intel.com:+];
+	RCVD_COUNT_FIVE(0.00)[5];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,flowmailer.net:dkim,siemens-energy.com:dkim]
-X-Rspamd-Queue-Id: 5FB5A572262
+	DBL_BLOCKED_OPENRESOLVER(0.00)[ashevche-desk.local:mid,intel.com:dkim,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,baylibre.com:email]
+X-Rspamd-Queue-Id: C15F85723AC
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Ethan, Arnd, Peter and Dinh,
+On Mon, May 18, 2026 at 10:16:38AM -0500, David Lechner wrote:
+> On 5/18/26 10:14 AM, Sabau, Radu bogdan wrote:
+> >> -----Original Message-----
+> >> From: David Lechner <dlechner@baylibre.com>
+> >> Sent: Saturday, May 16, 2026 8:53 PM
 
-On Mon, May 18, 2026 at 11:29:48AM +0200, Arnd Bergmann wrote:
-> We last discussed this a year ago when Simon Schuster mentioned[1]
-> that Siemens Energy is still using NIOS-2 in production and would
-> prefer to have this still included in Linux for at least another
-> few years until the obligation for kernel updates ends.
+...
 
-First off, thank you, Arnd, for remembering us as this patch series came
-up and also to Dinh for his maintenance of the architecture!
+> >>> +	if (st->manual_mode && st->offload)
+> >>> +		return sysfs_emit(buf, "%llu\n", READ_ONCE(st->offload-
+> >>> trigger_hz));
+> >>
+> >> Why do we need READ_ONCE?
+> > 
+> > trigger_hz is u64 and if the target is 32-bit, a 64-bit access compiles to two 32-bit
+> > instructions, so show() reading it without a lock and store() writing it concurrently
+> > can produce a torn value at the compiler level. READ_ONCE/WRITE_ONCE suppress
+> > the compiler transformations that would allow that splitting or caching. We could
+> > have st->lock in show() instead, but that felt heavier than necessary for a single
+> > scalar where a transiently stale-but-whole read is fine.
+> 
+> I would go with the mutex. It will be easier for people to understand.
 
-Regarding our status in relation to nios2, Arnd's response already gives
-you the gist:
+But why? READ_ONCE() here is exactly enough. We do not care about
+serialisation, we care only about integrity. With mutex it will confuse
+(some) people more, e.g., me. Because in that case I would think about
+some specific access to it that may happen. Yes, I saw many times the show
+functions that do mutex and then print the result when mutex is not held
+anymore, but for simple cases like here, mutex is overkill. Interestingly
+that using guard()() inside show makes the mentioned functions to print
+(almost) latest value of the variable in question. It narrows window down
+as printing will go inside critical section.
 
-We are well aware that the architecture was deprecated by Intel and are
-therefore phasing it out in favour of more contemporary hardware.
-I'm also fully aware of the uncertain future of 32-bit architectures as
-a whole [0] and that this fate will come to nios2 sooner or later.
-But as of now, the mainline support is still in very good shape.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-On Mon, May 18, 2026 at 12:57:35PM +0200, Peter Zijlstra wrote:
-> Isn't that what we have LTS branches for?
 
-Unfortunately, as we are an infrastructure provider for civil energy
-infrastructure, the refurbishment cycle is a bit slower than for
-traditional consumer systems. This implies that the traditional LTS
-support duration (max. Dec 2028 as of writing [1]) is rather short, and
-we would be glad if we could keep the architecture in mainline for at
-least 5 years and only then "decay" to LTS.
-
-On Mon, May 18, 2026 at 11:29:48AM +0200, Arnd Bergmann wrote:
-> My feeling is that the maintenance burden of keeping nios2 is
-> relatively low. On the other hand, maintaining it out of tree
-> as a patch set is also something that should not be all that
-> hard if it does get removed.
-
-Judging from the architecture's git history, it seems that it's
-currently mainly touched by treewide refactors, which are extremely
-helpful as we therefore do not have to piece these changes together 
-downstream. In other respects, we try to be good citizens and contribute
-bugfixes as well as required cleanups (such as implementing clone3 [2]
-and fixing its flag behaviour on 32-bit architectures) as they come up.
-
-If desired, we also would be happy to intensify our support regarding
-reviews or testing to share the maintnance burden if it helps to keep
-nios2 in mainline a bit longer.
-
-Best regards,
-Simon
- 
-0: https://lwn.net/Articles/1035727/
-1: https://www.kernel.org/category/releases.html
-2: https://lore.kernel.org/lkml/20250821-nios2-implement-clone3-v1-0-1bb24017376a@siemens-energy.com/
 
