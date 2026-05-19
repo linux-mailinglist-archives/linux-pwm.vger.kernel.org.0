@@ -1,75 +1,71 @@
-Return-Path: <linux-pwm+bounces-8984-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8985-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id cNUIKqjsC2prRAUAu9opvQ
-	(envelope-from <linux-pwm+bounces-8984-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Tue, 19 May 2026 06:52:56 +0200
+	id cIgXOx39C2qrTAUAu9opvQ
+	(envelope-from <linux-pwm+bounces-8985-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Tue, 19 May 2026 08:03:09 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 128B957749D
-	for <lists+linux-pwm@lfdr.de>; Tue, 19 May 2026 06:52:55 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B1FEA577B0C
+	for <lists+linux-pwm@lfdr.de>; Tue, 19 May 2026 08:03:09 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 2729E3014C0D
-	for <lists+linux-pwm@lfdr.de>; Tue, 19 May 2026 04:52:46 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 633643034309
+	for <lists+linux-pwm@lfdr.de>; Tue, 19 May 2026 06:03:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3431305E32;
-	Tue, 19 May 2026 04:52:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 99296377EAF;
+	Tue, 19 May 2026 06:02:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="XekseiGb"
+	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="nwbnVKPA"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from BN1PR04CU002.outbound.protection.outlook.com (mail-eastus2azon11010021.outbound.protection.outlook.com [52.101.56.21])
+Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010065.outbound.protection.outlook.com [52.101.61.65])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E53F2D94AB;
-	Tue, 19 May 2026 04:52:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.56.21
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0828C377EC1;
+	Tue, 19 May 2026 06:02:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.61.65
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779166364; cv=fail; b=WpAuoXvrHwq29xJ9kCSuRrra21baMxjGEfGK0mEGrkiZ0XMrPOBSy3924DjHn6gfXPnq1qYXVj/6PQPTTa71GZaj4xxAJ5eDF6tO3qEZwkoKwYaPbXjYzheDOdyEacLMuAH11eyrs0skLKYnzT9dSah6FFHmEfbr60U0WcbZwvQ=
+	t=1779170577; cv=fail; b=k5AKiPWZfJU4DMRZVtGzNSQvsHl30HpDX/Lz4y07peOa+tpvsRFiVVeFxzyGS5ahC56FUwWleOPhOaahGkTo6qrvdP7depsxuVFby+Aw7rlrIQ/fPBQ/tVzJhnM5HSojyznpkWMbP4PnSdq09EtpHB9m5n5L/ptrNqZvMuqUHvY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779166364; c=relaxed/simple;
-	bh=G+VVLerT+G5Gy4z561KGf3VfM/y2mOERHPPN8/x5yZw=;
-	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
-	 In-Reply-To:MIME-Version; b=MCZzHlUbO2u5VhqDyg+bucp83nnHP3bs3wGuCfLGy1vzUSbOugD1jBkzFLvgtSjwavPAaicMXD1Wz8PVIUegJKPlbI3iWMNod36VIT0ZcQQD0HWGcjGxu1EW9TIisOetntTDIu3Odn1ot/G+YJQfWZFsZkQsL2pSTOVVmRb+8Yo=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=XekseiGb; arc=fail smtp.client-ip=52.101.56.21
+	s=arc-20240116; t=1779170577; c=relaxed/simple;
+	bh=rX7s/f1QeE7jLuUoDDuGWVVd6j2C3seLFpY4KkXPjF8=;
+	h=Content-Type:Date:Message-Id:Subject:From:To:Cc:References:
+	 In-Reply-To:MIME-Version; b=co2HE82BAVoJAvG51EEKKTBndNhLFK+/WBOZYOi/BuDdoKV+kdijW7vF9D188dZ5AW8QoaEmWiAKDvOFVhuF7decmm8F23jfdjwW3AQfbtEYQAE8pvThQVRbYciUMbZw0us4HCce7iErsDGHRE1CoR3I5mWtf+7yV6LtBTNO4/k=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=nwbnVKPA; arc=fail smtp.client-ip=52.101.61.65
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
 Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=mBs08zXrRtw7+39zahp21Pg/C/oQoK5TOfmR2X1FEGhd6egVnp62a3trdQLF+aUX/Zjqi/QzP0I8Xx0KwqSvf/sm5F/rVramhmLv1cEuxTk5ggau0ulg0fsTbMEBgGCrip2K7zuwwfekQxiUw1A6t05j43MOwoMVJF0wBZi2jD/wN6/6cvE3goOTZWBNNjG6Z5k21x1JtVL0EwC7lRbZZBzW6lOGB5VkEgIw07J7qzgkY8wpBuQsi9l34/Ku0SJbwmdmc0qwE5JhZlLpZVDCfR318EkAFARkZjIXS3Hk7aJv04m+21Y9rRehkW+0JcnJRFkeifVF9jQsagiDciCiWg==
+ b=EGNurKtGTeOPiqhSI6dvpYiEAlff/oaHEt4YNuzYZFDIv2Eit0+JoSh7VQ5aljlv0IbCSGbFZia4KXpbj7xj06PBH/Y7wDyX3GVLCpugzjXNz2LwRH87zuJScb8/WO8cRWTO/Mi6CzbqIhzP0ZQDRJtVSuttHVkwZbMBwsSM4xUjwJnJOAnmclvaAhBQgGH+D7N6mdkBbVV0CpGKWn189EmmCOfGvnkjsvWwPoEc4rOp+VNkcSWXQsMgMhnMqzBx1Nmuj4roTJomRCrPzoKdJXWoXCGILXLYJKSFdvuMMv+SpBq6+KqrNHkAj6kUmvJOsJIMZwAJMkPZEihNs17S9g==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=G+VVLerT+G5Gy4z561KGf3VfM/y2mOERHPPN8/x5yZw=;
- b=fg3jmVA+1HYhnapxDfJv0UzpTL69VM82DgMR7cp5E7Dtw+tVad7oh2OQc7808IfgozsN7g7k3lHLBOoYpn7464JNbGVqwKYEjStZXJcFjPrYO2VDbX/NvCUf03L5fZRG/M23LQXqBa8td5fjUvdVI1y/YG6udSQ0Fg5LG7NEdwAD40Hmtz42ZMa0RJGO9nBXscvh60fcVcMPpv0FsnGGfCSIQ5b03Vj+p3mB1hahHumNEVxg0tu7BODHgfYkZpMpcGUVgFh6Thy5Hh4r7z2+3BSHVoaODg+9EKWZJ1baY1hceZBIhQC56/0tkfYg9sDPAHc9Z5NM3rw1MKui8uux6Q==
+ bh=LNdaC7G16O/x/qWJzZhSHkZU8K79nDCKxprnsOyDUbw=;
+ b=LtVaTI8Dscn/WqKHEeSWuNPy2UiZqSJESkkklBsbrGbmmAUBuTRKo/4ZDWb8CcD3U7ZMKxnJyDvTiEwS2sct8wTMdOB9qwvMQS//YAaMwnuGVzrwcjgc6quQO52J8icbApT5DwD3Pe1IDLAeypvBEsub2I5yFfZoVXZrg737WnzXIGlZiJ7LfSXpy7pe4itdc86lXmw+dbDDCfMl31+LIymZVUPYS0CqobtpfHSCqDMvd6AWa1dZTGrg5RvQdYwecUFVSHO+fJWZJ+8CjiPZXP9q4MeBrQy5EZ3rh5inKJ/LS5H8r4SOa+N94cawRG9EROo8OpngbELm5OubBmgRRA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=G+VVLerT+G5Gy4z561KGf3VfM/y2mOERHPPN8/x5yZw=;
- b=XekseiGbT2Bt9KZiAcUk6TMUUNrc/WDt5k1U8rwHFUL85PGk+zrVgX5s8r0NSpkQzwZhtwVf/9EdrgzIAP0I0dpr3SIANFeqh9g/kx0SGbXwS/CRzH2rT/Dub4LvnKs5lHDDryh/8bOuYDNc6l17tJczI3ow+dM/BQh+hSUQ3jz1sqOX8HLqD2IfjJ4WR0oVFOc/K1FGGReu1rCorEMxVS5cPVUOAuhBcQd96gXag9/P9Ig9ILztICa2rvCnP9a2nGpODK+c/nYBFoWYM/TOvAUdAXqz1KCgwtCRB+kV+kCfUws9AFjnNilx2Ea0Os6+ssS/BeubccYmJ4F2Iyzi7Q==
+ bh=LNdaC7G16O/x/qWJzZhSHkZU8K79nDCKxprnsOyDUbw=;
+ b=nwbnVKPAwYOLsD23lmLlKrEThPBPCzfTIvc84sTW5kzPtVjX16BQBDsYUxOGDVy2E2wc6yP5wnv0I23skeuzXjuPpPJMnAkUauYysz0dqsQRPx+34Zvysbc/Djg5IiB7NBgBLPC1noEBOyBeHBda4eZIa6/dEafOTcRkSjr3wfX/ZDTzzTVvwU7o7s8oCgTeMe1WWqTaRxYuk4tnhoNCnzaFgisR5L+EFy57v8k9uQ3Qn+CYUjxe22J0gDlP1Z+bz6Hr7ccjqa7dEVRfcvg0YjzZ45uz8nOW6BGRQFFy9wczx/8pagehVsN3ePstxlMkiG/ANcmsM+M28tv8+vprAg==
 Authentication-Results: dkim=none (message not signed)
  header.d=none;dmarc=none action=none header.from=nvidia.com;
 Received: from BL0PR12MB2353.namprd12.prod.outlook.com (2603:10b6:207:4c::31)
- by CH3PR12MB9344.namprd12.prod.outlook.com (2603:10b6:610:1c8::7) with
+ by DS0PR12MB9324.namprd12.prod.outlook.com (2603:10b6:8:1b6::14) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.25.18; Tue, 19 May
- 2026 04:52:36 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.25.23; Tue, 19 May
+ 2026 06:02:48 +0000
 Received: from BL0PR12MB2353.namprd12.prod.outlook.com
  ([fe80::99b:dcff:8d6d:78e0]) by BL0PR12MB2353.namprd12.prod.outlook.com
  ([fe80::99b:dcff:8d6d:78e0%4]) with mapi id 15.21.0025.023; Tue, 19 May 2026
- 04:52:36 +0000
+ 06:02:48 +0000
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset=UTF-8
-Date: Tue, 19 May 2026 13:52:32 +0900
-Message-Id: <DIMDU2XL6PKO.RUXA0XPFT94R@nvidia.com>
-Cc: <driver-core@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
- <nova-gpu@lists.linux.dev>, <dri-devel@lists.freedesktop.org>,
- <linux-pm@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
- <linux-pci@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH v3 10/27] rust: pci: make Driver trait
- lifetime-parameterized
+Date: Tue, 19 May 2026 15:02:43 +0900
+Message-Id: <DIMFBTLBNISD.W92F9DWEFSX@nvidia.com>
+Subject: Re: [PATCH v3 16/27] rust: types: add `ForLt` trait for
+ higher-ranked lifetime support
 From: "Eliot Courtney" <ecourtney@nvidia.com>
 To: "Danilo Krummrich" <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
  <rafael@kernel.org>, <acourbot@nvidia.com>, <aliceryhl@google.com>,
@@ -81,12 +77,16 @@ To: "Danilo Krummrich" <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
  <gary@garyguo.net>, <bjorn3_gh@protonmail.com>, <lossin@kernel.org>,
  <a.hindborg@kernel.org>, <tmgross@umich.edu>, <igor.korotin@linux.dev>,
  <daniel.almeida@collabora.com>, <pcolberg@redhat.com>
+Cc: <driver-core@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+ <nova-gpu@lists.linux.dev>, <dri-devel@lists.freedesktop.org>,
+ <linux-pm@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+ <linux-pci@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
 X-Mailer: aerc 0.21.0-0-g5549850facc2
 References: <20260517000149.3226762-1-dakr@kernel.org>
- <20260517000149.3226762-11-dakr@kernel.org>
-In-Reply-To: <20260517000149.3226762-11-dakr@kernel.org>
-X-ClientProxiedBy: TYCP286CA0095.JPNP286.PROD.OUTLOOK.COM
- (2603:1096:400:2b4::18) To BL0PR12MB2353.namprd12.prod.outlook.com
+ <20260517000149.3226762-17-dakr@kernel.org>
+In-Reply-To: <20260517000149.3226762-17-dakr@kernel.org>
+X-ClientProxiedBy: TYCPR01CA0193.jpnprd01.prod.outlook.com
+ (2603:1096:400:2b0::12) To BL0PR12MB2353.namprd12.prod.outlook.com
  (2603:10b6:207:4c::31)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
@@ -95,81 +95,81 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BL0PR12MB2353:EE_|CH3PR12MB9344:EE_
-X-MS-Office365-Filtering-Correlation-Id: ac6b8dac-9f77-427a-7056-08deb5627272
+X-MS-TrafficTypeDiagnostic: BL0PR12MB2353:EE_|DS0PR12MB9324:EE_
+X-MS-Office365-Filtering-Correlation-Id: 7322857b-7c52-404b-f9d5-08deb56c407e
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|1800799024|366016|10070799003|11063799003|4143699003|56012099003|22082099003|18002099003|921020;
+	BCL:0;ARA:13230040|1800799024|10070799003|366016|7416014|376014|921020|22082099003|56012099003|18002099003|11063799003|4143699003;
 X-Microsoft-Antispam-Message-Info:
-	VkNDKxjDMQXNYT5cCHtM7JEpdAlXJdA9gQTddaPx68r3xR01EWdxcMIuiCnsGjFui/xka7EFAaovdGD83UawLYDzgrBkZSz4Z0QC0qdHUNE9XBAS36FhDM6oEc31Um3Eu2qfFw6qtBfq4vgU0CNx9u9/RhONFXuOkfKTEiZ4fLFq8XRbghoGYaDp07N9hVdtzyVQbQNAhyqR+7/QJtOspxDsn1nJTC5rl9UWXgMtHzxC/lW2JyRiQdx5yT5pwmGEx2n1YNOAxuO/iMpqA99nxnFVeT7F8k6Q3rtZykIQR7g2AdOLUq7YX7VQtu+537Y7/yRJzQJEsBJoW/ixjuK285BLgCMOIQe2GLXbn8eNmQKibmQghDAugcq4X+z+4lpKImT3vHB6eoCL1vv+qh9MxjPr1Gb6ruB4qwKXB8OfSfKhxtVhZ3jPJH0hSCNW8C6o3cvCB/ZX0HwNz/9tjCePWTU8sA7ga2bUShNFXy1c1UNEG2ZAuvbY7wTHRhHWPfUxnzZj2EGI0GpRrLXd3kcA3GzsXmSbdlwCrfski/32LZx+hAGBsleBQdS0oAdKUy3dbouzforYYJLUsdyH3ks866ig0PJR4+Ru3KbPgod9KOTziGxDhpEwff7a1Tb1MsIxrFiRK4ZFzamZEPti+z3Zas/vmVC1G4tv0/ir8BDcWTQQZMTzfOBMcllFB2ndxkI+wmotHh15AiAAfUVaJ+trqU7O/RwtkETXwbEy/+QCrL4=
+	0lWfuFz7AKNW9Mg5vN+5gyaoLX47JwVu3LjaA74wHapXto0njrz8zzIaOENlY7+ywP3vH7C8B04VvwGOXGV9Zmpj76J3Eyl4PToE2StQkDi+XsiQxCvf8OVlVsBaN7rnX5hcrEopIoEJQLOkSv0N3YnEiTzxM9XJzsIiUyy6C+awWSUkmmPQHh/KIjsHSfAVju3MlEzALLYF5tAkpCRZ5FLH7MREzNHUk+axlKedEpm3m55yHVR9R06YtqFJdNOn08aoSc9b5x5alPZuwYtKtKlKJZ6nQFIjnpLsEXlRsY1t0et7kCI8KCJCjeeDZ9Nxd1kYkCoEmsVJiO4VkjjUcD7gyFVU3IXolq2iZCTzyfJLI/qQEX997Y8UPHmPgtG7FHTZ76KrkjbeWKGPasdy5rNpgy5aMLIgPYIz0u5/oNg53feyQaffuQKE7yhQE2ZoXNNPkwWb7IISTsT/HAILk4H0UXEmoZSl+mZQXpBhmvucTF+zsduUMe9HhnO5EhVS03jaDxfwNY2VnJ7zGjXnBxMqE2GTZBga+aGpFGSKsUrngCfMYUJ8xgqNsinIAxcvyUZbEnxKXOytgo6aNamqFELw1W68jkdD1/k+Bsq7xC8w1cSymOrzT730bJPEg3eOkXHphQiouKMPpzsIZjZeX6p1vl3WycY9yjq21yeuYbSMluB575hyaJSjkGSYSOLu8ZiAKZ4DVYSDHhFd32NEZ3/Q6D0+CWBGqPhfE6VoCN5sJal3vv82M+UJeBcm1zhF
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2353.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(366016)(10070799003)(11063799003)(4143699003)(56012099003)(22082099003)(18002099003)(921020);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BL0PR12MB2353.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(10070799003)(366016)(7416014)(376014)(921020)(22082099003)(56012099003)(18002099003)(11063799003)(4143699003);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 2
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NDN0dGxaTFdkb1NQVmlvK1R0aThHYTNhbVlxNnQxemdiNW5pS3h6OFZXWUNa?=
- =?utf-8?B?aFJKa2dMRFB4N1phc3RNMWdmbWlCVGtxL2RxVEl2Zkd3RW03LzM3QWxVMllM?=
- =?utf-8?B?SmtpR1ZqWXZIcWorM2JPRitZVE16Ry9HdnRrNG5GeDNIeFdYeUtXN0RlOGtU?=
- =?utf-8?B?L1FPSmszeTcyVndhc3FIWFQ1R1ZSL1ByUHVHaE5kV25hMWlLMWk2SmpEc1Mw?=
- =?utf-8?B?WWxzMi84dUY1eVZaakRwNGlVSVV5cjM5NitGd2VQTGpIS2tUYlNxNkVUbXNo?=
- =?utf-8?B?YVRlOXdYK2VqcDNXdUFVSUVZSmJFY3B3MUEwY3l1T1N4dUdCbnFQK0pLQVp2?=
- =?utf-8?B?NlFFU0p0RFNqT0h0T0d0WWI5YUc5Z3JDUVF0dVdzV04wODZZVnpNMW5aWEdz?=
- =?utf-8?B?ZjJYV0FLdXphbXVQQ0pleDhKZktlZjBRSDhZKzh4VVpKRHA5Rm5yS0tTS0lL?=
- =?utf-8?B?NWs3S2NIYzdHUitNSzN1YVFPT1g1a0lhWFhxeHJOaW41QjBOcGVhV1pqRlZL?=
- =?utf-8?B?V2M1WTFqMkVrQ1NyZC9lWHM2VHJwb3JpeSsxcTY4WE5UaW52MnNZbkMwTGho?=
- =?utf-8?B?OWxuQW5QV1pRWXBVb2xwRWhPbmZqZG1xOVRyd2hldTFvd2lHZFhTQkdzV2RR?=
- =?utf-8?B?b3VPRDlOWmZKVTY0YnlKcTlBVVhDNWpwUURHMnhsZUwyUXFNRkV2cDA2VlRS?=
- =?utf-8?B?Nk1tclBCcnRQelhKcGU2Y1I1RkpoUDVFenRhVXdPcXpkaW5wSVlYY2Q4Rjls?=
- =?utf-8?B?NnUyV0svU3NQcitnWXpLaG5ZeW9CQlRxNDczN2VlMmtBdDE3c21qVG0rK1dy?=
- =?utf-8?B?MUk4TUY3VFN4VW5QRXd6ZjdmNkZpSkxZYlRuVkFLMndrUGNMY1JucjRBWStV?=
- =?utf-8?B?bmRQdmRaUFRTbjEyY2p1VnBsR2hmWXJCUWpzUFA1NEtPak5aZ2VhZ1JFSzhP?=
- =?utf-8?B?WUdMVlQ5bU5hbXhhdk00YmVlSlc4U25uYWR4aHM1VktrM2hVUkp6YjRuMk9r?=
- =?utf-8?B?UmdQY2NPQTQzRVpibmwxU1ZmcGNrVU1kaHlIRnc3NE5pYkRXUENwYm02a0Jh?=
- =?utf-8?B?Ukd2Sk5aZ2NpZXVFdjdQak03NmFmSzdmdWxJYkFhUW5qSTh4NmRZTGd2akJN?=
- =?utf-8?B?TUJRT1o3RDUwLzNKT1FCYzBvYWFhSlIvRUI1ZXBta2o2NHhhV2tqc1lrcFBP?=
- =?utf-8?B?MGdnMkRKWFAxU0hpSitwTVRHcHVycjFaVFJ3VUNSWUJKNU5pb3piaTlacHJt?=
- =?utf-8?B?QjI4TFFXWXl1UFBxekJWNjRhQzNoUC96THJoVkZYKzg4RTBrT3dSR1BmRTJI?=
- =?utf-8?B?YUw1aGF4Ni9XOUxJTDZNVXJOL25UK3JnanUwQWo4TDJoY3daR2JQSzRBcnkx?=
- =?utf-8?B?UVhIVGdDeG41YU1VUlZLQzdJNHBXTVI2dEFlNUNXVERRYS9ldFFYNWtCQ0JK?=
- =?utf-8?B?cVRjWFowMWhyOUk2YW1URHVCb0ZhVjYwMU9zTUZLY09EY2RpUHdKVldTVnNV?=
- =?utf-8?B?RkFTc2NqL1ZWYkJrZnlPcnloWVI3cmxCcXNvaUNsb3hQb1llYUdUcXJYT3Az?=
- =?utf-8?B?TVBZZXZXUWRzaXB4N2FXOHZhSWpkTmhUVmp0c09qSzhtN25JRnNLZzZ4aTZU?=
- =?utf-8?B?L1FXREF4WnNTVTN2cUQ0aWc0c2creW9SQy85d01LaDlDR0RTbnA1eGF3MVQ0?=
- =?utf-8?B?am5EK3pHS2ZHRkV2QzlTb3FYcFkwZXYvakNDTk9RT05PVXJaOXdmM1hYTWty?=
- =?utf-8?B?bUZXa1Y2MHVNaTRBV0JpK05mSFpuMVM2ajlUWm03cW5OWUpOcjV0bzk3UUNp?=
- =?utf-8?B?cE0vOGFxZUxCUCtYS2xUSWFPQXRBcnNadUhkNDVVdXU2dnp5bXp0N2JDQjM0?=
- =?utf-8?B?ejR4QWVCbmRYMkV4ZTJyTllGcTY5enpJOGY3aTRsN09jK2tDcC83WVNPMW0x?=
- =?utf-8?B?aGtLdHdkRTBUSzFYUFVHbk15dDZnR3o3K2d6SzFCRm1Hc3V3bTd1alNFemFI?=
- =?utf-8?B?MGNPaVV4T1d5SGU4d1I5c2dWTjFyN3RlbXVkd1pEcmM3bENibXZaRm9oOUtP?=
- =?utf-8?B?MzVwOEJnZDhLbDl6dVM3dk5GVTRGVERNVVluQWZ1a3VaQmJlVjZEa0IxSDJn?=
- =?utf-8?B?d3I3bmMvZHpQalhTUi9aRnRyaEdOWE53S20vU3NmNWtRSk1RcjFBNHMranFn?=
- =?utf-8?B?N1lUN1VKcFdzNGhjNDYvQ1pHZ3d4aVRtRHRhb3ZZT3cwR3lFZGwraWNvVzdX?=
- =?utf-8?B?d3FaVEZlaCtPbFVCbEtHeHFCWitxV2NUamZGbEhQNHA1VmgzbnJ2Um9EYkpS?=
- =?utf-8?B?TzlvVStLTUx5RG5STktQaWZVeWlyMDIzbm1ONUJ3RjhrOXdNYy9lRDVya3Fr?=
- =?utf-8?Q?j2vCxj1Tz/J08YUmoIBO0LWELPyZqUdZCptwzgReUc/yJ?=
-X-MS-Exchange-AntiSpam-MessageData-1: +cEQDwiI+F6xyQ==
+	=?utf-8?B?dzdVVkV1ak5DNzE4L2dIbGs5UllmekNuWHdqUmNlY3N2Z1dVanF6UXl3c0FO?=
+ =?utf-8?B?bnQ2ZU1yeHhkbm5Xcm1mOWhVejlKdG1Gd0RxQlpDWW8wZkp1T0tieEhvY2du?=
+ =?utf-8?B?OXFFRU8zbkF2K2xsa0I3VWdCRkg1eCtNUUJVVXhBck9qZytGTnNZWEd2cjY2?=
+ =?utf-8?B?YW1YbFVoRkZsNExwclFXRjAyUjA1QWdjaTYraHhkMlptYXowbGhuSlNLSity?=
+ =?utf-8?B?WkhVWkRsYkx5UDY0SXlGZkhYTStkMnNsTkc1T3RVdjkza1hCYjF2QW1mWExH?=
+ =?utf-8?B?YmZ2bHh3U2tYczY5SnA3RGJwQWgrbTZJeUt3UFBPMUpYWDlWSEl3anloS2c2?=
+ =?utf-8?B?by9OZGxWdmpONitzODhFVWw5Y0RtckNUeTQvdDZ3aWw3WElzOCtGY0Z6TW0y?=
+ =?utf-8?B?NURyYTdYTTZWOGFrYW51YW1vTlJidUFJK3A2eWZ6anEyME5BMTczU0RYSHpz?=
+ =?utf-8?B?WFFTMzlsR3h0UzNmbUh4ZE9QeTFrLzhRNXZNMnVNNTJuY3I2N05sWkMySTBk?=
+ =?utf-8?B?UElybFdGN0UvclI2RktvVGM4dGM2WVY4a3FmK2xvb1AvNFZjbkZLejIwd0F2?=
+ =?utf-8?B?RWZlUHp0MnRSZndER2V5aXdNNmdwUDJjUTVHTldqaTJaelRPYUFRcWVEM1NT?=
+ =?utf-8?B?MG55UjVHSlRRU2Vlbm80SncrOWFMMW1Ic1ZLSEMzWEFORVBHbHZjckUyNmNW?=
+ =?utf-8?B?TTd3YTRmaWdpeDREZjVyWFBGSGpiRmJJd045a2l0N0xvSTdXNHNqMU12Vy81?=
+ =?utf-8?B?WHMwQnlVbWRPZVhySk1LV1RCVXNIa2RMMkNIajZ1NzBUQ3dFT0FBTzd1eUl2?=
+ =?utf-8?B?YUd0L1BSa202Q1dubHFoRWJSVktweFhlMnFSSmlSaHFMOHV3dU5tenlNa0E5?=
+ =?utf-8?B?RFBhYmRMRitiY3FFNmZlTHZlOFVhUVc3ZE1vd1Y2U2EyVFZ0QklEZXVBd1ZO?=
+ =?utf-8?B?UHdnYkM1dFlMK3BkRUJsQmdMQ0R0M1AzZlB2dStBUlhXeVJaQlU3UFFoelFk?=
+ =?utf-8?B?T3VRYkYvYjZHNFh0a0lrSm50SE9XZDFnSTluOXQzd3NSc1hQdlhvUG1CV2Zj?=
+ =?utf-8?B?RWRzN2VHR2JpaWp4aW1yVnZ2bWQwRVhUa0dmNVh1cWNRRDBEdU5lYnVLYWZn?=
+ =?utf-8?B?ck03UEVZSFc4eUVtalhwQ0d6cWdFVUpnTzJucmlydU5QN1JRZjdlamZMdzMw?=
+ =?utf-8?B?c1NFQUNxbG9zMEFtb0h1V2Q3QmJVb1FJT21MdDZyQWhONWpSdlFuTnNGN3NC?=
+ =?utf-8?B?Q2NWNHlMOTY1WXRwcnVDa0hEWXM1a2xhMnhjbDZ3YkxMa05ML3Ywajk3Rm9s?=
+ =?utf-8?B?enNna3NJWVpDNTlNRmdxU01tNGsydGxSTHZvKzdJU1FjYWVpTXArOG5nZlVm?=
+ =?utf-8?B?MVprajVwQUtZSVRFUHhVUjBacWtJbHlpV05EdllyendvYjlKRjBLdmYvOExk?=
+ =?utf-8?B?Nnpsd0RlQ0lHTUJ3OGFBekQ4YndBRFQ2THh1d3BMbjZOZEFHRjRTQzF2TUlv?=
+ =?utf-8?B?ZzUyYjIvV1JVTUJaVHBNQnVrSVo1RTBRVDF6dEJuQXlnNjA3Nk5lUWtnd3BD?=
+ =?utf-8?B?bHJKTURKTDJKQkZ1VWg2a2cxSWltSEJZOVF1V0kxK2lyWDRjazFTNExoTmRn?=
+ =?utf-8?B?MXZCNkVYVXltaC8yS3U4bkNOVWt2V0ZyMUtFSWRkVkc0VlIyZHRUa0dpbkE0?=
+ =?utf-8?B?R1hXMkxhRjJPd2M0NVorNytMWnczZmNvRlVSbVFUdVoyblhudkd0ZWFPWUp6?=
+ =?utf-8?B?ZHZJMVQ4VkhIaStYMjRZZ2pUSmZjNHVNcWkweTQvc2lZcXk1UldkTFJHY3BQ?=
+ =?utf-8?B?R29XWG0wWnNpTlpwNUcxOFdNMGZLck4wRkd5RXpkNjZaMkNpaTJOMjBKeFJ1?=
+ =?utf-8?B?RloxMTBqUlFWTEJNbk1wbDAvelNqNUpJeVRDVDhGOGQ4QmVHTzA2WVRJRGRY?=
+ =?utf-8?B?NVpkOFMwdzJqWU9FclluaVJHaFMzVldaaVkrWWZtdXZMbXp1dCs2Y2I5KzRr?=
+ =?utf-8?B?Vi8rTmVjZmtVNTBKQm9YbzJyRk96MUNPWjZmYjNPa3dRN08wZ0VXdC8vakt0?=
+ =?utf-8?B?MDBER3cvQUlITkFwL3BrN0xyRjNWbVZ6dmlZTHdVRU5Uc0dtY2Z6WW82M2x5?=
+ =?utf-8?B?dTZLN0ZSdTNpckV3cEpLNnQxMFg3WUFYZjYxN3JiSHl3TUNWL2dsVkc2ZzhE?=
+ =?utf-8?B?SHNHNWRMMVRacmx4WlNXcmdqU2s1NFF6M2IrQTk4T29KQ3ZocEJEYUVpNk5R?=
+ =?utf-8?B?Ny83M0VVS2FWNEM0bk84ZUtQUVdsQ2NxOCthWTlsdGxuc09oV3o1cXNvWk1Y?=
+ =?utf-8?B?cmVQRFlPWDJubnhBdDFRZFRUdVpmTGRtaG95d1MzMVM3UnNLSnVYTUZ6Nm0w?=
+ =?utf-8?Q?Y9P8+OH5Ga6nl3XMvt6YkB8/9xppwXQdN27cGtuqMBv9n?=
+X-MS-Exchange-AntiSpam-MessageData-1: Bln8lmQoQGVdOg==
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ac6b8dac-9f77-427a-7056-08deb5627272
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7322857b-7c52-404b-f9d5-08deb56c407e
 X-MS-Exchange-CrossTenant-AuthSource: BL0PR12MB2353.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2026 04:52:36.6722
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 19 May 2026 06:02:48.4095
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: fhwAbl8FwbRGo/PnRF3WDI9aKM0SBw7VAlFz+zhTXIlmSHeOKCdUInkh+DpsNQhFrmakqThMMIJQmb+sX5xarA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB9344
+X-MS-Exchange-CrossTenant-UserPrincipalName: UVD2qkaNC64neci8tnrQ3k/quiGMzKglR+i6XxqZ+iqVxenTp/mHdCXAWoSEejxwoPMcTkh3PaaPlcGpRxojIw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DS0PR12MB9324
 X-Spamd-Result: default: False [1.34 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_REJECT(1.00)[cv is fail on i=2];
 	DMARC_POLICY_ALLOW(-0.50)[nvidia.com,reject];
 	R_DKIM_ALLOW(-0.20)[Nvidia.com:s=selector2];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8984-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-8985-lists,linux-pwm=lfdr.de];
 	FREEMAIL_TO(0.00)[kernel.org,linuxfoundation.org,nvidia.com,google.com,intel.com,linaro.org,samsung.com,gmail.com,arm.com,posteo.de,garyguo.net,protonmail.com,umich.edu,linux.dev,collabora.com,redhat.com];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -183,31 +183,212 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	RCVD_COUNT_FIVE(0.00)[5];
 	TAGGED_RCPT(0.00)[linux-pwm];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[Nvidia.com:dkim,nvidia.com:mid,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 128B957749D
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[garyguo.net:email,Nvidia.com:dkim,nvidia.com:mid,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: B1FEA577B0C
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Sun May 17, 2026 at 9:00 AM JST, Danilo Krummrich wrote:
-> Add a 'bound lifetime to the associated Data, changing type Data to type
-> Data<'bound>.
+On Sun May 17, 2026 at 9:01 AM JST, Danilo Krummrich wrote:
+> From: Gary Guo <gary@garyguo.net>
 >
-> This allows the driver's bus device private data to capture the device /
-> driver bound lifetime; device resources can be stored directly by
-> reference rather than requiring Devres.
+> There are a few cases, e.g. when dealing with data referencing each other=
+,
+> one might want to write code that are generic over lifetimes. For example=
+,
+> if you want take a function that takes `&'a Foo` and gives `Bar<'a>`, you
+> can write:
 >
-> The probe() and unbind() callbacks thus gain a 'bound lifetime parameter
-> on the methods themselves; avoiding a global lifetime on the trait impl.
+>     f: impl for<'a> FnOnce(&'a Foo) -> Bar<'a>,
 >
-> Existing drivers set type Data<'bound> =3D Self, preserving the current
-> behavior.
+> However, it becomes tricky when you want that function to not have a fixe=
+d
+> `Bar`, but have it be generic again. In this case, one needs something th=
+at
+> is generic over types that are themselves generic over lifetimes.
 >
+> `ForLt` provides such support. It provides a trait `ForLt` which describe=
+s
+> a type generic over lifetime. One may use `ForLt::Of<'a>` to get an
+> instance of a type for a specific lifetime.
+>
+> For the case of cross referencing, one would almost always want the
+> lifetime to be covariant. Therefore this is also made a requirement for t=
+he
+> `ForLt` trait, so functions with `ForLt` trait bound can assume covarianc=
+e.
+>
+> A macro `ForLt!()` is provided to be able to obtain a type that implement=
+s
+> `ForLt`. For example, `ForLt!(for<'a> Bar<'a>)` would yield a type that
+> `<TheType as ForLt>::Of<'a>` is `Bar<'a>`. This also works with lifetime
+> elision, e.g. `ForLt!(Bar<'_>)` or for types without lifetime at all, e.g=
+.
+> `ForLt!(u32)`.
+>
+> The API design draws inspiration from the higher-kinded-types [1] crate,
+> however different design decision has been taken (e.g. covariance
+> requirement) and the implementation is independent.
+>
+> License headers use "Apache-2.0 OR MIT" because I anticipate this to be
+> used in pin-init crate too which is licensed as such.
+>
+> Link: https://docs.rs/higher-kinded-types/ [1]
+>
+> Signed-off-by: Gary Guo <gary@garyguo.net>
 > Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 > ---
 
-Is this really sound without a covariance proof? For example, with this
-version you could stash a Cell<Option<&'bound pci::Device<Bound>> (even
-with Gary's suggested Core<'_> change) and then observe that reference
-on Drop of Data, which seems unsound to me.
+> +trait TypeExt {
+> +    fn expand_elided_lifetime(&self, explicit_lt: &Lifetime) -> Type;
+> +    fn replace_lifetime(&self, src: &Lifetime, dst: &Lifetime) -> Type;
+> +    fn has_lifetime(&self, lt: &Lifetime) -> bool;
+> +}
+> +
+> +impl TypeExt for Type {
+> +    fn expand_elided_lifetime(&self, explicit_lt: &Lifetime) -> Type {
+> +        struct ElidedLifetimeExpander<'a>(&'a Lifetime);
+> +
+> +        impl VisitMut for ElidedLifetimeExpander<'_> {
+> +            fn visit_lifetime_mut(&mut self, lifetime: &mut Lifetime) {
+> +                // Expand explicit `'_`
+> +                if lifetime.ident =3D=3D "_" {
+> +                    *lifetime =3D self.0.clone();
+> +                }
+> +            }
+> +
+> +            fn visit_type_reference_mut(&mut self, reference: &mut syn::=
+TypeReference) {
+> +                syn::visit_mut::visit_type_reference_mut(self, reference=
+);
+> +
+> +                if reference.lifetime.is_none() {
+> +                    reference.lifetime =3D Some(self.0.clone());
+> +                }
+> +            }
+> +        }
+> +
+> +        let mut ret =3D self.clone();
+> +        ElidedLifetimeExpander(explicit_lt).visit_type_mut(&mut ret);
+> +        ret
+> +    }
+> +
+> +    fn replace_lifetime(&self, src: &Lifetime, dst: &Lifetime) -> Type {
+> +        struct LifetimeReplacer<'a>(&'a Lifetime, &'a Lifetime);
+> +
+> +        impl VisitMut for LifetimeReplacer<'_> {
+> +            fn visit_lifetime_mut(&mut self, lifetime: &mut Lifetime) {
+> +                if lifetime.ident =3D=3D self.0.ident {
+> +                    *lifetime =3D self.1.clone();
+> +                }
+> +            }
+> +        }
+> +
+> +        let mut ret =3D self.clone();
+> +        LifetimeReplacer(src, dst).visit_type_mut(&mut ret);
+> +        ret
+> +    }
+> +
+> +    fn has_lifetime(&self, lt: &Lifetime) -> bool {
+> +        struct HasLifetime<'a>(&'a Lifetime, bool);
+> +
+> +        impl Visit<'_> for HasLifetime<'_> {
+> +            fn visit_lifetime(&mut self, lifetime: &Lifetime) {
+> +                if lifetime.ident =3D=3D self.0.ident {
+> +                    self.1 =3D true;
+> +                }
+> +            }
+> +        }
+> +
+> +        let mut visitor =3D HasLifetime(lt, false);
+> +        visitor.visit_type(self);
+> +        visitor.1
+> +    }
+> +}
+> +
+> +struct Prover<'a>(&'a Lifetime, Vec<&'a Type>);
+> +
+> +impl<'a> Prover<'a> {
+> +    /// Prove that `ty` is covariant over `'lt`.
+> +    ///
+> +    /// This also needs to prove that it'll be wellformed for any instan=
+ce of `'lt`.
+> +    /// It can be assumed that `ty` will be wellformed if `'lt` is subst=
+ituted to `'static`.
+> +    fn prove(&mut self, ty: &'a Type) {
+> +        match ty {
+> +            Type::Paren(ty) =3D> self.prove(&ty.elem),
+> +            Type::Group(ty) =3D> self.prove(&ty.elem),
+> +
+> +            // No lifetime involved
+> +            Type::Never(_) =3D> {}
+> +
+> +            // `[T; N]` and `[T]` is covariant over `T`.
+> +            Type::Array(ty) =3D> self.prove(&ty.elem),
+> +            Type::Slice(ty) =3D> self.prove(&ty.elem),
+> +
+> +            Type::Tuple(ty) =3D> {
+> +                for elem in &ty.elems {
+> +                    self.prove(elem);
+> +                }
+> +            }
+> +
+> +            // `*const T` is covariant over `T`
+> +            Type::Ptr(ty) if ty.const_token.is_some() =3D> self.prove(&t=
+y.elem),
+> +
+> +            // `&T` is covariant over `T` and lifetime.
+> +            //
+> +            // Note that if we encounter `&'other_lt T`, then we still n=
+eed to make sure the type
+> +            // is wellformed if `T` involves `&'lt`, so we defer to the =
+compiler.
+> +            //
+> +            // This is to block cases like `ForLt!(for<'a> &'static &'a =
+u32)`, as the presence of
+> +            // the type implies `'a: 'static` but this is unsound.
+> +            Type::Reference(ty)
+> +                if ty.mutability.is_none() && ty.lifetime.as_ref() =3D=
+=3D Some(self.0) =3D>
+> +            {
+> +                self.prove(&ty.elem)
+> +            }
+> +
+> +            // `&[mut] T` is covariant over lifetime.
+> +            // In case we have `&[mut] NoLifetime`, we don't need to do =
+additional checks.
+> +            Type::Reference(ty) if !ty.elem.has_lifetime(self.0) =3D> ()=
+,
+> +
+> +            // No mention of lifetime at all, no need to perform compile=
+r check.
+> +            ty if !ty.has_lifetime(self.0) =3D> (),
+
+This treats macros as not having a lifetime, but it allows this which is
+not covariant for 'a IIUC:
+
+```
+trait Trait {}
+
+macro_rules! asdf {
+  () =3D> { dyn Trait };
+}
+
+type NotCovariant =3D ForLt!(for<'a> &'a mut asdf!());
+```
+
+And you can get rid of the macro too:
+
+```
+type NotCovariant =3D ForLt!(for<'a> &'a mut dyn Trait);
+```
+
+These are not covariant because dyn Trait has an elided +'a lifetime.
+
+I feel that the syntactic checking is kinda difficult to get right since
+it would need to handle all ways lifetimes can be elided now and in the
+future.
+
+Would it be that bad to always emit the proofs?
+
 
