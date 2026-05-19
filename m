@@ -1,204 +1,142 @@
-Return-Path: <linux-pwm+bounces-8995-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8996-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id qIaFD9M9DGqPbAUAu9opvQ
-	(envelope-from <linux-pwm+bounces-8995-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Tue, 19 May 2026 12:39:15 +0200
+	id gE6/OrdFDGoGcwUAu9opvQ
+	(envelope-from <linux-pwm+bounces-8996-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Tue, 19 May 2026 13:12:55 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id E2CAF57C785
-	for <lists+linux-pwm@lfdr.de>; Tue, 19 May 2026 12:39:14 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 6EF6F57D490
+	for <lists+linux-pwm@lfdr.de>; Tue, 19 May 2026 13:12:55 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 38EBA33A1B66
-	for <lists+linux-pwm@lfdr.de>; Tue, 19 May 2026 10:30:26 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 6B374316BE19
+	for <lists+linux-pwm@lfdr.de>; Tue, 19 May 2026 10:41:02 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C996352007;
-	Tue, 19 May 2026 10:30:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C78A94D9902;
+	Tue, 19 May 2026 10:39:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=flowmailer.net header.i=@flowmailer.net header.b="EZaazZKd";
-	dkim=pass (2048-bit key) header.d=siemens-energy.com header.i=schuster.simon@siemens-energy.com header.b="Te2jAfZD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WlzyzTrf"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mta-64-132.flowmailer.net (mta-64-132.flowmailer.net [185.136.64.132])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACCE7342CBD
-	for <linux-pwm@vger.kernel.org>; Tue, 19 May 2026 10:30:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.132
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1EAC4D90DB;
+	Tue, 19 May 2026 10:39:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779186622; cv=none; b=dE/QmraeJXfq9lbvC3byYHLbC13zUGPF0yReaJ1Dz0pvLF9sB8EbhHSuXp9OInWKmFGwVG06iToYAO9MxOrbTsGXkKYztr98aYN/lbos1E0xLdi8yxqeQT97s1pzOdO1GcwJ21u5yOvt8m+zS5BYGpeVRpqPmtVGy/bHdn4idn8=
+	t=1779187164; cv=none; b=nJJZvg5s8VKojuFE9+fHfqdFMcEZBZGDA5h0p+6kh4U9nWg5IWpCU5UPpC3xgaWs1mArTxhP9bC57MJq9GOrqxxg/UDrc2I2Fz6ZPDUg/VZx0TOyEfTUqwbVBPJ4wBunodRG55L9Wv/qYlq34r63d3oM8Gm+sZsTrdTkjonnveM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779186622; c=relaxed/simple;
-	bh=FMylFNF2LBIsDQTt92IHLCTEBM4Uc4LrYwy7HvJjx8M=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=cqZG83RNVUghJTCbT5aB1yFpSgo+hPvnXuYbk1fd2VlmUPR+GIbXwu0dkDzxp24B/Gcd7zIAz5TscWG3BzovT5lgBSLy39XiUIuqdiC+yHLdN/jL6Dzzus8kikWuGs8s6GxctkTt6saXJwR25ZIRtNlWQq2Vi0yj1X7oYOU3zsg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens-energy.com; spf=pass smtp.mailfrom=errorhandling.siemens-energy.com; dkim=pass (1024-bit key) header.d=flowmailer.net header.i=@flowmailer.net header.b=EZaazZKd; dkim=pass (2048-bit key) header.d=siemens-energy.com header.i=schuster.simon@siemens-energy.com header.b=Te2jAfZD; arc=none smtp.client-ip=185.136.64.132
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens-energy.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=errorhandling.siemens-energy.com
-Received: by mta-64-132.flowmailer.net with ESMTPSA id 20260519103015961d2425720019fd4f
-        for <linux-pwm@vger.kernel.org>;
-        Tue, 19 May 2026 12:30:16 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=s1;
- d=flowmailer.net;
- h=from:from:sender:to:to:cc:cc:subject:subject:content-type:content-type:content-transfer-encoding:References:In-Reply-To:Date:Message-ID:MIME-Version;
- bh=VQcumpK/VH7AMVe3D9QfBdm875bqYNSA1S/WhQcMd50=;
- b=EZaazZKd3ZONXRq4GpMzuNQLKWTjDM3BCDcJN1Zro5Jf4shP6ldQEZRd/JpK1AZ4rlK0YF
- /Aa7cioXIloqt5aLEMZp2zhOmX1/9l/6y1VhiFuSN27YZpJ0WrZoxkmuTSB8KOR9mJccLgIF
- U5YZLq88tEC65edr76mfk0J41cOEg=;
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm3;
- d=siemens-energy.com; i=schuster.simon@siemens-energy.com;
- h=from:from:sender:to:to:cc:cc:subject:subject:content-type:content-type:content-transfer-encoding:References:In-Reply-To:Date:Message-ID:MIME-Version;
- bh=VQcumpK/VH7AMVe3D9QfBdm875bqYNSA1S/WhQcMd50=;
- b=Te2jAfZD7hDN23NQ3+54hePl7vopCgSM3JMxLh/fm7xcDVL3oowG/1GukwfDalvkw/93pk
- r1edcvtKHS8aMq6NRNiOadutVoT+ObgjmyLqPfqBF0IzKI4s/3l4Ljo3Ns0e8129/XbiB/f0
- eILgqZumYF4wXN2RrKqjT6iJT48jJyha8qiB1Ms2c7YCYUsoOaUZYeqchP96MjjkD2jP9Tnp
- Bup5ZCH2E2PIWkx0GqjYc7NY1+ofQc4JMbJbK42rmOgM8diRAjnGGhXNzlSI65tykwA8DWj2
- tjMUFpTA0awNupV3gXQUmo6aF83iBjTdaCqUN4ZyrwUBouDMkjB7zheA==;
-Date: Tue, 19 May 2026 12:30:12 +0200
-From: Simon Schuster <schuster.simon@siemens-energy.com>
-To: Ethan Nelson-Moore <enelsonmoore@gmail.com>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc: Peter Zijlstra <peterz@infradead.org>, Arnd Bergmann <arnd@arndb.de>,
- Dinh Nguyen <dinguyen@kernel.org>, linux-doc@vger.kernel.org,
- devicetree@vger.kernel.org, workflows@vger.kernel.org, Linux-Arch
- <linux-arch@vger.kernel.org>, dmaengine@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org, Netdev
- <netdev@vger.kernel.org>, linux-pci@vger.kernel.org,
- linux-pwm@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-kbuild@vger.kernel.org, "linux-csky@vger.kernel.org"
- <linux-csky@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
- <skhan@linuxfoundation.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Daniel
- Lezcano <daniel.lezcano@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
- Alex Shi <alexs@kernel.org>, Yanteng Si <si.yanteng@linux.dev>, Dongliang
- Mu <dzm91@hust.edu.cn>, Hu Haowen <2023002089@link.tyut.edu.cn>, Kees Cook
- <kees@kernel.org>, Oleg Nesterov <oleg@redhat.com>, Will Deacon
- <will@kernel.org>, "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>, Nicholas Piggin
- <npiggin@gmail.com>, Vinod Koul <vkoul@kernel.org>, Frank Li
- <Frank.Li@kernel.org>, Dave Penkler <dpenkler@gmail.com>, Andi Shyti
- <andi.shyti@kernel.org>, Jonathan Cameron <jic23@kernel.org>, David Lechner
- <dlechner@baylibre.com>, =?ISO-8859-1?Q?Nuno_S=E1?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof
- WilczyDski <kwilczynski@kernel.org>, Andreas Oetken
- <andreas.oetken@siemens-energy.com>
-Subject: Re: [PATCH] nios2: remove the architecture
-Message-ID: <20260519103012.blot4bssgiqfer6p@dev-vm-schuster>
-References: <20260518042833.272221-1-enelsonmoore@gmail.com>
- <d40b1e80-37fc-4c88-9d7f-dae6458efe6c@app.fastmail.com>
- <20260518105735.GW3126523@noisy.programming.kicks-ass.net>
- <20260518172444.zyd47mcagrcwu7wt@dev-vm-schuster>
- <CADkSEUjhq6HSdg4ignzbuJiN5uXATsTdxFbRJ3BMxs5=WUWLDg@mail.gmail.com>
+	s=arc-20240116; t=1779187164; c=relaxed/simple;
+	bh=5J8hmX1CCU0iLcpPMu5NtOM8FHJanErUGlCyNObqAGo=;
+	h=Content-Type:Date:Message-Id:Subject:Cc:To:From:Mime-Version:
+	 References:In-Reply-To; b=W0aPMzYGJMEtWJ3nsWgpOjpX2Vg0Z3F6LZGitk6xEsbxITL4RCcrsgy0eWJfemcbJ+jlRNKhdlAp2Cim3xZa8Gbh4OIL4BZ53s6i9hUwUJMq8Ad8bn6LBucQt6jsW6DHT6xfhI+y2Iz3cAdfX73Xv7WTG2G4aBMXi8TG1UVEP8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WlzyzTrf; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32C81C2BCB3;
+	Tue, 19 May 2026 10:39:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779187164;
+	bh=5J8hmX1CCU0iLcpPMu5NtOM8FHJanErUGlCyNObqAGo=;
+	h=Date:Subject:Cc:To:From:References:In-Reply-To:From;
+	b=WlzyzTrfiapXBcLy/6izyhFaE+Ulg7HRdIMadQ7hTDarGnJnez4IPmK3n3+FbUfEX
+	 0qCGQS2eEE4Uzmqq4tltIvQLCfObxCmFIn2R8idpC/VvAmw8bf751KtnrYk3y8e8xf
+	 puwIBSuda04tXtpDp/1k37aHCAp2Nezb0a0TdrIBn7WZ5bvhQnCm4wqetagni4o5yt
+	 1LOWieJIVCn7g+Z7zBAuUjUpGvPSWZG5bpdIqJ3vDjWMLIvurI31NerM+pInCA2fkv
+	 QxFzIaYcjvwpYJciL5pSSZlE28Pj5ZYUy4pZHmD0G4HKc4n2nmQnk+kBO1/7a1g4hf
+	 j2eAV1vQ7jG+A==
+Content-Type: text/plain; charset=UTF-8
+Date: Tue, 19 May 2026 12:39:15 +0200
+Message-Id: <DIML7JNOV84D.1CK4G9MBZQJ3T@kernel.org>
+Subject: Re: [PATCH v3 17/27] rust: auxiliary: generalize Registration over
+ ForLt
+Cc: <gregkh@linuxfoundation.org>, <rafael@kernel.org>,
+ <acourbot@nvidia.com>, <aliceryhl@google.com>, <david.m.ertman@intel.com>,
+ <ira.weiny@intel.com>, <leon@kernel.org>, <viresh.kumar@linaro.org>,
+ <m.wilczynski@samsung.com>, <ukleinek@kernel.org>, <bhelgaas@google.com>,
+ <kwilczynski@kernel.org>, <abdiel.janulgue@gmail.com>,
+ <robin.murphy@arm.com>, <markus.probst@posteo.de>, <ojeda@kernel.org>,
+ <boqun@kernel.org>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
+ <lossin@kernel.org>, <a.hindborg@kernel.org>, <tmgross@umich.edu>,
+ <igor.korotin@linux.dev>, <daniel.almeida@collabora.com>,
+ <pcolberg@redhat.com>, <driver-core@lists.linux.dev>,
+ <linux-kernel@vger.kernel.org>, <nova-gpu@lists.linux.dev>,
+ <dri-devel@lists.freedesktop.org>, <linux-pm@vger.kernel.org>,
+ <linux-pwm@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+ <rust-for-linux@vger.kernel.org>
+To: "Eliot Courtney" <ecourtney@nvidia.com>
+From: "Danilo Krummrich" <dakr@kernel.org>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CADkSEUjhq6HSdg4ignzbuJiN5uXATsTdxFbRJ3BMxs5=WUWLDg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+References: <20260517000149.3226762-1-dakr@kernel.org>
+ <20260517000149.3226762-18-dakr@kernel.org>
+ <DIMHR3ZPEL92.2HVZ0FGPM54MF@nvidia.com>
+In-Reply-To: <DIMHR3ZPEL92.2HVZ0FGPM54MF@nvidia.com>
 X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[siemens-energy.com,reject];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[flowmailer.net:s=s1,siemens-energy.com:s=fm3];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	MV_CASE(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-8995-lists,linux-pwm=lfdr.de];
-	TO_DN_SOME(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-8996-lists,linux-pwm=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_TO(0.00)[gmail.com,sang-engineering.com];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[flowmailer.net:+,siemens-energy.com:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[51];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[schuster.simon@siemens-energy.com,linux-pwm@vger.kernel.org];
-	FREEMAIL_CC(0.00)[infradead.org,arndb.de,kernel.org,vger.kernel.org,lwn.net,linuxfoundation.org,linux.dev,hust.edu.cn,link.tyut.edu.cn,redhat.com,linux-foundation.org,gmail.com,baylibre.com,analog.com,lunn.ch,davemloft.net,google.com,siemens-energy.com];
-	TAGGED_RCPT(0.00)[linux-pwm,renesas,dt,netdev];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[linuxfoundation.org,kernel.org,nvidia.com,google.com,intel.com,linaro.org,samsung.com,gmail.com,arm.com,posteo.de,garyguo.net,protonmail.com,umich.edu,linux.dev,collabora.com,redhat.com,lists.linux.dev,vger.kernel.org,lists.freedesktop.org];
+	RCPT_COUNT_TWELVE(0.00)[34];
+	MIME_TRACE(0.00)[0:+];
+	FROM_HAS_DN(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[siemens-energy.com:dkim,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,cip-project.org:url,flowmailer.net:dkim,linuxfoundation.org:url]
-X-Rspamd-Queue-Id: E2CAF57C785
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dakr@kernel.org,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TAGGED_RCPT(0.00)[linux-pwm];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 6EF6F57D490
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Ethan, hi Wolfram,
+On Tue May 19, 2026 at 9:56 AM CEST, Eliot Courtney wrote:
+> For example, in the next patch on the sample aux driver you can do:
+>
+> ```
+> let data =3D adev.registration_data::<ForLt!(for<'a> Data<'static>)>()?;
+> let pdev: &'static pci::Device<Bound> =3D data.parent;
+> ```
+>
+> and mint a 'static reference to a bound device, which seems unsound to
+> me.
 
-Thank you for your thoughtful responses.
+Good catch, I applied the fix.
 
-On Mon, May 18, 2026 at 05:13:58PM -0700, Ethan Nelson-Moore wrote:
-> Your reasoning makes complete sense. However, there is an alternative
-> to maintaining the architecture in mainline.
-> 
-> The Civil Infrastructure Platform project maintains super-LTS kernels
-> (and a set of base Debian packages) for 10 years. They are intended to
-> be used for exactly these kinds of devices.
-> See here: https://wiki.linuxfoundation.org/civilinfrastructureplatform/start#kernel_maintainership
-> and here: https://cip-project.org/about/linux-kernel-core-packages
-> 
-> CIP will maintain kernel 6.12 until 2035. Is this long enough for your
-> lifecycle? What kernel are you currently using? If it's newer than
-> 6.12, we can easily wait until the next CIP SLTS release to remove
-> Nios II support to avoid a downgrade.
+Additionally, we could probably reject unused lifetime binders in the ForLt=
+!()
+macro, which doesn't help when used with a type alias, but may be a good
+defensive measure anyway.
 
-This depends. For released/maintained firmware revisions we already
-track CIP SLTS versions (candidates) to be prepared, the majority of which
-is currently still running 6.1.x with 6.12.x up-and-coming.
-But for the reasons outlined by you regarding architectural and feature
-support in CIP SLTS, we do not, however, use the extended support duration
-SLTS releases in production, and instead upgrade with the kernel.org LTS
-branch release schedule and track these internally alongside mainline
-to prevent major obstacles during version jumps.
-2035 is still a rather tight timeframe for our typical support/phase-out
-period (we would hope to get close to 2040 with the SLTS extensions),
-which is also the reason for our targeted 'lifetime extension' for the
-nios2 architecture for approximately 5 years, or more precisely ~2-3
-SLTS kernels assuming the usual cadence of 2 years between SLTS versions
-(+ some safety margin).
+> What about requiring all device ids declared to be supported by an aux
+> bus driver to have the same rust registration data type?
 
-> Also, CIP focuses on architectures used by CIP members - currently I
-> think they are x86 (32 and 64-bit), ARM (32 and 64-bit) and RISC-V.
-> Since Siemens is already a CIP member, you can simply ask them to add
-> Nios II to the list, and you can assist them with testing and directly
-> submit patches to them once the standard 6.12 LTS period ends.
+Please see [1] and [2].
 
-We have already been in contact with the CIP team (even though the
-contact has unfortunately lapsed a bit, mostly our fault), but adding an
-additional architecture seemed to be a more substantial effort.
-N.B.: Due to past circumstances, we are a completely distinct business
-entity from Siemens AG that merely shares the trademark and a common
-history; but of course this should not hinder us from getting directly
-involved in CIP (quite the opposite!). But this also requires some setup
-time.
+Thanks,
+Danilo
 
-On Mon, May 18, 2026 at 10:46:55PM +0200, Wolfram Sang wrote:
-> > If desired, we also would be happy to intensify our support regarding
-> > reviews or testing to share the maintnance burden if it helps to keep
-> > nios2 in mainline a bit longer.
-> 
-> ... but given this, you might want to get added in MAINTAINERS as
-> reviewer (or even maintainer) for nios2? Besides that your efforts are
-> already worth it in my book, it would also ensure you get CCed on
-> patches like this. Then, you are not depending on people like Arnd
-> putting you in the loop manually.
-
-Sure, I'd be glad to do so, but so far I refrained from it as I was a bit
-unsure about the netiquette (can I simply do so by self-proclamation? At
-least the git history seems to suggest so...).
-
-Best regards,
-Simon
+[1] https://lore.kernel.org/driver-core/DIFBME3GXDC0.14UHJTPD6TTAE@kernel.o=
+rg/
+[2] https://lore.kernel.org/driver-core/DIFXM2N21Q5J.2RIYLU11C5FR6@kernel.o=
+rg/
 
