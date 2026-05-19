@@ -1,145 +1,204 @@
-Return-Path: <linux-pwm+bounces-8994-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-8995-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id UKl7COA7DGp8aQUAu9opvQ
-	(envelope-from <linux-pwm+bounces-8994-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Tue, 19 May 2026 12:30:56 +0200
+	id qIaFD9M9DGqPbAUAu9opvQ
+	(envelope-from <linux-pwm+bounces-8995-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Tue, 19 May 2026 12:39:15 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 276A557C421
-	for <lists+linux-pwm@lfdr.de>; Tue, 19 May 2026 12:30:55 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id E2CAF57C785
+	for <lists+linux-pwm@lfdr.de>; Tue, 19 May 2026 12:39:14 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 1F48B30118FB
-	for <lists+linux-pwm@lfdr.de>; Tue, 19 May 2026 10:03:56 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 38EBA33A1B66
+	for <lists+linux-pwm@lfdr.de>; Tue, 19 May 2026 10:30:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 34940480DD5;
-	Tue, 19 May 2026 10:03:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C996352007;
+	Tue, 19 May 2026 10:30:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FmxNproE"
+	dkim=pass (1024-bit key) header.d=flowmailer.net header.i=@flowmailer.net header.b="EZaazZKd";
+	dkim=pass (2048-bit key) header.d=siemens-energy.com header.i=schuster.simon@siemens-energy.com header.b="Te2jAfZD"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mta-64-132.flowmailer.net (mta-64-132.flowmailer.net [185.136.64.132])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11A1B477E31;
-	Tue, 19 May 2026 10:03:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACCE7342CBD
+	for <linux-pwm@vger.kernel.org>; Tue, 19 May 2026 10:30:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.132
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779185034; cv=none; b=dzEEddU7RZke63lsjkmGVgnhNZF2wDoWTRP7HLYPpDvQxpf5k1WjGqp6m+5r0q3GGggwcMG6bqGZmRnXxSDDv8llFg8eUadk0xIWQrNhHTYJw5GR82LwzuKxe1JsKmOma/fVV+VmZEjlTbMmU9ClptyvUzK9wT4ZhusxENKi7b8=
+	t=1779186622; cv=none; b=dE/QmraeJXfq9lbvC3byYHLbC13zUGPF0yReaJ1Dz0pvLF9sB8EbhHSuXp9OInWKmFGwVG06iToYAO9MxOrbTsGXkKYztr98aYN/lbos1E0xLdi8yxqeQT97s1pzOdO1GcwJ21u5yOvt8m+zS5BYGpeVRpqPmtVGy/bHdn4idn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779185034; c=relaxed/simple;
-	bh=5QWinO9Xjw92NFX2pfVE5o/B55ZoWiLgM/PylmeqNxE=;
+	s=arc-20240116; t=1779186622; c=relaxed/simple;
+	bh=FMylFNF2LBIsDQTt92IHLCTEBM4Uc4LrYwy7HvJjx8M=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=AZTFAEgSAHgJ5bGsi/AZUq3GijtGlKGQ7Cw4JRs38wQNfsyfGBHNRq5nfVJUD7p3Nkrg0+GgBrHBL+Rd4nRBm60QRwnhTByj+u24iqklg2BUcWmibeYczqc4kH5h0JtpmkLjrL0oX/HnxUKkkg6GY0jp4ss17/MaBCdH1qNBEOY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FmxNproE; arc=none smtp.client-ip=10.30.226.201
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F1A0C2BCB3;
-	Tue, 19 May 2026 10:03:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1779185033;
-	bh=5QWinO9Xjw92NFX2pfVE5o/B55ZoWiLgM/PylmeqNxE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=FmxNproEEopPjAbb2zBeyvfCuA7MgGuISv+HsareXD0X3JS0PpGL2WmKBE32KnWHi
-	 o9neWelgGRGO0B3F0yUsYCqi9XOAEXYQfgUpMa39plQJIJ9fL19VIdcl5z7Secnxzk
-	 FULpwYAOWtLMQD1hfpTTbQz6LRgKqsLKbCqxFwW7kCBQJW0N8Y5dkBF6R6kxldP7ny
-	 K7FJTq3KCH89mA1eEPW/hqAiMZCDSIN4XrGm3jACgprQXUEaI80nXssDtXh60ujfms
-	 E/Uy+4+U50EN2PwEDq00noVpQzLGsB/qTyBagMMjW/RD0zz5Gx3gnpzaSgJaH19T/K
-	 690+ib8PUBBLw==
-Date: Tue, 19 May 2026 12:03:51 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: linux-pwm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v1] pwm: pca9685: Use named initializers for struct
- i2c_device_id
-Message-ID: <agw1WE4xLKY_Uv_Z@monoceros>
-References: <20260518172323.932774-2-u.kleine-koenig@baylibre.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=cqZG83RNVUghJTCbT5aB1yFpSgo+hPvnXuYbk1fd2VlmUPR+GIbXwu0dkDzxp24B/Gcd7zIAz5TscWG3BzovT5lgBSLy39XiUIuqdiC+yHLdN/jL6Dzzus8kikWuGs8s6GxctkTt6saXJwR25ZIRtNlWQq2Vi0yj1X7oYOU3zsg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens-energy.com; spf=pass smtp.mailfrom=errorhandling.siemens-energy.com; dkim=pass (1024-bit key) header.d=flowmailer.net header.i=@flowmailer.net header.b=EZaazZKd; dkim=pass (2048-bit key) header.d=siemens-energy.com header.i=schuster.simon@siemens-energy.com header.b=Te2jAfZD; arc=none smtp.client-ip=185.136.64.132
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens-energy.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=errorhandling.siemens-energy.com
+Received: by mta-64-132.flowmailer.net with ESMTPSA id 20260519103015961d2425720019fd4f
+        for <linux-pwm@vger.kernel.org>;
+        Tue, 19 May 2026 12:30:16 +0200
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=s1;
+ d=flowmailer.net;
+ h=from:from:sender:to:to:cc:cc:subject:subject:content-type:content-type:content-transfer-encoding:References:In-Reply-To:Date:Message-ID:MIME-Version;
+ bh=VQcumpK/VH7AMVe3D9QfBdm875bqYNSA1S/WhQcMd50=;
+ b=EZaazZKd3ZONXRq4GpMzuNQLKWTjDM3BCDcJN1Zro5Jf4shP6ldQEZRd/JpK1AZ4rlK0YF
+ /Aa7cioXIloqt5aLEMZp2zhOmX1/9l/6y1VhiFuSN27YZpJ0WrZoxkmuTSB8KOR9mJccLgIF
+ U5YZLq88tEC65edr76mfk0J41cOEg=;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm3;
+ d=siemens-energy.com; i=schuster.simon@siemens-energy.com;
+ h=from:from:sender:to:to:cc:cc:subject:subject:content-type:content-type:content-transfer-encoding:References:In-Reply-To:Date:Message-ID:MIME-Version;
+ bh=VQcumpK/VH7AMVe3D9QfBdm875bqYNSA1S/WhQcMd50=;
+ b=Te2jAfZD7hDN23NQ3+54hePl7vopCgSM3JMxLh/fm7xcDVL3oowG/1GukwfDalvkw/93pk
+ r1edcvtKHS8aMq6NRNiOadutVoT+ObgjmyLqPfqBF0IzKI4s/3l4Ljo3Ns0e8129/XbiB/f0
+ eILgqZumYF4wXN2RrKqjT6iJT48jJyha8qiB1Ms2c7YCYUsoOaUZYeqchP96MjjkD2jP9Tnp
+ Bup5ZCH2E2PIWkx0GqjYc7NY1+ofQc4JMbJbK42rmOgM8diRAjnGGhXNzlSI65tykwA8DWj2
+ tjMUFpTA0awNupV3gXQUmo6aF83iBjTdaCqUN4ZyrwUBouDMkjB7zheA==;
+Date: Tue, 19 May 2026 12:30:12 +0200
+From: Simon Schuster <schuster.simon@siemens-energy.com>
+To: Ethan Nelson-Moore <enelsonmoore@gmail.com>,
+	Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Peter Zijlstra <peterz@infradead.org>, Arnd Bergmann <arnd@arndb.de>,
+ Dinh Nguyen <dinguyen@kernel.org>, linux-doc@vger.kernel.org,
+ devicetree@vger.kernel.org, workflows@vger.kernel.org, Linux-Arch
+ <linux-arch@vger.kernel.org>, dmaengine@vger.kernel.org,
+ linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org, Netdev
+ <netdev@vger.kernel.org>, linux-pci@vger.kernel.org,
+ linux-pwm@vger.kernel.org, linux-hardening@vger.kernel.org,
+ linux-kbuild@vger.kernel.org, "linux-csky@vger.kernel.org"
+ <linux-csky@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
+ <skhan@linuxfoundation.org>, Rob Herring <robh@kernel.org>, Krzysztof
+ Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Daniel
+ Lezcano <daniel.lezcano@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
+ Alex Shi <alexs@kernel.org>, Yanteng Si <si.yanteng@linux.dev>, Dongliang
+ Mu <dzm91@hust.edu.cn>, Hu Haowen <2023002089@link.tyut.edu.cn>, Kees Cook
+ <kees@kernel.org>, Oleg Nesterov <oleg@redhat.com>, Will Deacon
+ <will@kernel.org>, "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>, Nicholas Piggin
+ <npiggin@gmail.com>, Vinod Koul <vkoul@kernel.org>, Frank Li
+ <Frank.Li@kernel.org>, Dave Penkler <dpenkler@gmail.com>, Andi Shyti
+ <andi.shyti@kernel.org>, Jonathan Cameron <jic23@kernel.org>, David Lechner
+ <dlechner@baylibre.com>, =?ISO-8859-1?Q?Nuno_S=E1?= <nuno.sa@analog.com>,
+ Andy Shevchenko <andy@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S . Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
+ <pabeni@redhat.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof
+ WilczyDski <kwilczynski@kernel.org>, Andreas Oetken
+ <andreas.oetken@siemens-energy.com>
+Subject: Re: [PATCH] nios2: remove the architecture
+Message-ID: <20260519103012.blot4bssgiqfer6p@dev-vm-schuster>
+References: <20260518042833.272221-1-enelsonmoore@gmail.com>
+ <d40b1e80-37fc-4c88-9d7f-dae6458efe6c@app.fastmail.com>
+ <20260518105735.GW3126523@noisy.programming.kicks-ass.net>
+ <20260518172444.zyd47mcagrcwu7wt@dev-vm-schuster>
+ <CADkSEUjhq6HSdg4ignzbuJiN5uXATsTdxFbRJ3BMxs5=WUWLDg@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="brsjvhmpj6rzdtgf"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260518172323.932774-2-u.kleine-koenig@baylibre.com>
-X-Spamd-Result: default: False [-3.76 / 15.00];
-	SIGNED_PGP(-2.00)[];
+In-Reply-To: <CADkSEUjhq6HSdg4ignzbuJiN5uXATsTdxFbRJ3BMxs5=WUWLDg@mail.gmail.com>
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	DMARC_POLICY_ALLOW(-0.50)[siemens-energy.com,reject];
 	MID_RHS_NOT_FQDN(0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[flowmailer.net:s=s1,siemens-energy.com:s=fm3];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-8995-lists,linux-pwm=lfdr.de];
+	TO_DN_SOME(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-8994-lists,linux-pwm=lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_TWO(0.00)[2];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_TO(0.00)[gmail.com,sang-engineering.com];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[flowmailer.net:+,siemens-energy.com:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_GT_50(0.00)[51];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ukleinek@kernel.org,linux-pwm@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_NONE(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[schuster.simon@siemens-energy.com,linux-pwm@vger.kernel.org];
+	FREEMAIL_CC(0.00)[infradead.org,arndb.de,kernel.org,vger.kernel.org,lwn.net,linuxfoundation.org,linux.dev,hust.edu.cn,link.tyut.edu.cn,redhat.com,linux-foundation.org,gmail.com,baylibre.com,analog.com,lunn.ch,davemloft.net,google.com,siemens-energy.com];
+	TAGGED_RCPT(0.00)[linux-pwm,renesas,dt,netdev];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-pwm];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[baylibre.com:email,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 276A557C421
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[siemens-energy.com:dkim,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,cip-project.org:url,flowmailer.net:dkim,linuxfoundation.org:url]
+X-Rspamd-Queue-Id: E2CAF57C785
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+Hi Ethan, hi Wolfram,
 
---brsjvhmpj6rzdtgf
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v1] pwm: pca9685: Use named initializers for struct
- i2c_device_id
-MIME-Version: 1.0
+Thank you for your thoughtful responses.
 
-On Mon, May 18, 2026 at 07:23:22PM +0200, Uwe Kleine-K=F6nig (The Capable H=
-ub) wrote:
-> While being less compact, using named initializers allows to more easily
-> see which members of the structs are assigned which value without having
-> to lookup the declaration of the struct. And it's also more robust
-> against changes to the struct definition.
->=20
-> This patch doesn't modify the compiled arrays, only their representation
-> in source form benefits. The former was confirmed with x86 and arm64
-> builds.
->=20
-> Signed-off-by: Uwe Kleine-K=F6nig (The Capable Hub) <u.kleine-koenig@bayl=
-ibre.com>
+On Mon, May 18, 2026 at 05:13:58PM -0700, Ethan Nelson-Moore wrote:
+> Your reasoning makes complete sense. However, there is an alternative
+> to maintaining the architecture in mainline.
+> 
+> The Civil Infrastructure Platform project maintains super-LTS kernels
+> (and a set of base Debian packages) for 10 years. They are intended to
+> be used for exactly these kinds of devices.
+> See here: https://wiki.linuxfoundation.org/civilinfrastructureplatform/start#kernel_maintainership
+> and here: https://cip-project.org/about/linux-kernel-core-packages
+> 
+> CIP will maintain kernel 6.12 until 2035. Is this long enough for your
+> lifecycle? What kernel are you currently using? If it's newer than
+> 6.12, we can easily wait until the next CIP SLTS release to remove
+> Nios II support to avoid a downgrade.
 
-Applied to
+This depends. For released/maintained firmware revisions we already
+track CIP SLTS versions (candidates) to be prepared, the majority of which
+is currently still running 6.1.x with 6.12.x up-and-coming.
+But for the reasons outlined by you regarding architectural and feature
+support in CIP SLTS, we do not, however, use the extended support duration
+SLTS releases in production, and instead upgrade with the kernel.org LTS
+branch release schedule and track these internally alongside mainline
+to prevent major obstacles during version jumps.
+2035 is still a rather tight timeframe for our typical support/phase-out
+period (we would hope to get close to 2040 with the SLTS extensions),
+which is also the reason for our targeted 'lifetime extension' for the
+nios2 architecture for approximately 5 years, or more precisely ~2-3
+SLTS kernels assuming the usual cadence of 2 years between SLTS versions
+(+ some safety margin).
 
-	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/for=
--next
+> Also, CIP focuses on architectures used by CIP members - currently I
+> think they are x86 (32 and 64-bit), ARM (32 and 64-bit) and RISC-V.
+> Since Siemens is already a CIP member, you can simply ask them to add
+> Nios II to the list, and you can assist them with testing and directly
+> submit patches to them once the standard 6.12 LTS period ends.
 
-as merge window material.
+We have already been in contact with the CIP team (even though the
+contact has unfortunately lapsed a bit, mostly our fault), but adding an
+additional architecture seemed to be a more substantial effort.
+N.B.: Due to past circumstances, we are a completely distinct business
+entity from Siemens AG that merely shares the trademark and a common
+history; but of course this should not hinder us from getting directly
+involved in CIP (quite the opposite!). But this also requires some setup
+time.
 
-Best regards
-Uwe
+On Mon, May 18, 2026 at 10:46:55PM +0200, Wolfram Sang wrote:
+> > If desired, we also would be happy to intensify our support regarding
+> > reviews or testing to share the maintnance burden if it helps to keep
+> > nios2 in mainline a bit longer.
+> 
+> ... but given this, you might want to get added in MAINTAINERS as
+> reviewer (or even maintainer) for nios2? Besides that your efforts are
+> already worth it in my book, it would also ensure you get CCed on
+> patches like this. Then, you are not depending on people like Arnd
+> putting you in the loop manually.
 
---brsjvhmpj6rzdtgf
-Content-Type: application/pgp-signature; name="signature.asc"
+Sure, I'd be glad to do so, but so far I refrained from it as I was a bit
+unsure about the netiquette (can I simply do so by self-proclamation? At
+least the git history seems to suggest so...).
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmoMNYQACgkQj4D7WH0S
-/k42AAf+IBLsqxDF4Bsmhlaxpthxnf8UO96IRW06T0G2cdm1cJHkh4RzcRziCPHn
-XZytjZYY+J50BWgn1Y4q4r1v3y4eI6gjL+0HbOCLd9DbCkmaprBsyaI30FMb0Wk+
-JxU8ggQhgI3VTuqdf1eHbSNyjCfgdmWFw+COI2/YiwSR/9tX7dcsIt1HnMn390il
-f3AAJ5YgVMqJLEkZWo5vKxeHYpyAa0VJZgC61xWmZOXxPzn2xYBX3S5mG57uCqAq
-yB+YJrtnYMY1Cd/vnLXYse3VAAn3NsPXc3kPBNsrH/ZNp7pJ3v9dHTD2MMmRaHU1
-CYlbRWraIxRBIc9lLq5e5hziPQJyNg==
-=EnNZ
------END PGP SIGNATURE-----
-
---brsjvhmpj6rzdtgf--
+Best regards,
+Simon
 
