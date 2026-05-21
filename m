@@ -1,189 +1,202 @@
-Return-Path: <linux-pwm+bounces-9036-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9037-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id EFIxCHpLDmrL9gUAu9opvQ
-	(envelope-from <linux-pwm+bounces-9036-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Thu, 21 May 2026 02:02:02 +0200
+	id CMkFKXScDmqZAgYAu9opvQ
+	(envelope-from <linux-pwm+bounces-9037-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Thu, 21 May 2026 07:47:32 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D5A8A59D1DB
-	for <lists+linux-pwm@lfdr.de>; Thu, 21 May 2026 02:02:01 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 228E559F35E
+	for <lists+linux-pwm@lfdr.de>; Thu, 21 May 2026 07:47:31 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 350E1303976E
-	for <lists+linux-pwm@lfdr.de>; Thu, 21 May 2026 00:01:21 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 223A53054FCA
+	for <lists+linux-pwm@lfdr.de>; Thu, 21 May 2026 05:47:28 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 04BE372618;
-	Thu, 21 May 2026 00:01:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 83C4C34E75C;
+	Thu, 21 May 2026 05:47:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="LnzEF2is"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EqiPlTMR"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D57039FD4
-	for <linux-pwm@vger.kernel.org>; Thu, 21 May 2026 00:01:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779321677; cv=none; b=omjZ2Gt4XXq+dS5KGPxLhemM4SD/7D7ozNSW8WNNoJYCjWbM9/2sC7nCBzWHmUDEAckes8rQjlWYF3Ee6YG0oqORjn2pHYYbTDcScm7BvH7wR7j7v2Tu0CIug/WyGHQDZNcBjZAsZ6R3aJtlUqk2OWRuO3qu36NTm02aem/5Dvg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779321677; c=relaxed/simple;
-	bh=3Z1/s8TDKCJg12TEEASVieUkMtbUhhy151++MGS6sgU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rKUzjdnK+hhavqdsPVkkMazGqTv/LxHZj+bMpBVbsBQikFo1AumUTwhwvaHOZqvyZjusSwxYrwUmEm/OrdRvDVW/ORrUSVLw+OxgJ2W0QpoZ8Euq9pd/cqRCBwZIZPUSWAOst4KsEFKyM/2jkcxDmQ6d0ghy+uLIpB6g3uReHYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=LnzEF2is; arc=none smtp.client-ip=209.85.221.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
-Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-56f72d27e7eso6826410e0c.0
-        for <linux-pwm@vger.kernel.org>; Wed, 20 May 2026 17:01:14 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AA17340DB0
+	for <linux-pwm@vger.kernel.org>; Thu, 21 May 2026 05:47:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=209.85.219.43
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779342444; cv=pass; b=KJKvsztAfWrRKEnL3xQtrGtXgaGhAceCd2DaXGHRUNpZZvatGeObNfJNpERFiqhvJ84vjp26hq/+z7ocXsVJykn0KBprHpn/gg8xk2XEfUltx1NTH4I7PJ9FaxrRFzaL1nimv+oFLonYs/hjq9hHyW2Qu0iW/tV3RBuRQ33tpss=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779342444; c=relaxed/simple;
+	bh=rvRNJypYuIaXcdpikXLL+TmH4qjgE66gRUyO8Jwy6pE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Whkxgj1y5B/8R8A2uIH0izPJkDIXQQXEFc38o4FEcNO389+9oiiSsj0PATouz9v+cM72FYEdrC1SgeaBg37nBLTQpipb/+CzYR55JVU9Yd1xPecKAsowGH1TsmHUmDw0kAQAH4NnqAfAyDMAgvIPcAMlXfobI4267antL4r3R6M=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EqiPlTMR; arc=pass smtp.client-ip=209.85.219.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-qv1-f43.google.com with SMTP id 6a1803df08f44-8b5de17382cso49168346d6.1
+        for <linux-pwm@vger.kernel.org>; Wed, 20 May 2026 22:47:22 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1779342441; cv=none;
+        d=google.com; s=arc-20240605;
+        b=ERMIvTTt0BiCkfhKFovaSiVimLraKmoWlGxt1tugscebJkaqv4qwvv3ffg0lo8rZWe
+         +0KofxkXcoJD/zVLLvLfL3pf+vENhTLfmqlmE5PNMD6m59UHGmef9ZIZ1lbC8nIjOJqY
+         edTie/2UeDEh59krGQDgWXTyMmc6YC9AgxeQHIzYeW4d0MGfXBBhiWKtjhHn6BfMogxi
+         kJrVacq21qdplSuwOv7yHs8jBMZ9iS+zwtMRTkpeY9lZswrWr9VepcvPzURhrwtoyQlM
+         CeeZ7hSzc1+gWTudwlpbo2plgCW97uAta1IL78mLb+Ds5+Yx/+UyYWI9hQPobzlPZz8j
+         A/8Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=w25KogIBywA1a93/rf1RBOgU5z4hh07df7N09bLqYmU=;
+        fh=byCwn//VAYJTV5oiF9XLV4hqzLKHW1o3xBOXyLSU3Yw=;
+        b=R7urFXArPC2ybuSB8zTy21QihZySGbLSpgHB73pV3kK6S6GhxAgUr6ng7tHHw+11I/
+         YN+Y8JiwpVGU/B3JTJkTY/I+JwHGzlUS8va+fN0kc7zdI9slfRnSLAKJiTF0kFM47J+t
+         xtuIo5lo2+VKcUrVkGsGmwWPbh5ZNk1fW8qUf2uqTT6kG+mclIW1iXhh5fYAcU1jQn17
+         5r9NVkCgxqK77syXOey1CzXwjxTFVvpXGke61SYXG6m3lLEXtyJHl0s0VxCy64m0wU8v
+         5ugacYAS0c6tgy/FRFeCYSVXkPBB4+ZSvv24w7BRYV/ovasi4Y5EIusNTpHAdA9AYwVk
+         Y6MA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre.com; s=google; t=1779321674; x=1779926474; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=Lg+UFUjX2TWBvKvhX5SvfRqht7iHN6Ihdh9sMBKt2/o=;
-        b=LnzEF2isaSB/NOqY7hyYBDWDxrEx5PqfOY1sABqKNvXZgsoCRbeCeBvSeEF9ql5DN0
-         8F9U7SgnB30QRXZTfQvyqfmgKFOd0PYJIHbU/pgt4bn7D30AwHFPBWsCXslrjvZJZ0Ep
-         uvXk4tQT+EA6SEGqqxaEXllojFh3dQ/bzjM+GY4E47DE5m+NBPTFVhWOi9/3AJAvOmBP
-         M6cayqx/3vRAYEU0+NHOkbB93wEkaSHVbbQsHpjf4cKaD6imM4LudCCXegzSFea6GLHJ
-         FqDc/7zXq6gwSh2vl2OVgmyQ2U8ZPc8iOLQnsc+Jr54lxGCwj9oPIE8G6PDGdb6QcZh9
-         R3dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1779321674; x=1779926474;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+        d=gmail.com; s=20251104; t=1779342441; x=1779947241; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=Lg+UFUjX2TWBvKvhX5SvfRqht7iHN6Ihdh9sMBKt2/o=;
-        b=QBx6jgJqp6EKs3iKUQW+5MESon8ufrBgA6nvjKzTBHdicoz0c7FIZBbsKGbPs3Zln+
-         WGmGOIA3NBWscbgfOBIKdEMiLR4NVnUSDH3+jd4fLEnf+d2jFMMTQU0pMzkLwlJSb2vJ
-         pcDHo6K3N+mJ9l/VI7u2f2dDmnW1AKSAH1kc2jclUa2cx/tmcCYleWl7YxITbbaD0PQD
-         ZpaIuEC7L0vWA4M8c7Rfl/vLnuXhGbyIdG3Tp43TrxfkodhvmpmH33PtIbd1S8dPSXpw
-         L4iiXirQTVBrU0mobHLF8ijxv75jiIlV5o7otHaVKziZ5M7C6XDNdCdBh1auHsq2iCX2
-         1Xmw==
-X-Gm-Message-State: AOJu0Yx8waVTZMGamlSQWsHknlKQ9vWcieSCAJUm7ZGZ3IGjkwzxSH/f
-	/sRFetU5c34n0gaj53kCCsDPNB1vVv8s6HwArRjxsPQp/U4dce2+LbFfw8O+/c0uiTBDGPFVxFD
-	coHcRea9iLw==
-X-Gm-Gg: Acq92OFPq691Qk8xXaIHhPEn/RhNPgPSRh2a/7wrQqZuSTuQF63410rWuSEPczpowMP
-	yVhclTCdycqt7VqMIiAyvbdtGu6q5hjH8z5K7F0lekVrZnjRdEqLLkKnyMTrggdkQPE4mHmtH3B
-	E35YV8RXtccFJnEP1ZDyo2p7l0Ky4gCE5K5y7BeDcq8UzhHMlu5zvfzh36fZo7RJMIwWT+tUNKT
-	sUgbW/AA4tJEdk+kmu0wxuTZhDqHgp2FK3tCKghMaTMgJrBgc+2f+FIWMVDE5Q27YG+dEFyvLTZ
-	jY8pLeiNaZUfcSuxcoTT4pRAWpvSlp3XMn+OVXa2uzVhxBVs89chyEiBfa/fH7aLRP52Y9olk2l
-	0pxPNTi0f5OQq1efPe1vLEhJv3ycNBpBSyPuyf6EdqDsXw3i5rpqpqUPZlHgvi1nqmDpltc/IVR
-	41f4kbpiTUlWG3M1KuUJRYo39Na+FCj1BLpW7bU3rOzA==
-X-Received: by 2002:a05:6122:235:b0:575:fa0b:bc23 with SMTP id 71dfb90a1353d-5841b77d3bemr288066e0c.2.1779321673711;
-        Wed, 20 May 2026 17:01:13 -0700 (PDT)
-Received: from acer-e1.tail6c460f.ts.net ([2804:7f0:7542:7b16:2880:ed6d:f5c:8b9e])
-        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-95fc2d278a8sm10206321241.6.2026.05.20.17.01.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 20 May 2026 17:01:12 -0700 (PDT)
-From: Ronaldo Nunez <rnunez@baylibre.com>
-To: linux-pwm@vger.kernel.org
-Cc: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Frank Li <Frank.Li@nxp.com>,
-	Sascha Hauer <s.hauer@pengutronix.de>,
-	Pengutronix Kernel Team <kernel@pengutronix.de>,
-	Fabio Estevam <festevam@gmail.com>,
-	imx@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Ronaldo Nunez <rnunez@baylibre.com>
-Subject: [PATCH] pwm: imx27: Fix variable truncation in .apply()
-Date: Wed, 20 May 2026 21:00:54 -0300
-Message-ID: <20260521000054.4790-1-rnunez@baylibre.com>
-X-Mailer: git-send-email 2.53.0
+        bh=w25KogIBywA1a93/rf1RBOgU5z4hh07df7N09bLqYmU=;
+        b=EqiPlTMRrAaIc8qFky7sVocBjJblT7RqKTYG+Jfcn42rtPvYkZqxDs5uVEIexfSKrm
+         yWMvp7y6UlOfKqNC00Lxw5sXNKCexJFggE8s61gcr7QxFh9lyzPxxf9gKNh1JIriHPPD
+         MqxDHaLDj2lk5Jxw8IYMkZLRJ+Qhp2Lzo+zzTLRwQw6hzAMOXsaipIfLAVUStyl6PnJG
+         BXjKJN13yFdT3f+tCUUMo7o2nxejTfyKIbKXkR71xOGhG6jxfh07eP8vBio5dbWG2f2x
+         +e074yCCly78/lPKWGyV684uHD+X2I6DhHDhno7ds5zch59Pav+V20kddZfQRsg+YrRg
+         Rf5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779342441; x=1779947241;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=w25KogIBywA1a93/rf1RBOgU5z4hh07df7N09bLqYmU=;
+        b=TfP0Qyjln0bowfnyrQqa7GEYTOi+kI9zsLen/jBfWxa4Yu3HXf7KlcvFZqtr8+EQC6
+         udSx8+rdASf8+exEIKHCP9siX3jaVHtZqJXgT9E6qRn4djMvSIb3cPnBhS5Ckznu6ZWZ
+         4qkDtfR76QOMTcrKiYH6sR24P4GQ0DOKLYgnf2r6YjwoxKd0waO1huRiVeypc2JBnZ10
+         zcpS0ZNmoMdYf5GVtFvcTay7tncvBq6KF5tY2NssUtevnUGWhiFTQW2oZfU3Xr4bB74+
+         2Rci2orgSHTOJy+RKFF/gIaGcqa1mndgMzXC3lUASdxKSV52S7Nyx4I6PiFOM1FHWies
+         5vsg==
+X-Forwarded-Encrypted: i=1; AFNElJ8VwlgkXHv9LKw40/mgGr5yVQw6XSwaNROOU1qJB5Rjx+iThx8Yy0iU2wUGqPQi/F2Ii848ndypuQ0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YyWJ7deDkWidUxkL0pAWf68k2lOik8ZFknnqRh2vKpBUzYLXNud
+	cDBcKMa1r76EruG3nHnumLSNcvGh4TX6YL7F+ckoRvbl9lFqCaSzaCf0pMQIh+gKClTmFg+//86
+	Iah17HD0/0pTxaGF6/Oy0CL8Ou+OZP2s=
+X-Gm-Gg: Acq92OFk3700/JlUhukQeH4Kpv+2cG+KjZ+2jAak6yXmpAO/+KGiuw/yDzPoSkXcOaI
+	EbhTvrm+rCKbXdEZESXBOVAQen2LbHx7oKu9KN8qoxI+GCKGs0iiaqcoP43rTe9r3p80FsEFqeN
+	AXBVHNvDJOHYt6LYcvCuo1deMV1kmbaYQcab1SbSUaLL1WpcrVczm8REJhdT0kx9uKZt3fVXA7R
+	n+cYopC/mjwYD6Dm9K7KBNOUBY6VQxRzUKN1FYTFAVDsx4RXH/UnA+o8UUMPId4upPTPxCFxCpu
+	Rxlb2IViL/jH4/maVrntVJulTT5c6B2fyEH61qoXU9iIHmVIqw==
+X-Received: by 2002:a05:6214:4589:b0:8ac:b1ad:3a24 with SMTP id
+ 6a1803df08f44-8cc6e369142mr24275146d6.27.1779342441405; Wed, 20 May 2026
+ 22:47:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
-	R_DKIM_ALLOW(-0.20)[baylibre.com:s=google];
+References: <20260509193928.19030-1-manishbaing2789@gmail.com> <agnY16I4sYAdRd9T@monoceros>
+In-Reply-To: <agnY16I4sYAdRd9T@monoceros>
+From: Manish Baing <manishbaing2789@gmail.com>
+Date: Thu, 21 May 2026 11:17:10 +0530
+X-Gm-Features: AVHnY4KAzV-NI5cDZgO-6QHQZfraoFlbvvmbGV2Hd6qkCVQ1Ph4LlYmyO8Rq1VQ
+Message-ID: <CAJvdc_enTOF=+1rumSz4FD5T1ME0fnJ+SVC+jMuOTMxzyx8P1Q@mail.gmail.com>
+Subject: Re: [PATCH v3] dt-bindings: mfd: st,stmpe: fix PWM schema and drop
+ legacy binding
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>
+Cc: lee@kernel.org, linusw@kernel.org, robh@kernel.org, krzk+dt@kernel.org, 
+	conor+dt@kernel.org, mcoquelin.stm32@gmail.com, alexandre.torgue@foss.st.com, 
+	devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, 
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, 
+	linux-pwm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-0.66 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9036-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FUZZY_RATELIMITED(0.00)[rspamd.com];
-	FREEMAIL_CC(0.00)[kernel.org,nxp.com,pengutronix.de,gmail.com,lists.linux.dev,lists.infradead.org,vger.kernel.org,baylibre.com];
-	DMARC_NA(0.00)[baylibre.com];
+	TAGGED_FROM(0.00)[bounces-9037-lists,linux-pwm=lfdr.de];
+	FROM_HAS_DN(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FROM_HAS_DN(0.00)[];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[13];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,foss.st.com,vger.kernel.org,st-md-mailman.stormreply.com,lists.infradead.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[rnunez@baylibre.com,linux-pwm@vger.kernel.org];
-	RCPT_COUNT_SEVEN(0.00)[10];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_COUNT_FIVE(0.00)[5];
-	DKIM_TRACE(0.00)[baylibre.com:+];
-	TAGGED_RCPT(0.00)[linux-pwm];
 	TO_DN_SOME(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: D5A8A59D1DB
+	NEURAL_HAM(-0.00)[-1.000];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[manishbaing2789@gmail.com,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 228E559F35E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-This patch fixes a variable truncation when calculating period in
-microseconds as part of the solution for the ERR051198 in .apply()
-callback.
+Hi Uwe,
+> If the patch was split into two, each touching just one of the files,
+> there would be no need for merge coordination. Also logically it's two
+> patches. Would you mind splitting?
 
-The problem was identified when reducing the duty cycle through sysfs,
-with enable set to 1. The condition to fix errata ERR051198 for period
-smaller than 2us is always being met, due to a truncation on tmp,
-variable from .apply() callback, caused by the multiplication of
-NSEC_PER_SEC, PWMPR (period register) and the prescaler which can easily
-overflow u32. Declaring tmp as u64 makes it large enough to accommodate
-larger multiplication results.
+That makes perfect sense. I will split this into a two-patch series
+(one for the MFD YAML fix and one for the PWM TXT deletion) and submit
+it shortly as v4.
+Thanks for the feedback!
 
-Testing:
-- Hardware: Udoo Neo Extended with iMX6SoloX SoC
-- Tools: Verified with a logic analyzer
+Thanks and Regards,
+Manish
 
-Signed-off-by: Ronaldo Nunez <rnunez@baylibre.com>
----
- drivers/pwm/pwm-imx27.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
-index 3d34cdc4a3a5..c8b801fcb525 100644
---- a/drivers/pwm/pwm-imx27.c
-+++ b/drivers/pwm/pwm-imx27.c
-@@ -200,7 +200,7 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_chip *chip,
- static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 			   const struct pwm_state *state)
- {
--	unsigned long period_cycles, duty_cycles, prescale, period_us, tmp;
-+	unsigned long period_cycles, duty_cycles, prescale, period_us;
- 	struct pwm_imx27_chip *imx = to_pwm_imx27_chip(chip);
- 	unsigned long long c;
- 	unsigned long long clkrate;
-@@ -208,6 +208,7 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	int val;
- 	int ret;
- 	u32 cr;
-+	u64 tmp;
- 
- 	clkrate = clk_get_rate(imx->clks[PWM_IMX27_PER].clk);
- 	c = clkrate * state->period;
-@@ -249,6 +250,11 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	val = readl(imx->mmio_base + MX3_PWMPR);
- 	val = val >= MX3_PWMPR_MAX ? MX3_PWMPR_MAX : val;
- 	cr = readl(imx->mmio_base + MX3_PWMCR);
-+
-+	/*
-+	 * tmp stores period in nanoseconds. Result fits in u64 since
-+	 * val <= 0xfffe and prescaler in [1, 0x1000].
-+	 */
- 	tmp = NSEC_PER_SEC * (u64)(val + 2) * MX3_PWMCR_PRESCALER_GET(cr);
- 	tmp = DIV_ROUND_UP_ULL(tmp, clkrate);
- 	period_us = DIV_ROUND_UP_ULL(tmp, 1000);
--- 
-2.53.0
-
+On Sun, May 17, 2026 at 8:35=E2=80=AFPM Uwe Kleine-K=C3=B6nig <ukleinek@ker=
+nel.org> wrote:
+>
+> Hello,
+>
+> On Sat, May 09, 2026 at 07:39:28PM +0000, Manish Baing wrote:
+> > The st,stmpe-pwm binding is already covered by the MFD schema in
+> > Documentation/devicetree/bindings/mfd/st,stmpe.yaml. However, the
+> > PWM subnode was missing a 'required' properties block. This allowed
+> > Device Tree nodes to pass validation even if the 'compatible'
+> > string was omitted. This omission could lead to probe failures
+> > at runtime.
+> >
+> > Fix the schema by adding the missing 'required' block and
+> > remove the obsolete and redundant text binding file.
+> >
+> > Signed-off-by: Manish Baing <manishbaing2789@gmail.com>
+> > ---
+> > Changes in v3:
+> > - Added 'required' properties to the pwm subnode in st,stmpe.yaml
+> >   to close a validation gap identified by the Sashiko.
+> > - Updated commit message and description to reflect MFD subsystem chang=
+es.
+> >
+> > Changes in v2:
+> >  - Droppped the TXT file instead of converting to YAML, as the
+> >    functionality is already covered by st,stmpe.yaml.
+> >
+> >  .../devicetree/bindings/mfd/st,stmpe.yaml      |  4 ++++
+> >  .../devicetree/bindings/pwm/st,stmpe-pwm.txt   | 18 ------------------
+>
+> If the patch was split into two, each touching just one of the files,
+> there would be no need for merge coordination. Also logically it's two
+> patches. Would you mind splitting?
+>
+> Best regards
+> Uwe
 
