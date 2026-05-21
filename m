@@ -1,319 +1,154 @@
-Return-Path: <linux-pwm+bounces-9039-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9042-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id mIdhBp6xDmopBQYAu9opvQ
-	(envelope-from <linux-pwm+bounces-9039-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Thu, 21 May 2026 09:17:50 +0200
+	id kAAdOSrDDmqiCAYAu9opvQ
+	(envelope-from <linux-pwm+bounces-9042-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Thu, 21 May 2026 10:32:42 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6C1F959FF9D
-	for <lists+linux-pwm@lfdr.de>; Thu, 21 May 2026 09:17:49 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 82D455A115A
+	for <lists+linux-pwm@lfdr.de>; Thu, 21 May 2026 10:32:41 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id F19553087CD1
-	for <lists+linux-pwm@lfdr.de>; Thu, 21 May 2026 07:15:05 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id EAD7A3021588
+	for <lists+linux-pwm@lfdr.de>; Thu, 21 May 2026 08:27:08 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id D41CA384CDD;
-	Thu, 21 May 2026 07:15:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4E8BC359A6B;
+	Thu, 21 May 2026 08:27:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o3BFOKAu"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gDf6J9CW"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DFDA30677D;
-	Thu, 21 May 2026 07:15:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26C4632AAB5;
+	Thu, 21 May 2026 08:27:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779347705; cv=none; b=IgZMBMjbRDhUc4fRkSFwxjCAEm2zhugvCYUD1a0u0iFI8MPYd2oBn03Ezfx+pTS/bAyUg5DvWGXWiRmjOxNzGZcOvA2OdAtzXIDUPyRI9s6m5mRdjHe1ylaFPogZ9wyEEqNxvLy22Vlc71zylo0FVOyYeIpiSat6aSqbSdHdkzE=
+	t=1779352028; cv=none; b=TrRdSlQpa451P2TTwaXyyGzI2MMOO3BCVvlOJd6CvfkEItucN803nNdV5sLSh1TtbrN11y1s0SqW9dgooUSOq8LhIwOYXZhdjlZqvKts5vROoAsuTSyqe2AgDVV5CihvYUqE/V2MBdzkVjsoK15jYOXpOFoo18X3s3kzH9xJp1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779347705; c=relaxed/simple;
-	bh=0tuatrgSZLxX6JuH2l3AHqLUVM9jp7j6ZkklyfphM9E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=s7wZ7XdRbRPexpIqgKU3z5O2y+Y8+k/X30RGD8KRLAvY9rCTokCcyMS0EBajcQhkBI+GLwRVO03G6pvwAmiBQ5Wbi5Dpp7WwsU8Q2XX6TgbVNIY/NTx6JVqC/IHuJ6yYUNm5f6t9CPyEMBi3KR8LQ5ca2Fis9wMgz/3LyoaJJ14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o3BFOKAu; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4D001F000E9;
-	Thu, 21 May 2026 07:15:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779347704;
-	bh=m3uRx8eDhutExABFhJL6iQpic3ktHG4D5BXwjOzXRS4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To;
-	b=o3BFOKAu5B4V2E/Ja6+JPG0nWpnltWUqD+kzAnJkgu2vDmBLwvLQGQNqMzEo3/rm6
-	 OQx/SIzzGxyLDleDg0SvXISSefgQXlI6IEY+ObWQd3R8BZ9tI5c0dDoxOVNWIXb2e8
-	 FRl7KkBtNq2jExfztmsjdp5gB+fBVO11JFD8yVK9+CDAeKD5oxk9hdZtTNpzcXW2iT
-	 VszOJH8wvx1Ck2ln3gdtB9niifdnusWb8oESmOAKlS4wgBfKfDrTpARd4CMwzBVpbZ
-	 UcMWLYxv3Zbko3N6/esHUgJFrV0DN8MeUJG9VW14Hn2SdtxGgpxp7Tca+6dzeyKS6A
-	 aZZ+yCIM8dUFQ==
-Message-ID: <50516d7b-4732-4354-a79d-40732592cb75@kernel.org>
-Date: Thu, 21 May 2026 09:14:59 +0200
+	s=arc-20240116; t=1779352028; c=relaxed/simple;
+	bh=bzdk7Kr97M8ZTKkR73nEt8S7smKlwLk3jyxCaislBCE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=NIV+y5cBAus/EVnF9AoZUrsR52hiok4KDdYY/5WM+oJtgmn6iv60oNuQi+N/fLVoeEUCchzCOR0Bw4oNACjiF8guYcnyFlbCnU5yFA7ndRkfNawb4D6V9H5tObBcDc7ApyB3FExCUR+7dzdlnJtXFkFTUAmqykQw899fC+WzmGQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gDf6J9CW; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPS id AC2C5C2BCB4;
+	Thu, 21 May 2026 08:27:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1779352027;
+	bh=bzdk7Kr97M8ZTKkR73nEt8S7smKlwLk3jyxCaislBCE=;
+	h=From:Subject:Date:To:Cc:Reply-To:From;
+	b=gDf6J9CWA0Jkj+sVyKVjYft0qdrfcuAu3LQz1WoiH+hv0NLkaIZ2ATVwNpmU97ioz
+	 0ykkbd4X4S1LvMXMliPzlR/X14Zr+i6PJcnG1/whPEFaw/e7mxFfdo4gwiCupEfN3H
+	 NIHycvMdX6bfrvnknGywZ4OAKDyLRPJ/+i+oztVtQluhAa+A9miJsj+qLzpcehTaze
+	 8kIxP6UET+zM7aP/LRUPtTGoFKsSwNFdn0l/T1JWvSXjMTu6ozAJjX27+78IQjT/8s
+	 W1hIfRQLsjgSn05fJd+BZ8GWrh9i6Y3rbnSW+X1mAvCseKQcUt1V3X3FyFhrd32JT+
+	 BBX/2nkVR32mg==
+Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE88CD5BAC;
+	Thu, 21 May 2026 08:27:07 +0000 (UTC)
+From: Xianwei Zhao via B4 Relay <devnull+xianwei.zhao.amlogic.com@kernel.org>
+Subject: [PATCH v3 0/2] Add PWM support Amlogic S7 S7D S6
+Date: Thu, 21 May 2026 08:26:57 +0000
+Message-Id: <20260521-s6-s7-pwm-v3-0-57b073fbafef@amlogic.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v6 1/2] dt-bindings: pwm: dwc: add optional reset
-To: Xuyang Dong <dongxuyang@eswincomputing.com>
-Cc: ukleinek@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
- conor+dt@kernel.org, ben-linux@fluff.org, ben.dooks@codethink.co.uk,
- p.zabel@pengutronix.de, linux-pwm@vger.kernel.org,
- devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
- ningyu@eswincomputing.com, linmin@eswincomputing.com,
- xuxiang@eswincomputing.com, wangguosheng@eswincomputing.com,
- pinkesh.vaghela@einfochips.com
-References: <20260424094529.1691-1-dongxuyang@eswincomputing.com>
- <20260424095435.1721-1-dongxuyang@eswincomputing.com>
- <ee58a5d6-9268-445c-a270-1f4a49b49c6e@kernel.org>
- <622e18f1.5bb3.19dd36d0c40.Coremail.dongxuyang@eswincomputing.com>
- <7bd6129a-dd37-48e8-a54c-cc149a2b84a2@kernel.org>
- <1ac7fae4.5c66.19dd892ec4d.Coremail.dongxuyang@eswincomputing.com>
- <b3a1b5ba-c381-407f-9118-aac7217138af@kernel.org>
- <f4f7edf.6067.19e15df803f.Coremail.dongxuyang@eswincomputing.com>
- <1d1a21a6-720d-4e8d-9798-27f8cc593403@kernel.org>
- <2e3c6632.66d0.19e493f4f19.Coremail.dongxuyang@eswincomputing.com>
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Content-Language: en-US
-Autocrypt: addr=krzk@kernel.org; keydata=
- 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 a/A=
-In-Reply-To: <2e3c6632.66d0.19e493f4f19.Coremail.dongxuyang@eswincomputing.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANHBDmoC/1WMzQ6CMBAGX4X07Jqy2B88+R7GA5QCmwglrakaw
+ rtbSIx4nN1vZmbBerKBnbOZeRspkBsTFIeMmb4aOwvUJGbIUfICBQQJQcH0HAB1LoWutVaFZGk
+ /edvSa2tdb4l7Cg/n31s65uv1W5G7SsyBg1QWW4V1qWtzqYa768gcjRvY2on4c08c9y6urlCNs
+ elTCvnvLsvyARIbnMHgAAAA
+X-Change-ID: 20260325-s6-s7-pwm-281658b88736
+To: =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Heiner Kallweit <hkallweit1@gmail.com>, 
+ Neil Armstrong <neil.armstrong@linaro.org>, 
+ Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, 
+ Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
+ linux-amlogic@lists.infradead.org, Xianwei Zhao <xianwei.zhao@amlogic.com>, 
+ Junyi Zhao <junyi.zhao@amlogic.com>, 
+ Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+X-Mailer: b4 0.14.3
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1779352023; l=1053;
+ i=xianwei.zhao@amlogic.com; s=20251216; h=from:subject:message-id;
+ bh=bzdk7Kr97M8ZTKkR73nEt8S7smKlwLk3jyxCaislBCE=;
+ b=fQiZzM/Lh8PPnpiLD5LGzPb/OkLEGlqImpKBfEDcs3FUg3JubOsnLumaApJU5vjcr4iZI7XYT
+ stuhJIZ/1xGCaD7/XckedZzIBGzrxZzihsUTqgTQOjCd/oOqTvvpAOr
+X-Developer-Key: i=xianwei.zhao@amlogic.com; a=ed25519;
+ pk=dWwxtWCxC6FHRurOmxEtr34SuBYU+WJowV/ZmRJ7H+k=
+X-Endpoint-Received: by B4 Relay for xianwei.zhao@amlogic.com/20251216 with
+ auth_id=578
+X-Original-From: Xianwei Zhao <xianwei.zhao@amlogic.com>
+Reply-To: xianwei.zhao@amlogic.com
 X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20201202];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9039-lists,linux-pwm=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-9042-lists,linux-pwm=lfdr.de,xianwei.zhao.amlogic.com];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	FROM_HAS_DN(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_TO(0.00)[kernel.org,gmail.com,linaro.org,baylibre.com,googlemail.com];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,3.7.107.208:email]
-X-Rspamd-Queue-Id: 6C1F959FF9D
+	RCPT_COUNT_TWELVE(0.00)[17];
+	FROM_HAS_DN(0.00)[];
+	REPLYTO_DOM_NEQ_TO_DOM(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[devnull@kernel.org,linux-pwm@vger.kernel.org];
+	REPLYTO_DOM_NEQ_FROM_DOM(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	HAS_REPLYTO(0.00)[xianwei.zhao@amlogic.com];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[amlogic.com:replyto,amlogic.com:mid,amlogic.com:email,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 82D455A115A
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On 21/05/2026 08:35, Xuyang Dong wrote:
->>
->>>>>>>>> +allOf:
->>>>>>>>> +  - $ref: pwm.yaml#
->>>>>>>>> +
->>>>>>>>> +  - if:
->>>>>>>>> +      properties:
->>>>>>>>> +        compatible:
->>>>>>>>> +          contains:
->>>>>>>>> +            const: eswin,eic7700-pwm
->>>>>>>>
->>>>>>>> Same problem as v3 which I commented. I do not understand why your new
->>>>>>>> device has also 1 reset.
->>>>>>>>
->>>>>>>> Your commit msg MUST explain why 1 reset is valid.
->>>>>>>>
->>>>>>>
->>>>>>> Hi Krzysztof,
->>>>>>>
->>>>>>> Although the PWM IP supports two clock domains, each requiring a reset, 
->>>>>>> the EIC7700 implementation uses the same clock domain for both clock 
->>>>>>> signals. Therefore, the eic7700-pwm only supports one reset.
->>>>>>>
->>>>>>
->>>>>> If we speak about eic7700, explain why it has two resets now, according
->>>>>> to schema, even though you say it has not.
->>>>>>
->>>>>> But I was speaking about dw-apb-timers-pwm, which has one reset as well!
->>>>>> Why you are not having proper constraints? Please read writing bindings
->>>>>> document.
->>>>>>
->>>>>
->>>>> Hi Krzysztof,
->>>>>
->>>>> Let me clarify the reset signals.
->>>>>   - snps,dw-apb-timers-pwm2: IP spec has 2 optional reset signals (one per
->>>>> clock domain), SoC vendor decides whether to wire them — so maxItems: 2, 
->>>>> optional in required.
->>>>
->>>> Two reset signals but what is exactly optional? Each of them? Only the
->>>> first? Binding does not allow the first to be optional.
->>>>
->>>
->>> Hi Krzysztof,
->>>
->>> Thank you for the review. 
->>>
->>> For the generic snps,dw-apb-timers-pwm2 binding, both reset signals 
->>> are now fully optional by not including resets in the required list.
->>>
->>> When a single optional reset signal is used, the interface bus reset 
->>> (index 0) is used by default.
->>>
->>> Keep the YAML as follows:
->>> +  resets:
->>> +    minItems: 1
->>> +    items:
->>> +      - description: Interface bus reset
->>> +      - description: PWM timer logic reset
->>>
->>> Add the following description to the commit message:
->>
->> We speak about hardware, not binding. I asked, why your new device has
->> only one reset.
->>
-> 
-> Hi Krzysztof,
-> 
-> Thank you for the detailed review.
-> 
-> I don't quite understand the meaning of your sentence: "We speak about 
-> hardware, not binding. I asked, why your new device has only one reset."
-> If you mean that the commit message in dt-bindings does not accurately 
-> describe why the EIC7700 has only one reset, I have pasted below the 
-> complete commit message that will be included in the next v7 version.
-> 
-> Does this commit message address your question?
-> 
-> The DesignWare PWM includes separate reset signals dedicated to each clock
-> domain:
-> The presetn signal resets logic in pclk domain.
-> The timer_N_resetn signal resets logic in the timer_N_clk domain.
-> The resets are active-low.
-> 
-> EIC7700 uses DesignWare IP for PWM controllers. Add ESWIN EIC7700 support
-> in snps,dw-apb-timers-pwm2.yaml.
-> EIC7700 physically ties presetn signal and timer_N_resetn signal to one reset 
-> — so exactly 1, required.
+Add bindings and driver support Amlogic S7/S7D/S6 SoCs.
 
-Your binding says that EIC7700 has one or two resets. Here you say
-EXACTLY one, so why do you say in the schema one or two? That was the
-question.
+Signed-off-by: Xianwei Zhao <xianwei.zhao@amlogic.com>
+---
+Changes in v3:
+- Use npwm instead of single_pwm in priv_data and format adjustments.
+- Link to v2: https://lore.kernel.org/r/20260402-s6-s7-pwm-v2-0-657dce040956@amlogic.com
 
-You need to make your binding strict - see writing-bindings and
-writing-schema.
+Changes in v2:
+- Simpler s7 clock desc, and drop the example in bindings.
+- Make minor changes to probe based on Martin's suggestion.
+- Link to v1: https://lore.kernel.org/r/20260326-s6-s7-pwm-v1-0-67e2f72b98bc@amlogic.com
 
-Or any other example!
+---
+Junyi Zhao (1):
+      dt-bindings: pwm: amlogic: Add new bindings for S6 S7 S7D
 
-> 
->>>
->>> Whether each signal is wired on a given SoC is a board integration 
->>> decision, so the resets property is optional for snps,dw-apb-timers-pwm2. 
->>> When present, up to two handles may be supplied: the bus reset is always 
->>> at index 0 and the timer reset at index 1.
->>>
->>>>>   - eswin,eic7700-pwm: SoC physically ties both signals to one reset — so
->>>>> exactly 1, required.
->>>>
->>>> Then two would not be right and you need to restrict that.
->>>>
->>>
->>> For the specific eswin,eic7700-pwm binding, the reset signal is required 
->>> and fixed to one via conditional schema (if:then:), with maxItems: 1 
->>> and resets added to required. And add an example for eswin,eic7700-pwm.
->>> The changes are as follows:
->>>
->>> +allOf:
->>> +  - $ref: pwm.yaml#
->>> +
->>> +  - if:
->>> +      properties:
->>> +        compatible:
->>> +          contains:
->>> +            const: eswin,eic7700-pwm
->>> +    then:
->>> +      properties:
->>> +        resets:
->>> +          maxItems: 1
->>> +      required:
->>> +        - resets
->>> +
->>>
->>> +  - |
->>> +    pwm@50818000 {
->>> +      compatible = "eswin,eic7700-pwm";
->>> +      reg = <0x50818000 0x4000>;
->>> +      #pwm-cells = <3>;
->>> +      clocks = <&bus>, <&timer>;
->>> +      clock-names = "bus", "timer";
->>> +      resets = <&reset>;
->>> +    };
->>>
->>> Then change the binding's subject from "dt-bindings: pwm: dwc: add optional 
->>> reset" to "dt-bindings: pwm: dwc: add eswin,eic7700-pwm compatible and resets".
->>>
->>> Do these changes look acceptable to you?
->>
->> So two resets or one reset? I am completely confused what you are
->> replying to.
->>
->> Please read writing bindings document.
+Xianwei Zhao (1):
+      pwm: meson: Add support for Amlogic S7
 
-DID YOU FINALLY READ IT?
-
->>
-> 
-> I think the "resets" in the subject is ambiguous. It could mislead people
-> into thinking that the EIC7700 has multiple reset signals.
-> I think the subject should be changed to 
-> "dt-bindings: pwm: dwc: Add eswin compatible and resets property".
-
-I finished with responses here.
+ .../devicetree/bindings/pwm/pwm-amlogic.yaml       | 19 ++++++++++
+ drivers/pwm/pwm-meson.c                            | 41 ++++++++++++++++++++--
+ 2 files changed, 57 insertions(+), 3 deletions(-)
+---
+base-commit: b1385d0c7b7c633e55adcf4a7c1ef46c43a84a4a
+change-id: 20260325-s6-s7-pwm-281658b88736
 
 Best regards,
-Krzysztof
+-- 
+Xianwei Zhao <xianwei.zhao@amlogic.com>
+
+
 
