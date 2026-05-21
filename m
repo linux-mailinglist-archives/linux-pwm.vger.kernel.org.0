@@ -1,185 +1,242 @@
-Return-Path: <linux-pwm+bounces-9045-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9046-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id gOabIHU0D2qSHgYAu9opvQ
-	(envelope-from <linux-pwm+bounces-9045-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Thu, 21 May 2026 18:36:05 +0200
+	id kESPMuFVD2oFJQYAu9opvQ
+	(envelope-from <linux-pwm+bounces-9046-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Thu, 21 May 2026 20:58:41 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 01DB55A9655
-	for <lists+linux-pwm@lfdr.de>; Thu, 21 May 2026 18:36:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 2DD045AB4BF
+	for <lists+linux-pwm@lfdr.de>; Thu, 21 May 2026 20:58:40 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id AFBCB30F359B
-	for <lists+linux-pwm@lfdr.de>; Thu, 21 May 2026 15:38:09 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 38D6130329A0
+	for <lists+linux-pwm@lfdr.de>; Thu, 21 May 2026 18:57:22 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5223930B508;
-	Thu, 21 May 2026 15:37:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E95213002B6;
+	Thu, 21 May 2026 18:57:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=flowmailer.net header.i=@flowmailer.net header.b="MMFq36yT";
-	dkim=pass (2048-bit key) header.d=siemens-energy.com header.i=schuster.simon@siemens-energy.com header.b="Zq3CXr0l"
+	dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b="TR5O7iXO"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mta-64-141.flowmailer.net (mta-64-141.flowmailer.net [185.136.64.141])
+Received: from DB3PR0202CU003.outbound.protection.outlook.com (mail-northeuropeazon11010029.outbound.protection.outlook.com [52.101.84.29])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF2B0322DAF
-	for <linux-pwm@vger.kernel.org>; Thu, 21 May 2026 15:37:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.136.64.141
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779377863; cv=none; b=JCNhbGkBl1ZgVbvqY3fDttZIe7IFaERqPjMwNhF1nU394g2f/y4vf0Y0ws7h4ZeOKRDjxi9TSOAM5GBodvqS4WeMjMwAiEGMAERFCBzxM2NCLTvCKYOgyszOGRsd5H2hCYnwdEa6jwpdwIOHm+0EU9KQkoxolEvcHuKqiyaJuJI=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779377863; c=relaxed/simple;
-	bh=ueEF+bxWvWqR586sT6h/9OE/noXhk1FsLD5ozFIo48g=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ca8Tl0GLP+3NlMoxBMmR+pEZECvlo3cTKjxLg6lyhpZh6obrUOCGULAOm70chPFF6dteJIS7zBUt+w3edSSgRTnYIFHYZlIMUM+y5wxQeoGtOlxuvduQT3cH05rgRbTGJDD/qqRW1Tv2+pSrKf4X0zXVMq8HgL0ys6Rrb06vPd4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens-energy.com; spf=pass smtp.mailfrom=errorhandling.siemens-energy.com; dkim=pass (1024-bit key) header.d=flowmailer.net header.i=@flowmailer.net header.b=MMFq36yT; dkim=pass (2048-bit key) header.d=siemens-energy.com header.i=schuster.simon@siemens-energy.com header.b=Zq3CXr0l; arc=none smtp.client-ip=185.136.64.141
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=siemens-energy.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=errorhandling.siemens-energy.com
-Received: by mta-64-141.flowmailer.net with ESMTPSA id 20260521153732b08cd3f59a0019fdd1
-        for <linux-pwm@vger.kernel.org>;
-        Thu, 21 May 2026 17:37:32 +0200
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=s1;
- d=flowmailer.net;
- h=from:from:sender:to:to:cc:cc:subject:subject:content-type:content-type:content-transfer-encoding:References:In-Reply-To:Date:Message-ID:MIME-Version;
- bh=KcRzYfxPkdiV7UzaW+6lIfDEOBCRNUcUcG27X2U1VSs=;
- b=MMFq36yTf/DJOdkiWD8dxyVJTeBb2CpUxQWl6ikCBdoeyzPO1YF1TlVatLLSDsvGHWcQd5
- VDsmO4GbpHypEfkjO53Qz6kghqkYW63SBOu0Z3QcrtuSqWyhCWSOJvxnT/UwU+hUbYuuGM0J
- HuZSr59c5et2+K6wbsqMmvXOzxMIc=;
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; s=fm3;
- d=siemens-energy.com; i=schuster.simon@siemens-energy.com;
- h=from:from:sender:to:to:cc:cc:subject:subject:content-type:content-type:content-transfer-encoding:References:In-Reply-To:Date:Message-ID:MIME-Version;
- bh=KcRzYfxPkdiV7UzaW+6lIfDEOBCRNUcUcG27X2U1VSs=;
- b=Zq3CXr0liSNgT0BCELoEs6XA0YM8cHIjZYr0stylqb6wFZbahGV2hbEmOBF/1TqoTWIGML
- pQmKEA14s3UI+M6MccDXkCrApiCPspbcb8X1z4i0qqkc0XKsEuZWyaX++RCNyx2Oho4OkebH
- CljyjSOBruD/mCsSnEVDpu/bRn9huDA1sfKAPLG4TnjoGEs76ifH2dvqbyplGH4LM/bN//MJ
- TbAfvH9UHgJigDJ9qujRe7uPZe7uulWgnP1HXFpgW6KlqYd6iasg0kXPD7frFGW+6jdQlaQd
- pc5Ftr3JZPBE4ZdvXY4aK24gQwmJHg5mcdt41zeDIsJIor2N0FKdzstA==;
-Date: Thu, 21 May 2026 17:37:29 +0200
-From: Simon Schuster <schuster.simon@siemens-energy.com>
-To: Arnd Bergmann <arnd@arndb.de>, Dinh Nguyen <dinguyen@kernel.org>,
-	Wolfram Sang <wsa+renesas@sang-engineering.com>,
-	Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Cc: Ethan Nelson-Moore <enelsonmoore@gmail.com>, Peter Zijlstra
- <peterz@infradead.org>, linux-doc@vger.kernel.org,
- devicetree@vger.kernel.org, workflows@vger.kernel.org, Linux-Arch
- <linux-arch@vger.kernel.org>, dmaengine@vger.kernel.org,
- linux-i2c@vger.kernel.org, linux-iio@vger.kernel.org, Netdev
- <netdev@vger.kernel.org>, linux-pci@vger.kernel.org,
- linux-pwm@vger.kernel.org, linux-hardening@vger.kernel.org,
- linux-kbuild@vger.kernel.org, "linux-csky@vger.kernel.org"
- <linux-csky@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Shuah Khan
- <skhan@linuxfoundation.org>, Rob Herring <robh@kernel.org>, Krzysztof
- Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, Daniel
- Lezcano <daniel.lezcano@kernel.org>, Thomas Gleixner <tglx@kernel.org>,
- Alex Shi <alexs@kernel.org>, Yanteng Si <si.yanteng@linux.dev>, Dongliang
- Mu <dzm91@hust.edu.cn>, Hu Haowen <2023002089@link.tyut.edu.cn>, Kees Cook
- <kees@kernel.org>, Oleg Nesterov <oleg@redhat.com>, Will Deacon
- <will@kernel.org>, "Aneesh Kumar K.V (Arm)" <aneesh.kumar@kernel.org>,
- Andrew Morton <akpm@linux-foundation.org>, Nicholas Piggin
- <npiggin@gmail.com>, Vinod Koul <vkoul@kernel.org>, Frank Li
- <Frank.Li@kernel.org>, Dave Penkler <dpenkler@gmail.com>, Andi Shyti
- <andi.shyti@kernel.org>, Jonathan Cameron <jic23@kernel.org>, David Lechner
- <dlechner@baylibre.com>, =?ISO-8859-1?Q?Nuno_S=E1?= <nuno.sa@analog.com>,
- Andy Shevchenko <andy@kernel.org>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S . Miller" <davem@davemloft.net>, Eric Dumazet
- <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
- <pabeni@redhat.com>, Lorenzo Pieralisi <lpieralisi@kernel.org>, Krzysztof
- WilczyDski <kwilczynski@kernel.org>, Andreas Oetken
- <andreas.oetken@siemens-energy.com>
-Subject: Re: [PATCH] nios2: remove the architecture
-Message-ID: <20260521153729.ig2xgvskkbg3nx47@dev-vm-schuster>
-References: <20260518042833.272221-1-enelsonmoore@gmail.com>
- <d40b1e80-37fc-4c88-9d7f-dae6458efe6c@app.fastmail.com>
- <20260518105735.GW3126523@noisy.programming.kicks-ass.net>
- <20260518172444.zyd47mcagrcwu7wt@dev-vm-schuster>
- <CADkSEUjhq6HSdg4ignzbuJiN5uXATsTdxFbRJ3BMxs5=WUWLDg@mail.gmail.com>
- <20260519103012.blot4bssgiqfer6p@dev-vm-schuster>
- <76af64fa-7820-4d92-8aa9-826c3bd812a1@app.fastmail.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 745593DCDA9;
+	Thu, 21 May 2026 18:57:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.84.29
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779389840; cv=fail; b=NRG3aNv+/cfdaZeYokrw2nCTfGDNI9e1hxtoscafQ/bckoTHj6f2BCJNqMpn7AgohR6wNPSClcn+QLzmk++q6ZP7Du60Lb9D67WMYvfTYQhaV+ryIruxLKfOU/NEjXbbVDZF/CMjIjypMmy+H5LMOJ21Z04ty5gVZdvdi9tkgzY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779389840; c=relaxed/simple;
+	bh=I6jv3ykflDW5yHqVBaabgkEBfSLB2Oxyp5n5rKX+6Qo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:Content-Type:
+	 Content-Disposition:In-Reply-To:MIME-Version; b=eHvxCzCzTucUs60LOCsj1Aw9WuVLtS7Hz0IidXiYEhEyzPlgQs0ohorUvbxIkomGlCRrbExid6ZjilEMj1eBZ/MNjXMfQZUemWBohHXREB5sgkglSvlpRJNsTlGX7zVcBwynPJc+fA09RUwPLEMp/GeBEkdztYEcBwj7aTnMPqk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com; spf=pass smtp.mailfrom=nxp.com; dkim=pass (2048-bit key) header.d=nxp.com header.i=@nxp.com header.b=TR5O7iXO; arc=fail smtp.client-ip=52.101.84.29
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=nxp.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=nxp.com
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=EYikIAkGcIWcuoKlPetK0aqZyiDtzb7jQG5o/KJkDDcywF20sPwghwBKmGOQozQlrlTyK67G0HcGVRf9Bfi1tJ7vEtPFyVP+I4Ibd9n07LVAP73IU170W5s/HvgaMKfbZJ5TmzYmg3SVz+APhq/yzqG5TPZk8oyHvgMkxMjrjK0g+q7V5ixp1YV81X4jOcz6WyRnlEoH/dAX0G8k10HE1vzostnXzXmO+LS+eej8yeyJa1U9CrlyuolW8mFgbTAlGrkqB2LvyypWw74AQXbbtSXYxeSXurvSRsze/n2e80wfK0WuBYXFz6diybsgmCeNu+p4Jn2CmBjHZzEhOBmsjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=hQPUvw1EVv3wMo+5XCqi3dBxzVExXxLWd6AksmEn/LY=;
+ b=g1GjVfTz2O5J1J/53/Nr3qGTpvRhL5LVdu6MmYwMAGGHPMPEU9uWKfCm/dvVMCf1XAEJV77vc5XEGiAg99Ppo66dpnyjjsiPrgPVhAjlqReWlQG81KVN+WeTwM/9yT2dmbSzdHUVps1qb6tF7EXU6ZrlR6dTZhh686NXllWmC7flcx7R3XsfDEy2qA3lNdLHrzAzh53sGE+3hvZA0C/nw+GwD3zouvAJSXVrDAHbsBgTYYk3Pgon0B47rgz/AQvHLV8tlqW7wLwuVD8WSB/jvsbFuEHY16//kjf7Dq9a16glWNdUlulvBTCfPXyCmSSUGf+yzPrT6kMhuK6pDunwHg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hQPUvw1EVv3wMo+5XCqi3dBxzVExXxLWd6AksmEn/LY=;
+ b=TR5O7iXO41Iig5fpd4aAwAnn7Ftjl74Mgz3TxQI5P2N68E9X/2icZIAXWX7sh2KoedOe4DkyIAZw8DKWrDpqzTmdotSPvI9l5ttthbYXY2Y73Pg+KoBy1jxcXSYurwPojjqJamiVGZ0rOk87yU+K+ntUyxV8KlQBXb8AY05tqQ1b21bKdoAw/cbSZNf2AFRN5QENExYibcxKPXSvKIstXzH1ru44qsQP9thb1LXJZJyx2CtCd4UpW/sOIIAnH9BSS4EOYYoJ5if6wEfEU1Sd3YpRZ4x3Sd2INyo05h2PDrGQWzq/ndv8U7k1EaKnlDL5zcIfDDmCyWUkNLdzXFrb5A==
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=nxp.com;
+Received: from DU0PR04MB9372.eurprd04.prod.outlook.com (2603:10a6:10:35b::7)
+ by DU6PR04MB11159.eurprd04.prod.outlook.com (2603:10a6:10:5c4::8) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.48.17; Thu, 21 May
+ 2026 18:57:15 +0000
+Received: from DU0PR04MB9372.eurprd04.prod.outlook.com
+ ([fe80::4f6:1e57:c3b9:62b4]) by DU0PR04MB9372.eurprd04.prod.outlook.com
+ ([fe80::4f6:1e57:c3b9:62b4%4]) with mapi id 15.21.0048.016; Thu, 21 May 2026
+ 18:57:15 +0000
+Date: Thu, 21 May 2026 14:56:48 -0400
+From: Frank Li <Frank.li@nxp.com>
+To: Ronaldo Nunez <rnunez@baylibre.com>
+Cc: linux-pwm@vger.kernel.org,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>, imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pwm: imx27: Fix variable truncation in .apply()
+Message-ID: <ag9VcFoodZjxUsBg@lizhi-Precision-Tower-5810>
+References: <20260521000054.4790-1-rnunez@baylibre.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260521000054.4790-1-rnunez@baylibre.com>
+X-ClientProxiedBy: PH7P221CA0042.NAMP221.PROD.OUTLOOK.COM
+ (2603:10b6:510:33c::10) To PA4PR04MB9366.eurprd04.prod.outlook.com
+ (2603:10a6:102:2a9::8)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <76af64fa-7820-4d92-8aa9-826c3bd812a1@app.fastmail.com>
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: DU0PR04MB9372:EE_|DU6PR04MB11159:EE_
+X-MS-Office365-Filtering-Correlation-Id: 2b9681d3-bc80-436d-6430-08deb76abcc6
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|52116014|366016|1800799024|19092799006|38350700014|6133799003|11063799006|18002099003|22082099003|56012099003;
+X-Microsoft-Antispam-Message-Info:
+	YeDz4+YaGBvLHdNkJEiBJwbo+pRY+1G+YYQNadIG966tRgFseKkc+H0oOyP8liZTxqIZ9mchDgC3ttNJQcpDDRhO4wwBkwA++repejM+CAfzON5ZQOhaVnBJknGfzuuzOqjHtyoDiN4HQXG0qrdukklAPKx0r3hR+9RImACyjjHuSmcujOqRYj5pnfAn0sXL7ch9Tw+ijFfwf5/Hbr08Crlf+ES3tEJwQzJDrsoODaEhwONIfJbu1JogH+3TWDR0J5jNrH3KIuxy2eOyosG5iicES1V3WUlHvbfbU03m8Ivc6JFg7oXNlXWg4cKapNPTxDT25U6xYWrkqWmbumFaNnuny6uAMfUtkOC+iXf1icMP5HFDTkewXcy4RQ/MUlCw+emmZaT6gG/0YvMI9+0ZYrZ4L9L5MMcaWmEfOtpbUM5ouGoFI6k6tLWFia8Efs2u3pjW4J/uW8Ji6DE0x0+LY/qzgkBy0TFdhZKOPJfcNfkGfUoLOVuEndxjySUjidTqFa8lkHw+fEIcCZ1MR6kzlUaxVAuwj62mnolgtbdXafvTKOQasz/xLuOIdi/oZREMfgJKDVHYJLHq+vqEYqYm2vQW96UaQ/fq6Zvp0JH9nAnhZohegX5FELeQtLIOEYHqJI/uDffFwmZ3JDpTlE9PcN+JYBjZ5zrv98UDI/zZx99BO+py5A097iZQXFs+l9a73oLFdnFHP5Bivdm64H3+fnxm+hkESQQ5DAHHu5+rnlR/ASBQuQBIYR9CVvvymbve
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DU0PR04MB9372.eurprd04.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(52116014)(366016)(1800799024)(19092799006)(38350700014)(6133799003)(11063799006)(18002099003)(22082099003)(56012099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?us-ascii?Q?+8F1D83dJSfbtYS5YfZpCxeWmjfx52zXwxhyq2yUgDU2UqKiABouWlRIRzdy?=
+ =?us-ascii?Q?uEM53lWxHmh7CNaB5fZ/idZGHxIgV+DhrE43C/kRZrGL00Nd6SiOBILdxMhd?=
+ =?us-ascii?Q?o9xeU18jlgvyCuNs7B/LpGJCYXi+GzRHfqNZxJnRxp33D5yF/4ir1IAxVj9o?=
+ =?us-ascii?Q?GPmvFw7BVnkM3zstueZ7Am+vzuN2KdgoJnL+VuVVtolWdL5yPwFH1BbQ98hR?=
+ =?us-ascii?Q?bGgILVNJKudbufFPuVeFxD0urZke8HWzNKVGWTPoTwqx3afLaQdofcXUX+hl?=
+ =?us-ascii?Q?wJmkWSxsFww06my59XI6n+mmiGCZZ5jaqkMn22V9Ye/CetWZ/THH8DK4sDka?=
+ =?us-ascii?Q?88/k1Lq3YRNcyvGwWy+oB77mTKDTpy75wJtryke5qhqfpcSwTTu5hMmm5Q3J?=
+ =?us-ascii?Q?6o53hbiD2LaxlrXZkLokGsjmyA1ee7gm8lJ/KJrE3nYdnvB1d7GmZnHd1lUJ?=
+ =?us-ascii?Q?LCy8fmu2wjrrzpszWJB4p59kogtV/8AMyxYzvQwlbTdcPbK0pJoKB0rm73Qq?=
+ =?us-ascii?Q?tYmzmaD/4mbqOvn4cWR8I3qxcDYGUEyTud4plDFJV2vx77ecY3ueh+0bZHrd?=
+ =?us-ascii?Q?XI/pMo2RmRkpPLndHSJgqYCe3tK5xBiS6PZcaC3ZCiVM1AStIb4eNxKomnqB?=
+ =?us-ascii?Q?BCVaKVX5oPJtgxUrj/zBYhh7kKiOkhVQiraFCgki1VOz/54Aa+bdTAW7ycV1?=
+ =?us-ascii?Q?l1sJ0fzqaLfhMeX4r1C4nePk7ZNF7xGpMAKb+ikhwUH/zRehOJAyggkIW380?=
+ =?us-ascii?Q?jWVRQPRwo4ZORsfvyeyz52WeGDkJ9EZ8n73VrHR/66glBviaWkY96hV9gJx0?=
+ =?us-ascii?Q?iPRNKZ2lXsVwdW7Dso2Cheqik5jVmdlr6EoQZGy2nm60gEEvEA/4LxhsTV/m?=
+ =?us-ascii?Q?D/638gBNcg0wavr6z9RmfWPceRkVOfck8p8zCjqJPJLHIpjhNy3tCBf9xIYW?=
+ =?us-ascii?Q?ZOSN+gXG/hyexnn/hMVchuuDdeN+IgY+l5hIx4MH1FXSyJeJijtgtUuPKQno?=
+ =?us-ascii?Q?8J2bLTU1BSxSpecnPCgLDOu0TdpJoUjm0TIB4vy6mDTjBPckglasXO3PaLWH?=
+ =?us-ascii?Q?sPHivYfDqbq7+6UzECm2UHL/gbCLKNtdREhU0QdeluYdPTtIGy3svTBb2gZd?=
+ =?us-ascii?Q?FeYHXBql/TrhD6scSy2YTr3ysOhghmaf+Vh0aWyvjI/0jgrhWjf+ekJhhFgL?=
+ =?us-ascii?Q?9O4Rwe/8MYMAJl3OiRe93YFveGMZhm5ejTy82CwbGw4gKLTLQ3rIZhBbAkpz?=
+ =?us-ascii?Q?VuYN7dEpRyOIzO2EuNDcr7PfftvpH+W3niYIR+qQdGNj5Y8dloYy5wRxrumr?=
+ =?us-ascii?Q?wo7KubA0glVyC7tuZqXQOdScZW69ovkKcqFCJ6bUqQlJuMpQl0I/eSqylgLZ?=
+ =?us-ascii?Q?6pyf3pF66sPMYP7Vixi9bymcHp3lMbMXSKxlZOTx4Lgj5E6tM0/fC7dw/g0n?=
+ =?us-ascii?Q?Q1t7rW7igw9Z3C68Pe0ugP8ZiEPGrPfl1kP79/rWbqufKfcfRQPNalWBAc75?=
+ =?us-ascii?Q?gZJ1xM6T42nmR8baGRu4qv0dmKYx2TFdlkchnOY4uEh3A3LZowMN4yZaO0k3?=
+ =?us-ascii?Q?FSwHNq0O8V8IgI11kGEyhLkfa/hyr0iWaHzdebnD4XQFm8GwU6BCd22Abf/w?=
+ =?us-ascii?Q?9QNOEAgNuOjYiYH4C3J/AVo/huxLDul+q1xE6IcEZEPbkUn6tSMEoq5yTUKm?=
+ =?us-ascii?Q?N7tHW8DlUwcRMnl9xKIrXaBZs3eZ5N8IBmzbEmeWpXb3aU8t?=
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 2b9681d3-bc80-436d-6430-08deb76abcc6
+X-MS-Exchange-CrossTenant-AuthSource: PA4PR04MB9366.eurprd04.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 21 May 2026 18:57:15.0967
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ydTcogGY7JNR6ZWYTb0zwZNy5LPSKV9uxGMf5UbVq6cHEh56dwzFIsBp0eG8HXqYoTyL+1P1r3B92QEWQvmQiQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DU6PR04MB11159
+X-Spamd-Result: default: False [0.34 / 15.00];
+	ARC_REJECT(1.00)[cv is fail on i=2];
 	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[siemens-energy.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[flowmailer.net:s=s1,siemens-energy.com:s=fm3];
+	DMARC_POLICY_ALLOW(-0.50)[nxp.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
+	R_DKIM_ALLOW(-0.20)[nxp.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9045-lists,linux-pwm=lfdr.de];
+	FREEMAIL_CC(0.00)[vger.kernel.org,kernel.org,pengutronix.de,gmail.com,lists.linux.dev,lists.infradead.org];
+	TAGGED_FROM(0.00)[bounces-9046-lists,linux-pwm=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FREEMAIL_TO(0.00)[arndb.de,kernel.org,sang-engineering.com,gmail.com];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[gmail.com,infradead.org,vger.kernel.org,lwn.net,linuxfoundation.org,kernel.org,linux.dev,hust.edu.cn,link.tyut.edu.cn,redhat.com,linux-foundation.org,baylibre.com,analog.com,lunn.ch,davemloft.net,google.com,siemens-energy.com];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[52];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[schuster.simon@siemens-energy.com,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[flowmailer.net:+,siemens-energy.com:+];
-	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-pwm,renesas,dt,netdev];
+	RCVD_TLS_LAST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[nxp.com:+];
 	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[Frank.li@nxp.com,linux-pwm@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	NEURAL_HAM(-0.00)[-1.000];
+	TAGGED_RCPT(0.00)[linux-pwm];
+	RCPT_COUNT_SEVEN(0.00)[9];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[flowmailer.net:dkim,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 01DB55A9655
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 2DD045AB4BF
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Hi Arnd, Dinh, Wolfram, and Miguel,
+On Wed, May 20, 2026 at 09:00:54PM -0300, Ronaldo Nunez wrote:
+> This patch fixes a variable truncation when calculating period in
 
-thank you for your explanations and encouragement; I've now sent my
-application for co-maintainership for arch/nios2 to you, Dinh.
+Remove "This Patch" just
 
-On Wed, May 20, 2026 at 09:06:33AM +0200, Arnd Bergmann wrote:
-> I think that is a reasonable target. We have a bunch of embedded
-> architectures that have a similarly small user base and I expect
-> that we will want to remove most of them at some point, as we did
-> for seven architectures in linux-4.17.
-> 
-> As long as there is a maintainer for nios2 and it's not actively
-> getting in the way of a specific treewide change, I don't see any
-> reason to remove this any earlier than the other ones.
-> 
-> Obviously at some point nios2 will have to get removed because
-> of the limit to gcc-14 or older, but that should not be a problem
-> for the next few LTS releases.
+Fix a variable 'tmp' truncation when calculating period in
 
-This all sounds quite reasonable, including the toolchain
-considerations. Thank you for the offer to keep it around a bit.
-If any issues arise with tree-wide changes I'd be happy to look into
-what can be done on the arch/nios2 side; now that the issues should
-reliably reach me via mail.
+> microseconds as part of the solution for the ERR051198 in .apply()
+> callback.
+>
+> The problem was identified when reducing the duty cycle through sysfs,
+> with enable set to 1. The condition to fix errata ERR051198 for period
+> smaller than 2us is always being met, due to a truncation on tmp,
+> variable from .apply() callback, caused by the multiplication of
+> NSEC_PER_SEC, PWMPR (period register) and the prescaler which can easily
+> overflow u32.
 
-> > Sure, I'd be glad to do so, but so far I refrained from it as I was a bit
-> > unsure about the netiquette (can I simply do so by self-proclamation? At
-> > least the git history seems to suggest so...).
-> 
-> Dinh already replied that he welcomes the help, and I also suggested
-> the same thing a year ago. As the only known user that has contributed
-> patches in a long time, you are obviously qualified.
-> 
-> Sending a patch for the MAINTAINERS file to Dinh is the first step,
-> once he has sent that upstream, you can (optionally) apply for
-> kernel.org account that would let you host a git tree on kernel.org
-> or have a tree that you both have access to.
+It'd better provide actual example value for PWMPR and prescaler when
+overflow happen.
 
-I've sent the patch, I'm sure we can work everything else out from
-there.
+> Declaring tmp as u64 makes it large enough to accommodate
+> larger multiplication results.
+>
+> Testing:
+> - Hardware: Udoo Neo Extended with iMX6SoloX SoC
+> - Tools: Verified with a logic analyzer
 
-Best regards,
-Simon
+needn't this part.
+
+Frank
+>
+> Signed-off-by: Ronaldo Nunez <rnunez@baylibre.com>
+> ---
+>  drivers/pwm/pwm-imx27.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
+> index 3d34cdc4a3a5..c8b801fcb525 100644
+> --- a/drivers/pwm/pwm-imx27.c
+> +++ b/drivers/pwm/pwm-imx27.c
+> @@ -200,7 +200,7 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_chip *chip,
+>  static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  			   const struct pwm_state *state)
+>  {
+> -	unsigned long period_cycles, duty_cycles, prescale, period_us, tmp;
+> +	unsigned long period_cycles, duty_cycles, prescale, period_us;
+>  	struct pwm_imx27_chip *imx = to_pwm_imx27_chip(chip);
+>  	unsigned long long c;
+>  	unsigned long long clkrate;
+> @@ -208,6 +208,7 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  	int val;
+>  	int ret;
+>  	u32 cr;
+> +	u64 tmp;
+>
+>  	clkrate = clk_get_rate(imx->clks[PWM_IMX27_PER].clk);
+>  	c = clkrate * state->period;
+> @@ -249,6 +250,11 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  	val = readl(imx->mmio_base + MX3_PWMPR);
+>  	val = val >= MX3_PWMPR_MAX ? MX3_PWMPR_MAX : val;
+>  	cr = readl(imx->mmio_base + MX3_PWMCR);
+> +
+> +	/*
+> +	 * tmp stores period in nanoseconds. Result fits in u64 since
+> +	 * val <= 0xfffe and prescaler in [1, 0x1000].
+> +	 */
+>  	tmp = NSEC_PER_SEC * (u64)(val + 2) * MX3_PWMCR_PRESCALER_GET(cr);
+>  	tmp = DIV_ROUND_UP_ULL(tmp, clkrate);
+>  	period_us = DIV_ROUND_UP_ULL(tmp, 1000);
+> --
+> 2.53.0
+>
 
