@@ -1,49 +1,49 @@
-Return-Path: <linux-pwm+bounces-9070-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9071-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id +MytMqqbD2qCNwYAu9opvQ
-	(envelope-from <linux-pwm+bounces-9070-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 May 2026 01:56:26 +0200
+	id uO4LJfmaD2r5NgYAu9opvQ
+	(envelope-from <linux-pwm+bounces-9071-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 May 2026 01:53:29 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 63B3C5AD24F
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 May 2026 01:56:25 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 0E65D5AD1D0
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 May 2026 01:53:28 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 46346309F65C
-	for <lists+linux-pwm@lfdr.de>; Thu, 21 May 2026 23:46:14 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 4B3AA30A502B
+	for <lists+linux-pwm@lfdr.de>; Thu, 21 May 2026 23:46:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7B58E3A48C8;
-	Thu, 21 May 2026 23:42:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 360DB3A63F7;
+	Thu, 21 May 2026 23:42:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T/AMtvU7"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kpJT7zq9"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7318B383312;
-	Thu, 21 May 2026 23:41:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEE8537CD44;
+	Thu, 21 May 2026 23:42:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779406924; cv=none; b=IVYKnCPyIIbHvHkk1cD4bpBGCsJUubDKxxXYOA88aZqh2cqx1rSGRCb1a9yZmTAxlA164KUsgPgxLtY6EmIfmtRWyN1FDsCxG4zwhI0GH9Ej0/NASm2VxyzQQnF+XL8m5LUrI4kVpFGqpvSPWpL3m5mft1LbKwe0cz8PLArsRnQ=
+	t=1779406932; cv=none; b=da0XiiOmL6Hhyh9nWsUyvsaHS68SVS4uUdiYgIZ/JGOscuIdnlKcGDFJIPN2UOX6/tVPNl6QGWAF0Ve+rZeDIa8NV9Qsx+WG6T7rGj/5jyuB4ZP55WSVdIupWiCZnl3T6DAJDZzKzjGObz6CwHacbS6k0bzReICAAhcShBd10+I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779406924; c=relaxed/simple;
-	bh=URv7kDky/fzF48yyZX8bZFxKK2Zco6+d0cntaCwf/Ds=;
+	s=arc-20240116; t=1779406932; c=relaxed/simple;
+	bh=CuQ7qIU+BHd6reTZImgtyilW90DC+YtbmxWxQx8ToF8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pFM6zFeb9+u0jBAeMmssBGRpwB9s6etv/24JJscDfqsNwI/6YfmUeA1ZaUC0yIAaPIfGDBdf67izimZNCdO2f69WuI0E9qBsYFOqoSGDN29VklWGFM2eAW2XreIstW3wH7DGLskgY3yzsXG1D91wruer9Jl3lTI/ybGKAXJbo6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T/AMtvU7; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C47D1F00A3F;
-	Thu, 21 May 2026 23:41:50 +0000 (UTC)
+	 MIME-Version; b=kE+tH1cyhOLwUZN+O+ZGDUld9HlySZcVlBQovhTOWvBcqLiV46yyqFaOJuflDYr51xZhHc5iBKBGoa8hDHZ2LjP0HNdJc95YP4sjfGHkdSbCpGxLuUPG+MtsuMC19CF4WjN7XqRTazfwGvuPwX3cq4h1YBRc8Xn9sRKCeuPHMr0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kpJT7zq9; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E2A01F000E9;
+	Thu, 21 May 2026 23:41:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779406917;
-	bh=K3j4lL+2mHxp0flNXouCMSDh28DfNlEwKKwd9IHTneY=;
+	s=k20260515; t=1779406924;
+	bh=hpkmLWMZxfJfm6p78iGk3YLCLFrtdb80RZEsvdpd5WE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=T/AMtvU7TEIn4q026laXEglQYz0gh9HbSnPY1WlGi9txqlikR/jJq2HXA+5B6etyf
-	 u02+XzLy7UXY8wvyvVLeBLsbBi4cxT29Ss4BpqDELTg4njoJ9JHLxACVxjDXMeCNuu
-	 Svqoi/LLDWurkwVK2Phtk6a1BzMTZi76s4c7diSvir0cIt57y7d3vn6VinK9FBwUqa
-	 vwowsKkh+vCk4WDgPKxmxeknikdunoxvNOdJBIRFmWAzZDjqyPCmbdLCnixiXJwVuO
-	 8hWF/p2OPBlmAkllu3+zdLoPHcIuOL4NQLELdKf/ENX4GpSQAfu7/I+j2HSPxpcnoG
-	 LRalpVdJJ4VEQ==
+	b=kpJT7zq9EiSpL8AeAL/YALB24BOzxueNibg6wF2gVxtTyDErrPm2lSGhdodnaMCZq
+	 BavfL6jdbfsW4H6SwilwsEzygY4JZFQ+x8R4bGJzGliaJwJNeHZlGZJMjOQ95+uuI2
+	 7gIsBl53SDHktbkz0/KhS3MFiQ/AGsiDIwX08h7nFn7fWB91vQ6AJ4QoCWehXZ/PHS
+	 5DbZoXVMcKiOZbdXUAne914i4inTL46BdOes/rt7K04L2f1sp4Dp2eZFvWGjZ7vCeR
+	 QJDkISQOwZXwPKupYr4Zm3kP2awRBGOs2uGBXIbi7VOa4rMb91XNCv5ZeSrUbur1vT
+	 6X/l/UYBlU70Q==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -78,11 +78,10 @@ Cc: driver-core@lists.linux.dev,
 	linux-pwm@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	rust-for-linux@vger.kernel.org,
-	Danilo Krummrich <dakr@kernel.org>,
-	Eliot Courtney <ecourtney@nvidia.com>
-Subject: [PATCH v4 23/27] samples: rust: rust_driver_auxiliary: showcase lifetime-bound registration data
-Date: Fri, 22 May 2026 01:34:49 +0200
-Message-ID: <20260521233501.1191842-24-dakr@kernel.org>
+	Danilo Krummrich <dakr@kernel.org>
+Subject: [PATCH REF v4 24/27] gpu: nova-core: use lifetime for Bar
+Date: Fri, 22 May 2026 01:34:50 +0200
+Message-ID: <20260521233501.1191842-25-dakr@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260521233501.1191842-1-dakr@kernel.org>
 References: <20260521233501.1191842-1-dakr@kernel.org>
@@ -100,13 +99,13 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[35];
+	RCPT_COUNT_TWELVE(0.00)[34];
 	FREEMAIL_TO(0.00)[linuxfoundation.org,kernel.org,nvidia.com,google.com,intel.com,linaro.org,samsung.com,gmail.com,arm.com,posteo.de,garyguo.net,protonmail.com,umich.edu,linux.dev,collabora.com,redhat.com];
-	TAGGED_FROM(0.00)[bounces-9070-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9071-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -117,127 +116,181 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[dakr@kernel.org,linux-pwm@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-0.991];
+	NEURAL_HAM(-0.00)[-0.995];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-pwm];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[garyguo.net:email,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,nvidia.com:email]
-X-Rspamd-Queue-Id: 63B3C5AD24F
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[self.bar:url,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 0E65D5AD1D0
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Make the Data struct lifetime-parameterized, storing a reference to the
-parent pci::Device<Bound>. This demonstrates that registration data can
-hold device resources tied to the parent driver's lifetime.
+Take advantage of the lifetime-parameterized pci::Bar<'bound> to hold
+the BAR mapping directly in NovaCore<'bound>, and pass a borrowed
+reference to Gpu<'bound>.
 
-In connect(), retrieve the parent PCI device from the registration data
-rather than casting through adev.parent().
+This eliminates the Arc<Devres<Bar0>> indirection, removes runtime
+revocation checks for BAR access, and simplifies Gpu::unbind().
 
-Reviewed-by: Eliot Courtney <ecourtney@nvidia.com>
-Reviewed-by: Gary Guo <gary@garyguo.net>
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- samples/rust/rust_driver_auxiliary.rs | 58 ++++++++++++++++-----------
- 1 file changed, 35 insertions(+), 23 deletions(-)
+ drivers/gpu/nova-core/driver.rs | 32 +++++++++++++++-----------------
+ drivers/gpu/nova-core/gpu.rs    | 33 +++++++++++++--------------------
+ 2 files changed, 28 insertions(+), 37 deletions(-)
 
-diff --git a/samples/rust/rust_driver_auxiliary.rs b/samples/rust/rust_driver_auxiliary.rs
-index e3e811a14110..2c1351040e45 100644
---- a/samples/rust/rust_driver_auxiliary.rs
-+++ b/samples/rust/rust_driver_auxiliary.rs
-@@ -51,16 +51,17 @@ fn probe<'bound>(
-     }
+diff --git a/drivers/gpu/nova-core/driver.rs b/drivers/gpu/nova-core/driver.rs
+index d3f2245ba2e0..d4cf4379ee87 100644
+--- a/drivers/gpu/nova-core/driver.rs
++++ b/drivers/gpu/nova-core/driver.rs
+@@ -13,12 +13,9 @@
+     },
+     prelude::*,
+     sizes::SZ_16M,
+-    sync::{
+-        atomic::{
+-            Atomic,
+-            Relaxed, //
+-        },
+-        Arc,
++    sync::atomic::{
++        Atomic,
++        Relaxed, //
+     },
+     types::ForLt,
+ };
+@@ -31,7 +28,8 @@
+ #[pin_data]
+ pub(crate) struct NovaCore<'bound> {
+     #[pin]
+-    pub(crate) gpu: Gpu,
++    pub(crate) gpu: Gpu<'bound>,
++    bar: pci::Bar<'bound, BAR0_SIZE>,
+     #[allow(clippy::type_complexity)]
+     _reg: auxiliary::Registration<'bound, ForLt!(())>,
  }
+@@ -48,7 +46,7 @@ pub(crate) struct NovaCore<'bound> {
+ // DMA addresses. These systems should be quite rare.
+ const GPU_DMA_BITS: u32 = 47;
  
--struct Data {
-+struct Data<'bound> {
-     index: u32,
-+    parent: &'bound pci::Device<Bound>,
- }
- 
- struct ParentDriver;
- 
- #[allow(clippy::type_complexity)]
- struct ParentData<'bound> {
--    _reg0: auxiliary::Registration<'bound, ForLt!(Data)>,
--    _reg1: auxiliary::Registration<'bound, ForLt!(Data)>,
-+    _reg0: auxiliary::Registration<'bound, ForLt!(Data<'_>)>,
-+    _reg1: auxiliary::Registration<'bound, ForLt!(Data<'_>)>,
- }
+-pub(crate) type Bar0 = pci::Bar<'static, BAR0_SIZE>;
++pub(crate) type Bar0 = kernel::io::Mmio<BAR0_SIZE>;
  
  kernel::pci_device_table!(
-@@ -81,33 +82,44 @@ fn probe<'bound>(
-         _info: &'bound Self::IdInfo,
-     ) -> impl PinInit<Self::Data<'bound>, Error> + 'bound {
-         Ok(ParentData {
--            _reg0: auxiliary::Registration::new(
--                pdev.as_ref(),
--                AUXILIARY_NAME,
--                0,
--                MODULE_NAME,
--                Data { index: 0 },
--            )?,
--            _reg1: auxiliary::Registration::new(
--                pdev.as_ref(),
--                AUXILIARY_NAME,
--                1,
--                MODULE_NAME,
--                Data { index: 1 },
--            )?,
-+            // SAFETY: `ParentData` is the driver's private data, which is dropped when the
-+            // device is unbound; i.e. `mem::forget()` is never called on it.
-+            _reg0: unsafe {
-+                auxiliary::Registration::new_with_lt(
-+                    pdev.as_ref(),
-+                    AUXILIARY_NAME,
-+                    0,
-+                    MODULE_NAME,
-+                    Data {
-+                        index: 0,
-+                        parent: pdev,
-+                    },
-+                )?
-+            },
-+            // SAFETY: See `_reg0` above.
-+            _reg1: unsafe {
-+                auxiliary::Registration::new_with_lt(
-+                    pdev.as_ref(),
-+                    AUXILIARY_NAME,
-+                    1,
-+                    MODULE_NAME,
-+                    Data {
-+                        index: 1,
-+                        parent: pdev,
-+                    },
-+                )?
-+            },
+     PCI_TABLE,
+@@ -95,14 +93,14 @@ fn probe<'bound>(
+             // other threads of execution.
+             unsafe { pdev.dma_set_mask_and_coherent(DmaMask::new::<GPU_DMA_BITS>())? };
+ 
+-            let bar = Arc::new(
+-                pdev.iomap_region_sized::<BAR0_SIZE>(0, c"nova-core/bar0")?
+-                    .into_devres()?,
+-                GFP_KERNEL,
+-            )?;
+-
+             Ok(try_pin_init!(NovaCore {
+-                gpu <- Gpu::new(pdev, bar.clone(), bar.access(pdev.as_ref())?),
++                bar: pdev.iomap_region_sized::<BAR0_SIZE>(0, c"nova-core/bar0")?,
++                // TODO: Use `&bar` self-referential pin-init syntax once available.
++                //
++                // SAFETY: `bar` is initialized before this expression is evaluated
++                // (`try_pin_init!()` initializes fields in declaration order), lives at a pinned
++                // stable address, and is dropped after `gpu` (struct field drop order).
++                gpu <- Gpu::new(pdev, unsafe { &*core::ptr::from_ref(bar) }),
+                 _reg: auxiliary::Registration::new(
+                     pdev.as_ref(),
+                     c"nova-drm",
+@@ -116,7 +114,7 @@ fn probe<'bound>(
          })
      }
+ 
+-    fn unbind<'bound>(pdev: &'bound pci::Device<Core<'_>>, this: Pin<&Self::Data<'bound>>) {
+-        this.gpu.unbind(pdev.as_ref());
++    fn unbind<'bound>(_pdev: &'bound pci::Device<Core<'_>>, this: Pin<&Self::Data<'bound>>) {
++        this.gpu.unbind();
+     }
+ }
+diff --git a/drivers/gpu/nova-core/gpu.rs b/drivers/gpu/nova-core/gpu.rs
+index 4ffb506342a9..8d2d6b0a917b 100644
+--- a/drivers/gpu/nova-core/gpu.rs
++++ b/drivers/gpu/nova-core/gpu.rs
+@@ -2,13 +2,11 @@
+ 
+ use kernel::{
+     device,
+-    devres::Devres,
+     fmt,
+     io::Io,
+     num::Bounded,
+     pci,
+-    prelude::*,
+-    sync::Arc, //
++    prelude::*, //
+ };
+ 
+ use crate::{
+@@ -224,10 +222,10 @@ fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+ 
+ /// Structure holding the resources required to operate the GPU.
+ #[pin_data]
+-pub(crate) struct Gpu {
++pub(crate) struct Gpu<'gpu> {
+     spec: Spec,
+-    /// MMIO mapping of PCI BAR 0
+-    bar: Arc<Devres<Bar0>>,
++    /// MMIO mapping of PCI BAR 0.
++    bar: &'gpu Bar0,
+     /// System memory page required for flushing all pending GPU-side memory writes done through
+     /// PCIE into system memory, via sysmembar (A GPU-initiated HW memory-barrier operation).
+     sysmem_flush: SysmemFlush,
+@@ -240,12 +238,11 @@ pub(crate) struct Gpu {
+     gsp: Gsp,
  }
  
- impl ParentDriver {
-     fn connect(adev: &auxiliary::Device<Bound>) -> Result {
--        let dev = adev.parent();
--        let pdev: &pci::Device<Bound> = dev.try_into()?;
+-impl Gpu {
+-    pub(crate) fn new<'a>(
+-        pdev: &'a pci::Device<device::Bound>,
+-        devres_bar: Arc<Devres<Bar0>>,
+-        bar: &'a Bar0,
+-    ) -> impl PinInit<Self, Error> + 'a {
++impl<'gpu> Gpu<'gpu> {
++    pub(crate) fn new(
++        pdev: &'gpu pci::Device<device::Bound>,
++        bar: &'gpu Bar0,
++    ) -> impl PinInit<Self, Error> + 'gpu {
+         try_pin_init!(Self {
+             spec: Spec::new(pdev.as_ref(), bar).inspect(|spec| {
+                 dev_info!(pdev,"NVIDIA ({})\n", spec);
+@@ -257,6 +254,8 @@ pub(crate) fn new<'a>(
+                     .inspect_err(|_| dev_err!(pdev, "GFW boot did not complete\n"))?;
+             },
+ 
++            bar,
++
+             sysmem_flush: SysmemFlush::register(pdev.as_ref(), bar, spec.chipset)?,
+ 
+             gsp_falcon: Falcon::new(
+@@ -270,19 +269,13 @@ pub(crate) fn new<'a>(
+             gsp <- Gsp::new(pdev),
+ 
+             _: { gsp.boot(pdev, bar, spec.chipset, gsp_falcon, sec2_falcon)? },
 -
--        let data = adev.registration_data::<ForLt!(Data)>()?;
-+        let data = adev.registration_data::<ForLt!(Data<'_>)>()?;
-+        let pdev = data.parent;
+-            bar: devres_bar,
+         })
+     }
  
-         dev_info!(
--            dev,
-+            pdev,
-             "Connect auxiliary {} with parent: VendorID={}, DeviceID={:#x}\n",
-             adev.id(),
-             pdev.vendor_id(),
-@@ -115,7 +127,7 @@ fn connect(adev: &auxiliary::Device<Bound>) -> Result {
-         );
- 
-         dev_info!(
--            dev,
-+            pdev,
-             "Connected to auxiliary device with index {}.\n",
-             data.index
-         );
+     /// Called when the corresponding [`Device`](device::Device) is unbound.
+     ///
+     /// Note: This method must only be called from `Driver::unbind`.
+-    pub(crate) fn unbind(&self, dev: &device::Device<device::Core<'_>>) {
+-        kernel::warn_on!(self
+-            .bar
+-            .access(dev)
+-            .inspect(|bar| self.sysmem_flush.unregister(bar))
+-            .is_err());
++    pub(crate) fn unbind(&self) {
++        self.sysmem_flush.unregister(self.bar);
+     }
+ }
 -- 
 2.54.0
 
