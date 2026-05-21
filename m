@@ -1,49 +1,49 @@
-Return-Path: <linux-pwm+bounces-9065-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9066-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 0B/0Kn+aD2r5NgYAu9opvQ
-	(envelope-from <linux-pwm+bounces-9065-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 May 2026 01:51:27 +0200
+	id aBN1FHSaD2r5NgYAu9opvQ
+	(envelope-from <linux-pwm+bounces-9066-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 May 2026 01:51:16 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 484F15AD14F
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 May 2026 01:51:26 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id A045D5AD129
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 May 2026 01:51:15 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id E2CD43083AB6
-	for <lists+linux-pwm@lfdr.de>; Thu, 21 May 2026 23:44:19 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id D48B330A33BE
+	for <lists+linux-pwm@lfdr.de>; Thu, 21 May 2026 23:44:46 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8EA81386450;
-	Thu, 21 May 2026 23:41:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 79BE038F653;
+	Thu, 21 May 2026 23:41:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iIu2NYsD"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KeJEoyCH"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8CB1378D9E;
-	Thu, 21 May 2026 23:41:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6007387596;
+	Thu, 21 May 2026 23:41:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779406889; cv=none; b=W7JLGmNUbwIZMI6MNv9UWl/5a/7za1/34G+MT886HuxeOxR62d3lxYb2jdxnUm84ih4b2ljOracvqgG41o6EvUgk9sPDbvhKFgPWOLCESx9m0aMUI613mU75nwtLgZChKv9heOVjOyrD6OeBNGT5/kKt5j0OZJJtXDrua5M4sGw=
+	t=1779406897; cv=none; b=JgbJSHvtmM9T3gqV7VBMlUJewVJ/zyDpHS/rflL4P3oHxx2rs0KnraavgqNcavT8vis1ArVd6PoU7cjZ3/3KZ7RKP5C+fsSafd0IzArJ+FSM4lx7Glmu7J5VB1gxfE2SukHI00mklx9XdmszKYCPMeljxdkxkP7UO+R+zheBv74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779406889; c=relaxed/simple;
-	bh=XC/m7Eo1pjqY+ccRLxQHX5P3WSnClMgFocqpJDIY0/k=;
+	s=arc-20240116; t=1779406897; c=relaxed/simple;
+	bh=xHgKVPGVfOWtieNSvIbyzkBESHRgg2F9YKYBnEngkC8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=g9sa4Y8qQZvY8qA5976is2eMdju6ClUgSnLPeX6q7uvfE7N9RSMyhmsEnx4RBU4tR8TKnSiDbd7t2s0K6gSmLMJiaC5LZMTqMtNVGtYGusxA8p70LBMzYHAZXk0XtjGwcvL4FQYAAQfm6l/HTbJ7LwJhLUgp2+I/xObDkIo+IQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iIu2NYsD; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 998BE1F00A3B;
-	Thu, 21 May 2026 23:41:16 +0000 (UTC)
+	 MIME-Version; b=XAFQPLk2u1dpaL5p2UjbLacCN1T+wcMUrn+KIzhP8S8nvP4+CYQrH544GpFXvaXVioE9fcFbxe+BhvP0Gungi1bz2qWiQlUwrwNo3bbBbNWR6Ehm2sacz7w+1xlhJN6tos6b+aYYExEiJOrId6++DM0Buv7OwCTU6s4kBFXHTXI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KeJEoyCH; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AF5A1F00A3C;
+	Thu, 21 May 2026 23:41:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779406883;
-	bh=3gGtk1HaMSOrNjSuBv1vNVcxZdaUJzZy2YhNgkmnK8M=;
+	s=k20260515; t=1779406890;
+	bh=YS3MIWt7wBP8jQ9SbXuqnDqrROA1jOXopyH7kmiVFAM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=iIu2NYsDwUMoNVqXejhPr7N1nulrwGg5RmVR8LbT1MRumGi4ECvOc9uClytjyL9+F
-	 BOlQgoVVGb5e3raTNsT9g+dA+fos5CasEaINUGXHEyKkem2v0uli+fV3DZS3Y+AKZd
-	 Lb5K8WBEMoPyih9pSou24+YqkV2LNwIA9tCG+YPOIPJz8MRarTdZ8MnOO2Xab8Kp3c
-	 6jnORlVwFIPOS+Y2llqbkhE/hvbja5bSCyuagxLxed/KxIWButX2VjYBf3s0lj+MmI
-	 iaAQKf0nrHDEskHES1y5hvdEi2FWoA8xK7M0ogs7r+n1hE8jVUxa+EfaQzlt0FXMl2
-	 ZYxPzhoaQ88kw==
+	b=KeJEoyCH9u6rLuX3kBFyOlxstdiVTi8CFJ+DideoIrB5QE04w1KBuBjQiwlt7suTX
+	 wI4+rgNELgACQmsSSAWm6pAv3P53pdnMzAQWM0gZnJNUhrF/moUTE0F7uxY7673keH
+	 5PnJM6/MLBlXRyUYl9YxvuFmJtFhTH91zwhB7AmSGytSEpIU4dXo95r7eDGrmpxrkb
+	 khmGPx/4DAvXlWXMZzQ+cmx80uOpolOIRQ+B3qeQ9aPA9qfm6EWlnxboxiclAznevh
+	 GvuhOejpZNl7U28THr038UGzBJyi8fOgj0ZgCP8KrRCO/20FPejyHEHj1jbOLo9ebl
+	 GVo1KO7st9H2w==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -80,9 +80,9 @@ Cc: driver-core@lists.linux.dev,
 	rust-for-linux@vger.kernel.org,
 	Danilo Krummrich <dakr@kernel.org>,
 	Eliot Courtney <ecourtney@nvidia.com>
-Subject: [PATCH v4 18/27] rust: io: make IoMem and ExclusiveIoMem lifetime-parameterized
-Date: Fri, 22 May 2026 01:34:44 +0200
-Message-ID: <20260521233501.1191842-19-dakr@kernel.org>
+Subject: [PATCH v4 19/27] samples: rust: rust_driver_pci: use HRT lifetime for Bar
+Date: Fri, 22 May 2026 01:34:45 +0200
+Message-ID: <20260521233501.1191842-20-dakr@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260521233501.1191842-1-dakr@kernel.org>
 References: <20260521233501.1191842-1-dakr@kernel.org>
@@ -92,312 +92,204 @@ List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [0.34 / 15.00];
+X-Spamd-Result: default: False [0.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_CONTAINS_FROM(1.00)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_MISSING_CHARSET(0.50)[];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9065-lists,linux-pwm=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[35];
+	FREEMAIL_TO(0.00)[linuxfoundation.org,kernel.org,nvidia.com,google.com,intel.com,linaro.org,samsung.com,gmail.com,arm.com,posteo.de,garyguo.net,protonmail.com,umich.edu,linux.dev,collabora.com,redhat.com];
+	TAGGED_FROM(0.00)[bounces-9066-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_TO(0.00)[linuxfoundation.org,kernel.org,nvidia.com,google.com,intel.com,linaro.org,samsung.com,gmail.com,arm.com,posteo.de,garyguo.net,protonmail.com,umich.edu,linux.dev,collabora.com,redhat.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[dakr@kernel.org,linux-pwm@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-0.999];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	NEURAL_HAM(-0.00)[-0.995];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-pwm];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:email,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 484F15AD14F
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:email,this.bar:url,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: A045D5AD129
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Add a lifetime parameter to IoMem<'a, SIZE> and ExclusiveIoMem<'a,
-SIZE>, storing a &'a Device<Bound> reference to tie the mapping to the
-device's lifetime.
+Convert the sample driver to SampleDriver<'bound>, taking advantage of
+the lifetime-parameterized Driver trait.
 
-This mirrors the pci::Bar<'a, SIZE> design and enables drivers to hold
-I/O memory mappings directly in their HRT private data, tied to the
-device lifetime.
+The driver struct holds &'bound pci::Device directly instead of
+ARef<pci::Device>, and pci::Bar<'bound> directly instead of
+Devres<pci::Bar>. This removes PinnedDrop, pin_init_scope, and runtime
+revocation checks on BAR access.
 
-IoRequest::iomap_* methods now return the mapping directly instead of
-wrapping it in Devres. Callers that need device-managed revocation can
-call the new into_devres() method.
-
-Acked-by: Uwe Kleine-König <ukleinek@kernel.org>
 Reviewed-by: Eliot Courtney <ecourtney@nvidia.com>
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- drivers/gpu/drm/tyr/driver.rs |   4 +-
- drivers/pwm/pwm_th1520.rs     |   4 +-
- rust/kernel/io/mem.rs         | 103 +++++++++++++++++-----------------
- 3 files changed, 56 insertions(+), 55 deletions(-)
+ samples/rust/rust_driver_pci.rs | 89 +++++++++++++++------------------
+ 1 file changed, 40 insertions(+), 49 deletions(-)
 
-diff --git a/drivers/gpu/drm/tyr/driver.rs b/drivers/gpu/drm/tyr/driver.rs
-index 797f09e23a4c..04f83fcf0937 100644
---- a/drivers/gpu/drm/tyr/driver.rs
-+++ b/drivers/gpu/drm/tyr/driver.rs
-@@ -37,7 +37,7 @@
-     regs, //
+diff --git a/samples/rust/rust_driver_pci.rs b/samples/rust/rust_driver_pci.rs
+index 0353481b0690..0ae2373d74fd 100644
+--- a/samples/rust/rust_driver_pci.rs
++++ b/samples/rust/rust_driver_pci.rs
+@@ -9,7 +9,6 @@
+         Bound,
+         Core, //
+     },
+-    devres::Devres,
+     io::{
+         register,
+         register::Array,
+@@ -17,8 +16,7 @@
+     },
+     num::Bounded,
+     pci,
+-    prelude::*,
+-    sync::aref::ARef, //
++    prelude::*, //
  };
  
--pub(crate) type IoMem = kernel::io::mem::IoMem<SZ_2M>;
-+pub(crate) type IoMem = kernel::io::mem::IoMem<'static, SZ_2M>;
- 
- pub(crate) struct TyrDrmDriver;
- 
-@@ -110,7 +110,7 @@ fn probe<'bound>(
-         let sram_regulator = Regulator::<regulator::Enabled>::get(pdev.as_ref(), c"sram")?;
- 
-         let request = pdev.io_request_by_index(0).ok_or(ENODEV)?;
--        let iomem = Arc::pin_init(request.iomap_sized::<SZ_2M>(), GFP_KERNEL)?;
-+        let iomem = Arc::new(request.iomap_sized::<SZ_2M>()?.into_devres()?, GFP_KERNEL)?;
- 
-         issue_soft_reset(pdev.as_ref(), &iomem)?;
-         gpu::l2_power_on(pdev.as_ref(), &iomem)?;
-diff --git a/drivers/pwm/pwm_th1520.rs b/drivers/pwm/pwm_th1520.rs
-index 6c5b791f3153..48808cd80737 100644
---- a/drivers/pwm/pwm_th1520.rs
-+++ b/drivers/pwm/pwm_th1520.rs
-@@ -92,7 +92,7 @@ struct Th1520WfHw {
- #[pin_data(PinnedDrop)]
- struct Th1520PwmDriverData {
-     #[pin]
--    iomem: devres::Devres<IoMem<TH1520_PWM_REG_SIZE>>,
-+    iomem: devres::Devres<IoMem<'static, TH1520_PWM_REG_SIZE>>,
-     clk: Clk,
+ mod regs {
+@@ -45,7 +43,7 @@ mod regs {
+     pub(super) const END: usize = 0x10;
  }
  
-@@ -352,7 +352,7 @@ fn probe<'bound>(
-             dev,
-             TH1520_MAX_PWM_NUM,
-             try_pin_init!(Th1520PwmDriverData {
--                iomem <- request.iomap_sized::<TH1520_PWM_REG_SIZE>(),
-+                iomem <- request.iomap_sized::<TH1520_PWM_REG_SIZE>()?.into_devres(),
-                 clk <- clk,
-             }),
-         )?;
-diff --git a/rust/kernel/io/mem.rs b/rust/kernel/io/mem.rs
-index 51ba347220ee..fc2a3e24f8d5 100644
---- a/rust/kernel/io/mem.rs
-+++ b/rust/kernel/io/mem.rs
-@@ -74,22 +74,19 @@ pub(crate) unsafe fn new(device: &'a Device<Bound>, resource: &'a Resource) -> S
-     ///       //
-     ///       // No runtime checks will apply when reading and writing.
-     ///       let request = pdev.io_request_by_index(0).ok_or(ENODEV)?;
--    ///       let iomem = request.iomap_sized::<42>();
--    ///       let iomem = KBox::pin_init(iomem, GFP_KERNEL)?;
--    ///
--    ///       let io = iomem.access(pdev.as_ref())?;
-+    ///       let iomem = request.iomap_sized::<42>()?;
-     ///
-     ///       // Read and write a 32-bit value at `offset`.
--    ///       let data = io.read32(offset);
-+    ///       let data = iomem.read32(offset);
-     ///
--    ///       io.write32(data, offset);
-+    ///       iomem.write32(data, offset);
-     ///
-     ///       # Ok(SampleDriver)
-     ///     }
-     /// }
-     /// ```
--    pub fn iomap_sized<const SIZE: usize>(self) -> impl PinInit<Devres<IoMem<SIZE>>, Error> + 'a {
--        IoMem::new(self)
-+    pub fn iomap_sized<const SIZE: usize>(self) -> Result<IoMem<'a, SIZE>> {
-+        IoMem::ioremap(self.device, self.resource)
-     }
+-type Bar0 = pci::Bar<'static, { regs::END }>;
++type Bar0<'bound> = pci::Bar<'bound, { regs::END }>;
  
-     /// Same as [`Self::iomap_sized`] but with exclusive access to the
-@@ -98,10 +95,8 @@ pub fn iomap_sized<const SIZE: usize>(self) -> impl PinInit<Devres<IoMem<SIZE>>,
-     /// This uses the [`ioremap()`] C API.
-     ///
-     /// [`ioremap()`]: https://docs.kernel.org/driver-api/device-io.html#getting-access-to-the-device
--    pub fn iomap_exclusive_sized<const SIZE: usize>(
--        self,
--    ) -> impl PinInit<Devres<ExclusiveIoMem<SIZE>>, Error> + 'a {
--        ExclusiveIoMem::new(self)
-+    pub fn iomap_exclusive_sized<const SIZE: usize>(self) -> Result<ExclusiveIoMem<'a, SIZE>> {
-+        ExclusiveIoMem::ioremap(self.device, self.resource)
-     }
- 
-     /// Maps an [`IoRequest`] where the size is not known at compile time,
-@@ -140,27 +135,24 @@ pub fn iomap_exclusive_sized<const SIZE: usize>(
-     ///       // family of functions should be used, leading to runtime checks on every
-     ///       // access.
-     ///       let request = pdev.io_request_by_index(0).ok_or(ENODEV)?;
--    ///       let iomem = request.iomap();
--    ///       let iomem = KBox::pin_init(iomem, GFP_KERNEL)?;
--    ///
--    ///       let io = iomem.access(pdev.as_ref())?;
-+    ///       let iomem = request.iomap()?;
-     ///
--    ///       let data = io.try_read32(offset)?;
-+    ///       let data = iomem.try_read32(offset)?;
-     ///
--    ///       io.try_write32(data, offset)?;
-+    ///       iomem.try_write32(data, offset)?;
-     ///
-     ///       # Ok(SampleDriver)
-     ///     }
-     /// }
-     /// ```
--    pub fn iomap(self) -> impl PinInit<Devres<IoMem<0>>, Error> + 'a {
--        Self::iomap_sized::<0>(self)
-+    pub fn iomap(self) -> Result<IoMem<'a>> {
-+        self.iomap_sized::<0>()
-     }
- 
-     /// Same as [`Self::iomap`] but with exclusive access to the underlying
-     /// region.
--    pub fn iomap_exclusive(self) -> impl PinInit<Devres<ExclusiveIoMem<0>>, Error> + 'a {
--        Self::iomap_exclusive_sized::<0>(self)
-+    pub fn iomap_exclusive(self) -> Result<ExclusiveIoMem<'a, 0>> {
-+        self.iomap_exclusive_sized::<0>()
-     }
+ #[derive(Copy, Clone, Debug)]
+ struct TestIndex(u8);
+@@ -66,14 +64,14 @@ impl TestIndex {
+     const NO_EVENTFD: Self = Self(0);
  }
  
-@@ -169,9 +161,9 @@ pub fn iomap_exclusive(self) -> impl PinInit<Devres<ExclusiveIoMem<0>>, Error> +
- /// # Invariants
- ///
- /// - [`ExclusiveIoMem`] has exclusive access to the underlying [`IoMem`].
--pub struct ExclusiveIoMem<const SIZE: usize> {
-+pub struct ExclusiveIoMem<'a, const SIZE: usize> {
-     /// The underlying `IoMem` instance.
--    iomem: IoMem<SIZE>,
-+    iomem: IoMem<'a, SIZE>,
- 
-     /// The region abstraction. This represents exclusive access to the
-     /// range represented by the underlying `iomem`.
-@@ -180,9 +172,9 @@ pub struct ExclusiveIoMem<const SIZE: usize> {
-     _region: Region,
+-#[pin_data(PinnedDrop)]
+-struct SampleDriver {
+-    pdev: ARef<pci::Device>,
+-    #[pin]
+-    bar: Devres<Bar0>,
++struct SampleDriverData<'bound> {
++    pdev: &'bound pci::Device,
++    bar: Bar0<'bound>,
+     index: TestIndex,
  }
  
--impl<const SIZE: usize> ExclusiveIoMem<SIZE> {
-+impl<'a, const SIZE: usize> ExclusiveIoMem<'a, SIZE> {
-     /// Creates a new `ExclusiveIoMem` instance.
--    fn ioremap(resource: &Resource) -> Result<Self> {
-+    fn ioremap(dev: &'a Device<Bound>, resource: &Resource) -> Result<Self> {
-         let start = resource.start();
-         let size = resource.size();
-         let name = resource.name().unwrap_or_default();
-@@ -196,26 +188,29 @@ fn ioremap(resource: &Resource) -> Result<Self> {
-             )
-             .ok_or(EBUSY)?;
++struct SampleDriver;
++
+ kernel::pci_device_table!(
+     PCI_TABLE,
+     MODULE_PCI_TABLE,
+@@ -84,8 +82,8 @@ struct SampleDriver {
+     )]
+ );
  
--        let iomem = IoMem::ioremap(resource)?;
-+        let iomem = IoMem::ioremap(dev, resource)?;
+-impl SampleDriver {
+-    fn testdev(index: &TestIndex, bar: &Bar0) -> Result<u32> {
++impl SampleDriverData<'_> {
++    fn testdev(index: &TestIndex, bar: &Bar0<'_>) -> Result<u32> {
+         // Select the test.
+         bar.write_reg(regs::TEST::zeroed().with_index(*index));
  
--        let iomem = ExclusiveIoMem {
-+        Ok(ExclusiveIoMem {
-             iomem,
-             _region: region,
--        };
+@@ -140,56 +138,49 @@ fn config_space(pdev: &pci::Device<Bound>) {
+ 
+ impl pci::Driver for SampleDriver {
+     type IdInfo = TestIndex;
+-    type Data<'bound> = Self;
++    type Data<'bound> = SampleDriverData<'bound>;
+ 
+     const ID_TABLE: pci::IdTable<Self::IdInfo> = &PCI_TABLE;
+ 
+     fn probe<'bound>(
+         pdev: &'bound pci::Device<Core<'_>>,
+         info: &'bound Self::IdInfo,
+-    ) -> impl PinInit<Self, Error> + 'bound {
+-        pin_init::pin_init_scope(move || {
+-            let vendor = pdev.vendor_id();
+-            dev_dbg!(
+-                pdev,
+-                "Probe Rust PCI driver sample (PCI ID: {}, 0x{:x}).\n",
+-                vendor,
+-                pdev.device_id()
+-            );
 -
--        Ok(iomem)
-+        })
-     }
- 
--    /// Creates a new `ExclusiveIoMem` instance from a previously acquired [`IoRequest`].
--    pub fn new<'a>(io_request: IoRequest<'a>) -> impl PinInit<Devres<Self>, Error> + 'a {
--        let dev = io_request.device;
--        let res = io_request.resource;
+-            pdev.enable_device_mem()?;
+-            pdev.set_master();
 -
--        Devres::new(dev, Self::ioremap(res))
-+    /// Consume the `ExclusiveIoMem` and register it as a device-managed resource.
-+    ///
-+    /// The returned `Devres<ExclusiveIoMem<'static, SIZE>>` can outlive the original lifetime
-+    /// `'a`. Access to the I/O memory is revoked when the device is unbound.
-+    pub fn into_devres(self) -> Result<Devres<ExclusiveIoMem<'static, SIZE>>> {
-+        // SAFETY: Casting to `'static` is sound because `Devres` guarantees the
-+        // `ExclusiveIoMem` does not actually outlive the device -- access is revoked and the
-+        // resource is released when the device is unbound.
-+        let iomem: ExclusiveIoMem<'static, SIZE> = unsafe { core::mem::transmute(self) };
-+        let dev = iomem.iomem.dev;
-+        Devres::new(dev, iomem)
-     }
- }
- 
--impl<const SIZE: usize> Deref for ExclusiveIoMem<SIZE> {
-+impl<const SIZE: usize> Deref for ExclusiveIoMem<'_, SIZE> {
-     type Target = Mmio<SIZE>;
- 
-     fn deref(&self) -> &Self::Target {
-@@ -232,12 +227,13 @@ fn deref(&self) -> &Self::Target {
- ///
- /// [`IoMem`] always holds an [`MmioRaw`] instance that holds a valid pointer to the
- /// start of the I/O memory mapped region.
--pub struct IoMem<const SIZE: usize = 0> {
-+pub struct IoMem<'a, const SIZE: usize = 0> {
-+    dev: &'a Device<Bound>,
-     io: MmioRaw<SIZE>,
- }
- 
--impl<const SIZE: usize> IoMem<SIZE> {
--    fn ioremap(resource: &Resource) -> Result<Self> {
-+impl<'a, const SIZE: usize> IoMem<'a, SIZE> {
-+    fn ioremap(dev: &'a Device<Bound>, resource: &Resource) -> Result<Self> {
-         // Note: Some ioremap() implementations use types that depend on the CPU
-         // word width rather than the bus address width.
-         //
-@@ -269,28 +265,33 @@ fn ioremap(resource: &Resource) -> Result<Self> {
-         }
- 
-         let io = MmioRaw::new(addr as usize, size)?;
--        let io = IoMem { io };
- 
--        Ok(io)
-+        Ok(IoMem { dev, io })
-     }
- 
--    /// Creates a new `IoMem` instance from a previously acquired [`IoRequest`].
--    pub fn new<'a>(io_request: IoRequest<'a>) -> impl PinInit<Devres<Self>, Error> + 'a {
--        let dev = io_request.device;
--        let res = io_request.resource;
+-            Ok(try_pin_init!(Self {
+-                bar: pdev.iomap_region_sized::<{ regs::END }>(0, c"rust_driver_pci")?
+-                    .into_devres()?,
+-                index: *info,
+-                _: {
+-                    let bar = bar.access(pdev.as_ref())?;
 -
--        Devres::new(dev, Self::ioremap(res))
-+    /// Consume the `IoMem` and register it as a device-managed resource.
-+    ///
-+    /// The returned `Devres<IoMem<'static, SIZE>>` can outlive the original
-+    /// lifetime `'a`. Access to the I/O memory is revoked when the device
-+    /// is unbound.
-+    pub fn into_devres(self) -> Result<Devres<IoMem<'static, SIZE>>> {
-+        // SAFETY: Casting to `'static` is sound because `Devres` guarantees the `IoMem` does not
-+        // actually outlive the device -- access is revoked and the resource is released when the
-+        // device is unbound.
-+        let iomem: IoMem<'static, SIZE> = unsafe { core::mem::transmute(self) };
-+        let dev = iomem.dev;
-+        Devres::new(dev, iomem)
+-                    dev_info!(
+-                        pdev,
+-                        "pci-testdev data-match count: {}\n",
+-                        Self::testdev(info, bar)?
+-                    );
+-                    Self::config_space(pdev);
+-                },
+-                pdev: pdev.into(),
+-            }))
++    ) -> impl PinInit<Self::Data<'bound>, Error> + 'bound {
++        let vendor = pdev.vendor_id();
++        dev_dbg!(
++            pdev,
++            "Probe Rust PCI driver sample (PCI ID: {}, 0x{:x}).\n",
++            vendor,
++            pdev.device_id()
++        );
++
++        pdev.enable_device_mem()?;
++        pdev.set_master();
++
++        let bar = pdev.iomap_region_sized::<{ regs::END }>(0, c"rust_driver_pci")?;
++
++        dev_info!(
++            pdev,
++            "pci-testdev data-match count: {}\n",
++            SampleDriverData::testdev(info, &bar)?
++        );
++        SampleDriverData::config_space(pdev);
++
++        Ok(SampleDriverData {
++            pdev,
++            bar,
++            index: *info,
+         })
+     }
+ 
+-    fn unbind(pdev: &pci::Device<Core<'_>>, this: Pin<&Self>) {
+-        if let Ok(bar) = this.bar.access(pdev.as_ref()) {
+-            // Reset pci-testdev by writing a new test index.
+-            bar.write_reg(regs::TEST::zeroed().with_index(this.index));
+-        }
++    fn unbind<'bound>(_pdev: &'bound pci::Device<Core<'_>>, this: Pin<&'bound Self::Data<'bound>>) {
++        this.bar
++            .write_reg(regs::TEST::zeroed().with_index(this.index));
      }
  }
  
--impl<const SIZE: usize> Drop for IoMem<SIZE> {
-+impl<const SIZE: usize> Drop for IoMem<'_, SIZE> {
-     fn drop(&mut self) {
-         // SAFETY: Safe as by the invariant of `Io`.
-         unsafe { bindings::iounmap(self.io.addr() as *mut c_void) }
+-#[pinned_drop]
+-impl PinnedDrop for SampleDriver {
+-    fn drop(self: Pin<&mut Self>) {
++impl Drop for SampleDriverData<'_> {
++    fn drop(&mut self) {
+         dev_dbg!(self.pdev, "Remove Rust PCI driver sample.\n");
      }
  }
- 
--impl<const SIZE: usize> Deref for IoMem<SIZE> {
-+impl<const SIZE: usize> Deref for IoMem<'_, SIZE> {
-     type Target = Mmio<SIZE>;
- 
-     fn deref(&self) -> &Self::Target {
 -- 
 2.54.0
 
