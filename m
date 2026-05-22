@@ -1,200 +1,184 @@
-Return-Path: <linux-pwm+bounces-9084-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9085-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id 4OGpDD9eEGqDWgYAu9opvQ
-	(envelope-from <linux-pwm+bounces-9084-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 May 2026 15:46:39 +0200
+	id 2FQgIRKrEGrKcAYAu9opvQ
+	(envelope-from <linux-pwm+bounces-9085-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 May 2026 21:14:26 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id D21895B56FB
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 May 2026 15:46:38 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id F0D325B94CA
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 May 2026 21:14:25 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 26DA4303C4DB
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 May 2026 13:38:46 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 51848300A7F7
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 May 2026 19:14:24 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E609E3FF8BA;
-	Fri, 22 May 2026 13:38:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 802CC374E67;
+	Fri, 22 May 2026 19:14:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ipeDJUhq"
+	dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b="LU7WccnZ"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f182.google.com (mail-vk1-f182.google.com [209.85.221.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F0753FA5DA;
-	Fri, 22 May 2026 13:38:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1207D3672B5
+	for <linux-pwm@vger.kernel.org>; Fri, 22 May 2026 19:14:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779457124; cv=none; b=Yh3S3KoS6sEbzjiJts/T6ZG1j4Uw6bz17aK04wTMvcMi11ZDBCZesghrpciJyWfKxFfvTF3t8YvHwrKgq7cFN8SJzUQjL/DvKcssTtyZM9TLkPoiI9H3l7yk0N116E5eY6NGRe+xfn+sXZo8vwsVFh7bL/2RRrs7V2AEkuUSMiE=
+	t=1779477263; cv=none; b=Fqw4vjPcbyyunxvwLAlhOyqz2oiTP6MuzcYJVHAJ4iG0BarQ5Oj0TvO+A1fMGA4P930laXjSrqMZ+H5zlFkT2oWnIBrv3LFqxQCvetiByRzjWPqAuxKsMbRW61jc4F3sRlY0XokG/MhIzPouFJt5hBgxhQR5EBbgDnQpPZ/RuFc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779457124; c=relaxed/simple;
-	bh=VTIq37iy9DUOokRQnz3PLEP+l6B+THmSP5B+u2rjDgM=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rn7aI0UqVsymVvuFR4Nj+ErXbsTsQ3jLz0tucwDjCiZqW7z53qNUma3QSgHtBwUk1sJYXTuRqGwQzeRz2OCpx0p6Axb3tAx27yP5ZkSHO0TKPdN75sjVPx1LFCWcZG70KX67uSqE9/vw7IbyL7T4/6l0cS+HvPwMXqDvfBJy62Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ipeDJUhq; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ACCAB1F000E9;
-	Fri, 22 May 2026 13:38:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779457120;
-	bh=2sEt+pfVTqi62XRpqK9+If4oDJrLR/RRwahq5GJ1eB4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=ipeDJUhqXzLNXV3/kjrZjDcIBrdBMJrwhEHGT2yPJuyIrzQGmgeY0+FCUspfdVakj
-	 tKtadiizz3RYaUAl/qxmetY8aUqVwRKhcKNnc1UI81X9WPjCQRGX6uGy833WAmoo/v
-	 pNs2OGjecBi4w8XzEExuumnilUumrLyq9oDY2pxIVNPb3cpXP7UZ/fukc76kkcUo0P
-	 mg2BrZCa+bsYI8JnwmJqXAVkVk/Fh+gS7rXE2XYI9rK2/aMGjNny/SRXRLUZoUk2zU
-	 052gpvCVoi3e4HmokXZA8wMezUzWEmpRXkWs489liV+CIW+dh1/Jh3ozRFoy42sjMZ
-	 GV2/wMk0o5l7w==
-Date: Fri, 22 May 2026 14:38:27 +0100
-From: Jonathan Cameron <jic23@kernel.org>
-To: "Sabau, Radu bogdan" <Radu.Sabau@analog.com>
-Cc: Lars-Peter Clausen <lars@metafoo.de>, "Hennerich, Michael"
- <Michael.Hennerich@analog.com>, David Lechner <dlechner@baylibre.com>, "Sa,
- Nuno" <Nuno.Sa@analog.com>, Andy Shevchenko <andy@kernel.org>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?=
- <ukleinek@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown
- <broonie@kernel.org>, Linus Walleij <linusw@kernel.org>, Bartosz
- Golaszewski <brgl@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>,
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <skhan@linuxfoundation.org>,
- "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
- "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
- "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
- "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
- "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
- "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
-Subject: Re: [PATCH v12 5/6] iio: adc: ad4691: add oversampling support
-Message-ID: <20260522143827.013a985c@jic23-huawei>
-In-Reply-To: <LV9PR03MB8414E63DA5C2C22A46E98215F70F2@LV9PR03MB8414.namprd03.prod.outlook.com>
-References: <20260519-ad4692-multichannel-sar-adc-driver-v12-0-5b335162aa51@analog.com>
-	<20260519-ad4692-multichannel-sar-adc-driver-v12-5-5b335162aa51@analog.com>
-	<LV9PR03MB8414CA3DB26235605C9323E5F70E2@LV9PR03MB8414.namprd03.prod.outlook.com>
-	<20260522121628.21bf03f9@jic23-huawei>
-	<LV9PR03MB8414E63DA5C2C22A46E98215F70F2@LV9PR03MB8414.namprd03.prod.outlook.com>
-X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
+	s=arc-20240116; t=1779477263; c=relaxed/simple;
+	bh=W95e8kqy+EUnTLn7yhNEZxHMkbNjEJlRwwDjiQMwjXk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WfeQbn9KKpY7/zsRSwmKWukKFw4O3ezNOCPReNjWb7Zis4iBOhH7uLS2aEZVIYbGBjjcrLdrX/5aVUnTmcPPjT3B9OSClKLfbkmHUWk+27p8DRNJun9NaAi6fTSoHdcqU5aqWZFPLJ+iuWde1W924fIguTqAVj6UI/HJOVT1dnE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=LU7WccnZ; arc=none smtp.client-ip=209.85.221.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=baylibre.com
+Received: by mail-vk1-f182.google.com with SMTP id 71dfb90a1353d-57533363201so2535110e0c.0
+        for <linux-pwm@vger.kernel.org>; Fri, 22 May 2026 12:14:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre.com; s=google; t=1779477259; x=1780082059; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=bcQfxlYT0WdkNlclpO13skLK1pFgoPq0lf6iXLyTJ4A=;
+        b=LU7WccnZN/e8j78afIIJ2gmr2De8Zy50nyQQbiRzS1qnNe0Pulb/HMmrwk1pXT2Mr3
+         RTqAxn8guYYqNY+ahaMfcM89VhGqjvVfeqSF8NNGV1PDawy2qxLglR/BR1v4FbWmZxsd
+         TCCFwGdcM5lva3hyD2beNxMp/JVNmWt5p+D0chQ/HvhcBMl8fTCnwfgBT+7jdbxnm/eP
+         SdIyLaUuUMyu/8GWE/2xsqVj4kuVg7cQT3ouo2g64ngYHtruvagoQ9dAuhgV1qWpP/w2
+         GsRosVnqwVktP3pfkNvbxCzaj8G1XxMja/Ybzz9pk7SDAqswGH9PtyNhmBCjI4AbkUoy
+         +w+Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1779477259; x=1780082059;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bcQfxlYT0WdkNlclpO13skLK1pFgoPq0lf6iXLyTJ4A=;
+        b=qldgsVsmllB2wI6WVrS2GvIctGMuoLOjRglPDxh81OGyn2ruLcllUESdEP5Zxc4UJd
+         uQnheGT/3PlThAotQHhb0AyJ3MecKzC5qfMOlzVxPFeR1z5aDtdNkjk9vEeAVaSGZttW
+         ftj6Xbmb9Ic4sHieeNXUR7Lq3i4j7GZQqghSFQmgvwm3WPGNZQY8onwB4ughrQUs1K2c
+         qGkEAnh4UER9wanV0F3Twv+Pim7T1L6rU5TqMbQnt/KU/n+5JZz+P9Dy+CbirusxqgqT
+         t7Fa3WQe57vYNPcVMgGlJOOiBp9/9tAnWOIdLlTwOI98gLruf/bJFDegWlUpVuUN9Sme
+         qh5g==
+X-Gm-Message-State: AOJu0YwhNPg+FMEnsIaETr/LrzwG42DzP4DKjIRS7ELNZk50JwIiJ0Sk
+	9Q/mQWi5iFafjXri7o5H/A2YLLyBEn2c1pGflzYjO/hsv2ALUOradYW3CMXWyOnJN2/ea/75AcJ
+	LBVJkiIrB6Q==
+X-Gm-Gg: Acq92OHD9NznaNQy0O0hujIh7eOD5/ler+3hQOXDbLv6xlpZREBLNRrle1zXcSiN5Ya
+	U77EKT3Ds7u9Ql4abbIAgnTYb3fGELSbXia268zDiFw0GTfMzNKTEKYtv3WHEL9QH0Ym/Os28so
+	y/QxvsjtzrvEsBzmPM/fbOa4YyXBk91/G3i0hGwPatI8FpiGnIYiM/rSRkdtdrsvv8mIjmGVS+G
+	NTVYSrlaSXG0pbDD/KZFfKm/tXyBhB/D1aN8XTDumTSu9t7NneUkqHC9NmFHWPQV+UW5Nw8nSui
+	cqBiCLcHA1hfWeuO6ZiMq+8kTB6hEv7trTXqXchTOuo3eZSdfBXihnX2aLxfS2mSiagD+Cdg9tF
+	dyAiZV4JghXbO0kZ6vpAiA2DQ5eCUBbOw/KrHR0f85TwXSi85vR91xaEhKTfoI7pK1tAPaxBaZU
+	FDVDl8ZmDf00uATelBXJVyFJwqj3fww/ldslRJaH5BhQ==
+X-Received: by 2002:a05:6122:330a:b0:56f:adb8:7c54 with SMTP id 71dfb90a1353d-5865e3aff5emr3335785e0c.3.1779477259066;
+        Fri, 22 May 2026 12:14:19 -0700 (PDT)
+Received: from acer-e1.tail6c460f.ts.net ([2804:7f0:7542:7b16:2880:ed6d:f5c:8b9e])
+        by smtp.gmail.com with ESMTPSA id a1e0cc1a2514c-96173af3e82sm2741013241.10.2026.05.22.12.14.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 22 May 2026 12:14:18 -0700 (PDT)
+From: Ronaldo Nunez <rnunez@baylibre.com>
+To: linux-pwm@vger.kernel.org
+Cc: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Frank Li <Frank.Li@nxp.com>,
+	Sascha Hauer <s.hauer@pengutronix.de>,
+	Pengutronix Kernel Team <kernel@pengutronix.de>,
+	Fabio Estevam <festevam@gmail.com>,
+	imx@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Ronaldo Nunez <rnunez@baylibre.com>
+Subject: [PATCH v2] pwm: imx27: Fix variable truncation in .apply()
+Date: Fri, 22 May 2026 16:13:48 -0300
+Message-ID: <20260522191348.6227-1-rnunez@baylibre.com>
+X-Mailer: git-send-email 2.53.0
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[baylibre.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9084-lists,linux-pwm=lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
 	RCVD_TLS_LAST(0.00)[];
-	FREEMAIL_CC(0.00)[metafoo.de,analog.com,baylibre.com,kernel.org,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org,vger.kernel.org];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[23];
+	TAGGED_FROM(0.00)[bounces-9085-lists,linux-pwm=lfdr.de];
+	FREEMAIL_CC(0.00)[kernel.org,nxp.com,pengutronix.de,gmail.com,lists.linux.dev,lists.infradead.org,vger.kernel.org,baylibre.com];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[jic23@kernel.org,linux-pwm@vger.kernel.org];
+	DMARC_NA(0.00)[baylibre.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[baylibre.com:+];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[rnunez@baylibre.com,linux-pwm@vger.kernel.org];
 	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_COUNT_FIVE(0.00)[5];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[10];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TO_DN_SOME(0.00)[]
-X-Rspamd-Queue-Id: D21895B56FB
+	TAGGED_RCPT(0.00)[linux-pwm];
+	TO_DN_SOME(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: F0D325B94CA
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Fri, 22 May 2026 11:38:55 +0000
-"Sabau, Radu bogdan" <Radu.Sabau@analog.com> wrote:
+Fix a variable truncation when calculating period in microseconds as
+part of the solution for the ERR051198 in .apply() callback.
 
-> > -----Original Message-----
-> > From: Jonathan Cameron <jic23@kernel.org>
-> > Sent: Friday, May 22, 2026 2:16 PM  
-> 
-> ...
-> 
-> > > >
-> > > > +	iio_for_each_active_channel(indio_dev, bit) {
-> > > > +		ret = regmap_write(st->regmap,
-> > > > AD4691_ACC_DEPTH_IN(bit), st->osr[bit]);  
-> > >
-> > > Unfortunately enough, I think a v13 will come, too...
-> > >
-> > > Had a look again on what Sashiko had to say, and seeing the sampling  
-> > frequency  
-> > > shared_by_all comment again made me have a deeper look see how the  
-> > code could  
-> > > be commented so he wouldn't complain about this anymore, and...
-> > >
-> > > Perhaps he is a bit right after all. I found a section stating that in standard
-> > > sequencer mode (which the driver uses right now), all the channels actually  
-> > use  
-> > > the ACC_DEPTH_IN0 for osr, and so changing ACC_DEPTH_INn for other  
-> > channels  
-> > > doesn't really do much. And so I tested this selecting both voltage0 and  
-> > voltage1  
-> > > for sampling with osr4 for voltage0 and osr1 for voltage1 and with a 100kHz  
-> > osc freq  
-> > > indeed DR fell after approximately 80us which points out both channels were  
-> > actually  
-> > > using OSR of 4. Perhaps the OSR should be shared by all and therefore the
-> > > sampling frequency would also be shared by all, right?  
-> > 
-> > I kind of lost track on the modes. What are the chances we later move to or
-> > add
-> > support for a mode where the different OSRs do matter?  If that's a possibility
-> > we should avoid ABI change by allowing for it from the start.
-> > 
-> > Then if we are in this mode, they'll have separate controls but change any,
-> > changes
-> > them all, if we are in a different mode that connection breaks.
-> > If that's the case, just throw in a comment saying something to the effect this
-> > may change.
-> > 
-> > It's not wrong ABI to do this, it's just less intuitive for users which is why
-> > we prefer the shared_by stuff where there isn't a disadvantage.  That is at
-> > most
-> > a hint to what actually happens.   A simple example is where different
-> > channels have one OSR field but they aren't the same - i.e. channel 1 is twice
-> > the OSR of channel 2.  Hence we can't share the attribute but any change
-> > effects
-> > both.
-> >   
-> 
-> Hi Jonathan,
-> 
-> I don't think a mode where different OSR will matter will be added in the future. Better
-> yet, this advanced sequencer functionality is not really mode dependent and is actually
-> something that allows you to manually rearrange channels and samples in the
-> sequence, and unless this functionality is active (it is not by default nor is it used by
-> the driver, since we use the standard sequencer).
-> 
-> Personally, I don't see any reason to have this advanced sequencer stuff implemented
-> since DR is only falling at the end of the sequence no matter if it is standard config or not,
-> the only "disadvantage" to say so is that the standard sequencer uses the same OSR field
-> for all channels. But that advanced sequencer stuff would only complicate the buffer
-> enable/disable functions even more, which I don't think it's worth the effort.
-> 
-> So, with this in mind. Letting the driver use standard sequencer would ultimately mean
-> that the osr would be the same for all the channels, and then effective rate the same for
-> all channels, which I suggest having it like that from initial driver patch to the end, so no
-> ABI change mid-patch series. This change will simplify the driver.
+Example scenario:
+ - Period of 3us (PWMPR = 196 and prescaler = 1)
+ - Expected value in tmp: 198000000000 (NSEC_PER_SEC * (196 + 2) * 1)
+ - Actual value is 431504384 (truncation to u32)
 
-Ok.  Thanks for the analysis.  It may well be that those fancy sequencer things are
-only really useful for very specific use cases we won't see in Linux.
+Signed-off-by: Ronaldo Nunez <rnunez@baylibre.com>
+---
+Changes in v2:
+- Added example with actual PWMPR/prescaler values per Frank Li's feedback
+- Dropped testing section
+---
+ drivers/pwm/pwm-imx27.c | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-So I'm fine with following the simple path!
-
-Jonathan
-
-> 
-> Radu
+diff --git a/drivers/pwm/pwm-imx27.c b/drivers/pwm/pwm-imx27.c
+index 3d34cdc4a3a5..c8b801fcb525 100644
+--- a/drivers/pwm/pwm-imx27.c
++++ b/drivers/pwm/pwm-imx27.c
+@@ -200,7 +200,7 @@ static void pwm_imx27_wait_fifo_slot(struct pwm_chip *chip,
+ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 			   const struct pwm_state *state)
+ {
+-	unsigned long period_cycles, duty_cycles, prescale, period_us, tmp;
++	unsigned long period_cycles, duty_cycles, prescale, period_us;
+ 	struct pwm_imx27_chip *imx = to_pwm_imx27_chip(chip);
+ 	unsigned long long c;
+ 	unsigned long long clkrate;
+@@ -208,6 +208,7 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	int val;
+ 	int ret;
+ 	u32 cr;
++	u64 tmp;
+ 
+ 	clkrate = clk_get_rate(imx->clks[PWM_IMX27_PER].clk);
+ 	c = clkrate * state->period;
+@@ -249,6 +250,11 @@ static int pwm_imx27_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+ 	val = readl(imx->mmio_base + MX3_PWMPR);
+ 	val = val >= MX3_PWMPR_MAX ? MX3_PWMPR_MAX : val;
+ 	cr = readl(imx->mmio_base + MX3_PWMCR);
++
++	/*
++	 * tmp stores period in nanoseconds. Result fits in u64 since
++	 * val <= 0xfffe and prescaler in [1, 0x1000].
++	 */
+ 	tmp = NSEC_PER_SEC * (u64)(val + 2) * MX3_PWMCR_PRESCALER_GET(cr);
+ 	tmp = DIV_ROUND_UP_ULL(tmp, clkrate);
+ 	period_us = DIV_ROUND_UP_ULL(tmp, 1000);
+-- 
+2.53.0
 
 
