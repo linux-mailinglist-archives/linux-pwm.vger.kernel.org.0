@@ -1,50 +1,50 @@
-Return-Path: <linux-pwm+bounces-9079-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9080-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id hR1tDMA8EGrzVAYAu9opvQ
-	(envelope-from <linux-pwm+bounces-9079-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 May 2026 13:23:44 +0200
+	id IJumObU/EGrzVAYAu9opvQ
+	(envelope-from <linux-pwm+bounces-9080-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 May 2026 13:36:21 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id C34595B2F15
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 May 2026 13:23:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id BBC175B3177
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 May 2026 13:36:21 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id E899F300679C
-	for <lists+linux-pwm@lfdr.de>; Fri, 22 May 2026 11:23:42 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 21917300CE97
+	for <lists+linux-pwm@lfdr.de>; Fri, 22 May 2026 11:36:01 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 985123D88E9;
-	Fri, 22 May 2026 11:23:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EC2663E8688;
+	Fri, 22 May 2026 11:35:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jVqIVWGS"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vd/nszY9"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F311360ED1;
-	Fri, 22 May 2026 11:23:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A947636B07B;
+	Fri, 22 May 2026 11:35:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779449018; cv=none; b=My6zVTLqf0TsAFWCa8ldodyX0TnFe0orY/Y1X3NBrq7h2nxQbU+sYxF4AHPd/oasXKuYv3pHDqD6DEv4FVz/dFOont7gCX5UkyMkir4V5c9PBwEqIAXXeyBtA7chAz0/UA2/iuxvRdufu2rjK05QHwY3WyivLn4+92YV3rt1vvU=
+	t=1779449752; cv=none; b=nZ0amjM93PyMsWVgI9EAwnpv0uzgSF8uCLpkMjt1ccVx6MWhg+yhiYhL1JVhakKW2MSwkH4pBo/8zSmJMoq7Q4UlWjR9rIffC4RoCd4HEXebJB7bZiJnu9vi3M/EjzgCSMHwMnFdgrm8iHR1vKLQjaHU/VIVdRbMf4Jx2xYnisA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779449018; c=relaxed/simple;
-	bh=HFtmXz0PCp2aQpnPMnU3L1VxYRn6d9FRpQD2wRgGSq0=;
+	s=arc-20240116; t=1779449752; c=relaxed/simple;
+	bh=dhK9LwkTVSg5ClC7s36E3nT62pjq9DRrRLj8t34gf1g=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=OW0TE9rnKIAdLC7qwhmNwVePRLYp1Td1/VpidZM671xQJzdvIaCP2SKxGSh1tNfdBgyMgVgKNBgSzJcEGj66YAtpoQJBNEJCulANpjBx8vxLVtSce6Ldw+JZ+YEseemu86fCsEpIwFaTUTNdKwG00z2jXiWRVyFMpmGgJizqLeg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jVqIVWGS; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3EAE1F000E9;
-	Fri, 22 May 2026 11:23:27 +0000 (UTC)
+	 MIME-Version:Content-Type; b=dmh8cpyxOh9vzweli6xzn96BXEXxKrfGbQ3HUc9zW6iGAiGKCG9XPMvOhv7sO3hPabEsqMO6Mlai3acx+rPpvTHl13tsTnh0tJD64jAgnGCpTSbxodqKhtgJkQJHLsHn+di1NwgenYJD7wPTKNTrpdOxhClemjijy0bZate0gjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vd/nszY9; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7520C1F00A3D;
+	Fri, 22 May 2026 11:35:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779449016;
-	bh=g0Tk5SjgRMfO81NIuJvLyIjw5gsTSwcbfmCYhvq+Xsc=;
+	s=k20260515; t=1779449751;
+	bh=uQ24BeckYia2HpQtla0uiDaMZ5DsfBUVq5bUePbJKtI=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References;
-	b=jVqIVWGSsTzhxLytj8chbFa3NmrX/sPZxrQrnYwbsVTFyitSFbt/3CUFIkk+Ifozu
-	 vJZJVlhnKBnP/Uo0dS6fOvwNB4LrIdH2PE3OZmaca1FLV2fQHYeGiPaZr4+SLrHMiP
-	 1A0nmndTujTrT9UJnqzHxEvX+085d3mVRZqSznR3ok12fbog1coCUX8NoKG1pNbK7E
-	 HK1ri7I81+nAdwn/bOea31fKfVmqIt71ShcZ1oACMetLosYHONUM41PJoGgSwuvQAL
-	 wXMlEfW5/ECXfIVH0TAeiAj9R8tVFDKDrKm/YHt3Ox0yDFU7CVbgfzUvCLSX95xvm3
-	 PO2G/QuLTWu0Q==
-Date: Fri, 22 May 2026 12:23:22 +0100
+	b=Vd/nszY9OghrxXxo67VGf9mX4htr93FLvnBaxgptt4KpSnh+1f7Z0eWigVIQVXucj
+	 tVI4bVOKunBhg2tUthXTMDUW6luepsZiwFRLWU/AU2AaGrSAfmjo3iYJJLbzkN2Yxy
+	 jJsxUkhXchDCRUpPbr1eYxBHn5C0uGB//K0BRK6W33nGlydNHyvrzBekW7FfTEZSEZ
+	 ghzO8ZeDFqEd/XxUYsvQL9lv/2scpt0CogkBPN32B+Mvkp9DJy2NBQSn34tnEi30se
+	 PXBsmto29z8cK7zuMdBVGEAyiXdXx9kY8nOZqxdRiXUngCuKOhhgaXuOnqkgvrw/3c
+	 WE2vrZzaZuXxQ==
+Date: Fri, 22 May 2026 12:35:42 +0100
 From: Jonathan Cameron <jic23@kernel.org>
 To: Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org>
 Cc: radu.sabau@analog.com, Lars-Peter Clausen <lars@metafoo.de>, Michael
@@ -59,12 +59,13 @@ Cc: radu.sabau@analog.com, Lars-Peter Clausen <lars@metafoo.de>, Michael
  <skhan@linuxfoundation.org>, linux-iio@vger.kernel.org,
  devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
  linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org,
- linux-doc@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>
-Subject: Re: [PATCH v12 1/6] dt-bindings: iio: adc: add AD4691 family
-Message-ID: <20260522122322.2cd9d4ae@jic23-huawei>
-In-Reply-To: <20260519-ad4692-multichannel-sar-adc-driver-v12-1-5b335162aa51@analog.com>
+ linux-doc@vger.kernel.org
+Subject: Re: [PATCH v12 2/6] iio: adc: ad4691: add initial driver for AD4691
+ family
+Message-ID: <20260522123542.0425f2b1@jic23-huawei>
+In-Reply-To: <20260519-ad4692-multichannel-sar-adc-driver-v12-2-5b335162aa51@analog.com>
 References: <20260519-ad4692-multichannel-sar-adc-driver-v12-0-5b335162aa51@analog.com>
-	<20260519-ad4692-multichannel-sar-adc-driver-v12-1-5b335162aa51@analog.com>
+	<20260519-ad4692-multichannel-sar-adc-driver-v12-2-5b335162aa51@analog.com>
 X-Mailer: Claws Mail 4.4.0 (GTK 3.24.52; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
@@ -72,93 +73,154 @@ List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9079-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9080-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[25];
+	RCPT_COUNT_TWELVE(0.00)[24];
 	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[jic23@kernel.org,linux-pwm@vger.kernel.org];
-	FREEMAIL_CC(0.00)[analog.com,metafoo.de,baylibre.com,kernel.org,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org,vger.kernel.org,microchip.com];
+	FREEMAIL_CC(0.00)[analog.com,metafoo.de,baylibre.com,kernel.org,gmail.com,pengutronix.de,lwn.net,linuxfoundation.org,vger.kernel.org];
 	TAGGED_RCPT(0.00)[linux-pwm,radu.sabau.analog.com,dt];
 	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[analog.com:email,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: C34595B2F15
+	DBL_BLOCKED_OPENRESOLVER(0.00)[analog.com:email,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,baylibre.com:email]
+X-Rspamd-Queue-Id: BBC175B3177
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, 19 May 2026 15:20:22 +0300
+On Tue, 19 May 2026 15:20:23 +0300
 Radu Sabau via B4 Relay <devnull+radu.sabau.analog.com@kernel.org> wrote:
 
 > From: Radu Sabau <radu.sabau@analog.com>
-> 
-> Add DT bindings for the Analog Devices AD4691 family of multichannel
-> SAR ADCs (AD4691, AD4692, AD4693, AD4694).
-> 
-> The binding describes the hardware connections:
-> 
-> - Power domains: avdd-supply (required), vio-supply, ref-supply or
->   refin-supply (external reference; the REFIN path enables the
->   internal reference buffer). Digital core VDD is supplied either
->   externally via vdd-supply, or generated by the on-chip LDO fed
->   from ldo-in-supply; the two are mutually exclusive and one must
->   be present.
-> 
-> - Optional PWM on the CNV pin selects CNV Burst Mode; when absent,
->   Manual Mode is assumed with CNV tied to SPI CS.
-> 
-> - An optional reset GPIO (reset-gpios) for hardware reset.
-> 
-> - Up to four GP pins (gp0..gp3) usable as interrupt sources,
->   identified in firmware via interrupt-names "gp0".."gp3".
-> 
-> - gpio-controller with #gpio-cells = <2> for GP pin GPIO usage.
-> 
-> - #trigger-source-cells = <1>: one cell selecting the GP pin number
->   (0-3) used as the SPI offload trigger source.
-> 
-> Two binding examples are provided: CNV Burst Mode with SPI offload
-> (DMA data acquisition driven by DATA_READY on a GP pin), and Manual
-> Mode for CPU-driven triggered-buffer or single-shot capture.
-
-Doesn't really matter, but why include so much detail that is easy enough
-seen in the binding?  If there is information we need to capture it better
-be in the binding!
-
-Not actually worth the effort of changing it though - more something
-for future reference (unless someone else is asking for this levle
-of detail).
-
-> 
-> The four variants are not compatible with each other: AD4691/AD4692 have
-> 16 analog input channels while AD4693/AD4694 have 8, and AD4691/AD4693
-> top out at 500 kSPS while AD4692/AD4694 reach 1 MSPS. These differences
-> in channel count and maximum sample rate require distinct compatible
-> strings so the driver can select the correct channel configuration and
-> rate limits.
-This bit indeed belongs here.
-
-> 
-> Acked-by: Conor Dooley <conor.dooley@microchip.com>
+>=20
+> Add support for the Analog Devices AD4691 family of high-speed,
+> low-power multichannel SAR ADCs: AD4691 (16-ch, 500 kSPS),
+> AD4692 (16-ch, 1 MSPS), AD4693 (8-ch, 500 kSPS) and
+> AD4694 (8-ch, 1 MSPS).
+>=20
+> The driver implements a custom regmap layer over raw SPI to handle the
+> device's mixed 1/2/3/4-byte register widths and uses the standard IIO
+> read_raw/write_raw interface for single-channel reads.
+>=20
+> The chip idles in Autonomous Mode so that single-shot read_raw can use
+> the internal oscillator without disturbing the hardware configuration.
+>=20
+> Three voltage supply domains are managed: avdd (required), vio, and a
+> reference supply on either the REF pin (ref-supply, external buffer)
+> or the REFIN pin (refin-supply, uses the on-chip reference buffer;
+> REFBUF_EN is set accordingly). Hardware reset is performed by asserting
+> the reset-gpios GPIO line for at least 300 =C2=B5s then deasserting it;
+> a software reset via SPI_CONFIG_A is used as fallback when no reset
+> GPIO is provided.
+>=20
+> Accumulator channel masking for single-shot reads uses ACC_MASK_REG via
+> an ADDR_DESCENDING SPI write, which covers both mask bytes in a single
+> 16-bit transfer.
+>=20
+> IIO_CHAN_INFO_SAMP_FREQ is exposed as info_mask_separate. The oscillator
+> is shared hardware =E2=80=94 writing any channel's sampling_frequency att=
+ribute
+> sets it for all others =E2=80=94 but per-channel attributes are used thro=
+ughout
+> the series to avoid an ABI change when per-channel oversampling ratios
+> are introduced in a later commit, at which point the effective output
+> rate (osc_freq / osr[N]) becomes genuinely per-channel.
+>=20
+> Reviewed-by: David Lechner <dlechner@baylibre.com>
 > Signed-off-by: Radu Sabau <radu.sabau@analog.com>
-> ---
+
+One really small thing given you mention you'll be doing a v13.
+
+> diff --git a/drivers/iio/adc/ad4691.c b/drivers/iio/adc/ad4691.c
+> new file mode 100644
+> index 000000000000..2d58df862142
+> --- /dev/null
+> +++ b/drivers/iio/adc/ad4691.c
+
+
+
+> +static int ad4691_reset(struct ad4691_state *st)
+> +{
+> +	struct device *dev =3D regmap_get_device(st->regmap);
+> +	struct reset_control *rst;
+> +	int ret;
+> +
+> +	rst =3D devm_reset_control_get_optional_exclusive(dev, NULL);
+> +	if (IS_ERR(rst))
+> +		return dev_err_probe(dev, PTR_ERR(rst), "Failed to get reset\n");
+> +
+> +	if (rst) {
+> +		/*
+> +		 * Assert the reset line to guarantee a clean reset pulse on
+> +		 * every probe, including driver reloads where the line may
+> +		 * already be deasserted (reset_control_put() does not
+> +		 * re-assert on release). tRESETL (minimum pulse width) =3D 10 ns
+> +		 * (Table 5); kernel function-call overhead alone exceeds this,
+> +		 * so no explicit delay is needed between assert and deassert.
+> +		 */
+> +		reset_control_assert(rst);
+> +		ret =3D reset_control_deassert(rst);
+> +		if (ret)
+> +			return ret;
+
+Really trivial but seems like this could be refactored to share the sleep=20
+code + perhaps more usefully the comment.
+
+
+
+	} else {
+		/* No hardware reset available, fall back to software reset. */
+		ret =3D regmap_write(st->regmap, AD4691_SPI_CONFIG_A_REG, AD4691_SW_RESET=
+);
+		if (ret)
+			return ret;
+	}
+	/*
+	 * Wait tHWR =3D 300 =C2=B5s (Table 5) for the device to complete its
+	 * internal reset sequence before accepting SPI commands.
+	 */
+	fsleep(300);
+
+	return 0;
+}
+> +		/*
+> +		 * Wait tHWR =3D 300 =C2=B5s (Table 5) for the device to complete its
+> +		 * internal reset sequence before accepting SPI commands.
+> +		 */
+> +		fsleep(300);
+> +		return 0;
+> +	}
+> +
+> +	/* No hardware reset available, fall back to software reset. */
+> +	ret =3D regmap_write(st->regmap, AD4691_SPI_CONFIG_A_REG, AD4691_SW_RES=
+ET);
+> +	if (ret)
+> +		return ret;
+> +	/*
+> +	 * Wait tSWR =3D 300 =C2=B5s (Table 5) for the device to complete its
+> +	 * internal reset sequence before accepting SPI commands.
+> +	 */
+> +	fsleep(300);
+> +	return 0;
+> +}
+
 
