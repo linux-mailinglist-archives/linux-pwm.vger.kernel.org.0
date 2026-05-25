@@ -1,49 +1,49 @@
-Return-Path: <linux-pwm+bounces-9127-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9128-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id kH1zAZ6xFGrRPQcAu9opvQ
-	(envelope-from <linux-pwm+bounces-9127-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Mon, 25 May 2026 22:31:26 +0200
+	id QH7yF86xFGoJPgcAu9opvQ
+	(envelope-from <linux-pwm+bounces-9128-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Mon, 25 May 2026 22:32:14 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 6265E5CE76F
-	for <lists+linux-pwm@lfdr.de>; Mon, 25 May 2026 22:31:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D96D35CE807
+	for <lists+linux-pwm@lfdr.de>; Mon, 25 May 2026 22:32:13 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D5073301E3C9
-	for <lists+linux-pwm@lfdr.de>; Mon, 25 May 2026 20:29:39 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3386B301ECE1
+	for <lists+linux-pwm@lfdr.de>; Mon, 25 May 2026 20:29:47 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 71076395AC6;
-	Mon, 25 May 2026 20:29:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A1BF8395AF5;
+	Mon, 25 May 2026 20:29:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QSgKPNc+"
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KpduoAIr"
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F3343955E6;
-	Mon, 25 May 2026 20:29:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6830228E0;
+	Mon, 25 May 2026 20:29:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779740979; cv=none; b=N8kfUvcr/WsIaWH9yXapJ3nLLDcGhE9z47zLxYeWME1ReglL0/qPAT5e5njw8N60QqjIv2U/wy1I+0WWquyY7xhdD3Y+z7E2xqs/mBKZJ2rS0r2BHHqUyCs/2lLX7S8wway3JH+FLSZEW73QeVjYx/0AarZQ9XzhssUo5MT8RBs=
+	t=1779740986; cv=none; b=mx5dz4nE90lmSevnnVfiG35OhWgR8z33he8PHJIZaqnHjjQO7oiOMVa1jp2FqiGrmrRaidwtE2hRFfo3xJrQ0nZoYRhdQjX6wj8Jwd9HphNkfwTaRbNO1ukwRL/EFekTiRMrrrmS1zyRCb5GzxErjhdTcO+TEktJURZd9BvaqP8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779740979; c=relaxed/simple;
-	bh=rAFNx8RypDYKG+dpWgDHjGVQ/4vHb+Tv98qyCpRhLTw=;
+	s=arc-20240116; t=1779740986; c=relaxed/simple;
+	bh=4BLgZuFs8LVFNWq+TMoAP1f22BiBhWxaI/2axMWi1ec=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OtApthCnN2jF7iIs58cVVjRQmcfIzIUhBKcyj0tiZXZ34uStzvQUSc7Y/Daeujy7HPQ+JnWdBme9qE1hTRB+VLLiGiHI71l2xeCFQHOG8GsHoZ31R534uGIUBxV6BxVbcunmTyQYXPzSaagnN4PVGTA0KI2GkKgIzN67vQFNaWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QSgKPNc+; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD7E81F00A3A;
-	Mon, 25 May 2026 20:29:30 +0000 (UTC)
+	 MIME-Version; b=i4Dq97Lra34k5LGoiAlKJfgIpOwd/4sqwFFrDF+FxXF7ON4jmJnzBRNIBCHuqwDYKOxR9Wnl0KTkq0wm62w4KzhxIPe3yMJIsIm0WmA8/Fwxu19/B/ZJyKV++0swwuGQ+zVKds2qirzMqzfT5BMH4T2howfziyPAm4ozNG6xVV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KpduoAIr; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66C501F000E9;
+	Mon, 25 May 2026 20:29:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779740978;
-	bh=f29QOiLOmTtepPqGTyUIO0rU++hJKbjbxryGjGLUDYY=;
+	s=k20260515; t=1779740985;
+	bh=CvsWKx5YQe9ahMUZVvp0ojIrus3es8Io68N4EoQNks0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=QSgKPNc+JoRjxcpaHyht4zv1jP+wZg3OUncC/d7JZRePkLU6NHmtZSEMDQb/QPWct
-	 GC9fW/BK9+kX9xOJtJ8M5dqXJYz9pte2/JD4eyCF16z9U3H13hkrsyqNN5dwmuG1f8
-	 TmSVS0dtRu1Hzt2fUn6Ibro2kAlCFH4xfrxqSTmnRwkHxL2qvzJmEl4oLgc3/CGBwA
-	 DxDk4mTWDwYVGItXOj8QDkK6pN+snuv1e9ECsoWqGa8SXd5mTfBXhBO3xMV+kcHwdD
-	 PLwi7aMRYda8UA46SspnWMp2Z9WMz2eLc+2BHNjOcsNmA4vj6p6j6qfaH1V44+RmQn
-	 VvuK2ddEc9WhQ==
+	b=KpduoAIr0LeDIRVPVRU0Ks2uAUTfj4bIY+YARKxe/qUadknx+sc+/0ys/MCuAtH8o
+	 9x/F+Y4eIJ/pvHBzJXMO/VVPJJYiIR98t6JGsQdGfkyaPLSBMn50p8p94E4PqKu30d
+	 N5/tDY5d+OTB7CgA+rde2mus8bXXYpCImZqkEI09XT5Tophca2IJUAoMsx1J1wxILm
+	 ovpLRaYvuq1C9zDYFN53npOxUuu28YK2DD5sB1sU3eXWP02BmHnUEp5osWhtajC2IQ
+	 J7tGd39Qbd1XlaxcPt7EvDPsvCQuFs5knqcLU+qv3q1LrLMCa7VMkcX8eCKNz3YOoX
+	 kNEtI26E5U9XA==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -78,12 +78,10 @@ Cc: driver-core@lists.linux.dev,
 	linux-pwm@vger.kernel.org,
 	linux-pci@vger.kernel.org,
 	rust-for-linux@vger.kernel.org,
-	Danilo Krummrich <dakr@kernel.org>,
-	stable@vger.kernel.org,
-	Sashiko <sashiko-bot@kernel.org>
-Subject: [PATCH v5 01/24] rust: pci: use 'static lifetime for PCI BAR resource names
-Date: Mon, 25 May 2026 22:20:48 +0200
-Message-ID: <20260525202921.124698-2-dakr@kernel.org>
+	Danilo Krummrich <dakr@kernel.org>
+Subject: [PATCH v5 02/24] rust: alloc: remove `'static` bound on `ForeignOwnable`
+Date: Mon, 25 May 2026 22:20:49 +0200
+Message-ID: <20260525202921.124698-3-dakr@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260525202921.124698-1-dakr@kernel.org>
 References: <20260525202921.124698-1-dakr@kernel.org>
@@ -105,9 +103,9 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[36];
+	RCPT_COUNT_TWELVE(0.00)[34];
 	FREEMAIL_TO(0.00)[linuxfoundation.org,kernel.org,nvidia.com,google.com,intel.com,linaro.org,samsung.com,gmail.com,arm.com,posteo.de,garyguo.net,protonmail.com,umich.edu,linux.dev,collabora.com,redhat.com];
-	TAGGED_FROM(0.00)[bounces-9127-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9128-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -118,59 +116,105 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	FROM_NEQ_ENVFROM(0.00)[dakr@kernel.org,linux-pwm@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
-	NEURAL_HAM(-0.00)[-0.995];
+	NEURAL_HAM(-0.00)[-0.987];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-pwm];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: 6265E5CE76F
+	DBL_BLOCKED_OPENRESOLVER(0.00)[garyguo.net:email,nvidia.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,linuxfoundation.org:email]
+X-Rspamd-Queue-Id: D96D35CE807
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-pci_request_region() stores the name pointer directly in struct
-resource; use &'static CStr to ensure the pointer remains valid even if
-the Bar is leaked.
+From: Gary Guo <gary@garyguo.net>
 
-Cc: stable@vger.kernel.org
-Reported-by: Sashiko <sashiko-bot@kernel.org>
-Closes: https://lore.kernel.org/all/20260522004943.CDA7C1F000E9@smtp.kernel.org/
-Fixes: 3c2e31d717ac ("rust: pci: move I/O infrastructure to separate file")
+The `'static` bound is currently necessary because there's no
+restriction on the lifetime of the GAT. Add a `Self: 'a` bound to
+restrict possible lifetimes on `Borrowed` and `BorrowedMut`, and lift
+the `'static` requirement.
+
+Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Gary Guo <gary@garyguo.net>
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- rust/kernel/pci/io.rs | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ rust/kernel/alloc/kbox.rs | 24 ++++++++++++++++++------
+ rust/kernel/types.rs      |  8 ++++++--
+ 2 files changed, 24 insertions(+), 8 deletions(-)
 
-diff --git a/rust/kernel/pci/io.rs b/rust/kernel/pci/io.rs
-index ae78676c927f..3ce21482b079 100644
---- a/rust/kernel/pci/io.rs
-+++ b/rust/kernel/pci/io.rs
-@@ -153,7 +153,7 @@ pub struct Bar<const SIZE: usize = 0> {
- }
+diff --git a/rust/kernel/alloc/kbox.rs b/rust/kernel/alloc/kbox.rs
+index c824ed6e1523..2f8c16473c2c 100644
+--- a/rust/kernel/alloc/kbox.rs
++++ b/rust/kernel/alloc/kbox.rs
+@@ -477,7 +477,7 @@ fn try_init<E>(init: impl Init<T, E>, flags: Flags) -> Result<Self, E>
  
- impl<const SIZE: usize> Bar<SIZE> {
--    pub(super) fn new(pdev: &Device, num: u32, name: &CStr) -> Result<Self> {
-+    pub(super) fn new(pdev: &Device, num: u32, name: &'static CStr) -> Result<Self> {
-         let len = pdev.resource_len(num)?;
-         if len == 0 {
-             return Err(ENOMEM);
-@@ -252,7 +252,7 @@ impl Device<device::Bound> {
-     pub fn iomap_region_sized<'a, const SIZE: usize>(
-         &'a self,
-         bar: u32,
--        name: &'a CStr,
-+        name: &'static CStr,
-     ) -> impl PinInit<Devres<Bar<SIZE>>, Error> + 'a {
-         Devres::new(self.as_ref(), Bar::<SIZE>::new(self, bar, name))
-     }
-@@ -261,7 +261,7 @@ pub fn iomap_region_sized<'a, const SIZE: usize>(
-     pub fn iomap_region<'a>(
-         &'a self,
-         bar: u32,
--        name: &'a CStr,
-+        name: &'static CStr,
-     ) -> impl PinInit<Devres<Bar>, Error> + 'a {
-         self.iomap_region_sized::<0>(bar, name)
-     }
+ // SAFETY: The pointer returned by `into_foreign` comes from a well aligned
+ // pointer to `T` allocated by `A`.
+-unsafe impl<T: 'static, A> ForeignOwnable for Box<T, A>
++unsafe impl<T, A> ForeignOwnable for Box<T, A>
+ where
+     A: Allocator,
+ {
+@@ -487,8 +487,14 @@ unsafe impl<T: 'static, A> ForeignOwnable for Box<T, A>
+         core::mem::align_of::<T>()
+     };
+ 
+-    type Borrowed<'a> = &'a T;
+-    type BorrowedMut<'a> = &'a mut T;
++    type Borrowed<'a>
++        = &'a T
++    where
++        Self: 'a;
++    type BorrowedMut<'a>
++        = &'a mut T
++    where
++        Self: 'a;
+ 
+     fn into_foreign(self) -> *mut c_void {
+         Box::into_raw(self).cast()
+@@ -516,13 +522,19 @@ unsafe fn borrow_mut<'a>(ptr: *mut c_void) -> &'a mut T {
+ 
+ // SAFETY: The pointer returned by `into_foreign` comes from a well aligned
+ // pointer to `T` allocated by `A`.
+-unsafe impl<T: 'static, A> ForeignOwnable for Pin<Box<T, A>>
++unsafe impl<T, A> ForeignOwnable for Pin<Box<T, A>>
+ where
+     A: Allocator,
+ {
+     const FOREIGN_ALIGN: usize = <Box<T, A> as ForeignOwnable>::FOREIGN_ALIGN;
+-    type Borrowed<'a> = Pin<&'a T>;
+-    type BorrowedMut<'a> = Pin<&'a mut T>;
++    type Borrowed<'a>
++        = Pin<&'a T>
++    where
++        Self: 'a;
++    type BorrowedMut<'a>
++        = Pin<&'a mut T>
++    where
++        Self: 'a;
+ 
+     fn into_foreign(self) -> *mut c_void {
+         // SAFETY: We are still treating the box as pinned.
+diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+index 4329d3c2c2e5..9cf9f869d195 100644
+--- a/rust/kernel/types.rs
++++ b/rust/kernel/types.rs
+@@ -27,10 +27,14 @@ pub unsafe trait ForeignOwnable: Sized {
+     const FOREIGN_ALIGN: usize;
+ 
+     /// Type used to immutably borrow a value that is currently foreign-owned.
+-    type Borrowed<'a>;
++    type Borrowed<'a>
++    where
++        Self: 'a;
+ 
+     /// Type used to mutably borrow a value that is currently foreign-owned.
+-    type BorrowedMut<'a>;
++    type BorrowedMut<'a>
++    where
++        Self: 'a;
+ 
+     /// Converts a Rust-owned object to a foreign-owned one.
+     ///
 -- 
 2.54.0
 
