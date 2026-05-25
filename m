@@ -1,245 +1,290 @@
-Return-Path: <linux-pwm+bounces-9150-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9151-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CC1yMBu0FGpDPgcAu9opvQ
-	(envelope-from <linux-pwm+bounces-9150-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Mon, 25 May 2026 22:42:03 +0200
+	id qPuBAmO8FGpUPwcAu9opvQ
+	(envelope-from <linux-pwm+bounces-9151-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Mon, 25 May 2026 23:17:23 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id CA7695CEAE1
-	for <lists+linux-pwm@lfdr.de>; Mon, 25 May 2026 22:42:02 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5EBF55CED7E
+	for <lists+linux-pwm@lfdr.de>; Mon, 25 May 2026 23:17:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 44288307EE1D
-	for <lists+linux-pwm@lfdr.de>; Mon, 25 May 2026 20:33:53 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id B94983007F75
+	for <lists+linux-pwm@lfdr.de>; Mon, 25 May 2026 21:16:31 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F176E3AE704;
-	Mon, 25 May 2026 20:32:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 2917734EF15;
+	Mon, 25 May 2026 21:16:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E5Z15P9j"
+	dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b="DceHwUns"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76FD2388363;
-	Mon, 25 May 2026 20:32:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+Received: from foss.arm.com (foss.arm.com [217.140.110.172])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F86E2DAFCB;
+	Mon, 25 May 2026 21:16:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.140.110.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779741145; cv=none; b=cNgld8Zjrqv00uy3tbspT9WeUlzO3liyLSo9ihkzcl91sGrKaGRbSOXdu/lPE36zffMeIlh7YKXKlFH9/LUZwqOK19ViPu9Kro542hbCYNlS+arzaSbnQLO/mPHuqyjFmmI4Mj+/XOx/UvSJWssMS5ZD7smiSNdRcj4CQuRFIrE=
+	t=1779743790; cv=none; b=ud+MxcNLUqq3dxE65ZrdJaYu46XwXz1M31c769hKY8ovr8tdQr6uYFlPA4et3AlJDdQh5ItY4SmD+ZNPW/2i7dlOeag9c00gLQMUJhxrZAsOmwJAPKNXpNIc1vsiKz9j+xFGYfLT+dbQcSRocMuSN2Cml1TipKHadhYsP5sNJew=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779741145; c=relaxed/simple;
-	bh=n9OSdO3AwMmlBW0KtaOxaurI9/V+4mxLjp0ERUUz9nQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AGR6gBjiieySNa93kFsAp/QlF3o23HYyHiqscYzw72pVc28tn5N1W16i84hwNZY8ANwsTAt2aVmqwX2Sfp7T2LFzHInxWdcqzz5BQubJBIv1FuscIWNCqPz3lhvRzy1AuasYhVtjihPRkKoCK/LhkzDRz5rKpGQIPsC3cOTcfck=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E5Z15P9j; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 269F31F000E9;
-	Mon, 25 May 2026 20:32:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779741144;
-	bh=+rPmKZf6uaQzYhVqY2DDZC+3sDd3VtNWS1o0vbSmOWw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=E5Z15P9jRyUCpIVYHnJfOk9/D8atKgXHRLvLuzY1yly8rDaOEcFJr6aenLpt9wHkp
-	 /w1H2/iDK/CnanATE6FZIVUJjMGIiJaMeujyma+KBb5394RaHkIALs2YfTi5S4eZQZ
-	 IVmrNIqu0IQYPP5bqkgyH5stRJqYoDMAzQb4A9Jkw2dJoegGPX1CSsF+cCMMZ56PG7
-	 QR0c7fRMSXTWyNelz2+V3zbiV6ZLXRloDG7wZ48WsDWNiMGDkVK6VBjERevJDCeaeI
-	 GohDsI7+lvwSPSkn9t8Cud0GrpoCkF8iQUbbZLpfaCFu+vtTFo/qYNVAEJKeNpHz2x
-	 UHOVDH2VZAwEg==
-From: Danilo Krummrich <dakr@kernel.org>
-To: gregkh@linuxfoundation.org,
-	rafael@kernel.org,
-	acourbot@nvidia.com,
-	aliceryhl@google.com,
-	david.m.ertman@intel.com,
-	ira.weiny@intel.com,
-	leon@kernel.org,
-	viresh.kumar@linaro.org,
-	m.wilczynski@samsung.com,
-	ukleinek@kernel.org,
-	bhelgaas@google.com,
-	kwilczynski@kernel.org,
-	abdiel.janulgue@gmail.com,
-	robin.murphy@arm.com,
-	markus.probst@posteo.de,
-	ojeda@kernel.org,
-	boqun@kernel.org,
-	gary@garyguo.net,
-	bjorn3_gh@protonmail.com,
-	lossin@kernel.org,
-	a.hindborg@kernel.org,
-	tmgross@umich.edu,
-	igor.korotin@linux.dev,
-	daniel.almeida@collabora.com,
-	pcolberg@redhat.com
-Cc: driver-core@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	nova-gpu@lists.linux.dev,
-	dri-devel@lists.freedesktop.org,
-	linux-pm@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	linux-pci@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	Danilo Krummrich <dakr@kernel.org>,
-	Eliot Courtney <ecourtney@nvidia.com>
-Subject: [PATCH v5 24/24] samples: rust: rust_driver_auxiliary: showcase lifetime-bound registration data
-Date: Mon, 25 May 2026 22:21:11 +0200
-Message-ID: <20260525202921.124698-25-dakr@kernel.org>
-X-Mailer: git-send-email 2.54.0
-In-Reply-To: <20260525202921.124698-1-dakr@kernel.org>
-References: <20260525202921.124698-1-dakr@kernel.org>
+	s=arc-20240116; t=1779743790; c=relaxed/simple;
+	bh=Q3KznSmPGXShIXkpUxQ+T6UiVEFFgAzT1PTN8IZQDcA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NVBjsQYAlqbI8UHRDgjAXfYiatojlAVmvM43h4YAyvD98HgYOyBArhku0WoV9jgC8yO6FHWXxVthSmxZ9RvPYMtugLOiPPCmN7QK74Ij6Xd9BG9INvV4b+niZlEy+0M0d6dIzgZEVU/kp6cMQWbO0Cv1vjf/q/a6m25xCkMZzPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com; spf=pass smtp.mailfrom=arm.com; dkim=pass (1024-bit key) header.d=arm.com header.i=@arm.com header.b=DceHwUns; arc=none smtp.client-ip=217.140.110.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arm.com
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+	by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7FB001758;
+	Mon, 25 May 2026 14:16:21 -0700 (PDT)
+Received: from ryzen.lan (usa-sjc-mx-foss1.foss.arm.com [172.31.20.19])
+	by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F29713F632;
+	Mon, 25 May 2026 14:16:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple; d=arm.com; s=foss;
+	t=1779743786; bh=Q3KznSmPGXShIXkpUxQ+T6UiVEFFgAzT1PTN8IZQDcA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=DceHwUnsr+h9yMlBWX/oFjrCB/CAS+EBlWKkxrF7rijrwncPuyE1VOcEfF6eFEnUV
+	 ERbPoaErMvi9f6rVI+fnr6fCMje0FFMj1FD+ANSgdfBohsCTdD5ydudgxRAk+BDj2Q
+	 56tLHKt09r4Vai3S95SsZnNzDvx/rH9y9TwVIxEw=
+Date: Mon, 25 May 2026 23:15:26 +0200
+From: Andre Przywara <andre.przywara@arm.com>
+To: Richard Genoud <richard.genoud@bootlin.com>
+Cc: Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>, Rob Herring
+ <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Chen-Yu Tsai <wens@kernel.org>, Jernej Skrabec
+ <jernej.skrabec@gmail.com>, Samuel Holland <samuel@sholland.org>, Philipp
+ Zabel <p.zabel@pengutronix.de>, Paul Kocialkowski <paulk@sys-base.io>,
+ Thomas Petazzoni <thomas.petazzoni@bootlin.com>, John Stultz
+ <jstultz@google.com>, Joao Schim <joao@schimsalabim.eu>,
+ bigunclemax@gmail.com, linux-pwm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+ linux-sunxi@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v6 0/4] Introduce Allwinner H616 PWM controller
+Message-ID: <20260525231526.0c5d9a10@ryzen.lan>
+In-Reply-To: <20260416134037.3160537-1-richard.genoud@bootlin.com>
+References: <20260416134037.3160537-1-richard.genoud@bootlin.com>
+Organization: Arm Ltd.
+X-Mailer: Claws Mail 4.4.0 (GTK 3.24.31; x86_64-slackware-linux-gnu)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [0.84 / 15.00];
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	DMARC_POLICY_ALLOW(-0.50)[arm.com,none];
+	R_DKIM_ALLOW(-0.20)[arm.com:s=foss];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9150-lists,linux-pwm=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[35];
-	FREEMAIL_TO(0.00)[linuxfoundation.org,kernel.org,nvidia.com,google.com,intel.com,linaro.org,samsung.com,gmail.com,arm.com,posteo.de,garyguo.net,protonmail.com,umich.edu,linux.dev,collabora.com,redhat.com];
-	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_CC(0.00)[kernel.org,gmail.com,sholland.org,pengutronix.de,sys-base.io,bootlin.com,google.com,schimsalabim.eu,vger.kernel.org,lists.infradead.org,lists.linux.dev];
+	TAGGED_FROM(0.00)[bounces-9151-lists,linux-pwm=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	HAS_ORG_HEADER(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[19];
 	MIME_TRACE(0.00)[0:+];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dakr@kernel.org,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[arm.com:+];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-0.991];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andre.przywara@arm.com,linux-pwm@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	NEURAL_HAM(-0.00)[-1.000];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-pwm];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	FROM_HAS_DN(0.00)[]
-X-Rspamd-Queue-Id: CA7695CEAE1
+	DBL_BLOCKED_OPENRESOLVER(0.00)[bootlin.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,ryzen.lan:mid,arm.com:dkim]
+X-Rspamd-Queue-Id: 5EBF55CED7E
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Make the Data struct lifetime-parameterized, storing a reference to the
-parent pci::Device<Bound>. This demonstrates that registration data can
-hold device resources tied to the parent driver's lifetime.
+On Thu, 16 Apr 2026 15:40:33 +0200
+Richard Genoud <richard.genoud@bootlin.com> wrote:
 
-In connect(), retrieve the parent PCI device from the registration data
-rather than casting through adev.parent().
+Hi Richard,
 
-Reviewed-by: Eliot Courtney <ecourtney@nvidia.com>
-Reviewed-by: Gary Guo <gary@garyguo.net>
-Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
-Signed-off-by: Danilo Krummrich <dakr@kernel.org>
----
- samples/rust/rust_driver_auxiliary.rs | 58 ++++++++++++++++-----------
- 1 file changed, 35 insertions(+), 23 deletions(-)
+> Allwinner H616 PWM controller is quite different from the A10 one.
+> 
+> It can drive 6 PWM channels, and like for the A10, each channel has a
+> bypass that permits to output a clock, bypassing the PWM logic, when
+> enabled.
+> 
+> But, the channels are paired 2 by 2, sharing a first set of
+> MUX/prescaler/gate.
+> Then, for each channel, there's another prescaler (that will be bypassed
+> if the bypass is enabled for this channel).
+> 
+> It looks like that:
+>             _____      ______      ________
+> OSC24M --->|     |    |      |    |        |
+> APB1 ----->| Mux |--->| Gate |--->| /div_m |-----> PWM_clock_src_xy
+>            |_____|    |______|    |________|
+>                           ________
+>                          |        |
+>                       +->| /div_k |---> PWM_clock_x
+>                       |  |________|
+>                       |    ______
+>                       |   |      |
+>                       +-->| Gate |----> PWM_bypass_clock_x
+>                       |   |______|
+> PWM_clock_src_xy -----+   ________
+>                       |  |        |
+>                       +->| /div_k |---> PWM_clock_y
+>                       |  |________|
+>                       |    ______
+>                       |   |      |
+>                       +-->| Gate |----> PWM_bypass_clock_y
+>                           |______|
+> 
+> Where xy can be 0/1, 2/3, 4/5
+> 
+> PWM_clock_x/y serve for the PWM purpose.
+> PWM_bypass_clock_x/y serve for the clock-provider purpose.
+> The common clock framework has been used to manage those clocks.
+> 
+> This PWM driver serves as a clock-provider for PWM_bypass_clocks.
+> This is needed for example by the embedded AC300 PHY which clock comes
+> from PMW5 pin (PB12).
+> 
+> Usually, to get a clock from a PWM driver, we use the pwm-clock driver
+> so that the PWM driver doesn't need to be a clk-provider itself.
+> While this works in most cases, here it just doesn't.
+> That's because the pwm-clock request a period from the PWM driver,
+> without any clue that it actually wants a clock at a specific frequency,
+> and not a PWM signal with duty cycle capability.
+> So, the PWM driver doesn't know if it can use the bypass or not, it
+> doesn't even have the real accurate frequency information (23809524 Hz
+> instead of 24MHz) because PWM drivers only deal with periods.
+> 
+> With pwm-clock, we loose a precious information along the way (that we
+> actually want a clock and not a PWM signal).
+> That's ok with simple PWM drivers that don't have multiple input clocks,
+> but in this case, without this information, we can't know for sure which
+> clock to use.
+> And here, for instance, if we ask for a 24MHz clock, pwm-clock will
+> requests 42ns (assigned-clocks doesn't help for that matter). The logic
+> is to select the highest clock (100MHz) with no prescaler and a duty
+> cycle value of 2/4 => we have 25MHz instead of 24MHz.
 
-diff --git a/samples/rust/rust_driver_auxiliary.rs b/samples/rust/rust_driver_auxiliary.rs
-index e3e811a14110..2c1351040e45 100644
---- a/samples/rust/rust_driver_auxiliary.rs
-+++ b/samples/rust/rust_driver_auxiliary.rs
-@@ -51,16 +51,17 @@ fn probe<'bound>(
-     }
- }
- 
--struct Data {
-+struct Data<'bound> {
-     index: u32,
-+    parent: &'bound pci::Device<Bound>,
- }
- 
- struct ParentDriver;
- 
- #[allow(clippy::type_complexity)]
- struct ParentData<'bound> {
--    _reg0: auxiliary::Registration<'bound, ForLt!(Data)>,
--    _reg1: auxiliary::Registration<'bound, ForLt!(Data)>,
-+    _reg0: auxiliary::Registration<'bound, ForLt!(Data<'_>)>,
-+    _reg1: auxiliary::Registration<'bound, ForLt!(Data<'_>)>,
- }
- 
- kernel::pci_device_table!(
-@@ -81,33 +82,44 @@ fn probe<'bound>(
-         _info: &'bound Self::IdInfo,
-     ) -> impl PinInit<Self::Data<'bound>, Error> + 'bound {
-         Ok(ParentData {
--            _reg0: auxiliary::Registration::new(
--                pdev.as_ref(),
--                AUXILIARY_NAME,
--                0,
--                MODULE_NAME,
--                Data { index: 0 },
--            )?,
--            _reg1: auxiliary::Registration::new(
--                pdev.as_ref(),
--                AUXILIARY_NAME,
--                1,
--                MODULE_NAME,
--                Data { index: 1 },
--            )?,
-+            // SAFETY: `ParentData` is the driver's private data, which is dropped when the
-+            // device is unbound; i.e. `mem::forget()` is never called on it.
-+            _reg0: unsafe {
-+                auxiliary::Registration::new_with_lt(
-+                    pdev.as_ref(),
-+                    AUXILIARY_NAME,
-+                    0,
-+                    MODULE_NAME,
-+                    Data {
-+                        index: 0,
-+                        parent: pdev,
-+                    },
-+                )?
-+            },
-+            // SAFETY: See `_reg0` above.
-+            _reg1: unsafe {
-+                auxiliary::Registration::new_with_lt(
-+                    pdev.as_ref(),
-+                    AUXILIARY_NAME,
-+                    1,
-+                    MODULE_NAME,
-+                    Data {
-+                        index: 1,
-+                        parent: pdev,
-+                    },
-+                )?
-+            },
-         })
-     }
- }
- 
- impl ParentDriver {
-     fn connect(adev: &auxiliary::Device<Bound>) -> Result {
--        let dev = adev.parent();
--        let pdev: &pci::Device<Bound> = dev.try_into()?;
--
--        let data = adev.registration_data::<ForLt!(Data)>()?;
-+        let data = adev.registration_data::<ForLt!(Data<'_>)>()?;
-+        let pdev = data.parent;
- 
-         dev_info!(
--            dev,
-+            pdev,
-             "Connect auxiliary {} with parent: VendorID={}, DeviceID={:#x}\n",
-             adev.id(),
-             pdev.vendor_id(),
-@@ -115,7 +127,7 @@ fn connect(adev: &auxiliary::Device<Bound>) -> Result {
-         );
- 
-         dev_info!(
--            dev,
-+            pdev,
-             "Connected to auxiliary device with index {}.\n",
-             data.index
-         );
--- 
-2.54.0
+Didn't we discuss this choice of "highest clock" before? I dimly
+remember asking whether we cannot use a least-error approach, so
+considering all clocks and choosing the one which matches the target
+best?
+
+> And that's a perfectly fine choice for a PMW, because we still can
+> change the duty cycle in the range [0-4]/4.
+> But obviously for a clock, we don't care about the duty cycle, but more
+> about the clock accuracy.
+
+Thanks for your research into this and summarising this up! I see your
+point, and always found the choice to use nanoseconds in PWM somewhat
+problematic, especially when looking at the rounding errors.
+And while turning the PWM into a clock provider looks like a clever
+solution, this is somewhat arbitrary - why do we have this for those
+SoCs and not the other (older) ones? The 24 MHz != 1/42ns problem is
+the same there.
+What also bugs me a bit is also that this is actually a decision
+affecting the generic hardware devicetree description of the system,
+but its rooted in a Linux implementation detail (ns resolution periods).
+
+So before we consider going this route:
+- Can we change the internal interface in Linux, maybe introducing
+  some special interface from pwm-clock to the pwm drivers, to convey
+  frequencies directly, instead of period lengths?
+- Can we add an optional interface for pwm drivers in general, to use
+  a frequency / duty-cycle pair to describe a PWM setup? I would naively
+  think those to be some kind of natural PWM parameters.
+- Can we at least add a picosecond precision interface? That doesn't
+  solve the rounding issue for those number not only divisible by
+  2 or 5 (like 24), but at least it seems to mitigate it:
+  24 MHz => 41666 ps => 24.000384 MHz
+
+I see that having a clock provider seems like a more sustainable and
+fitting choice, but as mentioned it's something that affects the DT
+description, so I don't want to change that lightly.
+
+Cheers,
+Andre
+
+> And actually, this PWM is really a PWM AND a real clock when the bypass
+> is set.
+> 
+> This series is based onto v7.0
+> 
+> NB: checkpatch is not happy with patch 2, but it's a false positive.
+> It doesn't detect that PWM_XY_SRC_MUX/GATE/DIV are structures, but as
+> it's more readable like that, I prefer keeping it that way.
+> 
+> Changes since v5:
+> - remove trailing junk after commit message in patch 4
+> - remove Tested-by when it doesn't make sense.
+> (sorry for the noise)
+> 
+> Changes since v4:
+> - Fix a bug on bypass for channels greater than 1
+> - add colons to clarify 2 debug messages
+> - switch from H616 to sun8i prefix (in code, filename, module name)
+> - fix consistency issues in macro parameters
+> - rename some macros with a confusing naming
+> - rebase on v7.0
+> 
+> Changes since v3:
+> - gather Acked-by/Tested-by
+> - fix cast from pointer to integer of different size (kernel test robot
+>   with arc platform)
+> - add devm_action for clk_hw_unregister_composite as suggested by Philipp
+> - remove now unused pwm_remove as suggested by Philipp
+> 
+> Changes since v2:
+> - use U32_MAX instead of defining UINT32_MAX
+> - add a comment on U32_MAX usage in clk_round_rate()
+> - change clk_table_div_m (use macros)
+> - fix formatting (double space, superfluous comma, extra line feed)
+> - fix the parent clock order
+> - simplify code by using scoped_guard()
+> - add missing const in to_h616_pwm_chip() and rename to
+> h616_pwm_from_chip()
+> - add/remove missing/superfluous error messages
+> - rename cnt->period_ticks, duty_cnt->duty_ticks
+> - fix PWM_PERIOD_MAX
+> - add .remove() callback
+> - fix DIV_ROUND_CLOSEST_ULL->DIV_ROUND_UP_ULL
+> - add H616_ prefix
+> - protect _reg in macros
+> - switch to waveforms instead of apply/get_state
+> - shrink struct h616_pwm_channel
+> - rebase on v6.19-rc4
+> 
+> Changes since v1:
+> - rebase onto v6.19-rc1
+> - add missing headers
+> - remove MODULE_ALIAS (suggested by Krzysztof)
+> - use sun4i-pwm binding instead of creating a new one (suggested by Krzysztof)
+> - retrieve the parent clocks from the devicetree
+> - switch num_parents to unsigned int
+> 
+> Richard Genoud (4):
+>   dt-bindings: pwm: allwinner: add h616 pwm compatible
+>   pwm: sun8i: Add H616 PWM support
+>   arm64: dts: allwinner: h616: add PWM controller
+>   MAINTAINERS: Add entry on Allwinner sun8i/H616 PWM driver
+> 
+>  .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml |  19 +-
+>  MAINTAINERS                                   |   5 +
+>  .../arm64/boot/dts/allwinner/sun50i-h616.dtsi |  47 +
+>  drivers/pwm/Kconfig                           |  12 +
+>  drivers/pwm/Makefile                          |   1 +
+>  drivers/pwm/pwm-sun8i.c                       | 938 ++++++++++++++++++
+>  6 files changed, 1021 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/pwm/pwm-sun8i.c
+> 
+> 
+> base-commit: 028ef9c96e96197026887c0f092424679298aae8
+> 
 
 
