@@ -1,574 +1,211 @@
-Return-Path: <linux-pwm+bounces-9165-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9166-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CLW8EuuyFmokogcAu9opvQ
-	(envelope-from <linux-pwm+bounces-9165-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Wed, 27 May 2026 11:01:31 +0200
+	id eFnuOovcFmofuAcAu9opvQ
+	(envelope-from <linux-pwm+bounces-9166-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Wed, 27 May 2026 13:59:07 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 9B7DB5E1771
-	for <lists+linux-pwm@lfdr.de>; Wed, 27 May 2026 11:01:30 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 963525E3C27
+	for <lists+linux-pwm@lfdr.de>; Wed, 27 May 2026 13:59:07 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 094DA30686DD
-	for <lists+linux-pwm@lfdr.de>; Wed, 27 May 2026 08:55:38 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 1093130058F6
+	for <lists+linux-pwm@lfdr.de>; Wed, 27 May 2026 11:59:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id E16933E3145;
-	Wed, 27 May 2026 08:55:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 200D23FD960;
+	Wed, 27 May 2026 11:59:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cjgFmfHv"
+	dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b="LaqViX3w"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from LO3P265CU004.outbound.protection.outlook.com (mail-uksouthazon11020082.outbound.protection.outlook.com [52.101.196.82])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36A853976AD;
-	Wed, 27 May 2026 08:55:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1779872136; cv=none; b=oZNuax8jQtGNrnu/WkjrPMvI2xhN3PL3pYpM3CLAyRlhNjFJ0PScLPeiABwhwLV3GFbUj2hBuWk6o+xag/q+7w2MEchRZID5H0emVG6sJ16CefQw62pPXpCEBeWzl4eWucCrThBO4Z/gPw1BGvO7DA2/JCdRS8r01/J580FJa+g=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1779872136; c=relaxed/simple;
-	bh=lEwCr6BuCo1SL4vbLe2Es4zN1+pS2TYQxjLgtYqgtik=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Hdhwz07eGzgw1y3B69WlBR2ZoqmNbIVQi9xkGO88gyUx29006GAs2Y4lvZFhSRlqlX3EIDQ5yM7pCIDW+n6Q97yGwmxeyI/qpoRtwYheNcCcUKwkGvnv4fbzTiVN4w/bPup70h7B/vzTUQaBmMZdJ0gaOdwDkvZmyE1BGvlntjY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cjgFmfHv; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id 450011F00ACF;
-	Wed, 27 May 2026 08:55:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1779872134;
-	bh=ZEcr3GfgN9GEDhisD/lw9lF9PWEQ66FnzcFrj0iaVW4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=cjgFmfHvb8bt+bgXOEPlY/W5TzS2vOcqwIOF+galjlid0Z+JorL52XE73LczqCWoD
-	 MJW0tvkWN9+gbbx8W145gWexMiqlebLylB1W/rybjzjbK9m5QVZrCXOEyoCZgFP7Ap
-	 SwZIBt0IEuf5OnrhsP90NyBjB7DDiFIXPRMFBnT9i58keH16AR7zLOK24zrSUsvhqY
-	 Y3bjNsheJkGd70cDhVqMoCJYDzz2iwOiMx9IPf6Llo8lOwIw3SczPlMiue6AoVPktj
-	 DOIFs5FEfy6BcVAo5EciItnWywN6CHiM92JfQHxSdY8n4tZy+bkVcGXoJEnTWVSf1z
-	 tI4iUhxcOLYWA==
-Date: Wed, 27 May 2026 10:55:32 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: ben717@andestech.com
-Cc: Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org, 
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 2/3] pwm: add Andes PWM driver support
-Message-ID: <ahajkcejv71TwV5f@monoceros>
-References: <20260330-andes-pwm-v5-0-01c59a659d2c@andestech.com>
- <20260330-andes-pwm-v5-2-01c59a659d2c@andestech.com>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D13A400DE4;
+	Wed, 27 May 2026 11:59:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.196.82
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1779883145; cv=fail; b=u9cDBIp9KibN7hZlXSk+4wdBtbZ0sJKOcKwcZ4hh42thR806HbrijTvcXbK8kVLuZvnExujJmjWlyRv42HLZUV2SVbV2smeHJUTNmR0EvNO81PlwM44e0WM0ZxAZpYUdr2OMyuXxu/zA/qV4HN8W7Afp9/VSbyPIIWVzUEjp5uQ=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1779883145; c=relaxed/simple;
+	bh=77XWhYqZCR856Ui319RzPEIk6gO7v33Bp446FjbaKs0=;
+	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
+	 In-Reply-To:MIME-Version; b=NuVKRV1kSt0kBX9KR/SSqmoHvHkR5YC0OGDA6k+N+3Be1W8HEyXyWA4dxxX04CJTFBTQ7/gGCTojncFLfihNOXY1GuD5GLrTMTN39mJ1NPFs+fWfWoBI1GYKxnjhIhudYaKU0Nku+Z+7hhbV9aPfITU8oiaZ3qrDeBQxg8yc2dY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=LaqViX3w; arc=fail smtp.client-ip=52.101.196.82
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=garyguo.net
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=e83HYpFfIMPVkPeKCbpMMoFlOO6zZzfIWxrNkwFtgH3aZ7xuOx8WilirFYOnC8olWyJPzvfX6mFJj1ES6zZYxpFEXY+6zqa35RHiK01+wu7jW0UUi2OyyKHPuc3baGkwpBtZP6eSlB0kX+rp46hnhq/mwRYcp5uvALtX1W1ztlA3R037eFv7ZkP77txnztU3xcikBwgwwgowcwM+p01JkmJyu287bzzjcwmQ3BEVKtk75u+OHCSICe+PuliJI5fFtkeJN2pmW7XxnqmW+wvDDnVUMOuIFTMM8dMyIIgyLm5R8kF2cKJXLkoVQZGxmiGplRw34m4UuAmvQ6Mj2JZP2g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=2fsrDmowFUMYXILZotlarITJd8qSx0wAIwhDA3Z6Yfg=;
+ b=NHUc3Xjd92midutasbhtwXZkKpi2knaPvcQVy+MiI4i1Elm0LGwTsMbXOiGR1UKwh5RDP+eSbcW6EShQUGvN4YDbTmYo3pWYR7VGBEDb/s2y/oGa9z6Zb2tjGsSx/k0hlnhdDbU/fWW5m5kn/ZOlZ330pWk7xkhLjrxtqsQYYpyU9lYzWRyPOYbPCZiZa+M1OktJHAIWH9AG5PmqkC401XNi1DnQgbXoKWtthIZ0ET0yy8EfZAxsDW7sWeqK8SiNpUjZ4lW33et2xnUAPAbqUEzk6LhNVoruDqZMi5PfNJxpN01O1jOQyM0IIGuZWV5wJAGmU/sMyDpVDlpzmRKrgw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=garyguo.net; dmarc=pass action=none header.from=garyguo.net;
+ dkim=pass header.d=garyguo.net; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garyguo.net;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2fsrDmowFUMYXILZotlarITJd8qSx0wAIwhDA3Z6Yfg=;
+ b=LaqViX3wx5xT8i9Bcvvhv0GWy6lIiRC+vLago5U6cRmXgrPO9+B8nznpC9x2mTe99DVRr2ZwXuXJm6G37d+HsUDkuRjMIzIftfbHeoQerWOTuMUeuY+MgwCROuHY2+3clulC82Dj/aeVfXHfl0wLJB28NQ99BwwH5IrHY6m/NbA=
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=garyguo.net;
+Received: from LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:488::16)
+ by LO6P265MB6208.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:2b3::10) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.71.12; Wed, 27 May
+ 2026 11:58:58 +0000
+Received: from LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::1c3:ceba:21b4:9986]) by LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::1c3:ceba:21b4:9986%4]) with mapi id 15.21.0071.011; Wed, 27 May 2026
+ 11:58:58 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Wed, 27 May 2026 12:58:57 +0100
+Message-Id: <DITFWXKH2IMU.21KBH5CCYGRK3@garyguo.net>
+Cc: <driver-core@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+ <nova-gpu@lists.linux.dev>, <dri-devel@lists.freedesktop.org>,
+ <linux-pm@vger.kernel.org>, <linux-pwm@vger.kernel.org>,
+ <linux-pci@vger.kernel.org>, <rust-for-linux@vger.kernel.org>,
+ <stable@vger.kernel.org>, "Sashiko" <sashiko-bot@kernel.org>
+Subject: Re: [PATCH v5 01/24] rust: pci: use 'static lifetime for PCI BAR
+ resource names
+From: "Gary Guo" <gary@garyguo.net>
+To: "Danilo Krummrich" <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
+ <rafael@kernel.org>, <acourbot@nvidia.com>, <aliceryhl@google.com>,
+ <david.m.ertman@intel.com>, <ira.weiny@intel.com>, <leon@kernel.org>,
+ <viresh.kumar@linaro.org>, <m.wilczynski@samsung.com>,
+ <ukleinek@kernel.org>, <bhelgaas@google.com>, <kwilczynski@kernel.org>,
+ <abdiel.janulgue@gmail.com>, <robin.murphy@arm.com>,
+ <markus.probst@posteo.de>, <ojeda@kernel.org>, <boqun@kernel.org>,
+ <gary@garyguo.net>, <bjorn3_gh@protonmail.com>, <lossin@kernel.org>,
+ <a.hindborg@kernel.org>, <tmgross@umich.edu>, <igor.korotin@linux.dev>,
+ <daniel.almeida@collabora.com>, <pcolberg@redhat.com>
+X-Mailer: aerc 0.21.0
+References: <20260525202921.124698-1-dakr@kernel.org>
+ <20260525202921.124698-2-dakr@kernel.org>
+In-Reply-To: <20260525202921.124698-2-dakr@kernel.org>
+X-ClientProxiedBy: LO4P123CA0135.GBRP123.PROD.OUTLOOK.COM
+ (2603:10a6:600:193::14) To LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:488::16)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="qvg65orckwj2rpzn"
-Content-Disposition: inline
-In-Reply-To: <20260330-andes-pwm-v5-2-01c59a659d2c@andestech.com>
-X-Spamd-Result: default: False [-3.76 / 15.00];
-	SIGNED_PGP(-2.00)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LOVP265MB8871:EE_|LO6P265MB6208:EE_
+X-MS-Office365-Filtering-Correlation-Id: eb09d8bc-1d39-417f-3913-08debbe755eb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|7416014|376014|10070799003|366016|1800799024|921020|4143699003|56012099006|18002099003|22082099003;
+X-Microsoft-Antispam-Message-Info:
+	Pz0AQaJt1shm0AGz6ikf6HheeS0g11czbcAIGEinVXo80lbn63bH46dn+YdwOAd9bk2IG3VcnMOEIeK1LogvAzyeWFOTAQmtgtBbvjSoAllMysjqwYVhrNFm/mfwT+JojLQPMP+pZWLftqtalJlEJB71NQS0hWZGgux+XFv5AQtE0kvHqDmOWE4bOQ30z672y0KZ68iaGhO0uAe5vnxpzUkWsJoQYShbGyiQcLxyok4FuaN//fn87iaEKaFu/dxxPe/WFALifal9qAg4zC8DKDBfBWPO7V98DO7DFiZ7aUJdbsimdzvxkv9FN8crD4cXu96l2OdhlBZP58qEoMB3ic6cVeXGYzB4JXiMHSQivwUWsUY9VoRt8QCUXeO+/u90hQzS0zPLAeQIyBiH+cv+TaFs2ijGntse+GWIkMbQDggqjBXPNVoExAXO9KA+9pLEw//EFyUIQCzzmqSfBWUU/EdQBV/GM/Oa6/jjtRo3RqMFaqDQrX9+FLTENtvrmKjHwovhJbboH9b6veDmkr+9MWVEC3RUUgTV8WaxqIP3xBzOrDmB87gpGi3xyn5XJB/P4vCzz0VyxZiUty6OMbd2Mzbh5+PjgAiwCMoFNUQbyWM7I7eVb/LMeXA3/tw6QQ37RH0UGAPW9rtm1kF3fhpE4H0jx3HoKBJ1PJvJhDR9U5prZnL9s+QJlpuTXUuzuSTZ
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(7416014)(376014)(10070799003)(366016)(1800799024)(921020)(4143699003)(56012099006)(18002099003)(22082099003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?VXNPczFqV0xkZEJCUkVqaVM0NXpPZVNFazE1SlJuNTBLdmJxYUhGMkxHMENJ?=
+ =?utf-8?B?Q2pzSWdhSGlSYmpLaFJmVFpwUmd6d1lZbXluUEJpbFpKTnJTczZ6ZDlCbzY3?=
+ =?utf-8?B?YTk0N29ObVhvVG9SMHEzaWlRMGMrc01sZy9DVnlUNVo3VHYwKzlQS29ZcmQw?=
+ =?utf-8?B?UWVueHV5SlFEVlFmM2VkMjFSalIxK3d4eS9LZ0Q1eG0ycnRNemVJQnR1QTJU?=
+ =?utf-8?B?MlI1SnZ2TG9RcmhuTjdGL0Y5ZlhrSUYrOVFsMjFvK2t4U3hmaHovQ3kyYldi?=
+ =?utf-8?B?SU9WZHRWdUxmTkIyM25JOE5PS1MvUE1jeGppWGFFSkkwTU5wYVNaS3ZkM1dr?=
+ =?utf-8?B?aGlZS0dvdUpOV0V0SjkveWF6STNCUjVPQkRhR052QzMzZ0Z3aFk2cVgrWU10?=
+ =?utf-8?B?RGdsM3pyZitHWXowbDFTNkJxSDNyaHk3a2VjcGxhYjZoVTQyS2VWeGh6T0tK?=
+ =?utf-8?B?UjQ5SXo2cENrTndvSEJwYmtvWlJLVVFzd21NNHhrNTB1Uzhwdkt4LzFQVDRh?=
+ =?utf-8?B?ejh6YXlTQk02VW1zS1hiYXRTRm5SRE5sY2xhcVJBOWdHc0E2TkxYOS9rbWIx?=
+ =?utf-8?B?RmdrdGJIQUE0Qm9BNkI1dEJuV0NFRU5kS0hXVzkyK1Vkd3ErbTVweGcyRmVH?=
+ =?utf-8?B?Wm9nZFo4Q1kzWlhVcHI2M1k1QWcvTnc3ZDJZNHRhaU42SXFoeHAydFc4YXU5?=
+ =?utf-8?B?UW5yVGt0QWMvZXJncDg4N0tPU3hQYmVxL01oRXJNWHFGaW1udUxicGg0WTRl?=
+ =?utf-8?B?bG5IQlJWMWVycHZhMkFBaHhoRHFuNXAwWFZHN3VLK0dWeWFuRndtbU11d041?=
+ =?utf-8?B?bHMxc3NLcTZVVFRGcVVXeDhhNWJDVTBTRFdPQkNwclpiYmwvbHlaUEdHQitv?=
+ =?utf-8?B?WU9CbkxpZTZWV3FuT2xmNURHd3c3MGQ5aklRMlpCNml5d0VLYnhkcFU2bHRF?=
+ =?utf-8?B?U3JVK0VhdUI2YnRVem1QbDZnOHU4MlZyZmV1TVA1VWtDcDBiK3VwRGJqTkYr?=
+ =?utf-8?B?ZzRvMWgrM0hkRWVWTnUvK1krcGRpZlFVTDV1ZWNsUHM1OXpBOWowYXhtUnRI?=
+ =?utf-8?B?blYxam9CNE15eHpFWDNZZ2paQzk5U01neWNDakh0bWlxcWpRWDN4UTJEYWdI?=
+ =?utf-8?B?WkRWWHFKZFVXRndkUVhna2NpbnlJQ3ROQzdrcmdNeUgxaEJOdUNZUXd5WHo2?=
+ =?utf-8?B?SDh6eENnUktLL1o0MmlPS1llQWdOcnIvcGc5SExjNlhMa24wQWozRWo4a2Nr?=
+ =?utf-8?B?aXc0eS94NHZ5ekxzTDJaUklBQWxiUlRTYWhudUQxRWFjZnAyRUVkM0hCK2xu?=
+ =?utf-8?B?amZ3OWJteHFMTFhaUmhGQ3QxdXNFVUNRei9pS0hRWTZnMFF0ZWRsZXE1THhh?=
+ =?utf-8?B?ckV0alBhWDR4Z3YrbFBWNnlpaExmY3Jya2xMRU82azY4ZyttRlJQTUtrMlNE?=
+ =?utf-8?B?NDVqeVJyUzAzSXJLN09KWkFLVCtocGNiTWh5YTVqbDVYNCtSMFNnYjZUVkx4?=
+ =?utf-8?B?amlFQTN1eGNKN2hQZmpsMXhPcTVZM1h3VXJCVXlOeWRlUld0TFBKVHFaWmxL?=
+ =?utf-8?B?WldmQmhoYzlvM1l0OVFxa3BiK2Z5UUdXaUJCaC9hMHNxU3p1SXVuRG1YTmpG?=
+ =?utf-8?B?d21IT0RuRW4wemVCVnNocGM4MlAyTU1Tc2U3TlJkS29TaXBoRUpDNTR1RDAy?=
+ =?utf-8?B?T0IxQTZGckw4VlpuWTZTdUczTmZ5TUNjRm1pVnltdUZHN0t2OEZhcHhmSzdo?=
+ =?utf-8?B?cHFENUl3Qk9NVEI5L2NPR0JPSzlBaFdYQnRtZ2ZqdGNqVitOYUllaE5XR0Jq?=
+ =?utf-8?B?REtoaERiNmVieDBNNWRmNzZmRGdZMWdTRFFOZ3kzanJVSGNoUmNDT1NOV092?=
+ =?utf-8?B?cUorOGFXdTRjR2lqa1ltNEhQODRDWnE2K2dSU0gxQThob0p4MUc4Yk1odzNi?=
+ =?utf-8?B?VjV4RDMrRUVUTUFOL0txd2R0R0RlQmZrM3E1ek1jRjhRZU13TkJjMzJIV3o2?=
+ =?utf-8?B?VGF3aHFNakZMZUFVOHVkSVVJYU1WenhKMk03TlRlK1pCU296UC9TRHlvaWpQ?=
+ =?utf-8?B?c3hqaURsdW81dnVXTHQ0M0E4bzZCNDJFODRMVWVsSmdOUEFYMElzT3pJRkdq?=
+ =?utf-8?B?KzU1amEvcm5lRTl0WDdVUkZZeWUwVTVISUJwT2tKRXVUOUhJQkh4ajlMa2RD?=
+ =?utf-8?B?YU1tSzdSS0Z2eHM4M3JDTml4SU5MUUdtWU9BZVJKT2xEZTRmOW9BT0FzWVl2?=
+ =?utf-8?B?M2lualFEUTA4aTNxelp0OEFRUmlMZDZONnkxQ1ZqSzlXSlZKRUFhSlNlbENq?=
+ =?utf-8?B?WHRkdWw1TUkvNUV0a0NTcVlDUEtyelBqV0lTK2YzeGpUbXZ1eTNvQT09?=
+X-OriginatorOrg: garyguo.net
+X-MS-Exchange-CrossTenant-Network-Message-Id: eb09d8bc-1d39-417f-3913-08debbe755eb
+X-MS-Exchange-CrossTenant-AuthSource: LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2026 11:58:58.7345
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: bbc898ad-b10f-4e10-8552-d9377b823d45
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Pf8LVUicx9ejqyiPJVEal4sbqKw0JCDR2yQkU4ouCmqeJwrFl2cA4TkAaPz6ylEbP5PD+uR425/krDni6s0EFA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO6P265MB6208
+X-Spamd-Result: default: False [1.34 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[garyguo.net,none];
+	R_DKIM_ALLOW(-0.20)[garyguo.net:s=selector1];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9165-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9166-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	FREEMAIL_TO(0.00)[kernel.org,linuxfoundation.org,nvidia.com,google.com,intel.com,linaro.org,samsung.com,gmail.com,arm.com,posteo.de,garyguo.net,protonmail.com,umich.edu,linux.dev,collabora.com,redhat.com];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	MISSING_XM_UA(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ukleinek@kernel.org,linux-pwm@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[36];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
-	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	RCPT_COUNT_SEVEN(0.00)[7];
 	TO_DN_SOME(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,andestech.com:email]
-X-Rspamd-Queue-Id: 9B7DB5E1771
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[gary@garyguo.net,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[garyguo.net:+];
+	NEURAL_HAM(-0.00)[-0.999];
+	TAGGED_RCPT(0.00)[linux-pwm];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[garyguo.net:email,garyguo.net:mid,garyguo.net:dkim,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
+X-Rspamd-Queue-Id: 963525E3C27
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
+On Mon May 25, 2026 at 9:20 PM BST, Danilo Krummrich wrote:
+> pci_request_region() stores the name pointer directly in struct
+> resource; use &'static CStr to ensure the pointer remains valid even if
+> the Bar is leaked.
+>=20
+> Cc: stable@vger.kernel.org
+> Reported-by: Sashiko <sashiko-bot@kernel.org>
+> Closes: https://lore.kernel.org/all/20260522004943.CDA7C1F000E9@smtp.kern=
+el.org/
+> Fixes: 3c2e31d717ac ("rust: pci: move I/O infrastructure to separate file=
+")
+> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 
---qvg65orckwj2rpzn
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v5 2/3] pwm: add Andes PWM driver support
-MIME-Version: 1.0
+Reviewed-by: Gary Guo <gary@garyguo.net>
 
-Hello Ben,
-
-On Mon, Mar 30, 2026 at 03:45:44PM +0800, Ben Zong-You Xie via B4 Relay wro=
-te:
-> From: Ben Zong-You Xie <ben717@andestech.com>
->=20
-> Add a driver for the PWM controller found in Andes AE350 platforms and
-> QiLai SoCs.
->=20
-> The Andes PWM controller features:
-> - 4 independent channels.
-> - Dual clock source support (APB clock and external clock) to provide
->   a flexible range of frequencies.
-> - Support for normal and inversed polarity.
->=20
-> The driver implements the .apply() and .get_state() callbacks. Since the
-> clock source of each channel can be selected by programming the
-> register, clock selection logic is implemented to prioritize the
-> external clock to maximize the supported period range, falling back to
-> the APB clock for higher frequency requirements.
->=20
-> Signed-off-by: Ben Zong-You Xie <ben717@andestech.com>
 > ---
->  drivers/pwm/Kconfig     |  10 ++
->  drivers/pwm/Makefile    |   1 +
->  drivers/pwm/pwm-andes.c | 306 ++++++++++++++++++++++++++++++++++++++++++=
-++++++
->  3 files changed, 317 insertions(+)
->=20
-> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> index 6f3147518376..b82f2c857ada 100644
-> --- a/drivers/pwm/Kconfig
-> +++ b/drivers/pwm/Kconfig
-> @@ -73,6 +73,16 @@ config PWM_AIROHA
->  	  To compile this driver as a module, choose M here: the module
->  	  will be called pwm-airoha.
-> =20
-> +config PWM_ANDES
-> +	tristate "Andes PWM support"
-> +	depends on ARCH_ANDES || COMPILE_TEST
-> +	help
-> +	  Generic PWM framework driver for Andes platform, such as QiLai SoC
-> +	  and AE350 platform.
-> +
-> +	  To compile this driver as a module, choose M here: the module
-> +	  will be called pwm-andes.
-> +
->  config PWM_APPLE
->  	tristate "Apple SoC PWM support"
->  	depends on ARCH_APPLE || COMPILE_TEST
-> diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> index 0dc0d2b69025..858f225289cc 100644
-> --- a/drivers/pwm/Makefile
-> +++ b/drivers/pwm/Makefile
-> @@ -3,6 +3,7 @@ obj-$(CONFIG_PWM)		+=3D core.o
->  obj-$(CONFIG_PWM_AB8500)	+=3D pwm-ab8500.o
->  obj-$(CONFIG_PWM_ADP5585)	+=3D pwm-adp5585.o
->  obj-$(CONFIG_PWM_AIROHA)	+=3D pwm-airoha.o
-> +obj-$(CONFIG_PWM_ANDES)		+=3D pwm-andes.o
->  obj-$(CONFIG_PWM_APPLE)		+=3D pwm-apple.o
->  obj-$(CONFIG_PWM_ARGON_FAN_HAT)	+=3D pwm-argon-fan-hat.o
->  obj-$(CONFIG_PWM_ATMEL)		+=3D pwm-atmel.o
-> diff --git a/drivers/pwm/pwm-andes.c b/drivers/pwm/pwm-andes.c
-> new file mode 100644
-> index 000000000000..835c8db55987
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-andes.c
-> @@ -0,0 +1,306 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Driver for Andes PWM, used in Andes AE350 platform and QiLai SoC
-> + *
-> + * Copyright (C) 2026 Andes Technology Corporation.
-> + *
-> + * Limitations:
-> + * - When disabling a channel, the current period will not be completed,=
- and the
-> + *   output will be constant zero.
+>  rust/kernel/pci/io.rs | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 
-You could use that to simulate a 0% relative duty cycle instead of
-erroring out.
-
-Just to be sure: A disabled channel emits zero independant of
-ANDES_PWM_CH_CTRL_PARK being set or not?!
-
-> + * - The current period will be completed first if reconfiguring.
-> + * - Further, if the reconfiguration changes the clock source, the outpu=
-t will
-> + *   not be the old one nor the new one. And the output will be the new =
-one
-> + *   until writing to the reload register.
-> + * - The hardware can neither do a 0% nor a 100% relative duty cycle.
-> + */
-> +
-> +#include <linux/bitfield.h>
-> +#include <linux/clk.h>
-> +#include <linux/err.h>
-> +#include <linux/math64.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pwm.h>
-> +#include <linux/regmap.h>
-> +#include <linux/time.h>
-> +#include <linux/types.h>
-> +
-> +#define ANDES_PWM_CH_ENABLE		0x1C
-> +#define ANDES_PWM_CH_ENABLE_PWM(ch)	BIT(3 + (4 * (ch)))
-> +
-> +#define ANDES_PWM_CH_CTRL(ch)		(0x20 + (0x10 * (ch)))
-> +#define ANDES_PWM_CH_CTRL_MODE_PWM	BIT(2)
-> +#define ANDES_PWM_CH_CTRL_CLK		BIT(3)
-> +#define ANDES_PWM_CH_CTRL_PARK		BIT(4)
-> +#define ANDES_PWM_CH_CTRL_MASK		GENMASK(4, 0)
-> +
-> +#define ANDES_PWM_CH_RELOAD(ch)		(0x24 + (0x10 * (ch)))
-> +#define ANDES_PWM_CH_RELOAD_HIGH	GENMASK(31, 16)
-> +#define ANDES_PWM_CH_RELOAD_LOW		GENMASK(15, 0)
-> +
-> +#define ANDES_PWM_CH_COUNTER(ch)	(0x28 + (0x10 * (ch)))
-> +
-> +#define ANDES_PWM_CH_MAX		4
-> +#define ANDES_PWM_CYCLE_MIN		1
-> +#define ANDES_PWM_CYCLE_MAX		0x10000
-> +
-> +struct andes_pwm {
-> +	struct regmap *regmap;
-> +	struct clk *pclk;
-> +	struct clk *extclk;
-> +	unsigned int pclk_rate;
-> +	unsigned int extclk_rate;
-> +};
-> +
-> +static const struct regmap_config andes_pwm_regmap_config =3D {
-> +	.name =3D "andes_pwm",
-> +	.reg_bits =3D 32,
-> +	.reg_stride =3D 4,
-> +	.val_bits =3D 32,
-> +	.pad_bits =3D 0,
-> +	.max_register =3D ANDES_PWM_CH_COUNTER(ANDES_PWM_CH_MAX - 1),
-> +	.cache_type =3D REGCACHE_NONE,
-> +};
-> +
-> +static inline struct andes_pwm *to_andes_pwm(struct pwm_chip *chip)
-
-If you rename this to andes_pwm_from_chip this function has the driver's
-function name prefix, too.
-
-> +{
-> +	return pwmchip_get_drvdata(chip);
-> +}
-> +
-> +static int andes_pwm_enable(struct pwm_chip *chip, unsigned int channel,
-> +			    bool enable)
-> +{
-> +	struct andes_pwm *ap =3D to_andes_pwm(chip);
-> +
-> +	return regmap_assign_bits(ap->regmap, ANDES_PWM_CH_ENABLE,
-> +				  ANDES_PWM_CH_ENABLE_PWM(channel), enable);
-> +}
-> +
-> +static int andes_pwm_config(struct pwm_chip *chip, unsigned int channel,
-> +			    const struct pwm_state *state)
-> +{
-> +	struct andes_pwm *ap =3D to_andes_pwm(chip);
-> +	unsigned int clk_rate =3D ap->extclk_rate;
-> +	unsigned int try =3D 2;
-> +	u64 high_ns =3D state->duty_cycle;
-> +	u64 low_ns =3D state->period - high_ns;
-
-This results in rounding errors. Consider:
-
-	clk_rate =3D 500000000
-	state->duty_cycle =3D 17
-	state->period =3D 32
-
-then you configure=20
-
-	high_cycles =3D 8
-	low_cycles =3D 7
-
-which corresponds to a period =3D 30 ns, while you can do 32 ns. So you
-have to convert state->period to ticks and do the subtraction in the
-tick domain.
-
-> +	unsigned int ctrl =3D ANDES_PWM_CH_CTRL_MODE_PWM;
-> +	u64 high_cycles;
-> +	u64 low_cycles;
-> +	u32 reload;
-> +
-> +	/*
-> +	 * Reload register for PWM mode:
-> +	 *
-> +	 *		31 : 16    15 : 0
-> +	 *		PWM16_Hi | PWM16_Lo
-> +	 *
-> +	 * The high duration is (PWM16_Hi + 1) cycles and the low duration is
-> +	 * (PWM16_Lo + 1) cycles. For a duty cycle of 10 cycles and a total
-> +	 * period of 30 cycles in normal polarity, PWM16_Hi is set to
-> +	 * 9 (10 - 1) and PWM16_Lo to 19 (30 - 10 - 1). Also, PWM16_Hi is set to
-> +	 * 19 and PWM16_Lo is set to 9 in inversed polarity.
-> +	 *
-> +	 * Because the register stores "cycles - 1", the valid range for
-> +	 * each phase is 1 to 65536 (0x10000) cycles. This implies the hardware
-> +	 * cannot achieve a true 0% or 100% duty cycle.
-> +	 *
-> +	 * The controller supports two clock sources: the APB clock and an
-> +	 * external clock. The driver first attempts to use the external clock
-> +	 * to widest possible range of supported periods. If the requests
-> +	 * exceeds the valid range of the register, it falls back to the APB
-> +	 * clock. The request is rejected if the timing cannot be met by either
-> +	 * source.
-> +	 */
-> +	if (state->polarity =3D=3D PWM_POLARITY_INVERSED)
-> +		swap(high_ns, low_ns);
-> +
-> +	while (try) {
-> +		high_cycles =3D mul_u64_u64_div_u64(clk_rate, high_ns,
-> +						  NSEC_PER_SEC);
-> +		low_cycles =3D mul_u64_u64_div_u64(clk_rate, low_ns,
-> +						 NSEC_PER_SEC);
-> +		if (high_cycles > ANDES_PWM_CYCLE_MAX)
-> +			high_cycles =3D ANDES_PWM_CYCLE_MAX;
-> +
-> +		if (low_cycles > ANDES_PWM_CYCLE_MAX)
-> +			low_cycles =3D ANDES_PWM_CYCLE_MAX;
-> +
-> +		if (high_cycles >=3D ANDES_PWM_CYCLE_MIN &&
-> +		    low_cycles >=3D ANDES_PWM_CYCLE_MIN)
-> +			break;
-> +
-> +		try--;
-> +		clk_rate =3D ap->pclk_rate;
-> +	}
-
-This loop implements:
-
-	if extclk_rate is too high:
-		if pclk is too high:
-			error out
-		else:
-			use pclk
-	else:
-		use extclk
-
-This might be surprising for a user because the emitted period depends
-on the requested duty_cycle.
-
-> +
-> +	/*
-> +	 * try =3D=3D 0 : no clock is valid
-> +	 * try =3D=3D 1 : use APB clock
-> +	 * try =3D=3D 2 : use external clock
-> +	 */
-> +	if (!try)
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * If changing the clock source here, the output will not be the old one
-> +	 * nor the new one. And the output will be the new one until writing to
-> +	 * the reload register.
-
-And the output will be the new one *after* writing to the reload register?
-
-> +	 */
-> +	ctrl |=3D (try =3D=3D 1) ? ANDES_PWM_CH_CTRL_CLK : 0;
-> +	ctrl |=3D (state->polarity =3D=3D PWM_POLARITY_INVERSED) ?
-> +		ANDES_PWM_CH_CTRL_PARK : 0;
-> +	regmap_update_bits(ap->regmap, ANDES_PWM_CH_CTRL(channel),
-> +			   ANDES_PWM_CH_CTRL_MASK, ctrl);
-> +	reload =3D FIELD_PREP(ANDES_PWM_CH_RELOAD_HIGH, high_cycles - 1) |
-> +		 FIELD_PREP(ANDES_PWM_CH_RELOAD_LOW, low_cycles - 1);
-> +
-> +	return regmap_write(ap->regmap, ANDES_PWM_CH_RELOAD(channel), reload);
-> +}
-> +
-> +static int andes_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
-> +			   const struct pwm_state *state)
-> +{
-> +	unsigned int channel =3D pwm->hwpwm;
-> +	int ret;
-> +
-> +	if (!state->enabled) {
-> +		if (pwm->state.enabled)
-> +			andes_pwm_enable(chip, channel, false);
-> +
-> +		return 0;
-> +	}
-> +
-> +	ret =3D andes_pwm_config(chip, channel, state);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return andes_pwm_enable(chip, channel, true);
-> +}
-> +
-> +static int andes_pwm_get_state(struct pwm_chip *chip, struct pwm_device =
-*pwm,
-> +			       struct pwm_state *state)
-> +{
-> +	struct andes_pwm *ap =3D to_andes_pwm(chip);
-> +	unsigned int channel =3D pwm->hwpwm;
-> +	unsigned int ctrl;
-> +	unsigned int clk_rate;
-> +	unsigned int reload;
-> +	u64 high_cycles;
-> +	u64 low_cycles;
-> +
-> +	regmap_read(ap->regmap, ANDES_PWM_CH_CTRL(channel), &ctrl);
-> +	clk_rate =3D FIELD_GET(ANDES_PWM_CH_CTRL_CLK, ctrl) ? ap->pclk_rate
-> +							  : ap->extclk_rate;
-> +	state->enabled =3D regmap_test_bits(ap->regmap, ANDES_PWM_CH_ENABLE,
-> +					  ANDES_PWM_CH_ENABLE_PWM(channel));
-> +	state->polarity =3D regmap_test_bits(ap->regmap,
-> +					   ANDES_PWM_CH_CTRL(channel),
-> +					   ANDES_PWM_CH_CTRL_PARK);
-
-This can be simplified to use FIELD_GET(..., ctrl);
-
-> +	regmap_read(ap->regmap, ANDES_PWM_CH_RELOAD(channel), &reload);
-> +	high_cycles =3D FIELD_GET(ANDES_PWM_CH_RELOAD_HIGH, reload) + 1;
-> +	low_cycles =3D FIELD_GET(ANDES_PWM_CH_RELOAD_LOW, reload) + 1;
-> +
-> +	/*
-> +	 * high_cycles and low_cycles are both 16 bits, and NSEC_PER_SEC is 30
-> +	 * bits. Thus, the multiplication is safe from overflow
-
-Missing . at the end.
-
-> +	 */
-> +	if (state->polarity =3D=3D PWM_POLARITY_NORMAL) {
-> +		state->duty_cycle =3D DIV_ROUND_UP_ULL(high_cycles * NSEC_PER_SEC,
-> +						     clk_rate);
-> +		state->period =3D state->duty_cycle +
-> +				DIV_ROUND_UP_ULL(low_cycles * NSEC_PER_SEC,
-> +						 clk_rate);
-> +	} else {
-> +		state->duty_cycle =3D DIV_ROUND_UP_ULL(low_cycles * NSEC_PER_SEC,
-> +						     clk_rate);
-> +		state->period =3D state->duty_cycle +
-> +				DIV_ROUND_UP_ULL(high_cycles * NSEC_PER_SEC,
-> +						 clk_rate);
-
-Here is a rounding error. You need
-
-	state->period =3D DIV_ROUND_UP_ULL((low_cycles + high_cycles) * NSEC_PER_S=
-EC, clk_rate);
-
-(for both polarities, so it can be moved out of the if).
-
-To see the difference, consider clk_rate =3D 2 * NSEC_PER_SEC,
-high_cycles =3D 15 and low_cycles =3D 15.
-
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct pwm_ops andes_pwm_ops =3D {
-> +	.apply =3D andes_pwm_apply,
-> +	.get_state =3D andes_pwm_get_state,
-> +};
-> +
-> +static int andes_pwm_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev =3D &pdev->dev;
-> +	struct pwm_chip *chip;
-> +	struct andes_pwm *ap;
-> +	void __iomem *reg_base;
-> +	int ret;
-> +
-> +	chip =3D devm_pwmchip_alloc(dev, ANDES_PWM_CH_MAX, sizeof(*ap));
-> +	if (IS_ERR(chip))
-> +		return PTR_ERR(chip);
-> +
-> +	ap =3D to_andes_pwm(chip);
-> +	reg_base =3D devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(reg_base))
-> +		return dev_err_probe(dev, PTR_ERR(reg_base),
-> +				     "failed to map I/O space\n");
-> +
-> +	ap->pclk =3D devm_clk_get_enabled(dev, "pclk");
-> +	if (IS_ERR(ap->pclk))
-> +		return dev_err_probe(dev, PTR_ERR(ap->pclk),
-> +				     "failed to get APB clock\n");
-> +
-> +	ap->extclk =3D devm_clk_get_optional_enabled(dev, "extclk");
-> +	if (IS_ERR(ap->extclk))
-> +		return dev_err_probe(dev, PTR_ERR(ap->extclk),
-> +				     "failed to get external clock\n");
-> +
-> +	/*
-> +	 * If the clock rate is greater than 10^9, there may be an overflow when
-> +	 * calculating the cycles in andes_pwm_config()
-> +	 */
-> +	ap->pclk_rate =3D clk_get_rate(ap->pclk);
-> +	if (ap->pclk_rate > NSEC_PER_SEC)
-> +		ap->pclk =3D NULL;
-
-This is not enough to prevent that pclk is used.
-
-> +	ap->extclk_rate =3D ap->extclk ? clk_get_rate(ap->extclk) : 0;
-> +	if (ap->extclk_rate > NSEC_PER_SEC)
-> +		ap->extclk =3D NULL;
-> +
-> +	if (!ap->pclk && !ap->extclk)
-> +		return dev_err_probe(dev, -EINVAL, "clocks are out of range\n");
-
-If you mention the clk rates in the error message, the problem to fix
-becomes easier to identify.
-
-> +	ap->regmap =3D devm_regmap_init_mmio(dev, reg_base,
-> +					   &andes_pwm_regmap_config);
-> +	if (IS_ERR(ap->regmap)) {
-> +		return dev_err_probe(dev, PTR_ERR(ap->regmap),
-> +				     "failed to initialize regmap\n");
-> +	}
-
-Don't use { ... } for single statements. Please start error messages
-with a capital letter.
-
-> +
-> +	chip->ops =3D &andes_pwm_ops;
-> +	ret =3D devm_pwmchip_add(dev, chip);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "failed to add pwm chip\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id andes_pwm_of_match[] =3D {
-> +	{ .compatible =3D "andestech,ae350-pwm" },
-> +	{ /* sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, andes_pwm_of_match);
-> +
-> +static struct platform_driver andes_pwm_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "andes_pwm",
-> +		.of_match_table =3D andes_pwm_of_match,
-> +	},
-> +	.probe =3D andes_pwm_probe,
-> +};
-> +module_platform_driver(andes_pwm_driver);
-> +
-> +MODULE_AUTHOR("Ben Zong-You Xie <ben717@andestech.com>");
-> +MODULE_DESCRIPTION("Andes PWM driver");
-> +MODULE_LICENSE("GPL");
-
-Best regards
-Uwe
-
---qvg65orckwj2rpzn
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmoWsYEACgkQj4D7WH0S
-/k4jNggAqFVLZhPZJ0m9WaJgawfWORstcdHvHU9J1b6W9wUOOm+Pd8zZ2/zEbjhZ
-D2ecmhFYsqQqikXoz2clcrZLQRP/qSK00DC5Ox72IfD4aHF6ijNqcZ/UxKfwgcsz
-ri1KMkJp3SohzuCULUs+S/gAQXULEAUMOSK2zZllRSslxrzUBEQLzqR/3H65voz3
-HRFCTaByI3LZjpuTD79Iz1RV0Nfyah3YX0v7PsY42PPtifIQ30Nd1blWJatzLW7L
-RRT8bMySKlbUIXq4ss7iZSRFlu/CCALgeLPxIplKfpOUwvNWxRnSA0QjcU0JPsG5
-sNBeSIW0Opv4fKqueHWaOjRkg2j9hg==
-=4zvY
------END PGP SIGNATURE-----
-
---qvg65orckwj2rpzn--
 
