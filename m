@@ -1,138 +1,181 @@
-Return-Path: <linux-pwm+bounces-9208-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9209-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id CCrzJfm4GWpByggAu9opvQ
-	(envelope-from <linux-pwm+bounces-9208-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Fri, 29 May 2026 18:04:09 +0200
+	id CO8eCHPFGWoIzAgAu9opvQ
+	(envelope-from <linux-pwm+bounces-9209-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Fri, 29 May 2026 18:57:23 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 41C61605413
-	for <lists+linux-pwm@lfdr.de>; Fri, 29 May 2026 18:04:09 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 24137606062
+	for <lists+linux-pwm@lfdr.de>; Fri, 29 May 2026 18:57:22 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 2B8AE303C64F
-	for <lists+linux-pwm@lfdr.de>; Fri, 29 May 2026 15:48:38 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 9A4D53053B33
+	for <lists+linux-pwm@lfdr.de>; Fri, 29 May 2026 16:45:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 816D33CAA48;
-	Fri, 29 May 2026 15:48:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D90663F23B6;
+	Fri, 29 May 2026 16:45:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=privacyrequired.com header.i=@privacyrequired.com header.b="hWq0NfUP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BlauHNj0"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from latitanza.investici.org (latitanza.investici.org [185.218.207.228])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f175.google.com (mail-dy1-f175.google.com [74.125.82.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CA243328FD;
-	Fri, 29 May 2026 15:48:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.218.207.228
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780069716; cv=none; b=q3Tg2sesRNx76YFr8j3WInqae2haRzxgCaPi2ty4S76IcmtMWRskyYYhaR0cVQxdd5U3IFnPzQHBG5vrhkhKWjERPTAMaCIP2DxdfYb4/8KD4dq6z7vv2EQ+K0SsiMOUt+RyUzP8kNfY7A+crHBoiTdXYBJyUGwAB+0AuZohTAE=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780069716; c=relaxed/simple;
-	bh=y/UeTu/E1r5exlVyd6PZjhTTC8A/Dm1i+hrIlYJiOko=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=HkOOp9Rg9rZjMYa9bvo+9pcaLBKL93igFeDhDoPVH5vMoNux/EG2DffE+y9Nzv2ouRAKdDdsqifJNDziA+mRX56Wocj6QqE1fsUZdsBYCReq7jn70i2IuE2S5cVidP/1IdMbkSwSjw0rCuwq37Ng49z9vn8QjmkDhP/sEWd4fk0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=privacyrequired.com; spf=pass smtp.mailfrom=privacyrequired.com; dkim=pass (1024-bit key) header.d=privacyrequired.com header.i=@privacyrequired.com header.b=hWq0NfUP; arc=none smtp.client-ip=185.218.207.228
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=privacyrequired.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=privacyrequired.com
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=privacyrequired.com;
-	s=stigmate; t=1780069119;
-	bh=nE54WBHYh18XBHfnL0b5qXxtCiVRQLEV3D90GwnfxZ0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=hWq0NfUPgqiqJmc3usdGSgAYA58479noSbGOwGZyMsmyweq3POdX1KE49t6RqFWCK
-	 +fEZXwmhvCefNA6y7RPPynrDHf/U0gqwOQWXew4uEvak6grMVvzy3aRI6Fjxa499cX
-	 T5/TA5t7Hrp5F+go+BR3JDpjBHmxu0eMcQQafi+8=
-Received: from mx3.investici.org (unknown [127.0.0.1])
-	by latitanza.investici.org (Postfix) with ESMTP id 4gRnZR0G95zGpC7;
-	Fri, 29 May 2026 15:38:39 +0000 (UTC)
-Received: from [185.218.207.228] (mx3.investici.org [185.218.207.228]) (Authenticated sender: laniel_francis@privacyrequired.com) by localhost (Postfix) with ESMTPSA id 4gRnZP4RyDzGp9y;
-	Fri, 29 May 2026 15:38:37 +0000 (UTC)
-From: Francis Laniel <laniel_francis@privacyrequired.com>
-To: Michal Wilczynski <m.wilczynski@samsung.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Benno Lossin <lossin@kernel.org>,
-	Gary Guo <gary@garyguo.net>
-Cc: Francis Laniel <laniel_francis@privacyrequired.com>,
-	Boqun Feng <boqun@kernel.org>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	linux-pwm@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v1] rust: pwm: use pin_init::zeroed() to initialize pwm_ops
-Date: Fri, 29 May 2026 18:38:20 +0300
-Message-ID: <20260529153821.126823-1-laniel_francis@privacyrequired.com>
-X-Mailer: git-send-email 2.47.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89DB2359A66
+	for <linux-pwm@vger.kernel.org>; Fri, 29 May 2026 16:45:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=74.125.82.175
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780073123; cv=pass; b=c+e/8AVtE5YqmbkMOj/zJuDdSEmfYsUxNTYUarlvU0u4HYJAkqSjWaa9qnZo2zehH5J3mDG25thBC05aXKfx70oFh29yZt6WAPk4OFKcExksb+SjOWmRwqkHxXt2o7vM0gvCOXJ91uvIeSrQKFqVVdCHd7cbuH83rgrjN4/K8+8=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780073123; c=relaxed/simple;
+	bh=QCZOkqcwEr9LZyCCKBh8a9RlChOA57zOW/UhtnSAJoQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=hCh/f3bQnTogQODjLGtqbQFXPZMD81JuBKLXEUwE3LyO6o7sE9hDhoc816sKUYDR/jrUtNpm0bP+jWKWttSBFFiktb+x+xKAIiZn5ZVXAWO5yPXxDOIL1d5koJkaXCKJTCtNnNUu24LDs4gstYdo1Bs1Rzy/NaoGQKZD2lDODjY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BlauHNj0; arc=pass smtp.client-ip=74.125.82.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Received: by mail-dy1-f175.google.com with SMTP id 5a478bee46e88-3042a99f0ceso855691eec.0
+        for <linux-pwm@vger.kernel.org>; Fri, 29 May 2026 09:45:22 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1780073122; cv=none;
+        d=google.com; s=arc-20240605;
+        b=R4A0csieJvaujaN/sL1NDo7DlIrl4k3MXMUbGUyhm3VyNxcL0lkSL2rry8yRhcfKNq
+         BPrQU1VYIyxKqZ262grfwr1PghSs4invxFEq5e+NOByRoO9YBFUsLTOFXelBi/fYBtoE
+         2w99fAcZ3mGwgFAms6qYmNbvkAfsE2Sic4P6/1cBzgEgg1N7kwPjiJXwG2oQKGIUtD0I
+         +RbvNIIQw0zA+zHBnsE7s5hRw68lwx2wkwdtsiHQmYFTUBdTgGWUsDrQkWLUjQYwShKB
+         yJU7sJYZX/fsoMMdwQRwo1GCA8kxJJuABRBTF6xzKD+eXUmn3TZtdwBdbgnZeyxwKQsc
+         zHIw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=jUlJ3VcCq6+l4y78pcrfJDXSNKNSZtDLFvQc/c/d0Nc=;
+        fh=R2Eik/+RHN3deje1hvnRrWWOMmXaw3spqlO9JlosXHQ=;
+        b=FCPMFZQE0xGOfAOhjr+SPV1IEfTNwJp2hkhOgLUa0eDuSZZwBoUHjtwytiu4aByVrf
+         cQqeSgMMVioP89DoPjlf5SVpuFNEJ7KvMAcGnB0CR49Sf5dUaPoDQuQloWBEARVGZ9tn
+         HcqCn51sp5zEPWLBfeGdmJkmQ4d1hRsxeQAHboyFbxle/pKg4y1gxXNOGuhlJS2wCHI3
+         4HtNHLRgtEf0zW07RdVMyLt049D3SODJGb+Gc0V23+V58A+LnUyzrmIgvOKOOOtRDqQF
+         njF3sSytfpVWMcET6Jt42A6Hb7WR33BIpzE+2oRq1UMv8AtOeJI0k/9K0S7QTVTpBuUx
+         u5Cg==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780073122; x=1780677922; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jUlJ3VcCq6+l4y78pcrfJDXSNKNSZtDLFvQc/c/d0Nc=;
+        b=BlauHNj0mLco/XPgbXh1BZaM10PBthipV570T1bjZpFxqLYPERH3kV+b3bMlbAyyi1
+         bDkmdW1krwfPGC3qdkQTlO9vqjTi7KoeVxwBriVV6PtD77CqqEpPp6Z36S9BCyOYHv9O
+         k2JGY/OPHSvtcm8AAJIZjd4oeJ1+5Y1bSkEztiPeMcRSOTrpIBdqtiM6UEWbeMb46vTY
+         q66ju7kjMFH0OdyS6f1yYYkIs2x0R+qp0z6n+u2/eBsxH+sJ506+z6VGda6ipndJoR3v
+         6nh3HyajHyGlfyUeLnV1w5SHFBhF7ovbGDMWZO2SsAd3rmCLqahU97jQJCkSJ9WNgqvt
+         GLDQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780073122; x=1780677922;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=jUlJ3VcCq6+l4y78pcrfJDXSNKNSZtDLFvQc/c/d0Nc=;
+        b=CEq1IT9hV2jhlWC7gTiRovdIOekdifz/UBs0LabX/36ip6//qm91k5VyLmG/dqjTzu
+         I4qgwpzKO1qjI4vQItlbFVX1lay9hgjrGY6s6iTIBQkLX5ICzJ9aC4nOesXjlcxHH9Dj
+         yp1B5wApMuB1mTug87qYWEPxJRDjDTxKnsNvz8+7NkP+ykGWugYTMs0koznPIAD8NKqY
+         /YSNJrfQr0yxt45MK2BvhTvl2sI1kc4/gB0KRfm1I6N3Rb562rnpc9SrRYAZoQp+AVat
+         l6BucWm3OQ+Q4Vypi0yx4eQNt+/oUHgyVxPLaJB1NS3JfEH83GMApzluzXu1xmNfZoXD
+         RrNw==
+X-Forwarded-Encrypted: i=1; AFNElJ8rNC5HYr2yqopAqWIE6VNyVj5O4Ajwuc/m74s08yyYPdIQuctEOa0yezKenivsQdWaHjwV5MrtfNQ=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxiT+gkEQg3x4ek7gOdm6+nLSXllJ/L8WQoufKgQbbAnn/GbQIK
+	CoQNPwvuALh43olgFyrShNYcFdHKyQ0FJ7SoSTEcRECIz0ru1T0DWFnVnkfWlQNE5PM3tFea9tu
+	c/v4+CtTQczu1kt+Q2GJEQEsmKycdZZY=
+X-Gm-Gg: Acq92OFaLGtz0lhFzZ/GFsQHC7bWk6w0epd+QCBzJ0q/ladI2ddeE/jUdmHxu/49Pww
+	f1KtojBXQsk82vyBRTpiTpJV22wczrvyPpUit4v0CJfddaNNitHycuPewMUAnVwmpHAE1J/iSpZ
+	ALuPCrxl+MYgPs/bReM+bFO3JDX3ugX/VKbZiYgPKXd/7glBdttzJrY57dUS3F2bjxo0vs+Kc+9
+	pnV+h54sqFE9X2cZS8sDGnOvN9aDfuZvHZy3kgO6UeAylDiRYgcvaD/unKaJUFGZtbeGMoIyRCq
+	cL7xU7bW4WDleBSAc62+csCr0WFh0NMeT6RFbxc6CShobbyAc7Awx6tZqB/XDO9mVRQDFV2QkHd
+	f1M3Kt2aqOcq2XsKLYfni2kYABY367eUc+A==
+X-Received: by 2002:a05:7300:ef83:b0:2f3:3835:2005 with SMTP id
+ 5a478bee46e88-304fa67adabmr129194eec.6.1780073121435; Fri, 29 May 2026
+ 09:45:21 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[privacyrequired.com,reject];
-	R_DKIM_ALLOW(-0.20)[privacyrequired.com:s=stigmate];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+References: <20260529153821.126823-1-laniel_francis@privacyrequired.com>
+In-Reply-To: <20260529153821.126823-1-laniel_francis@privacyrequired.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Fri, 29 May 2026 18:45:06 +0200
+X-Gm-Features: AVHnY4K39U7uwop-a1na9ijJOB-HC56J7AlF1na1rF9vrlLNm1Vm_81IYCkq-Zw
+Message-ID: <CANiq72=DK_qr96K7V=akgHqm0z4msymJ+VRxY0f1uqmyDmbZkw@mail.gmail.com>
+Subject: Re: [PATCH v1] rust: pwm: use pin_init::zeroed() to initialize pwm_ops
+To: Francis Laniel <laniel_francis@privacyrequired.com>
+Cc: Michal Wilczynski <m.wilczynski@samsung.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Benno Lossin <lossin@kernel.org>, Gary Guo <gary@garyguo.net>, Boqun Feng <boqun@kernel.org>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, linux-pwm@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	FREEMAIL_CC(0.00)[privacyrequired.com,kernel.org,protonmail.com,google.com,umich.edu,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-9208-lists,linux-pwm=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9209-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DKIM_TRACE(0.00)[privacyrequired.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[laniel_francis@privacyrequired.com,linux-pwm@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_CC(0.00)[samsung.com,kernel.org,garyguo.net,protonmail.com,google.com,umich.edu,vger.kernel.org];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	RCVD_COUNT_THREE(0.00)[4];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	TAGGED_RCPT(0.00)[linux-pwm];
+	TO_DN_SOME(0.00)[];
 	NEURAL_HAM(-0.00)[-1.000];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,privacyrequired.com:email,privacyrequired.com:mid,privacyrequired.com:dkim]
-X-Rspamd-Queue-Id: 41C61605413
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[miguelojedasandonis@gmail.com,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-pwm];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,mail.gmail.com:mid,privacyrequired.com:email]
+X-Rspamd-Queue-Id: 24137606062
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-Replace unsafe block containing core::mem::zeroed by calling
-pin_init::zeroed().
-This is safer, as this function is guarded by trait contrary to
-core::mem:zeroed().
-Also, we can call this because all fields in pwm_ops, i.e. function
-pointers in Option<> and usize, are Zeroable.
+On Fri, May 29, 2026 at 5:48=E2=80=AFPM Francis Laniel
+<laniel_francis@privacyrequired.com> wrote:
+>
+> Replace unsafe block containing core::mem::zeroed by calling
+> pin_init::zeroed().
+> This is safer, as this function is guarded by trait contrary to
+> core::mem:zeroed().
 
-Link: https://github.com/Rust-for-Linux/linux/issues/1189
-Signed-off-by: Francis Laniel <laniel_francis@privacyrequired.com>
----
- rust/kernel/pwm.rs | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+It is definitely safer, but it is actually fully safe, i.e. it is a
+safe `const fn` after all, which is great. I would say removing
+`unsafe` code is the justification, even if of course the function is
+able to be safe thanks to implementing the trait only for certain
+types. (Also missing `:`).
 
-diff --git a/rust/kernel/pwm.rs b/rust/kernel/pwm.rs
-index 6c9d667009ef..3427b7d93a03 100644
---- a/rust/kernel/pwm.rs
-+++ b/rust/kernel/pwm.rs
-@@ -494,9 +494,7 @@ pub(crate) fn as_raw(&self) -> *const bindings::pwm_ops {
- /// This is used to bridge Rust trait implementations to the C `struct pwm_ops`
- /// expected by the kernel.
- pub const fn create_pwm_ops<T: PwmOps>() -> PwmOpsVTable {
--    // SAFETY: `core::mem::zeroed()` is unsafe. For `pwm_ops`, all fields are
--    // `Option<extern "C" fn(...)>` or data, so a zeroed pattern (None/0) is valid initially.
--    let mut ops: bindings::pwm_ops = unsafe { core::mem::zeroed() };
-+    let mut ops: bindings::pwm_ops = pin_init::zeroed();
- 
-     ops.request = Some(Adapter::<T>::request_callback);
-     ops.capture = Some(Adapter::<T>::capture_callback);
--- 
-2.47.3
+I would suggest reusing Benno's commit message from the series he
+links in the issue instead, e.g.
 
+  https://lore.kernel.org/all/20250814093046.2071971-8-lossin@kernel.org/
+
+> Link: https://github.com/Rust-for-Linux/linux/issues/1189
+
+Please use Suggested-by like the issue mentions :)
+
+Suggested-by: Benno Lossin <lossin@kernel.org>
+
+Thanks!
+
+Cheers,
+Miguel
 
