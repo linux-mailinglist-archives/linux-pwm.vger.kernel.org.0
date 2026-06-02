@@ -1,140 +1,153 @@
-Return-Path: <linux-pwm+bounces-9218-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9219-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by lfdr with LMTP
-	id eEeBI+PeHWpsfQkAu9opvQ
-	(envelope-from <linux-pwm+bounces-9218-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Mon, 01 Jun 2026 21:34:59 +0200
+	id mFTGAVWCHmo3kAkAu9opvQ
+	(envelope-from <linux-pwm+bounces-9219-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Tue, 02 Jun 2026 09:12:21 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id E64BA624B1A
-	for <lists+linux-pwm@lfdr.de>; Mon, 01 Jun 2026 21:34:58 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id C53D2629656
+	for <lists+linux-pwm@lfdr.de>; Tue, 02 Jun 2026 09:12:19 +0200 (CEST)
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 070843043520
-	for <lists+linux-pwm@lfdr.de>; Mon,  1 Jun 2026 19:28:12 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id A83723015A57
+	for <lists+linux-pwm@lfdr.de>; Tue,  2 Jun 2026 07:12:18 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DBD737D104;
-	Mon,  1 Jun 2026 19:28:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0363835674B;
+	Tue,  2 Jun 2026 07:12:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T7HvLvVO"
+	dkim=pass (1024-bit key) header.d=privacyrequired.com header.i=@privacyrequired.com header.b="IqJLEOjs"
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from confino.investici.org (confino.investici.org [93.190.126.19])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C81D360EDE;
-	Mon,  1 Jun 2026 19:28:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=100.103.45.18
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FCB233B6FB;
+	Tue,  2 Jun 2026 07:12:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=93.190.126.19
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780342091; cv=none; b=WIXCBGTyoGshjjJAyLabR94QkHh+xi6RDF0CFjaJIEGz/g+8nZy9qzuQERJ2lyjPsbRw3AYBDXzd4EDNSfalhfmjx4ktO6JUQ1+L232T5xy2qB2a87vRLDwCZyHhq31528Giwsi4TY7Q+Urz9jGRQXagekmlfYiSDlDxzEOxZBI=
+	t=1780384335; cv=none; b=GtLSrNMSyjgfNBBFmcBFxCRcmkNVsMNmaaYEIfY/Ge7kSONpGLx7J+RrUhpA423u+vT0q2mvRKfJ262nsQlYWeMaDUCceCOrV6dXnsKAwAE2vI9JPO9uugOiishPDwQXLsNw6CtVTeZMq8TmoJlR1BrPSG+BLcKnWuiRtYafMYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780342091; c=relaxed/simple;
-	bh=oJvVtxM1xLc2HjJ1CGbHcAeaHfyfE1pqqFuTdIpKjvc=;
+	s=arc-20240116; t=1780384335; c=relaxed/simple;
+	bh=P8lh701jT9yZmofB7hy7w97sJuyJLPaeQffJywe9s6g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YWoo9gBxZh3WMGBB+V3wJzm4T4z9Fsuso1bSKdWh696exhftG/BnkMSokF/eGKu52MwWtLJu5mCEMQWlYrwYGI74V94ZEFwRVQpr84PjZzSnCRnwKC7xoRmD1eCIdOdzDdzBxXfbxugGJbTNMr+Ns3B5ijzinpJKJr8parNRcSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T7HvLvVO; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32EEE1F00893;
-	Mon,  1 Jun 2026 19:28:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1780342090;
-	bh=tq9hC/3pSjCU1zQh1hrpFiGfKgYq/LkIGM+ulqsQyiA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=T7HvLvVOibi7qLus6vM4bZcU/nYKtFxRDkObZU4Ht6bjnAvszWEQaWIE7f3lghyIN
-	 JJy7Nkxjyh196lRU2i44LmfFaBu4j75sVgtwkQFtOKctxO9UWvnC0wJjMkpziwbBhE
-	 RL78lH7nm5ttrkft3JDArP2TxydubsfCNRQXstUb8LvJ+ItghrBrYCGbPz1/iJuFZE
-	 884xhIC7/yhZvkL21KoTwua5HEf8//gMzUsFtJ5FF7HjGM5Dia1nhmsbsnrR08g/Ql
-	 smWOIDdem/8ePu6Ik1FYG9j+QhoaHU5VzByUaJa/GFgY1N+yYnAHic48Jhnsa6iQRZ
-	 TtzbXfCrhBeBQ==
-From: Sven Peter <sven@kernel.org>
-To: Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Lorenzo Pieralisi <lpieralisi@kernel.org>,
-	Neal Gompa <neal@gompa.dev>,
-	Wim Van Sebroeck <wim@linux-watchdog.org>,
-	Guenter Roeck <linux@roeck-us.net>,
-	Mark Kettenis <kettenis@openbsd.org>,
-	Sasha Finkelstein <k@chaosmail.tech>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Janne Grunau <j@jannau.net>
-Cc: Sven Peter <sven@kernel.org>,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org,
-	asahi@lists.linux.dev,
-	linux-arm-kernel@lists.infradead.org,
-	linux-watchdog@vger.kernel.org,
-	linux-pwm@vger.kernel.org,
-	Joshua Peisach <jpeisach@ubuntu.com>,
-	Michael Reeves <michael.reeves077@gmail.com>
-Subject: Re: (subset) [PATCH v2 0/6] Initial Apple silicon M3 device trees and dt-bindings
-Date: Mon,  1 Jun 2026 21:27:52 +0200
-Message-ID: <178034193517.3711.18153194478204531400.b4-ty@kernel.org>
-X-Mailer: git-send-email 2.53.0
-In-Reply-To: <20260505-apple-m3-initial-devicetrees-v2-0-b0c2f3519e0e@jannau.net>
-References: <20260505-apple-m3-initial-devicetrees-v2-0-b0c2f3519e0e@jannau.net>
+	 MIME-Version:Content-Type; b=YraVl6ZvIv5GX+eLeMjC3N6K/18cFKV4j4E+iMrNf5kE6BDBr2fBMMVRa6O/iOFTQWO+Tg5J9v4F0EvPIaWYS7+G+RU/PoEXAwjrmLX5I90R9nOMFIgDtCCQLksn7CMFvnVgPa9PWgnupXuXfB2Gu656HbNVF1Pk8j/V3sOw1S0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=privacyrequired.com; spf=pass smtp.mailfrom=privacyrequired.com; dkim=pass (1024-bit key) header.d=privacyrequired.com header.i=@privacyrequired.com header.b=IqJLEOjs; arc=none smtp.client-ip=93.190.126.19
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=privacyrequired.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=privacyrequired.com
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=privacyrequired.com;
+	s=stigmate; t=1780383886;
+	bh=z0jmVNzZvirhy3R+tfL9bbf+f442BGqrfXEemWbJb9o=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=IqJLEOjsiXnW2zkyrLbvMKHHaE0+D1wVk7aSiasGfF/mxbTdcO7MkQOF29YeIXIYn
+	 ysy7JJ2gNSdc/DlQWj01fd0WscuyrwtVkAfJjs8sD6/TYVJQhhJgEWoJ4UZix4hK3g
+	 3uhawK0I8knHFo1iiTEdOU0D4ZdoCtYCXi9QLzNw=
+Received: from mx1.investici.org (unknown [127.0.0.1])
+	by confino.investici.org (Postfix) with ESMTP id 4gV1zf2bk4z11HB;
+	Tue, 02 Jun 2026 07:04:46 +0000 (UTC)
+Received: by mx1.investici.org (Postfix) id 4gV1zd112Nz11H5;
+	Tue, 02 Jun 2026 07:04:45 +0000 (UTC)
+From: Francis Laniel <laniel_francis@privacyrequired.com>
+To: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Cc: Michal Wilczynski <m.wilczynski@samsung.com>,
+ Miguel Ojeda <ojeda@kernel.org>,
+ Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>,
+ Benno Lossin <lossin@kernel.org>, Gary Guo <gary@garyguo.net>,
+ Boqun Feng <boqun@kernel.org>,
+ =?UTF-8?B?QmrDtnJu?= Roy Baron <bjorn3_gh@protonmail.com>,
+ Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>,
+ linux-pwm@vger.kernel.org, rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+Subject:
+ Re: [PATCH v1] rust: pwm: use pin_init::zeroed() to initialize pwm_ops
+Date: Tue, 02 Jun 2026 10:04:43 +0300
+Message-ID: <2833204.mvXUDI8C0e@pmachine>
+In-Reply-To:
+ <CANiq72=DK_qr96K7V=akgHqm0z4msymJ+VRxY0f1uqmyDmbZkw@mail.gmail.com>
+References:
+ <20260529153821.126823-1-laniel_francis@privacyrequired.com>
+ <CANiq72=DK_qr96K7V=akgHqm0z4msymJ+VRxY0f1uqmyDmbZkw@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
+	MID_RHS_NOT_FQDN(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[privacyrequired.com,reject];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_DKIM_ALLOW(-0.20)[privacyrequired.com:s=stigmate];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9218-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,lists.linux.dev,lists.infradead.org,ubuntu.com,gmail.com];
-	RCPT_COUNT_TWELVE(0.00)[20];
-	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-9219-lists,linux-pwm=lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FREEMAIL_TO(0.00)[gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	MIME_TRACE(0.00)[0:+];
+	FREEMAIL_CC(0.00)[samsung.com,kernel.org,garyguo.net,protonmail.com,google.com,umich.edu,vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	NEURAL_HAM(-0.00)[-1.000];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[sven@kernel.org,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
-X-Rspamd-Queue-Id: E64BA624B1A
+	FROM_NEQ_ENVFROM(0.00)[laniel_francis@privacyrequired.com,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[privacyrequired.com:+];
+	NEURAL_HAM(-0.00)[-1.000];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	TAGGED_RCPT(0.00)[linux-pwm];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,privacyrequired.com:email,privacyrequired.com:dkim]
+X-Rspamd-Queue-Id: C53D2629656
 X-Rspamd-Action: no action
 X-Rspamd-Server: lfdr
 
-On Tue, 05 May 2026 13:02:38 +0200, Janne Grunau wrote:
-> Hej,
-> 
-> This series adds initial device trees for M3 Apple silicon devices. The
-> device trees contain only a minimal set of hardware not going much
-> beyond the minimum required for booting kernel and initramfs and
-> verify via serial console that the hardware and drivers work.
-> The hardware with the exception of the interrupt controller is
-> compatible with the M1 and M2 SoCs and the existing drivers.
-> `make dtbs_check` fails due to already applied and dropped apple,i2c
-> dt-bindings change (commit c5f25f5800f5 ("dt-bindings: i2c: apple,i2c:
-> Add t8122 compatible") in
-> https://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git
-> i2c/for-next).
-> 
-> [...]
+Hi,
 
-Applied to local tree (apple-soc/dt-7.2), thanks!
+Le vendredi 29 mai 2026, 19:45:06 heure d=E2=80=99=C3=A9t=C3=A9 d=E2=80=99E=
+urope de l=E2=80=99Est Miguel Ojeda a=20
+=C3=A9crit :
+> On Fri, May 29, 2026 at 5:48=E2=80=AFPM Francis Laniel
+>=20
+> <laniel_francis@privacyrequired.com> wrote:
+> > Replace unsafe block containing core::mem::zeroed by calling
+> > pin_init::zeroed().
+> > This is safer, as this function is guarded by trait contrary to
+> > core::mem:zeroed().
+>=20
+> It is definitely safer, but it is actually fully safe, i.e. it is a
+> safe `const fn` after all, which is great. I would say removing
+> `unsafe` code is the justification, even if of course the function is
+> able to be safe thanks to implementing the trait only for certain
+> types. (Also missing `:`).
+>=20
+> I would suggest reusing Benno's commit message from the series he
+> links in the issue instead, e.g.
+>=20
+>   https://lore.kernel.org/all/20250814093046.2071971-8-lossin@kernel.org/
+>=20
+> > Link: https://github.com/Rust-for-Linux/linux/issues/1189
+>=20
+> Please use Suggested-by like the issue mentions :)
+>=20
+> Suggested-by: Benno Lossin <lossin@kernel.org>
 
-[1/6] dt-bindings: arm: apple: apple,pmgr: Add t8122 compatible
-      https://github.com/AsahiLinux/linux/commit/0407ad56fbbf
+I read the issue too fast! I will send a v2 with the corresponding tags and=
+=20
+new commit message! Thank you for your suggestions!
+
+> Thanks!
+>=20
+> Cheers,
+> Miguel
 
 Best regards,
--- 
-Sven Peter <sven@kernel.org>
+
 
 
