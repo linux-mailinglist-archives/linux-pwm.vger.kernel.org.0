@@ -1,145 +1,181 @@
-Return-Path: <linux-pwm+bounces-9223-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9224-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id DPyGIYvsHmqwZAAAu9opvQ
-	(envelope-from <linux-pwm+bounces-9223-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Tue, 02 Jun 2026 16:45:31 +0200
+	id e2qWN3H5HmoJbQAAu9opvQ
+	(envelope-from <linux-pwm+bounces-9224-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Tue, 02 Jun 2026 17:40:33 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2F5D762F6A4
-	for <lists+linux-pwm@lfdr.de>; Tue, 02 Jun 2026 16:45:31 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
+	by mail.lfdr.de (Postfix) with ESMTPS id 135A462FE0C
+	for <lists+linux-pwm@lfdr.de>; Tue, 02 Jun 2026 17:40:33 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=privacyrequired.com header.s=stigmate header.b=FAoBtotV;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9223-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9223-lists+linux-pwm=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=reject) header.from=privacyrequired.com;
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=BPTUKWy3;
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9224-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9224-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=gmail.com;
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id C3FBF30202A1
-	for <lists+linux-pwm@lfdr.de>; Tue,  2 Jun 2026 14:38:33 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 54201303740A
+	for <lists+linux-pwm@lfdr.de>; Tue,  2 Jun 2026 15:12:15 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 56C903BAD82;
-	Tue,  2 Jun 2026 14:30:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8C2F13EAC9A;
+	Tue,  2 Jun 2026 15:12:12 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from confino.investici.org (confino.investici.org [93.190.126.19])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-dy1-f180.google.com (mail-dy1-f180.google.com [74.125.82.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48BBA1DA60D;
-	Tue,  2 Jun 2026 14:30:21 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780410626; cv=none; b=O0H3uFvLRFNA59sywgIFyHlE9X6X/DnmsOB1aOjarkqypstDJTHXPeOi/i7cutqcOSt8KfiwPYKvbC90UreYCc8gIrNyUl4o1H+yrlobqqnpKWmB0VGjX37DMRDT4oe5/cvmOC6IV0ghw+Sd2kb/njzu78dZrLlf56bV97q1D1o=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780410626; c=relaxed/simple;
-	bh=16i/JJjNhoMN1c1Ms7nybdLc81QMezO68mt+246DxSo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=E7NzJyIsbfJb9leu2OIcd/5XjZZCZda+RAXtKEOxNc0ppYzcI8+GYvnXGv3jHq/tG/1rAlrO6R1VUUynA6oES9uycqNkQz2gw2TuW+c8npimZ+tthMKDeRC1hRijty/jhLxsMIJ5pA+L/cQPvR0NBzM7WUwDZkxq4P0FIcdOXrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=privacyrequired.com; spf=pass smtp.mailfrom=privacyrequired.com; dkim=pass (1024-bit key) header.d=privacyrequired.com header.i=@privacyrequired.com header.b=FAoBtotV; arc=none smtp.client-ip=93.190.126.19
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=privacyrequired.com;
-	s=stigmate; t=1780410619;
-	bh=6TKcjPnH0nC1FrF6sUHUFL2v1lRBfi1+s/MSYZAUc40=;
-	h=From:To:Cc:Subject:Date:From;
-	b=FAoBtotVFVugE4ZqRUGdbc1U50XhYOIsxJMvVfIaa1j4lY/0QOWH44C0Ih+6jth6M
-	 dayy6jErXtVxhoAZo3648e9zrIrpA0I/q9IVbBSQMfWxdr23KWu/SJl8/K7jPRo6nJ
-	 kWOhPqdy6dRf8ah51sWH0WJzWURCVhFnOg626QXo=
-Received: from mx1.investici.org (unknown [127.0.0.1])
-	by confino.investici.org (Postfix) with ESMTP id 4gVCsl6PH7z11MR;
-	Tue, 02 Jun 2026 14:30:19 +0000 (UTC)
-Received: by mx1.investici.org (Postfix) id 4gVCsk3BrBz11Ll;
-	Tue, 02 Jun 2026 14:30:18 +0000 (UTC)
-From: Francis Laniel <laniel_francis@privacyrequired.com>
-To: Michal Wilczynski <m.wilczynski@samsung.com>,
-	Miguel Ojeda <ojeda@kernel.org>,
-	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
-	Benno Lossin <lossin@kernel.org>,
-	Gary Guo <gary@garyguo.net>
-Cc: Francis Laniel <laniel_francis@privacyrequired.com>,
-	Alexandre Courbot <acourbot@nvidia.com>,
-	Boqun Feng <boqun@kernel.org>,
-	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>,
-	Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	linux-pwm@vger.kernel.org,
-	rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH v2] rust: pwm: replace `core::mem::zeroed` with `pin_init::zeroed`
-Date: Tue,  2 Jun 2026 17:30:00 +0300
-Message-ID: <20260602143002.38390-1-laniel_francis@privacyrequired.com>
-X-Mailer: git-send-email 2.47.3
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A541D187346
+	for <linux-pwm@vger.kernel.org>; Tue,  2 Jun 2026 15:12:10 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780413132; cv=pass; b=OM6Y1+AhH/Nvk5g3xioeZohpZey1d0oWvPHpHvvUsSe7ojZh0a8IHqrXeLYkKx6jjIOGgPK9pRtT0kn6gRiNAMffCfGFfo8zVXCXAAqz/cSE6TZg9SV6eMTg2TQR35bBD0RK7iUARi0TVrkp+68F3jpWpVn+asQxasGHQ4JHdkY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780413132; c=relaxed/simple;
+	bh=uFPYloQT7XT6IfJNhJ/SAmsfhwQb5BmEaHuYH5X2XhI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=miglv6WwS3/YngxGkiPzYz9T9nIiVTp7c7ufSDl47k/Qr/jsXnrte7pj16rOb5NgTSjKvqPZz1KZ8d3w223N5KE+4Lcen9fYIeFLIJty18gV6LQeAyGJyb6sPWGSIAsqt7ccQ0Ijpp+IxnTfbL3zmgpFyn20EitsTuC3KBYJw2c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BPTUKWy3; arc=pass smtp.client-ip=74.125.82.180
+Received: by mail-dy1-f180.google.com with SMTP id 5a478bee46e88-30741f821cfso92725eec.1
+        for <linux-pwm@vger.kernel.org>; Tue, 02 Jun 2026 08:12:10 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1780413130; cv=none;
+        d=google.com; s=arc-20240605;
+        b=HTl3fP6m11SRLG0k47XR1d7ZRrk1FcGdeQGGFtg8zGNn6wNXUvzhnvfRNEVvoOc/Go
+         9aRmYg6viEoXbxUR/Tw5sE2PvYmd0gXqWhdWpyj4frBX7M05pJE+rwZKlEKRydPJmka4
+         TdwzKVtnqaeusXW5NuPNMydQZgsnCeU/DSlBiXdzDc2B/0/6qJ1TkyAIo7sysugb5i44
+         DHzB0cr62NOjo6wJaBHVdqCAYNONOHjKpZUpvuV4wvzYzZx4rjw6dyJW7RJZ82r8XBO0
+         HOJhgyfPwD428nmwJ6qc6sCsZT5e5WYeskjnvzkBA5XeA7327HBdTHRsOsGqRJo9d0wk
+         Y2LA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=YiJYeG2fCLjzF65IFEg2pHH+5NjWfuJTGzHlNysR1+U=;
+        fh=aBGsj26+cnDjA7nglrc/51+Vgh0QvoVi69Grh9f+/Ow=;
+        b=JKNP5xm6cko4RfwCQ9wYa0aSQskfN9KnCv4ba6XmicF3lTpYClijjCVF2QZn6mY5uB
+         H3XmvmsIypBO3QBQp6wwzvHBRpSApVfzh2LKcHjypGfjcFIwpub14oXSZLRxit3a/mqU
+         2E0dcwITA1q0U2Kefw3BBcjcuyfiUlNWCplGFmz9a/ELQ9/iB0b4q1bKMOd0SHRT3fuG
+         dDWZ3GVNMCj1lM4Rbwr2FjZ63XcyHBQTug/EzNxvj1U2BRncXaSBuHTZG5kKVeZUrMjq
+         jBwLWY93BNo+wSmtbmU2EzLUXdTjCxYi/CDvhDN7ijZL/2Mr1wsgWOz159UU0W5M4VqD
+         guqA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1780413130; x=1781017930; darn=vger.kernel.org;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YiJYeG2fCLjzF65IFEg2pHH+5NjWfuJTGzHlNysR1+U=;
+        b=BPTUKWy3oKEljJFweT4sXiVa5VpOeXCztzpDykXqQ/CoKKjEiJkLTBn9KLNPPJxUNI
+         k621brU3PvHS++P7+qk7yJfhdW69iqOHeF8F49UrMvTIhA+OPjIc98YU5ZxXkQeKiXrD
+         FuEykK3sYNMVBTOwatIkyaxznyS/4B7N5foU00kmKhsnOY/cmmTNwpYkuBVsZEbb2KKO
+         AZJmPz3rwcrK0liZjLYsWCl83nysi8+mu6dv8ayxQrDmoZRUq0oU4lEg6d4BgJ4KhX4e
+         H98KYy4eDQfMkzwpUTuj6clKJ96cQUrAgl4+c7vvSejZCjZvKen1tJP/fw7IS3ZSchSz
+         bIzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780413130; x=1781017930;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=YiJYeG2fCLjzF65IFEg2pHH+5NjWfuJTGzHlNysR1+U=;
+        b=WL9gYteUf7BcQ/osnELR/8wYVQIoLjx6U6SKbMML5CglyAxhZYYG7ZdGpYbjmgpYxs
+         ogm/xpN4vYH1ghTFJQsoix3HQJWm57JuHuUUVgis/wLRnAEa3IOICr2BUwc9ItqC4amL
+         XsHk8EDqUif1mYwkwHIaQnn3onMo/PZ+m2EcQrX9ZpSxZBOu0JZtNUMErhN8fhb+ZQfE
+         TB9V4AfLPqDpdWVDyT3klJ/zfFCUnPpzD9GowFpXtEl94RjGLIwdEYZwFlBKEVh5EcI3
+         sQZl2DrnNOJLTY9n+aIXnq8uXwuaGGXF2M82KmZqTeG/hxJRQ8JgP7qeuPW/9T9sKCzP
+         sivw==
+X-Forwarded-Encrypted: i=1; AFNElJ8WiqBJxg5mDncAKQHhJTFygmsag+f1C2uWUpqZJG7w4aS7dBNUY1xz85MHecJcC5KIP81UmrC0DNU=@vger.kernel.org
+X-Gm-Message-State: AOJu0YykF4RVgqfzhFouP3uLc2Mypp7nACtbNvYzrnxcBy3Sfv/mgehE
+	Mon0rtzUFPN6XQaqsqsi7MTKU+2wh4GX33bCB3+aXmrTOndzAwNVHm581UCP1PC5x9vY9iocpTP
+	I4utVnqEz76TYrlYzOmsoMnAssbetxpQ=
+X-Gm-Gg: Acq92OEJS1Au1EsjS+wWQGlVzeMKjOvWlATqUfIBWwOhHoG2aqZ3eB44PSl33Fbrdl6
+	c8crT7Q+ZVWxtUt/7maS5qRTuRJIuF/fGdAk+9Sd4j3it+HlIJosO4Ny4yx9jDbCJuawcBVTCBm
+	G6jWIbd37LOxCsKbCISlHgSi510FhUP0OsTnyA9Aju+tOAlPD4t9k6r22p0L5j9HpYVEJK8JJcl
+	+UWDEH0doJfB84lezO3G7WnB4wToNKg6yvN4bYz9EORjVCOjuSDugZ0N9+LruKe1fu0nSlcT++i
+	k2u6duKWPf80Fb6fI4brEOiGHuuEu5+d/mOtJUPbpr9Sjtsa1q/SqGGI2RHv0LEmbFNf+mRBsR6
+	u+q3QGbA952ck6yCMWLF8j8jaaYngAR/FYg==
+X-Received: by 2002:a05:693c:300c:b0:2ea:5057:a320 with SMTP id
+ 5a478bee46e88-304fa4a49b8mr3613659eec.2.1780413129636; Tue, 02 Jun 2026
+ 08:12:09 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20260602143002.38390-1-laniel_francis@privacyrequired.com>
+In-Reply-To: <20260602143002.38390-1-laniel_francis@privacyrequired.com>
+From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
+Date: Tue, 2 Jun 2026 17:11:57 +0200
+X-Gm-Features: AVHnY4LFoVeXSriFdB4h3MAWgoxx4YQ8iyP8wPhbEtGQ9gefjQQAfyS_0pWNPPs
+Message-ID: <CANiq72n+tyDcabpwZOR1gHb4mycbpTQbzr0QNgi9c48cSnrZ8w@mail.gmail.com>
+Subject: Re: [PATCH v2] rust: pwm: replace `core::mem::zeroed` with `pin_init::zeroed`
+To: Francis Laniel <laniel_francis@privacyrequired.com>
+Cc: Michal Wilczynski <m.wilczynski@samsung.com>, Miguel Ojeda <ojeda@kernel.org>, 
+	=?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>, 
+	Benno Lossin <lossin@kernel.org>, Gary Guo <gary@garyguo.net>, 
+	Alexandre Courbot <acourbot@nvidia.com>, Boqun Feng <boqun@kernel.org>, 
+	=?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+	Andreas Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, 
+	Trevor Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, linux-pwm@vger.kernel.org, 
+	rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
-	MID_CONTAINS_FROM(1.00)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[privacyrequired.com,reject];
-	R_DKIM_ALLOW(-0.20)[privacyrequired.com:s=stigmate];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	FREEMAIL_CC(0.00)[privacyrequired.com,nvidia.com,kernel.org,protonmail.com,google.com,umich.edu,vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-9223-lists,linux-pwm=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9224-lists,linux-pwm=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:laniel_francis@privacyrequired.com,m:m.wilczynski@samsung.com,m:ojeda@kernel.org,m:ukleinek@kernel.org,m:lossin@kernel.org,m:gary@garyguo.net,m:acourbot@nvidia.com,m:boqun@kernel.org,m:bjorn3_gh@protonmail.com,m:a.hindborg@kernel.org,m:aliceryhl@google.com,m:tmgross@umich.edu,m:dakr@kernel.org,m:linux-pwm@vger.kernel.org,m:rust-for-linux@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_SENDER(0.00)[laniel_francis@privacyrequired.com,linux-pwm@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER(0.00)[miguelojedasandonis@gmail.com,linux-pwm@vger.kernel.org];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FREEMAIL_FROM(0.00)[gmail.com];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:m.wilczynski@samsung.com,m:ojeda@kernel.org,m:ukleinek@kernel.org,m:lossin@kernel.org,m:gary@garyguo.net,m:laniel_francis@privacyrequired.com,m:acourbot@nvidia.com,m:boqun@kernel.org,m:bjorn3_gh@protonmail.com,m:a.hindborg@kernel.org,m:aliceryhl@google.com,m:tmgross@umich.edu,m:dakr@kernel.org,m:linux-pwm@vger.kernel.org,m:rust-for-linux@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
+	FREEMAIL_CC(0.00)[samsung.com,kernel.org,garyguo.net,nvidia.com,protonmail.com,google.com,umich.edu,vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[laniel_francis@privacyrequired.com,linux-pwm@vger.kernel.org];
-	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[privacyrequired.com:+];
-	RCVD_COUNT_FIVE(0.00)[5];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[miguelojedasandonis@gmail.com,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-pwm];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[privacyrequired.com:mid,privacyrequired.com:dkim,privacyrequired.com:from_mime,privacyrequired.com:email,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,nvidia.com:email,samsung.com:email,vger.kernel.org:from_smtp]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,samsung.com:email,mail.gmail.com:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 2F5D762F6A4
+X-Rspamd-Queue-Id: 135A462FE0C
 
-All types in `bindings` implement `Zeroable` if they can, so use
-`pin_init::zeroed` instead of relying on `unsafe` code.
+On Tue, Jun 2, 2026 at 4:30=E2=80=AFPM Francis Laniel
+<laniel_francis@privacyrequired.com> wrote:
+>
+> Link: https://github.com/Rust-for-Linux/linux/issues/1189
+> Signed-off-by: Francis Laniel <laniel_francis@privacyrequired.com>
+> Suggested-by: Benno Lossin <lossin@kernel.org>
+> Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
+> Acked-by: Michal Wilczynski <m.wilczynski@samsung.com>
 
-If this ends up not compiling in the future, something in bindgen or on
-the C side changed and is most likely incorrect.
+I would suggest this ordering:
 
-Link: https://github.com/Rust-for-Linux/linux/issues/1189
-Signed-off-by: Francis Laniel <laniel_francis@privacyrequired.com>
-Suggested-by: Benno Lossin <lossin@kernel.org>
-Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
-Acked-by: Michal Wilczynski <m.wilczynski@samsung.com>
----
- rust/kernel/pwm.rs | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+    Suggested-by: Benno Lossin <lossin@kernel.org>
+    Link: https://github.com/Rust-for-Linux/linux/issues/1189
+    Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
+    Acked-by: Michal Wilczynski <m.wilczynski@samsung.com>
+    Signed-off-by: Francis Laniel <laniel_francis@privacyrequired.com>
 
-diff --git a/rust/kernel/pwm.rs b/rust/kernel/pwm.rs
-index 6c9d667009ef..3427b7d93a03 100644
---- a/rust/kernel/pwm.rs
-+++ b/rust/kernel/pwm.rs
-@@ -494,9 +494,7 @@ pub(crate) fn as_raw(&self) -> *const bindings::pwm_ops {
- /// This is used to bridge Rust trait implementations to the C `struct pwm_ops`
- /// expected by the kernel.
- pub const fn create_pwm_ops<T: PwmOps>() -> PwmOpsVTable {
--    // SAFETY: `core::mem::zeroed()` is unsafe. For `pwm_ops`, all fields are
--    // `Option<extern "C" fn(...)>` or data, so a zeroed pattern (None/0) is valid initially.
--    let mut ops: bindings::pwm_ops = unsafe { core::mem::zeroed() };
-+    let mut ops: bindings::pwm_ops = pin_init::zeroed();
- 
-     ops.request = Some(Adapter::<T>::request_callback);
-     ops.capture = Some(Adapter::<T>::capture_callback);
--- 
-2.47.3
+I guess this will go through PWM; otherwise, please let me know.
 
+Thanks for the patch!
+
+Cheers,
+Miguel
 
