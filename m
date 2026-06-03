@@ -1,300 +1,196 @@
-Return-Path: <linux-pwm+bounces-9236-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9237-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id H4AeNtkrIGqUyAAAu9opvQ
-	(envelope-from <linux-pwm+bounces-9236-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Wed, 03 Jun 2026 15:27:53 +0200
+	id +kBvC1pJIGrk0AAAu9opvQ
+	(envelope-from <linux-pwm+bounces-9237-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Wed, 03 Jun 2026 17:33:46 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 32BA763809C
-	for <lists+linux-pwm@lfdr.de>; Wed, 03 Jun 2026 15:27:53 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id D58266393C8
+	for <lists+linux-pwm@lfdr.de>; Wed, 03 Jun 2026 17:33:45 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=bp.renesas.com header.s=selector1 header.b=lK7a6r9r;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9236-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9236-lists+linux-pwm=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=renesas.com;
-	arc=reject ("cv is fail on i=2")
+	dkim=pass header.d=suse.com header.s=google header.b=AdLnftGE;
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9237-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9237-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=suse.com;
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id ED8F23090888
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jun 2026 13:12:27 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 9EBE73075F62
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jun 2026 15:28:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F0B0480DD5;
-	Wed,  3 Jun 2026 13:12:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 482183DD53E;
+	Wed,  3 Jun 2026 15:24:43 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from TY3P286CU002.outbound.protection.outlook.com (mail-japaneastazon11010016.outbound.protection.outlook.com [52.101.229.16])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0186480354;
-	Wed,  3 Jun 2026 13:12:25 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780492347; cv=fail; b=H4xaU41teD9+d2BJgkWTpZAzX2fhu/cWACCkWQBDQxUTj0MK59VFi/8L9wT6TzTdgv7B8UXcxqDAd0VqsGCnvb5C3bkzgFqLbX8WZROxuDH/wUnTYt287YjVy1is9889hknn+wVWlhvQra+KgMBKWyTG0gk5RVgxvvu4QsAtrSo=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780492347; c=relaxed/simple;
-	bh=o9dXTsbtqTlRTOr9Yc0jN1kFGClYXLzz5ORPV+8dAA8=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 Content-Type:MIME-Version; b=EpOvJiASiKci9FKn1F/USx6VUWgemjV5gHFFIYt15M8wn4LIcBCHbRZklNotfFOQJSdljh4bl3rYGzn+MIStSEDx9a8yAzF/O42s7MvtgV5edC1q8j6NAWbLtUouyWfO8Aeh00Jw5vj+i5Z2Jjw8TgvazBAH9ef4U6Y1VbQ5Tig=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=lK7a6r9r; arc=fail smtp.client-ip=52.101.229.16
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=XUumuV+N/o067gdGg/s8OXGazsF4XvSTYwNPfg0pxeZlPDsisr24CERQyzUBV5RowJW9tnPuD6n3osyIRfxb7bAxg3+xsDAHiHZlvfFJGk6qvwwU1mX8HiT9N0TB3JUwMrHBi00+GXnxWnE4gMXxOLsF2NKQHkUfX3aEadO2urkY7K5hnDuiv53YRF/vvaZodf65K+DzrBnSXJ1gbzPFgPAkUTywc8S+PDnnq5U+gGlhABqKURaC9rEhE1V+N/lTFUxTa+Zwj/gf5vUz93UAFpzEGUa2rcYLRkAzXOEeYoQTWu2dJwkz1ReL1sW9qGtgR71NtQARY2345sDcbVHiZg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=VyHz1xxz2dKf0g/yjNELE+2s1CEAe1k2WkEHbnWjOjc=;
- b=gI7jl7c3IoySbvltp+RprC14NICNocxixnXvnBX9fvJSoh58wXIl8u+9iyQSDWabjC23I4FkwdFsJR6MBKhzyIfcgJ/6eSG/Twnui902KevaIwqbylgEmw9EwAY4utzf+zoC+rPoqe+gYGNxxWfI/KWK09K3XJroTIer8q7wIG7vT5PvfJC6HdBqNzmZCSfh+ykpewOAMLkVf+5wZeUOZj9ZyqFadL0JhIbKRYj9/wukw/Lt+e0dLyLbAlRhdOLELsx0ELYW3vXxTp9gLzBlxwCUDtxJdhPfxvksHbE8mFCgvyEWkNs8OPADSIQyd1oBTJR/OefDY8vv/Ohgsurpdw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
- header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=VyHz1xxz2dKf0g/yjNELE+2s1CEAe1k2WkEHbnWjOjc=;
- b=lK7a6r9rTc36xQqUE453+JNHrJgaWJrhnqE4iVAPSqZymkxB7uxla5bgf2Zd4TZQbnbs53xS1Qk7VRMKWn4J3ov7uQ2AkE2bjmDEqGW5vOiPBM4ce0NHXeQ+OUYd9VmvMSrpeFmIdhNXc9tnG3lznuesRpHcCcLgue5X9DuJNCw=
-Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com (2603:1096:400:3d0::7)
- by OSCPR01MB16258.jpnprd01.prod.outlook.com (2603:1096:604:3f9::6) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.71.15; Wed, 3 Jun 2026
- 13:12:23 +0000
-Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com
- ([fe80::87d1:4928:d55:97de]) by TY3PR01MB11346.jpnprd01.prod.outlook.com
- ([fe80::87d1:4928:d55:97de%4]) with mapi id 15.21.0092.006; Wed, 3 Jun 2026
- 13:12:20 +0000
-From: Biju Das <biju.das.jz@bp.renesas.com>
-To: =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= <ukleinek@kernel.org>
-CC: Cosmin-Gabriel Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>,
-	biju.das.au <biju.das.au@gmail.com>, "linux-pwm@vger.kernel.org"
-	<linux-pwm@vger.kernel.org>, "linux-kernel@vger.kernel.org"
-	<linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>,
-	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
-	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
-Subject: RE: [PATCH v5 4/9] pwm: rzg2l-gpt: Convert to waveform callbacks
-Thread-Topic: [PATCH v5 4/9] pwm: rzg2l-gpt: Convert to waveform callbacks
-Thread-Index: AQHc0LKQvlxtyV3slUeJAFuTBfcm3LXoPECAgAD3bICABLoNcIAkrWwAgBp4RzA=
-Date: Wed, 3 Jun 2026 13:12:20 +0000
-Message-ID:
- <TY3PR01MB113467B67CF05D80A5EE7E35D86132@TY3PR01MB11346.jpnprd01.prod.outlook.com>
-References: <20260420104332.153640-5-biju.das.jz@bp.renesas.com>
- <TYRPR01MB156193428AFA2FE631556EEDA852F2@TYRPR01MB15619.jpnprd01.prod.outlook.com>
- <aec2GeV_aP6rOtFg@monoceros>
- <TY3PR01MB11346D2A5AD3D030E806594CF862B2@TY3PR01MB11346.jpnprd01.prod.outlook.com>
- <agnynFUowrOA6oqH@monoceros>
-In-Reply-To: <agnynFUowrOA6oqH@monoceros>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach:
-X-MS-TNEF-Correlator:
-x-ms-publictraffictype: Email
-x-ms-traffictypediagnostic: TY3PR01MB11346:EE_|OSCPR01MB16258:EE_
-x-ms-office365-filtering-correlation-id: d74e5855-4735-4530-2eca-08dec171be6e
-x-ld-processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam:
- BCL:0;ARA:13230040|366016|1800799024|376014|38070700021|18002099003|22082099003|56012099006|4143699003|11063799006|6133799003;
-x-microsoft-antispam-message-info:
- qbjyH/lzrDVrt7BWztFVbqxshwUs1zn1yCcZmTFvrDSsuWy6Zxw8MLoPINUFP1endnEyyseZseiMopEZuEPzkSdc7gISk95iMfgkyyIEIXCY1yaAu9ZQ9BKCMNz3NBZHXMBQQlMWFMU9aZFSXVyA+BwRlQGM0YdpjjSbina38WZjH3dEgc0LXe5uEqyx+pOP1hWK5EAI1Hk8mdrlsfbGAnQx5BTa6CkS0rUxMO5y9VCjoYeW0v5sKDvAtR3TaAZjqERzqyhihabcjTBvQ9cWAjFiAtN9+t8aCVPyRIO5xVKbrKdxXh0o4pdTkdypo3bhL+Z2jmVuYkhDJPE/TUQJaN7pDhmgvfZWMqBAkZumDasaulfm1BWx+R8Hcsg8LMOu66SEYKVhPooe3r7DdtXCUfeYA1AK/a019twuvOqZHTu01NdncYdiSmeAOzwOqFaMzbn2J/MKo+kEalQ0OWZl779P6MvrzQ4gNsdQtAduZ7xzZMpMnTQaeStFdBxyZaFFfU724SQAg/uAE6hZ/an9i1H+AvmfFOhDKxleEv6/6oIGe1/KUGbJwNowmZKbqHdNIlI7iIRC2dWGqFvH2AfBWuIwvy9k4eOxLMC8n+DGWQUrXfwf757VANud+jVxZaO2WdmMAau+ZXUfjRpbQ6pmeBn/Un3BQcGaj6AjvgsvTc8+k0bkrMj7vhxAA+wrenmxZ+1F1cK6/y3HaxuKFVh6gN4He5Tz/FZVIveP7fVoxLq5c19tJlgttwJ+PGv96glL
-x-forefront-antispam-report:
- CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY3PR01MB11346.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700021)(18002099003)(22082099003)(56012099006)(4143699003)(11063799006)(6133799003);DIR:OUT;SFP:1101;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0:
- =?iso-8859-1?Q?FT0FEVkwaGWcAUrcrszVDz/dHtpbIJ12kctLYqKHK5yM1NE0I+0V5ARKfK?=
- =?iso-8859-1?Q?naXkBBOd4nnOcllQbOq0PYIAtk+TnpmjQBHXHkBrLpFHyoTr8d17lQgq5o?=
- =?iso-8859-1?Q?PM62vurMdlLPm86+dDInunx2uem5xhpP2LLLnIfZvSuEj7u3xdTYzpZNeO?=
- =?iso-8859-1?Q?SmTZZUbuzBQGZqfvtMCyK0Eq2aRsNgMpKKL/iqXqtKVJxZEGu272MKDPOd?=
- =?iso-8859-1?Q?2uwGHXILpH4HGnCd3011hxXsCdpVeHUw+nLXg9+c0rn44nnkgIICpWjoIh?=
- =?iso-8859-1?Q?1iKUt91qNKb0uwcecc6tRkx+bijMcGV/1LmSI/My7cvIg372tpVMi76osY?=
- =?iso-8859-1?Q?X3WgS0ke6oXPKlbdMz5PrZGdBhxNnCkvd6mEKwNT8tPWDWp7OGrIsiW588?=
- =?iso-8859-1?Q?ZoGNHxjLzd809xd/JuX40LW14VLGxHsqPyEpo5EEwBzenz7w70xrxdn6JR?=
- =?iso-8859-1?Q?NcjLimdzrdQ3vg+BQvmSVWcCEna1XXlG+5Rdene7o4IzQx4CtW8ZWgdMto?=
- =?iso-8859-1?Q?mPMZ1AiUdcOrSJZwDG1g4Hm0576p43LCJrhDd0m/y8E9K6va7ZIygzmYo+?=
- =?iso-8859-1?Q?XYelcE77P6HeQeGwIiBmoohZjzhgKKZ1vYeSTslo8PKTNw0G+RV5a5zSR5?=
- =?iso-8859-1?Q?S9PIEwE27kbp6lDt51SZ2uUgLOh/3/4z1/lN6SfOGEgSewtcciNsIDuQC5?=
- =?iso-8859-1?Q?+XQaGbpf3pA9Uca6Q5lsL04Dpuf/ysnyBFVb9EPte4lmjt/atCJLWFCdM9?=
- =?iso-8859-1?Q?lVjeGSunTn+8VzVJ+RozRPvbJhmvpoJDXWXPSKdw8btsjmJU2/ty8y0gn6?=
- =?iso-8859-1?Q?fH9EIDelXceUVGEiAzkwGVPPproBm6UASmgXMgSIy9817Lho7hgYMFCO9s?=
- =?iso-8859-1?Q?is+dHNptDPEdvfZBS3WIcbBAtxEGiRIpxR9Ic2IECqOhnVGdKyr04RhRrF?=
- =?iso-8859-1?Q?G8x7tft4wEPhlhs4m0RdzOdEoPK9NXR+qBZYyFxfY8tCzRpepgW70kszEx?=
- =?iso-8859-1?Q?RGInwAauCjCJmL7hDTM4GG0MYXSTnS8AZWJaEP3UgLpbf8rqAkD48AGtqn?=
- =?iso-8859-1?Q?HWWFDq2+LzNqO6yI+RQM48iYmtQareTOgnaXhgqUxTGgkCEOA+E8GkMvUP?=
- =?iso-8859-1?Q?3CeOqwjGn/8WeIvVD8ox9+tfOHXMIONSU076W/cn8MCrkdxWJUZscYb2vO?=
- =?iso-8859-1?Q?hRYMl5vFWxIiSuEhSirGBcqnVM57VUV44M86h9jJMusX2bkVarAXkK507g?=
- =?iso-8859-1?Q?W1Cve+UFTJDUPtXU1M8RnZ5nWSfTo683wy1tGwEeraedF5u3ocpNlIWt68?=
- =?iso-8859-1?Q?eQ4C9ntFjsgn0zPobEFERwUJYw6rdcVRfJxm7pphBs5/aOR7cbmvlDYw0E?=
- =?iso-8859-1?Q?KgMFK1IcxZR6PHsFGfUfIxRwne9jPt9xYdNuz4Q/gsyNNS6kIfck7EBbgg?=
- =?iso-8859-1?Q?0lgz/9WizDBfDmYTJ3zxbz8yBzLKXwfWzMb4+hNdUgHA43BDOt7stySIhl?=
- =?iso-8859-1?Q?9J296v1uC6RjLKMIovqySOlI3dOtnQJdYIBC4ghIrdVFXvjjvZBiGE3nyg?=
- =?iso-8859-1?Q?o1eORUNVQYwR0vWy0Ba0kgoHX25I3jVKR5ZhIZfdl08p9ThEemKvuLL2GZ?=
- =?iso-8859-1?Q?DpDA/1E/tHk+6aiuFwvHrBWLE1myfgahhm6R9kPG0MqnVXqr78s/F6bF4+?=
- =?iso-8859-1?Q?PUURRdGixUsyIpDATllYPeHYFlFeOj2BAQlFXl65KrQO4LV55ws3c1/qJt?=
- =?iso-8859-1?Q?LRJ3CuUNsU1624SLJASX6G3yJsibplZ19X28LUseXbRlTzKQ07UFmkaFNg?=
- =?iso-8859-1?Q?rd1SMnPNrw=3D=3D?=
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2E923DD502
+	for <linux-pwm@vger.kernel.org>; Wed,  3 Jun 2026 15:24:41 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780500283; cv=none; b=FNmv+VCvDpi0JAvuYlyw8T7WZ7J11berUvjscQ5oiCYCiRTPpEjd65qEqKBDqJtPOw6lyd3mtEPOGg0hX4jw5sTWsi8Hyigw+Kffidu/f/GUjq6Q7GIhWAHC7xmnAYrmdwCjuM7IK3AAxofdmVYp/n0A2zMLO77GsPmEoqoHj9I=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780500283; c=relaxed/simple;
+	bh=pwnLdAL7wp0rmLebUr1pKIcbrTLNSQRBMwWuio2DBUA=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version; b=OelS5tOaTmF7TiQ9AR7MLTLPoe//RPYAC7VFZAWiObDWAUoEL7c9JznCyPW55/QtR79AhP/Y8jItX5S+E6jleAhQnCw+qtUfFAv1tHmOWVqY6RbPb5Gq4ithK7FqDwIoPhmT8zxiSjr4wRmRJw6qjZp3u7jZraPxjBy055SoQMQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=AdLnftGE; arc=none smtp.client-ip=209.85.221.46
+Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-45ef616daf6so5408948f8f.3
+        for <linux-pwm@vger.kernel.org>; Wed, 03 Jun 2026 08:24:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1780500280; x=1781105080; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:from:to:cc:subject:date:message-id:reply-to;
+        bh=d1fMCVLbIKr90LXf3SjcImREe67/kY5zx03n0vnfB2Y=;
+        b=AdLnftGEO1xCzY4HC3+jrsk73p/0uUDVJ7NTNiBA1Vp9+V503W7EyKWIjN25xrlzfz
+         /Xz7BPqtQgAPjknPDQLfLB+Yt/qNajs2D6Wcfc4GwhhCWfjNy9+93tPnmzI+UMBVT0ri
+         bAcvBfD+8bRKQzR4jZilG47d1fGWMUhWGkU3ev6OSZoPMq+q46M8qi+NRQxb3vukRyBe
+         /rBfwIfK03INgM0imkJmuruS+S9CnWsxcGc9nSuN7sk4NBmZYyJOrrPHBc1A0JXBSxy7
+         P9DTCwnhEXgflY7seyovCS5+qRn0OTl5eFg01Rs/2CKME8gO9Z9JTWWhbSe2Z/d4gIEw
+         BFbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1780500280; x=1781105080;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:to
+         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=d1fMCVLbIKr90LXf3SjcImREe67/kY5zx03n0vnfB2Y=;
+        b=YNDeeM6rUbtE0pENnXhkRGLMtotOmnebNNdE+t8mXvLburrIfnld3Dmii90sbVIcSb
+         mRqfzKXfcvtUhrV2GSMbQw5KBVYa7yO2jNth+eDdnmQaQzkRmZd/3n7V1lfXPdZSaS8O
+         MImg8/7PFgSVG0U0hdRRJhd+/isCtTFSHoKqCRNHOCPcLKxGlHWcsSyiZzhA9y2fim8M
+         WTu9fCcoF1bd5Y2YsEXUfc3BGnJNPgogIhTFvO+PqpmdRlGsIRfl3vrCZY26zr0cBnJT
+         SRwx4TT5gLINt3xvgaOERy9bidtBBmPJ2ryRYBLdNarxzjHpZNw9pw1Mo4RRG75z1AQQ
+         DrwA==
+X-Forwarded-Encrypted: i=1; AFNElJ8l4fP7Pm1lh5uZ+DO296Vcn8dxuJGRHE6sLt3cKdjV/ZuFEG8s7X3rjFTJW1eXzRTYeOcSbPFfAOg=@vger.kernel.org
+X-Gm-Message-State: AOJu0YxOVWLXqVPVMjc8cjZt74yk51PyjdusBUZZBJ3Q1spTGK4KNr7x
+	nTpda0aSkmRlBiieQt01fkoPiPcft36qaO58LwfclQk40Cz9atS+gq9VPIRMyM3rKzo=
+X-Gm-Gg: Acq92OFa8105BwuorXvIA8xxITuDFOlC2RPzIfGJh2H1sdP43EdsPoPJ0M5bkpfSGrR
+	PRx2K5HX/H6FkzPq8M+MlYhYIWhgahgXbfU0jlnrfJaBVU7T9nnkAWta2gykI1+5F0tb0o/byyV
+	1nVperLcB5xkMY/wk6O3B8JwpDCdkOta3t9mTSVahgbAm4wt9KqekdKMzYIzlGZ+6GeQPeuLNZZ
+	aU2H8t6uPCJnqIlAIrv1MeRTWv4eiQiDYWDTerHS9e+MNFD5YirWlDAiTQVbUb1wic5dFzuFsvF
+	McEhkyYF8w7flSO01a3bR6FCtdtROK8jqCXHd/DsAjzij6udx6BxYLWBBHZrlOS61ifJGh9cHdm
+	U1M4IBlkDeyWtg1e+Wu4BKv41VVH6yiB0ksD20YRbLX0AVE76PPP/t60obHPCYj2TgchFK9wcCj
+	9w7irLmQrO15Fl/Hhlaqu7FvR7WjNvuNR3a71B2KbccZw=
+X-Received: by 2002:a5d:5710:0:b0:453:e3a1:6580 with SMTP id ffacd0b85a97d-46021844ce7mr4341301f8f.25.1780500280187;
+        Wed, 03 Jun 2026 08:24:40 -0700 (PDT)
+Received: from localhost ([82.192.120.99])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-4601f3444fesm9185525f8f.20.2026.06.03.08.24.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Jun 2026 08:24:39 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	linux-pwm@vger.kernel.org,
+	Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	Andrea della Porta <andrea.porta@suse.com>,
+	devicetree@vger.kernel.org,
+	linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Naushir Patuck <naush@raspberrypi.com>,
+	Stanimir Varbanov <svarbanov@suse.de>,
+	mbrugger@suse.com
+Subject: [PATCH v4 0/3] Add RP1 PWM controller support
+Date: Wed,  3 Jun 2026 17:27:43 +0200
+Message-ID: <cover.1780498640.git.andrea.porta@suse.com>
+X-Mailer: git-send-email 2.51.0
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: bp.renesas.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: TY3PR01MB11346.jpnprd01.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: d74e5855-4735-4530-2eca-08dec171be6e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2026 13:12:20.2903
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: a3igGYSPM4a+0JOS0GCajtKOREuL/nsMReWCMGnEA0FvSh5qycBNtdfF85ZDN6vtZBSk3T2piqVJ2qZ7Kq2vDP2NHcklBFTC2int5eEQr7A=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSCPR01MB16258
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [1.34 / 15.00];
+X-Spamd-Result: default: False [0.84 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[renesas.com,none];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	R_DKIM_ALLOW(-0.20)[bp.renesas.com:s=selector1];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[suse.com,quarantine];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=google];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	TO_DN_SOME(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9236-lists,linux-pwm=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-9237-lists,linux-pwm=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	FORGED_RECIPIENTS(0.00)[m:ukleinek@kernel.org,m:linux-pwm@vger.kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:florian.fainelli@broadcom.com,m:bcm-kernel-feedback-list@broadcom.com,m:andrea.porta@suse.com,m:devicetree@vger.kernel.org,m:linux-rpi-kernel@lists.infradead.org,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:naush@raspberrypi.com,m:svarbanov@suse.de,m:mbrugger@suse.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:ukleinek@kernel.org,m:cosmin-gabriel.tanislav.xa@renesas.com,m:biju.das.au@gmail.com,m:linux-pwm@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:geert+renesas@glider.be,m:prabhakar.mahadev-lad.rj@bp.renesas.com,m:linux-renesas-soc@vger.kernel.org,m:bijudasau@gmail.com,m:geert@glider.be,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[biju.das.jz@bp.renesas.com,linux-pwm@vger.kernel.org];
-	TO_DN_EQ_ADDR_SOME(0.00)[];
-	FREEMAIL_CC(0.00)[renesas.com,gmail.com,vger.kernel.org,glider.be,bp.renesas.com];
-	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[andrea.porta@suse.com,linux-pwm@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[biju.das.jz@bp.renesas.com,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[bp.renesas.com:+];
-	ALIAS_RESOLVED(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andrea.porta@suse.com,linux-pwm@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[suse.com:+];
+	RCVD_COUNT_FIVE(0.00)[5];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_SEVEN(0.00)[8];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-pwm,renesas];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[bp.renesas.com:from_mime,bp.renesas.com:dkim,vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,TY3PR01MB11346.jpnprd01.prod.outlook.com:mid]
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ALIAS_RESOLVED(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,suse.com:mid,suse.com:from_mime,suse.com:dkim]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 32BA763809C
+X-Rspamd-Queue-Id: D58266393C8
 
-Hello Uwe,
+This patchset adds support for the PWM controller found on the
+Raspberry Pi RP1 southbridge. This is necessary to operate the
+cooling fan connected to one of the PWM channels.
 
-Thanks for the feedback.
+The tachometer pin for the fan speed is managed by the firmware 
+running on the RP1's M-core. It uses the PHASE2 register
+to report the RPM, which is then exported by this driver via
+syscon registers. A subsequent patch will add a new device
+and driver to read the RPM and export this value via hwmon.
+ 
+Subsequent patches will also add the CPU thermal zone, which
+acts as a consumer of the PWM device.
 
-> -----Original Message-----
-> From: Uwe Kleine-K=F6nig <ukleinek@kernel.org>
-> Sent: 17 May 2026 17:58
-> Subject: Re: [PATCH v5 4/9] pwm: rzg2l-gpt: Convert to waveform callbacks
->=20
-> Hello Biju,
->=20
-> On Fri, Apr 24, 2026 at 09:01:51AM +0000, Biju Das wrote:
-> > > -----Original Message-----
-> > > From: Uwe Kleine-K=F6nig <ukleinek@kernel.org>
-> > > Sent: 21 April 2026 09:41
-> > > Subject: Re: [PATCH v5 4/9] pwm: rzg2l-gpt: Convert to waveform
-> > > callbacks
-> > >
-> > > On Mon, Apr 20, 2026 at 05:55:07PM +0000, Cosmin-Gabriel Tanislav wro=
-te:
-> > > > > @@ -291,21 +286,26 @@ static int rzg2l_gpt_config(struct pwm_chip=
- *chip, struct pwm_device
-> *pwm,
-> > > > >  	if (rzg2l_gpt->channel_request_count[ch] > 1) {
-> > > > >  		u8 sibling_ch =3D rzg2l_gpt_sibling(pwm->hwpwm);
-> > > > >
-> > > > > -		if (rzg2l_gpt_is_ch_enabled(rzg2l_gpt, sibling_ch)) {
-> > > > > +		if (rzg2l_gpt_is_ch_enabled(rzg2l_gpt, sibling_ch, NULL)) {
-> > > > >  			if (period_ticks < rzg2l_gpt->period_ticks[ch])
-> > > > > -				return -EBUSY;
-> > > > > +				is_small_second_period =3D true;
-> > > > >
-> > > > >  			period_ticks =3D rzg2l_gpt->period_ticks[ch];
-> > > > >  		}
-> > > > >  	}
-> > > > >
-> > > > > -	prescale =3D rzg2l_gpt_calculate_prescale(period_ticks);
-> > > > > -	pv =3D rzg2l_gpt_calculate_pv_or_dc(period_ticks, prescale);
-> > > > > +	wfhw->prescale =3D rzg2l_gpt_calculate_prescale(period_ticks);
-> > > > > +	pv =3D rzg2l_gpt_calculate_pv_or_dc(period_ticks, wfhw->prescal=
-e);
-> > > > > +	wfhw->gtpr =3D pv;
-> > > > > +	wfhw->gtccr =3D 0;
-> > > > > +	if (is_small_second_period)
-> > > > > +		return 1;
-> > > > >
-> > > > > -	duty_ticks =3D mul_u64_u64_div_u64(state->duty_cycle, rzg2l_gpt=
-->rate_khz, USEC_PER_SEC);
-> > > > > -	if (duty_ticks > period_ticks)
-> > > > > -		duty_ticks =3D period_ticks;
-> > > > > -	dc =3D rzg2l_gpt_calculate_pv_or_dc(duty_ticks, prescale);
-> > > > > +	duty_ticks =3D mul_u64_u64_div_u64(wf->duty_length_ns, rzg2l_gp=
-t->rate_khz, USEC_PER_SEC);
-> > > > > +	if (duty_ticks > RZG2L_MAX_TICKS)
-> > > > > +		duty_ticks =3D RZG2L_MAX_TICKS;
-> > > >
-> > > > I know this change from > period_ticks to > RZG2L_MAX_TICKS has
-> > > > been suggested by you, Uwe, but is this correct if period_ticks
-> > > > was set to a smaller value in the earlier sibling channel condition=
-?
-> > >
-> > > Indeed this is irritating. I assume I missed that and take the blame =
-for the wrong suggestions.
-> > > Depending on how hardware copes with such a configuration it might
-> > > be ok to keep the code as is, but a comment would be justified in thi=
-s case.
-> >
-> > Please confirm
-> >
-> >  /*
-> >   * duty_ticks were clampled to match either period_ticks of this
->=20
-> I think it's "clamped"
->=20
-> >   * channel or an active sibling channel's period_ticks.
-> >   */
-> > if (duty_ticks > period_ticks)
-> > 	duty_ticks =3D period_ticks;
->=20
-> I think the comment is not needed in this case. (I only wanted a comment =
-if the comparison against
-> RZG2L_MAX_TICKS was kept.)
+Best regards,
+Andrea
 
-OK will drop the comment.
+CHANGES in V4:
 
->=20
-> > > > >  	/*
-> > > > >  	 * GPT counter is shared by multiple channels, we cache the
-> > > > > period ticks @@ -314,6 +314,61 @@ static int
-> > > > > rzg2l_gpt_config(struct pwm_chip *chip, struct pwm_device
-> > > *pwm,
-> > > > >  	 */
-> > > > >  	rzg2l_gpt->period_ticks[ch] =3D period_ticks;
-> > > > >
-> > > >
-> > > > This should be part of rzg2l_gpt_write_waveform().
-> >
-> > Also, if we move this to rzg2l_gpt_write_waveform() there is a
-> > rounding error possible as we need to use hardware register to
-> > calculate rzg2l_gpt->period_ticks[ch].
-> >
-> > Can you please confirm, is it ok for you?
->=20
-> I don't understand that. Why is there a rounding error possible? The rele=
-vant thing here is that a
-> call to the two rounding callbacks is not supposed to change internal sta=
-te of the driver or even the
-> hardware.
+- s/rp1_pwm/rp1_pwm1/ in the DTS, so adding rp1_pwm0 in the
+  future will be unambiguous
+- the driver can now be compiled as module. Since it cannot
+  be unloaded (due to syscon registration), substitute
+  builtin_platform_driver for module_platform_driver.
+- preserved the polarity bit when setting up the channel on
+  rp1_pwm_request()
+- rp1_pwm_round_waveform_tohw(): capped duty_ticks to be no
+  more than period_ticks, and adjusted offset_ticks
+  accordingly (best effort)
+- the syscon registration is moved at the end of the probe
+  function, to avoid leaking if the probing bail out
+  prematurely
+- fixed the erroneous casting about pwm_chip/rp1_pwm struct
+  in suspend/resume functions.
 
-OK, will move assigning rzg2l_gpt->period_ticks[ch] =3D period_ticks;
-to rzg2l_gpt_write_waveform().
+Naushir Patuck (2):
+  dt-bindings: pwm: Add Raspberry Pi RP1 PWM controller
+  pwm: rp1: Add RP1 PWM controller driver
 
-Cheers,
-Biju
+Stanimir Varbanov (1):
+  arm64: dts: broadcom: rpi-5: Add RP1 PWM node
+
+ .../bindings/pwm/raspberrypi,rp1-pwm.yaml     |  54 +++
+ .../boot/dts/broadcom/bcm2712-rpi-5-b.dts     |  12 +
+ arch/arm64/boot/dts/broadcom/rp1-common.dtsi  |   9 +
+ drivers/pwm/Kconfig                           |   9 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-rp1.c                         | 422 ++++++++++++++++++
+ 6 files changed, 507 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/raspberrypi,rp1-pwm.yaml
+ create mode 100644 drivers/pwm/pwm-rp1.c
+
+-- 
+2.35.3
+
 
