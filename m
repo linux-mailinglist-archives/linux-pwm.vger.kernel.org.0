@@ -1,417 +1,300 @@
-Return-Path: <linux-pwm+bounces-9235-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9236-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id ZNPOOUkdIGpRwAAAu9opvQ
-	(envelope-from <linux-pwm+bounces-9235-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Wed, 03 Jun 2026 14:25:45 +0200
+	id H4AeNtkrIGqUyAAAu9opvQ
+	(envelope-from <linux-pwm+bounces-9236-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Wed, 03 Jun 2026 15:27:53 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1681263778E
-	for <lists+linux-pwm@lfdr.de>; Wed, 03 Jun 2026 14:25:45 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 32BA763809C
+	for <lists+linux-pwm@lfdr.de>; Wed, 03 Jun 2026 15:27:53 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=garyguo.net header.s=selector1 header.b=HxNvRGkE;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9235-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9235-lists+linux-pwm=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=garyguo.net;
+	dkim=pass header.d=bp.renesas.com header.s=selector1 header.b=lK7a6r9r;
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9236-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9236-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=renesas.com;
 	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 005E53067B63
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jun 2026 12:06:06 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id ED8F23090888
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jun 2026 13:12:27 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9A55046AF2D;
-	Wed,  3 Jun 2026 12:05:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9F0B0480DD5;
+	Wed,  3 Jun 2026 13:12:27 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from LO3P265CU004.outbound.protection.outlook.com (mail-uksouthazon11020120.outbound.protection.outlook.com [52.101.196.120])
+Received: from TY3P286CU002.outbound.protection.outlook.com (mail-japaneastazon11010016.outbound.protection.outlook.com [52.101.229.16])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B435843DA55;
-	Wed,  3 Jun 2026 12:05:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0186480354;
+	Wed,  3 Jun 2026 13:12:25 +0000 (UTC)
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780488357; cv=fail; b=bReY1gpwqPu8reCM5XxBPI8jqO0F0BTUq3BxKIqD7Sd9KhR2OhIa9pqlUs4kCivoWVKbDRSLDaLXeRM/Akg0Z/b9xz/cYrfYbWQJuzay2gOgVb9+O/ksyotXfAftByvanyClwNiC4TfZNljzwgTaRnmWUeUmFSV1hpDoMwfSoDo=
+	t=1780492347; cv=fail; b=H4xaU41teD9+d2BJgkWTpZAzX2fhu/cWACCkWQBDQxUTj0MK59VFi/8L9wT6TzTdgv7B8UXcxqDAd0VqsGCnvb5C3bkzgFqLbX8WZROxuDH/wUnTYt287YjVy1is9889hknn+wVWlhvQra+KgMBKWyTG0gk5RVgxvvu4QsAtrSo=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780488357; c=relaxed/simple;
-	bh=uzihlwfRwPj7VuZa2N2cZWg3WKhVH10Wa4z8oNxCu7U=;
-	h=Content-Type:Date:Message-Id:Cc:Subject:From:To:References:
-	 In-Reply-To:MIME-Version; b=f76n1Zgy0MVvnexdt7vpU1dFlSqxnKpSR2ZDlXuwxm/7+5g1tB/iVLesnDobw+fUaIzUs1iSj/6os9FERbo3U1xWQRhfq9oldKEH/HvGxpXaYwe5kk+H5OU9nIyQFNjQs0clpr12O5SR1fC0gl7M3JOPTSsaIlZ/4mfclrK9A/I=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=HxNvRGkE; arc=fail smtp.client-ip=52.101.196.120
+	s=arc-20240116; t=1780492347; c=relaxed/simple;
+	bh=o9dXTsbtqTlRTOr9Yc0jN1kFGClYXLzz5ORPV+8dAA8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=EpOvJiASiKci9FKn1F/USx6VUWgemjV5gHFFIYt15M8wn4LIcBCHbRZklNotfFOQJSdljh4bl3rYGzn+MIStSEDx9a8yAzF/O42s7MvtgV5edC1q8j6NAWbLtUouyWfO8Aeh00Jw5vj+i5Z2Jjw8TgvazBAH9ef4U6Y1VbQ5Tig=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=bp.renesas.com; spf=pass smtp.mailfrom=bp.renesas.com; dkim=pass (1024-bit key) header.d=bp.renesas.com header.i=@bp.renesas.com header.b=lK7a6r9r; arc=fail smtp.client-ip=52.101.229.16
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=NNQhPhPw69ghJqTeMflM+LpLRGpoJ7LW0+aAPBsmeL1+gHbsORKUUgtUlJC9B22zYiyyf7DAxlKIvgmXN8VTYUm+NH0sAZyKcP6R1VH4SCqq4sNuIQ7GNyXSGWpKY7oLC68d8bkVyjfmoY6hdS/D927IkNywxAfOfljwIDCm0W6Lb74zkU9ArIh8qxAuhZmAeVB2CvmLxMaNjVyGNF3lVInzn1wVLx0YwSAiHvTcuFPmWkkQxQIb5NVX2XzNDkUGdyfBq37fWZICfyVWuKNRveLgnYXjMeavVpBgK5lv9AA4L8aWkimk157QYrW5wVNVQZOKSubpjp3sohuY4tWvYw==
+ b=XUumuV+N/o067gdGg/s8OXGazsF4XvSTYwNPfg0pxeZlPDsisr24CERQyzUBV5RowJW9tnPuD6n3osyIRfxb7bAxg3+xsDAHiHZlvfFJGk6qvwwU1mX8HiT9N0TB3JUwMrHBi00+GXnxWnE4gMXxOLsF2NKQHkUfX3aEadO2urkY7K5hnDuiv53YRF/vvaZodf65K+DzrBnSXJ1gbzPFgPAkUTywc8S+PDnnq5U+gGlhABqKURaC9rEhE1V+N/lTFUxTa+Zwj/gf5vUz93UAFpzEGUa2rcYLRkAzXOEeYoQTWu2dJwkz1ReL1sW9qGtgR71NtQARY2345sDcbVHiZg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=/WuB2yhn5r5KUd+0rQRstQKEruwydO6FmBKt1a0gjcY=;
- b=sSCOCiNzNtMglMil07miHzezKsTnHjMw7gLDxMWu6MKsV21YIJbJ5Apq3oAMMph26dUxrjE0Ajt1CZNz0kxUpV8dJ1NUOUbUjRjbA4xM4yl0+XBzl9Owl+nMyhQredObbXw6qQs5M0fukzuvC7gve8rd7zOatGPbMEWsZgEeBnD9aca0nnNWmKprlY1kiy39rJyTUnqMZlzi3XGvO000yAXzV+cjQnFD2PX7SX0MBP7F73/CLaMKjBI4RqRqdU4+L/oYv/v2cX/poDfUUbufSRQLMPA52wd8NyoadPFTwqOLGz2dax2e3/ssBSJVJ+KVd/vdPS25KylKyKf9ocJK+g==
+ bh=VyHz1xxz2dKf0g/yjNELE+2s1CEAe1k2WkEHbnWjOjc=;
+ b=gI7jl7c3IoySbvltp+RprC14NICNocxixnXvnBX9fvJSoh58wXIl8u+9iyQSDWabjC23I4FkwdFsJR6MBKhzyIfcgJ/6eSG/Twnui902KevaIwqbylgEmw9EwAY4utzf+zoC+rPoqe+gYGNxxWfI/KWK09K3XJroTIer8q7wIG7vT5PvfJC6HdBqNzmZCSfh+ykpewOAMLkVf+5wZeUOZj9ZyqFadL0JhIbKRYj9/wukw/Lt+e0dLyLbAlRhdOLELsx0ELYW3vXxTp9gLzBlxwCUDtxJdhPfxvksHbE8mFCgvyEWkNs8OPADSIQyd1oBTJR/OefDY8vv/Ohgsurpdw==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=garyguo.net; dmarc=pass action=none header.from=garyguo.net;
- dkim=pass header.d=garyguo.net; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garyguo.net;
+ smtp.mailfrom=bp.renesas.com; dmarc=pass action=none
+ header.from=bp.renesas.com; dkim=pass header.d=bp.renesas.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=bp.renesas.com;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=/WuB2yhn5r5KUd+0rQRstQKEruwydO6FmBKt1a0gjcY=;
- b=HxNvRGkEEZi+636pTqO6SBWORy/p93isxwrCNUvSPVeGYTgPo+yiWeaXoVMZ2CWijT9uF6Nf8GLOBdU1xOnkqXA/bDIdfyOnQKbICEpUXBa2sgwXmCcSX7gDZBbw7mc7CztCoQL4JMAhe/hKHV4GK+RGNFJgUgGcANvIfL32CZU=
-Received: from LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:488::16)
- by LO2P265MB5205.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:254::9) with
+ bh=VyHz1xxz2dKf0g/yjNELE+2s1CEAe1k2WkEHbnWjOjc=;
+ b=lK7a6r9rTc36xQqUE453+JNHrJgaWJrhnqE4iVAPSqZymkxB7uxla5bgf2Zd4TZQbnbs53xS1Qk7VRMKWn4J3ov7uQ2AkE2bjmDEqGW5vOiPBM4ce0NHXeQ+OUYd9VmvMSrpeFmIdhNXc9tnG3lznuesRpHcCcLgue5X9DuJNCw=
+Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com (2603:1096:400:3d0::7)
+ by OSCPR01MB16258.jpnprd01.prod.outlook.com (2603:1096:604:3f9::6) with
  Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.92.7; Wed, 3 Jun 2026
- 12:05:53 +0000
-Received: from LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
- ([fe80::1c3:ceba:21b4:9986]) by LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
- ([fe80::1c3:ceba:21b4:9986%4]) with mapi id 15.21.0092.006; Wed, 3 Jun 2026
- 12:05:45 +0000
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.71.15; Wed, 3 Jun 2026
+ 13:12:23 +0000
+Received: from TY3PR01MB11346.jpnprd01.prod.outlook.com
+ ([fe80::87d1:4928:d55:97de]) by TY3PR01MB11346.jpnprd01.prod.outlook.com
+ ([fe80::87d1:4928:d55:97de%4]) with mapi id 15.21.0092.006; Wed, 3 Jun 2026
+ 13:12:20 +0000
+From: Biju Das <biju.das.jz@bp.renesas.com>
+To: =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= <ukleinek@kernel.org>
+CC: Cosmin-Gabriel Tanislav <cosmin-gabriel.tanislav.xa@renesas.com>,
+	biju.das.au <biju.das.au@gmail.com>, "linux-pwm@vger.kernel.org"
+	<linux-pwm@vger.kernel.org>, "linux-kernel@vger.kernel.org"
+	<linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>,
+	Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>,
+	"linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+Subject: RE: [PATCH v5 4/9] pwm: rzg2l-gpt: Convert to waveform callbacks
+Thread-Topic: [PATCH v5 4/9] pwm: rzg2l-gpt: Convert to waveform callbacks
+Thread-Index: AQHc0LKQvlxtyV3slUeJAFuTBfcm3LXoPECAgAD3bICABLoNcIAkrWwAgBp4RzA=
+Date: Wed, 3 Jun 2026 13:12:20 +0000
+Message-ID:
+ <TY3PR01MB113467B67CF05D80A5EE7E35D86132@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+References: <20260420104332.153640-5-biju.das.jz@bp.renesas.com>
+ <TYRPR01MB156193428AFA2FE631556EEDA852F2@TYRPR01MB15619.jpnprd01.prod.outlook.com>
+ <aec2GeV_aP6rOtFg@monoceros>
+ <TY3PR01MB11346D2A5AD3D030E806594CF862B2@TY3PR01MB11346.jpnprd01.prod.outlook.com>
+ <agnynFUowrOA6oqH@monoceros>
+In-Reply-To: <agnynFUowrOA6oqH@monoceros>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: TY3PR01MB11346:EE_|OSCPR01MB16258:EE_
+x-ms-office365-filtering-correlation-id: d74e5855-4735-4530-2eca-08dec171be6e
+x-ld-processed: 53d82571-da19-47e4-9cb4-625a166a4a2a,ExtAddr
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|1800799024|376014|38070700021|18002099003|22082099003|56012099006|4143699003|11063799006|6133799003;
+x-microsoft-antispam-message-info:
+ qbjyH/lzrDVrt7BWztFVbqxshwUs1zn1yCcZmTFvrDSsuWy6Zxw8MLoPINUFP1endnEyyseZseiMopEZuEPzkSdc7gISk95iMfgkyyIEIXCY1yaAu9ZQ9BKCMNz3NBZHXMBQQlMWFMU9aZFSXVyA+BwRlQGM0YdpjjSbina38WZjH3dEgc0LXe5uEqyx+pOP1hWK5EAI1Hk8mdrlsfbGAnQx5BTa6CkS0rUxMO5y9VCjoYeW0v5sKDvAtR3TaAZjqERzqyhihabcjTBvQ9cWAjFiAtN9+t8aCVPyRIO5xVKbrKdxXh0o4pdTkdypo3bhL+Z2jmVuYkhDJPE/TUQJaN7pDhmgvfZWMqBAkZumDasaulfm1BWx+R8Hcsg8LMOu66SEYKVhPooe3r7DdtXCUfeYA1AK/a019twuvOqZHTu01NdncYdiSmeAOzwOqFaMzbn2J/MKo+kEalQ0OWZl779P6MvrzQ4gNsdQtAduZ7xzZMpMnTQaeStFdBxyZaFFfU724SQAg/uAE6hZ/an9i1H+AvmfFOhDKxleEv6/6oIGe1/KUGbJwNowmZKbqHdNIlI7iIRC2dWGqFvH2AfBWuIwvy9k4eOxLMC8n+DGWQUrXfwf757VANud+jVxZaO2WdmMAau+ZXUfjRpbQ6pmeBn/Un3BQcGaj6AjvgsvTc8+k0bkrMj7vhxAA+wrenmxZ+1F1cK6/y3HaxuKFVh6gN4He5Tz/FZVIveP7fVoxLq5c19tJlgttwJ+PGv96glL
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:TY3PR01MB11346.jpnprd01.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(1800799024)(376014)(38070700021)(18002099003)(22082099003)(56012099006)(4143699003)(11063799006)(6133799003);DIR:OUT;SFP:1101;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?FT0FEVkwaGWcAUrcrszVDz/dHtpbIJ12kctLYqKHK5yM1NE0I+0V5ARKfK?=
+ =?iso-8859-1?Q?naXkBBOd4nnOcllQbOq0PYIAtk+TnpmjQBHXHkBrLpFHyoTr8d17lQgq5o?=
+ =?iso-8859-1?Q?PM62vurMdlLPm86+dDInunx2uem5xhpP2LLLnIfZvSuEj7u3xdTYzpZNeO?=
+ =?iso-8859-1?Q?SmTZZUbuzBQGZqfvtMCyK0Eq2aRsNgMpKKL/iqXqtKVJxZEGu272MKDPOd?=
+ =?iso-8859-1?Q?2uwGHXILpH4HGnCd3011hxXsCdpVeHUw+nLXg9+c0rn44nnkgIICpWjoIh?=
+ =?iso-8859-1?Q?1iKUt91qNKb0uwcecc6tRkx+bijMcGV/1LmSI/My7cvIg372tpVMi76osY?=
+ =?iso-8859-1?Q?X3WgS0ke6oXPKlbdMz5PrZGdBhxNnCkvd6mEKwNT8tPWDWp7OGrIsiW588?=
+ =?iso-8859-1?Q?ZoGNHxjLzd809xd/JuX40LW14VLGxHsqPyEpo5EEwBzenz7w70xrxdn6JR?=
+ =?iso-8859-1?Q?NcjLimdzrdQ3vg+BQvmSVWcCEna1XXlG+5Rdene7o4IzQx4CtW8ZWgdMto?=
+ =?iso-8859-1?Q?mPMZ1AiUdcOrSJZwDG1g4Hm0576p43LCJrhDd0m/y8E9K6va7ZIygzmYo+?=
+ =?iso-8859-1?Q?XYelcE77P6HeQeGwIiBmoohZjzhgKKZ1vYeSTslo8PKTNw0G+RV5a5zSR5?=
+ =?iso-8859-1?Q?S9PIEwE27kbp6lDt51SZ2uUgLOh/3/4z1/lN6SfOGEgSewtcciNsIDuQC5?=
+ =?iso-8859-1?Q?+XQaGbpf3pA9Uca6Q5lsL04Dpuf/ysnyBFVb9EPte4lmjt/atCJLWFCdM9?=
+ =?iso-8859-1?Q?lVjeGSunTn+8VzVJ+RozRPvbJhmvpoJDXWXPSKdw8btsjmJU2/ty8y0gn6?=
+ =?iso-8859-1?Q?fH9EIDelXceUVGEiAzkwGVPPproBm6UASmgXMgSIy9817Lho7hgYMFCO9s?=
+ =?iso-8859-1?Q?is+dHNptDPEdvfZBS3WIcbBAtxEGiRIpxR9Ic2IECqOhnVGdKyr04RhRrF?=
+ =?iso-8859-1?Q?G8x7tft4wEPhlhs4m0RdzOdEoPK9NXR+qBZYyFxfY8tCzRpepgW70kszEx?=
+ =?iso-8859-1?Q?RGInwAauCjCJmL7hDTM4GG0MYXSTnS8AZWJaEP3UgLpbf8rqAkD48AGtqn?=
+ =?iso-8859-1?Q?HWWFDq2+LzNqO6yI+RQM48iYmtQareTOgnaXhgqUxTGgkCEOA+E8GkMvUP?=
+ =?iso-8859-1?Q?3CeOqwjGn/8WeIvVD8ox9+tfOHXMIONSU076W/cn8MCrkdxWJUZscYb2vO?=
+ =?iso-8859-1?Q?hRYMl5vFWxIiSuEhSirGBcqnVM57VUV44M86h9jJMusX2bkVarAXkK507g?=
+ =?iso-8859-1?Q?W1Cve+UFTJDUPtXU1M8RnZ5nWSfTo683wy1tGwEeraedF5u3ocpNlIWt68?=
+ =?iso-8859-1?Q?eQ4C9ntFjsgn0zPobEFERwUJYw6rdcVRfJxm7pphBs5/aOR7cbmvlDYw0E?=
+ =?iso-8859-1?Q?KgMFK1IcxZR6PHsFGfUfIxRwne9jPt9xYdNuz4Q/gsyNNS6kIfck7EBbgg?=
+ =?iso-8859-1?Q?0lgz/9WizDBfDmYTJ3zxbz8yBzLKXwfWzMb4+hNdUgHA43BDOt7stySIhl?=
+ =?iso-8859-1?Q?9J296v1uC6RjLKMIovqySOlI3dOtnQJdYIBC4ghIrdVFXvjjvZBiGE3nyg?=
+ =?iso-8859-1?Q?o1eORUNVQYwR0vWy0Ba0kgoHX25I3jVKR5ZhIZfdl08p9ThEemKvuLL2GZ?=
+ =?iso-8859-1?Q?DpDA/1E/tHk+6aiuFwvHrBWLE1myfgahhm6R9kPG0MqnVXqr78s/F6bF4+?=
+ =?iso-8859-1?Q?PUURRdGixUsyIpDATllYPeHYFlFeOj2BAQlFXl65KrQO4LV55ws3c1/qJt?=
+ =?iso-8859-1?Q?LRJ3CuUNsU1624SLJASX6G3yJsibplZ19X28LUseXbRlTzKQ07UFmkaFNg?=
+ =?iso-8859-1?Q?rd1SMnPNrw=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 03 Jun 2026 13:05:45 +0100
-Message-Id: <DIZEFXX93XUI.38M3E0EM9VN89@garyguo.net>
-Cc: <driver-core@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
- <nova-gpu@lists.linux.dev>, <dri-devel@lists.freedesktop.org>,
- <linux-pwm@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
-Subject: Re: [PATCH v2 3/7] rust: auxiliary: add registration_data_with()
- for ForLt types
-From: "Gary Guo" <gary@garyguo.net>
-To: "Danilo Krummrich" <dakr@kernel.org>, <gregkh@linuxfoundation.org>,
- <rafael@kernel.org>, <ojeda@kernel.org>, <boqun@kernel.org>,
- <gary@garyguo.net>, <bjorn3_gh@protonmail.com>, <lossin@kernel.org>,
- <a.hindborg@kernel.org>, <aliceryhl@google.com>, <tmgross@umich.edu>,
- <acourbot@nvidia.com>, <ecourtney@nvidia.com>, <m.wilczynski@samsung.com>,
- <david.m.ertman@intel.com>, <ira.weiny@intel.com>, <leon@kernel.org>,
- <daniel.almeida@collabora.com>, <bhelgaas@google.com>,
- <kwilczynski@kernel.org>
-X-Mailer: aerc 0.21.0
-References: <20260603011020.2073650-1-dakr@kernel.org>
- <20260603011020.2073650-4-dakr@kernel.org>
-In-Reply-To: <20260603011020.2073650-4-dakr@kernel.org>
-X-ClientProxiedBy: LO4P123CA0622.GBRP123.PROD.OUTLOOK.COM
- (2603:10a6:600:294::7) To LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:488::16)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LOVP265MB8871:EE_|LO2P265MB5205:EE_
-X-MS-Office365-Filtering-Correlation-Id: 3eaeeeda-d24a-4572-73c7-08dec168716d
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|10070799003|376014|7416014|1800799024|366016|921020|6133799003|56012099006|4143699003|22082099003|18002099003;
-X-Microsoft-Antispam-Message-Info:
-	pN2NTQse2jcc84JRBr0QSRsgTvL7y/g7vZEkRkZRxWtQV9JmLKj8yeb3pCVCgtMheBTL4p7lvprAkQ4YjgEh0UrxUYjagmtvl9XbDUlaHm8OB7FQNeIfrpX6SrhSX/JYutwGu+ubAjP4nxSGucEvg9C2iNBcgBTVasUUvXDdW9HqPsRT1Wx/gu0Av/ok6KrhgY2RU5zaitN8ovpEfUjp15VPwRCXZcyvZtTtYbC81lRKsf61GFv0iAjtqPzvpLUaafjxFSr6UCFzh95rzezPc6u1m9DowU7YKgEGauBHXJlpXuN/LvTlevVucwbkRInkrgcazTs85kSS8r0rUbHRMg5APYxEIj1YPcWj+8IF2YTnoUTNKwCI9KawdihAhuP9g/oa7sla8vZw/iJRscbvGICp4vQ/kFn0T+dmdmB1EGpjsqUlza1cT91jLphxMcjDAuMQl5nUpl0+BvFIHTYptb7T0PdaXw811R0FV2Xsa8sNcK+AquRn3buHDWsp8OHSS+BO5Za2rZ7Mbh7KEBbrYm0HZ/aYLZPoZ1tCAPFLY3Td59reCJ0+6Pexesjcr6dHQu/s5bOnGpoHsnHrBvNEQ4meNzEEllNs+s+X34sYG62Cm6VJn1vFMeVUeFWh1wJRYvwxZjtV4ZTrn9pTUgDOT23KvEQjj2tr3O+rrlYDHYiAja+D46CjzoGoLVT7U34/03pIe4Clhk6hqn4SgK7+z2dUX5XOzaoKOVL20Xgf61w=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(376014)(7416014)(1800799024)(366016)(921020)(6133799003)(56012099006)(4143699003)(22082099003)(18002099003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?MmJkVHZNQXpZMXpUaUNCZnRqdUtsV3daeElQellTVHhybVB1d29HUHdzOWV2?=
- =?utf-8?B?Ulo5UzJqY1pKQ20zZk03TGV5Y2N5Q1JDTWVyb3dCNGVGaVlrNXZBSFFpdXRO?=
- =?utf-8?B?eUN5alRRMzBqbTZBQWw4ZThnNlh2T294WVNsemlWbWhZcEJ6MW9tczFtTWd6?=
- =?utf-8?B?YWdvSmtFdEhra0R1ZUtXOVhCUnBoZjMvWGp4eVQ5V1NGMEM4aEJpWlJHNThN?=
- =?utf-8?B?aE5sZld1VVFBbndJYmJFUUdDTGV6NFdWcDJZOEZnVkNvK1o5d1ZsSWtMNUNK?=
- =?utf-8?B?d2dVNkpwakgzWE1uRFBwbXd3SS9nMWd1d3R1bDQ0YUZub0w5MzhORnNlMFlz?=
- =?utf-8?B?UVNjUTBnYVVkamNZL005bVBEWURBQ29Kb3pRNm5CTXBsUzJYOHM3NDZ0Y2Zt?=
- =?utf-8?B?dUcxZHpVZSsrOTZFOHRwOGl3STkzV291a0Iwb093VWlZQzR4ZC83MmZSWVBV?=
- =?utf-8?B?WHY4OEVSNkVhQ0tsOUl0YUlyQ0MzUitiY3kwV3FnMDhENTk1Y09GSnFQUytU?=
- =?utf-8?B?QWNaMVg2VjFJL3VqZXVRZmNnM0RvSEZIU3U2ZXhZa2dySWJFSWRLSUJjempU?=
- =?utf-8?B?U0EyTVlkcVFtaEFmVFNYdmJaQ1RBRS9xdndiOGxiU2VPUkU1bnBSOU13KzJk?=
- =?utf-8?B?NGxhOGFwWGxLczBIOGRpbnpjbUVRbENNcElHeURWcVNidzU4VytyeWxsL2Y0?=
- =?utf-8?B?SXE2OGZmVmhxL1p5NG1iUWZzbW9PTFRIdFhIS0xtbndDd0FER00xb3BaRjAy?=
- =?utf-8?B?N3BYWS9odkdnYzg1ZDhtd2l5Z0dIb2ppL0JSZm5HcUlYK3BseXZKNi9Dbnpj?=
- =?utf-8?B?dW9QWlpjWTNuVEdCUlAxYUxYYTNvbE5WTDhKVlAzUmpKRm43bzdCUzF4dVJr?=
- =?utf-8?B?UjgvWjE2ZmxTYWhKWHhvcjBudE1xUTBHQ2dQcWlndytmZnVwL1g5bCtKL09w?=
- =?utf-8?B?ZnI5K2F2eEdTTnBkdGtzVE8vR3lBaVFJMDZKb01FOElpcUFGcUl0QkJ0Nkh4?=
- =?utf-8?B?cHBiak1MMThENFZGL3NRWlMzVFJCQXpER1dBT3JJRmc4VTRWUDZyWkErM3V1?=
- =?utf-8?B?TDhmaTk4d1FvT29OdXE3cU5pTEQwYzhpNXZqcENkL2lLdU9nN3FiMGxqZHBv?=
- =?utf-8?B?aW5yb0E2KzF0SmlKSlNvTlRjTmJzWnhiZHo2UCtRckZ1ME8yS3E3RU1FUGdI?=
- =?utf-8?B?SVJ1MUJsZldPOFJmSWplcGpteXZNSTN6eldMc1pia0dObmJBRm8ybWh5ekhx?=
- =?utf-8?B?V05yNHR4K0hzUUxUdW05aUxCeVdMVUhoeEk5VnpzQXVieUNROVJiOG5PUEt1?=
- =?utf-8?B?YTlNblVKV0JNb2hGVS9OeS90QnhoUUdrWVVlTVRpbVh1bWFKbXBBOUViNSsx?=
- =?utf-8?B?ejk0ZXVneEJpMXFwY0pjU1QrZXoyUjVWTUREZzZIdi9WSGdDZnM0R2NvZEV4?=
- =?utf-8?B?L3ZJQ0NNOTh3RGIvOS9mWkdyMDZLWHlVL2xlbXNQVWRmdmJYVWkxQ1JMb0l1?=
- =?utf-8?B?TU5vY2FVMTFGV09NZHZ6eG13VS9uYWhqQS9qLzZ3L3F1MmxyMzh2TzBMTkVm?=
- =?utf-8?B?VU8zWGRyQWc2UllDOXJsaVZwM2xaWEVIWjd3ZEo4Wkgzb0hnZ0ZpVVA0SDI0?=
- =?utf-8?B?dUpCMmc5alBBRklTUHg2WWtlb1Zvb1dLNWNPbFpkZE55dGVHYWZCQmc5VVR6?=
- =?utf-8?B?SVc5MFA5Z1REbDI4cmZjdFZkSE5YbHZORnRKSCtSYUdNdFUzTGp2M296bXB6?=
- =?utf-8?B?TGZuSmVYcjEzclY5Rkg1Yjg0RUhJdmZCRkpBdTJxTjdNbndSMHE0aG5vcGhL?=
- =?utf-8?B?Tml6OUNtU0pxRFNaZ3VCUDhZaWx5WmR3TEEzNTFma1REWHRUSnNaNzN1Tkhm?=
- =?utf-8?B?V0szS1ZudEl1ZlpzU3Q5VzJIb0VyS3FLUW93U1VtYXQrYTBKc1V2ZnVlY1Vp?=
- =?utf-8?B?akRIbmp5TmxBaVY5b3FPVUcyUzVYVzg2NVhNc1UyRC9aTjN1b0Z6QW9BdHBh?=
- =?utf-8?B?VjY3L2dvNlZUaXJkYWY0dVlERmt2YXBiWmE4cWdiNHY1em5YK0JlK1hWb2Mz?=
- =?utf-8?B?UXhJM1ZFMis2T0tWbFdlL1NXbUdSYkRERm1Kc3JaZHBacFhmVEJ2aWlDdWtB?=
- =?utf-8?B?aHNReG0yN1hBUXkyMU1VTERFT2dQb1ZhT0RFNFZyUHRJRUVQY3BTcjNSdG42?=
- =?utf-8?B?QzF1L0ZvUmE5WGs3eTdpdHkya3FPdXJRU1dHV1hGTUtKQk0zSXFTbVRvMWVS?=
- =?utf-8?B?QkdmRVMwZzlPWU0zKzlpNy85cWhIMTA2NDR2RTB1NnJZL3pEMFREQVF0Nldu?=
- =?utf-8?B?VVFJbjJSdDEzUkFMTkhFazJFQ1RpNEhHeXJESHZ0M1htbm4za3Zmdz09?=
-X-OriginatorOrg: garyguo.net
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3eaeeeda-d24a-4572-73c7-08dec168716d
-X-MS-Exchange-CrossTenant-AuthSource: LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
+X-OriginatorOrg: bp.renesas.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Jun 2026 12:05:45.7763
+X-MS-Exchange-CrossTenant-AuthSource: TY3PR01MB11346.jpnprd01.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d74e5855-4735-4530-2eca-08dec171be6e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 03 Jun 2026 13:12:20.2903
  (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: bbc898ad-b10f-4e10-8552-d9377b823d45
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 2BUSqTPA+g1p5js3eG72zFEZboAlnGUu3ddtpS5/4b+OcwitD7MnMjhaQcaiSM66GwSM0Hj3XoQ7i3/78i0QfA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO2P265MB5205
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 53d82571-da19-47e4-9cb4-625a166a4a2a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: a3igGYSPM4a+0JOS0GCajtKOREuL/nsMReWCMGnEA0FvSh5qycBNtdfF85ZDN6vtZBSk3T2piqVJ2qZ7Kq2vDP2NHcklBFTC2int5eEQr7A=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: OSCPR01MB16258
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.16 / 15.00];
+X-Spamd-Result: default: False [1.34 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[garyguo.net,none];
-	R_DKIM_ALLOW(-0.20)[garyguo.net:s=selector1];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	DMARC_POLICY_ALLOW(-0.50)[renesas.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[bp.renesas.com:s=selector1];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9235-lists,linux-pwm=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[26];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:driver-core@lists.linux.dev,m:linux-kernel@vger.kernel.org,m:nova-gpu@lists.linux.dev,m:dri-devel@lists.freedesktop.org,m:linux-pwm@vger.kernel.org,m:rust-for-linux@vger.kernel.org,m:dakr@kernel.org,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:ojeda@kernel.org,m:boqun@kernel.org,m:gary@garyguo.net,m:bjorn3_gh@protonmail.com,m:lossin@kernel.org,m:a.hindborg@kernel.org,m:aliceryhl@google.com,m:tmgross@umich.edu,m:acourbot@nvidia.com,m:ecourtney@nvidia.com,m:m.wilczynski@samsung.com,m:david.m.ertman@intel.com,m:ira.weiny@intel.com,m:leon@kernel.org,m:daniel.almeida@collabora.com,m:bhelgaas@google.com,m:kwilczynski@kernel.org,s:lists@lfdr.de];
-	FREEMAIL_TO(0.00)[kernel.org,linuxfoundation.org,garyguo.net,protonmail.com,google.com,umich.edu,nvidia.com,samsung.com,intel.com,collabora.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[gary@garyguo.net,linux-pwm@vger.kernel.org];
 	FORWARDED(0.00)[lists@lfdr.de];
+	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9236-lists,linux-pwm=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:ukleinek@kernel.org,m:cosmin-gabriel.tanislav.xa@renesas.com,m:biju.das.au@gmail.com,m:linux-pwm@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:geert+renesas@glider.be,m:prabhakar.mahadev-lad.rj@bp.renesas.com,m:linux-renesas-soc@vger.kernel.org,m:bijudasau@gmail.com,m:geert@glider.be,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[biju.das.jz@bp.renesas.com,linux-pwm@vger.kernel.org];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FREEMAIL_CC(0.00)[renesas.com,gmail.com,vger.kernel.org,glider.be,bp.renesas.com];
 	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[gary@garyguo.net,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[garyguo.net:+];
+	FROM_NEQ_ENVFROM(0.00)[biju.das.jz@bp.renesas.com,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[bp.renesas.com:+];
 	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	TAGGED_RCPT(0.00)[linux-pwm];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,vger.kernel.org:from_smtp,garyguo.net:mid,garyguo.net:from_mime,garyguo.net:dkim]
+	MISSING_XM_UA(0.00)[];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-pwm,renesas];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[bp.renesas.com:from_mime,bp.renesas.com:dkim,vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,TY3PR01MB11346.jpnprd01.prod.outlook.com:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 1681263778E
+X-Rspamd-Queue-Id: 32BA763809C
 
-On Wed Jun 3, 2026 at 2:10 AM BST, Danilo Krummrich wrote:
-> Add registration_data_with() taking a for<'a> closure that receives
-> Pin<&'a F::Of<'a>>, which works with any ForLt type. Taking a for<'a>
-> closure rather than returning a direct reference prevents callers from
-> choosing a concrete lifetime for the data, which is required for
-> soundness with non-covariant ForLt types.
->
-> Extract the common null-check, TypeId-check and KBox-borrow logic into a
-> private registration_data_pinned() helper shared by both
-> registration_data_with() and the existing registration_data().
->
-> Relax Registration's bound from CovariantForLt to ForLt so that
-> non-covariant types can be registered.
->
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
-> ---
->  rust/kernel/auxiliary.rs | 89 ++++++++++++++++++++++++++++++----------
->  1 file changed, 68 insertions(+), 21 deletions(-)
->
-> diff --git a/rust/kernel/auxiliary.rs b/rust/kernel/auxiliary.rs
-> index 40a0af74a8e5..81549a3e347e 100644
-> --- a/rust/kernel/auxiliary.rs
-> +++ b/rust/kernel/auxiliary.rs
-> @@ -21,6 +21,7 @@
->      prelude::*,
->      types::{
->          CovariantForLt,
-> +        ForLt,
->          ForeignOwnable,
->          Opaque, //
->      },
-> @@ -270,18 +271,15 @@ pub fn parent(&self) -> &device::Device<device::Bou=
-nd> {
->          unsafe { parent.as_bound() }
->      }
-> =20
-> -    /// Returns a pinned reference to the registration data set by the r=
-egistering (parent) driver.
-> +    /// Returns the stored registration data as a pinned `'static` refer=
-ence.
->      ///
-> -    /// `F` is the [`CovariantForLt`](trait@CovariantForLt) encoding of =
-the data type. The returned
-> -    /// reference has its lifetime shortened from `'static` to `&self`'s=
- borrow lifetime via
-> -    /// [`CovariantForLt::cast_ref`].
-> +    /// Performs null and [`TypeId`] checks, then borrows the stored [`K=
-Box`].
->      ///
-> -    /// Returns [`EINVAL`] if `F` does not match the type used by the pa=
-rent driver when calling
-> -    /// [`Registration::new()`].
-> +    /// # Safety
->      ///
-> -    /// Returns [`ENOENT`] if no registration data has been set, e.g. wh=
-en the device was
-> -    /// registered by a C driver.
-> -    pub fn registration_data<F: CovariantForLt + 'static>(&self) -> Resu=
-lt<Pin<&F::Of<'_>>> {
-> +    /// The returned `'static` lifetime was transmuted from the device's=
- bound lifetime during
-> +    /// registration. Callers must shorten it before exposing it.
-> +    unsafe fn registration_data_pinned<F: ForLt + 'static>(&self) -> Res=
-ult<Pin<&F::Of<'static>>> {
->          // SAFETY: By the type invariant, `self.as_raw()` is a valid `st=
-ruct auxiliary_device`.
->          let ptr =3D unsafe { (*self.as_raw()).registration_data_rust };
->          if ptr.is_null() {
-> @@ -306,10 +304,58 @@ pub fn registration_data<F: CovariantForLt + 'stati=
-c>(&self) -> Result<Pin<&F::O
->          let wrapper =3D unsafe { Pin::<KBox<RegistrationData<F::Of<'stat=
-ic>>>>::borrow(ptr) };
-> =20
->          // SAFETY: `data` is a structurally pinned field of `Registratio=
-nData`.
-> -        let pinned: Pin<&F::Of<'_>> =3D unsafe { wrapper.map_unchecked(|=
-w| &w.data) };
-> +        Ok(unsafe { wrapper.map_unchecked(|w| &w.data) })
-> +    }
-> +
-> +    /// Access the registration data set by the registering (parent) dri=
-ver through a closure.
-> +    ///
-> +    /// `F` is the [`ForLt`](trait@ForLt) encoding of the data type. The=
- closure receives a pinned
-> +    /// reference to the registration data.
-> +    ///
-> +    /// For covariant types that implement [`trait@CovariantForLt`], pre=
-fer
-> +    /// [`registration_data`](Self::registration_data) which returns a d=
-irect reference.
-> +    ///
-> +    /// Returns [`EINVAL`] if `F` does not match the type used by the pa=
-rent driver when calling
-> +    /// [`Registration::new()`].
-> +    ///
-> +    /// Returns [`ENOENT`] if no registration data has been set, e.g. wh=
-en the device was
-> +    /// registered by a C driver.
-> +    pub fn registration_data_with<F: ForLt + 'static, R>(
-> +        &self,
-> +        f: impl for<'a> FnOnce(Pin<&'a F::Of<'a>>) -> R,
-> +    ) -> Result<R> {
-> +        // SAFETY: The HRTB closure prevents the caller from smuggling i=
-n references with a
-> +        // concrete short lifetime, making the round-trip from `'static`=
- sound regardless of
-> +        // variance.
-> +        let pinned =3D unsafe { self.registration_data_pinned::<F>()? };
-> +
-> +        // SAFETY: See above; the closure's HRTB makes the round-trip so=
-und.
-> +        let short =3D unsafe { F::cast_ref_unchecked(pinned.get_ref()) }=
-;
+Hello Uwe,
 
-This shouldn't be necessary, you can just directly call `f`.
+Thanks for the feedback.
 
-Best,
-Gary
+> -----Original Message-----
+> From: Uwe Kleine-K=F6nig <ukleinek@kernel.org>
+> Sent: 17 May 2026 17:58
+> Subject: Re: [PATCH v5 4/9] pwm: rzg2l-gpt: Convert to waveform callbacks
+>=20
+> Hello Biju,
+>=20
+> On Fri, Apr 24, 2026 at 09:01:51AM +0000, Biju Das wrote:
+> > > -----Original Message-----
+> > > From: Uwe Kleine-K=F6nig <ukleinek@kernel.org>
+> > > Sent: 21 April 2026 09:41
+> > > Subject: Re: [PATCH v5 4/9] pwm: rzg2l-gpt: Convert to waveform
+> > > callbacks
+> > >
+> > > On Mon, Apr 20, 2026 at 05:55:07PM +0000, Cosmin-Gabriel Tanislav wro=
+te:
+> > > > > @@ -291,21 +286,26 @@ static int rzg2l_gpt_config(struct pwm_chip=
+ *chip, struct pwm_device
+> *pwm,
+> > > > >  	if (rzg2l_gpt->channel_request_count[ch] > 1) {
+> > > > >  		u8 sibling_ch =3D rzg2l_gpt_sibling(pwm->hwpwm);
+> > > > >
+> > > > > -		if (rzg2l_gpt_is_ch_enabled(rzg2l_gpt, sibling_ch)) {
+> > > > > +		if (rzg2l_gpt_is_ch_enabled(rzg2l_gpt, sibling_ch, NULL)) {
+> > > > >  			if (period_ticks < rzg2l_gpt->period_ticks[ch])
+> > > > > -				return -EBUSY;
+> > > > > +				is_small_second_period =3D true;
+> > > > >
+> > > > >  			period_ticks =3D rzg2l_gpt->period_ticks[ch];
+> > > > >  		}
+> > > > >  	}
+> > > > >
+> > > > > -	prescale =3D rzg2l_gpt_calculate_prescale(period_ticks);
+> > > > > -	pv =3D rzg2l_gpt_calculate_pv_or_dc(period_ticks, prescale);
+> > > > > +	wfhw->prescale =3D rzg2l_gpt_calculate_prescale(period_ticks);
+> > > > > +	pv =3D rzg2l_gpt_calculate_pv_or_dc(period_ticks, wfhw->prescal=
+e);
+> > > > > +	wfhw->gtpr =3D pv;
+> > > > > +	wfhw->gtccr =3D 0;
+> > > > > +	if (is_small_second_period)
+> > > > > +		return 1;
+> > > > >
+> > > > > -	duty_ticks =3D mul_u64_u64_div_u64(state->duty_cycle, rzg2l_gpt=
+->rate_khz, USEC_PER_SEC);
+> > > > > -	if (duty_ticks > period_ticks)
+> > > > > -		duty_ticks =3D period_ticks;
+> > > > > -	dc =3D rzg2l_gpt_calculate_pv_or_dc(duty_ticks, prescale);
+> > > > > +	duty_ticks =3D mul_u64_u64_div_u64(wf->duty_length_ns, rzg2l_gp=
+t->rate_khz, USEC_PER_SEC);
+> > > > > +	if (duty_ticks > RZG2L_MAX_TICKS)
+> > > > > +		duty_ticks =3D RZG2L_MAX_TICKS;
+> > > >
+> > > > I know this change from > period_ticks to > RZG2L_MAX_TICKS has
+> > > > been suggested by you, Uwe, but is this correct if period_ticks
+> > > > was set to a smaller value in the earlier sibling channel condition=
+?
+> > >
+> > > Indeed this is irritating. I assume I missed that and take the blame =
+for the wrong suggestions.
+> > > Depending on how hardware copes with such a configuration it might
+> > > be ok to keep the code as is, but a comment would be justified in thi=
+s case.
+> >
+> > Please confirm
+> >
+> >  /*
+> >   * duty_ticks were clampled to match either period_ticks of this
+>=20
+> I think it's "clamped"
+>=20
+> >   * channel or an active sibling channel's period_ticks.
+> >   */
+> > if (duty_ticks > period_ticks)
+> > 	duty_ticks =3D period_ticks;
+>=20
+> I think the comment is not needed in this case. (I only wanted a comment =
+if the comparison against
+> RZG2L_MAX_TICKS was kept.)
 
-> +
-> +        // SAFETY: The data was pinned before the lifetime was shortened=
-; pinning is
-> +        // orthogonal to lifetimes.
-> +        Ok(f(unsafe { Pin::new_unchecked(short) }))
-> +    }
-> =20
-> -        // SAFETY: The data was pinned when stored; `cast_ref` only shor=
-tens
-> -        // the lifetime, so the pinning guarantee is preserved.
-> +    /// Returns a pinned reference to the registration data set by the r=
-egistering (parent) driver.
-> +    ///
-> +    /// This method is only available when `F` implements [`trait@Covari=
-antForLt`], which guarantees
-> +    /// safe lifetime shortening via [`CovariantForLt::cast_ref`].
-> +    ///
-> +    /// For non-covariant types, use the closure-based [`Self::registrat=
-ion_data_with`].
-> +    ///
-> +    /// Returns [`EINVAL`] if `F` does not match the type used by the pa=
-rent driver when calling
-> +    /// [`Registration::new()`].
-> +    ///
-> +    /// Returns [`ENOENT`] if no registration data has been set, e.g. wh=
-en the device was
-> +    /// registered by a C driver.
-> +    pub fn registration_data<F: CovariantForLt + 'static>(&self) -> Resu=
-lt<Pin<&F::Of<'_>>> {
-> +        // SAFETY: CovariantForLt guarantees covariance, so cast_ref saf=
-ely shortens the
-> +        // `'static` lifetime.
-> +        let pinned =3D unsafe { self.registration_data_pinned::<F>()? };
-> +
-> +        // SAFETY: The data was pinned before the lifetime was shortened=
-; pinning is orthogonal
-> +        // to lifetimes.
->          Ok(unsafe { Pin::new_unchecked(F::cast_ref(pinned.get_ref())) })
->      }
->  }
-> @@ -399,22 +445,23 @@ struct RegistrationData<T> {
->  /// This type represents the registration of a [`struct auxiliary_device=
-`]. When its parent device
->  /// is unbound, the corresponding auxiliary device will be unregistered =
-from the system.
->  ///
-> -/// The type parameter `F` is a [`CovariantForLt`](trait@CovariantForLt)=
- encoding of the
-> -/// registration data type. For non-lifetime-parameterized types, use
-> -/// [`CovariantForLt!(T)`](macro@CovariantForLt).
-> -/// The data can be accessed by the auxiliary driver through [`Device::r=
-egistration_data()`].
-> +/// The type parameter `F` is a [`ForLt`](trait@ForLt) encoding of the r=
-egistration
-> +/// data type. For non-lifetime-parameterized types, use [`ForLt!(T)`](m=
-acro@ForLt).
-> +///
-> +/// The data can be accessed by the auxiliary driver through [`Device::r=
-egistration_data()`] and
-> +/// [`Device::registration_data_with()`].
->  ///
->  /// # Invariants
->  ///
->  /// `self.adev` always holds a valid pointer to an initialized and regis=
-tered
->  /// [`struct auxiliary_device`] whose `registration_data_rust` field poi=
-nts to a
->  /// valid `Pin<KBox<RegistrationData<F::Of<'static>>>>`.
-> -pub struct Registration<'a, F: CovariantForLt + 'static> {
-> +pub struct Registration<'a, F: ForLt + 'static> {
->      adev: NonNull<bindings::auxiliary_device>,
->      _phantom: PhantomData<F::Of<'a>>,
->  }
-> =20
-> -impl<'a, F: CovariantForLt> Registration<'a, F>
-> +impl<'a, F: ForLt> Registration<'a, F>
->  where
->      for<'b> F::Of<'b>: Send + Sync,
->  {
-> @@ -526,7 +573,7 @@ pub fn new<E>(
->      }
->  }
-> =20
-> -impl<F: CovariantForLt> Drop for Registration<'_, F> {
-> +impl<F: ForLt> Drop for Registration<'_, F> {
->      fn drop(&mut self) {
->          // SAFETY: By the type invariant of `Self`, `self.adev.as_ptr()`=
- is a valid registered
->          // `struct auxiliary_device`.
-> @@ -548,7 +595,7 @@ fn drop(&mut self) {
->  }
-> =20
->  // SAFETY: A `Registration` of a `struct auxiliary_device` can be releas=
-ed from any thread.
-> -unsafe impl<F: CovariantForLt> Send for Registration<'_, F> where for<'a=
-> F::Of<'a>: Send {}
-> +unsafe impl<F: ForLt> Send for Registration<'_, F> where for<'a> F::Of<'=
-a>: Send {}
-> =20
->  // SAFETY: `Registration` does not expose any methods or fields that nee=
-d synchronization.
-> -unsafe impl<F: CovariantForLt> Sync for Registration<'_, F> where for<'a=
-> F::Of<'a>: Send {}
-> +unsafe impl<F: ForLt> Sync for Registration<'_, F> where for<'a> F::Of<'=
-a>: Send {}
+OK will drop the comment.
 
+>=20
+> > > > >  	/*
+> > > > >  	 * GPT counter is shared by multiple channels, we cache the
+> > > > > period ticks @@ -314,6 +314,61 @@ static int
+> > > > > rzg2l_gpt_config(struct pwm_chip *chip, struct pwm_device
+> > > *pwm,
+> > > > >  	 */
+> > > > >  	rzg2l_gpt->period_ticks[ch] =3D period_ticks;
+> > > > >
+> > > >
+> > > > This should be part of rzg2l_gpt_write_waveform().
+> >
+> > Also, if we move this to rzg2l_gpt_write_waveform() there is a
+> > rounding error possible as we need to use hardware register to
+> > calculate rzg2l_gpt->period_ticks[ch].
+> >
+> > Can you please confirm, is it ok for you?
+>=20
+> I don't understand that. Why is there a rounding error possible? The rele=
+vant thing here is that a
+> call to the two rounding callbacks is not supposed to change internal sta=
+te of the driver or even the
+> hardware.
 
+OK, will move assigning rzg2l_gpt->period_ticks[ch] =3D period_ticks;
+to rzg2l_gpt_write_waveform().
+
+Cheers,
+Biju
 
