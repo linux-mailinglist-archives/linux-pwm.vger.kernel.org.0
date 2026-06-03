@@ -1,103 +1,71 @@
-Return-Path: <linux-pwm+bounces-9240-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9241-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 7mrCIL9TIGqn1AAAu9opvQ
-	(envelope-from <linux-pwm+bounces-9240-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Wed, 03 Jun 2026 18:18:07 +0200
+	id AjouNr9aIGpK1wAAu9opvQ
+	(envelope-from <linux-pwm+bounces-9241-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Wed, 03 Jun 2026 18:47:59 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 80262639A08
-	for <lists+linux-pwm@lfdr.de>; Wed, 03 Jun 2026 18:18:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id D9BDB639E79
+	for <lists+linux-pwm@lfdr.de>; Wed, 03 Jun 2026 18:47:58 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=suse.com header.s=google header.b=SKMcKD79;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9240-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9240-lists+linux-pwm=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=suse.com;
+	dkim=pass header.d=privacyrequired.com header.s=stigmate header.b=cVj6ILnx;
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9241-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9241-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=reject) header.from=privacyrequired.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 70D1F324BBC5
-	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jun 2026 15:28:29 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 9948630AEDF1
+	for <lists+linux-pwm@lfdr.de>; Wed,  3 Jun 2026 16:09:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id EBF243D45FE;
-	Wed,  3 Jun 2026 15:24:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id B3A213E2756;
+	Wed,  3 Jun 2026 16:09:32 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wr1-f45.google.com (mail-wr1-f45.google.com [209.85.221.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from confino.investici.org (confino.investici.org [93.190.126.19])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BE0B3E0C44
-	for <linux-pwm@vger.kernel.org>; Wed,  3 Jun 2026 15:24:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29F103E1696;
+	Wed,  3 Jun 2026 16:09:27 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780500286; cv=none; b=Uq/820My7GhbyI+XCkaJy2/DnVHHU8g+wTJLe48WKp36I/cLWQ0s3sx94svZCiH8uFZGLhTb2nfzjzjbUD4a9PP3KULWL6j6VxBT/jon99YeUT41Huo+uVy23ipMkS7b+D/jwxivdwkGKbxIUd7N8Lrxinqvttqwka9whBZfFWs=
+	t=1780502972; cv=none; b=n4YA30/zBr7FNanPKGMIC8+7QDOuG3EtkNU/Kr9t8yj0wA/J6tQ1wkHNgbTIvRXaSJkPLOlSiwBf0GzSrXX3E/RiUGgViOJW0PT90XyTEjWnsMsWLWISKWpbXbhEFbHsanZz5fPzPVNt6QMz3Epue3ssrqOGpQT82zelOaCpYjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780500286; c=relaxed/simple;
-	bh=NyT3bvkYhBzVis/qc4NVpDUc0HxiHbXcgKHaKLAMasY=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=deoBVibWSbfZjdAuqdcC5UGfy93FTW+OG4Rb/eEX6Y/J+aIKydPsvEg5IAVfOVwytSvNznx14gfZlseO/39FXDYv3RVKu5X/HL1rTUps8NOyDhNlYvSHA86hZlQFyLcu8gF1950CydnAW0vR1+dpWKPznu7aKS3lGNCnRZRJY6c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=SKMcKD79; arc=none smtp.client-ip=209.85.221.45
-Received: by mail-wr1-f45.google.com with SMTP id ffacd0b85a97d-45eec22fab7so3613203f8f.3
-        for <linux-pwm@vger.kernel.org>; Wed, 03 Jun 2026 08:24:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1780500283; x=1781105083; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=RUWg5GWqhMeDrgGwJjMhc1B+7LHRy8TQo04xcORPTAE=;
-        b=SKMcKD79kKsplaImXWSljuoFk26lfBdoU25DlYGEsC9+fm3BKwzdYPqDRwTw8yd3U1
-         Fvj9SPZUGjupaU5FcchcO8i4Mi/9ps23oAHxStsDm8lkNAXh4m3yTYBqOHBrnq0NRjmY
-         7tfDZaA2jUJamDc3nQeqvE3x10p1gzjoU6VRk37+JqN49Qv3XJcPAjf9z7142sD7yG/j
-         gk1RbgYX9Ng3zonqH7EfH2qL5NPcqoG/ER+11y+Ri/hOtehxhpbTNJ2WnJrjOS0APYFp
-         22A+Dr4jv0YUZNG/e5GZt/L914f5XLFWQbp8HH4V1F1YzwDVEt8WeaInVujVrTHk/hez
-         HFVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1780500283; x=1781105083;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:to:from:x-gm-gg:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=RUWg5GWqhMeDrgGwJjMhc1B+7LHRy8TQo04xcORPTAE=;
-        b=GZWEMua+kgC6AQ7TV0gpcSIQKDuHY/tprWd5dO+xrWbHLr2ON0dWmrJs88LZDHXF0f
-         7Mx0s4dWMltvhTLn2VlUVEfXRYAtehbC2rjB4OgZ3RWuURDVKUPEMQKEYijn90beIRAw
-         yur89igb0fCcS2vunc1g7fTtODSALR6aq6dCTHll+owGZULCJR5nwXisPp9cfk89jHvD
-         ZfFt+f8G/4YDkayWeMgWO+NY0bMv9Rn5XuCfqjLqrXsXeyAlmBeFORYL3MFD+YQQDYNE
-         Xm2ckKHnopSqgiFK5cP7FbbD2RqHK/3YuCQ4Do9weGJV7X98TPeirRnlB5lmIwyXJ7CZ
-         sC2w==
-X-Forwarded-Encrypted: i=1; AFNElJ9n2eK2455xXYAz5Oma3hXA6R1+7pGOTkGOl41plB6Rq9pugR9AuAMt8dXNidAVQOKfAStRgSKLFNE=@vger.kernel.org
-X-Gm-Message-State: AOJu0YwEwc/1AKP0+h8wYs+dzC2qIB5OxkUhiv9ilXdA6yQHmmRiOnrc
-	p4foKKvWi1uBvCIE/uxaY0bickmcDjofCgg3hQydZrHXvW3vzhtc1eZe71tM46pCd3k=
-X-Gm-Gg: Acq92OHwXxGFMoDLKxvLC3IaFOBu6GdJN7uHZSCttgr7DKEcYt6JTNgfU6OcaogzXEP
-	m3/rdXR/ZUfHo2lEAhRmobmHk957a0/J8V8D579Of7h9EfWeHNBbNzRyT9ksfKa8+JDIAYRjDfq
-	ya3BarXpCsaVdKmkQ+sLQ7+4Esc/fnmiAstGIpsh/39pAgKSm0guldXnwNDpXc5GMO5NoJWOYYM
-	YpaIEEs0cQSo+Rfdyj//aCLYr615XqtY8jhWCbtldbJ+TqmzdpbGnq7gpBhwTM+tSo2B5mbvvWi
-	xxHaoMGmsc9KusLnmqh++gUzyp1HbQPuAS0NX3n1qROPQTJcPUVifrc3bREAcE7lJbf0Du6cMzN
-	Xr/RZKlKgMrxYhPWkxae6KSde8eKIPc4CkniySALO5KS5S+gZOY0y7jj+lVtd6zuaeyB51Bh+oI
-	/q4HdXuY+hyBMqqrq/lqVvaBUyjxM9G1uOiGxtCcl1Mag=
-X-Received: by 2002:a05:600c:8b01:b0:490:6237:5200 with SMTP id 5b1f17b1804b1-490b5d36863mr63918565e9.10.1780500283560;
-        Wed, 03 Jun 2026 08:24:43 -0700 (PDT)
-Received: from localhost ([82.192.120.99])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-490b725fb1bsm63329125e9.8.2026.06.03.08.24.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Jun 2026 08:24:43 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	s=arc-20240116; t=1780502972; c=relaxed/simple;
+	bh=WORJHmS5AbdBJkAua/xhYAI6MCvg14NUZOBqKp8uMp8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=LeyWIp6DTnLXanrGNfILmJBQVQR3BudwT8xaAo9KbKNnURWS4pfIm0PQiYx2Gye253cY2L8pDEAIvYqlLo9UYB2wmsJ+ZhWT3D1rlqFFkGCfyfIJ7kIhoAeAztwXeppYEOBT2M6bKfov0VElBDoNQ/1yQrZzHvUpftRuYQ4GVdw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=privacyrequired.com; spf=pass smtp.mailfrom=privacyrequired.com; dkim=pass (1024-bit key) header.d=privacyrequired.com header.i=@privacyrequired.com header.b=cVj6ILnx; arc=none smtp.client-ip=93.190.126.19
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=privacyrequired.com;
+	s=stigmate; t=1780502960;
+	bh=N1j58YIfvL75mFmNhYJnpjVAlyOHaTOSZqO4NHOEnxg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=cVj6ILnxSUpKRczSVc9h6sUuK5/bQLE5KkeodFmQ6H5aBcDeplEV5SS7NaRFFlE67
+	 +Pijwm8bosfXWnYFwpVoDtylrQ1oSUJD7a11Gk4DBoKxdlg1PirXV+SJlHbBjZ6tBa
+	 RUQnmO0mC+TrR9P5Ess7fSI8jonHgcTEKrA5sPcI=
+Received: from mx1.investici.org (unknown [127.0.0.1])
+	by confino.investici.org (Postfix) with ESMTP id 4gVt1X1H0lz115F;
+	Wed, 03 Jun 2026 16:09:20 +0000 (UTC)
+Received: by mx1.investici.org (Postfix) id 4gVt1V6CFyz1154;
+	Wed, 03 Jun 2026 16:09:18 +0000 (UTC)
+From: Francis Laniel <laniel_francis@privacyrequired.com>
+To: Michal Wilczynski <m.wilczynski@samsung.com>,
+	Miguel Ojeda <ojeda@kernel.org>,
+	=?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+	Benno Lossin <lossin@kernel.org>,
+	Gary Guo <gary@garyguo.net>
+Cc: Francis Laniel <laniel_francis@privacyrequired.com>,
+	Alexandre Courbot <acourbot@nvidia.com>,
+	Boqun Feng <boqun@kernel.org>,
+	=?UTF-8?q?Bj=C3=B6rn=20Roy=20Baron?= <bjorn3_gh@protonmail.com>,
+	Andreas Hindborg <a.hindborg@kernel.org>,
+	Alice Ryhl <aliceryhl@google.com>,
+	Trevor Gross <tmgross@umich.edu>,
+	Danilo Krummrich <dakr@kernel.org>,
 	linux-pwm@vger.kernel.org,
-	Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	Andrea della Porta <andrea.porta@suse.com>,
-	devicetree@vger.kernel.org,
-	linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-kernel@vger.kernel.org,
-	Naushir Patuck <naush@raspberrypi.com>,
-	Stanimir Varbanov <svarbanov@suse.de>,
-	mbrugger@suse.com
-Subject: [PATCH v4 3/3] arm64: dts: broadcom: rpi-5: Add RP1 PWM node
-Date: Wed,  3 Jun 2026 17:27:46 +0200
-Message-ID: <3328baef11e5cf57391c2679d810922807f26a7a.1780498640.git.andrea.porta@suse.com>
-X-Mailer: git-send-email 2.51.0
-In-Reply-To: <cover.1780498640.git.andrea.porta@suse.com>
-References: <cover.1780498640.git.andrea.porta@suse.com>
+	rust-for-linux@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH v3] rust: pwm: replace `core::mem::zeroed` with `pin_init::zeroed`
+Date: Wed,  3 Jun 2026 19:09:09 +0300
+Message-ID: <20260603160910.159307-1-laniel_francis@privacyrequired.com>
+X-Mailer: git-send-email 2.47.3
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -106,110 +74,72 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [0.84 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	MID_CONTAINS_FROM(1.00)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[suse.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=google];
+	DMARC_POLICY_ALLOW(-0.50)[privacyrequired.com,reject];
+	R_DKIM_ALLOW(-0.20)[privacyrequired.com:s=stigmate];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-9240-lists,linux-pwm=lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[15];
-	FORGED_RECIPIENTS(0.00)[m:ukleinek@kernel.org,m:linux-pwm@vger.kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:florian.fainelli@broadcom.com,m:bcm-kernel-feedback-list@broadcom.com,m:andrea.porta@suse.com,m:devicetree@vger.kernel.org,m:linux-rpi-kernel@lists.infradead.org,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:naush@raspberrypi.com,m:svarbanov@suse.de,m:mbrugger@suse.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	FREEMAIL_CC(0.00)[privacyrequired.com,nvidia.com,kernel.org,protonmail.com,google.com,umich.edu,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-9241-lists,linux-pwm=lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[andrea.porta@suse.com,linux-pwm@vger.kernel.org];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_SENDER(0.00)[laniel_francis@privacyrequired.com,linux-pwm@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_RECIPIENTS(0.00)[m:m.wilczynski@samsung.com,m:ojeda@kernel.org,m:ukleinek@kernel.org,m:lossin@kernel.org,m:gary@garyguo.net,m:laniel_francis@privacyrequired.com,m:acourbot@nvidia.com,m:boqun@kernel.org,m:bjorn3_gh@protonmail.com,m:a.hindborg@kernel.org,m:aliceryhl@google.com,m:tmgross@umich.edu,m:dakr@kernel.org,m:linux-pwm@vger.kernel.org,m:rust-for-linux@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andrea.porta@suse.com,linux-pwm@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[laniel_francis@privacyrequired.com,linux-pwm@vger.kernel.org];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[suse.com:+];
+	DKIM_TRACE(0.00)[privacyrequired.com:+];
 	RCVD_COUNT_FIVE(0.00)[5];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	ALIAS_RESOLVED(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,suse.com:mid,suse.com:dkim,suse.com:from_mime,suse.com:email,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,suse.de:email]
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-pwm];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,samsung.com:email,vger.kernel.org:from_smtp,privacyrequired.com:mid,privacyrequired.com:dkim,privacyrequired.com:from_mime,privacyrequired.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 80262639A08
+X-Rspamd-Queue-Id: D9BDB639E79
 
-From: Stanimir Varbanov <svarbanov@suse.de>
+All types in `bindings` implement `Zeroable` if they can, so use
+`pin_init::zeroed` instead of relying on `unsafe` code.
 
-The RP1 chipset used on the Raspberry Pi 5 features an integrated
-PWM controller to drive the cooling fan.
+If this ends up not compiling in the future, something in bindgen or on
+the C side changed and is most likely incorrect.
 
-Add the corresponding DT node for this PWM controller.
-
-Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
-Co-developed-by: Andrea della Porta <andrea.porta@suse.com>
-Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+Suggested-by: Benno Lossin <lossin@kernel.org>
+Link: https://github.com/Rust-for-Linux/linux/issues/1189
+Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
+Acked-by: Michal Wilczynski <m.wilczynski@samsung.com>
+Signed-off-by: Francis Laniel <laniel_francis@privacyrequired.com>
 ---
- arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts | 12 ++++++++++++
- arch/arm64/boot/dts/broadcom/rp1-common.dtsi     |  9 +++++++++
- 2 files changed, 21 insertions(+)
+ rust/kernel/pwm.rs | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-index 0fc57e72632ed..748be8f1ee9e2 100644
---- a/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-+++ b/arch/arm64/boot/dts/broadcom/bcm2712-rpi-5-b.dts
-@@ -64,6 +64,12 @@ phy1: ethernet-phy@1 {
- };
+diff --git a/rust/kernel/pwm.rs b/rust/kernel/pwm.rs
+index 6c9d667009ef..3427b7d93a03 100644
+--- a/rust/kernel/pwm.rs
++++ b/rust/kernel/pwm.rs
+@@ -494,9 +494,7 @@ pub(crate) fn as_raw(&self) -> *const bindings::pwm_ops {
+ /// This is used to bridge Rust trait implementations to the C `struct pwm_ops`
+ /// expected by the kernel.
+ pub const fn create_pwm_ops<T: PwmOps>() -> PwmOpsVTable {
+-    // SAFETY: `core::mem::zeroed()` is unsafe. For `pwm_ops`, all fields are
+-    // `Option<extern "C" fn(...)>` or data, so a zeroed pattern (None/0) is valid initially.
+-    let mut ops: bindings::pwm_ops = unsafe { core::mem::zeroed() };
++    let mut ops: bindings::pwm_ops = pin_init::zeroed();
  
- &rp1_gpio {
-+	fan_pwm_default_state: fan-pwm-default-state {
-+		function = "pwm1";
-+		pins = "gpio45";
-+		bias-pull-down;
-+	};
-+
- 	usb_vbus_default_state: usb-vbus-default-state {
- 		function = "vbus1";
- 		groups = "vbus1";
-@@ -94,6 +100,12 @@ &rp1_i2c6 {
- 	pinctrl-names = "default";
- };
- 
-+&rp1_pwm1 {
-+	pinctrl-0 = <&fan_pwm_default_state>;
-+	pinctrl-names = "default";
-+	status = "okay";
-+};
-+
- &rp1_usb0 {
- 	pinctrl-0 = <&usb_vbus_default_state>;
- 	pinctrl-names = "default";
-diff --git a/arch/arm64/boot/dts/broadcom/rp1-common.dtsi b/arch/arm64/boot/dts/broadcom/rp1-common.dtsi
-index 16f5359395835..df4c2d09c8d34 100644
---- a/arch/arm64/boot/dts/broadcom/rp1-common.dtsi
-+++ b/arch/arm64/boot/dts/broadcom/rp1-common.dtsi
-@@ -99,7 +99,16 @@ rp1_i2c6: i2c@40088000 {
- 		clocks = <&rp1_clocks RP1_CLK_SYS>;
- 		i2c-scl-rising-time-ns = <65>;
- 		i2c-scl-falling-time-ns = <100>;
-+		status = "disabled";
-+	};
- 
-+	rp1_pwm1: pwm@4009c000 {
-+		compatible = "raspberrypi,rp1-pwm";
-+		reg = <0x00 0x4009c000  0x0 0x100>;
-+		clocks = <&rp1_clocks RP1_CLK_PWM1>;
-+		assigned-clocks = <&rp1_clocks RP1_CLK_PWM1>;
-+		assigned-clock-rates = <50000000>;
-+		#pwm-cells = <3>;
- 		status = "disabled";
- 	};
- 
+     ops.request = Some(Adapter::<T>::request_callback);
+     ops.capture = Some(Adapter::<T>::capture_callback);
 -- 
-2.35.3
+2.47.3
 
 
