@@ -1,72 +1,74 @@
-Return-Path: <linux-pwm+bounces-9258-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9257-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id wUZmCI51ImrrXgEAu9opvQ
-	(envelope-from <linux-pwm+bounces-9258-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Fri, 05 Jun 2026 09:06:54 +0200
+	id iQOtH8h1Imr4XgEAu9opvQ
+	(envelope-from <linux-pwm+bounces-9257-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Fri, 05 Jun 2026 09:07:52 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1768C645C58
-	for <lists+linux-pwm@lfdr.de>; Fri, 05 Jun 2026 09:06:53 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 17307645C7A
+	for <lists+linux-pwm@lfdr.de>; Fri, 05 Jun 2026 09:07:52 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=mailbox.org header.s=mail20150812 header.b=KGElozfF;
-	dkim=pass header.d=mailbox.org header.s=mail20150812 header.b=B9mdvrtu;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9258-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9258-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=mailbox.org header.s=mail20150812 header.b=GGaoMEEQ;
+	dkim=pass header.d=mailbox.org header.s=mail20150812 header.b=h4ZJD7pW;
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9257-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9257-lists+linux-pwm=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=reject) header.from=mailbox.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 7DAB330290A0
-	for <lists+linux-pwm@lfdr.de>; Fri,  5 Jun 2026 07:01:10 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id F0F9A3046D53
+	for <lists+linux-pwm@lfdr.de>; Fri,  5 Jun 2026 07:01:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 113B444CAEA;
-	Fri,  5 Jun 2026 07:01:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C28B944CF5E;
+	Fri,  5 Jun 2026 07:01:06 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mout-p-102.mailbox.org (mout-p-102.mailbox.org [80.241.56.152])
+Received: from mout-p-201.mailbox.org (mout-p-201.mailbox.org [80.241.56.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 822D244CF56;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E14340B6F9;
 	Fri,  5 Jun 2026 07:01:03 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780642867; cv=none; b=McemWhimCrei2vFKhB0AJF00lJ3Coqmzc56Oye0le/XH87SnHw1YMjG/VYbj0VjFh0pv2RflVecPaYuYz1kSGjouR8cpaQUOO47JSPJU0hjkGv1xq97+xQ8GDYD3vvP6U0dRFcztflTg4gqSmfHEsm863LGHBqyi6hTvATpnBHQ=
+	t=1780642866; cv=none; b=rIQCxRsQzWjwRfwjCdfl9XhqtMYc7BZdAcJUPdCKBnOo2uS2t7GGF0oOvW9cDPhJve4QIagI3L/Bp7OXgynDzz/6SPJQ+vUsueBE60T08r0z51HWjkx+xt9pYCelz88A8vyNRmOf0eWAVVX7zT9Dup03xt6HlczNugUcWpzA2ZY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780642867; c=relaxed/simple;
-	bh=7AgV/jvCGRHNYi9UE7Sn1mIc5P3fU81aRL5N8wcCv8w=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=q9VYV//ERCNDvE6zpDKwqHgeB6W2/zjf3eRAEznS+nClD77eZSpgQ72o9hYP761mTu0aHNG0Zx8Pwve4L4WVluxOpr2XPwDOmB3VfgSvefwXzgSHMVkVEh3DuF964gwYibdD0GVVfivjDd3nd45YEVjEbsAFI9muAFYOjbcD3yU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=KGElozfF; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=B9mdvrtu; arc=none smtp.client-ip=80.241.56.152
+	s=arc-20240116; t=1780642866; c=relaxed/simple;
+	bh=Eq2/FqQK+/3GGvQH1jgzjXllW8SOFixYwWstqkvt+Ks=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=jKGFQSZvEUhKAZOwKee8jNH8XyBeo6WXTHRex8hiMuVsYWUm5gcDs7VJbwQdQ664cQeJS0Fl/ljUXnqDy0DjwOqrjnTRDjzNnEnNkCihYxcvfcTymNaUniOmLqEyGRTFLYabZMybP/pI9DDMjjnwg0PWkQc0MjAGNFeUWOb+2OA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=mailbox.org; spf=pass smtp.mailfrom=mailbox.org; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=GGaoMEEQ; dkim=pass (2048-bit key) header.d=mailbox.org header.i=@mailbox.org header.b=h4ZJD7pW; arc=none smtp.client-ip=80.241.56.171
 Received: from smtp202.mailbox.org (smtp202.mailbox.org [10.196.197.202])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mout-p-102.mailbox.org (Postfix) with ESMTPS id 4gWslr1N5Rz9v9m;
-	Fri,  5 Jun 2026 09:00:56 +0200 (CEST)
+	by mout-p-201.mailbox.org (Postfix) with ESMTPS id 4gWslx34H3z9v3Q;
+	Fri,  5 Jun 2026 09:01:01 +0200 (CEST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1780642856;
+	t=1780642861;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ok3grrEVy8++TcZAk4/8hJa1q3Dyot3JENfiZb1Bh5o=;
-	b=KGElozfFeWoSUsHggk+MGm+Gcj/16XxxmZFWnXSyx/iDqA4qmePnJkRBrcLNuZUQfz3WXs
-	7TDnmxPE5FZvWurzHyoL70eaChcwMsfithUyOUj5LngmS1CVEtZUMGCLQUc29Xz/nU7KbB
-	YJFxRqpYAG+AynG6wglcARBC6UKLv8CFIFx2FOJtL2CxIzQjOmzu9XBc5b/IU0fVWQsOHe
-	NhtFTN94hezfxPkKdTBUDjx4iE1Rw+b8yMyjZEldjqgkJp23+HvcdpH5FYSkNXbhoCDVC1
-	79QKmCAk8n2Z4e7AOFa50Ise4DVyaIoT6FUUITF3pucVC1d33BBqbNkheF1ksg==
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OpNBtlw9n2UCJW3D0hBUmygvSZ9hYaw7j0NNMC94AK4=;
+	b=GGaoMEEQI3Xwgau5/KSpvAySoomQK91gLt491999CJTJ6qWIxbsGyRWlpefLN9VdkpzswO
+	JGAcgDUAzmc7UgPYlp4OKVWP4tJKbFhq5wsvnqMJ6OUU3pK0gOALDBwQFrNC6szaYKMIw2
+	6krzfuD35LZwtB+Qdtm5yuWQztwa6NpqaGvu4htpakZpnkGwh6M8ntZSXp2/9r5OfXQY03
+	FMMKyGXZi6x7fr28Nb5AfT9rYeJI8seAq2HSlQQiIHMZGwOwKE+5JUwwHWvy9ykS7kaP15
+	VRUvl/pXHMPpDyO6kFED+yZTmSRkanpNWF+zRJP6Pf3KK0NkF4iOUSH4HqUnFg==
 From: Maurice Hieronymus <mhi@mailbox.org>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mailbox.org; s=mail20150812;
-	t=1780642849;
+	t=1780642859;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=ok3grrEVy8++TcZAk4/8hJa1q3Dyot3JENfiZb1Bh5o=;
-	b=B9mdvrtulAX0Myi4wyYoU9wm7PAZ/NE1gKqig0Feg/z6bQnOM0LWswaDKoDYgppGMk6NAA
-	fLaokrGDJ7hBUpPhUQVNwjZ+/grao7zF0Ob2uB2cS6MGVykNo6kCkHQNPvz4/61Zj4+ydt
-	TBUjARVdHYkVU6M9R2W1Ds6z8BLmw+8qHc5e0pIfXvcMZ8H2XH7+FSBUoe+jFErQ6Ju210
-	co8hpJFXEtwUlUzrtyFYiXRF6dH3am6hfP8dxlhPs1GtPRWF5NDSzv4JyabBMOhS5iTydi
-	7nh2NRFRxcTQLEdnF2FFHrG3P6Crji6rW5eoRy9m/yPVARPDKGm9Kvq4IU2PhA==
-Subject: [PATCH v2 0/2] rust: clk: Add ExclusiveClk and use it in
- pwm-th1520
-Date: Fri, 05 Jun 2026 08:59:58 +0200
-Message-Id: <20260605-rate-exclusive-get-th1520-v2-0-695640bf7249@mailbox.org>
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=OpNBtlw9n2UCJW3D0hBUmygvSZ9hYaw7j0NNMC94AK4=;
+	b=h4ZJD7pWeiBrHP178TiWZuxtX1fdKlYrIYx1VcSOMs+fzU84EYqGbu5FcO9uzIEgn91tcS
+	Jn5LZ2ope1hnWhoapqqxQyz/frTp8TYH0gFRD5hSu0z9fFZxcx5oZRFn2FphEN4y86L+Oz
+	fr6v2oGNgsu3TatoZA7Cm9zbjwpwIShCh6Qt9G9a1z4VOqsku+joy1N4jRACQlNvi9g7hf
+	Hm4rcBOOLU7Wgoqddlr3fTTyQbz00s+Hv6+R8c3LLyTgDkYXMMcQAKoqm3OQPJkzyAYRd+
+	3wgGQiQ1dBDrTr66YS16GVW+Q4Hs7zg1EsKk/MLGVaCo6DkfRtOL9lXNx+T13Q==
+Date: Fri, 05 Jun 2026 08:59:59 +0200
+Subject: [PATCH v2 1/2] rust: clk: Add ExclusiveClk wrapper for
+ clk_rate_exclusive_get
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -75,11 +77,9 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAAAAAAAC/42NQQ6CMBBFr0Jm7Zi2FBRX3sOwqDDAJEhJW5saw
- t2tnMDl+8l/bwNPjsnDrdjAUWTPdsmgTgV0k1lGQu4zgxKqFpWq0ZlASKmb354j4UgBwyQrJfB
- Sa9Popid5Jcj/1dHA6XA/2swT+2Dd50hF+Vv/sUaJAkvdDaLUJHPj/jI8P206WzdCu+/7FzTEv
- qnEAAAA
-X-Change-ID: 20260526-rate-exclusive-get-th1520-764a949de18e
+Message-Id: <20260605-rate-exclusive-get-th1520-v2-1-695640bf7249@mailbox.org>
+References: <20260605-rate-exclusive-get-th1520-v2-0-695640bf7249@mailbox.org>
+In-Reply-To: <20260605-rate-exclusive-get-th1520-v2-0-695640bf7249@mailbox.org>
 To: Michael Turquette <mturquette@baylibre.com>, 
  Stephen Boyd <sboyd@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
  Boqun Feng <boqun@kernel.org>, Gary Guo <gary@garyguo.net>, 
@@ -93,20 +93,20 @@ To: Michael Turquette <mturquette@baylibre.com>,
 Cc: linux-clk@vger.kernel.org, rust-for-linux@vger.kernel.org, 
  linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, 
  linux-pwm@vger.kernel.org, Maurice Hieronymus <mhi@mailbox.org>
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1780642818; l=1057;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1780642818; l=3552;
  i=mhi@mailbox.org; s=20260525; h=from:subject:message-id;
- bh=7AgV/jvCGRHNYi9UE7Sn1mIc5P3fU81aRL5N8wcCv8w=;
- b=MQ9ALBSr14fgkGxYrTIqDCq8RAvbwrzksThQHaFqK0YN3At+av9LQpU5i58S2+6cLMboqKJdq
- 63OUxc1rFroDOE3wkR5hTTdLetppbU/ymDT5LtloDUS5JF8zEvQySOD
+ bh=Eq2/FqQK+/3GGvQH1jgzjXllW8SOFixYwWstqkvt+Ks=;
+ b=EnPdbF7ZbiSZsoiQzpqVV642CEH+9nF8nNVKGzxReY0KS0hzY5ErgB16n/ogDC4ZIgDHlnxRs
+ 3pOhFWYN/TeBhXC4PYk2qu9FhThAApgBG4qR+jGpgZpndrfq7TktHcu
 X-Developer-Key: i=mhi@mailbox.org; a=ed25519;
  pk=AHlEkGG3hpXZHntlEzF42Ip/LFyXWOgsNUvaHqAnV80=
-X-MBO-RS-META: pqwz9dnzqb5jncw8f6pzxerow7tykiuk
-X-MBO-RS-ID: a64c37f4287a6ee13a7
+X-MBO-RS-META: btqxt863ejstfjtaxooubyxo1r5tg14c
+X-MBO-RS-ID: 46288b54c5fc677ce46
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-2.16 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[mailbox.org,reject];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[mailbox.org:s=mail20150812];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
@@ -115,7 +115,7 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	FORGED_RECIPIENTS(0.00)[m:mturquette@baylibre.com,m:sboyd@kernel.org,m:ojeda@kernel.org,m:boqun@kernel.org,m:gary@garyguo.net,m:bjorn3_gh@protonmail.com,m:lossin@kernel.org,m:a.hindborg@kernel.org,m:aliceryhl@google.com,m:tmgross@umich.edu,m:dakr@kernel.org,m:fustini@kernel.org,m:guoren@kernel.org,m:wefu@redhat.com,m:m.wilczynski@samsung.com,m:ukleinek@kernel.org,m:linux-clk@vger.kernel.org,m:rust-for-linux@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-riscv@lists.infradead.org,m:linux-pwm@vger.kernel.org,m:mhi@mailbox.org,s:lists@lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER(0.00)[mhi@mailbox.org,linux-pwm@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-9258-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9257-lists,linux-pwm=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[22];
 	FREEMAIL_TO(0.00)[baylibre.com,kernel.org,garyguo.net,protonmail.com,google.com,umich.edu,redhat.com,samsung.com];
 	MIME_TRACE(0.00)[0:+];
@@ -133,40 +133,105 @@ X-Spamd-Result: default: False [-2.16 / 15.00];
 	TAGGED_RCPT(0.00)[linux-pwm];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,vger.kernel.org:from_smtp,mailbox.org:mid,mailbox.org:dkim,mailbox.org:from_mime,mailbox.org:email]
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mailbox.org:mid,mailbox.org:dkim,mailbox.org:from_mime,mailbox.org:email,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 1768C645C58
+X-Rspamd-Queue-Id: 17307645C7A
 
-Add a Rust binding for clk_rate_exclusive_get() / clk_rate_exclusive_put()
-and use it in pwm-th1520, which previously carried a TODO noting the
-missing binding.
+Add Rust bindings for clk_rate_exclusive_get() and
+clk_rate_exclusive_put().
 
-Based on pwm/for-next.
+Clk::rate_exclusive_get() consumes the Clk and returns an ExclusiveClk;
+the matching put is issued from its Drop impl. ExclusiveClk derefs to
+Clk so existing rate / prepare / enable APIs remain available on the
+locked handle.
 
+Reviewed-by: Alice Ryhl <aliceryhl@google.com>
 Signed-off-by: Maurice Hieronymus <mhi@mailbox.org>
 ---
-Changes in v2:
-- Rebase on pwm/for-next
-- Remove newline after [`clk_rate_exclusive_get`] comment
-- Remove unused [`struct clk`] link
-- Put semicolon outside of unsafe block
-- Link to v1: https://lore.kernel.org/r/20260526-rate-exclusive-get-th1520-v1-0-34cf034e1764@mailbox.org
+ rust/kernel/clk.rs | 60 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
 
----
-Maurice Hieronymus (2):
-      rust: clk: Add ExclusiveClk wrapper for clk_rate_exclusive_get
-      pwm: th1520: Lock clock rate with clk_rate_exclusive_get
+diff --git a/rust/kernel/clk.rs b/rust/kernel/clk.rs
+index 7abbd0767d8c..f834f4833f18 100644
+--- a/rust/kernel/clk.rs
++++ b/rust/kernel/clk.rs
+@@ -249,6 +249,22 @@ pub fn set_rate(&self, rate: Hertz) -> Result {
+             // [`clk_set_rate`].
+             to_result(unsafe { bindings::clk_set_rate(self.as_raw(), rate.as_hz()) })
+         }
++
++        /// Acquire exclusive control over the clock's rate.
++        ///
++        /// Consumes the [`Clk`] and returns an [`ExclusiveClk`] that releases the exclusivity
++        /// when dropped. While held, no other consumer may change the clock's rate.
++        ///
++        /// Equivalent to the kernel's [`clk_rate_exclusive_get`] API. Must not be called from
++        /// atomic context.
++        ///
++        /// [`clk_rate_exclusive_get`]: https://docs.kernel.org/core-api/kernel-api.html#c.clk_rate_exclusive_get
++        pub fn rate_exclusive_get(self) -> Result<ExclusiveClk> {
++            // SAFETY: By the type invariants, self.as_raw() is a valid argument for
++            // [`clk_rate_exclusive_get`].
++            to_result(unsafe { bindings::clk_rate_exclusive_get(self.as_raw()) })?;
++            Ok(ExclusiveClk(self))
++        }
+     }
+ 
+     impl Drop for Clk {
+@@ -329,6 +345,50 @@ fn deref(&self) -> &Clk {
+             &self.0
+         }
+     }
++
++    /// A [`Clk`] with exclusive control over its rate.
++    ///
++    /// While an [`ExclusiveClk`] exists, no other consumer of the same clock may change its rate.
++    /// Obtained by calling [`Clk::rate_exclusive_get`]; the exclusivity is released automatically
++    /// when the value is dropped, after which the inner [`Clk`] is dropped as usual.
++    ///
++    /// # Invariants
++    ///
++    /// An [`ExclusiveClk`] instance owns a [`Clk`] for which `clk_rate_exclusive_get` has been
++    /// called and the matching `clk_rate_exclusive_put` has not yet been called.
++    ///
++    /// # Examples
++    ///
++    /// ```
++    /// use kernel::clk::{Clk, ExclusiveClk};
++    /// use kernel::device::Device;
++    /// use kernel::error::Result;
++    ///
++    /// fn lock_rate(dev: &Device) -> Result<ExclusiveClk> {
++    ///     let clk = Clk::get(dev, None)?;
++    ///     clk.prepare_enable()?;
++    ///     clk.rate_exclusive_get()
++    /// }
++    /// ```
++    pub struct ExclusiveClk(Clk);
++
++    // Make [`ExclusiveClk`] behave like [`Clk`].
++    impl Deref for ExclusiveClk {
++        type Target = Clk;
++
++        fn deref(&self) -> &Clk {
++            &self.0
++        }
++    }
++
++    impl Drop for ExclusiveClk {
++        fn drop(&mut self) {
++            // SAFETY: By the type invariants, self.as_raw() is a valid argument for
++            // [`clk_rate_exclusive_put`] and balances the [`clk_rate_exclusive_get`] call from
++            // [`Clk::rate_exclusive_get`].
++            unsafe { bindings::clk_rate_exclusive_put(self.as_raw()) };
++        }
++    }
+ }
+ 
+ #[cfg(CONFIG_COMMON_CLK)]
 
- drivers/pwm/pwm_th1520.rs |  8 +++----
- rust/kernel/clk.rs        | 60 +++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 63 insertions(+), 5 deletions(-)
----
-base-commit: 5b5e33c44a491d5b5e019f527e028bd567a226fa
-change-id: 20260526-rate-exclusive-get-th1520-764a949de18e
-
-Best regards,
 -- 
-Maurice Hieronymus <mhi@mailbox.org>
+2.51.2
 
 
