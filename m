@@ -1,145 +1,148 @@
-Return-Path: <linux-pwm+bounces-9269-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9270-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id H7kxMJqWJmreZAIAu9opvQ
-	(envelope-from <linux-pwm+bounces-9269-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Mon, 08 Jun 2026 12:16:58 +0200
+	id vd5xB/mkJmqxaQIAu9opvQ
+	(envelope-from <linux-pwm+bounces-9270-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Mon, 08 Jun 2026 13:18:17 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2B7C9654F27
-	for <lists+linux-pwm@lfdr.de>; Mon, 08 Jun 2026 12:16:58 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3916A655944
+	for <lists+linux-pwm@lfdr.de>; Mon, 08 Jun 2026 13:18:16 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=samsung.com header.s=mail20170921 header.b=cLoF5su3;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9269-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9269-lists+linux-pwm=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=samsung.com;
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	dkim=pass header.d=collabora.com header.s=zohomail header.b=XUGTWHrn;
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9270-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9270-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=none) header.from=collabora.com;
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id C7BEA3046CD6
-	for <lists+linux-pwm@lfdr.de>; Mon,  8 Jun 2026 10:09:37 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id C0376300118E
+	for <lists+linux-pwm@lfdr.de>; Mon,  8 Jun 2026 11:09:04 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F1D9E38B148;
-	Mon,  8 Jun 2026 10:08:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1DE0634107D;
+	Mon,  8 Jun 2026 11:09:03 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from sender4-op-o11.zoho.com (sender4-op-o11.zoho.com [136.143.188.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35BBE1CAA68
-	for <linux-pwm@vger.kernel.org>; Mon,  8 Jun 2026 10:08:41 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780913323; cv=none; b=iTbCx1an0CIpAV8+XVVjERFShzHzT7ZuAIAHOKIqFeWOqW+uwPWWhmaKFbkorFRQ4cO/jvJyo+GQk13X/BlTGlwUUpRdMryce3OvvPTbazcmY+7cmYGvVfbF7H9IQUURMbFhFUsuzOGZHRvfTDY2bd1c54due0pKy5PfX7H+mv0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780913323; c=relaxed/simple;
-	bh=UaS8P+BnNs30Wx3OCTtg2sP9AlLlbx00rCICGw91jA4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:From:In-Reply-To:
-	 Content-Type:References; b=TIK1PYrO0LvBZQBr7C16qMQwLJnGPH/f2Z5h3ZOoA4B8kRKcvmkJBzFpV5pBW3GymX+nF84oqYBzLgeEG1qVl3sLiMMFgsjoUzrgBVp71NsR1DLxW7jBfuen+HMmGKHjeGCVL527OuWUtK9adcj8O9uqe5F8rce+DKUt2mEjZkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=cLoF5su3; arc=none smtp.client-ip=210.118.77.11
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20260608100839euoutp013529edb0cdfff2fad1be3da197844d85~3Ezp4nAQ42057420574euoutp01J
-	for <linux-pwm@vger.kernel.org>; Mon,  8 Jun 2026 10:08:39 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20260608100839euoutp013529edb0cdfff2fad1be3da197844d85~3Ezp4nAQ42057420574euoutp01J
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1780913319;
-	bh=ScX6tmH+TYFIA4SdeDcX5TAQpdwZEO/9NVN1KgaB3hw=;
-	h=Date:Subject:To:Cc:From:In-Reply-To:References:From;
-	b=cLoF5su3stWT+hb6nfTtHwBwrrKHZLRDbQwUroh5t+iFCfiCUD0Z8tIlOkamuIlxG
-	 qeOHzEJ58YbyS317GkjyofK7fQ13HHHwF0legf9LOkfvpwVI1TCV7BT/w9fiu/TkE8
-	 lOCBfrOUmSVswJYFE8RtOExm4LjdPdpKByrpZFPY=
-Received: from eusmtip2.samsung.com (unknown [203.254.199.222]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20260608100839eucas1p26efb0e1085dba36943f16284a4fee98b~3EzpgqhjL2726127261eucas1p2t;
-	Mon,  8 Jun 2026 10:08:39 +0000 (GMT)
-Received: from [192.168.1.44] (unknown [106.210.136.40]) by
-	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
-	20260608100838eusmtip2364ad82459e2916175d35315bdcac074~3EzoopYD61119811198eusmtip2K;
-	Mon,  8 Jun 2026 10:08:38 +0000 (GMT)
-Message-ID: <2c036c0e-8246-4e55-90b0-97ba8ef46115@samsung.com>
-Date: Mon, 8 Jun 2026 12:08:37 +0200
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E55DF3A1C9;
+	Mon,  8 Jun 2026 11:09:01 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1780916943; cv=pass; b=DXqt2aq9PDw4ixuojwaXi7IbeIth2tps57uw+sxrrv99fVPmwDCZirW+rISDY5DuU1F82B+Ae7gSSgkDBg5ynyO9XVm3qRcZMLFqAfd6yZxe1grWAXn/QHNOkguCtJqxKMHCU6Q48CVwvNB9t2lxYs56idEAUy5a1l/whuhG0Qc=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1780916943; c=relaxed/simple;
+	bh=/tb7o9YfkkFDiV4LOWCcRHi0hE5qmxAuEKieOm6ZjM4=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=DhcCGkzbux5QtNURONniIDxE011gRZZZCPUQ9oMewRkffkKpDyfi6QRZDkFXxTvwOMIL18k2MrBA1RFGfO3ZucOlNy4X2CNx0aglM1pAzphgYU/Do0csIxcWrEWkncs/aaC/z19XkqdxKcbw7cqcGL5kzmhjwOEy5soSGPAoK1o=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=XUGTWHrn; arc=pass smtp.client-ip=136.143.188.11
+ARC-Seal: i=1; a=rsa-sha256; t=1780916906; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=V77ohDi1FU5qxxWvH1DRlpHx1d9WApt+1XamxW/ICSlhNOMRJJN8mlsDRjM7Hb1QScMIugYflwgv+/w4KK2xaJiCpmo8Z0DtBAvBzJCyoV5ALBVxAJKM8LbVXiVvvcLxFhZ1Qhed0ho/Icg5gctGqt9zydRhZ4NCH2dL4kdVsOQ=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1780916906; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=/tb7o9YfkkFDiV4LOWCcRHi0hE5qmxAuEKieOm6ZjM4=; 
+	b=Zi5G9hxbP9Yi5Me8h0nhyCvq3v0pcxHHCF0KfYJ9GvBunaLDhwzHyIAwzG6dCMgLuYwWl9JbUjASPu5A1O+tfLjZ+vn3VTaVW70NirKcCd+go6Fyf2Hn2vv+fPG5vg1FrnaHsebU3oebSdXVQF1zU24e7DmizBJP+5aAJ6P63ac=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1780916906;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=/tb7o9YfkkFDiV4LOWCcRHi0hE5qmxAuEKieOm6ZjM4=;
+	b=XUGTWHrn0sgfDLuXq/gh6I9o9DPgvj+iImqlEtKZz50yGBUGuYMoGASst237rYA5
+	bwnqdwuGBWCqvuHfXQ/jgTF77oyI5aZMd0QmkRIUq+KYVj2ZH+fWjdUeXZ4qbZ9Eec8
+	XK33KVVUfuhepLk+GSg4HxQWeV5OVBtwOLa3+4fQ=
+Received: by mx.zohomail.com with SMTPS id 1780916903731652.9798968643184;
+	Mon, 8 Jun 2026 04:08:23 -0700 (PDT)
+Content-Type: text/plain;
+	charset=utf-8
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 2/2] pwm: th1520: Lock clock rate with
- clk_rate_exclusive_get
-To: Maurice Hieronymus <mhi@mailbox.org>, Michael Turquette
-	<mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Miguel Ojeda
-	<ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>, Gary Guo
-	<gary@garyguo.net>, =?UTF-8?Q?Bj=C3=B6rn_Roy_Baron?=
-	<bjorn3_gh@protonmail.com>, Benno Lossin <lossin@kernel.org>, Andreas
-	Hindborg <a.hindborg@kernel.org>, Alice Ryhl <aliceryhl@google.com>, Trevor
-	Gross <tmgross@umich.edu>, Danilo Krummrich <dakr@kernel.org>, Drew Fustini
-	<fustini@kernel.org>, Guo Ren <guoren@kernel.org>, Fu Wei <wefu@redhat.com>,
-	=?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: linux-clk@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-	linux-pwm@vger.kernel.org
-Content-Language: en-US
-From: Michal Wilczynski <m.wilczynski@samsung.com>
-In-Reply-To: <20260605-rate-exclusive-get-th1520-v2-2-695640bf7249@mailbox.org>
-Content-Transfer-Encoding: 7bit
-X-CMS-MailID: 20260608100839eucas1p26efb0e1085dba36943f16284a4fee98b
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20260605070115eucas1p14ef31f75a9597be42bda6c6597fc7e38
-X-EPHeader: CA
-X-CMS-RootMailID: 20260605070115eucas1p14ef31f75a9597be42bda6c6597fc7e38
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.700.81\))
+Subject: Re: [PATCH v2 0/2] rust: clk: Add ExclusiveClk and use it in
+ pwm-th1520
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <20260605-rate-exclusive-get-th1520-v2-0-695640bf7249@mailbox.org>
+Date: Mon, 8 Jun 2026 08:08:04 -0300
+Cc: Michael Turquette <mturquette@baylibre.com>,
+ Stephen Boyd <sboyd@kernel.org>,
+ Miguel Ojeda <ojeda@kernel.org>,
+ Boqun Feng <boqun@kernel.org>,
+ Gary Guo <gary@garyguo.net>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <lossin@kernel.org>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Alice Ryhl <aliceryhl@google.com>,
+ Trevor Gross <tmgross@umich.edu>,
+ Danilo Krummrich <dakr@kernel.org>,
+ Drew Fustini <fustini@kernel.org>,
+ Guo Ren <guoren@kernel.org>,
+ Fu Wei <wefu@redhat.com>,
+ Michal Wilczynski <m.wilczynski@samsung.com>,
+ =?utf-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ linux-clk@vger.kernel.org,
+ rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ linux-riscv@lists.infradead.org,
+ linux-pwm@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <140FE1B3-73CA-45EA-B978-648A1A48B577@collabora.com>
 References: <20260605-rate-exclusive-get-th1520-v2-0-695640bf7249@mailbox.org>
-	<CGME20260605070115eucas1p14ef31f75a9597be42bda6c6597fc7e38@eucas1p1.samsung.com>
-	<20260605-rate-exclusive-get-th1520-v2-2-695640bf7249@mailbox.org>
+To: Maurice Hieronymus <mhi@mailbox.org>
+X-Mailer: Apple Mail (2.3826.700.81)
+X-ZohoMailClient: External
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[samsung.com,none];
-	R_DKIM_ALLOW(-0.20)[samsung.com:s=mail20170921];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[collabora.com,none];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
+	R_DKIM_ALLOW(-0.20)[collabora.com:s=zohomail];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-9270-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9269-lists,linux-pwm=lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:mhi@mailbox.org,m:mturquette@baylibre.com,m:sboyd@kernel.org,m:ojeda@kernel.org,m:boqun@kernel.org,m:gary@garyguo.net,m:bjorn3_gh@protonmail.com,m:lossin@kernel.org,m:a.hindborg@kernel.org,m:aliceryhl@google.com,m:tmgross@umich.edu,m:dakr@kernel.org,m:fustini@kernel.org,m:guoren@kernel.org,m:wefu@redhat.com,m:ukleinek@kernel.org,m:linux-clk@vger.kernel.org,m:rust-for-linux@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-riscv@lists.infradead.org,m:linux-pwm@vger.kernel.org,s:lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[m.wilczynski@samsung.com,linux-pwm@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[21];
-	FREEMAIL_TO(0.00)[mailbox.org,baylibre.com,kernel.org,garyguo.net,protonmail.com,google.com,umich.edu,redhat.com];
+	FORGED_RECIPIENTS(0.00)[m:mturquette@baylibre.com,m:sboyd@kernel.org,m:ojeda@kernel.org,m:boqun@kernel.org,m:gary@garyguo.net,m:bjorn3_gh@protonmail.com,m:lossin@kernel.org,m:a.hindborg@kernel.org,m:aliceryhl@google.com,m:tmgross@umich.edu,m:dakr@kernel.org,m:fustini@kernel.org,m:guoren@kernel.org,m:wefu@redhat.com,m:m.wilczynski@samsung.com,m:ukleinek@kernel.org,m:linux-clk@vger.kernel.org,m:rust-for-linux@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-riscv@lists.infradead.org,m:linux-pwm@vger.kernel.org,m:mhi@mailbox.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[daniel.almeida@collabora.com,linux-pwm@vger.kernel.org];
+	FREEMAIL_CC(0.00)[baylibre.com,kernel.org,garyguo.net,protonmail.com,google.com,umich.edu,redhat.com,samsung.com,vger.kernel.org,lists.infradead.org];
+	RCPT_COUNT_TWELVE(0.00)[22];
+	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	DKIM_TRACE(0.00)[samsung.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[m.wilczynski@samsung.com,linux-pwm@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[daniel.almeida@collabora.com,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[collabora.com:+];
 	MID_RHS_MATCH_FROM(0.00)[];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-pwm];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,mailbox.org:email,vger.kernel.org:from_smtp,samsung.com:mid,samsung.com:dkim,samsung.com:from_mime,samsung.com:email]
+	APPLE_MAILER_COMMON(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 2B7C9654F27
+X-Rspamd-Queue-Id: 3916A655944
 
+Hi Maurice,
 
+There is some ongoing work to convert Clks to a type state pattern [0]
 
-On 6/5/26 09:00, Maurice Hieronymus wrote:
-> The driver derives period and duty cycle from the clock rate read at
-> probe, so a later rate change would silently miscompute waveforms.
-> Switch to the new ExclusiveClk wrapper to hold the rate for the lifetime
-> of the driver data and drop the corresponding TODO.
-> 
-> Reviewed-by: Alice Ryhl <aliceryhl@google.com>
-> Signed-off-by: Maurice Hieronymus <mhi@mailbox.org>
-> ---
->  drivers/pwm/pwm_th1520.rs | 8 +++-----
->  1 file changed, 3 insertions(+), 5 deletions(-)
-> 
+I wonder if you would be willing to rebase on top of that?
+I can push a new version if so.
 
-Reviewed-by: Michal Wilczynski <m.wilczynski@samsung.com>
+It seems like we are mostly in agreement with that series, and only
+a few nits are missing.
 
+=E2=80=94 Daniel
+
+[0]: =
+https://lore.kernel.org/rust-for-linux/20260107-clk-type-state-v3-0-77d3e3=
+ee59c2@collabora.com/=
 
