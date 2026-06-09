@@ -1,176 +1,187 @@
-Return-Path: <linux-pwm+bounces-9273-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9274-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 8LJ3Gb/fJ2oj3wIAu9opvQ
-	(envelope-from <linux-pwm+bounces-9273-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Tue, 09 Jun 2026 11:41:19 +0200
+	id wxpFN+XlJ2pU4QIAu9opvQ
+	(envelope-from <linux-pwm+bounces-9274-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Tue, 09 Jun 2026 12:07:33 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 943CA65E6EB
-	for <lists+linux-pwm@lfdr.de>; Tue, 09 Jun 2026 11:41:18 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7407565EB9B
+	for <lists+linux-pwm@lfdr.de>; Tue, 09 Jun 2026 12:07:33 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=none;
-	dmarc=none;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9273-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9273-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=oj+XUqDd;
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9274-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9274-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id ED9B931798E6
-	for <lists+linux-pwm@lfdr.de>; Tue,  9 Jun 2026 09:32:01 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id F040A30803DE
+	for <lists+linux-pwm@lfdr.de>; Tue,  9 Jun 2026 10:02:49 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA4AD39EF30;
-	Tue,  9 Jun 2026 09:31:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 477BA3ED3AA;
+	Tue,  9 Jun 2026 10:02:42 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [52.175.55.52])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0534E2EA48F;
-	Tue,  9 Jun 2026 09:31:53 +0000 (UTC)
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 466803DEAD1;
+	Tue,  9 Jun 2026 10:02:40 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1780997518; cv=none; b=ZZQHajDf4JaJFGm4dl7KMnFcihB/B6jNAhIfYVmqiiIVsLI0Xq7t8gS57S9SDn6CuES8LhAvzSKlJf/yixpXWqQVcrWsfMxqU04qb1JTmZevRUEQMBAb3TZj/meiNAg9JK1TpCmtdc/hjgTc38Aec3KuB2yX0td70IGbYi2n7II=
+	t=1780999362; cv=none; b=V7hSvg6Izc84jTFtUb7iOpx17wfXF1ADql3zuWPOsJ+Qmnckb6CKKeMjhvKrI4fYY7JkhL7NLKM6oMJv7zSmslkbNcg7OOQcwes03/8utzWjL8epafsCaRXYZPDaZyxQA+NRSYwGessXUlvUJGgHW6OCcaqC0cHUfTlauyO39eM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1780997518; c=relaxed/simple;
-	bh=mTv1FIbYgG6vlkv8D3t7CfREq47u9+v5RbbqmW627C4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=QLuANaiyM6YRRHzJCNN4/HrBSD/MWlTqC4wT6AZGonQvzS2iHiQGT4eBpI+23dGKW1fnQa5Dhy5bqXrJ9X63hhXuEYJRe5+SUXOEZV1O2oNka98m46bH9CT80TMYphO45HWCY4qrinefi/g9IV4zLMs20MZAIwTnmdgz3tQwyPg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=52.175.55.52
-Received: from dongxuyang$eswincomputing.com ( [10.12.96.41] ) by
- ajax-webmail-app2 (Coremail) ; Tue, 9 Jun 2026 17:31:28 +0800 (GMT+08:00)
-Date: Tue, 9 Jun 2026 17:31:28 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: "Xuyang Dong" <dongxuyang@eswincomputing.com>
-To: "Krzysztof Kozlowski" <krzk@kernel.org>
-Cc: ukleinek@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, ben-linux@fluff.org, ben.dooks@codethink.co.uk,
-	p.zabel@pengutronix.de, linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ningyu@eswincomputing.com, linmin@eswincomputing.com,
-	xuxiang@eswincomputing.com, wangguosheng@eswincomputing.com,
-	pinkesh.vaghela@einfochips.com
-Subject: Re: Re: [PATCH v7 1/2] dt-bindings: pwm: dwc: Add eswin compatible
- and resets property
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2024.2-cmXT6 build
- 20241203(6b039d88) Copyright (c) 2002-2026 www.mailtech.cn
- mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
-In-Reply-To: <20260605-scrupulous-tasteful-nuthatch-5d8ce3@quoll>
-References: <20260605082242.1541-1-dongxuyang@eswincomputing.com>
- <20260605082318.1599-1-dongxuyang@eswincomputing.com>
- <20260605-scrupulous-tasteful-nuthatch-5d8ce3@quoll>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+	s=arc-20240116; t=1780999362; c=relaxed/simple;
+	bh=/ueYrrhKFqDUrrLdxNHdo/GPMQH4ych/yjY+QWL47TM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Q8cMw0t/xaalkaBU56AonaA0HNo6YPMFbsG+smG4LsArfWgb4rCcK76LshsQ7cwdFFake4qujlyd3LA0WB9l8UZ+POxuI9/xxM07ad0tMsB+9wr4Nl8rKYyIgP1LBCJJv5lg0hxLCQDBqvjUxcouX5GcEoJadwjR4c+oEuZrZq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oj+XUqDd; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF2661F00893;
+	Tue,  9 Jun 2026 10:02:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1780999360;
+	bh=9+41EvuzcPCEx1tAoFP/DnjyJ6VDpRPyqYwS8hVfghw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=oj+XUqDdG95lV+L75Y5YzT27yIRYfkpThlPydNFdN+oWCMPYFXOmKeQMTrvrXCsSV
+	 C4DqkXVAebUldV75GFKXSlbMecCsnlODGbrvfYUF9C1U+AJSN6fRHKJ9L+6bF4YBXq
+	 auDnHWfbF53CsiinbATPgwJOMLCsKUvZfpHTfRpOqeyFHZtzlKwbJTWwRl7sEpqiLH
+	 4Y+Ritxe/+wOhuZe2FJ3jZ8dBjPg7y8kfYOZ1fU3qv89CzHS+9z9fpxjgw3lAWLzYA
+	 A0M24/a8HzUlJVYOFHQs9M6/lAknijQ2LyuV9+908Q1vd5JxjVLNU2bgbz/1Hux5Mv
+	 DUsj7NqHXinhw==
+Message-ID: <c4fa85f1-365e-49ab-9549-d6d46529a68b@kernel.org>
+Date: Tue, 9 Jun 2026 12:02:33 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <643f9b98.722f.19eabb8fe3e.Coremail.dongxuyang@eswincomputing.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:TQJkCgAHHaBw3SdqhhclAA--.6758W
-X-CM-SenderInfo: pgrqw5xx1d0w46hv4xpqfrz1xxwl0woofrz/1tbiAQENAmom7qEx9
-	gACsJ
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWxJw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v7 1/2] dt-bindings: pwm: dwc: Add eswin compatible and
+ resets property
+To: Xuyang Dong <dongxuyang@eswincomputing.com>
+Cc: ukleinek@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
+ conor+dt@kernel.org, ben-linux@fluff.org, ben.dooks@codethink.co.uk,
+ p.zabel@pengutronix.de, linux-pwm@vger.kernel.org,
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+ ningyu@eswincomputing.com, linmin@eswincomputing.com,
+ xuxiang@eswincomputing.com, wangguosheng@eswincomputing.com,
+ pinkesh.vaghela@einfochips.com
+References: <20260605082242.1541-1-dongxuyang@eswincomputing.com>
+ <20260605082318.1599-1-dongxuyang@eswincomputing.com>
+ <20260605-scrupulous-tasteful-nuthatch-5d8ce3@quoll>
+ <643f9b98.722f.19eabb8fe3e.Coremail.dongxuyang@eswincomputing.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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
+In-Reply-To: <643f9b98.722f.19eabb8fe3e.Coremail.dongxuyang@eswincomputing.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [1.14 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	MIME_BASE64_TEXT(0.10)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS(0.00)[m:krzk@kernel.org,m:ukleinek@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:ben-linux@fluff.org,m:ben.dooks@codethink.co.uk,m:p.zabel@pengutronix.de,m:linux-pwm@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:ningyu@eswincomputing.com,m:linmin@eswincomputing.com,m:xuxiang@eswincomputing.com,m:wangguosheng@eswincomputing.com,m:pinkesh.vaghela@einfochips.com,m:conor@kernel.org,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	DMARC_NA(0.00)[eswincomputing.com];
+	TAGGED_FROM(0.00)[bounces-9274-lists,linux-pwm=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:dongxuyang@eswincomputing.com,m:ukleinek@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:ben-linux@fluff.org,m:ben.dooks@codethink.co.uk,m:p.zabel@pengutronix.de,m:linux-pwm@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:ningyu@eswincomputing.com,m:linmin@eswincomputing.com,m:xuxiang@eswincomputing.com,m:wangguosheng@eswincomputing.com,m:pinkesh.vaghela@einfochips.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[krzk@kernel.org,linux-pwm@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	RCPT_COUNT_TWELVE(0.00)[16];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER(0.00)[dongxuyang@eswincomputing.com,linux-pwm@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-9273-lists,linux-pwm=lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dongxuyang@eswincomputing.com,linux-pwm@vger.kernel.org];
-	HAS_X_PRIO_THREE(0.00)[3];
-	R_DKIM_NA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MID_RHS_MATCH_FROM(0.00)[];
 	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,eswincomputing.com:email,eswincomputing.com:mid,eswincomputing.com:from_mime]
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 943CA65E6EB
+X-Rspamd-Queue-Id: 7407565EB9B
 
-PiA+IAo+ID4gRUlDNzcwMCB1c2UgRGVzaWduV2FyZSBJUCBmb3IgUFdNIGNvbnRyb2xsZXJzLiBB
-ZGQgRVNXSU4gRUlDNzcwMCBzdXBwb3J0Cj4gPiBpbiBzbnBzLGR3LWFwYi10aW1lcnMtcHdtMi55
-YW1sLgo+ID4gCj4gPiBUaGUgRGVzaWduV2FyZSBQV00gaW5jbHVkZXMgc2VwYXJhdGUgcmVzZXQg
-c2lnbmFscyBkZWRpY2F0ZWQgdG8gZWFjaCBjbG9jawo+ID4gZG9tYWluOgo+ID4gVGhlIHByZXNl
-dG4gc2lnbmFsIHJlc2V0cyBsb2dpYyBpbiBwY2xrIGRvbWFpbi4KPiA+IFRoZSB0aW1lcl9OX3Jl
-c2V0biBzaWduYWwgcmVzZXRzIGxvZ2ljIGluIHRoZSB0aW1lcl9OX2NsayBkb21haW4uCj4gPiBU
-aGUgcmVzZXRzIGFyZSBhY3RpdmUtbG93Lgo+ID4gCj4gPiBUaGUgZ2VuZXJpYyBzbnBzLGR3LWFw
-Yi10aW1lcnMtcHdtMiBiaW5kaW5nIGFsbG93cyBvbmUgb3IgdHdvIG9wdGlvbmFsCj4gCj4gSSBk
-b24ndCBrbm93IHdoYXQgaXMgdGhlIGdlbmVyaWMgYmluZGluZywgYnV0IGl0IGRvZXMgbm90IGFs
-bG93LiBPcGVuCj4gdGhlIGZpbGU6IHRoZXJlIGFyZSBubyByZXNldHMgYXQgYWxsLCBzbyBpdCBk
-b2VzIG5vdCBhbGxvdyB0aGVtLiBPciB5b3UKPiBtaXhlZCB0ZW5zZXMgaGVyZSBhbmQgeW91IHdh
-bnRlZCB0byBkZXNjcmliZSB0aGUgY2hhbmdlPwo+IAoKSGkgS3J6eXN6dG9mLAoKVGhhbmtzIGZv
-ciB5b3VyIGNvbW1lbnRzIGFuZCB0aW1lLgoKUmVnYXJkaW5nIHNucHMsZHctYXBiLXRpbWVycy1w
-d20yLCB3ZSBwcmV2aW91c2x5IGludGVuZGVkIHRvIGFkZCB0aGXCoApyZXNldHMgcHJvcGVydHkg
-aW4gdGhlIHNhbWUgcGF0Y2guwqAKSG93ZXZlciwgYXMgeW91IHN1Z2dlc3RlZCwgd2Ugd2lsbCBz
-cGxpdCBpdCBpbnRvIGEgc2VwYXJhdGUgcGF0Y2guCgo+IFRoZSBwcmVzZW50IHRlbnNlIGRlc2Ny
-aWJlcyBjdXJyZW50IHN0YXRlIG9mIHNvdXJjZSBjb2RlIGJlZm9yZSBhcHBseWluZwo+IHRoZSBw
-YXRjaC4gVGhlIHBhdGNoIHRyYW5zZm9ybSB0aGF0IGN1cnJlbnQgc3RhdGUsIHNvIHlvdSBkb24n
-dCB1c2UKPiBwcmVzZW50IHRlbnNlIHRvIHNob3cgd2hhdCB3aWxsIGJlIGZ1dHVyZS4KPiAKPiBV
-bmxlc3MgeW91IG1lYW50IGhlcmUgYSBkZXZpY2UsIG5vdCBiaW5kaW5nLiBJIHdvdWxkIGJlIHBp
-Y2t5IGhlcmUKPiBleGNlcHQgdGhhdCB5b3VyIGJpbmRpbmcgaXMgaW5jb3JyZWN0IHdoaWNoIG1h
-ZGUgbWUgbG9va2luZyBmb3IgYW5zd2Vycy4KPiBJIGNhbm5vdCBmaW5kIHRoZXNlIGFuc3dlcnMu
-Cj4gCj4gPiByZXNldCBsaW5lcyBkZXBlbmRpbmcgb24gU29DIGludGVncmF0aW9uLgo+ID4gCj4g
-PiBPbiBFSUM3NzAwLCB0aGUgcHJlc2V0biBhbmQgdGltZXJfTl9yZXNldG4gaW5wdXRzIGFyZSBw
-aHlzaWNhbGx5IHRpZWQKPiA+IHRvIGEgc2luZ2xlIHJlc2V0IGxpbmUsIHRoZXJlZm9yZSBleGFj
-dGx5IG9uZSByZXNldCBpcyByZXF1aXJlZC4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTogWHV5YW5n
-IERvbmcgPGRvbmd4dXlhbmdAZXN3aW5jb21wdXRpbmcuY29tPgo+ID4gLS0tCj4gPiAgLi4uL2Jp
-bmRpbmdzL3B3bS9zbnBzLGR3LWFwYi10aW1lcnMtcHdtMi55YW1sIHwgMzggKysrKysrKysrKysr
-KysrKystLQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzNCBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9u
-cygtKQo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3B3bS9zbnBzLGR3LWFwYi10aW1lcnMtcHdtMi55YW1sIGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3B3bS9zbnBzLGR3LWFwYi10aW1lcnMtcHdtMi55YW1sCj4gPiBpbmRl
-eCA3NTIzYTg5YTE3NzMuLmE0Yjc5MjlmMmUwNSAxMDA2NDQKPiA+IC0tLSBhL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9wd20vc25wcyxkdy1hcGItdGltZXJzLXB3bTIueWFtbAo+
-ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3B3bS9zbnBzLGR3LWFw
-Yi10aW1lcnMtcHdtMi55YW1sCj4gPiBAQCAtMjAsMTIgKzIwLDExIEBAIGRlc2NyaXB0aW9uOgo+
-ID4gICAgaW5zdGVhZCBvZiBoYXZpbmcgdG8gZW5jb2RlIHRoZSBJUCB2ZXJzaW9uIG51bWJlciBp
-biB0aGUgZGV2aWNlIHRyZWUKPiA+ICAgIGNvbXBhdGlibGUuCj4gPiAgCj4gPiAtYWxsT2Y6Cj4g
-PiAtICAtICRyZWY6IHB3bS55YW1sIwo+ID4gLQo+ID4gIHByb3BlcnRpZXM6Cj4gPiAgICBjb21w
-YXRpYmxlOgo+ID4gLSAgICBjb25zdDogc25wcyxkdy1hcGItdGltZXJzLXB3bTIKPiA+ICsgICAg
-ZW51bToKPiA+ICsgICAgICAtIHNucHMsZHctYXBiLXRpbWVycy1wd20yCj4gPiArICAgICAgLSBl
-c3dpbixlaWM3NzAwLXB3bQo+ID4gIAo+ID4gICAgcmVnOgo+ID4gICAgICBtYXhJdGVtczogMQo+
-ID4gQEAgLTQzLDYgKzQyLDEyIEBAIHByb3BlcnRpZXM6Cj4gPiAgICAgICAgLSBjb25zdDogYnVz
-Cj4gPiAgICAgICAgLSBjb25zdDogdGltZXIKPiA+ICAKPiA+ICsgIHJlc2V0czoKPiA+ICsgICAg
-bWluSXRlbXM6IDEKPiA+ICsgICAgaXRlbXM6Cj4gPiArICAgICAgLSBkZXNjcmlwdGlvbjogSW50
-ZXJmYWNlIGJ1cyByZXNldAo+ID4gKyAgICAgIC0gZGVzY3JpcHRpb246IFBXTSB0aW1lciBsb2dp
-YyByZXNldAo+ID4gKwo+ID4gICAgc25wcyxwd20tbnVtYmVyOgo+ID4gICAgICAkcmVmOiAvc2No
-ZW1hcy90eXBlcy55YW1sIy9kZWZpbml0aW9ucy91aW50MzIKPiA+ICAgICAgZGVzY3JpcHRpb246
-IFRoZSBudW1iZXIgb2YgUFdNIGNoYW5uZWxzIGNvbmZpZ3VyZWQgZm9yIHRoaXMgaW5zdGFuY2UK
-PiA+IEBAIC01NCw2ICs1OSwyMiBAQCByZXF1aXJlZDoKPiA+ICAgIC0gY2xvY2tzCj4gPiAgICAt
-IGNsb2NrLW5hbWVzCj4gPiAgCj4gPiArYWxsT2Y6Cj4gPiArICAtICRyZWY6IHB3bS55YW1sIwo+
-ID4gKwo+ID4gKyAgLSBpZjoKPiA+ICsgICAgICBwcm9wZXJ0aWVzOgo+ID4gKyAgICAgICAgY29t
-cGF0aWJsZToKPiA+ICsgICAgICAgICAgY29udGFpbnM6Cj4gPiArICAgICAgICAgICAgY29uc3Q6
-IGVzd2luLGVpYzc3MDAtcHdtCj4gPiArICAgIHRoZW46Cj4gPiArICAgICAgcHJvcGVydGllczoK
-PiA+ICsgICAgICAgIHJlc2V0czoKPiA+ICsgICAgICAgICAgbWluSXRlbXM6IDEKPiAKPiBEcm9w
-Cj4gCgpXaWxsIGZpeCBpbiB0aGUgbmV4dCB2ZXJzaW9uLgoKPiA+ICsgICAgICAgICAgbWF4SXRl
-bXM6IDEKPiAKPiBTbyB5b3Ugd2FudCB0byBhZGQgcmVzZXRzIGZvciB0aGUgZXhpc3RpbmcgdmFy
-aWFudCBjbGFpbWluZyB0aGF0IHRoZXkKPiB3ZXJlIG1pc3Npbmc/IFByb2JhYmx5IHdlIHNob3Vs
-ZCB0ZWxsIHlvdSB0aGF0IGVhcmxpZXIsIGFsdGhvdWdoIHRoZQo+IHBhdGNoIHdhcyBnb2luZyBv
-ZGQgZGlyZWN0aW9ucywgYnV0IHlvdSBuZWVkIHRvIHNwbGl0IGl0LiBGaXJzdCB5b3UgZml4Cj4g
-ZXhpc3RpbmcgZGV2aWNlcyB3aXRoIGV4cGxhbmF0aW9uIHdoeS4gVGhlbiB5b3UgYWRkIG5ldyBj
-b21wYXRpYmxlIHdpdGgKPiBjb25zdHJhaW50IGZvciBvbmUgcmVzZXQuCj4gCgpCYXNlZCBvbiB5
-b3VyIGNvbW1lbnRzLCB3ZSB3aWxsIHNwbGl0IHRoaXMgcGF0Y2ggaW50byB0d28uIE9uZSBwYXRj
-aMKgCmV4cGxhaW5zIHdoeSB3ZSBhZGQgdGhlIHJlc2V0cyBwcm9wZXJ0eSwgYW5kIHRoZSBvdGhl
-ciBhZGRzIHRoZSBlc3dpbsKgCmNvbXBhdGlibGUgc3RyaW5nIGFuZCB0aGUgbGltaXQgZm9yIHJl
-c2V0cy4KCkJlc3QgcmVnYXJkcywKWHV5YW5nIERvbmcK
+On 09/06/2026 11:31, Xuyang Dong wrote:
+>>>
+>>> EIC7700 use DesignWare IP for PWM controllers. Add ESWIN EIC7700 support
+>>> in snps,dw-apb-timers-pwm2.yaml.
+>>>
+>>> The DesignWare PWM includes separate reset signals dedicated to each clock
+>>> domain:
+>>> The presetn signal resets logic in pclk domain.
+>>> The timer_N_resetn signal resets logic in the timer_N_clk domain.
+>>> The resets are active-low.
+>>>
+>>> The generic snps,dw-apb-timers-pwm2 binding allows one or two optional
+>>
+>> I don't know what is the generic binding, but it does not allow. Open
+>> the file: there are no resets at all, so it does not allow them. Or you
+>> mixed tenses here and you wanted to describe the change?
+>>
+> 
+> Hi Krzysztof,
+> 
+> Thanks for your comments and time.
+> 
+> Regarding snps,dw-apb-timers-pwm2, we previously intended to add the 
+> resets property in the same patch. 
+> However, as you suggested, we will split it into a separate patch.
+
+I find commit msg still confusing. Please always clearly explain WHY you
+are doing changes.
+
+Best regards,
+Krzysztof
 
