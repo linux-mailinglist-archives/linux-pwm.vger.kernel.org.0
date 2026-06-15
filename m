@@ -1,85 +1,61 @@
-Return-Path: <linux-pwm+bounces-9289-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9290-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id MiNRFc6RL2rSCgUAu9opvQ
-	(envelope-from <linux-pwm+bounces-9289-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Mon, 15 Jun 2026 07:46:54 +0200
+	id xlXyClCdL2o6DQUAu9opvQ
+	(envelope-from <linux-pwm+bounces-9290-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Mon, 15 Jun 2026 08:36:00 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5FAA683910
-	for <lists+linux-pwm@lfdr.de>; Mon, 15 Jun 2026 07:46:53 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 85C4A683DE1
+	for <lists+linux-pwm@lfdr.de>; Mon, 15 Jun 2026 08:35:59 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=baylibre.com header.s=google header.b=POTrQh8Y;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9289-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9289-lists+linux-pwm=lfdr.de@vger.kernel.org";
-	dmarc=none;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=M15whiB7;
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9290-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9290-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 1C98B300398B
-	for <lists+linux-pwm@lfdr.de>; Mon, 15 Jun 2026 05:46:52 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 0B9FB301D322
+	for <lists+linux-pwm@lfdr.de>; Mon, 15 Jun 2026 06:34:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C20AA3AEB35;
-	Mon, 15 Jun 2026 05:46:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A21FF3B14C4;
+	Mon, 15 Jun 2026 06:34:55 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A18DB36C9D9
-	for <linux-pwm@vger.kernel.org>; Mon, 15 Jun 2026 05:46:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8E633AFAF4;
+	Mon, 15 Jun 2026 06:34:54 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781502407; cv=none; b=Ibwaj1zk0xXBVVxvN3OJ9LBQLlI8K5jJP1qLOwDxX3Zo5NJU/SCmQg0lkW5JJ6HPG8HfQdHO8bYGT0EAIDs5juAyzGYMac5Uig0yR00x8nYScGiOfF4/CtJU4mq6BsK7B0Kln2J88pXJr+N0jjiQqYZ7sJhD4DqhW3c44ebK1dM=
+	t=1781505295; cv=none; b=iEmJddhsRiXefRGgGgFHvIVtL1vVGzFFLEyjKcDWQRZDc2fus38bvi9WTezv7yW0Gp4nBdPxW3+14pduEe/PW4lV4y+kRyt0p8rNbU3K4X1F4d9mUjVguhFSMQMX1FXN+RV8PhPM36TGPENlSX91CJxaJiwD9EveizGrVdUW+rk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781502407; c=relaxed/simple;
-	bh=5zA8SgvcBlGZ0x3ALj4pWOU3y/GsVC+aLzfyQtzX4HE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=WqnAtDsi6vToX/4IQ2DUd03RrauE0IWk/03EArW+gGqMumWaXme7tO6r8v3HQG13+zyYsDdu5K75yIrOqWB+/uUrP5GRlpp2Yq5vKpAksejKBtfiJgfPu5FYHgpTR0tYw1eznP2Wp1wNg1Pj8rApUpXl6xJI8xHSE3uR1GWwY9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=POTrQh8Y; arc=none smtp.client-ip=209.85.128.53
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-490afc47455so11824235e9.2
-        for <linux-pwm@vger.kernel.org>; Sun, 14 Jun 2026 22:46:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre.com; s=google; t=1781502403; x=1782107203; darn=vger.kernel.org;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=Oipocvriu0QVgg/2ohII0bRtyoCrcru68YYlYyqEgQY=;
-        b=POTrQh8Y0w2w2vhEeuGMwVjowliqF2VvfITwkYUEyZ959FD/Fod3Ot28ioca+UAMw9
-         b4PC87DfcN8LKifvOc3DE8Rb6p6/ep/vEq7SCtmZbvYj29kyjKv9g8DnB/AyQir2hjt+
-         pY3R12w/YmIN91ePpyhutQ6UvDn5DeDjn9VyC7EEPdwBwD0++xaweshnDMlSm52ZRVN1
-         /tGZ9fR7kX73LVegAaPL/S0U55XrpOOL6Y+LhbMiIRiwORMfcLxip4X+5cjrdKcUsxxQ
-         UiRbjiUqiDSWhJVukqyLroH5+EVRFNsuiIkPg/NmGpyOp7jPQGrMQXg3s6VZrm5JtBYA
-         Y1AQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781502403; x=1782107203;
-        h=content-disposition:mime-version:message-id:subject:cc:to:from:date
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Oipocvriu0QVgg/2ohII0bRtyoCrcru68YYlYyqEgQY=;
-        b=NuggQ5quNf5HpKzB79ofRqWg31d52SGGylI71+3hMWfgVf3RCnZvn5kCPdxFNivhwX
-         BCV42iSi8Y9j3GVFYKROGLzAvY2dCmSnDW7xWVz3wIIW3TsV7l9btmjfXSs0apj2Xgc2
-         jkDIr51ue/qHYN6QEXvRUQ/B7YyxYs7MyMsLPKPz+8F9o4Wz7Anh97Jb/SU4xIZyBPRD
-         KzIo0jBQGzE9vJ2SE/f/WraUJ7iT2n24cIBGwujDU0qVLsrDTGLPeya4j52ZsEC6j7po
-         7n+a/ZYPcoQgTEz0jxH1+AtvPxOiItaomxFxEkczaufHIMeP0gSlud3NK1ODUi0TfMY6
-         b7fA==
-X-Gm-Message-State: AOJu0YyOmfupjbnP0nYW+EjqMr8Q4a8ECtRMoSe/MoHLVmrNuOLXjNgC
-	4qFW3Bu9x1vrAgCYt0iNNTf3I7E7YmUbAfp1xEUK35EiB+WVN+kgdkVM0c9QJ9lZkoA=
-X-Gm-Gg: Acq92OE7xlT8NIknxSlqYXdhkZa96I58NIRUaey4Bfg/+ukTMaq86/xhVYVlJldnQu9
-	97lKuzT6E5ioijDGwXqQRqlRRdOcw8q7t3c4DAEifamRjF7OMo6G4B7TToTW+AgyDrWcXW/iJNs
-	gZoIV022otYT2rAUC4t8Bx09riTYvjolmUlXKX6Y8vseVeC6BvOsspc/htzmEDWePFo/Axkvy08
-	4iuI5mHgIPs8Y7WprUfO6VJ23hg1Qggcw223B5vwD4/wvbRVzvAUDAafHc8z4g2LSKbj4fEX5Vy
-	VrrX7FnkgKtif+MWIxJXmrAbWj3T9Za/iRUNShQ/8qQQi43movLaZCzUY/6+jylmqQZXyX85Xlj
-	oPmH9vAhC3Y86ee34G1KxvJyA7UX30qLIaDLWIkvKasTiXc+HcZ1p/fn1xt2LK03jFIe9DTZ8BB
-	GYBp8F3xgcD4z0vljQ9qTfXun1kjyC
-X-Received: by 2002:a05:6000:29dc:b0:460:7300:e91a with SMTP id ffacd0b85a97d-4607300ea68mr8861470f8f.39.1781502402962;
-        Sun, 14 Jun 2026 22:46:42 -0700 (PDT)
-Received: from localhost ([2a02:8071:56d1:2de0:559d:eec2:887f:c200])
-        by smtp.gmail.com with UTF8SMTPSA id ffacd0b85a97d-4606f26f309sm30040261f8f.14.2026.06.14.22.46.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 14 Jun 2026 22:46:41 -0700 (PDT)
-Date: Mon, 15 Jun 2026 07:46:40 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@baylibre.com>
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: linux-pwm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [GIT PULL] pwm: Changes for 7.2-rc1
-Message-ID: <ai-PyEf2c2Ce63FQ@monoceros>
+	s=arc-20240116; t=1781505295; c=relaxed/simple;
+	bh=LwVwZ1OH794aFnSS7FIyTAlzmDuCdGBWxBc78g/rlcw=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CybEPb2eZiMkJAOMEUhmePhGa8H9dywysKJAD4/AywbkLeVjanT4FojC8wVKelq4vbIA/PfDhzr9oHhaOKz4e6Oqzo62SAtVxppv9mbF5Cn2L2ej4V465JtN1ic46SND1adlR/BSajiWEZl1S3PmBSqtVNTgg/xb5rNHJwXnHNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M15whiB7; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id A230B1F000E9;
+	Mon, 15 Jun 2026 06:34:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1781505294;
+	bh=LwVwZ1OH794aFnSS7FIyTAlzmDuCdGBWxBc78g/rlcw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=M15whiB7awNSzpgBgSLlWyrVBDSrbGMngmgj4QA5DHrS9J3frZf509O0fV2RQbd94
+	 yhpGEseCZZDlGfCAaUUrtT1CNxBkhSAzt919SG0KUMewHAfTf81TYOsS0Co1zO3JAf
+	 +HSErqQLjMyM/q+XqhcLjDCJj/KUWo4mLP4Kir/5plPOMbfOy6VfwPHTyQHil4MbyB
+	 km3LiF8oxFKGJXhKisvRoZcinCilhh2pvZb9EtZd5gkXmQbYlCe5SaIeEPW8+J248C
+	 S1QVq2vi39+IiTCtQZe4E106CR7PxvTVZkQDCT2gugxR2+wtEi//eQ81X84Rr9wMyO
+	 vt+0OsI2+CTjA==
+Date: Mon, 15 Jun 2026 08:34:51 +0200
+From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
+To: Charan Pedumuru <charan.pedumuru@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Pal Singh <ajitpal.singh@st.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: pwm: st,pwm: convert to DT schema
+Message-ID: <ai-cWP8XW0ZwBnbH@monoceros>
+References: <20260613-st-pwm-v1-1-458c2c89709a@gmail.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -87,157 +63,89 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ta47lymotlddx2i4"
+	protocol="application/pgp-signature"; boundary="emncwsoh2jwmrgbx"
 Content-Disposition: inline
+In-Reply-To: <20260613-st-pwm-v1-1-458c2c89709a@gmail.com>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.26 / 15.00];
+X-Spamd-Result: default: False [-6.76 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	SIGNED_PGP(-2.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
 	MID_RHS_NOT_FQDN(0.50)[];
 	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_DKIM_ALLOW(-0.20)[baylibre.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	HAS_LIST_UNSUB(-0.01)[];
+	FORGED_RECIPIENTS(0.00)[m:charan.pedumuru@gmail.com,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:ajitpal.singh@st.com,m:linux-pwm@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:charanpedumuru@gmail.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:torvalds@linux-foundation.org,m:linux-pwm@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	DMARC_NA(0.00)[baylibre.com];
+	FREEMAIL_TO(0.00)[gmail.com];
 	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	TAGGED_FROM(0.00)[bounces-9289-lists,linux-pwm=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[u.kleine-koenig@baylibre.com,linux-pwm@vger.kernel.org];
+	FORGED_SENDER(0.00)[ukleinek@kernel.org,linux-pwm@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9290-lists,linux-pwm=lfdr.de];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_THREE(0.00)[3];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[u.kleine-koenig@baylibre.com,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[baylibre.com:+];
-	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-pwm];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	TO_DN_SOME(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,monoceros:mid]
+	FORGED_SENDER_FORWARDING(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[ukleinek@kernel.org,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	RCPT_COUNT_SEVEN(0.00)[8];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sashiko.dev:url,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,monoceros:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: E5FAA683910
+X-Rspamd-Queue-Id: 85C4A683DE1
 
 
---ta47lymotlddx2i4
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
+--emncwsoh2jwmrgbx
+Content-Type: text/plain; protected-headers=v1; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
-Subject: [GIT PULL] pwm: Changes for 7.2-rc1
+Subject: Re: [PATCH] dt-bindings: pwm: st,pwm: convert to DT schema
 MIME-Version: 1.0
 
-Hello Linus,
+Hello,
 
-the following changes since commit 254f49634ee16a731174d2ae34bc50bd5f45e731:
+On Sat, Jun 13, 2026 at 07:04:11AM +0000, Charan Pedumuru wrote:
+> Convert STMicroelectronics STiH41x PWM/Capture controller binding
+> to DT schema.
+>=20
+> Signed-off-by: Charan Pedumuru <charan.pedumuru@gmail.com>
 
-  Linux 7.1-rc1 (2026-04-26 14:19:00 -0700)
+FTR: sashiko found a relevant issue in this patch, sent a mail about it,
+but not to the list. It's about the old binding requiring `interrupts`
+which isn't the case in the new proposed one.
 
-are available in the Git repository at:
+Find the full message at
+https://sashiko.dev/#/message/20260613071327.BE3101F000E9%40smtp.kernel.org.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git tags/p=
-wm/for-7.2-rc1
+So I marked this patch as changes requested.
 
-for you to fetch changes up to 6f9b73071c15001530e6697491b6db1bf639f4c7:
-
-  pwm: th1520: Remove requirement for mul_u64_u64_div_u64_roundup (2026-06-=
-05 14:03:00 +0200)
-
-Apart from the topmost patch the changes were in next since end of May,
-the last patch only for a week without reported issues. The patch stack
-starts with a few fixes that I considered sending for the last cycle
-already, but then didn't deem them important enough.
-
-Thanks for pulling this tag for 7.2-rc1.
-
-Best regards
+Best reagrds
 Uwe
 
-----------------------------------------------------------------
-pwm: Changes for v7.2-rc1
-
-The usual mixture of minor fixes, a few cleanups, a new driver and dt
-updates for the pwm subsystem.
-
-Thanks to Chen Ni, Devi Priya, Manish Baing, Maurice Hieronymus, Ronaldo
-Nunez, Rosen Penev, Shiji Yang and Yixun Lan for the actual changes and
-Bjorn Andersson, Conor Dooley, Frank Li, Michal Wilczynski and Rob
-Herring for reviews and acks.
-
-----------------------------------------------------------------
-Chen Ni (1):
-      pwm: atmel-tcb: Remove unneeded semicolon
-
-Devi Priya (1):
-      pwm: Driver for qualcomm ipq6018 pwm block
-
-Manish Baing (1):
-      dt-bindings: pwm: stmpe: Drop legacy binding
-
-Maurice Hieronymus (1):
-      pwm: th1520: Remove requirement for mul_u64_u64_div_u64_roundup
-
-Ronaldo Nunez (1):
-      pwm: imx27: Fix variable truncation in .apply()
-
-Rosen Penev (1):
-      pwm: ipq: Add missing module description
-
-Shiji Yang (2):
-      pwm: mediatek: set mt7628 pwm45_fixup flag to false
-      pwm: mediatek: correct mt7628 clock source setting
-
-Uwe Kleine-K=F6nig (1):
-      pwm: stm32: Make use of mul_u64_u64_div_u64_roundup()
-
-Uwe Kleine-K=F6nig (The Capable Hub) (2):
-      pwm: Consistently define pci_device_ids using named initializers
-      pwm: pca9685: Use named initializers for struct i2c_device_id
-
-Yixun Lan (2):
-      dt-bindings: pwm: marvell,pxa-pwm: Add SpacemiT K3 PWM support
-      pwm: pxa: Add optional bus clock
-
- .../devicetree/bindings/pwm/marvell,pxa-pwm.yaml   |  41 +++-
- .../devicetree/bindings/pwm/st,stmpe-pwm.txt       |  18 --
- drivers/pwm/Kconfig                                |  12 +
- drivers/pwm/Makefile                               |   1 +
- drivers/pwm/pwm-atmel-tcb.c                        |   2 +-
- drivers/pwm/pwm-dwc.c                              |   4 +-
- drivers/pwm/pwm-imx27.c                            |   8 +-
- drivers/pwm/pwm-ipq.c                              | 264 +++++++++++++++++=
-++++
- drivers/pwm/pwm-lpss-pci.c                         |  18 +-
- drivers/pwm/pwm-mediatek.c                         |  25 +-
- drivers/pwm/pwm-pca9685.c                          |   2 +-
- drivers/pwm/pwm-pxa.c                              |   8 +-
- drivers/pwm/pwm-stm32.c                            |  27 +--
- drivers/pwm/pwm_th1520.rs                          |  16 +-
- 14 files changed, 375 insertions(+), 71 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/pwm/st,stmpe-pwm.txt
- create mode 100644 drivers/pwm/pwm-ipq.c
-
---ta47lymotlddx2i4
+--emncwsoh2jwmrgbx
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmovkb4ACgkQj4D7WH0S
-/k5c2Af/ZrV35sIAjnyDc8WM5jnol4LLKh6NPM1tv9qvmTMGN416Ilj9sDGOgdbu
-HJSOMN0dkdgkNCBrouapSGdb8F+fJwTbfqFoYw0NQcNNDg9RTBG/a3exxgGP1QIK
-a0vzVirFviGzqJaFlFubCcPk2p0q4wWYyikCk+LGXC4vK0Nr/ZsXx99suJPEhISx
-i2yLPahQf9K3ngjYZPLk/nRX9Z+kmPxtjwxsQAXmykoEK4QMmUuhLJfrFvfixB+k
-Y3ajH0x3VQNczkIXUfE4z/4+3GEswgvluoUi5ZwO+sDJyz/0aLIkkJPf4R7W2LeP
-dEd5D7I6/ij7uBbPk8+TihvZApUCIQ==
-=wM+u
+iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmovnQgACgkQj4D7WH0S
+/k40YwgAuXZImzLUX+KOPP158jbavgVEmzuiuBb//DdDlrIGgzzO6v+dBAMA9SDj
+PvuC7RBW/B5UooAcMZ1ug0XNSKEBPdmt5Y0gQ87AHDpCorEj0TT7sxnwkNsPFX7x
+HWl9G8cL27P6GutcVbCOluI0yYR7Nw1zHYQf21RyAACqbQ8Vhyhh72ob5smi9YfV
+33kT4xEB6wS6RhPxBqf4Nq+uAItquyUKzPnYPnJyA/tYFsPGidRAMDVQ67CCC59y
+b1wHuvuWgjOm7Vf43RWcIcBZflb/1IGtXsHWm2NX0LiS7MCBDIiuchqFT32NykG0
+RZvK1jwXaN14bK03WyRqvyufOjWRXA==
+=XSA6
 -----END PGP SIGNATURE-----
 
---ta47lymotlddx2i4--
+--emncwsoh2jwmrgbx--
 
