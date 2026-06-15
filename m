@@ -1,45 +1,46 @@
-Return-Path: <linux-pwm+bounces-9296-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9293-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 8TQjHSguMGo7PgUAu9opvQ
-	(envelope-from <linux-pwm+bounces-9296-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Mon, 15 Jun 2026 18:54:00 +0200
+	id HbznHKAnMGqSPAUAu9opvQ
+	(envelope-from <linux-pwm+bounces-9293-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Mon, 15 Jun 2026 18:26:08 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0316768890A
-	for <lists+linux-pwm@lfdr.de>; Mon, 15 Jun 2026 18:54:00 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 713FE68856A
+	for <lists+linux-pwm@lfdr.de>; Mon, 15 Jun 2026 18:26:07 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
 	dkim=none;
 	dmarc=fail reason="SPF not aligned (relaxed), No valid DKIM" header.from=starfivetech.com (policy=quarantine);
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9296-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9296-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9293-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9293-lists+linux-pwm=lfdr.de@vger.kernel.org";
 	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 382D2310D543
-	for <lists+linux-pwm@lfdr.de>; Mon, 15 Jun 2026 16:31:53 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 0E995305C9F9
+	for <lists+linux-pwm@lfdr.de>; Mon, 15 Jun 2026 16:14:29 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 10B3540C5DF;
-	Mon, 15 Jun 2026 16:31:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id F04A340B370;
+	Mon, 15 Jun 2026 16:12:38 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2121.outbound.protection.partner.outlook.cn [139.219.17.121])
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2101.outbound.protection.partner.outlook.cn [139.219.17.101])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF913FE66F;
-	Mon, 15 Jun 2026 16:31:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 845CF40910F;
+	Mon, 15 Jun 2026 16:12:33 +0000 (UTC)
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781541111; cv=fail; b=IQBH/DxNQqrKNndlv/Er+UZXGbHdXfLvU1qzj5NP9u1ncMzfgZokEBAC9a61wbu4VY7yroeu0dEPdDPIqzkdeYvf3xqwOUMGC1ELCMLd+r+j+VwQFZOAPixHBCGht/HoE0c5grkr6nxtayQrHsFNe3W2KItrXfEOE8OB3cL206g=
+	t=1781539958; cv=fail; b=KdbwbwVAViW5T7D41pAphIwMxrMcY4UZISekcvHz1fuPEdnnDXUxbYVwx7FDxQ2VueY3+QDd3z+iwXOdvfQdcp8UtJwigi4/xFR8BqZqbFZG6f9QIpU/cIQ2scPmDqrFDeYfd25JoJXxRRSBgq2ZENx/Pnh3ANNOt5l72+vNOwE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781541111; c=relaxed/simple;
-	bh=dqklhzJXGXFrgXGgJa8W9zljwqTagJXi5gpMyluogoM=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=Q7kCXWLGQh1T1Jk+d0LcwZh9zsMtfV/IpwoP3bVTrdYo64hVQzlTnSRo0egYnPRAMfKoXQXp9O41rT5QdMTvbRDfuWzob+kONr6+b0Vsoo3V42xXIOHUyBtd+bKD8KIQ2i71+pr/0GyYD2gxsGBr4YLOAiG4huCuxZcGOAOyKsk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.121
+	s=arc-20240116; t=1781539958; c=relaxed/simple;
+	bh=0fO3KfRUVuLOSEOhBPTm/acSlbr2Rj+XF5JEoMnfAUc=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=NMVVIIKKhiQpnQYPcYasLvuM/TYIHZNOBr/dFhM9n1G0e1sK0Np6xeCcV63WcdRzeSRjfj4sogSHa6J3Y3rJ5qxZ47okbvwA+If9m7CywDU8BJx2NHXpFPYMVb/qKk7BOBv40zZPruLflI6fVFkk340+eIG1yu5hesIukKS3eaA=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.101
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=L+AoGWH1O2ry7jHnZFKQ7n3N29tuIllUuTW78OMoJuWy8sbXN735hnO+f2KvzKzIhueCf0Kb1ZT1Kvs+VcRrx1rSx/+6N5R0DqPUAUDEZsEzWoG0Rg10RceDYfXw8X9Fbtse2tLvGtdsKdda/IH23VJd6r4Dmc3Z0xW1xzd0poKABMTcsBkTDr0L5peuFVNToZcmmFDGO1GyRwyvPDphUFk/8SuIRmXoHbHwMnJHvmkP8TFbRyt3NLZ5iJ1zB7tHPyThHDR9/pYJsAlBLabPfVCShqt3u0ywak9ciw6MaDR3l8+UYM3zYD/k1f0hCIvPrxLoRcZ8mKvNjjqLQJtuPg==
+ b=JnrNx8PdQ8Ns4UHpTx7tjc7IPfkLr65ENiSRpLQe7WJk5n/qCNprgzfvbcoAzwjFJV3JjoULHqcI07serL6v10vUeQDbRBjW8rT+esyvNdfa/fZmg1eCS031bJCI1ex3yOmDwhxV0aZpKA+LqJHxQdLrxN2gE1l4XRvwln6P4wyz3agw/uxy1OtBx+LUn/3O2SdsuHrtFMv8zQ+gkzrwP2k0wC5uNnRgyErvNSx9Y7TKbng/gyq9Dc3KQz1V94b2MqoOhJ09dehEp30TCWhrLLY3mjgLf+Q0fdbe9cbA2O08gJNTdC/BLYsLTrzoHwTJC53L2sTyFxtDgIpcnKtnVA==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=WwPyaAmZNKxEweQBz5hloUliHo67YernfyFmIqA9r2g=;
- b=IO1XUZ3ErJLAM+i8N3WLV/pQ6XQoMErSCtyVEBpPd0kaxSGSxQ2PIGOSG3jupsDDctyqO76IHQ3qkn+KIPZLfEOsp2K5lVfqxVIHOXDplx6eeG4apK/QYko5xxPM/cZ+kmK11vtmY6vprMszN/VTG9AC0gKQCXUnE5WwzKAQMcFcylbBxhOiYJFwY6j9Pc5Zge35FPF7KbBTZ1XuigpIQljQNvb1BeRlEvgB1h8YTyGgrjjCBSHUPgYNM5I5VoppcP8GYY0x2fcrPXHVJmkFyHdC9FiwZxJDrRN3XN6e2gcspm4JKxVxwhZ+5OBT0pvkOK3BgMkBi7IofZLobrN+Wg==
+ bh=nnLGp4EDeyZWcAIEmKd6NEfR/2g0u4pFyM/Hghphics=;
+ b=E8xKeQzs49bJEdfdaOMkwholvB+pF9HHkBDbxIa4ei2xXnJZAPXYguv0WVI4mexYILd3IB/J9l1tVLgdpWy3ntzZiAms2bsgx6GW9zezQacSrQwpdyuajyKaXkbKmGmhofoKpIi4aY/J+uHqY0QSAmB0hxWV9mAFUKu0IQyOo6szyhZC5pEpLOlpldBxEaCsOth7k1dcdNJfoiAayLddCzmEAgKoNRSywIIO1AFwCCXU5Hr3Hd+IXvCZQgJbgOI/N792GNX2pfFyfA7v3GLzedRAF6F2cSowRpENMhTORmwvV5TXze1mVkwOrSN0GdHsU7iiWlK3YDW9RZtu+YyfNA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=starfivetech.com; dmarc=pass action=none
  header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
@@ -47,11 +48,11 @@ Received: from ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
  (2406:e500:c550:7::14) by ZQ2PR01MB1321.CHNPR01.prod.partner.outlook.cn
  (2406:e500:c550:6::8) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.113.18; Mon, 15 Jun
- 2026 15:58:06 +0000
+ 2026 15:58:07 +0000
 Received: from ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
  ([fe80::4386:5cc4:3bc4:4795]) by
  ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn ([fe80::4386:5cc4:3bc4:4795%3])
- with mapi id 15.21.0113.015; Mon, 15 Jun 2026 15:58:06 +0000
+ with mapi id 15.21.0113.015; Mon, 15 Jun 2026 15:58:07 +0000
 From: Hal Feng <hal.feng@starfivetech.com>
 To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
 	Philipp Zabel <p.zabel@pengutronix.de>,
@@ -67,10 +68,12 @@ Cc: Hal Feng <hal.feng@starfivetech.com>,
 	devicetree@vger.kernel.org,
 	linux-riscv@lists.infradead.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH v19 0/3] Add OpenCores PTC PWM support
-Date: Mon, 15 Jun 2026 23:57:56 +0800
-Message-ID: <20260615155759.129210-1-hal.feng@starfivetech.com>
+Subject: [PATCH v19 1/3] dt-bindings: pwm: opencores: Update compatibles, examples and maintainers
+Date: Mon, 15 Jun 2026 23:57:57 +0800
+Message-ID: <20260615155759.129210-2-hal.feng@starfivetech.com>
 X-Mailer: git-send-email 2.43.2
+In-Reply-To: <20260615155759.129210-1-hal.feng@starfivetech.com>
+References: <20260615155759.129210-1-hal.feng@starfivetech.com>
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain
 X-ClientProxiedBy: BJXPR01CA0065.CHNPR01.prod.partner.outlook.cn
@@ -84,56 +87,56 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: ZQ2PR01MB1307:EE_|ZQ2PR01MB1321:EE_
-X-MS-Office365-Filtering-Correlation-Id: 24b8424f-4c39-4bbd-ad24-08decaf6e3b8
+X-MS-Office365-Filtering-Correlation-Id: c10f85b4-d397-4958-e39b-08decaf6e45e
 X-MS-Exchange-SenderADCheck: 1
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|7416014|52116014|376014|23010399003|38350700014|18002099003|56012099006;
+	BCL:0;ARA:13230040|1800799024|366016|7416014|52116014|376014|23010399003|38350700014|22082099003|18002099003|3023799007|56012099006;
 X-Microsoft-Antispam-Message-Info:
-	J9S3YCcVbH2+k9WsZLykQrmSgJGuqZgZJjQu1GEUuoZdrqtLx4htLyNBlefsHpI56Uw3qE2KnYAn2lk/BFfcZNllrVWistHQdJRCAYnJw0gDaAQro8IJAO4qWLMpwi8myfPgDsqenjwgaxp0eZNqhwN07DUUvuA88vT8x7KbPPZPYojidy1dxh7Vi0PejLYgZ6EpVJDUhrT8STEql6Y7UwCExOr0CYTtALO/2dJbqNw9gLYVhVM1R8xTqAdm662YHTS3TM28KX58hvvTi6VCrGJbxqTDZTPju+YePro4YwreF7DrmHPm60TyFoxMz5Px8ym7aab8dZ/EP++yUfFGdLIiG9BUEP7KA6Bbn5Eg0KVI9vqJ41xl234gEHXcAZnEIFk8JDlBc4UtShGcSShNwFvPRq/loUO4G2YsEKwC+OFibg9/pNGngQVlz5zSS0S9ety/rS9YNBW3wWdjOP/Bc9d2RfD9807raR1Egm1ncUuDhq8m2hPkBW5L49UcNRo1I89/Ch10p4ouISHY6IshGdKzJLs1bfRMLvDkxBv1iXkdJxDYPMyRICGFl9lW61Hw
+	y6xOEbkWwFbjzl4Q9gjdG1s4hySzjzClQyr8dauliZEOekylBE5cFCX7thB1FnQ/uqjpMG7vgxg3ALt3RCbF3XOnGsrCvn8v9ZY5yNTpAlwglExmnxa4w7ConlMdg68Kaml0HwyycTR1FhwXBHShbkO4u3NX+gKxr5nUt6aKPPPw8X6lvBLKCsxAI0AALnfropwW1gn4+kLu4WuZWRnZ1R2hzU+OrHsT6sMS8dMNlh4mlTpZbldmTPC0hu9kGeewCROtFF0zsksGQkpNAt1p9ZoDCU/aXmqBi4XUWkPih5fiSy0eLZPkXfqzpP2biInsFr0NBxAtN1PpuqGQVt4mR8Tv6sxzOmJXrBn7wctHbLNn04wSTp+kLKWK6NQr5rDBiD8k6oRAqsUFzlhH5vTBN8F1Kjne8J5GaJetHyCOoey7apr9xNSlTVZP8qYCJeIGs4C640Qh0a3naD8ZRj5c0fpjWrXyO9WcuU8gHkszyTZyG77hdkJv6H/h5sOdxFkmWqykwbaLjZ1NaZ1Q4qkJYvPLJLvAIDy+SUZ/R1rsuu+MBtdzj/o8IJgoj3p7pI4W
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(52116014)(376014)(23010399003)(38350700014)(18002099003)(56012099006);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(7416014)(52116014)(376014)(23010399003)(38350700014)(22082099003)(18002099003)(3023799007)(56012099006);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?GS58SaXA89PbKpKmFiaY2UAbBEKB4a/QEtVXTBfYPgiG62TneW8AjWhvA8oB?=
- =?us-ascii?Q?5W9C+JfUUkUh20ac2EWXhdmnE2QMT42yNHOv3hrS65OBsuxV2tv1pZTkD/Az?=
- =?us-ascii?Q?G5Q3+/LNuwbzUcs2UxXxrf9/l/7dzYQrUwk/hYI7Cots/OcK9uBwqwA6YBvJ?=
- =?us-ascii?Q?Kglq88uAYwytkZaL0xfzTAULCbwGSLVS0jHmzD4kdF7jdluarUOJdCWyFWqI?=
- =?us-ascii?Q?FsSqpGW8GZxka2vUEVyNB+ZmkNL+ilr1YLzLSWA01cTTzj45Mmc8xGsRG93B?=
- =?us-ascii?Q?W8ByxMyc5CdPBuvB19NgSe1VrOuFOB1zZKNCVJC/3cAbBdRS13earvSj5yQJ?=
- =?us-ascii?Q?sHrwri9A8ll5lnhKZG4zrR3sxsgUAboaDMYinz4YR1hQ6eS8M4tFjpglQNUE?=
- =?us-ascii?Q?piBkO18KcfQpskFVieAt3AEJqjG0lONiA4RkslZN2u+eqyldErsu8EmHAW2o?=
- =?us-ascii?Q?3Asb54Bq03G22FxhnfKQYW4Sufeg422dDfV2hE3+ftVmrCYMdpHLOR9Ublgg?=
- =?us-ascii?Q?yZ7ZS4xflDVQ+Aol4hCl585Z83jTUR2M5K05G7EmBeIrnk/vOEUplplO7di2?=
- =?us-ascii?Q?7hPSYDSpJa3p+T8PRnXi9cxHo3dsJ8O0Whr0Rlqgtg5hmOVWCvWES3hRfvz+?=
- =?us-ascii?Q?PzraxZx10EGPKaBCs7sbFmQAJxDwXaVvTheEE0qCZh7shl4RkGKnVYhxjmX9?=
- =?us-ascii?Q?+ezg49XkZ5yKcvgagcYKMYow2kqrPtcYcGZw8U+ngCCQV3dTubA40O5GxgnU?=
- =?us-ascii?Q?1jgf4zARU2iyX7LyxN1DpfD7QBuT1R9sJZLeIiRgdM2tPupQi+G+DaCxPs9x?=
- =?us-ascii?Q?FApiw/3bcO2/rx+xOF0Ok8JQ+MwR4aink7jf4zELx/E6dMnfOuz6dHAGbNn2?=
- =?us-ascii?Q?CINZDo7nw5TAVlujovzF8pgV2husNWJmXTHcrVQEkgkyIiGpyZy5IAbkX4qv?=
- =?us-ascii?Q?PfKk24MpCf0ns10Pa1L+LvwO9uy4zAKgWItR5OoWESJFST3BaMAd2rkUT0Dn?=
- =?us-ascii?Q?01ea0MtuCGIvy+qPibG2mEIpRIbwlgMjwmeGGKUzIteXthmV/FZ4a6FvWt9N?=
- =?us-ascii?Q?RuI8PewVwN+rXwl/oBRRktS3mSft6NBNXjo83esr1PYw0quzLyK0vTSBU6rP?=
- =?us-ascii?Q?p1ZSaXY/eUbQbGhXH/5SSDGAbLuXbsJ96NJi3CJjPDT+JxhEDk0oT0VqMRTG?=
- =?us-ascii?Q?s3Je6zAPXrEleBOKS6w2XCAyHnqlXYzQFcaE09VTHpJrPIZwzZzd7IqQicd0?=
- =?us-ascii?Q?BtaSnoj9i6ySwmS6KCzvewrZNu11uXMYeCOOtu3iPCBf0uW5rz1D/L1kOXbl?=
- =?us-ascii?Q?EpVUJbcEV1IMq+PA/UBzlgFhDyrCWqbaMgCwau4nXQjTL4pTWYDtjZbhn7HT?=
- =?us-ascii?Q?ppjiDxF9xF1FILD+WlQnOYJaGSDZQJm4xpBrE+GFlM/jxYJtwxrC/MiCGm6y?=
- =?us-ascii?Q?U8JFLMjeAeN0IJaa6E8869WVgpgTxyaDMxOllxq0BTXpNfZoukb5B+hrusg6?=
- =?us-ascii?Q?wNewrSqYRsuCtB19Ubrp3PHzLht3gNi+VFGI1KkNBi8+S5iFzOifqwU6DtKK?=
- =?us-ascii?Q?G2GKa0l63kCWEcPXvW7/8/RhGnuhxMrmgztbRnDICU7POV+CunE/43tjZCU2?=
- =?us-ascii?Q?J4+Cpm65ABwPw+emMwXx+UkAAebQlIMN8Kjmm4dh6tWI5I01EFpKoyN1/nyD?=
- =?us-ascii?Q?c+EaglWwy9dv5UPB4R779OfhXuwqO2iaYc/JrRUylDVrdzZYwHhOe5L9ZsXE?=
- =?us-ascii?Q?inIT1aGeduDYIO+pCDyM5Hq+VaAk5P0=3D?=
+	=?us-ascii?Q?aRAYprCFV9pkfWPS6NuT+14Pc8AIVckg759bOtZHPgQfCPOqzBuuBT4wUwUq?=
+ =?us-ascii?Q?MgeJlXhuueP9Q4x87w3rXAryOo2fkPhT6FPDmjq0iyqo+9PK0g6zAowpe5nA?=
+ =?us-ascii?Q?M/GHFgfZziSuAliLpgk1FsQu0DSH0MCdxT8/TeUHnOZOQhDCq0udZObm5D6n?=
+ =?us-ascii?Q?aTUUnHk9owVf0PWtGqq5UhgASuA6GLxXPbD4w69cCmPar56GYFMSSVJ1JLDz?=
+ =?us-ascii?Q?vTm8Dz/KscjiAqsixIgNvsSZTPhoZzvxGHlMWpYS/qKC6+7eWUy89HG+6psl?=
+ =?us-ascii?Q?8Ei4fdNqQfgi63mO4jtV4zdOj2lMZiSUQS6fHEGbIQyUjj1nxiCFRi36oMcy?=
+ =?us-ascii?Q?GWJcIb0mm/aC8ZcKKv1AvqKVVZ1o6fOTvMajvkWMgI8WADhhRIwCr+DwN7d8?=
+ =?us-ascii?Q?T72Wx674Jvu9eP6LW2268HuBzsNcuW5BL83ROydaZQ3yRcNfaGoBn81rAfpv?=
+ =?us-ascii?Q?jE6by9Kd/a75llHe7gWG9eS8OrRa+nQQwfRZYPM/U6knY0HvRHTrwZfUA7zO?=
+ =?us-ascii?Q?a9Bv+7qMeQN6FV13Y1dnL7+iI1Psdu/3q4UkqLYqLAfcW6dWNKwm9Cn4SlAu?=
+ =?us-ascii?Q?CkRPSWt1m1oXUIw0kcvFM97pph/txCNqDUg7mtrGHZMduaeY5o+H8hoCR31+?=
+ =?us-ascii?Q?saBlTop8V0rnE/C6NM3EePXTsiOJ1ePGIHopxoZFiG3i0FQnWgcl6Nh+vm1D?=
+ =?us-ascii?Q?MrVOICVzE3NJEtfzFWLUzKMrqm2qLm7NdlE+zO9LFH7hXYQQk+BEqFXOz4OW?=
+ =?us-ascii?Q?4G4hp3M5N0KqPpd3FFiqyUqm8oXPxoB5pM3UOlxO7XvuwKsFYxN0PnU9dqIR?=
+ =?us-ascii?Q?tlJh3irQA6BuGtUkHSnoWgmxXMt4I9G1AJzPHDRmrE2IiFiUJbzVwjGDjFDA?=
+ =?us-ascii?Q?lgzdmwqsQZXcBbC5vooQpau0RWPz5HKIGJhicmbHRARzAhYIhGNfhRbYJxOY?=
+ =?us-ascii?Q?Ux6AiOjZdZktgQ6vswv8jYfr4t7Po2pdPph9pUeVq8kOZha3EfClvWigh1kE?=
+ =?us-ascii?Q?VqoRYSLJBx/+lWRjRXw6F9vz2+rwKdaHN6VtWhNYpMu5Ijk8e/FIEsNnGV0D?=
+ =?us-ascii?Q?INrOJttkSUEjI7R4l8bNXM0kOpLwXhjBmiAB0bwo+cQnxDo11rXufOKDzjW/?=
+ =?us-ascii?Q?Q8BividtBSGkDwLEs6xpxmKLfJlhV2RAaYiw3v4G9NSaed4+Ufv36+rZwojF?=
+ =?us-ascii?Q?GfamgPWzw1CEnb7AxIyedI7LsboU+0dk0rDS+P314vDZPgRWLx4JaIYZ90N5?=
+ =?us-ascii?Q?s//J7jAa9VMTpvCnMozrrHbSGGujxZs7l0GT8R4QX7xT8XuZfQ3Gqco1Lj1e?=
+ =?us-ascii?Q?Wh4YFfz4swbRod92TeS0Pagq/MP6rjjtH79mpDBJDg53XAeXGfPFQNugtuVu?=
+ =?us-ascii?Q?7t7XpWICav1PO3J3w0VL3bbR7s2dtrE1lBQHb5vLQ6ngxhIa4fU+jOohmnkE?=
+ =?us-ascii?Q?wGe8jBSzj+4AfJ4W56lH2ZWUMiwj09Wulis527DK5SdlM8hXkB/9isTk7C4g?=
+ =?us-ascii?Q?t3CPWcpCHs2VOafP/u95w1PgSNYlOvPFOWNeB/Pbb5rAquw9OKTriD0OGhU4?=
+ =?us-ascii?Q?5UUIbm5X1/Drc6ZnnovtsbHtJhbEd7pUQOGFRtY3gTbRi37iu7lRegewfmHp?=
+ =?us-ascii?Q?IjEYMNCmTpIGut/fjSOGfzp88LiB3Z9u/8Vh8xWgdFpJE0WrW+KgPT+6NPaT?=
+ =?us-ascii?Q?Vu38vAM7Prjk8AILAlKGAwuavOgq4hLmkDNgMemIYrzOlgNqubzFBosfXSJk?=
+ =?us-ascii?Q?bVDqDnQ4txwxILXxMSAtAhFkgroHqkw=3D?=
 X-OriginatorOrg: starfivetech.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 24b8424f-4c39-4bbd-ad24-08decaf6e3b8
+X-MS-Exchange-CrossTenant-Network-Message-Id: c10f85b4-d397-4958-e39b-08decaf6e45e
 X-MS-Exchange-CrossTenant-AuthSource: ZQ2PR01MB1307.CHNPR01.prod.partner.outlook.cn
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2026 15:58:06.5804
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jun 2026 15:58:07.6553
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: oOFS7nYfVzy0IQ79UdKGiiY/ATUmwm/yAh2h8MlPmiwNOJ2O5lN+3k/lii3rAngQA9RxmrijjDK8cGuKEaVt3TMVFelkaow+KcKqxyt0AWw=
+X-MS-Exchange-CrossTenant-UserPrincipalName: O3SahtCM2FfddoVD6JkuC979qTWxXH9hr62dWhJiGbKmCtilGKmK0amaGLN3FDty676K42O1EObDP6F16K/oqXw3UZLi0B0IAjibjDFSKCE=
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ2PR01MB1321
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [5.04 / 15.00];
@@ -142,7 +145,7 @@ X-Spamd-Result: default: False [5.04 / 15.00];
 	ARC_REJECT(1.00)[cv is fail on i=2];
 	MID_CONTAINS_FROM(1.00)[];
 	R_MISSING_CHARSET(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
@@ -153,7 +156,7 @@ X-Spamd-Result: default: False [5.04 / 15.00];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	FORWARDED(0.00)[lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-9296-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9293-lists,linux-pwm=lfdr.de];
 	RCPT_COUNT_TWELVE(0.00)[14];
 	MIME_TRACE(0.00)[0:+];
 	FROM_HAS_DN(0.00)[];
@@ -163,71 +166,71 @@ X-Spamd-Result: default: False [5.04 / 15.00];
 	R_DKIM_NA(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[hal.feng@starfivetech.com,linux-pwm@vger.kernel.org];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
 	TO_DN_SOME(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,starfivetech.com:mid,starfivetech.com:from_mime]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,starfivetech.com:email,starfivetech.com:mid,starfivetech.com:from_mime,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,devicetree.org:url]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 0316768890A
+X-Rspamd-Queue-Id: 713FE68856A
 
-Add OpenCores PTC PWM driver which is used in StarFive
-JH7100/JH7110/JHB100 SoC.
+Remove the jh8100 compatible since the JH8100 SoC has been canceled and
+will not be released. Add the jhb100 compatible to replace it.
+Use a oneOf construct to support the single-string opencores,pwm-v1
+compatible.
+
+Change the register size in examples to 0x10, since an OpenCores PTC IP
+has only 4 32-bit registers: CNTR, HRC, LRC and CTRL.
 
 I will maintain this pwm module in place of William.
 
-Changes since v18:
-- Address Sashiko AI review comments for the OpenCores PWM driver.
-- Fix runtime PM usage count handling on probe, error paths, PWM release
-  and driver teardown.
-- Reject period or duty cycle values below the hardware minimum.
-- Restore PWM registers across system sleep resume.
-- Return the real error from devm_pwmchip_alloc().
-- Preserve bootloader-configured PWM state during probe and keep runtime
-  PM active if the PWM is already enabled.
-- Use synchronous runtime PM put before possible teardown.
+Signed-off-by: Hal Feng <hal.feng@starfivetech.com>
+---
+ .../devicetree/bindings/pwm/opencores,pwm.yaml   | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
-Changes since v17:
-- Simplify the code. Make it more readable.
-- Restructure the driver to register the pwm chip for one pwm channel,
-  because each OpenCores PTC IP core only supports one PWM channel.
-  Drop starfive compatibles.
-  Add patches to fix the dt-bindings and device tree.
-- Support runtime pm and system sleep pm.
-- Disable the pwm module and reset the pwm counter before updating the
-  period and duty cycle.
-- Improve the descriptions.
-- Update the dt-bindings maintainer to Hal Feng.
-
-History:
-v18: https://lore.kernel.org/all/20260515054723.25024-1-hal.feng@starfivetech.com/
-v17: https://lore.kernel.org/all/20250106103540.10079-1-william.qiu@starfivetech.com/
-
-Hal Feng (3):
-  dt-bindings: pwm: opencores: Update compatibles, examples and
-    maintainers
-  riscv: dts: starfive: Correct pwm nodes
-  pwm: Add OpenCores PTC PWM driver
-
- .../bindings/pwm/opencores,pwm.yaml           |  16 +-
- MAINTAINERS                                   |   6 +
- .../boot/dts/starfive/jh7100-common.dtsi      |  28 +-
- arch/riscv/boot/dts/starfive/jh7100.dtsi      |  67 +++-
- .../boot/dts/starfive/jh7110-common.dtsi      |  27 +-
- .../boot/dts/starfive/jh7110-milkv-mars.dts   |   6 +-
- .../dts/starfive/jh7110-milkv-marscm.dtsi     |   6 +-
- .../dts/starfive/jh7110-pine64-star64.dts     |   6 +-
- .../jh7110-starfive-visionfive-2-lite.dtsi    |   6 +-
- .../jh7110-starfive-visionfive-2.dtsi         |   6 +-
- arch/riscv/boot/dts/starfive/jh7110.dtsi      |  67 +++-
- drivers/pwm/Kconfig                           |  12 +
- drivers/pwm/Makefile                          |   1 +
- drivers/pwm/pwm-ocores.c                      | 312 ++++++++++++++++++
- 14 files changed, 538 insertions(+), 28 deletions(-)
- create mode 100644 drivers/pwm/pwm-ocores.c
-
-
-base-commit: 95e56f0f293ef797123eb032f78f5b5d56a035a6
+diff --git a/Documentation/devicetree/bindings/pwm/opencores,pwm.yaml b/Documentation/devicetree/bindings/pwm/opencores,pwm.yaml
+index 52a59d245cdb..5f05606a2d3d 100644
+--- a/Documentation/devicetree/bindings/pwm/opencores,pwm.yaml
++++ b/Documentation/devicetree/bindings/pwm/opencores,pwm.yaml
+@@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+ title: OpenCores PWM controller
+ 
+ maintainers:
+-  - William Qiu <william.qiu@starfivetech.com>
++  - Hal Feng <hal.feng@starfivetech.com>
+ 
+ description:
+   The OpenCores PTC ip core contains a PWM controller. When operating in PWM
+@@ -19,12 +19,14 @@ allOf:
+ 
+ properties:
+   compatible:
+-    items:
+-      - enum:
+-          - starfive,jh7100-pwm
+-          - starfive,jh7110-pwm
+-          - starfive,jh8100-pwm
++    oneOf:
+       - const: opencores,pwm-v1
++      - items:
++        - enum:
++            - starfive,jh7100-pwm
++            - starfive,jh7110-pwm
++            - starfive,jhb100-pwm
++        - const: opencores,pwm-v1
+ 
+   reg:
+     maxItems: 1
+@@ -49,7 +51,7 @@ examples:
+   - |
+     pwm@12490000 {
+         compatible = "starfive,jh7110-pwm", "opencores,pwm-v1";
+-        reg = <0x12490000 0x10000>;
++        reg = <0x12490000 0x10>;
+         clocks = <&clkgen 181>;
+         resets = <&rstgen 109>;
+         #pwm-cells = <3>;
 -- 
 2.43.2
 
