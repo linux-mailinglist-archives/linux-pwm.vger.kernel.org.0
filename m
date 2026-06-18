@@ -1,54 +1,54 @@
-Return-Path: <linux-pwm+bounces-9329-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9330-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id fhaoMS4mNGqrPwYAu9opvQ
-	(envelope-from <linux-pwm+bounces-9329-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jun 2026 19:09:02 +0200
+	id v1zdNaEnNGptQAYAu9opvQ
+	(envelope-from <linux-pwm+bounces-9330-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jun 2026 19:15:13 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD0FA6A1CE9
-	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jun 2026 19:09:02 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 7CCF86A1DCC
+	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jun 2026 19:15:13 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=garyguo.net header.s=selector1 header.b=bhv2H6Yy;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9329-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9329-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=garyguo.net header.s=selector1 header.b=b0xRUOtK;
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9330-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9330-lists+linux-pwm=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=garyguo.net;
 	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id AD3043005A82
-	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jun 2026 17:06:29 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 5CBC8313EB44
+	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jun 2026 17:06:34 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 29EA53F44C0;
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C60B3F8EC2;
 	Thu, 18 Jun 2026 17:05:04 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from CWXP265CU009.outbound.protection.outlook.com (mail-ukwestazon11021095.outbound.protection.outlook.com [52.101.100.95])
+Received: from CWXP265CU010.outbound.protection.outlook.com (mail-ukwestazon11022084.outbound.protection.outlook.com [52.101.101.84])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11CA43D891E;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C26953E5A0B;
 	Thu, 18 Jun 2026 17:05:02 +0000 (UTC)
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781802304; cv=fail; b=AKFLzS+inJreqJ8MedvMdRmC/V/3Ur/dJ6UkyT8KBlD3SMdYVEGEnc9alVr01M5ir3/XX6bphMlO1n7VC5KF/0yr7Kth0A/x61oCW7EiwbJAR50+HaA8+01ti7DOoHYjp5MeFi9XxK36oIdKtAF4rOmIszY+rOBBXdjKZxf7P28=
+	t=1781802304; cv=fail; b=uqWeKi0FmCiXrslcnIis8oK8kYk58R+5F7QrZvkQ+Gajo1xgFTAwEu/6vGUgsPE6QEXsCGfDj5HM4xVmu0ocjBKYYa0kfz0gUSUu4qNJa1m8tSbGmYIqFL500OfPrfLgm7l+Lx6TlXzD8M7CvhR6j+w0gXeRydbgsFJI7OCBUds=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1781802304; c=relaxed/simple;
-	bh=vM+4EwxTqnLZsJlEGl4U+mLg2IkF+9mY6+LzDXoKPxc=;
+	bh=A0ywXdGf02/pqWfOcql1b083Co7opyezNY57GOUfVeM=;
 	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=byPy7Dgr8HPqaSpF77eJPSnkUYhBvFymU/QMpdf1FndoJTmrryZzBanwYDM/4cu1pJZc4ndvTCQNVC7/vf0wYSKJkum6PHABMUENDSzR9OaK4JiQ/OH7Z4yMONHUC15VGWSjS9LRX0VXXxH7+tRSusnJ4nMRL7JKGBLzQGp0HVI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=bhv2H6Yy; arc=fail smtp.client-ip=52.101.100.95
+	 To:Cc:MIME-Version; b=pPRocZYR0WpkdA+/PvLwFIq1zYO3L4sI7H4oNYSoqam9iqPI7pQ3sjDSwpsCxZ/wmCymGrUtZ+dcHf+CZD/FnZKKnLXhm6KUBpI7H5L1DfCy57sZhJH2kKgtCewncM05hey2K9WmnJSfvmmZQzDxY/M10dUsphIgWmp29VlDQ+c=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=b0xRUOtK; arc=fail smtp.client-ip=52.101.101.84
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=M2bVAfj+o13wRsDpOVYIVvYcbgYQRk0DsyoOifA70EeecB0kkYkU1WqgegI7TaUzsoXrtvMHeHqappc4Qy1YPmRx1XDlyVX4ljCe0QNrietI2E/RULdfisUI7o7bxMH3w4SQdNeGgdHXGEFVMEgnUxmBnG9FAckcJn2oZya0qw0rr7P3cP8PLC7zNrU/fhcHN+9QWWHB6IENEOvu4TBjMYTTnzIb3jSRH6BRlKS6qxMasbaNcdboAsgVeJk0D9rDbwdUcmRwXlj/nftkak3x/7NWiuO/GEas/WRX2qZzpMigsjzFPzgKd06dd5mkbsTAABViE93+aRmUtQ3ds/KwlQ==
+ b=mZAaaFMYU3nIlOZpNHmvOsSK8NNKLTQfLg2NjV1xVJybAxfl8xbF558q4sy0JqWI8vLVGQqVfiWCNlJNVav181E16BIJEoalIo7nRvdWtX8vHVP9otwohNlItssoFVoS7dDIdUtDYqf4I3RtDbKAblZmVBmNSbRVFjJqceKo5w8bhcztahcaSZ3vzmstrIa6exeXcSp6KjxsjSjK1VQRM44zeTGBDVQIuWwLO3V8RjI9ziwnDuGZHGANnhtxN1SwG+b0xTMimgvTLjvJQtdcmmX1jcxsjrGRVcwi9YmyJxZHeSKExU+n1auxF7HKwV8D/Hxs0BT6Bv6JlkqSZEr8Cg==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=cbq9JYxSFEEujyBl/Q/9Y8MM++bo6kvGCCsEYLS0su4=;
- b=bmIARbwwas6i32+gbemxR37BJX9jqtR6gZC9PK3nVMb4RNx7RZEqxzxKmbz1b5N4GrLLpTZwmyAoQuvzzXZAHBDgfUQ4Z2G0lIrmYougadkNsnd2Tb5CybwhlNOZJs9DmEXHKf9G/5YpgBuX+HbxyaftXZJ3TQeIw13r4j4ppdl8op+ODNlzHZVSrzHAfKVDwGws1k358LC9vKuI+2rir4gbkLYZNosHMwADJevpbCxEGwYz3hONkes6af3+FrpMqNuoI0O8JQRfBP9Y2/9mRCx9WLe+KFS/2Uman/CahGztuNGqIeAeUFySlF/kJTVIBVt2YsPAhJJgww3EqofmEw==
+ bh=U1sc6qMCXeEMau8ZRnfo41X1a57ZKivnNqCpzABICd8=;
+ b=Nl+x5eL7wg0FspeOIYlUa+jOQBE76AoZgpWFwt7EbODWaUBtKImOZ4Y6dAQ9/54kkopUtq2CNCtAKFHFLTNgxOk+kehfE9KLxhCh6BUJ0XBEp0E/tari1Fn3GAKD5Ks7H4zzQeb0/cAINhfDwhEkTIF445hDd7KIYwjt0aCA0m7RXzRD8l27QJEe6dLHVfJOSwcQFYPmfKD/gMT6Kpsawso4MYyJZ2yZqwGY/Ptyxysdo0HgZxzTkWkJCBY5Npt3842+mbp0hZuTdhX/zcYt/KmWGkBy4ELqJWQZHaMTVGwi/LxkZ59CkD+r93A94x0mOBrXL8Dd7XH6bIJxrfh/4Q==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=garyguo.net; dmarc=pass action=none header.from=garyguo.net;
  dkim=pass header.d=garyguo.net; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garyguo.net;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cbq9JYxSFEEujyBl/Q/9Y8MM++bo6kvGCCsEYLS0su4=;
- b=bhv2H6Yyds/Yaq5co3bvcytVTfd+2utYGrtCj41kC9usa1EWDIbbWMMETOVcHSCoOvMRD2y6QKnMecN68zb+c3xTz5QOeo459TtGwGsHMkZR4elLQ/Et7J4XPvaIyQ1ha+wadz9XMnfq3HcvnGxWKRANUi/NDTQ7uS3T0claH+o=
+ bh=U1sc6qMCXeEMau8ZRnfo41X1a57ZKivnNqCpzABICd8=;
+ b=b0xRUOtKp6JBHFSir6fXCcRkcB20Zr8bI5bvVeFUQGjkkFkgK31Woz6aHb+9JsMi4qHCrBw51PGRgiiqpIFppUAtZ0b4YlsNWOvERRT+iM9wNNh6Wa3Yg/njXofT5WAO4PKtzqKDXKU5ns7vnef+Sihu5EymwkHRGKxz7SDqISM=
 Received: from LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:488::16)
  by LO4P265MB6966.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:34d::8) with
  Microsoft SMTP Server (version=TLS1_2,
@@ -59,11 +59,12 @@ Received: from LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
  ([fe80::1c3:ceba:21b4:9986%4]) with mapi id 15.21.0139.009; Thu, 18 Jun 2026
  17:04:49 +0000
 From: Gary Guo <gary@garyguo.net>
-Date: Thu, 18 Jun 2026 18:03:46 +0100
-Subject: [PATCH 09/10] rust: driver: remove duplicate ID table
+Date: Thu, 18 Jun 2026 18:03:47 +0100
+Subject: [PATCH 10/10] RFC: rust: driver: support map-like syntax for ID
+ table
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260618-id_info-v1-9-96af1e559ef9@garyguo.net>
+Message-Id: <20260618-id_info-v1-10-96af1e559ef9@garyguo.net>
 References: <20260618-id_info-v1-0-96af1e559ef9@garyguo.net>
 In-Reply-To: <20260618-id_info-v1-0-96af1e559ef9@garyguo.net>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
@@ -98,11 +99,11 @@ Cc: driver-core@lists.linux.dev, rust-for-linux@vger.kernel.org,
  linux-riscv@lists.infradead.org, linux-pwm@vger.kernel.org, 
  Gary Guo <gary@garyguo.net>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1781802282; l=5814;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1781802282; l=1753;
  i=gary@garyguo.net; s=20221204; h=from:subject:message-id;
- bh=vM+4EwxTqnLZsJlEGl4U+mLg2IkF+9mY6+LzDXoKPxc=;
- b=vcNY1W3BYSz5bcTTFXTEVlhzLcAPALAdaJJF/5U0vRgTFLIEbDmRFIX+334zLTCDctGgv9Sxx
- i+aBWwKStpbD4cL3k4f8HeAJieuGFAaajYDq0w3QWlpk4V3LHUzVPP1
+ bh=A0ywXdGf02/pqWfOcql1b083Co7opyezNY57GOUfVeM=;
+ b=xj5GhBjIYVuoC0phxbQlVjreyyGtDNgJPrJPqTGL7Nr7TwKpc+9p1wDMt1NR9cDa/pM/lNlFG
+ U8loSS9DoPdCo1m33rcwrc5RnyZnPCDLdP/IrcK3/TS2N/Ql+97hqaK
 X-Developer-Key: i=gary@garyguo.net; a=ed25519;
  pk=vB3uIX95SM4eVrIqo1DWNWKDKD2xzB+yLLLr0yOPYMo=
 X-ClientProxiedBy: LO4P123CA0548.GBRP123.PROD.OUTLOOK.COM
@@ -116,66 +117,66 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: LOVP265MB8871:EE_|LO4P265MB6966:EE_
-X-MS-Office365-Filtering-Correlation-Id: 5352048f-bff5-4939-e8be-08decd5bb4a7
+X-MS-Office365-Filtering-Correlation-Id: fbbbe4c8-d618-4554-48e1-08decd5bb4fe
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|10070799003|23010399003|1800799024|376014|366016|7416014|5023799004|921020|56012099006|6133799003|22082099003|18002099003;
+	BCL:0;ARA:13230040|10070799003|23010399003|1800799024|376014|366016|7416014|921020|56012099006|22082099003|18002099003;
 X-Microsoft-Antispam-Message-Info:
-	dza0LHMz6LB2PFpxhA5Xd0BfTSU6sMo4QbDi5PIToL/m3c0JAma3fHmSOAXPIiF7jG2Ik32N69S/f2v6SLmRqrd9s6xGiit27dLdWADJ2KZJUWJL+IQ9FiF/1JbHDv67NHk+oUsRdxp4V4FMxy+MH9Kvre5liBf5UNuFWpUvm9woLClvtYRVRD8upM3pIKm9f+vbq9IyhX2+k2ZJrYE/tCscX+OYag0Zv+unRvy6AhounzWka3leclZ5q7wL9Ioqaq4YKDIYy44ONU0NFm4EC2WnyzyOeo6ueU7oUAghiLA3D7XIT+THcO0AYcXIhP044YGHCd2vtoO6/dA2EPdJpndUM8uAHofHkRRuMaJQfvrVzmf9CbBGUw4FIFGJ7McGAamfVsIlVbJs3VtkCiPXr0w+FYiwKkPjxCODUb5Jc1gnn99Vws1vzCgmxYi/ikldlcQuilKyUmaqKjoTP5fHtDpQgEDVKlChckjxGJvP6Go34h/DN70SAUg8BCSZUDn6pnF1r/9rUb4VJsKYcO8smzuqQenQI/sQx38OWC7PxSzXpeDo1dLK+/gNINI1/4+zbe3PirtkykRwsfFRSNmMEE0wvRT8j9TzAHa0NvmBKnup/+ht1dxDM+glnV2kVYRH1eiKHf1gK985381WKJm6CfslsxAAwGAZQtVbhlxpXSZ2EYbk41Fo27hy7J9FH17OiJ6yHNvlX/c7I65+cLsRlwmkOmSwlu4GvjmOn8NfTj0=
+	Ehw/ZqUdUcvXQOIPbOVZQ6VmDsrYbcb2TEhcdYlFr5g38vpuDBKF6TViT0WiWqDKAw4Y82pA05ZgZsQa4xcmSDLjYBRyKd7J9a5XkY5Q22kGJ6Rx8VcmGZm9BjEbrnAzCUkBTie8ozhlrENCrS8rLLmx1mRylYQPl3nP8aVUTwf9MTIrRu8yuehdOgbghzXVQvIyq5bM2XZS3olQdbWSH14U9NUwHXNgtZFsZk7KY4wLon+fX4hvjEkT7gXGdTJiYgUCA9x7nhVuczItzxZZO1gW+IBAvIRDjifDtlBWA9wMDGj5OCdx1a6YPnAJMBqqjW6LGHJn/UM6IODeCODfiBOCLfEXQWPGXLRbqFf5eoIVkjwAWZzDBzZd8aKOCUW/G6KksXNP8mmF3DVleVmmxHdbUPouk8wlbXtxdiF9nBEjbBQaU3sSwnABYp0/onEP9y5CAWJ53tCtg87XVYlX1ba3+m/B5XeDOlc4C15bZMD0GZ20iaAGVwPbHbm9Bje4KS9/V6Q2MiKVJhwtPlZcTkrndmbFVk+adie9eEiDPaWx3WCBA3PD/SBAafsChNDxsj4RnkZCM+Mqa+deTxoUFmivM47BCtBFmPFiTDZgqJihUvdbaGSea46HgvKa/2NXdZ172+WNrCmJwVNr/t2DpR0qsp1ROU43GE94xdMUI7M7jlFf+J4lNmFPE/WOaM4Et55eCP3GWTEwxyi6Hm9WMzSBEmKKbzxilKa3PvQQW5g=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(23010399003)(1800799024)(376014)(366016)(7416014)(5023799004)(921020)(56012099006)(6133799003)(22082099003)(18002099003);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(23010399003)(1800799024)(376014)(366016)(7416014)(921020)(56012099006)(22082099003)(18002099003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aFhNZkdGS3dPTDdSaUtVYmZ4U3JSaG9ncThNUnRtVkMxdWtDeUZyMWhjWVlY?=
- =?utf-8?B?QUxJWkd5YkEzYVZuY0Q1eHVnd3Zhb0luS3FPMW42QkFSbzFhb1dWM0dLZ0ww?=
- =?utf-8?B?bzY2aGJnSWNKMUZmalc5ZUlyUWlRS0ZXTnhEbHJHOEQ0aERpQnEydzVCM29n?=
- =?utf-8?B?QjF1ZHZDYndpa25BTFN2NUt3TVc0SWFkRHFSb1ZKWEtoaXJJRnNVRmJOKzVK?=
- =?utf-8?B?bGI0UjY3dmZmMDZxdjlUOFFSOFM0eExYaFArck5UelJqRWV1b3E0SnpNM1B2?=
- =?utf-8?B?eEZrcWlGalExNUduMDBWVTB1Tk96MXBHMEViMGZMelcvUlE3WkdPV2RHa1pO?=
- =?utf-8?B?RkJaY2NOUE5Wb2NUQnZGM0w0b2pkMEUvZEczOGZkT2M0dVdNSXRjMk1Vcm1J?=
- =?utf-8?B?bXhjK0tkSkJMNHlYSENFNVNPYlQxQnpUbTRPeWUxVHpnb3kwUUZjZW5MSHVH?=
- =?utf-8?B?ZXlJaWkyNTFCRE5QU0pzU1pERmMvNzJ4eUExNzBDUm5TTUNKQTREQWVxTDFS?=
- =?utf-8?B?c3Z5U2N4eXRFWXR6d3gxNG9RdXRUcHpRcHhNWU0vdG5GZjZUUlNndzdWTXls?=
- =?utf-8?B?UkhicTZmQUZ1RS8zQU9kRm03UkxxWGRYRWswdHdWYzZybXhqRGFFTWRFWGph?=
- =?utf-8?B?UXRRcWdmZEFjaldJYjdNWmYxTlZUdisxaFdOYWdVR2dZMFFRbG1CYmdCV1Ry?=
- =?utf-8?B?SXo1L0EvL1VEeTB2dEpMdTVuRHhmd0p4V0V2ZDI5WmlucW0zTllCUHlFM0Fo?=
- =?utf-8?B?ZWtSSnZEbzlzdTJKNVI2Y0wvWXc0YTBuVERaNGtzK0VGeWtIazZIcWt1RFhH?=
- =?utf-8?B?WFJzWkJ6V1hpYTJKa055QTNIV3N6RUp1SVd3dWpKUDJ3U1J1ZE9EaTlJVndh?=
- =?utf-8?B?YU9qcGMyUjhYSSsyY3hRc2lUMTR4aCt2eE1qYmdlQ012OXFDSmE4cjNkckxl?=
- =?utf-8?B?ZlRRVWpMM3RUNzlvV3h0NmhtUXU2NVBnQ2x2Q3ZPN2pFMHpCTVRSM3dkQ1RP?=
- =?utf-8?B?WTBPc0lXZFRSbm9UcFUzVVdsVTlvakk5K1g4VC9LNWkwb3VsREdUa2UyUGpQ?=
- =?utf-8?B?eGNlWEVEZXJOMGNRTTQ1Y3Roakl5SUdDbFN3elQrNEdwWUZJR3piUUJIaUEw?=
- =?utf-8?B?L2xJYjRmQkdNVktYbitGcGZNT0NkYmNrOHo3eHhtYm1EbncxeDJqNXBHc2pO?=
- =?utf-8?B?NmY1bkhEOFFDNXo1bExQNmVyYmxGUWhPZjNsQkMxckk4QVY5RVRUZTB2Y2tp?=
- =?utf-8?B?QlFiNENiUjZ5MTRWYzAxSHdvRDJMU3JFUms3YnEyaDBZRFFRUGt1K2tmVWg1?=
- =?utf-8?B?SHczYUdxMGNRaTFsOVpYWWliMmdiK25QSmxEcWZ4UndjSkh3RlFka1FPNUh0?=
- =?utf-8?B?R1NjTFh3bFV2Y1hDV0ZyUDE5S2J4QW0xQzdHc1VtYWJISDhaTlpSQW9ud1lU?=
- =?utf-8?B?a1JxNE8xTjh1bU1VTjN3QXZwY1pmZnl1RzFKQnBYVWJQYUNnQzl2eUZTalI3?=
- =?utf-8?B?eFAyYW9md3hvTjUxY3hZdEQwQVF6c0Rvb1VWK2hqQ3cyZDBWdENmeExZTHlJ?=
- =?utf-8?B?ODJmLzh0d0k3VE9lanNDMUMvRlpNMjRYT0kvZStyVDEyaUdiRFFabG05OFZx?=
- =?utf-8?B?UTIwVU8yR0NKVDZxdUM0R0trN2FiN2tSQ0xaZDU0ZllYeWh1UDN1bktQcVI1?=
- =?utf-8?B?WU1NS3hPL21JU1NKUGZ0a3BpaEE4RlBHZmdHbE9aK3lTZU1SZ3dQcndPVEZh?=
- =?utf-8?B?a2x5dVJVaS9zcDFvQStwd1FJWnRyNmpnaEthN0pvQjFOVjlYMmZ3cGw5NHg3?=
- =?utf-8?B?eTdNRGZvc25jQ3BNMHBsSjRSMXk5bmpnSExMT3h6eXJPZUM1a0hUSlFwZ3Ex?=
- =?utf-8?B?UGNzNkNxVTdjWnlUSmpTTVJvNTlheW5IWjZWb1dyYTZnK2w0R2lVU2JVNyty?=
- =?utf-8?B?RFE3WXVwbUgycmx4NUx2TUx3UHZ6RWp1eWFDU0NoaDdPOElXNysremNYUVY5?=
- =?utf-8?B?anEzZmtEZnZ4amFBZllpbHYyQTZJVkxnNzE3dDRSZUJyZ3dncjJMT0lwYXho?=
- =?utf-8?B?eWpMczMzK3h0Unljb2hRa2VrMDFKbWxmZ3ZiM0V1c3RNQ25yK2pLNmdSR3dK?=
- =?utf-8?B?dXRteXQycWpZQzZxaGZ0RDdXWDI1bklKdzEwcE1Tc0YxSkpFVTdMenI1aTZQ?=
- =?utf-8?B?dnlXbFdYZXZSd1pWYmNCbW9seUIzTlVwamRNa1g4STB0amkxWFFoR2lkaU1n?=
- =?utf-8?B?SkJOSis5SDJScVo3Y3RQZytCbFpwRHIrTEY0U0xVaExNVnkzdlBnakJwOFpa?=
- =?utf-8?B?VFRyVjVIZG9STjBxckF5VHRNVS9IMUlOV3pUTE9ObFZ0NzljVy8rZz09?=
+	=?utf-8?B?eUtaSWcwSG0vZThhL2hVS3RNaTh0eEJEY2ZXODd4WlJ4MlZlUkRTaXRjNVZ4?=
+ =?utf-8?B?NE5DaUpqd2hmWENKOVM3bXpIRmh3aDE3Skx4U25Lc3dGWnVLb2xJcEhaZURX?=
+ =?utf-8?B?bllwOHJIQ0NrTXdiRENEUmlmR3hIYVAyQzdIQkE3OStEK01RN1ZDV3lIdG5h?=
+ =?utf-8?B?QkdRYkdKcWZVOHRrVndJdFJMRFY4ekYrMzJ1dWQ0ek00cVVSbkR0VWF0QWNO?=
+ =?utf-8?B?eEQ1bVpFMmRJdy9jMWNPTEZVVzc2WGNwa2J6Y2Z2WXFFRFpjV08vMmI0a3FN?=
+ =?utf-8?B?MXdoRXZrZlp4Ri8zWTkxZy9PYTlxZUVaYUtoUmNCVW1PMjF3YmdYd0RaMzQz?=
+ =?utf-8?B?cXJOUHpKS3NmTSs2SEdZNldNQzRQNXYrMEQyb25ibE13SjRvSkFkWUtleW1P?=
+ =?utf-8?B?VEltVDNwcldyNnF6MDBwOGp3SjRZclV5SWJvci9zVFRRWUVvMzZFdGVuc2h4?=
+ =?utf-8?B?TVJDTi9XMlhjOUgrZ2p1TkY5R3BNMTlId2dTZXNWZW1qZktlZXhLcGZKTVpL?=
+ =?utf-8?B?R2Uza0FqZnVhYXdVUjlHaVhEZHdQR0xvaGNYUnlNZEtRL2s0M01GNExJQ3Z3?=
+ =?utf-8?B?c1ZjR29lbEVhNnRFWEVGMVZEMklJb1lOM2hhb253YWdsVDdXeGZ0U3JtWFMv?=
+ =?utf-8?B?Y3grb0M4ZFhZQkYrNDVIM090UHQ1YXcrUlNLRk9CNmtNdDloVGV4dHFGMko0?=
+ =?utf-8?B?YWRIeTdwN25lZndlUFdUeTc4OVVVaGMyM0xZZ1hraG80ZklUcUQ1d3ZTc1dp?=
+ =?utf-8?B?YzNIUmRNa3E4UFUwTVQ5YW4rK2ViZExXQ21kLzNMaHRkQ24rdldzbktBbU5n?=
+ =?utf-8?B?Ry8zL3lMK1pRQ1lUZWZZdEpOTk5ISnNMcHN0dW1CRUZ6cHpXb1BBeUF4NG1U?=
+ =?utf-8?B?R01TNHRWVmpERU4xNUZTZ1RPRFVJKzh6MTBHWFlHd3A4TktQcUN5TWlPdmUx?=
+ =?utf-8?B?eVE0MjlVVjBKcEp3WC90dE1lWE41WnZaRXpjSk1waWhnL05kdldGOTlZeXNj?=
+ =?utf-8?B?bXNqTUtpaXV4ekx5d3JUT3hPN1dVdGdsQko1RjZteWh3V1dpTXIrUU5nVERW?=
+ =?utf-8?B?SzZ2YnFFUmFvdDhuUzNKeU04QmdMMjdtMm1aVEFrU0drNmxpTWpYQVN0ZElj?=
+ =?utf-8?B?VVlrMGZreVlKV3VPTjZYdHJmUDdPV2s1bGtRaWRPaDNMeVNoMlNyVXRHTDZ5?=
+ =?utf-8?B?aHoxYUhkeVZBa1pDSlFReExpQjlJd0ZQQUlqZlFYeHErUDEzY3lsa1psZGs4?=
+ =?utf-8?B?UVRFTDFsN1hseXg2OWRWRC9naFVJMUx6cURMMGpKd2hjNVF6Lzk5RlQ1cDZa?=
+ =?utf-8?B?Q2pHUFlNejkzb0FGRlpBbTRKSHNjajNVUlhSSmxYL2ViYURONDdNQks4UU5W?=
+ =?utf-8?B?UjhDT1IvYmF6TXRUZThsSFYwT1VEL2R4TXplMHE3OVIrREdVOTlTdHdNRkRG?=
+ =?utf-8?B?Y2tZZHBlZGlYUy9SaU92c1BocCs4UnpLbmh1TTM4ZlNadmVwbTlsK3RWK0VO?=
+ =?utf-8?B?c3hvZnQ2MXJ6dXcxd2lFVm41aTFMTFppdXY5NElWc0lORlpOMzdTMi9hZUs2?=
+ =?utf-8?B?Y3R5emh4QS9JZ3ZDUU00SUhNaWIxbVY2eU1mcDZ1cllGdWdGak1Ga2pYTnFI?=
+ =?utf-8?B?b29GRUVUSXc0MHRnT0psdUI2cEZwOXAyWS9tSUtVek1xODQ1RHRKRzdxaDQ5?=
+ =?utf-8?B?RVdBNENRZTRLaWszV2txdkFYS3BpRUN0WXNQSjNpUWtCQ1lhV0Q5Z3ZZRTM2?=
+ =?utf-8?B?dXFmOWNnMGVweUowWDFybUViYzhhN1lISWlCN0d3SkFHcU9pTVJiQW8xNzBh?=
+ =?utf-8?B?YUFCT1hhOTZsL1hLQkNkZ3E0S0dxdi9Fbmw2S0ZGME1HSHZZYmdQSVVvZ0Jy?=
+ =?utf-8?B?QUx3Q0d1MDhNdzhabDFWazU0VEdVNDlseXNIdTRDenY1emhvbWxydVdnVll2?=
+ =?utf-8?B?YkJpeGdyYTFEaUpMTlowQVBodEp4Z3pnUEJNcHNvcVlDSzBCVmRUdDJObUtY?=
+ =?utf-8?B?UkhUeEN2NmlvYUdXN3QzUm9YLzVCdUw2MHBTM0QxRENPM3hBbyswWEsvcEdr?=
+ =?utf-8?B?Z0ZicFBmc01raUVOUUJGRjhYa1psVi9XSFJCK09Ldy9NOEdQY2diZStsalRI?=
+ =?utf-8?B?eDJodFI0YTFkNzFieERtMThKbzJqZ1dkRlhIL3FydDI2SkRYdGFaNUxnUERL?=
+ =?utf-8?B?RWdZdmFlS2M5VnJSQVU5VHQ1Skw0R0NSYXdPTSttMWppaXpyMFZSamRUdUQ1?=
+ =?utf-8?B?Szc4OForYlJSSFJUeHpRbU5GWWdCV05uZXhVTFRXcEovTU5GR0lQZFdkdklV?=
+ =?utf-8?B?eU5EVDhKdHFvdlNrRTA1YU5aWnJuNWtrNnRpVDRHZmIrdEdaT1V0Zz09?=
 X-OriginatorOrg: garyguo.net
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5352048f-bff5-4939-e8be-08decd5bb4a7
+X-MS-Exchange-CrossTenant-Network-Message-Id: fbbbe4c8-d618-4554-48e1-08decd5bb4fe
 X-MS-Exchange-CrossTenant-AuthSource: LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2026 17:04:49.0483
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Jun 2026 17:04:49.6298
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: bbc898ad-b10f-4e10-8552-d9377b823d45
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 7fnliJ8RL4f4GIZ1mQKaJQW38K+xxnFquVDVoSF7N3BHwJ1QaMMwJfteM7eM7Laf+4E0g4++r/NQ4yfl6Kos9w==
+X-MS-Exchange-CrossTenant-UserPrincipalName: NjgpGG3fjnJ60VsWSKnltPjHnIGmV0RvNRmDQGgC10DJPu5bf9dRSZkoM/Zag6to58RbNFglJvWq13riTiVcaw==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO4P265MB6966
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [1.34 / 15.00];
@@ -183,14 +184,14 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	ARC_REJECT(1.00)[cv is fail on i=2];
 	DMARC_POLICY_ALLOW(-0.50)[garyguo.net,none];
 	R_DKIM_ALLOW(-0.20)[garyguo.net:s=selector1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	MIME_TRACE(0.00)[0:+];
 	RCPT_COUNT_TWELVE(0.00)[47];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9329-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9330-lists,linux-pwm=lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FREEMAIL_TO(0.00)[linuxfoundation.org,kernel.org,protonmail.com,google.com,umich.edu,collabora.com,nvidia.com,onurozkan.dev,gmail.com,ffwll.ch,arm.com,intel.com,linux.dev,linaro.org,samsung.com,redhat.com];
 	FORGED_RECIPIENTS(0.00)[m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:dakr@kernel.org,m:ojeda@kernel.org,m:boqun@kernel.org,m:bjorn3_gh@protonmail.com,m:lossin@kernel.org,m:a.hindborg@kernel.org,m:aliceryhl@google.com,m:tmgross@umich.edu,m:daniel.almeida@collabora.com,m:tamird@kernel.org,m:acourbot@nvidia.com,m:work@onurozkan.dev,m:fujita.tomonori@gmail.com,m:airlied@gmail.com,m:simona@ffwll.ch,m:bhelgaas@google.com,m:kwilczynski@kernel.org,m:abdiel.janulgue@gmail.com,m:robin.murphy@arm.com,m:david.m.ertman@intel.com,m:iweiny@kernel.org,m:leon@kernel.org,m:lenb@kernel.org,m:igor.korotin@linux.dev,m:robh@kernel.org,m:saravanak@kernel.org,m:viresh.kumar@linaro.org,m:m.wilczynski@samsung.com,m:fustini@kernel.org,m:guoren@kernel.org,m:wefu@redhat.com,m:ukleinek@kernel.org,m:driver-core@lists.linux.dev,m:rust-for-linux@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:netdev@vger.kernel.org,m:nova-gpu@lists.linux.dev,m:dri-devel@lists.freedesktop.org,m:linux-pci@vger.kernel.org,m:lin
@@ -208,161 +209,61 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-pwm];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[garyguo.net:dkim,garyguo.net:email,garyguo.net:mid,garyguo.net:from_mime,vger.kernel.org:from_smtp,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,garyguo.net:dkim,garyguo.net:email,garyguo.net:mid,garyguo.net:from_mime,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: AD0FA6A1CE9
+X-Rspamd-Queue-Id: 7CCF86A1DCC
 
-Previously, `IdArray` contains both device ID table and info table so we
-keep a separate copy for MODULE_DEVICE_TABLE for hotplug (which needs to be
-just the device ID table). With the info being changed to be carried via
-pointers, `IdArray` is now layout compatible with raw ID table and hence
-there is no longer a need to keep the distinction.
-
-Deduplicate the code, and remove the redundant copy for hotplug purpose by
-just giving the `IdArray` instance a proper symbol name.
+The device ID table and its associated info is really just a map. Add a
+syntax to `module_device_table` macro that reflects that.
 
 Signed-off-by: Gary Guo <gary@garyguo.net>
 ---
- rust/kernel/device_id.rs | 76 +++++++++++++++++-------------------------------
- 1 file changed, 27 insertions(+), 49 deletions(-)
+ rust/kernel/device_id.rs        | 11 +++++++++++
+ samples/rust/rust_driver_pci.rs |  7 +++----
+ 2 files changed, 14 insertions(+), 4 deletions(-)
 
 diff --git a/rust/kernel/device_id.rs b/rust/kernel/device_id.rs
-index 59453588df0e..26618bcda276 100644
+index 26618bcda276..7c61cdcc9427 100644
 --- a/rust/kernel/device_id.rs
 +++ b/rust/kernel/device_id.rs
-@@ -86,28 +86,23 @@ unsafe fn info_unchecked_opt<U>(&self) -> Option<&'static U> {
-     }
- }
- 
--/// A zero-terminated device id array.
-+/// A zero-terminated device id array, followed by context data.
- #[repr(C)]
--pub struct RawIdArray<T: RawDeviceId, const N: usize> {
-+pub struct IdArray<T: RawDeviceId, U: 'static, const N: usize> {
-     // This is `MaybeUninit<T::RawType>` so any bytes inside it can carry provenance in CTFE.
-     // If this were `T::RawType`, integer fields would not be able to contain pointers.
-     ids: [MaybeUninit<T::RawType>; N],
-     sentinel: MaybeUninit<T::RawType>,
-+    phantom: PhantomData<&'static U>,
- }
- 
--impl<T: RawDeviceId, const N: usize> RawIdArray<T, N> {
--    #[doc(hidden)]
--    pub const fn size(&self) -> usize {
--        core::mem::size_of::<Self>()
--    }
--}
-+// SAFETY: device ID is plain data plus a `&'static U` and can thus be sent between threads safely
-+// if `&U` can.
-+unsafe impl<T: RawDeviceId, U: Sync + 'static, const N: usize> Send for IdArray<T, U, N> {}
- 
--/// A zero-terminated device id array, followed by context data.
--#[repr(C)]
--pub struct IdArray<T: RawDeviceId, U: 'static, const N: usize> {
--    raw_ids: RawIdArray<T, N>,
--    phantom: PhantomData<&'static U>,
--}
-+// SAFETY: device ID is plain data plus a `&'static U` and can thus be shared between threads safely
-+// if `&U` can.
-+unsafe impl<T: RawDeviceId, U: Sync + 'static, const N: usize> Sync for IdArray<T, U, N> {}
- 
- impl<T: RawDeviceId + RawDeviceIdIndex, U: 'static, const N: usize> IdArray<T, U, N> {
-     /// Creates a new instance of the array.
-@@ -137,22 +132,13 @@ impl<T: RawDeviceId + RawDeviceIdIndex, U: 'static, const N: usize> IdArray<T, U
-         core::mem::forget(ids);
- 
-         Self {
--            raw_ids: RawIdArray {
--                ids: raw_ids,
--                sentinel: MaybeUninit::zeroed(),
--            },
-+            ids: raw_ids,
-+            sentinel: MaybeUninit::zeroed(),
-             phantom: PhantomData,
-         }
-     }
- }
- 
--impl<T: RawDeviceId, U: 'static, const N: usize> IdArray<T, U, N> {
--    /// Reference to the contained [`RawIdArray`].
--    pub const fn raw_ids(&self) -> &RawIdArray<T, N> {
--        &self.raw_ids
--    }
--}
--
- impl<T: RawDeviceId, const N: usize> IdArray<T, (), N> {
-     /// Creates a new instance of the array without writing index values.
-     ///
-@@ -164,10 +150,8 @@ impl<T: RawDeviceId, const N: usize> IdArray<T, (), N> {
-         core::mem::forget(ids);
- 
-         Self {
--            raw_ids: RawIdArray {
--                ids: raw_ids,
--                sentinel: MaybeUninit::zeroed(),
--            },
-+            ids: raw_ids,
-+            sentinel: MaybeUninit::zeroed(),
-             phantom: PhantomData,
-         }
-     }
-@@ -200,13 +184,17 @@ macro_rules! module_device_table {
+@@ -183,6 +183,17 @@ macro_rules! module_device_table {
+         $table_type: literal, $device_id_ty: ty,
          $table_name: ident, $id_info_type: ty,
          [$(($id: expr, $info:expr $(,)?)),* $(,)?]
++    ) => {
++        $crate::module_device_table!(
++            $table_type, $device_id_ty, $table_name, $id_info_type,
++            {$($id=>$info,)*}
++        );
++    };
++
++    (
++        $table_type: literal, $device_id_ty: ty,
++        $table_name: ident, $id_info_type: ty,
++        {$($id: expr => $info:expr),* $(,)?}
      ) => {
--        const $table_name: $crate::device_id::IdArray<
-+        #[export_name =
-+            concat!("__mod_device_table__", line!(),
-+                    "__kmod_", module_path!(),
-+                    "__", $table_type,
-+                    "__", stringify!($table_name))
-+        ]
-+        static $table_name: $crate::device_id::IdArray<
-             $device_id_ty,
-             $id_info_type,
-             { <[$device_id_ty]>::len(&[$($id,)*]) },
-         > = $crate::device_id::IdArray::new([$(($id, &$info),)*]);
--
--        $crate::module_device_table!($table_type, $table_name);
-     };
+         #[export_name =
+             concat!("__mod_device_table__", line!(),
+diff --git a/samples/rust/rust_driver_pci.rs b/samples/rust/rust_driver_pci.rs
+index 2282191e6292..652819dff082 100644
+--- a/samples/rust/rust_driver_pci.rs
++++ b/samples/rust/rust_driver_pci.rs
+@@ -75,10 +75,9 @@ struct SampleDriverData<'bound> {
+ kernel::pci_device_table!(
+     PCI_TABLE,
+     <SampleDriver as pci::Driver>::IdInfo,
+-    [(
+-        pci::DeviceId::from_id(pci::Vendor::REDHAT, 0x5),
+-        TestIndex::NO_EVENTFD
+-    )]
++    {
++        pci::DeviceId::from_id(pci::Vendor::REDHAT, 0x5) => TestIndex::NO_EVENTFD,
++    }
+ );
  
-     // Case for no ID info.
-@@ -215,26 +203,16 @@ macro_rules! module_device_table {
-         $table_name: ident, @none,
-         [$($id: expr),* $(,)?]
-     ) => {
--        const $table_name: $crate::device_id::IdArray<
-+        #[export_name =
-+            concat!("__mod_device_table__", line!(),
-+                    "__kmod_", module_path!(),
-+                    "__", $table_type,
-+                    "__", stringify!($table_name))
-+        ]
-+        static $table_name: $crate::device_id::IdArray<
-             $device_id_ty,
-             (),
-             { <[$device_id_ty]>::len(&[$($id,)*]) },
-         > = $crate::device_id::IdArray::new_without_index([$($id),*]);
--
--        $crate::module_device_table!($table_type, $table_name);
--    };
--
--    ($table_type: literal, $table_name:ident) => {
--        const _: () = {
--            #[rustfmt::skip]
--            #[export_name =
--                concat!("__mod_device_table__", line!(),
--                        "__kmod_", module_path!(),
--                        "__", $table_type,
--                        "__", stringify!($table_name))
--            ]
--            static TABLE: [::core::mem::MaybeUninit<u8>; $table_name.raw_ids().size()] =
--                unsafe { ::core::mem::transmute_copy($table_name.raw_ids()) };
--        };
-     };
- }
+ impl SampleDriverData<'_> {
 
 -- 
 2.54.0
