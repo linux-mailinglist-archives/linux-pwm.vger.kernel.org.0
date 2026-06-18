@@ -1,51 +1,51 @@
-Return-Path: <linux-pwm+bounces-9335-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9336-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id FY+YH9x6NGr2ZAYAu9opvQ
-	(envelope-from <linux-pwm+bounces-9335-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Fri, 19 Jun 2026 01:10:20 +0200
+	id oVD8HrZ6NGrkZAYAu9opvQ
+	(envelope-from <linux-pwm+bounces-9336-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Fri, 19 Jun 2026 01:09:42 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E45C56A30A0
-	for <lists+linux-pwm@lfdr.de>; Fri, 19 Jun 2026 01:10:19 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 399D06A3084
+	for <lists+linux-pwm@lfdr.de>; Fri, 19 Jun 2026 01:09:42 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=HxlukPWF;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9335-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9335-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=aFUN8taR;
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9336-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9336-lists+linux-pwm=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id EFCEA30878F0
-	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jun 2026 23:09:19 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 1CBB8302E563
+	for <lists+linux-pwm@lfdr.de>; Thu, 18 Jun 2026 23:09:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 141F5352014;
-	Thu, 18 Jun 2026 23:09:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8463434DB4A;
+	Thu, 18 Jun 2026 23:09:19 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF0AE34DB4A;
-	Thu, 18 Jun 2026 23:09:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 431DF34EF0E;
+	Thu, 18 Jun 2026 23:09:18 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781824154; cv=none; b=lguoRihgkImxTzwUl1IH9gLSHcdfTapfOJBqNulT1dYjA12OjGrz4T+3MWuPvyAYJ45ulX/FEAMiEsnA/eDFuwmUu60nmtp582mCSy9pT8hgWOUsUoiHlJTRj3Y+hfWmCXiQ/BXVWCvfMPLciONIsVSHzeC0lpW/yJ6bwXhtVYU=
+	t=1781824159; cv=none; b=lqdXPEpyTpyTGCIfKXXdmhbqou0Lbyq+bDLir2+2sR0AL3RUHQQzUQSCum6dKGbupBrR+Grs33/JG99JiHX5F53kk/JiSEyRPRhct5nL6FBqD/RttdlWzWtVs8UqbMneza8rs3GsbPabM1r9dOhxaK4m1LNbpsIRhFJPkvvEWCk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781824154; c=relaxed/simple;
-	bh=uOa12PoX3h/toUlHuGr0ZVOkgaxjpTuBwy1sIBKW98A=;
+	s=arc-20240116; t=1781824159; c=relaxed/simple;
+	bh=457uUqmTS24lpYUbrP1x6nvPyKODR9vWc8+30ZGVOaU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NPz3Zo6EfzenFwi+tMUS2tuzcGOkn/jEXw2uNsmNZMp/kbaKrQCDICny22wF06So7p842wlTgAPjoaC/I1O8VFCKbx6apzwmRDa1DWoQxs11xGe3dWH52d1l4fcWQX+VRDGt0VS7YuSOG6uRfX+bcZE2QNtq+9g0+q4oGeC6Z6M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HxlukPWF; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D9521F000E9;
-	Thu, 18 Jun 2026 23:09:07 +0000 (UTC)
+	 MIME-Version; b=noAwZpHPsWW9ApIqy79HjL+dhChrR+l+n9igvQ7skZccaf6PS+MkHxJUe4N1mZkhSMvletPQBIf6HH8RaXGzQTqOg1ZYu/SZIfP5lOQ1vAW7ybETp73ukGynOWF5ox3bvhQkQ+5LBmM634XKB63dCLaEvInPNgPq840A2S9nSek=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aFUN8taR; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F00CE1F00A3D;
+	Thu, 18 Jun 2026 23:09:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1781824152;
-	bh=t78Uhk4IqBOMxFqpBa9dZMpGO+12MHy37WkLBCfMbCs=;
+	s=k20260515; t=1781824157;
+	bh=SBP6WXSJxj7x4d44NbokidudSGv8G0PZhRUVu2WDm2I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=HxlukPWFYilPUw9YFAvS0XcSUXwMOGbFmPqD/i4LVWcKidpHSk1U/0gze/DR1pMNz
-	 bqwSTbMBoY9+spaTAzLhfekarTR9I1Nda705GvD1yUlfvJV5pNwtvxAoT/M6dsao96
-	 8ZKQKiW5uIknUcNG/+T7SXJqC5Mgv+fDNuLf3d9McCxOx+iKaY42jol015/hfsuE+b
-	 T/8y8Bybu77IFI3FhcleQCbEA8xeOXAHgumrBto0z3JqN57ZX923BgJvUdnDryLmVK
-	 SRyzHv87Jzj8bWzNhK/qooCTSAnVJM0u1wp8oFHJraSA5HNPTW+lUVHATy5HGVZbSl
-	 eRxOnwHlfjS/A==
+	b=aFUN8taRvXQFfSeQ+cMYlV9NkCy84X9Os/Mi9xf+I5Ca2JI1I73l1qSRB0MecUBWY
+	 4jGTSfrT3ION/PPDNeAxbhkBzylgXeU0/29GQX9Y30WBx3d7lTao9xTMtnsYfESmis
+	 xzZuIx+uSk3RMPpnLMtUPkV1NN2tvFvnGVHYxAueZZo8ypE+YgwEs605TveWcYgMhn
+	 9uUNp3ChYYztYWhyXqzwgT8BSgkXH/3TZvRwAawpej+0oDSJeApqsvg0lCktkw5KB1
+	 aobVZdn8ZIB8qCFNJffhiRWSUuUvijl/prwtk43W2SRpa+nbqlYDEzPR5TabVqWACd
+	 /NaqKGKrIxNhA==
 From: Danilo Krummrich <dakr@kernel.org>
 To: gregkh@linuxfoundation.org,
 	rafael@kernel.org,
@@ -73,9 +73,9 @@ Cc: driver-core@lists.linux.dev,
 	dri-devel@lists.freedesktop.org,
 	linux-pwm@vger.kernel.org,
 	rust-for-linux@vger.kernel.org
-Subject: [PATCH v3 4/7] rust: auxiliary: sample: demonstrate ForLt with invariant Mutex type
-Date: Fri, 19 Jun 2026 01:08:30 +0200
-Message-ID: <20260618230834.812007-5-dakr@kernel.org>
+Subject: [PATCH v3 5/7] rust: devres: add DevresLt for ForLt-aware device resource access
+Date: Fri, 19 Jun 2026 01:08:31 +0200
+Message-ID: <20260618230834.812007-6-dakr@kernel.org>
 X-Mailer: git-send-email 2.54.0
 In-Reply-To: <20260618230834.812007-1-dakr@kernel.org>
 References: <20260618230834.812007-1-dakr@kernel.org>
@@ -93,14 +93,14 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	R_MISSING_CHARSET(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	MIME_TRACE(0.00)[0:+];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9335-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9336-lists,linux-pwm=lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_RECIPIENTS(0.00)[m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:dakr@kernel.org,m:ojeda@kernel.org,m:boqun@kernel.org,m:gary@garyguo.net,m:bjorn3_gh@protonmail.com,m:lossin@kernel.org,m:a.hindborg@kernel.org,m:aliceryhl@google.com,m:tmgross@umich.edu,m:acourbot@nvidia.com,m:ecourtney@nvidia.com,m:m.wilczynski@samsung.com,m:david.m.ertman@intel.com,m:ira.weiny@intel.com,m:leon@kernel.org,m:daniel.almeida@collabora.com,m:bhelgaas@google.com,m:kwilczynski@kernel.org,m:driver-core@lists.linux.dev,m:linux-kernel@vger.kernel.org,m:nova-gpu@lists.linux.dev,m:dri-devel@lists.freedesktop.org,m:linux-pwm@vger.kernel.org,m:rust-for-linux@vger.kernel.org,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[dakr@kernel.org,linux-pwm@vger.kernel.org];
@@ -116,183 +116,163 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	TO_DN_NONE(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	ALIAS_RESOLVED(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-pwm];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: E45C56A30A0
+X-Rspamd-Queue-Id: 399D06A3084
 
-Extend the auxiliary driver sample to demonstrate both access patterns:
+Devres<T> stores resources as T and returns &'a T from access(). For
+lifetime-parameterized types like Bar<'a, SIZE> that are transmuted to
+'static for storage, this exposes the synthetic 'static lifetime to
+callers -- any method on the stored type that returns a reference with
+its lifetime parameter would yield a &'static reference, which is
+unsound.
 
-  - registration_data() with CovariantForLt!(Data<'_>) for the covariant
-    data type that holds a plain &'bound reference.
+Add DevresLt<F: ForLt>, a thin wrapper around Devres<F::Of<'static>>
+that shortens the stored 'static lifetime to the caller's borrow
+lifetime in all access methods.
 
-  - registration_data_with() with ForLt!(MutexData<'_>) for an invariant
-    data type that wraps a Mutex<&'bound Device>. Since Mutex<T> is
-    invariant over T, MutexData cannot implement CovariantForLt and must
-    use the closure-based accessor.
+DevresLt::new() is unsafe because the caller must guarantee that the
+data remains valid for the device's full bound scope; the internal
+transmute from F::Of<'a> to F::Of<'static> would otherwise allow
+use-after-free.
+
+Two access patterns are provided:
+
+- CovariantForLt types get direct-reference accessors (access,
+  try_access) that return shortened references via
+  CovariantForLt::cast_ref.
+
+- Plain ForLt types use closure-based accessors (access_with,
+  try_access_with) whose universally quantified lifetime prevents
+  callers from smuggling in concrete short-lived references.
 
 Signed-off-by: Danilo Krummrich <dakr@kernel.org>
 ---
- samples/rust/rust_driver_auxiliary.rs | 94 +++++++++++++++++++--------
- 1 file changed, 68 insertions(+), 26 deletions(-)
+ rust/kernel/devres.rs | 100 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 100 insertions(+)
 
-diff --git a/samples/rust/rust_driver_auxiliary.rs b/samples/rust/rust_driver_auxiliary.rs
-index 92ee6a6d348e..e441ae81fa2c 100644
---- a/samples/rust/rust_driver_auxiliary.rs
-+++ b/samples/rust/rust_driver_auxiliary.rs
-@@ -11,14 +11,21 @@
-         Core, //
+diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
+index 11ce500e9b76..e11deff3e1be 100644
+--- a/rust/kernel/devres.rs
++++ b/rust/kernel/devres.rs
+@@ -24,6 +24,8 @@
+         Arc, //
      },
-     driver,
-+    new_mutex,
-     pci,
-     prelude::*,
--    types::CovariantForLt,
-+    sync::Mutex,
-+    types::{
+     types::{
 +        CovariantForLt,
-+        ForLt, //
-+    },
-     InPlaceModule, //
- };
- 
- const MODULE_NAME: &CStr = <LocalModule as kernel::ModuleMetadata>::NAME;
- const AUXILIARY_NAME: &CStr = c"auxiliary";
-+const COVARIANT_DEV_ID: u32 = 0;
-+const INVARIANT_DEV_ID: u32 = 1;
- 
- struct AuxiliaryDriver;
- 
-@@ -56,12 +63,26 @@ struct Data<'bound> {
-     parent: &'bound pci::Device<Bound>,
++        ForLt,
+         ForeignOwnable,
+         Opaque, //
+     },
+@@ -365,6 +367,104 @@ fn drop(&mut self) {
+     }
  }
  
-+/// Registration data with interior mutability.
++/// Guard returned by [`DevresLt::try_access`].
 +///
-+/// `Mutex<&'bound T>` is invariant over `'bound`, so this type cannot implement
-+/// [`CovariantForLt`](trait@CovariantForLt). Access must go through the closure-based
-+/// [`auxiliary::Device::registration_data_with()`].
-+#[pin_data]
-+struct MutexData<'bound> {
-+    #[pin]
-+    parent: Mutex<&'bound pci::Device<Bound>>,
-+    index: u32,
++/// Dereferences to `F::Of<'a>`, shortening the lifetime of the stored data to the guard's borrow
++/// lifetime.
++pub struct DevresGuard<'a, F: CovariantForLt>(RevocableGuard<'a, F::Of<'static>>);
++
++impl<'a, F: CovariantForLt> core::ops::Deref for DevresGuard<'a, F> {
++    type Target = F::Of<'a>;
++
++    fn deref(&self) -> &Self::Target {
++        F::cast_ref(&*self.0)
++    }
 +}
 +
- struct ParentDriver;
- 
- #[allow(clippy::type_complexity)]
-+#[pin_data]
- struct ParentData<'bound> {
-     _reg0: auxiliary::Registration<'bound, CovariantForLt!(Data<'_>)>,
--    _reg1: auxiliary::Registration<'bound, CovariantForLt!(Data<'_>)>,
-+    #[pin]
-+    _reg1: auxiliary::Registration<'bound, ForLt!(MutexData<'_>)>,
- }
- 
- kernel::pci_device_table!(
-@@ -81,17 +102,17 @@ fn probe<'bound>(
-         pdev: &'bound pci::Device<Core<'_>>,
-         _info: &'bound Self::IdInfo,
-     ) -> impl PinInit<Self::Data<'bound>, Error> + 'bound {
--        Ok(ParentData {
-+        try_pin_init!(ParentData {
-             // SAFETY: `ParentData` is the driver's private data, which is dropped when the
-             // device is unbound; i.e. `mem::forget()` is never called on it.
-             _reg0: unsafe {
-                 auxiliary::Registration::new_with_lt(
-                     pdev.as_ref(),
-                     AUXILIARY_NAME,
--                    0,
-+                    COVARIANT_DEV_ID,
-                     MODULE_NAME,
-                     Data {
--                        index: 0,
-+                        index: COVARIANT_DEV_ID,
-                         parent: pdev,
-                     },
-                 )?
-@@ -101,12 +122,16 @@ fn probe<'bound>(
-                 auxiliary::Registration::new_with_lt(
-                     pdev.as_ref(),
-                     AUXILIARY_NAME,
--                    1,
-+                    INVARIANT_DEV_ID,
-                     MODULE_NAME,
--                    Data {
--                        index: 1,
--                        parent: pdev,
--                    },
-+                    pin_init!(MutexData {
-+                        parent <- {
-+                            let pdev: &pci::Device<Bound> = pdev;
++/// Device-managed resource with [`ForLt`](trait@ForLt)-aware access.
++///
++/// `DevresLt` wraps [`Devres`] and shortens the stored `'static` lifetime to the caller's borrow
++/// lifetime in all access methods.
++///
++/// Types that implement [`trait@CovariantForLt`] get direct-reference accessors ([`Self::access`],
++/// [`Self::try_access`]). Plain [`ForLt`](trait@ForLt) types use closure-based accessors
++/// ([`Self::access_with`], [`Self::try_access_with`]).
++pub struct DevresLt<F: ForLt>(Devres<F::Of<'static>>)
++where
++    F::Of<'static>: Send;
 +
-+                            new_mutex!(pdev)
-+                        },
-+                        index: INVARIANT_DEV_ID,
-+                    }),
-                 )?
-             },
-         })
-@@ -115,22 +140,39 @@ fn probe<'bound>(
- 
- impl ParentDriver {
-     fn connect(adev: &auxiliary::Device<Bound>) -> Result {
--        let data = adev.registration_data::<CovariantForLt!(Data<'_>)>()?;
--        let pdev = data.parent;
--
--        dev_info!(
--            pdev,
--            "Connect auxiliary {} with parent: VendorID={}, DeviceID={:#x}\n",
--            adev.id(),
--            pdev.vendor_id(),
--            pdev.device_id()
--        );
--
--        dev_info!(
--            pdev,
--            "Connected to auxiliary device with index {}.\n",
--            data.index
--        );
-+        match adev.id() {
-+            // CovariantForLt types can use the direct-reference accessor.
-+            COVARIANT_DEV_ID => {
-+                let data = adev.registration_data::<CovariantForLt!(Data<'_>)>()?;
-+                let pdev = data.parent;
++impl<F: ForLt> DevresLt<F>
++where
++    F::Of<'static>: Send,
++{
++    /// Creates a new [`DevresLt`] instance of the given `data`.
++    ///
++    /// # Safety
++    ///
++    /// The data must remain valid for the device's full bound scope. [`DevresLt`] allows
++    /// access until the device is unbound, which may outlast `'a`.
++    pub unsafe fn new<'a, E>(
++        dev: &'a Device<Bound>,
++        data: impl PinInit<F::Of<'a>, E>,
++    ) -> Result<Self>
++    where
++        Error: From<E>,
++    {
++        // SAFETY: The caller guarantees the data is valid for the device's full bound scope.
++        // Lifetimes do not affect layout, so F::Of<'a> and F::Of<'static> have identical
++        // representation; casting the slot pointer is sound.
++        let data = unsafe {
++            pin_init::pin_init_from_closure::<F::Of<'static>, E>(move |slot| {
++                data.__pinned_init(slot.cast())
++            })
++        };
 +
-+                dev_info!(
-+                    pdev,
-+                    "Connect auxiliary {} with parent: VendorID={}, DeviceID={:#x}\n",
-+                    adev.id(),
-+                    pdev.vendor_id(),
-+                    pdev.device_id()
-+                );
++        Ok(Self(Devres::new(dev, data)?))
++    }
 +
-+                dev_info!(
-+                    pdev,
-+                    "Connected to auxiliary device with index {}.\n",
-+                    data.index
-+                );
-+            }
-+            // Invariant ForLt types (e.g. containing a Mutex) require the closure-based accessor.
-+            INVARIANT_DEV_ID => {
-+                adev.registration_data_with::<ForLt!(MutexData<'_>), _>(|data| {
-+                    let pdev = *data.parent.lock();
-+                    dev_info!(
-+                        pdev,
-+                        "Connected to auxiliary device with index {} (via Mutex).\n",
-+                        data.index
-+                    );
-+                })?;
-+            }
-+            _ => return Err(EINVAL),
-+        }
- 
-         Ok(())
-     }
++    /// Return a reference of the [`Device`] this [`DevresLt`] instance has been created with.
++    pub fn device(&self) -> &Device {
++        self.0.device()
++    }
++
++    /// Obtain `&F::Of<'_>`, bypassing the [`Revocable`], through a closure.
++    ///
++    /// This method works like [`DevresLt::access`](DevresLt::access) but accepts any
++    /// [`trait@ForLt`] type, not just [`trait@CovariantForLt`].
++    pub fn access_with<R, G>(&self, dev: &Device<Bound>, f: G) -> Result<R>
++    where
++        G: for<'a> FnOnce(&F::Of<'a>) -> R,
++    {
++        self.0.access(dev).map(f)
++    }
++
++    /// [`DevresLt`] accessor for [`Revocable::try_access_with`].
++    pub fn try_access_with<R, G>(&self, f: G) -> Option<R>
++    where
++        G: for<'a> FnOnce(&F::Of<'a>) -> R,
++    {
++        self.0.data().try_access_with(f)
++    }
++}
++
++impl<F: CovariantForLt> DevresLt<F>
++where
++    F::Of<'static>: Send,
++{
++    /// Obtain `&'a F::Of<'a>`, bypassing the [`Revocable`].
++    ///
++    /// This method works like [`Devres::access`], but shortens the returned reference's lifetime
++    /// from `'static` to `'a` via [`CovariantForLt::cast_ref`].
++    pub fn access<'a>(&'a self, dev: &'a Device<Bound>) -> Result<&'a F::Of<'a>> {
++        self.0.access(dev).map(F::cast_ref)
++    }
++
++    /// [`DevresLt`] accessor for [`Revocable::try_access`].
++    pub fn try_access(&self) -> Option<DevresGuard<'_, F>> {
++        self.0.data().try_access().map(DevresGuard)
++    }
++}
++
+ /// Consume `data` and [`Drop::drop`] `data` once `dev` is unbound.
+ fn register_foreign<P>(dev: &Device<Bound>, data: P) -> Result
+ where
 -- 
 2.54.0
 
