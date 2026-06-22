@@ -1,204 +1,194 @@
-Return-Path: <linux-pwm+bounces-9342-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9343-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id EHSpK6thNmoy/AYAu9opvQ
-	(envelope-from <linux-pwm+bounces-9342-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Sat, 20 Jun 2026 11:47:23 +0200
+	id GZ5cA9wvOWqboAcAu9opvQ
+	(envelope-from <linux-pwm+bounces-9343-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jun 2026 14:51:40 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id A80BC6A8B4D
-	for <lists+linux-pwm@lfdr.de>; Sat, 20 Jun 2026 11:47:22 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5C1196AF924
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jun 2026 14:51:39 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=SWahMcCG;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9342-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9342-lists+linux-pwm=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=gmail.com;
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=2")
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=A9G5hKJL;
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9343-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9343-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id BE74D3004CB1
-	for <lists+linux-pwm@lfdr.de>; Sat, 20 Jun 2026 09:47:19 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 325EA301A1CA
+	for <lists+linux-pwm@lfdr.de>; Mon, 22 Jun 2026 12:50:56 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 02C66286D56;
-	Sat, 20 Jun 2026 09:47:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0FE2F3ACEF9;
+	Mon, 22 Jun 2026 12:50:55 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-lj1-f177.google.com (mail-lj1-f177.google.com [209.85.208.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B97173769EC
-	for <linux-pwm@vger.kernel.org>; Sat, 20 Jun 2026 09:47:15 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1781948837; cv=pass; b=q3KtZcUPAO5jfjWnpc4+9sSfWksObXDdAkcYacR5LyahE6yFDW25g6ixCmOpkPE296XlyOId1mwMAsmBSxierRt8ZcDldz295rmmzbnIEh1uuBMyG7YIzSO8uSRONZ3n8WoJ2udJNd4BOUp02SjeAbQhs9mvva13zWKEPoWHMc4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1781948837; c=relaxed/simple;
-	bh=xUcOXNLvQwqaM9qZ7NC4cNyDiAh2nAPZfoRZlNEk0Hw=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=ZQm74So3BcCfZVi8sklnlnQ5/joJ7sMPPiJgCK6qxw0AJtZ1y+bmkvxRfR/pctA10qQN34iRIze3ZzCNAjt2ccU9WU8ukwYTGPdSwJ/Xp1PXFI7Rxrzkr7AzQPyLihH1fRmc0jv+epCkZYl2dqMO1dzzrNBq6xs4aTbqDRdgfqc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SWahMcCG; arc=pass smtp.client-ip=209.85.208.177
-Received: by mail-lj1-f177.google.com with SMTP id 38308e7fff4ca-3997a6196c5so19304111fa.0
-        for <linux-pwm@vger.kernel.org>; Sat, 20 Jun 2026 02:47:15 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1781948834; cv=none;
-        d=google.com; s=arc-20240605;
-        b=R4YndvFc7g5Vhy/zy6vgUAK0KwhJ2Se+fArCd2nn7O8cLpiwB+FWcRgviqcFh+QB37
-         L7r8if2hqdVbuFM/KvgoaJ7n0Bb+HSSCyKYewP1PEN5As8coLIZUKEkh6TekGliDkmU+
-         /VN3JvnSQBtwKag7X456ZRLZj14ZyeYBKr0lgu7sUhYuocOSHHb2JUeQyLrzQ1GV5qWK
-         iRG5LfJYxW5ex5ciGUDlXdqUmdG+o4Pc4a4oySTmipePEnDeXhA3VAEt5XbZmoC/mkmr
-         sKCHiMGeQROwJwxOOOrX+D/TAjRSEqueHQttVds1jiCBFLgXpKrxvfJ1S9+uG0Q2DNo5
-         IIOg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20240605;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=xUcOXNLvQwqaM9qZ7NC4cNyDiAh2nAPZfoRZlNEk0Hw=;
-        fh=5vji2cyZvvoqsmBTNIDbbwh099uFb0HrNpCWpMYmt4I=;
-        b=R008PA+GYvBm0r3TeIk2jbWHB+PZ1G8qvoPIhyFFvEqX1QYTuNEIOzBCUx6avhCX2l
-         kSCJDflDZQGAEP7xsTUvDGdeUHzKkXuD40dhQu9MLPxm38a9PGPvnFeTkKz8yMt9900t
-         82jAIi6nE6++eatSH3HGJ3ft7a24iTQT17qXEnUIzZ3+hBQxoPUBg93a0eb3j23J4ex9
-         VneKv8MYvObqzBOUMJ6AR/3LJ8xYhTO7+zIOAYQZgrNsXxeM5nFtJyuj/0dGkZAWk+wH
-         ygfCDwfjl3zcXdBLZBJsBkX4ZBGOdWa/oA9R2lPVzW9TF6wF+Khuz3eMmFEmWk9Rs4eH
-         jAkA==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1781948834; x=1782553634; darn=vger.kernel.org;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xUcOXNLvQwqaM9qZ7NC4cNyDiAh2nAPZfoRZlNEk0Hw=;
-        b=SWahMcCGh3hv5PkP88j08IQ5KT2fSU3Cd5/aMGlOrQWpuAJJLjaet/Fg6N1K10tsDv
-         aaC/XVvD97/Hh2pWFS6xe08wLzex1qobMQiO/QzD5BXOWtGBq4/4ZvP7PhnQxoVtLPnF
-         bP6AM/8whRJBzaBBKZOiivt2rLdA5c1UTiiRLsLE540WcuYKz6EgeaW+mYrwRAsU9ITV
-         3jU4RWFoSISE45ciZ9UqrVpy58vpUWKDqUTqDP75xJdJyQk+w3bZT6qG2DsTeWbXEFHA
-         vqlpODEoL9ZwinxphFZ+Zm1pAhyU/ZgschCR3zCGzFMR572DjQi6FoFEaV4ZG/twYGS/
-         GelA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1781948834; x=1782553634;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=xUcOXNLvQwqaM9qZ7NC4cNyDiAh2nAPZfoRZlNEk0Hw=;
-        b=m/Sf0vFBff2PT8jBEyPRzf/yISqHE1fn2fywaHT/50xvEZ5bfPwOiXrF0JnF8iGrgB
-         I+kJDa+4xHuAyr+34PikPcsgS8x7MrgTrDPnOEvuaac8jywOintKqhN4/dhdJTGwaGzs
-         5nOkws59ODhVCnPBIKolBtjRiw9i7M5IHMbQxznIlGa1aeH3KajO+kTb+sinfjt0QJfR
-         ng9HnnsThe6d7GkTqNtoW7xUK1CKccWfkHvyJqC0L5ihkUljTfJxdTAl3rdBRidcSOv0
-         UYOBVmqc+dASQG3QR9T/kaKwqVUUUcuGWyuev4WHMYjetfyIvgdDt9PAATGUhgrfCXeJ
-         9MLA==
-X-Forwarded-Encrypted: i=1; AFNElJ9/jSFn/YwvlJLQswBJXPzZ+iyN7kTVrvKtHK4caOJza9YiFJTG9+fG+qFcEn2sBrjbipEe6U5apjY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzH6Cqhyjc93KhQtXkbBswC6A44WF5OutBmyHjyj2ZiEIDgZ8h7
-	kwE8c6sEYZaGa1aLVi74i8S3tvJOb/dBTGP6vN5tlyzTEG1pt/753ZhPsqMBcTnpt36Tyrvk7TO
-	b69wCfTTg9SiVDxqhsCoyF5Pf18IGDdg=
-X-Gm-Gg: AfdE7clgUaHrzNkBxDOfuEpaDlqkFLSqhdLtFQD7LeGQAGr0wh/9/PZBwhN3XxEOuJI
-	jzHgrD7A048BLzPx0LGiE7eftFElKwG5ui0Z5MqOBWAIVyFVUxdc+4ORtnMG7tUpK3pQRSQebmG
-	JFC2V3nNkZJ6aP0PB17jyv+gO2jHQXjs0RG28Kdlqk8jRNgvSyFHR1q56VfANmUddKjz5/pgx9L
-	+GpMZcrJgwd+QE/dMZZ08C1lfNhTSw/IVX7nMe+GNaLX9J7QFTLMnP0AQ2mRfmbDnovKqfKfxlm
-	kbath0ozyuhUHLmYpvBmDMg7qc3Cv//9bLQZ+TJIU7/eN7aF7j8Frv+cH/0=
-X-Received: by 2002:a05:6512:250c:b0:5ad:5620:ba65 with SMTP id
- 2adb3069b0e04-5ad562d1b58mr2172436e87.50.1781948833495; Sat, 20 Jun 2026
- 02:47:13 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B9223ACEF2;
+	Mon, 22 Jun 2026 12:50:53 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782132655; cv=none; b=BAQZ3OzAU1sARzyuBlD/G1+G+1iDf30z3PNSZLrFUC7FO9MAtpUnJBIc6r+fguMBFPmLpOB8IW7h2nNo229VhxoTLmsaJNxQwx8xPwTpQluGRIT8az1fl9VGX2CYGmJmN2ZqsHU5v2P3SNHDrs1B9fgY/QKhxYenBzrnAabZbkM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782132655; c=relaxed/simple;
+	bh=6mVp55jaNHYB6u9dji7txDTXgSi8y+ZJ//lp4OG77cY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MtcDbbjaqcMFqmdmVOnzHJkVFiMWuYIeGnR1FuemSGChtkq1NtqfQvbkixPiWKsMMW1im8uOtk9F8cAcCGEUNDvLLD2fN+a6zps6Ix67izTPvpKVRBr1RCA779ltqsUCZbl506diw8j8ym6urPtY8V8R3cG3IGragS6O7cgQ5Tw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A9G5hKJL; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2AAF51F000E9;
+	Mon, 22 Jun 2026 12:50:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782132653;
+	bh=ouMp2yyZxWKwMQKl3ZNhNzaFAfZkyrWvKLzTPUCYZAc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=A9G5hKJL2lUGfy+z/rbTm+qLW9omUpA8n1ga9o/uUZFPyRPOfmAjsb1J9g0Dcj5KZ
+	 uy1v/NRI+FzNbuzpR0iUiVbEYcj6wLW0JnhyT9YPbuLtcoHvtmbxyGRCxmzxN0d+ez
+	 SzwVI3iP1ch/OGYmSWcl+XzbLZonr1gOmNpSvwQ+6uBjbBO4h7N+RtN3bUh/LDjTYh
+	 B7SbDjBujcn3QXK0CyqDdxJDi15UgaTxDkZEd6jEMSTthpoAG4PPhy58bpQ59sTkjP
+	 Mxs6gX+WOvFlWJTWwsqJYAdOofJct5bgIqVepPLmexpJbZRh9ZTtXfdPG2KG801j29
+	 UvbwhotCL0Bzw==
+Message-ID: <c4f3875c-4f39-44bf-857f-10c50a2ca6f4@kernel.org>
+Date: Mon, 22 Jun 2026 14:50:47 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-References: <20260616-pwm-loongson-fix-v1-0-491dbf260a7f@gmail.com>
- <20260616-pwm-loongson-fix-v1-2-491dbf260a7f@gmail.com> <ajLFi7NpYQVcR_4I@monoceros>
-In-Reply-To: <ajLFi7NpYQVcR_4I@monoceros>
-From: Keguang Zhang <keguang.zhang@gmail.com>
-Date: Sat, 20 Jun 2026 17:46:36 +0800
-X-Gm-Features: AVVi8Ce_nVrgpR-qRQiJ9KZSPtUUKcez0qgBWOCZ3M6gXIshc3pk5PIPf2h_BcQ
-Message-ID: <CAJhJPsVoshaOWf3woe0LF1MJu8u_ivWW_14eSTsuEctehfVD8A@mail.gmail.com>
-Subject: Re: [PATCH 2/2] pwm: loongson: Reload PWM configuration through
- counter reset
-To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Binbin Zhou <zhoubinbin@loongson.cn>, linux-pwm@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 1/2] dt-bindings: pwm: add Axiado AX3000 PWM
+To: Petar Stepanovic <pstepanovic@axiado.com>, Akhila Kavi
+ <akavi@axiado.com>, Prasad Bolisetty <pbolisetty@axiado.com>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+ Conor Dooley <conor+dt@kernel.org>, Harshit Shah <hshah@axiado.com>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <20260618-axiado-ax3000-pwm-v1-0-c9797a909414@axiado.com>
+ <20260618-axiado-ax3000-pwm-v1-1-c9797a909414@axiado.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Content-Language: en-US
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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
+In-Reply-To: <20260618-axiado-ax3000-pwm-v1-1-c9797a909414@axiado.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
+X-Spamd-Result: default: False [-5.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS(0.00)[m:ukleinek@kernel.org,m:zhoubinbin@loongson.cn,m:linux-pwm@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9342-lists,linux-pwm=lfdr.de];
-	FORGED_SENDER(0.00)[keguangzhang@gmail.com,linux-pwm@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:pstepanovic@axiado.com,m:akavi@axiado.com,m:pbolisetty@axiado.com,m:ukleinek@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:hshah@axiado.com,m:linux-pwm@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[krzk@kernel.org,linux-pwm@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCPT_COUNT_TWELVE(0.00)[12];
+	TAGGED_FROM(0.00)[bounces-9343-lists,linux-pwm=lfdr.de];
+	MIME_TRACE(0.00)[0:+];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_THREE(0.00)[4];
-	FREEMAIL_FROM(0.00)[gmail.com];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[keguangzhang@gmail.com,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
-	TAGGED_RCPT(0.00)[linux-pwm];
+	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,vger.kernel.org:from_smtp]
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: A80BC6A8B4D
+X-Rspamd-Queue-Id: 5C1196AF924
 
-On Thu, Jun 18, 2026 at 12:11=E2=80=AFAM Uwe Kleine-K=C3=B6nig <ukleinek@ke=
-rnel.org> wrote:
->
-> Hello,
->
-> On Tue, Jun 16, 2026 at 07:13:18PM +0800, Keguang Zhang via B4 Relay wrot=
-e:
-> > From: Keguang Zhang <keguang.zhang@gmail.com>
-> >
-> > By default, the Loongson PWM controller latches the LOW and PERIOD
-> > registers only at the start of each PWM period, causing configuration
-> > updates to be delayed until the next period.
-> >
-> > Reset the PWM counter when disabling the PWM and release it when enabli=
-ng
-> > the PWM to force the controller to re-latch the updated LOW and PERIOD
-> > values, allowing configuration changes to take effect immediately.
->
-> To get this right, so if the hardware runs with PERIOD =3D 17 and then is
-> disabled with say the counter at 4, and later restarted with PERIOD =3D
-> 12, the counter first goes up to 17 before the 12 becomes active, right?
->
-Yes. This is exactly what happens when updating the configuration
-without setting LOONGSON_PWM_CTRL_REG_RST.
+On 18/06/2026 14:26, Petar Stepanovic wrote:
+> +
+> +description:
+> +  The Axiado PWM controller found on AX3000 and AX3005 SoCs.
+> +
+> +allOf:
+> +  - $ref: pwm.yaml#
+> +
+> +properties:
+> +  compatible:
+> +    const: axiado,ax3000-pwm
 
-Even with disabling and re-enabling the PWM, the counter still resumes
-from the previous value and completes the current period. The only
-difference is that the counter is paused while the PWM is disabled.
+Description mentions AX3005, but there is no ax3005 compatible here.
+This is confusing.
 
-Therefore, setting LOONGSON_PWM_CTRL_REG_RST when disabling the PWM
-forces the PWM controller to re-latch the updated LOW and PERIOD values,
-allowing the updated configuration to take effect immediately when the
-PWM is re-enabled.
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    maxItems: 1
+> +
+> +  clock-names:
+> +    const: pwm
 
-> I think the commit log is a bit irritating, because (IIUC) you only
-> change the behaviour when the PWM is disabled and then reenabled. If the
-> configuration is changed while the PWM is running, the effect is still
-> delayed until the current period ends (which is complete fine and even
-> preferred).
->
-That's exactly what I mean.
-Sorry for the misleading commit log. I'll clarify it in the next version.
+Drop clock-names, not really useful if it has block's name.
 
-> Best regards
-> Uwe
+> +
+> +  "#pwm-cells":
+> +    const: 2
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - clocks
+> +
+> +additionalProperties: false
+> +
 
 
-
---=20
 Best regards,
-
-Keguang Zhang
+Krzysztof
 
