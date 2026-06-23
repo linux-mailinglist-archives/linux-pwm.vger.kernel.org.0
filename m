@@ -1,84 +1,53 @@
-Return-Path: <linux-pwm+bounces-9355-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9356-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id L57JFZGVOmoiAwgAu9opvQ
-	(envelope-from <linux-pwm+bounces-9355-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Tue, 23 Jun 2026 16:17:53 +0200
+	id rQN5N1CXOmr1AwgAu9opvQ
+	(envelope-from <linux-pwm+bounces-9356-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Tue, 23 Jun 2026 16:25:20 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 8C6BE6B7CD1
-	for <lists+linux-pwm@lfdr.de>; Tue, 23 Jun 2026 16:17:52 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 78D5A6B7DC5
+	for <lists+linux-pwm@lfdr.de>; Tue, 23 Jun 2026 16:25:20 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=B4XbcUyu;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9355-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9355-lists+linux-pwm=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=gmail.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=BTELVT6X;
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9356-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9356-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 42A073009CD4
-	for <lists+linux-pwm@lfdr.de>; Tue, 23 Jun 2026 14:16:42 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id EC6B53042188
+	for <lists+linux-pwm@lfdr.de>; Tue, 23 Jun 2026 14:25:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DD47738425A;
-	Tue, 23 Jun 2026 14:16:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C40A385D77;
+	Tue, 23 Jun 2026 14:25:12 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C227F30216D
-	for <linux-pwm@vger.kernel.org>; Tue, 23 Jun 2026 14:16:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 602E4385D9F;
+	Tue, 23 Jun 2026 14:25:11 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782224201; cv=none; b=B7PHBdzgV2fmOa3SeQmhokL80nwoFtVgE4Co7D2AYIjdNgKiak/LUB6iAAyv4dSJMtLsWSOqqrtoAwhYmTQIPZwp8qKt7149w4oqbB2Z6K1iG1bocCMqE3x4t+El4BNClSYEj9UZNCoXU/LlxXEgipGjLPWYfecCzSGyMi3Vvec=
+	t=1782224712; cv=none; b=KQ4IjsrjcZ/v6XC6qMmHkek7Pjnpkl9+G6PLyo8E6OSuWSuVTK4/SnAqmNvqOcZwvG2gB2qe5BaKFqkNU5/+O5xxgjcSpR5SXt9lr/rCORfGgpcAUrleAzIy0SGppPBEaMqUWlzptNY+QZKHBXvHi1Y7KCotsr7mlkXVN5VcBNM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782224201; c=relaxed/simple;
-	bh=tUrRzAy9axz+ACESZYkPXNYcDTB4b3V9V30KZ9JrMWs=;
+	s=arc-20240116; t=1782224712; c=relaxed/simple;
+	bh=7oRQsXSo+60k/kgJI7kCepRP3xm8mTrw+n8TIirziQs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dOeGQTxt3h99UJiC/HjGzU7D1YqpNXNFAPZDOs63i087FYXBnVXooJU2SI+16roI46T8a1BrZRLA8vYUhBI23ult9Esef+A5lSzJrkU3Ce2sOko1l590cYKnm0eMEkxXDFQprOn39lF/0cw4sf6/csLE9nin7j5+EX8fkHel0oA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=B4XbcUyu; arc=none smtp.client-ip=209.85.214.177
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-2c40397e3caso54643055ad.2
-        for <linux-pwm@vger.kernel.org>; Tue, 23 Jun 2026 07:16:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782224200; x=1782829000; darn=vger.kernel.org;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=F5jyDpTw+nbmVl4evKwREMIxAz2iLdO/axx6qTM+O1Q=;
-        b=B4XbcUyutakW4uYHwA9baO3I44hX9qJcZniAhxFN+PVW+iglYNJpbtCeSTmSWstL6z
-         cKYlEK7+k1M3LK2TQ7ZmtL7+R5fbCvhS2gSiBobhMIbYwYJYzZivVfz2dzSFIC8rgNpx
-         sQWJmoo3s6+ZgLGsVX1KOyaUOmEfxivu0uu8yV2px3VuDCrJ8+UpVKGoZptQF46VtZ3z
-         WKuPcGoWV/DkvcyA3y7j8GzOPwzC0HKMiKRgOlfN+dFkNeI2/798Ra9+J//FvTw10tFW
-         V7auUN7GVh9rPARdyGYu6IfopQhcFcfe1kkWiWXq/AFGfggdbA12N02wxEZRL0Lg0FLA
-         Xyew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782224200; x=1782829000;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=F5jyDpTw+nbmVl4evKwREMIxAz2iLdO/axx6qTM+O1Q=;
-        b=lh1Dq/OWiiSa5Eho7ybv+T67fwsJd3uHt1uxYXKeTx9j/6PeeI0J1RowWSy/6WR/OB
-         34obtTM5KNIT/Bk4pUWvPgJm6V+tgLfEWYAihXZ/hSqZhfShsU930dH4t9KGEmhc6XTX
-         9pf3pq6i4bW/QsCsqbAWqzYrPzQiTQuiAnobvDXvPnX9EtPvlE0/M1snHjGkG+48jfQj
-         WyV0p2SRzQXpqiBLMp6592tN8IbT5gtUeZm6ynSC35zcOHRPtaKKU2zduODeersBactK
-         RUGd6DPFi0TivbHYgNgkENqxegAYUkxokI8J5l7JVOV8CYvc7mPMFs3OUGsrdq3TpvaQ
-         NvoA==
-X-Forwarded-Encrypted: i=1; AHgh+RqAjr6+YmYEuz3aNTQpKPvSTc/qoaxbOxVZPZWQOBdeaV80BKqGXJVjUKWsoazOs8Fi5eSDAdqHNQY=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxPV4p6YTruCzuFNcT+txqGILNa/xdd9DL/YP3/Xb3dSGZSXikn
-	rOiKl0hw6ZVu6PmdjHwa2Na+GrNJRfn1UOaj5Gscij8WkY5ezooXxdLW
-X-Gm-Gg: AfdE7cnQLNj4LpnalASjTtjiiuT6mrHya2YFpDlVbOvef93B8Ld1MhkwizPdjb8bduw
-	2RuTJRLap6A0rFEQYcjI+IFIoRBvjyPy8k8M7BNwWG9QbDccdyHwCXWxu7lSoQ4VMlFVeMpxTYH
-	vHsCtO96SYXyEP/bRz1bYEJ98f7Kpq/hll4gM01ZnwTzQQb2Subp6j5cvgsKjub339rqHEhTgBL
-	+alQXsOvJUjIm2esf4SMvJ8cIgzHGKZc6r51OBQmeEDkXg9ANianCH5zJQ0Dtbj2YGPDAKZYTGy
-	bAMm/QtRQMZqX8B9ux5DWbEVbd+HdWK9Bdk/f7owqM3GbUHAYbIFfFdu/WwRnHKrpDEbQIIa+zB
-	rNykH3qirKthjZQmWueM9UH/Hm7GNgWajLkNZeUDh3C88fPBm09XQPi0BAJY0yv+g8aADLN9shU
-	yulOfnAFShnsfOaST+/yvmCVF5uhI46C66ClY=
-X-Received: by 2002:a17:902:e5d1:b0:2c0:cf44:3b3b with SMTP id d9443c01a7336-2c7c7684655mr32613395ad.24.1782224200074;
-        Tue, 23 Jun 2026 07:16:40 -0700 (PDT)
-Received: from [192.168.0.2] ([49.207.62.136])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-2c7436f6395sm112363965ad.28.2026.06.23.07.16.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 23 Jun 2026 07:16:39 -0700 (PDT)
-Message-ID: <464e09d2-5a8f-42ea-998a-42cf1376a6e7@gmail.com>
-Date: Tue, 23 Jun 2026 19:46:35 +0530
+	 In-Reply-To:Content-Type; b=Xj2g9rtbO32EJZUXhRxFtlCDAciZcrLv4AFOM7kO/EGqlS2EWQ+zMBiSiDVb9aMFO1aKzqcjw2anAy0A5BoeyMrvfj59/Ukr1ei4+F+8V5bpR8khp2BCej3VUOtLWLTYHtRq7bQzJ7GQpgekDTTYSioirus9K+jk/9v/wE1sI24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BTELVT6X; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C8F61F000E9;
+	Tue, 23 Jun 2026 14:25:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782224711;
+	bh=gk9hbFHImOpbizVs2PIhhafcBK7lwWYQN1LI38jKoCg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=BTELVT6X9jKsuLaQWj7lv8LaCGqowsxsGOxwN3HlvPYQIJzSD6UG52JnLASacGDXF
+	 PU54DHCEJ+9G0TCc6TZ1adj8TzmaxLA0ESrfGyfIUn0LzJLUiJbQx5jMLTeE+mzuyM
+	 115uVTQ8QAKlhDSxli/Eo1Ja2Zo/CQ+JwePE0Fuc4J1p8in4pm6zks7REFXjURCec2
+	 Ao2xMGqjAmDLenBJ1N5sDRbjZeeS59NGU+sHGQUGB8vVe5OzsAMUPWUO2i/wigrznX
+	 VJrNmCeZqi/bjVUMCbXeibL1L+Adkk+R1vaLLHwZ16t5T0GX9hzSyKoU/fng4PR4Hh
+	 7p8Z4LdCwBFwA==
+Message-ID: <761cb58f-17cd-4a0b-98eb-a38b3b619941@kernel.org>
+Date: Tue, 23 Jun 2026 16:25:05 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -87,7 +56,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v2] dt-bindings: pwm: st,pwm: convert to DT schema
-To: Krzysztof Kozlowski <krzk@kernel.org>
+To: Charan Pedumuru <charan.pedumuru@gmail.com>
 Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
  Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
  Conor Dooley <conor+dt@kernel.org>, Pal Singh <ajitpal.singh@st.com>,
@@ -95,73 +64,120 @@ Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
  linux-kernel@vger.kernel.org
 References: <20260618-st-pwm-v2-1-c792d5795ce2@gmail.com>
  <20260623-electric-adder-of-upgrade-8bdeb4@quoll>
+ <464e09d2-5a8f-42ea-998a-42cf1376a6e7@gmail.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
 Content-Language: en-US
-From: Charan Pedumuru <charan.pedumuru@gmail.com>
-In-Reply-To: <20260623-electric-adder-of-upgrade-8bdeb4@quoll>
+Autocrypt: addr=krzk@kernel.org; keydata=
+ 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
+In-Reply-To: <464e09d2-5a8f-42ea-998a-42cf1376a6e7@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
+X-Spamd-Result: default: False [-5.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9355-lists,linux-pwm=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:krzk@kernel.org,m:ukleinek@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:ajitpal.singh@st.com,m:linux-pwm@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[charanpedumuru@gmail.com,linux-pwm@vger.kernel.org];
-	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[gmail.com:+];
 	MIME_TRACE(0.00)[0:+];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:charan.pedumuru@gmail.com,m:ukleinek@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:ajitpal.singh@st.com,m:linux-pwm@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:charanpedumuru@gmail.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_COUNT_THREE(0.00)[4];
+	FREEMAIL_TO(0.00)[gmail.com];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[charanpedumuru@gmail.com,linux-pwm@vger.kernel.org];
+	FORGED_SENDER(0.00)[krzk@kernel.org,linux-pwm@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-9356-lists,linux-pwm=lfdr.de];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	RCPT_COUNT_SEVEN(0.00)[9];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	TO_DN_SOME(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 8C6BE6B7CD1
+X-Rspamd-Queue-Id: 78D5A6B7DC5
 
-
-
-On 23-06-2026 12:47, Krzysztof Kozlowski wrote:
-> On Thu, Jun 18, 2026 at 12:42:07PM +0000, Charan Pedumuru wrote:
->> +description:
->> +  The STiH41x PWM controller supports both PWM output and input capture
->> +  functionality. It provides multiple PWM output channels for generating
->> +  variable duty-cycle waveforms, and multiple input capture channels for
->> +  measuring external signal periods and pulse widths. PWM output channels
->> +  and input capture channels are configured independently via
->> +  st,pwm-num-chan and st,capture-num-chan respectively.
->> +
->> +allOf:
->> +  - $ref: pwm.yaml#
+On 23/06/2026 16:16, Charan Pedumuru wrote:
 > 
-> Where is this compatible used?
-
-I will remove this allof and redefine the YAML again
-
 > 
-> Best regards,
-> Krzysztof
+> On 23-06-2026 12:47, Krzysztof Kozlowski wrote:
+>> On Thu, Jun 18, 2026 at 12:42:07PM +0000, Charan Pedumuru wrote:
+>>> +description:
+>>> +  The STiH41x PWM controller supports both PWM output and input capture
+>>> +  functionality. It provides multiple PWM output channels for generating
+>>> +  variable duty-cycle waveforms, and multiple input capture channels for
+>>> +  measuring external signal periods and pulse widths. PWM output channels
+>>> +  and input capture channels are configured independently via
+>>> +  st,pwm-num-chan and st,capture-num-chan respectively.
+>>> +
+>>> +allOf:
+>>> +  - $ref: pwm.yaml#
+>>
+>> Where is this compatible used?
 > 
+> I will remove this allof and redefine the YAML again
+>
 
--- 
-Best Regards,
-Charan.
 
+Sorry, I think I messed something so comment was incorrectly placed.
+
+The comment should be under:
+
+"+    const: st,pwm"
+
+Best regards,
+Krzysztof
 
