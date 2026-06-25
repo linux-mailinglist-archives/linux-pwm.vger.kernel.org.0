@@ -1,54 +1,54 @@
-Return-Path: <linux-pwm+bounces-9369-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9376-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id eszwMw4APWo/vggAu9opvQ
-	(envelope-from <linux-pwm+bounces-9369-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jun 2026 12:16:46 +0200
+	id 9Gj6A68APWqEvggAu9opvQ
+	(envelope-from <linux-pwm+bounces-9376-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jun 2026 12:19:27 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id 583806C48C8
-	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jun 2026 12:16:46 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 2FCD76C4989
+	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jun 2026 12:19:26 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=g41zFLTB;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9369-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9369-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=nFKEIEtz;
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9376-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9376-lists+linux-pwm=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 748BE3048C1E
-	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jun 2026 10:16:08 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 05C8E302A6F9
+	for <lists+linux-pwm@lfdr.de>; Thu, 25 Jun 2026 10:17:26 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 603E13CF682;
-	Thu, 25 Jun 2026 10:16:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 560143CF952;
+	Thu, 25 Jun 2026 10:17:25 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B233803D1;
-	Thu, 25 Jun 2026 10:16:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB6CF3C5827;
+	Thu, 25 Jun 2026 10:17:22 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782382566; cv=none; b=MEbIx2O5a5f6PsVy0XtetPqoumCYXGxUByvw6P5DB48bhjtx5IN2vWQK3Mt4wvCpNyGWaEOwX3ZAmTQ/XABWTxmuufVoSWVWDk6H5zHC9qhcEKgS/LD44ah/5x/1ZaD/FMdv5c+rp2ZQGWbGQGHNNd7Nhb11n3PnSYRgv/zBboU=
+	t=1782382645; cv=none; b=NZXxGNX2RbuXC0Jl7f9LRZmRUaQ4qGY4/ZIL3BGoOXabPRrrA/l5rUFw2xEBNBiyliYHvCufPPp+3qwIuY3VBH4pqpqJOWTDRmgfutJAc9iueoZBG3ehXURsAPX/H4k3TPNjB4miyr/Pxc5kdVMdFv7r5KAqcrp0QNp4Sq2NapE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782382566; c=relaxed/simple;
-	bh=3uINpTzkUhozxHIus2GyzGQBK4ZG0dvDGDWbpAs8t8g=;
+	s=arc-20240116; t=1782382645; c=relaxed/simple;
+	bh=qgJ5CvuiWW1CO2UFI/2Inv/CdwLi5LnE3m7k+4jxElE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YJX71Kt2/BFTlrLZcVLmsIa8oa7RjzQlc8tuXawyVFuYYu7p/nPustBgzFfYOlhwy5tQ630uMaEDGAbKD4gFj/4doc8kJFwV9spzYjyiYmF7wXVVgZb7j9K+J8EMNb6IwPiTcbA8VszJU5F/lze1VVKdRj3Xb2Ba8llY/dukuIA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g41zFLTB; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE4911F00A3A;
-	Thu, 25 Jun 2026 10:15:54 +0000 (UTC)
+	 In-Reply-To:To:Cc; b=an2xJ1+JbWPrIhkvePQ+TrOjF2Oaw6GFFim2928u0EEI1KhIMjo40bghLB3xT+ZzckSlFeCJwv4bVybTL+wgsdJCbcTnADqfgasSlTJ2koUx/ChEjTaIV+Jj1EoVZK+raOkBmtamJELBB0CzpWqU45sL50tBGD9guu5Wfdw3eaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nFKEIEtz; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DAD41F00A3D;
+	Thu, 25 Jun 2026 10:17:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782382564;
-	bh=H5Xg/yTmsDmIapUPd9z3AV1OgB7aVzEYKvcyGnA0u9g=;
+	s=k20260515; t=1782382642;
+	bh=eyoY11o/h4FmDuo9/bSaH+M2UzOuRRnxDRfrtKJ1tBQ=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc;
-	b=g41zFLTBGsqkkSpFeYLF3eOtvkWbqEWeeo8Kw7jTMoqeW8ZdTAEQ1ZpLpIIcUMLnb
-	 bEfzUqxbnMbfV9AKc9R0P4A0VKvwyPJL7sE7TCRgJ7eQsHZUUqevO2UBudO9e7VJef
-	 XekImAFCYhnlRcIf9LCneqEBuJQ0rNC8M/ONFbZOF7VgeAJqjINtoF9gvzZp3ZD/7+
-	 fcOXEho9Vhe3GOc6ZwJtnzwvEsxAVlIPW+iKX2oQmo6Vbve5SYi84qXq+VesJbtpds
-	 O7fmBnDatIYz1+R2ykBY1yhWtEQ8v5smthl5Xyz/Wj4QcCelQIhK0LfJ1VPfryEJkl
-	 MK/Uym1yAliaA==
+	b=nFKEIEtzQnPK3TCRFy7EqenD5IMNdZveple+ecgvcDW/3gQHIGmlY9wq9rY4fLs8q
+	 aT43CdOxaB5BEDymoO46lu8WkqiyiXp2+Qcx0slfJJ6vOyPZoi8cICNj3tlAY8c5ap
+	 p+Ntwg7uJHBxzG5xS0vf7EC5z14y3GXWT+WaLz+MOC2Q1O2v3b3hSWzP27t4MJFXPa
+	 81+IrvOCryDN/3MGRWPx/jHX8y555IQAonVq7EFStbNbF0z/ilg+iP1XomJepiirTb
+	 ZRFG+dJCdJVvhnhxS7+rMiRIZOMMTvtISk8qzVq60Q5hGqpzGVP9+JBdT/7uf+nG25
+	 DLzQGL7xDqULw==
 From: Andreas Hindborg <a.hindborg@kernel.org>
-Date: Thu, 25 Jun 2026 12:15:06 +0200
-Subject: [PATCH v18 4/8] rust: page: convert to `Ownable`
+Date: Thu, 25 Jun 2026 12:15:07 +0200
+Subject: [PATCH v18 5/8] rust: rename `AlwaysRefCounted` to `RefCounted`.
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -57,7 +57,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260625-unique-ref-v18-4-4e06b5896d47@kernel.org>
+Message-Id: <20260625-unique-ref-v18-5-4e06b5896d47@kernel.org>
 References: <20260625-unique-ref-v18-0-4e06b5896d47@kernel.org>
 In-Reply-To: <20260625-unique-ref-v18-0-4e06b5896d47@kernel.org>
 To: Danilo Krummrich <dakr@kernel.org>, Lorenzo Stoakes <ljs@kernel.org>, 
@@ -94,23 +94,25 @@ Cc: Andreas Hindborg <a.hindborg@kernel.org>,
  linux-security-module@vger.kernel.org, dri-devel@lists.freedesktop.org, 
  linux-fsdevel@vger.kernel.org, linux-pm@vger.kernel.org, 
  linux-pci@vger.kernel.org, linux-pwm@vger.kernel.org, 
- Asahi Lina <lina+kernel@asahilina.net>
+ Oliver Mangold <oliver.mangold@pm.me>, 
+ Viresh Kumar <viresh.kumar@linaro.org>, 
+ Igor Korotin <igor.korotin@linux.dev>
 X-Mailer: b4 0.16-dev
-X-Developer-Signature: v=1; a=openpgp-sha256; l=11863;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=37673;
  i=a.hindborg@kernel.org; h=from:subject:message-id;
- bh=5bd0TxDzpYiKKCTrS6HXmXBDHPGtsZH/9D62Iw9UkrM=;
- b=owEBbQKS/ZANAwAKAfpQKQiqxb3QAcsmYgBqPP/BCWQM722m+yjafknz+l6FH4E7Ve8Sn88Yc
- 5K1v+J4DEiJAjMEAAEKAB0WIQRXitnI2WZ2JirAaob6UCkIqsW90AUCajz/wQAKCRD6UCkIqsW9
- 0Af5D/96+ELr5E0sqyM62OFpGK0e93aiOTYRF2KxmnoWdwI+mu65DfAd0zvFpoa4Lgd9OQIKw6F
- t3qWnQeaDosG2Bvy0UuWO814oZAchA3LXBjnxZ7fD/mauJvgNkNsajr838+6ZiH/3wv1q2ThUqv
- MW4iFZYsLUL2Y4MzHtgdoeI0mVY/BalFIWNXpC9Cx1b/OPwsIyPGt1+GUOgB0+wA7IaxboCs12B
- I8sW66sm6x94A7/JeijBk3c7u+g+r7byPsIm8Bb3F1Kdw1mzNNS+N5mUYagCwaANFwBKgTiG3JV
- Hd6la1NRxPe3GUbOe2A8ON/Lp96Au/WPzIgS5omlx15Z3Pyxz5YUW5qPdjPNNqE0nznoVAAGi7s
- 5Gj3GmOHjTLFH8jj2FtNuJZ2oTMJF9NtMBW9kXTR6pb8ZtAOB2EhlCoc9uwAf7xxi2I+COFZHkK
- D7sb82JE4PpZXsgSrd5dWL+Y69InIlx6pQc0wX492810c1XpJc1rtMHagvpe7Aqd147fm1qYAaF
- pAdkbD+Vdiqem6sZGjG8aTZ0IrVq7iQjOdSK+xe/+92Egy3gL3qLGxJ+SDTDiiUOS16RcAQrGJS
- 5Trz9VryC6e2jIAGsziImd6sGtzsOTzVobvKAqyXMb8k2K6W6XwadfEh8bf/dpTJq2I8WIqxwtY
- ZW/2VuSRkvrRR4A==
+ bh=Ge33fPenQLmIaXz9HGhJbw3zyLT2i9D50c2AUvYScUI=;
+ b=owEBbQKS/ZANAwAKAfpQKQiqxb3QAcsmYgBqPP/B1keWEBWobOEu4E5ydo5wJtBu3IQ8gcnVG
+ jXhh7QGdCGJAjMEAAEKAB0WIQRXitnI2WZ2JirAaob6UCkIqsW90AUCajz/wQAKCRD6UCkIqsW9
+ 0E1lD/9rRJugOQ0accbM6aQ752hvihYbhe0Y9U/SnXEBKsMSNT0ZEbZAqcm9yfy0wKZBeywo4JU
+ cmLZujm6h96Kk3p1QcJU6lbePnNUksWE536qSU7tES2SeKgwc4enYYBKqbCNayYhHZPMwH2Czc4
+ 7vIdCeYO4F3t4Q6r5chIbA3vbWOgni3eFwZYf4RKy4LafEDUKh6Ex/2OIv9+Wl92jbj2iSgQNJA
+ 69Zxh823fxrSHPjPcuLgihePj1jxmsVZBblDA58m7ybebMBc6A2M+nbZ97cfGJJOo/x6AZqtaCe
+ NKhOLk9s1cjIUT+B/Oa1PrQzEZUhNC9b2NelnYNL9HQB+9DAMFslSGud3fa9kjdYWlBEW6DA4rq
+ 4ju9eZI477qughzVFlI0EPCJsi+x8gRpPC4JRBver+11VIG4u0AcfeO3yO1nGyYvTrztX2vX1rD
+ XUo9hAqx5o/+tMt/I+CmEpptFkVw7Ydpfh0peabcH/adlCsU90bhgUD8Hmk+W3A1Sp1wcVz5EbM
+ Ml0il41Jlo76TObjCtao8PB3tg5n+6XIIsEMz5TXAMpxCZk5qNQ42mDS+oySCPVhNWieKhQtJ1A
+ yvFZZrbbM+TRaOLtUV8YTBep4tuB0vPai/oo9M9wY7h/Dkazb744rkoXjPU580zpLn1/F2B6ota
+ uGL1NxPwdAM6wVQ==
 X-Developer-Key: i=a.hindborg@kernel.org; a=openpgp;
  fpr=3108C10F46872E248D1FB221376EB100563EF7A7
 X-Rspamd-Action: no action
@@ -119,15 +121,15 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9369-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9376-lists,linux-pwm=lfdr.de];
 	FORGED_RECIPIENTS(0.00)[m:dakr@kernel.org,m:ljs@kernel.org,m:vbabka@kernel.org,m:liam@infradead.org,m:urezki@gmail.com,m:ojeda@kernel.org,m:boqun@kernel.org,m:gary@garyguo.net,m:bjorn3_gh@protonmail.com,m:lossin@kernel.org,m:aliceryhl@google.com,m:tmgross@umich.edu,m:daniel.almeida@collabora.com,m:tamird@kernel.org,m:acourbot@nvidia.com,m:work@onurozkan.dev,m:lyude@redhat.com,m:gregkh@linuxfoundation.org,m:arve@android.com,m:tkjos@android.com,m:brauner@kernel.org,m:cmllamas@google.com,m:rafael@kernel.org,m:david.m.ertman@intel.com,m:ira.weiny@intel.com,m:leon@kernel.org,m:paul@paul-moore.com,m:sergeh@kernel.org,m:airlied@gmail.com,m:simona@ffwll.ch,m:viro@zeniv.linux.org.uk,m:jack@suse.cz,m:igor.korotin@linux.dev,m:vireshk@kernel.org,m:nm@ti.com,m:sboyd@kernel.org,m:bhelgaas@google.com,m:kwilczynski@kernel.org,m:ptikhomirov@virtuozzo.com,m:m.wilczynski@samsung.com,m:a.hindborg@kernel.org,m:phasta@kernel.org,m:rust-for-linux@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-mm@k
- vack.org,m:driver-core@lists.linux.dev,m:linux-block@vger.kernel.org,m:linux-security-module@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:linux-fsdevel@vger.kernel.org,m:linux-pm@vger.kernel.org,m:linux-pci@vger.kernel.org,m:linux-pwm@vger.kernel.org,m:lina+kernel@asahilina.net,s:lists@lfdr.de];
+ vack.org,m:driver-core@lists.linux.dev,m:linux-block@vger.kernel.org,m:linux-security-module@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:linux-fsdevel@vger.kernel.org,m:linux-pm@vger.kernel.org,m:linux-pci@vger.kernel.org,m:linux-pwm@vger.kernel.org,m:oliver.mangold@pm.me,m:viresh.kumar@linaro.org,s:lists@lfdr.de];
 	FREEMAIL_TO(0.00)[kernel.org,infradead.org,gmail.com,garyguo.net,protonmail.com,google.com,umich.edu,collabora.com,nvidia.com,onurozkan.dev,redhat.com,linuxfoundation.org,android.com,intel.com,paul-moore.com,ffwll.ch,zeniv.linux.org.uk,suse.cz,linux.dev,ti.com,virtuozzo.com,samsung.com];
 	FORGED_SENDER(0.00)[a.hindborg@kernel.org,linux-pwm@vger.kernel.org];
 	MIME_TRACE(0.00)[0:+];
@@ -138,328 +140,1036 @@ X-Spamd-Result: default: False [-3.66 / 15.00];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	RCPT_COUNT_GT_50(0.00)[54];
+	RCPT_COUNT_GT_50(0.00)[56];
 	PRECEDENCE_BULK(0.00)[];
 	FROM_NEQ_ENVFROM(0.00)[a.hindborg@kernel.org,linux-pwm@vger.kernel.org];
 	DKIM_TRACE(0.00)[kernel.org:+];
 	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	TAGGED_RCPT(0.00)[linux-pwm,kernel];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	TAGGED_RCPT(0.00)[linux-pwm];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,pm.me:email,collabora.com:email,garyguo.net:email,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 583806C48C8
+X-Rspamd-Queue-Id: 2FCD76C4989
 
-From: Asahi Lina <lina@asahilina.net>
+From: Oliver Mangold <oliver.mangold@pm.me>
 
-This allows Page references to be returned as borrowed references,
-without necessarily owning the struct page.
+There are types where it may both be reference counted in some cases and
+owned in others. In such cases, obtaining `ARef<T>` from `&T` would be
+unsound as it allows creation of `ARef<T>` copy from `&Owned<T>`.
 
-Remove `BorrowedPage` and update users to use `Owned<Page>`.
+Therefore, we split `AlwaysRefCounted` into `RefCounted` (which `ARef<T>`
+would require) and a marker trait to indicate that the type is always
+reference counted (and not `Ownable`) so the `&T` -> `ARef<T>` conversion
+is possible.
 
-Signed-off-by: Asahi Lina <lina@asahilina.net>
-[ Andreas: Fix formatting and add a safety comment, update users. ]
+- Rename `AlwaysRefCounted` to `RefCounted`.
+- Add a new unsafe trait `AlwaysRefCounted`.
+- Implement the new trait `AlwaysRefCounted` for the newly renamed
+  `RefCounted` implementations. This leaves functionality of existing
+  implementers of `AlwaysRefCounted` intact.
+
+Suggested-by: Alice Ryhl <aliceryhl@google.com>
+Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
+Signed-off-by: Oliver Mangold <oliver.mangold@pm.me>
+[ Andreas: Updated commit message and rebase on rust-next (7.2) ]
+Acked-by: Igor Korotin <igor.korotin.linux@gmail.com>
+Acked-by: Danilo Krummrich <dakr@kernel.org>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Reviewed-by: Gary Guo <gary@garyguo.net>
+Co-developed-by: Andreas Hindborg <a.hindborg@kernel.org>
 Signed-off-by: Andreas Hindborg <a.hindborg@kernel.org>
 ---
- drivers/android/binder/page_range.rs |  10 +--
- rust/kernel/alloc/allocator.rs       |  19 +++---
- rust/kernel/alloc/allocator/iter.rs  |   6 +-
- rust/kernel/page.rs                  | 122 +++++++++--------------------------
- 4 files changed, 46 insertions(+), 111 deletions(-)
+ rust/kernel/auxiliary.rs        | 10 +++++++-
+ rust/kernel/block/mq/request.rs | 19 +++++++++-----
+ rust/kernel/cred.rs             | 16 ++++++++++--
+ rust/kernel/device.rs           | 12 +++++++--
+ rust/kernel/device/property.rs  | 11 ++++++--
+ rust/kernel/drm/device.rs       |  9 +++++--
+ rust/kernel/drm/gem/mod.rs      | 16 +++++++++---
+ rust/kernel/fs/file.rs          | 23 ++++++++++++++---
+ rust/kernel/i2c.rs              | 13 +++++++---
+ rust/kernel/mm.rs               | 22 +++++++++++++---
+ rust/kernel/mm/mmput_async.rs   | 12 +++++++--
+ rust/kernel/opp.rs              | 16 +++++++++---
+ rust/kernel/owned.rs            |  2 +-
+ rust/kernel/pci.rs              | 10 +++++++-
+ rust/kernel/pid_namespace.rs    | 15 +++++++++--
+ rust/kernel/platform.rs         | 10 +++++++-
+ rust/kernel/pwm.rs              | 12 +++++++--
+ rust/kernel/sync/aref.rs        | 57 +++++++++++++++++++++++++----------------
+ rust/kernel/task.rs             | 13 ++++++++--
+ rust/kernel/types.rs            | 12 ++++++---
+ rust/kernel/usb.rs              | 17 +++++++++---
+ 21 files changed, 255 insertions(+), 72 deletions(-)
 
-diff --git a/drivers/android/binder/page_range.rs b/drivers/android/binder/page_range.rs
-index e54a90e62402a..7941eb85b4ef4 100644
---- a/drivers/android/binder/page_range.rs
-+++ b/drivers/android/binder/page_range.rs
-@@ -33,7 +33,7 @@
-     sync::{aref::ARef, Mutex, SpinLock},
-     task::Pid,
-     transmute::FromBytes,
--    types::Opaque,
-+    types::{Opaque, Owned},
-     uaccess::UserSliceReader,
+diff --git a/rust/kernel/auxiliary.rs b/rust/kernel/auxiliary.rs
+index c42928d5a2393..854525289c8b4 100644
+--- a/rust/kernel/auxiliary.rs
++++ b/rust/kernel/auxiliary.rs
+@@ -19,6 +19,10 @@
+         to_result, //
+     },
+     prelude::*,
++    sync::aref::{
++        AlwaysRefCounted,
++        RefCounted, //
++    },
+     types::{
+         ForLt,
+         ForeignOwnable,
+@@ -344,7 +348,7 @@ unsafe impl<Ctx: device::DeviceContext> device::AsBusDevice<Ctx> for Device<Ctx>
+ kernel::impl_device_context_into_aref!(Device);
+ 
+ // SAFETY: Instances of `Device` are always reference-counted.
+-unsafe impl crate::sync::aref::AlwaysRefCounted for Device {
++unsafe impl RefCounted for Device {
+     fn inc_ref(&self) {
+         // SAFETY: The existence of a shared reference guarantees that the refcount is non-zero.
+         unsafe { bindings::get_device(self.as_ref().as_raw()) };
+@@ -363,6 +367,10 @@ unsafe fn dec_ref(obj: NonNull<Self>) {
+     }
+ }
+ 
++// SAFETY: We do not implement `Ownable`, thus it is okay to obtain an `ARef<Device>` from a
++// `&Device`.
++unsafe impl AlwaysRefCounted for Device {}
++
+ impl<Ctx: device::DeviceContext> AsRef<device::Device<Ctx>> for Device<Ctx> {
+     fn as_ref(&self) -> &device::Device<Ctx> {
+         // SAFETY: By the type invariant of `Self`, `self.as_raw()` is a pointer to a valid
+diff --git a/rust/kernel/block/mq/request.rs b/rust/kernel/block/mq/request.rs
+index ce3e30c81cb5e..8dad15ae4cfb0 100644
+--- a/rust/kernel/block/mq/request.rs
++++ b/rust/kernel/block/mq/request.rs
+@@ -9,7 +9,11 @@
+     block::mq::Operations,
+     error::Result,
+     sync::{
+-        aref::{ARef, AlwaysRefCounted},
++        aref::{
++            ARef,
++            AlwaysRefCounted,
++            RefCounted, //
++        },
+         atomic::Relaxed,
+         Refcount,
+     },
+@@ -229,11 +233,10 @@ unsafe impl<T: Operations> Send for Request<T> {}
+ // mutate `self` are internally synchronized`
+ unsafe impl<T: Operations> Sync for Request<T> {}
+ 
+-// SAFETY: All instances of `Request<T>` are reference counted. This
+-// implementation of `AlwaysRefCounted` ensure that increments to the ref count
+-// keeps the object alive in memory at least until a matching reference count
+-// decrement is executed.
+-unsafe impl<T: Operations> AlwaysRefCounted for Request<T> {
++// SAFETY: All instances of `Request<T>` are reference counted. This implementation of `RefCounted`
++// ensure that increments to the ref count keeps the object alive in memory at least until a
++// matching reference count decrement is executed.
++unsafe impl<T: Operations> RefCounted for Request<T> {
+     fn inc_ref(&self) {
+         self.wrapper_ref().refcount().inc();
+     }
+@@ -255,3 +258,7 @@ unsafe fn dec_ref(obj: core::ptr::NonNull<Self>) {
+         }
+     }
+ }
++
++// SAFETY: We currently do not implement `Ownable`, thus it is okay to obtain an `ARef<Request>`
++// from a `&Request` (but this will change in the future).
++unsafe impl<T: Operations> AlwaysRefCounted for Request<T> {}
+diff --git a/rust/kernel/cred.rs b/rust/kernel/cred.rs
+index ffa156b9df377..b17736a9adcd5 100644
+--- a/rust/kernel/cred.rs
++++ b/rust/kernel/cred.rs
+@@ -8,7 +8,15 @@
+ //!
+ //! Reference: <https://www.kernel.org/doc/html/latest/security/credentials.html>
+ 
+-use crate::{bindings, sync::aref::AlwaysRefCounted, task::Kuid, types::Opaque};
++use crate::{
++    bindings,
++    sync::aref::RefCounted,
++    task::Kuid,
++    types::{
++        AlwaysRefCounted,
++        Opaque, //
++    }, //
++};
+ 
+ /// Wraps the kernel's `struct cred`.
+ ///
+@@ -76,7 +84,7 @@ pub fn euid(&self) -> Kuid {
+ }
+ 
+ // SAFETY: The type invariants guarantee that `Credential` is always ref-counted.
+-unsafe impl AlwaysRefCounted for Credential {
++unsafe impl RefCounted for Credential {
+     #[inline]
+     fn inc_ref(&self) {
+         // SAFETY: The existence of a shared reference means that the refcount is nonzero.
+@@ -90,3 +98,7 @@ unsafe fn dec_ref(obj: core::ptr::NonNull<Credential>) {
+         unsafe { bindings::put_cred(obj.cast().as_ptr()) };
+     }
+ }
++
++// SAFETY: We do not implement `Ownable`, thus it is okay to obtain an `ARef<Credential>` from a
++// `&Credential`.
++unsafe impl AlwaysRefCounted for Credential {}
+diff --git a/rust/kernel/device.rs b/rust/kernel/device.rs
+index 645afc49a27d6..2e90f6a06fd05 100644
+--- a/rust/kernel/device.rs
++++ b/rust/kernel/device.rs
+@@ -8,8 +8,12 @@
+     bindings,
+     fmt,
+     prelude::*,
+-    sync::aref::ARef,
++    sync::aref::{
++        ARef,
++        RefCounted, //
++    },
+     types::{
++        AlwaysRefCounted,
+         ForeignOwnable,
+         Opaque, //
+     }, //
+@@ -448,7 +452,7 @@ pub fn name(&self) -> &CStr {
+ kernel::impl_device_context_into_aref!(Device);
+ 
+ // SAFETY: Instances of `Device` are always reference-counted.
+-unsafe impl crate::sync::aref::AlwaysRefCounted for Device {
++unsafe impl RefCounted for Device {
+     fn inc_ref(&self) {
+         // SAFETY: The existence of a shared reference guarantees that the refcount is non-zero.
+         unsafe { bindings::get_device(self.as_raw()) };
+@@ -460,6 +464,10 @@ unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
+     }
+ }
+ 
++// SAFETY: We do not implement `Ownable`, thus it is okay to obtain an `ARef<Device>` from a
++// `&Device`.
++unsafe impl AlwaysRefCounted for Device {}
++
+ // SAFETY: As by the type invariant `Device` can be sent to any thread.
+ unsafe impl Send for Device {}
+ 
+diff --git a/rust/kernel/device/property.rs b/rust/kernel/device/property.rs
+index 5aead835fbbc0..cee7e25013689 100644
+--- a/rust/kernel/device/property.rs
++++ b/rust/kernel/device/property.rs
+@@ -14,7 +14,10 @@
+     fmt,
+     prelude::*,
+     str::{CStr, CString},
+-    sync::aref::ARef,
++    sync::aref::{
++        ARef,
++        AlwaysRefCounted, //
++    },
+     types::Opaque,
  };
  
-@@ -198,7 +198,7 @@ unsafe impl Send for Inner {}
- #[repr(C)]
- struct PageInfo {
-     lru: bindings::list_head,
--    page: Option<Page>,
-+    page: Option<Owned<Page>>,
-     range: *const ShrinkablePageRange,
+@@ -360,7 +363,7 @@ fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
  }
  
-@@ -206,7 +206,7 @@ impl PageInfo {
-     /// # Safety
-     ///
-     /// The caller ensures that writing to `me.page` is ok, and that the page is not currently set.
--    unsafe fn set_page(me: *mut PageInfo, page: Page) {
-+    unsafe fn set_page(me: *mut PageInfo, page: Owned<Page>) {
-         // SAFETY: This pointer offset is in bounds.
-         let ptr = unsafe { &raw mut (*me).page };
- 
-@@ -229,13 +229,13 @@ unsafe fn get_page<'a>(me: *const PageInfo) -> Option<&'a Page> {
-         let ptr = unsafe { &raw const (*me).page };
- 
-         // SAFETY: The pointer is valid for reading.
--        unsafe { (*ptr).as_ref() }
-+        unsafe { (*ptr).as_deref() }
-     }
- 
-     /// # Safety
-     ///
-     /// The caller ensures that writing to `me.page` is ok for the duration of 'a.
--    unsafe fn take_page(me: *mut PageInfo) -> Option<Page> {
-+    unsafe fn take_page(me: *mut PageInfo) -> Option<Owned<Page>> {
-         // SAFETY: This pointer offset is in bounds.
-         let ptr = unsafe { &raw mut (*me).page };
- 
-diff --git a/rust/kernel/alloc/allocator.rs b/rust/kernel/alloc/allocator.rs
-index cd4203f27aed0..c7b9b069cf75d 100644
---- a/rust/kernel/alloc/allocator.rs
-+++ b/rust/kernel/alloc/allocator.rs
-@@ -169,7 +169,7 @@ unsafe fn realloc(
- }
- 
- impl Vmalloc {
--    /// Convert a pointer to a [`Vmalloc`] allocation to a [`page::BorrowedPage`].
-+    /// Convert a pointer to a [`Vmalloc`] allocation to a [`Page`](page::Page) reference.
-     ///
-     /// # Examples
-     ///
-@@ -202,20 +202,17 @@ impl Vmalloc {
-     ///
-     /// - `ptr` must be a valid pointer to a [`Vmalloc`] allocation.
-     /// - `ptr` must remain valid for the entire duration of `'a`.
--    pub unsafe fn to_page<'a>(ptr: NonNull<u8>) -> page::BorrowedPage<'a> {
-+    pub unsafe fn to_page<'a>(ptr: NonNull<u8>) -> &'a page::Page {
-         // SAFETY: `ptr` is a valid pointer to `Vmalloc` memory.
-         let page = unsafe { bindings::vmalloc_to_page(ptr.as_ptr().cast()) };
- 
--        // SAFETY: `vmalloc_to_page` returns a valid pointer to a `struct page` for a valid pointer
--        // to `Vmalloc` memory.
--        let page = unsafe { NonNull::new_unchecked(page) };
--
-         // SAFETY:
--        // - `page` is a valid pointer to a `struct page`, given that by the safety requirements of
--        //   this function `ptr` is a valid pointer to a `Vmalloc` allocation.
--        // - By the safety requirements of this function `ptr` is valid for the entire lifetime of
--        //   `'a`.
--        unsafe { page::BorrowedPage::from_raw(page) }
-+        // - `vmalloc_to_page` returns a valid, non-null pointer to a `struct page` for a valid
-+        //   pointer to `Vmalloc` memory, given that by the safety requirements of this function
-+        //   `ptr` is a valid pointer to a `Vmalloc` allocation.
-+        // - By the safety requirements of this function `ptr`, and hence the `struct page`, is
-+        //   valid for the entire lifetime of `'a`.
-+        unsafe { &*page.cast() }
+ // SAFETY: Instances of `FwNode` are always reference-counted.
+-unsafe impl crate::sync::aref::AlwaysRefCounted for FwNode {
++unsafe impl crate::sync::aref::RefCounted for FwNode {
+     fn inc_ref(&self) {
+         // SAFETY: The existence of a shared reference guarantees that the
+         // refcount is non-zero.
+@@ -374,6 +377,10 @@ unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
      }
  }
  
-diff --git a/rust/kernel/alloc/allocator/iter.rs b/rust/kernel/alloc/allocator/iter.rs
-index 02fda3ea5cae6..8dcc16ed89893 100644
---- a/rust/kernel/alloc/allocator/iter.rs
-+++ b/rust/kernel/alloc/allocator/iter.rs
-@@ -9,7 +9,7 @@
++// SAFETY: We do not implement `Ownable`, thus it is okay to obtain an `ARef<FwNode>` from a
++// `&FwNode`.
++unsafe impl AlwaysRefCounted for FwNode {}
++
+ enum Node<'a> {
+     Borrowed(&'a FwNode),
+     Owned(ARef<FwNode>),
+diff --git a/rust/kernel/drm/device.rs b/rust/kernel/drm/device.rs
+index 403fc35353c74..368742a258376 100644
+--- a/rust/kernel/drm/device.rs
++++ b/rust/kernel/drm/device.rs
+@@ -15,7 +15,8 @@
+     prelude::*,
+     sync::aref::{
+         ARef,
+-        AlwaysRefCounted, //
++        AlwaysRefCounted,
++        RefCounted, //
+     },
+     types::Opaque,
+     workqueue::{
+@@ -227,7 +228,7 @@ fn deref(&self) -> &Self::Target {
+ 
+ // SAFETY: DRM device objects are always reference counted and the get/put functions
+ // satisfy the requirements.
+-unsafe impl<T: drm::Driver> AlwaysRefCounted for Device<T> {
++unsafe impl<T: drm::Driver> RefCounted for Device<T> {
+     fn inc_ref(&self) {
+         // SAFETY: The existence of a shared reference guarantees that the refcount is non-zero.
+         unsafe { bindings::drm_dev_get(self.as_raw()) };
+@@ -242,6 +243,10 @@ unsafe fn dec_ref(obj: NonNull<Self>) {
+     }
+ }
+ 
++// SAFETY: We do not implement `Ownable`, thus it is okay to obtain an `ARef<Device>` from a
++// `&Device`.
++unsafe impl<T: drm::Driver> AlwaysRefCounted for Device<T> {}
++
+ impl<T: drm::Driver> AsRef<device::Device> for Device<T> {
+     fn as_ref(&self) -> &device::Device {
+         // SAFETY: `bindings::drm_device::dev` is valid as long as the DRM device itself is valid,
+diff --git a/rust/kernel/drm/gem/mod.rs b/rust/kernel/drm/gem/mod.rs
+index 01b5bd47a3332..30d3718578fe8 100644
+--- a/rust/kernel/drm/gem/mod.rs
++++ b/rust/kernel/drm/gem/mod.rs
+@@ -17,7 +17,7 @@
+     prelude::*,
+     sync::aref::{
+         ARef,
+-        AlwaysRefCounted, //
++        RefCounted, //
+     },
+     types::Opaque,
+ };
+@@ -29,7 +29,7 @@
+ #[cfg(CONFIG_RUST_DRM_GEM_SHMEM_HELPER)]
+ pub mod shmem;
+ 
+-/// A macro for implementing [`AlwaysRefCounted`] for any GEM object type.
++/// A macro for implementing [`RefCounted`] for any GEM object type.
+ ///
+ /// Since all GEM objects use the same refcounting scheme.
+ #[macro_export]
+@@ -42,7 +42,7 @@ impl $( <$( $tparam_id:ident ),+> )? for $type:ty
+         )?
+     ) => {
+         // SAFETY: All GEM objects are refcounted.
+-        unsafe impl $( <$( $tparam_id ),+> )? $crate::sync::aref::AlwaysRefCounted for $type
++        unsafe impl $( <$( $tparam_id ),+> )? $crate::sync::aref::RefCounted for $type
+         where
+             Self: IntoGEMObject,
+             $( $( $bind_param : $bind_trait ),+ )?
+@@ -61,6 +61,14 @@ unsafe fn dec_ref(obj: core::ptr::NonNull<Self>) {
+                 unsafe { bindings::drm_gem_object_put(obj) };
+             }
+         }
++
++        // SAFETY: We do not implement `Ownable`, thus it is okay to obtain an `ARef<$type>` from a
++        // `&$type`.
++        unsafe impl $( <$( $tparam_id ),+> )? $crate::sync::aref::AlwaysRefCounted for $type
++        where
++            Self: IntoGEMObject,
++            $( $( $bind_param : $bind_trait ),+ )?
++        {}
+     };
+ }
+ #[cfg_attr(not(CONFIG_RUST_DRM_GEM_SHMEM_HELPER), allow(unused))]
+@@ -98,7 +106,7 @@ fn close(_obj: &<Self::Driver as drm::Driver>::Object, _file: &DriverFile<Self>)
+ }
+ 
+ /// Trait that represents a GEM object subtype
+-pub trait IntoGEMObject: Sized + super::private::Sealed + AlwaysRefCounted {
++pub trait IntoGEMObject: Sized + super::private::Sealed + RefCounted {
+     /// Returns a reference to the raw `drm_gem_object` structure, which must be valid as long as
+     /// this owning object is valid.
+     fn as_raw(&self) -> *mut bindings::drm_gem_object;
+diff --git a/rust/kernel/fs/file.rs b/rust/kernel/fs/file.rs
+index 23ee689bd2400..720e57418358d 100644
+--- a/rust/kernel/fs/file.rs
++++ b/rust/kernel/fs/file.rs
+@@ -12,8 +12,15 @@
+     cred::Credential,
+     error::{code::*, to_result, Error, Result},
+     fmt,
+-    sync::aref::{ARef, AlwaysRefCounted},
+-    types::{NotThreadSafe, Opaque},
++    sync::aref::{
++        ARef,
++        RefCounted, //
++    },
++    types::{
++        AlwaysRefCounted,
++        NotThreadSafe,
++        Opaque, //
++    }, //
+ };
+ use core::ptr;
+ 
+@@ -197,7 +204,7 @@ unsafe impl Sync for File {}
+ 
+ // SAFETY: The type invariants guarantee that `File` is always ref-counted. This implementation
+ // makes `ARef<File>` own a normal refcount.
+-unsafe impl AlwaysRefCounted for File {
++unsafe impl RefCounted for File {
+     #[inline]
+     fn inc_ref(&self) {
+         // SAFETY: The existence of a shared reference means that the refcount is nonzero.
+@@ -212,6 +219,10 @@ unsafe fn dec_ref(obj: ptr::NonNull<File>) {
+     }
+ }
+ 
++// SAFETY: We do not implement `Ownable`, thus it is okay to obtain an `ARef<File>` from a
++// `&File`.
++unsafe impl AlwaysRefCounted for File {}
++
+ /// Wraps the kernel's `struct file`. Not thread safe.
+ ///
+ /// This type represents a file that is not known to be safe to transfer across thread boundaries.
+@@ -233,7 +244,7 @@ pub struct LocalFile {
+ 
+ // SAFETY: The type invariants guarantee that `LocalFile` is always ref-counted. This implementation
+ // makes `ARef<LocalFile>` own a normal refcount.
+-unsafe impl AlwaysRefCounted for LocalFile {
++unsafe impl RefCounted for LocalFile {
+     #[inline]
+     fn inc_ref(&self) {
+         // SAFETY: The existence of a shared reference means that the refcount is nonzero.
+@@ -249,6 +260,10 @@ unsafe fn dec_ref(obj: ptr::NonNull<LocalFile>) {
+     }
+ }
+ 
++// SAFETY: We do not implement `Ownable`, thus it is okay to obtain an `ARef<LocalFile>` from a
++// `&LocalFile`.
++unsafe impl AlwaysRefCounted for LocalFile {}
++
+ impl LocalFile {
+     /// Constructs a new `struct file` wrapper from a file descriptor.
+     ///
+diff --git a/rust/kernel/i2c.rs b/rust/kernel/i2c.rs
+index 624b971ca8b0b..02b2c9220eb11 100644
+--- a/rust/kernel/i2c.rs
++++ b/rust/kernel/i2c.rs
+@@ -18,7 +18,8 @@
+     prelude::*,
+     sync::aref::{
+         ARef,
+-        AlwaysRefCounted, //
++        AlwaysRefCounted,
++        RefCounted, //
+     },
+     types::Opaque, //
+ };
+@@ -424,7 +425,7 @@ pub fn get(index: i32) -> Result<ARef<Self>> {
+ kernel::impl_device_context_into_aref!(I2cAdapter);
+ 
+ // SAFETY: Instances of `I2cAdapter` are always reference-counted.
+-unsafe impl AlwaysRefCounted for I2cAdapter {
++unsafe impl RefCounted for I2cAdapter {
+     fn inc_ref(&self) {
+         // SAFETY: The existence of a shared reference guarantees that the refcount is non-zero.
+         unsafe { bindings::i2c_get_adapter(self.index()) };
+@@ -435,6 +436,9 @@ unsafe fn dec_ref(obj: NonNull<Self>) {
+         unsafe { bindings::i2c_put_adapter(obj.as_ref().as_raw()) }
+     }
+ }
++// SAFETY: We do not implement `Ownable`, thus it is okay to obtain an `ARef<Device>` from an
++// `&I2cAdapter`.
++unsafe impl AlwaysRefCounted for I2cAdapter {}
+ 
+ /// The i2c board info representation
+ ///
+@@ -500,7 +504,7 @@ unsafe impl<Ctx: device::DeviceContext> device::AsBusDevice<Ctx> for I2cClient<C
+ kernel::impl_device_context_into_aref!(I2cClient);
+ 
+ // SAFETY: Instances of `I2cClient` are always reference-counted.
+-unsafe impl AlwaysRefCounted for I2cClient {
++unsafe impl RefCounted for I2cClient {
+     fn inc_ref(&self) {
+         // SAFETY: The existence of a shared reference guarantees that the refcount is non-zero.
+         unsafe { bindings::get_device(self.as_ref().as_raw()) };
+@@ -511,6 +515,9 @@ unsafe fn dec_ref(obj: NonNull<Self>) {
+         unsafe { bindings::put_device(&raw mut (*obj.as_ref().as_raw()).dev) }
+     }
+ }
++// SAFETY: We do not implement `Ownable`, thus it is okay to obtain an `ARef<Device>` from an
++// `&I2cClient`.
++unsafe impl AlwaysRefCounted for I2cClient {}
+ 
+ impl<Ctx: device::DeviceContext> AsRef<device::Device<Ctx>> for I2cClient<Ctx> {
+     fn as_ref(&self) -> &device::Device<Ctx> {
+diff --git a/rust/kernel/mm.rs b/rust/kernel/mm.rs
+index 4764d7b68f2a7..83ed94fca14ca 100644
+--- a/rust/kernel/mm.rs
++++ b/rust/kernel/mm.rs
+@@ -13,8 +13,15 @@
+ 
+ use crate::{
+     bindings,
+-    sync::aref::{ARef, AlwaysRefCounted},
+-    types::{NotThreadSafe, Opaque},
++    sync::aref::{
++        ARef,
++        RefCounted, //
++    },
++    types::{
++        AlwaysRefCounted,
++        NotThreadSafe,
++        Opaque, //
++    }, //
+ };
+ use core::{ops::Deref, ptr::NonNull};
+ 
+@@ -55,7 +62,7 @@ unsafe impl Send for Mm {}
+ unsafe impl Sync for Mm {}
+ 
+ // SAFETY: By the type invariants, this type is always refcounted.
+-unsafe impl AlwaysRefCounted for Mm {
++unsafe impl RefCounted for Mm {
+     #[inline]
+     fn inc_ref(&self) {
+         // SAFETY: The pointer is valid since self is a reference.
+@@ -69,6 +76,9 @@ unsafe fn dec_ref(obj: NonNull<Self>) {
+     }
+ }
+ 
++// SAFETY: We do not implement `Ownable`, thus it is okay to obtain an `ARef<Mm>` from a `&Mm`.
++unsafe impl AlwaysRefCounted for Mm {}
++
+ /// A wrapper for the kernel's `struct mm_struct`.
+ ///
+ /// This type is like [`Mm`], but with non-zero `mm_users`. It can only be used when `mm_users` can
+@@ -91,7 +101,7 @@ unsafe impl Send for MmWithUser {}
+ unsafe impl Sync for MmWithUser {}
+ 
+ // SAFETY: By the type invariants, this type is always refcounted.
+-unsafe impl AlwaysRefCounted for MmWithUser {
++unsafe impl RefCounted for MmWithUser {
+     #[inline]
+     fn inc_ref(&self) {
+         // SAFETY: The pointer is valid since self is a reference.
+@@ -105,6 +115,10 @@ unsafe fn dec_ref(obj: NonNull<Self>) {
+     }
+ }
+ 
++// SAFETY: We do not implement `Ownable`, thus it is okay to obtain an `ARef<MmWithUser>` from a
++// `&MmWithUser`.
++unsafe impl AlwaysRefCounted for MmWithUser {}
++
+ // Make all `Mm` methods available on `MmWithUser`.
+ impl Deref for MmWithUser {
+     type Target = Mm;
+diff --git a/rust/kernel/mm/mmput_async.rs b/rust/kernel/mm/mmput_async.rs
+index b8d2f051225c7..8fbc396e46028 100644
+--- a/rust/kernel/mm/mmput_async.rs
++++ b/rust/kernel/mm/mmput_async.rs
+@@ -10,7 +10,11 @@
+ use crate::{
+     bindings,
+     mm::MmWithUser,
+-    sync::aref::{ARef, AlwaysRefCounted},
++    sync::aref::{
++        ARef,
++        RefCounted, //
++    },
++    types::AlwaysRefCounted,
+ };
+ use core::{ops::Deref, ptr::NonNull};
+ 
+@@ -34,7 +38,7 @@ unsafe impl Send for MmWithUserAsync {}
+ unsafe impl Sync for MmWithUserAsync {}
+ 
+ // SAFETY: By the type invariants, this type is always refcounted.
+-unsafe impl AlwaysRefCounted for MmWithUserAsync {
++unsafe impl RefCounted for MmWithUserAsync {
+     #[inline]
+     fn inc_ref(&self) {
+         // SAFETY: The pointer is valid since self is a reference.
+@@ -48,6 +52,10 @@ unsafe fn dec_ref(obj: NonNull<Self>) {
+     }
+ }
+ 
++// SAFETY: We do not implement `Ownable`, thus it is okay to obtain an `ARef<MmWithUserAsync>`
++// from a `&MmWithUserAsync`.
++unsafe impl AlwaysRefCounted for MmWithUserAsync {}
++
+ // Make all `MmWithUser` methods available on `MmWithUserAsync`.
+ impl Deref for MmWithUserAsync {
+     type Target = MmWithUser;
+diff --git a/rust/kernel/opp.rs b/rust/kernel/opp.rs
+index 62e44676125d1..b8db6bdefd077 100644
+--- a/rust/kernel/opp.rs
++++ b/rust/kernel/opp.rs
+@@ -16,8 +16,14 @@
+     ffi::{c_char, c_ulong},
+     prelude::*,
+     str::CString,
+-    sync::aref::{ARef, AlwaysRefCounted},
+-    types::Opaque,
++    sync::aref::{
++        ARef,
++        RefCounted, //
++    },
++    types::{
++        AlwaysRefCounted,
++        Opaque, //
++    }, //
+ };
+ 
+ #[cfg(CONFIG_CPU_FREQ)]
+@@ -1041,7 +1047,7 @@ unsafe impl Send for OPP {}
+ unsafe impl Sync for OPP {}
+ 
+ /// SAFETY: The type invariants guarantee that [`OPP`] is always refcounted.
+-unsafe impl AlwaysRefCounted for OPP {
++unsafe impl RefCounted for OPP {
+     #[inline]
+     fn inc_ref(&self) {
+         // SAFETY: The existence of a shared reference means that the refcount is nonzero.
+@@ -1055,6 +1061,10 @@ unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
+     }
+ }
+ 
++// SAFETY: We do not implement `Ownable`, thus it is okay to obtain an `ARef<OPP>` from an
++// `&OPP`.
++unsafe impl AlwaysRefCounted for OPP {}
++
+ impl OPP {
+     /// Creates an owned reference to a [`OPP`] from a valid pointer.
+     ///
+diff --git a/rust/kernel/owned.rs b/rust/kernel/owned.rs
+index 9c92d4a83cc1b..e79936c00002c 100644
+--- a/rust/kernel/owned.rs
++++ b/rust/kernel/owned.rs
+@@ -27,7 +27,7 @@
+ ///
+ /// Note: The underlying object is not required to provide internal reference counting, because it
+ /// represents a unique, owned reference. If reference counting (on the Rust side) is required,
+-/// [`AlwaysRefCounted`](crate::sync::aref::AlwaysRefCounted) should be implemented.
++/// [`RefCounted`](crate::types::RefCounted) should be implemented.
+ ///
+ /// # Examples
+ ///
+diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
+index 5071cae6543fd..ea9ef99cecb07 100644
+--- a/rust/kernel/pci.rs
++++ b/rust/kernel/pci.rs
+@@ -19,6 +19,10 @@
+     },
+     prelude::*,
+     str::CStr,
++    sync::aref::{
++        AlwaysRefCounted,
++        RefCounted, //
++    },
+     types::Opaque,
+     ThisModule, //
+ };
+@@ -481,7 +485,7 @@ unsafe impl<Ctx: device::DeviceContext> device::AsBusDevice<Ctx> for Device<Ctx>
+ impl<'a> crate::dma::Device<'a> for Device<device::Core<'a>> {}
+ 
+ // SAFETY: Instances of `Device` are always reference-counted.
+-unsafe impl crate::sync::aref::AlwaysRefCounted for Device {
++unsafe impl RefCounted for Device {
+     fn inc_ref(&self) {
+         // SAFETY: The existence of a shared reference guarantees that the refcount is non-zero.
+         unsafe { bindings::pci_dev_get(self.as_raw()) };
+@@ -493,6 +497,10 @@ unsafe fn dec_ref(obj: NonNull<Self>) {
+     }
+ }
+ 
++// SAFETY: We do not implement `Ownable`, thus it is okay to obtain an `ARef<Device>` from a
++// `&Device`.
++unsafe impl AlwaysRefCounted for Device {}
++
+ impl<Ctx: device::DeviceContext> AsRef<device::Device<Ctx>> for Device<Ctx> {
+     fn as_ref(&self) -> &device::Device<Ctx> {
+         // SAFETY: By the type invariant of `Self`, `self.as_raw()` is a pointer to a valid
+diff --git a/rust/kernel/pid_namespace.rs b/rust/kernel/pid_namespace.rs
+index 979a9718f153d..067f68b99e8c5 100644
+--- a/rust/kernel/pid_namespace.rs
++++ b/rust/kernel/pid_namespace.rs
+@@ -7,7 +7,14 @@
+ //! C header: [`include/linux/pid_namespace.h`](srctree/include/linux/pid_namespace.h) and
+ //! [`include/linux/pid.h`](srctree/include/linux/pid.h)
+ 
+-use crate::{bindings, sync::aref::AlwaysRefCounted, types::Opaque};
++use crate::{
++    bindings,
++    sync::aref::RefCounted,
++    types::{
++        AlwaysRefCounted,
++        Opaque, //
++    }, //
++};
+ use core::ptr;
+ 
+ /// Wraps the kernel's `struct pid_namespace`. Thread safe.
+@@ -41,7 +48,7 @@ pub unsafe fn from_ptr<'a>(ptr: *const bindings::pid_namespace) -> &'a Self {
+ }
+ 
+ // SAFETY: Instances of `PidNamespace` are always reference-counted.
+-unsafe impl AlwaysRefCounted for PidNamespace {
++unsafe impl RefCounted for PidNamespace {
+     #[inline]
+     fn inc_ref(&self) {
+         // SAFETY: The existence of a shared reference means that the refcount is nonzero.
+@@ -55,6 +62,10 @@ unsafe fn dec_ref(obj: ptr::NonNull<PidNamespace>) {
+     }
+ }
+ 
++// SAFETY: We do not implement `Ownable`, thus it is okay to obtain an `ARef<PidNamespace>` from
++// a `&PidNamespace`.
++unsafe impl AlwaysRefCounted for PidNamespace {}
++
+ // SAFETY:
+ // - `PidNamespace::dec_ref` can be called from any thread.
+ // - It is okay to send ownership of `PidNamespace` across thread boundaries.
+diff --git a/rust/kernel/platform.rs b/rust/kernel/platform.rs
+index 9b362e0495d32..0ba676445b06d 100644
+--- a/rust/kernel/platform.rs
++++ b/rust/kernel/platform.rs
+@@ -27,6 +27,10 @@
+     },
+     of,
+     prelude::*,
++    sync::aref::{
++        AlwaysRefCounted,
++        RefCounted, //
++    },
+     types::Opaque,
+     ThisModule, //
+ };
+@@ -518,7 +522,7 @@ pub fn optional_irq_by_name(&self, name: &CStr) -> Result<IrqRequest<'_>> {
+ impl<'a> crate::dma::Device<'a> for Device<device::Core<'a>> {}
+ 
+ // SAFETY: Instances of `Device` are always reference-counted.
+-unsafe impl crate::sync::aref::AlwaysRefCounted for Device {
++unsafe impl RefCounted for Device {
+     fn inc_ref(&self) {
+         // SAFETY: The existence of a shared reference guarantees that the refcount is non-zero.
+         unsafe { bindings::get_device(self.as_ref().as_raw()) };
+@@ -530,6 +534,10 @@ unsafe fn dec_ref(obj: NonNull<Self>) {
+     }
+ }
+ 
++// SAFETY: We do not implement `Ownable`, thus it is okay to obtain an `ARef<Device>` from a
++// `&Device`.
++unsafe impl AlwaysRefCounted for Device {}
++
+ impl<Ctx: device::DeviceContext> AsRef<device::Device<Ctx>> for Device<Ctx> {
+     fn as_ref(&self) -> &device::Device<Ctx> {
+         // SAFETY: By the type invariant of `Self`, `self.as_raw()` is a pointer to a valid
+diff --git a/rust/kernel/pwm.rs b/rust/kernel/pwm.rs
+index 6c9d667009ef7..2d1cd74dd98e1 100644
+--- a/rust/kernel/pwm.rs
++++ b/rust/kernel/pwm.rs
+@@ -13,7 +13,11 @@
+     devres,
+     error::{self, to_result},
+     prelude::*,
+-    sync::aref::{ARef, AlwaysRefCounted},
++    sync::aref::{
++        ARef,
++        AlwaysRefCounted,
++        RefCounted, //
++    },
+     types::Opaque, //
+ };
+ use core::{
+@@ -629,7 +633,7 @@ pub fn new<'a>(
+ }
+ 
+ // SAFETY: Implements refcounting for `Chip` using the embedded `struct device`.
+-unsafe impl<T: PwmOps> AlwaysRefCounted for Chip<T> {
++unsafe impl<T: PwmOps> RefCounted for Chip<T> {
+     #[inline]
+     fn inc_ref(&self) {
+         // SAFETY: `self.0.get()` points to a valid `pwm_chip` because `self` exists.
+@@ -647,6 +651,10 @@ unsafe fn dec_ref(obj: NonNull<Chip<T>>) {
+     }
+ }
+ 
++// SAFETY: We do not implement `Ownable`, thus it is okay to obtain an `ARef<Chip<T>>` from a
++// `&Chip<T>`.
++unsafe impl<T: PwmOps> AlwaysRefCounted for Chip<T> {}
++
+ // SAFETY: `Chip` is a wrapper around `*mut bindings::pwm_chip`. The underlying C
+ // structure's state is managed and synchronized by the kernel's device model
+ // and PWM core locking mechanisms. Therefore, it is safe to move the `Chip`
+diff --git a/rust/kernel/sync/aref.rs b/rust/kernel/sync/aref.rs
+index 3bd5eb8a1a526..fb7466a362741 100644
+--- a/rust/kernel/sync/aref.rs
++++ b/rust/kernel/sync/aref.rs
+@@ -24,11 +24,9 @@
      ptr::NonNull, //
  };
  
--/// An [`Iterator`] of [`page::BorrowedPage`] items owned by a [`Vmalloc`] allocation.
-+/// An [`Iterator`] of [`Page`](page::Page) references owned by a [`Vmalloc`] allocation.
+-/// Types that are _always_ reference counted.
++/// Types that are internally reference counted.
  ///
- /// # Guarantees
+ /// It allows such types to define their own custom ref increment and decrement functions.
+-/// Additionally, it allows users to convert from a shared reference `&T` to an owned reference
+-/// [`ARef<T>`].
  ///
-@@ -28,11 +28,11 @@ pub struct VmallocPageIter<'a> {
-     size: usize,
-     /// The current page index of the [`Iterator`].
-     index: usize,
--    _p: PhantomData<page::BorrowedPage<'a>>,
-+    _p: PhantomData<&'a page::Page>,
+ /// This is usually implemented by wrappers to existing structures on the C side of the code. For
+ /// Rust code, the recommendation is to use [`Arc`](crate::sync::Arc) to create reference-counted
+@@ -45,9 +43,8 @@
+ /// at least until matching decrements are performed.
+ ///
+ /// Implementers must also ensure that all instances are reference-counted. (Otherwise they
+-/// won't be able to honour the requirement that [`AlwaysRefCounted::inc_ref`] keep the object
+-/// alive.)
+-pub unsafe trait AlwaysRefCounted {
++/// won't be able to honour the requirement that [`RefCounted::inc_ref`] keep the object alive.)
++pub unsafe trait RefCounted {
+     /// Increments the reference count on the object.
+     fn inc_ref(&self);
+ 
+@@ -60,11 +57,27 @@ pub unsafe trait AlwaysRefCounted {
+     /// Callers must ensure that there was a previous matching increment to the reference count,
+     /// and that the object is no longer used after its reference count is decremented (as it may
+     /// result in the object being freed), unless the caller owns another increment on the refcount
+-    /// (e.g., it calls [`AlwaysRefCounted::inc_ref`] twice, then calls
+-    /// [`AlwaysRefCounted::dec_ref`] once).
++    /// (e.g., it calls [`RefCounted::inc_ref`] twice, then calls [`RefCounted::dec_ref`] once).
+     unsafe fn dec_ref(obj: NonNull<Self>);
  }
  
- impl<'a> Iterator for VmallocPageIter<'a> {
--    type Item = page::BorrowedPage<'a>;
-+    type Item = &'a page::Page;
++/// Always reference-counted type.
++///
++/// It allows deriving a counted reference [`ARef<T>`] from a `&T`.
++///
++/// This provides some convenience, but it allows "escaping" borrow checks on `&T`. As it
++/// complicates attempts to ensure that a reference to T is unique, it is optional to provide for
++/// [`RefCounted`] types. See *Safety* below.
++///
++/// # Safety
++///
++/// Implementers must ensure that no safety invariants are violated by upgrading an `&T` to an
++/// [`ARef<T>`]. In particular that implies [`AlwaysRefCounted`] and [`crate::types::Ownable`]
++/// cannot be implemented for the same type, as this would allow violating the uniqueness guarantee
++/// of [`crate::types::Owned<T>`] by dereferencing it into an `&T` and obtaining an [`ARef`] from
++/// that.
++pub unsafe trait AlwaysRefCounted: RefCounted {}
++
+ /// An owned reference to an always-reference-counted object.
+ ///
+ /// The object's reference count is automatically decremented when an instance of [`ARef`] is
+@@ -75,7 +88,7 @@ pub unsafe trait AlwaysRefCounted {
+ ///
+ /// The pointer stored in `ptr` is non-null and valid for the lifetime of the [`ARef`] instance. In
+ /// particular, the [`ARef`] instance owns an increment on the underlying object's reference count.
+-pub struct ARef<T: AlwaysRefCounted> {
++pub struct ARef<T: RefCounted> {
+     ptr: NonNull<T>,
+     _p: PhantomData<T>,
+ }
+@@ -84,19 +97,19 @@ pub struct ARef<T: AlwaysRefCounted> {
+ // it effectively means sharing `&T` (which is safe because `T` is `Sync`); additionally, it needs
+ // `T` to be `Send` because any thread that has an `ARef<T>` may ultimately access `T` using a
+ // mutable reference, for example, when the reference count reaches zero and `T` is dropped.
+-unsafe impl<T: AlwaysRefCounted + Sync + Send> Send for ARef<T> {}
++unsafe impl<T: RefCounted + Sync + Send> Send for ARef<T> {}
  
-     fn next(&mut self) -> Option<Self::Item> {
-         let offset = self.index.checked_mul(page::PAGE_SIZE)?;
-diff --git a/rust/kernel/page.rs b/rust/kernel/page.rs
-index 8affd8262891b..6dc1c2395acaf 100644
---- a/rust/kernel/page.rs
-+++ b/rust/kernel/page.rs
-@@ -12,16 +12,16 @@
-         code::*,
-         Result, //
-     },
+ // SAFETY: It is safe to send `&ARef<T>` to another thread when the underlying `T` is `Sync`
+ // because it effectively means sharing `&T` (which is safe because `T` is `Sync`); additionally,
+ // it needs `T` to be `Send` because any thread that has a `&ARef<T>` may clone it and get an
+ // `ARef<T>` on that thread, so the thread may ultimately access `T` using a mutable reference, for
+ // example, when the reference count reaches zero and `T` is dropped.
+-unsafe impl<T: AlwaysRefCounted + Sync + Send> Sync for ARef<T> {}
++unsafe impl<T: RefCounted + Sync + Send> Sync for ARef<T> {}
+ 
+ // Even if `T` is pinned, pointers to `T` can still move.
+-impl<T: AlwaysRefCounted> Unpin for ARef<T> {}
++impl<T: RefCounted> Unpin for ARef<T> {}
+ 
+-impl<T: AlwaysRefCounted> ARef<T> {
++impl<T: RefCounted> ARef<T> {
+     /// Creates a new instance of [`ARef`].
+     ///
+     /// It takes over an increment of the reference count on the underlying object.
+@@ -125,12 +138,12 @@ pub unsafe fn from_raw(ptr: NonNull<T>) -> Self {
+     ///
+     /// ```
+     /// use core::ptr::NonNull;
+-    /// use kernel::sync::aref::{ARef, AlwaysRefCounted};
++    /// use kernel::sync::aref::{ARef, RefCounted};
+     ///
+     /// struct Empty {}
+     ///
+     /// # // SAFETY: TODO.
+-    /// unsafe impl AlwaysRefCounted for Empty {
++    /// unsafe impl RefCounted for Empty {
+     ///     fn inc_ref(&self) {}
+     ///     unsafe fn dec_ref(_obj: NonNull<Self>) {}
+     /// }
+@@ -148,7 +161,7 @@ pub fn into_raw(me: Self) -> NonNull<T> {
+     }
+ }
+ 
+-impl<T: AlwaysRefCounted> Clone for ARef<T> {
++impl<T: RefCounted> Clone for ARef<T> {
+     fn clone(&self) -> Self {
+         self.inc_ref();
+         // SAFETY: We just incremented the refcount above.
+@@ -156,7 +169,7 @@ fn clone(&self) -> Self {
+     }
+ }
+ 
+-impl<T: AlwaysRefCounted> Deref for ARef<T> {
++impl<T: RefCounted> Deref for ARef<T> {
+     type Target = T;
+ 
+     fn deref(&self) -> &Self::Target {
+@@ -173,7 +186,7 @@ fn from(b: &T) -> Self {
+     }
+ }
+ 
+-impl<T: AlwaysRefCounted> Drop for ARef<T> {
++impl<T: RefCounted> Drop for ARef<T> {
+     fn drop(&mut self) {
+         // SAFETY: The type invariants guarantee that the `ARef` owns the reference we're about to
+         // decrement.
+@@ -183,19 +196,19 @@ fn drop(&mut self) {
+ 
+ impl<T, U> PartialEq<ARef<U>> for ARef<T>
+ where
+-    T: AlwaysRefCounted + PartialEq<U>,
+-    U: AlwaysRefCounted,
++    T: RefCounted + PartialEq<U>,
++    U: RefCounted,
+ {
+     #[inline]
+     fn eq(&self, other: &ARef<U>) -> bool {
+         T::eq(&**self, &**other)
+     }
+ }
+-impl<T: AlwaysRefCounted + Eq> Eq for ARef<T> {}
++impl<T: RefCounted + Eq> Eq for ARef<T> {}
+ 
+ impl<T, U> PartialEq<&'_ U> for ARef<T>
+ where
+-    T: AlwaysRefCounted + PartialEq<U>,
++    T: RefCounted + PartialEq<U>,
+ {
+     #[inline]
+     fn eq(&self, other: &&U) -> bool {
+diff --git a/rust/kernel/task.rs b/rust/kernel/task.rs
+index 38273f4eedb51..6259430b0ca31 100644
+--- a/rust/kernel/task.rs
++++ b/rust/kernel/task.rs
+@@ -10,7 +10,12 @@
+     pid_namespace::PidNamespace,
+     prelude::*,
+     sync::aref::ARef,
+-    types::{NotThreadSafe, Opaque},
 +    types::{
++        AlwaysRefCounted,
++        NotThreadSafe,
 +        Opaque,
++        RefCounted, //
++    },
+ };
+ use core::{
+     ops::Deref,
+@@ -347,7 +352,7 @@ pub fn group_leader(&self) -> &Task {
+ }
+ 
+ // SAFETY: The type invariants guarantee that `Task` is always refcounted.
+-unsafe impl crate::sync::aref::AlwaysRefCounted for Task {
++unsafe impl RefCounted for Task {
+     #[inline]
+     fn inc_ref(&self) {
+         // SAFETY: The existence of a shared reference means that the refcount is nonzero.
+@@ -361,6 +366,10 @@ unsafe fn dec_ref(obj: ptr::NonNull<Self>) {
+     }
+ }
+ 
++// SAFETY: We do not implement `Ownable`, thus it is okay to obtain an `ARef<Task>` from a
++// `&Task`.
++unsafe impl AlwaysRefCounted for Task {}
++
+ impl PartialEq for Task {
+     #[inline]
+     fn eq(&self, other: &Self) -> bool {
+diff --git a/rust/kernel/types.rs b/rust/kernel/types.rs
+index c41eab0ec983c..5ef763717e59a 100644
+--- a/rust/kernel/types.rs
++++ b/rust/kernel/types.rs
+@@ -15,9 +15,15 @@
+ pub mod for_lt;
+ pub use for_lt::ForLt;
+ 
+-pub use crate::owned::{
+-    Ownable,
+-    Owned, //
++pub use crate::{
++    owned::{
 +        Ownable,
 +        Owned, //
 +    },
-     uaccess::UserSliceReader, //
- };
--use core::{
--    marker::PhantomData,
--    mem::ManuallyDrop,
--    ops::Deref,
--    ptr::{
--        self,
--        NonNull, //
--    }, //
-+use core::ptr::{
-+    self,
-+    NonNull, //
++    sync::aref::{
++        AlwaysRefCounted,
++        RefCounted, //
++    }, //
  };
  
- /// A bitwise shift for the page size.
-@@ -65,93 +65,29 @@ pub const fn page_align(addr: usize) -> Option<usize> {
-     Some(sum & PAGE_MASK)
+ /// Used to transfer ownership to and from foreign (non-Rust) languages.
+diff --git a/rust/kernel/usb.rs b/rust/kernel/usb.rs
+index 7aff0c82d0afc..59350c6b0df2a 100644
+--- a/rust/kernel/usb.rs
++++ b/rust/kernel/usb.rs
+@@ -18,7 +18,10 @@
+         to_result, //
+     },
+     prelude::*,
+-    sync::aref::AlwaysRefCounted,
++    sync::aref::{
++        AlwaysRefCounted,
++        RefCounted, //
++    },
+     types::Opaque,
+     ThisModule, //
+ };
+@@ -392,7 +395,7 @@ fn as_ref(&self) -> &Device {
  }
  
--/// Representation of a non-owning reference to a [`Page`].
--///
--/// This type provides a borrowed version of a [`Page`] that is owned by some other entity, e.g. a
--/// [`Vmalloc`] allocation such as [`VBox`].
--///
--/// # Example
--///
--/// ```
--/// # use kernel::{bindings, prelude::*};
--/// use kernel::page::{BorrowedPage, Page, PAGE_SIZE};
--/// # use core::{mem::MaybeUninit, ptr, ptr::NonNull };
--///
--/// fn borrow_page<'a>(vbox: &'a mut VBox<MaybeUninit<[u8; PAGE_SIZE]>>) -> BorrowedPage<'a> {
--///     let ptr = ptr::from_ref(&**vbox);
--///
--///     // SAFETY: `ptr` is a valid pointer to `Vmalloc` memory.
--///     let page = unsafe { bindings::vmalloc_to_page(ptr.cast()) };
--///
--///     // SAFETY: `vmalloc_to_page` returns a valid pointer to a `struct page` for a valid
--///     // pointer to `Vmalloc` memory.
--///     let page = unsafe { NonNull::new_unchecked(page) };
--///
--///     // SAFETY:
--///     // - `self.0` is a valid pointer to a `struct page`.
--///     // - `self.0` is valid for the entire lifetime of `self`.
--///     unsafe { BorrowedPage::from_raw(page) }
--/// }
--///
--/// let mut vbox = VBox::<[u8; PAGE_SIZE]>::new_uninit(GFP_KERNEL)?;
--/// let page = borrow_page(&mut vbox);
--///
--/// // SAFETY: There is no concurrent read or write to this page.
--/// unsafe { page.fill_zero_raw(0, PAGE_SIZE)? };
--/// # Ok::<(), Error>(())
--/// ```
--///
--/// # Invariants
--///
--/// The borrowed underlying pointer to a `struct page` is valid for the entire lifetime `'a`.
--///
--/// [`VBox`]: kernel::alloc::VBox
--/// [`Vmalloc`]: kernel::alloc::allocator::Vmalloc
--pub struct BorrowedPage<'a>(ManuallyDrop<Page>, PhantomData<&'a Page>);
--
--impl<'a> BorrowedPage<'a> {
--    /// Constructs a [`BorrowedPage`] from a raw pointer to a `struct page`.
--    ///
--    /// # Safety
--    ///
--    /// - `ptr` must point to a valid `bindings::page`.
--    /// - `ptr` must remain valid for the entire lifetime `'a`.
--    pub unsafe fn from_raw(ptr: NonNull<bindings::page>) -> Self {
--        let page = Page { page: ptr };
--
--        // INVARIANT: The safety requirements guarantee that `ptr` is valid for the entire lifetime
--        // `'a`.
--        Self(ManuallyDrop::new(page), PhantomData)
--    }
--}
--
--impl<'a> Deref for BorrowedPage<'a> {
--    type Target = Page;
--
--    fn deref(&self) -> &Self::Target {
--        &self.0
--    }
--}
--
--/// Trait to be implemented by types which provide an [`Iterator`] implementation of
--/// [`BorrowedPage`] items, such as [`VmallocPageIter`](kernel::alloc::allocator::VmallocPageIter).
-+/// Trait to be implemented by types which provide an [`Iterator`] of [`Page`] references, such as
-+/// [`VmallocPageIter`](kernel::alloc::allocator::VmallocPageIter).
- pub trait AsPageIter {
-     /// The [`Iterator`] type, e.g. [`VmallocPageIter`](kernel::alloc::allocator::VmallocPageIter).
--    type Iter<'a>: Iterator<Item = BorrowedPage<'a>>
-+    type Iter<'a>: Iterator<Item = &'a Page>
-     where
-         Self: 'a;
- 
--    /// Returns an [`Iterator`] of [`BorrowedPage`] items over all pages owned by `self`.
-+    /// Returns an [`Iterator`] of [`Page`] references over all pages owned by `self`.
-     fn page_iter(&mut self) -> Self::Iter<'_>;
- }
- 
--/// A pointer to a page that owns the page allocation.
-+/// A `struct page`.
-+///
-+/// A `Page` is accessed through a shared reference or through an owning [`Owned<Page>`]; the latter
-+/// frees the page allocation when it is dropped.
- ///
- /// # Invariants
- ///
--/// The pointer is valid, and has ownership over the page.
-+/// The `Page` is backed by a valid `struct page`.
-+#[repr(transparent)]
- pub struct Page {
--    page: NonNull<bindings::page>,
-+    page: Opaque<bindings::page>,
- }
- 
- // SAFETY: Pages have no logic that relies on them staying on a given thread, so moving them across
-@@ -185,19 +121,20 @@ impl Page {
-     /// # Ok::<(), kernel::alloc::AllocError>(())
-     /// ```
-     #[inline]
--    pub fn alloc_page(flags: Flags) -> Result<Self, AllocError> {
-+    pub fn alloc_page(flags: Flags) -> Result<Owned<Self>, AllocError> {
-         // SAFETY: Depending on the value of `gfp_flags`, this call may sleep. Other than that, it
-         // is always safe to call this method.
-         let page = unsafe { bindings::alloc_pages(flags.as_raw(), 0) };
-         let page = NonNull::new(page).ok_or(AllocError)?;
--        // INVARIANT: We just successfully allocated a page, so we now have ownership of the newly
--        // allocated page. We transfer that ownership to the new `Page` object.
--        Ok(Self { page })
-+        // SAFETY: We just successfully allocated a page, so we now have ownership of the newly
-+        // allocated page. We transfer that ownership to the new `Owned<Page>` object.
-+        // Since `Page` is transparent, we can cast the pointer directly.
-+        Ok(unsafe { Owned::from_raw(page.cast()) })
-     }
- 
-     /// Returns a raw pointer to the page.
-     pub fn as_ptr(&self) -> *mut bindings::page {
--        self.page.as_ptr()
-+        Opaque::cast_into(&self.page)
-     }
- 
-     /// Get the node id containing this page.
-@@ -372,10 +309,11 @@ pub unsafe fn copy_from_user_slice_raw(
+ // SAFETY: Instances of `Interface` are always reference-counted.
+-unsafe impl AlwaysRefCounted for Interface {
++unsafe impl RefCounted for Interface {
+     fn inc_ref(&self) {
+         // SAFETY: The invariants of `Interface` guarantee that `self.as_raw()`
+         // returns a valid `struct usb_interface` pointer, for which we will
+@@ -406,6 +409,10 @@ unsafe fn dec_ref(obj: NonNull<Self>) {
      }
  }
  
--impl Drop for Page {
-+impl Ownable for Page {
-     #[inline]
--    fn drop(&mut self) {
--        // SAFETY: By the type invariants, we have ownership of the page and can free it.
--        unsafe { bindings::__free_pages(self.page.as_ptr(), 0) };
-+    unsafe fn release(this: NonNull<Self>) {
-+        // SAFETY: By the function safety requirements, we have ownership of the page and can free
-+        // it. Since Page is transparent, we can cast the raw pointer directly.
-+        unsafe { bindings::__free_pages(this.as_ptr().cast(), 0) };
++// SAFETY: We do not implement `Ownable`, thus it is okay to obtain an `ARef<Interface>` from a
++// `&Interface`.
++unsafe impl AlwaysRefCounted for Interface {}
++
+ // SAFETY: A `Interface` is always reference-counted and can be released from any thread.
+ unsafe impl Send for Interface {}
+ 
+@@ -443,7 +450,7 @@ fn as_raw(&self) -> *mut bindings::usb_device {
+ kernel::impl_device_context_into_aref!(Device);
+ 
+ // SAFETY: Instances of `Device` are always reference-counted.
+-unsafe impl AlwaysRefCounted for Device {
++unsafe impl RefCounted for Device {
+     fn inc_ref(&self) {
+         // SAFETY: The invariants of `Device` guarantee that `self.as_raw()`
+         // returns a valid `struct usb_device` pointer, for which we will
+@@ -457,6 +464,10 @@ unsafe fn dec_ref(obj: NonNull<Self>) {
      }
  }
+ 
++// SAFETY: We do not implement `Ownable`, thus it is okay to obtain an `ARef<Device>` from a
++// `&Device`.
++unsafe impl AlwaysRefCounted for Device {}
++
+ impl<Ctx: device::DeviceContext> AsRef<device::Device<Ctx>> for Device<Ctx> {
+     fn as_ref(&self) -> &device::Device<Ctx> {
+         // SAFETY: By the type invariant of `Self`, `self.as_raw()` is a pointer to a valid
 
 -- 
 2.51.2
