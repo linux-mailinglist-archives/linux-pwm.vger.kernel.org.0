@@ -1,69 +1,70 @@
-Return-Path: <linux-pwm+bounces-9406-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9405-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id ggDxFcmQPmp1IAkAu9opvQ
-	(envelope-from <linux-pwm+bounces-9406-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Fri, 26 Jun 2026 16:46:33 +0200
+	id tyk7DfqQPmqGIAkAu9opvQ
+	(envelope-from <linux-pwm+bounces-9405-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Fri, 26 Jun 2026 16:47:22 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3E6CE6CE15D
-	for <lists+linux-pwm@lfdr.de>; Fri, 26 Jun 2026 16:46:32 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id B7AF46CE18C
+	for <lists+linux-pwm@lfdr.de>; Fri, 26 Jun 2026 16:47:21 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=garyguo.net header.s=selector1 header.b=nNSuo6sW;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9406-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9406-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=garyguo.net header.s=selector1 header.b=oYnRv3+C;
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9405-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9405-lists+linux-pwm=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=garyguo.net;
 	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 22513301F1CA
-	for <lists+linux-pwm@lfdr.de>; Fri, 26 Jun 2026 14:46:02 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id B616C307407D
+	for <lists+linux-pwm@lfdr.de>; Fri, 26 Jun 2026 14:45:51 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 12F4A3FA5F9;
-	Fri, 26 Jun 2026 14:45:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id A522C3FA5CB;
+	Fri, 26 Jun 2026 14:45:33 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from LO3P265CU004.outbound.protection.outlook.com (mail-uksouthazon11020079.outbound.protection.outlook.com [52.101.196.79])
+Received: from CWXP265CU009.outbound.protection.outlook.com (mail-ukwestazon11021075.outbound.protection.outlook.com [52.101.100.75])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E56543F9F26;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B75A83F99E5;
 	Fri, 26 Jun 2026 14:45:28 +0000 (UTC)
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782485134; cv=fail; b=tkf8Lk9BC5/ZV//Nw96JTlpVEKUSTPv7M9p0yOGAdRchLnsVIAX8S1LJ579kJx9FGC2Otmxn/IAuhc1nyAnGTtebHx2lVz71+jQhIuIUfww7sGJWaBCM1TYia56Nib/SPTaB+iYVGR8KtEeJZOAtbcY2/9BSMoAMv0Ao7d1F2Do=
+	t=1782485132; cv=fail; b=i0EinBJqmLc5zaan6w9D+n2l7iqNLKc3ifiy7KnKZCRmwUPeDoVG4U3LffHnA22AXhEqxf3x2dgCYZcYKY82QcM/UA+k9nIxiiFWQ9TGFUFlIu3k8C+GUPdpSNC/PPglXI9IML50apRcGQBfM+djXr6gxNtDgAEL2BWDZP1D3y4=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782485134; c=relaxed/simple;
-	bh=+muOjIpzmY8awapBnAXwqFhkIut1D502R+SWpNlqg6w=;
+	s=arc-20240116; t=1782485132; c=relaxed/simple;
+	bh=szxwJDnA7rTSEfocggCKebMj0aqWh3b0eoiakCjY6p8=;
 	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=XTy/hrMJTz0q2naaH9VqapdQ/4hZZYD6uP8YR1GKkxwGZy5lH1eyMjGZjUzdgoKTXcYBmy/PjBanRG2CfwITf/x0dx9yXGuHEtDeVAsq7CGhCt6bIKPupj11OZ0aRun+2Gu0403C3lDXqDaTraHAY0zYdAyF47mzM4FRYiFRvLU=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=nNSuo6sW; arc=fail smtp.client-ip=52.101.196.79
+	 To:Cc:MIME-Version; b=X66LxCcEeY3fM0Uig2hCx6cunxZGxrD8Z5PKzFAg+BcjpMZ04rua+x7rFsc3aCaVHr1iYMzKfKi6zaAjK2eU+QvZC21+kU7UewJHqGB0lZQ/h/Tk4NiMA86Wf3CVF3xCwuHF2Zo8VIMRXPJb02d4AjseLSOE1J0VV85lAWyaZNk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=oYnRv3+C; arc=fail smtp.client-ip=52.101.100.75
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BAT/NwgWikIhEpXkgT5BetkrB5n9xK2t1EhRMkZReqww9r+e/2ipPDpMZr8XUxoGKXi3o24H+xv1tzoQ598/LDeNCez3pzHWYCioWe00lFL8rX704k5dSzaBnNl4APJZH41260YFXW2qRiOHqlYXsyLrUZ4lJudouBCZ88AwTvIsq0fqykP0dj/+H3maQdqMidSnc7UgHF+Yykv/Nmysqf+BKdxuXKQmh/zqXtsngIOygahVYY3Y4vK/P8YHO41cZNH4yawN1neMrvVw9YOFTb6i8AVKMdjabgrq0bYupBOZr3kAeiz0tRHsq+7jZbrx9QIRhEgcZkf8AuJggfA+rg==
+ b=XBAumCZIM/aneMn57yx5yL/7WBzmr3oZXB0AsKBu4y+PCNyljOslW1AdMOUqW339Iqgb0qFWf8/O9mFXNqw0mBD0EcrU1YFkvOiC9ZPdqv/0+ECBlPwHHGSTeuTrVABN+yDP3ZVXSas6RNFK6zdYDEVxY/4unFbYszAd/e3h6iRLYHPQ2G8QqB1IFdA4ZM1VMd/QZXrRD9aUZORnkt6hqpWvk9Ft8rvLIGNxZW98NUWrRAnkd2FuGvTKORTQ22ToCnc0FoFS1ja5dYfDxu4jMI8Y5KofBF9ZQdGETWXmwftrSToHS8+o2yNSX5K18hMywijIUQiGi2+tP+2g41xOiw==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=OE0RMkfhw++rlUCNwVF+Cv2B+Nx+ivGc6kFSgTFDNtQ=;
- b=Gz8TU7/Cy0HA4K8unjeVq1ZuPijxJEXAIEP3UBMr1UarJrd7vnQvwO9Bg0XEfPa5++hgdeHaM80lP8t3EoAAY5YLWOtsR53jQZ00pxaYWwC+cN32s2w4kXKWhc7N2gesagUXm2zKYyHjVjjaLiUmn6VOU9cuMsU382c9xHDd3N8vjVT5F0+tMnqaMWAqEQbnt7E21fRJdMzvvT/U4mx1bgbKc+BliSwfmNOZeUBZ7QhRVENL1HwsvU0pG+Ifqb20gbGUIC35Cc7YnAuahFIvaeE3KnR4wB2BwO/Fwg0WpYdwMWgf6sVwBgmnvYbexjFmRHZYMXK/+E02kKapFVEfpg==
+ bh=nI/K6E5mJz+mqRbUC/6lTTT3GMPn2WcTdx3VFlB9BdM=;
+ b=dbMIM15EHEaDqVfgkuxhHwwYlSUnPHaoB+jgsnpKS2464C8YtSnsFvdaMLiD0J2QCdLR9RAyNK7MmTGxlhJ1uep3M9wE5WBsi+zCatbfyazRHt+cjqPGTBm7RRh2QP32tr47oeu5jSR2GcY3rG7rjh/iUwqyf4fvZ14Xn1zCWxmppqZylojsSEKi62/MjdwMCRKDVX08OLvvKZcK06unMN/RCMYLSp15ouHwGzBap+myad75TrxvSRsRKLHm5d6wYJKoM/4V5pkgWcKg6FMfA/a4709pR/LgqyI0gJYEDJg4D5ZQnh5RSjqwCgVMNMRGdWkRVUW0cCwSUoMURII99g==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=garyguo.net; dmarc=pass action=none header.from=garyguo.net;
  dkim=pass header.d=garyguo.net; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garyguo.net;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=OE0RMkfhw++rlUCNwVF+Cv2B+Nx+ivGc6kFSgTFDNtQ=;
- b=nNSuo6sWtKUEjTErWwiDhnIIEUBKxA4B9mC02TeEs8IubdYDhFUqHfuP8ihnHA1ToVDcLCC0aSmwfFJmLAAl+zCqUusy01hmpQ3CQ7cNqHvIcdzjkH3itwMaWmBWKM18U9J90q6RY5cZ0nyV6Dq3Csy4ZEPzY2iiQotPGBpU+NU=
+ bh=nI/K6E5mJz+mqRbUC/6lTTT3GMPn2WcTdx3VFlB9BdM=;
+ b=oYnRv3+CG5f6TM9Q0Yz22yy3CXQCqBl/dKN8juCBnQdJK3rwVBuUncwZwqykG8hmOmElup/CPnql2Rviy3pLd9TSXl+pbiksODOj+fz4SR88pEt3+cxqsMuHuZ64pNU+Jl/i82NFiw88Hr7jHpKcZ1k3ZbzyZTI3Iz+vKuFpVi8=
 Received: from LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:488::16)
  by LO6P265MB7248.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:341::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.17; Fri, 26 Jun
- 2026 14:45:17 +0000
+ 2026 14:45:18 +0000
 Received: from LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
  ([fe80::1c3:ceba:21b4:9986]) by LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
  ([fe80::1c3:ceba:21b4:9986%4]) with mapi id 15.21.0159.016; Fri, 26 Jun 2026
- 14:45:17 +0000
+ 14:45:18 +0000
 From: Gary Guo <gary@garyguo.net>
-Date: Fri, 26 Jun 2026 15:45:05 +0100
-Subject: [PATCH v5 01/20] rust: io: add dynamically-sized `Region` type
+Date: Fri, 26 Jun 2026 15:45:06 +0100
+Subject: [PATCH v5 02/20] rust: io: add missing safety requirement in
+ `IoCapable` methods
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260626-io_projection-v5-1-d0961471ae50@garyguo.net>
+Message-Id: <20260626-io_projection-v5-2-d0961471ae50@garyguo.net>
 References: <20260626-io_projection-v5-0-d0961471ae50@garyguo.net>
 In-Reply-To: <20260626-io_projection-v5-0-d0961471ae50@garyguo.net>
 To: Alice Ryhl <aliceryhl@google.com>, 
@@ -88,11 +89,11 @@ Cc: Danilo Krummrich <dakr@kernel.org>, driver-core@lists.linux.dev,
  linux-pci@vger.kernel.org, nova-gpu@lists.linux.dev, 
  dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1782485116; l=17123;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1782485116; l=3734;
  i=gary@garyguo.net; s=20221204; h=from:subject:message-id;
- bh=+muOjIpzmY8awapBnAXwqFhkIut1D502R+SWpNlqg6w=;
- b=tzKDiJd/Uj3hXkttaj2sLxMQlN0WMOi/NDqcQEyNKlqUq5cyvuqD5U8KxyMqepHU05AijzRjm
- JA05rH4Hqw6A3Iud2g7S3BS/ODcNqvqaIY0GAaxxQmbeB3kZs59bJzi
+ bh=szxwJDnA7rTSEfocggCKebMj0aqWh3b0eoiakCjY6p8=;
+ b=sas9nNtzzp9KUl5DIVPa7ENDFuITr1zhTvOAHFxcdl2ly/LAUu/tCIPvMPWyVM3r5MfdLyk5B
+ qDpWr+OHQkLDRC146oa4WQGjApi7I8oOTav0VFP64Sc3j8Bq3E9061y
 X-Developer-Key: i=gary@garyguo.net; a=ed25519;
  pk=vB3uIX95SM4eVrIqo1DWNWKDKD2xzB+yLLLr0yOPYMo=
 X-ClientProxiedBy: LO6P265CA0010.GBRP265.PROD.OUTLOOK.COM
@@ -106,66 +107,66 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: LOVP265MB8871:EE_|LO6P265MB7248:EE_
-X-MS-Office365-Filtering-Correlation-Id: 900d66a5-100f-4b74-3752-08ded3918a36
+X-MS-Office365-Filtering-Correlation-Id: 519eb827-4f32-4f3a-282f-08ded3918a86
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|1800799024|376014|10070799003|23010399003|366016|7416014|18002099003|22082099003|921020|5023799004|56012099006|6133799003;
 X-Microsoft-Antispam-Message-Info:
-	t6K8L2s3qczXSBN5/iDEVYqORPeqvSmo3aLy+eCckx+iNc+k2qKLTuaPlp/D75FOLiH0A4kdf2FNHRMi5oRcDys6fkJhUtDv+qwrcPpg3ti6RrHHuXW1FGbK3IB+w39iQyT5t3HIacO+s1Sq8hd3WNL9XNTWCmtRgDOx5KG0D4VWJTlVHhOWIfsZau6gsd7RIR+kj6PgwFCCrS54UVLF6Sy/HBh1h6klD91rDMX3jRbPmDmDULm0kjbLEw6PAe0bUKeetiCyOU6Ya2TKO7wB2703pSJDBcBS9UnTpcn5a/Mmxx0zeHdySm6PdtQOJU/0YKeCxFq8j7IfXltMLvKMIwNOSBChHU1YufpccFSWMLhpicTvX2OhDjOt5E7bCtJM4VJ1Z4hCYByRwJlkrD4KQkNUGSd3NZ9DQTVgL7l15p5iJaDlsDcQjmEOQIlgF4dihiGTPHIyPYBVGmhkqzUye9ROwNCZ5vBdED1Ug/DzvhvQ2w5cyQ0vprfN5dQtFHYduqklZ/ih1kmS6qO/lqxkVBhL3TyCPEHk9N7qTYFYrBAbxIPMtgckJ4uFxD+Z8+09mJ1b7a2DmgAj+pET2h41pYzQa07kPZ5aQVcgYGZ8ODBgdx5Ij4+MH0tcd0VA6DVqTIcmHugIGy/lxEe7BFOb0w0HdfMgcZSRsOuo4buK9/OuThp1g8ngO2EFrrZoEPM7kK6Li+XKpvRCV7KCWOfI4g==
+	ra9eQ56xbTa+3uttFT+Ja5sSJpPJrTu3xHxAO3WuhRBpui4EDOLKB/J8PVm0B6mqld2hvGipK9BTGtgStUqYwH5XVRuCKz3w3QHa+2MjJwXDetv7hbvWLp7srzigc4NxI1mudnEkYicr7l66T1DIaUNE8vcp6RYkI3XalqBp397bIL/DSKeJdTdNb/kyWbhhfa/mEaijZ79AaGe83ASFxrZy3lcqwX+mK3HuRaXlH9xzxfE3+oLH/f7sSuBYKlbSb3R/w/AaKxgErxpes1MhqnfmHn3kw0ALk79AFfEG9ZSgrK0KodXGob+9Maf4jFcyvAXOgvdYvR48/Vagvg936VLyq/STQw0X1bfwbR3rHTRd7QUJ+fwfp/VtCzHm0iSyDmj/SEKAKpnUF9gyApehBbv+v2WuIUpp7Ti6HCpzdJxPEq0JeKbKjoYmdwa/xje51/MVYHagVNkepwgss54/q0jTZanw1k8vqUWTMEYTOZC3ZCy6i7oHuAYPbVjHZfyWD/rSqW2OosOtyJoDsYDg9VsHS/EkdhmjxU91nTIa4/Iab8qGVowVKeiV4Bk42n2ndrTzlXT36Gmdh54ObOGSOHdeBYEB045hj3UTfLLKw8t+06xgRbsBO3/Mj3BWWNYFEtUjmbDMR3FoIJ6VcPqcx5n+Pb3Oak25Ud1oK9DWMwVePI9dxafDT0ZrCUk1/X4eCF98CSE8MSKmJRXGxvn5Gg==
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(376014)(10070799003)(23010399003)(366016)(7416014)(18002099003)(22082099003)(921020)(5023799004)(56012099006)(6133799003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?NFlLNzJxM1VIQUdWcnY5WS9FRXU5T1VsdmdKNmtnVE5BTFRmZ25yNFhjNXFt?=
- =?utf-8?B?YWo0d0J0UmtUZGJ1WTU3WGxCcTY2b2JTWk1pWFFlTVBwUWprSzZJWnZDdTAz?=
- =?utf-8?B?Z2N5L2pHSUdQUDYxRlRNZW9saTRjMDh0QWFVbjFSQjd5cTl2WVFSNVpLd1N1?=
- =?utf-8?B?VnVpRFowRSs1N0dxSHh3eC9DYVlpVEczd0dHdjBtQW5veUNBU21JZTFYblB3?=
- =?utf-8?B?emZ3a1RCMVY0RDVzS3haMjhiSjIrQ0plNk5qVVRsZnpYVm4wdDJuVmxwL2Q3?=
- =?utf-8?B?UzJDRGhJUGIrT1dKV0ZyTHRiZTdwWmRVVjlsYTBGSDF3WFR0RU4yMnZmdWIv?=
- =?utf-8?B?Vkt5MGJtaHFPeTJWSzJUQ0VrcWZDR0xCUm1CblkvYWxndEtabXFDNjhHQkt2?=
- =?utf-8?B?YjlFaCtOVHRJeGE2VDVPYjRCMmxTVjJNeGIrUTNTejhpMDZTVm9sMVBQdm5G?=
- =?utf-8?B?SFU3LzNUNjdyMG1aTHNqWDZjNXVIdUZPai8rOE5ERldYZS9oVlF0TFZia2pw?=
- =?utf-8?B?QUV5Qm1RZFRYeDJnWkt0N0R2YVlpeXMrSi8zeXpYNU1VV0VVRTV0cWNHV09V?=
- =?utf-8?B?a1EwaTZTa0krN2RnVVJUdnoxb3JEOUhSc1pwVUEwdURmcytCa3dBT215Ullz?=
- =?utf-8?B?SmV2aDBBUlpubFZwUlJzYmZFYStRd1ZKbit1Y3hWd3VOaWkxOFM0bUI4c0JG?=
- =?utf-8?B?WGwrU2kvTTBrd0tNY3ZkSmVTVlVveS9DbWRvaUd0cklzazhpY3dNT29reDMz?=
- =?utf-8?B?K0lpeGlGVTYyQkRlUzVYNE00UWFvQkxEckFmVkRxSE5oM2ptNlhxYXdsc2M0?=
- =?utf-8?B?eTZHa0VaSWpHUU01Q2tQY2I4TTN1YmFrbk9GRkszbGVKSWNRQVRGL3NkdXBQ?=
- =?utf-8?B?WDAxWGp1U2kzVTJTS3pwQSttT3Y5RkY0ZFE5VE10QkdQV1pKeUNLN2tYaVNj?=
- =?utf-8?B?a0JWTUwvNEJTUHVncnBtMFVsRzFhUEhsMDViRWt5ZU52MTFSVWYyQUJ1T1hH?=
- =?utf-8?B?aW5XeG4ybHlkalkySmVpQWYzUGRtbEZMUWtpRnhFQWt1Tkt0T21oV3pwZkI4?=
- =?utf-8?B?dkFNVy9FZUQzcDNrZmN5S2JwZXBzTVY5elJQZUhqRllod2k4cXB2dlJZZTFS?=
- =?utf-8?B?cTFqVjBoQUpJNEd1K05MUDNGRnI2NzRrTzdiS0hHWlNSVGQ1bmpjMHlHZ29o?=
- =?utf-8?B?SmlRSEtQZW9qcFd2SWJacUdWYk85K3NiZTZSTmFvc1ZHUHh6U00xalJXYldK?=
- =?utf-8?B?ajlTVVIxZlNzK2VPZlJ5NVRZcmRFaEhxR0F3ODFJdHlWdit5V01DRUQ5K3JE?=
- =?utf-8?B?aytYK3lnYUtBZkpzelFSSlVXVk5CZzd2dzBtVzNwbExSb0FFSXEyZHdibDUy?=
- =?utf-8?B?cUYrQWgwV2c2R1VJY3ZDYW9kRzkxeFQ4bEZ3d3NQZytzcTlvODZZTTE0OVNu?=
- =?utf-8?B?SVhGS05zT3paZjRhZyt3ZUxNUXFSbndJKzliTkkvM2x6bnM2NUg1Y2crU2xk?=
- =?utf-8?B?M2xVQ0k2Wm9JVTJHRzZaeU54N1MrNEN2TXJxR0R3akZpbWp2aHBlNHByaDUx?=
- =?utf-8?B?b1N2aExyc0V4S3BaL3Iwd0hRVjdoSUZ4Mi93eVIyS1liNHpORWFITjNxcUhJ?=
- =?utf-8?B?TXRWdEJWbGQ5OUwxSmtJN200U0x3aFhJcDJydG1MTnlLVkRwdGtsc0JRYWFv?=
- =?utf-8?B?VDFRcmZRS0xOMWhTdTJZaDlSYUNkNXo0VzFqYUJpWXdNUW96YU1NanEzUVF1?=
- =?utf-8?B?QjRUVWxmSEZ2aFVUTnlNYnVCRW9VNWw2R2FqMDFkK0pxeFFTYnN6bzd5Mlhn?=
- =?utf-8?B?bUhEZ3ZGbGlvVGhOaVhSNTdUY3NpRUpVK1g2VXBGdDdOelhnejRRMXlqd3hY?=
- =?utf-8?B?aS9CTElBbUxINi8xcy9PcTlkTU5lWWhmNDlhdTQvVHRIejRENU95TWZRTDZZ?=
- =?utf-8?B?MjdzVGVtL01HcVJCT2ZlZ1RMQzJSRkZLWHU4QVptdFNmT1JlYzVKYVdJRElu?=
- =?utf-8?B?VUJZWkZPTkRDcDcwai9NcFZUSW91cXBzYzdzUCtoSzR5Z3JMOVhpVzkzaG1n?=
- =?utf-8?B?Z0YwVXVrSzR6S0FJV3RrVkF2QjIvbmtGRDN6MTBGZkRLcGlhRGRlbmlwQkM3?=
- =?utf-8?B?QVhjODBKeWdrUnd5K2YzeFZ5VlA0RitnNEVoSVpYMlhJRDJHU0ZWQVlQR2ZW?=
- =?utf-8?B?Y3g1OTBRYmlvdGxXblZEL1AwejN6ZGpQVnc0ZmZXUDU1WXRDUWNkUW8rbXFy?=
- =?utf-8?B?SWVwUmRSU2loMVFXWGFBeWxLRkYrZUZsZm8xMDg0SkpRZmYzSmF5R0FOK1V0?=
- =?utf-8?B?MVhBZ0lQUGZDM0pjNm93WFpZSHExUmVETTgzN2VwOS9GZFlCSFRKUT09?=
+	=?utf-8?B?L3owUW1BeEs0amI3S01DenErWUdRRkVQaVRvQWtGRi9NeUREMW9DQmRqakFD?=
+ =?utf-8?B?cTFnd3lTS0FLNXdweVJXUE1Id2JvWFNmWFNUbm9Sd0NCR3kzQ2NoTXhpZ1Bl?=
+ =?utf-8?B?eHoxRkZWZTlwM0VvanRpK0o0L3hGVHBzRW5NbFlHQ2RDZzhhZlFnMmlVYUlq?=
+ =?utf-8?B?V29zSko1czVHaSt4RlRwWHBsVnpnTk8yWkZ0V0lvK3RZL0x5U0llbEJhZVFB?=
+ =?utf-8?B?eE9YdUdiWHhheWhIRFdZY1FkRnF3UmNmZXlQVDhhUDRlRDFHY3kwTm9RWi9S?=
+ =?utf-8?B?UE5BREpTR3Y3bHl0eHBqV09pV25qa1F4a2h3R2JYUnlOWStaQlhST2JYM2lr?=
+ =?utf-8?B?bU5DZHllSCtYUnpNYm1zdVFzOW1iR3oxOVNya1M1aDdXZVVLaGhlQW5mK0pn?=
+ =?utf-8?B?VEx0Nk01S1pPMExZSUdVOUJ6T2hRNW93bHdQbmt3dkRRMktlY0FxdUF0VU9L?=
+ =?utf-8?B?dy9CdGJ0TWlodWRNZnNHNVAzVHVYNWZ6c29aTWJxRTl5VnZNUWZibTZuWmtL?=
+ =?utf-8?B?bXh5RXlYWkZpTGUxd2pkdjNxWHJ1VFJEOXY5SGdURGlvL3dlVDhvYlRHa0xT?=
+ =?utf-8?B?bkdSQlRuY25qMEY4cHVIMHhZenUrSTVBSi9nM3R1NnN0WFQ0NVBoK1VKeUM1?=
+ =?utf-8?B?VlRhakdwSU1yeDQ0L3lCaGRiN0xRaDBEbWRtQWljSDFOQnNCZW1zR3F3ajRj?=
+ =?utf-8?B?YmhPRU5DNVM5WWJqU1RmblhIdWNPZ1d3Qm9EQ1diNGJkOWhKRVNUYTQ5QXFD?=
+ =?utf-8?B?MFcrbHNiajFpL1VzQ2dWQ0dDYUdDNFJJSGhzOWxKeWs0dFhGaVRNb0pDVUx1?=
+ =?utf-8?B?cGFkLzlJb2VIMWZvVUQ2bVR5YlZ5S21QWWJQSHNwY04zVEIvdU5aSC9sSnVj?=
+ =?utf-8?B?cXlDaEt5Y3FXTXJZYnRUcjk2Vlp6VC9yM3kyVG9UTFJZOVZGYXVNVktQaVFO?=
+ =?utf-8?B?QlcwUFRENzdkYjJORnRaODI2TXRkVlFONVlTYnlpK0xvRm1YeUpVeTdsaXdn?=
+ =?utf-8?B?VzdEWGxQUk9TUG1MV2N1RVVJOFFPZGROS2FacGNDNm9ucGxBKytSY0V1RkIw?=
+ =?utf-8?B?M3ZVN1dhWCtKU0YrS0EyZmt4RkdBMm5GNVVET3RIemNGS1dKQlE4UDRrWnVi?=
+ =?utf-8?B?cU9iUE1MSVRmK3doNjJ5WHdnZ3UxRkZNYVM3T0FUdzF6bEVjN0UycGVPdFYw?=
+ =?utf-8?B?YlRuVVFmRzJMY1A4dGlPc21pZ3dua3BoeG45QWVzZmovcGhPZW9qeHpKakN5?=
+ =?utf-8?B?dUZHOHJ3TVgvSXZBUWExenVNelVQMmhzNUFnbGRyRENBNisrRTNSK0dQdjZw?=
+ =?utf-8?B?dE9WSDIrUUlkOXBEZE10WTZuR3RoQWN5YkQwSkZPMXFnc05Sd0hhZ0Z2Tmgr?=
+ =?utf-8?B?Y3Z3Zjd1WW55eWk3cTNobHlHdWpDbFAvZ2RRemkyUitzc0k1dnY1U0IwaVlG?=
+ =?utf-8?B?TlQxTzNraEZtZFZCeWZyV0dkTzI4TE1QMWVBOGZ4TXM2eTNNdml5ay8ydHhZ?=
+ =?utf-8?B?dWdvcnlEZDFPUzdQV3RiUjlsQ0NnaDhldWtQQXBRZy9iU3BNVFdBSXZLTXdO?=
+ =?utf-8?B?TERTMytlN2Zra04vaGU1ZVM4U0c5UVNsMHJad3RMbnlMTzNCMG8vMUN3N0pj?=
+ =?utf-8?B?Q1NTTHkxNkV6a2VuenNSTUVZV2dBNzNWekJRZ2JiMTVFNEs0YVZLYkZiUkRI?=
+ =?utf-8?B?YmJEVUcyL3Rzbkx4SU9RMHBxMkt2MXBKWTRERllqcHBGOExKdTlTaWVxM1h4?=
+ =?utf-8?B?SzFiNG9ZUmhDVEd0SDhlTTQrMjZkZkpHZDM5dEJrU01IT09DU1J6eEtZSXJ0?=
+ =?utf-8?B?cjFVd2ZSdmFka09vaHVVZCtCb0RFaEM1ME4ybnMvQ01PQjE4cWYzaGh2UjJJ?=
+ =?utf-8?B?ekVzNEpISW1YanM3aTBIOE5LUzVNVWMzQ0svQWhUa2RJeFFhaU5JWGlFRHRr?=
+ =?utf-8?B?VzV5ZTJpSzJmbkVmNldIdllQdVBTMTVjMGt3VWtxd29kaVZrUjhoSzZMWmJv?=
+ =?utf-8?B?Sks0RStmU1RWeThkK1ZlajJ4c0VLQ0JndEhzOHM2K2o4SFFUdTlmNExmV2VU?=
+ =?utf-8?B?VHNleDIrM01NNXdPdXVFNWhrNUkrdUlKcjdlMFVoY1M2eFB5RkxnV1Q4SFd5?=
+ =?utf-8?B?WDBxZlNoZWdjSlRINm1LYkc1N3ZNaE5SbXJSZUNVQk5MemRTL05WRmRiN2dV?=
+ =?utf-8?B?QmRTVFFueUJlRUk0MUUyL3FPYTljTnlNbmNLSWRMaXdJYmc0UTYwa00yTHZr?=
+ =?utf-8?B?cU5URmtidk41WE5uNXlHQzZhWW9JcnBMQXNCL2NzVlkvYzRJMW55VXVVK2xK?=
+ =?utf-8?B?TFFnN3BPMktoS0ZuaU91azRrK2FXMXJLeW0yRmk1NUY0ckYxL2RQZz09?=
 X-OriginatorOrg: garyguo.net
-X-MS-Exchange-CrossTenant-Network-Message-Id: 900d66a5-100f-4b74-3752-08ded3918a36
+X-MS-Exchange-CrossTenant-Network-Message-Id: 519eb827-4f32-4f3a-282f-08ded3918a86
 X-MS-Exchange-CrossTenant-AuthSource: LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2026 14:45:17.6747
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 26 Jun 2026 14:45:18.1699
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: bbc898ad-b10f-4e10-8552-d9377b823d45
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: GSjWr+oRpyn4qnAApilY871b8cHHDOcRY2ylHQBvMvDuuseaSI6593iB5s90XaZ6yJ1MHJZMV/bkAaaWu18inw==
+X-MS-Exchange-CrossTenant-UserPrincipalName: TXT21qoXbNPPGBLUEBZ8sVuxG4dck4NEp3FtJrV4LwpIyjCRj60saXbgfrth8kt1IHTo5bLtfiwUi0DqBIDBmA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO6P265MB7248
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [1.34 / 15.00];
@@ -173,14 +174,14 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	ARC_REJECT(1.00)[cv is fail on i=2];
 	DMARC_POLICY_ALLOW(-0.50)[garyguo.net,none];
 	R_DKIM_ALLOW(-0.20)[garyguo.net:s=selector1];
-	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	MIME_TRACE(0.00)[0:+];
 	RCPT_COUNT_TWELVE(0.00)[30];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9406-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9405-lists,linux-pwm=lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FREEMAIL_TO(0.00)[google.com,collabora.com,linuxfoundation.org,kernel.org,garyguo.net,protonmail.com,umich.edu,onurozkan.dev,gmail.com,arm.com,nvidia.com,ffwll.ch,samsung.com];
 	FORGED_RECIPIENTS(0.00)[m:aliceryhl@google.com,m:daniel.almeida@collabora.com,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:ojeda@kernel.org,m:boqun@kernel.org,m:gary@garyguo.net,m:bjorn3_gh@protonmail.com,m:lossin@kernel.org,m:a.hindborg@kernel.org,m:tmgross@umich.edu,m:tamird@kernel.org,m:work@onurozkan.dev,m:bhelgaas@google.com,m:kwilczynski@kernel.org,m:abdiel.janulgue@gmail.com,m:robin.murphy@arm.com,m:acourbot@nvidia.com,m:airlied@gmail.com,m:simona@ffwll.ch,m:m.wilczynski@samsung.com,m:ukleinek@kernel.org,m:dakr@kernel.org,m:driver-core@lists.linux.dev,m:rust-for-linux@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-pci@vger.kernel.org,m:nova-gpu@lists.linux.dev,m:dri-devel@lists.freedesktop.org,m:linux-pwm@vger.kernel.org,m:abdieljanulgue@gmail.com,s:lists@lfdr.de];
@@ -197,508 +198,96 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
 	TAGGED_RCPT(0.00)[linux-pwm];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[garyguo.net:dkim,garyguo.net:email,garyguo.net:mid,garyguo.net:from_mime,sin.lore.kernel.org:rdns,sin.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,garyguo.net:dkim,garyguo.net:email,garyguo.net:mid,garyguo.net:from_mime,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 3E6CE6CE15D
+X-Rspamd-Queue-Id: B7AF46CE18C
 
-Currently many I/O related structs carry a `SIZE` parameter to denote the
-minimum size of the I/O region, while they also carry a field indicating
-the actual size. Proliferation of the pattern creates a lot of duplicated
-code, and makes it hard to create typed views of I/O.
+The current safety comment on `io_read`/`io_write` does not cover the topic
+about alignment. Add it so it can be relied on by implementor of
+`IoCapable`.
 
-Introduce a `Region` type that carries the `SIZE` parameter. It is a
-wrapper of `[u8]`, which makes it dynamically sized with a metadata of
-`usize`. This way, pointers to `Region` naturally carry size information.
-This type is required to be 4-byte aligned.
+Expand the check performed by `Io` by taking `self.addr()` into
+consideration when checking if `offset` is aligned. For the compile-time
+`io_addr_assert` check, check using the known minimum alignment of
+`Io::Target` and the accessed type.
 
-Expose the minimum size information via `MIN_SIZE` constant of the
-`KnownSize` trait. Similarly, expose the minimum alignment information via
-`KnownSize::MIN_ALIGN`.
-
-With these changes, it is possible to add an associated type to `Io` trait
-to represent the type of I/O region. For untyped regions, this is the newly
-added `Region` type. Remove `IoKnownSize` as it is no longer necessary. Use
-the same mechanism to indicate minimum size of PCI config spaces.
+While at it, fix the alignment check to use `align_of` instead of
+`size_of`. The values match for all primitives (including u64, given that
+we do not provide u64 accessor on 32-bit platforms), but are not
+necessarily true for custom types.
 
 Signed-off-by: Gary Guo <gary@garyguo.net>
 ---
- rust/kernel/devres.rs |   6 +--
- rust/kernel/io.rs     | 129 +++++++++++++++++++++++++++++++++-----------------
- rust/kernel/lib.rs    |   3 ++
- rust/kernel/pci.rs    |   1 -
- rust/kernel/pci/io.rs |  40 +++++++---------
- rust/kernel/ptr.rs    |  12 +++++
- 6 files changed, 117 insertions(+), 74 deletions(-)
+ rust/kernel/io.rs | 25 ++++++++++++++++---------
+ 1 file changed, 16 insertions(+), 9 deletions(-)
 
-diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
-index 11ce500e9b76..ed30ccc6e68e 100644
---- a/rust/kernel/devres.rs
-+++ b/rust/kernel/devres.rs
-@@ -68,7 +68,6 @@ struct Inner<T> {
- ///     devres::Devres,
- ///     io::{
- ///         Io,
--///         IoKnownSize,
- ///         Mmio,
- ///         MmioRaw,
- ///         PhysAddr, //
-@@ -297,10 +296,7 @@ pub fn device(&self) -> &Device {
-     /// use kernel::{
-     ///     device::Core,
-     ///     devres::Devres,
--    ///     io::{
--    ///         Io,
--    ///         IoKnownSize, //
--    ///     },
-+    ///     io::Io,
-     ///     pci, //
-     /// };
-     ///
 diff --git a/rust/kernel/io.rs b/rust/kernel/io.rs
-index fcc7678fd9e3..d1c5f0121994 100644
+index d1c5f0121994..d821ee48ed31 100644
 --- a/rust/kernel/io.rs
 +++ b/rust/kernel/io.rs
-@@ -6,7 +6,11 @@
+@@ -195,13 +195,14 @@ pub fn maxsize(&self) -> usize {
+ #[repr(transparent)]
+ pub struct Mmio<const SIZE: usize = 0>(MmioRaw<SIZE>);
  
- use crate::{
-     bindings,
--    prelude::*, //
-+    prelude::*,
-+    ptr::{
-+        Alignment,
-+        KnownSize, //
-+    }, //
- };
- 
- pub mod mem;
-@@ -31,6 +35,57 @@
- /// `CONFIG_PHYS_ADDR_T_64BIT`, and it can be a u64 even on 32-bit architectures.
- pub type ResourceSize = bindings::resource_size_t;
- 
-+/// Untyped I/O region.
+-/// Checks whether an access of type `U` at the given `offset`
++/// Checks whether an access of type `U` at the given `base` and the given `offset`
+ /// is valid within this region.
 +///
-+/// This type can be used when an I/O region without known type information has a compile-time known
-+/// minimum size (and a runtime known actual size).
-+///
-+/// # Invariants
-+///
-+/// - Size of the region is at least as large as the `SIZE` generic parameter.
-+/// - Size of the region is multiple of 4.
-+#[repr(C, align(4))]
-+pub struct Region<const SIZE: usize = 0> {
-+    inner: [u8],
-+}
-+
-+impl<const SIZE: usize> Region<SIZE> {
-+    /// Create a raw mutable pointer from given base address and size.
-+    ///
-+    /// `size` should be at least as large as the minimum size `SIZE`, and `base` and `size` should
-+    /// be 4-byte aligned to uphold the type invariant.
-+    ///
-+    /// Just like other methods on raw pointers, it is not unsafe to create a raw pointer
-+    /// that does not uphold the type invariants. However such pointers are not valid.
-+    #[inline]
-+    pub fn ptr_from_raw_parts_mut(base: *mut u8, size: usize) -> *mut Self {
-+        core::ptr::slice_from_raw_parts_mut(base, size) as *mut Region<SIZE>
-+    }
-+
-+    /// Create a raw mutable pointer from given base address and size.
-+    ///
-+    /// The alignment of `base` is checked, and `size` is checked against the minimum size specified
-+    /// via const generics.
-+    #[inline]
-+    pub fn ptr_try_from_raw_parts_mut(base: *mut u8, size: usize) -> Result<*mut Self> {
-+        if size < SIZE || base.align_offset(4) != 0 || !size.is_multiple_of(4) {
-+            return Err(EINVAL);
-+        }
-+
-+        Ok(Self::ptr_from_raw_parts_mut(base, size))
-+    }
-+}
-+
-+impl<const SIZE: usize> KnownSize for Region<SIZE> {
-+    const MIN_SIZE: usize = SIZE;
-+    const MIN_ALIGN: Alignment = Alignment::new::<4>();
-+
-+    #[inline(always)]
-+    fn size(p: *const Self) -> usize {
-+        (p as *const [u8]).len()
-+    }
-+}
-+
- /// Raw representation of an MMIO region.
- ///
- /// By itself, the existence of an instance of this structure does not provide any guarantees that
-@@ -85,7 +140,6 @@ pub fn maxsize(&self) -> usize {
- ///     ffi::c_void,
- ///     io::{
- ///         Io,
--///         IoKnownSize,
- ///         Mmio,
- ///         MmioRaw,
- ///         PhysAddr,
-@@ -241,12 +295,25 @@ fn offset(self) -> usize {
- /// For MMIO regions, all widths (u8, u16, u32, and u64 on 64-bit systems) are typically
- /// supported. For PCI configuration space, u8, u16, and u32 are supported but u64 is not.
- pub trait Io {
-+    /// Type of this I/O region. For untyped regions, [`Region`] can be used.
-+    type Target: ?Sized + KnownSize;
-+
-     /// Returns the base address of this mapping.
-     fn addr(&self) -> usize;
++/// The `base` is used for alignment checking only. This can be set to 0 to skip the check.
+ #[inline]
+-const fn offset_valid<U>(offset: usize, size: usize) -> bool {
+-    let type_size = core::mem::size_of::<U>();
+-    if let Some(end) = offset.checked_add(type_size) {
+-        end <= size && offset % type_size == 0
++const fn offset_valid<U>(base: usize, offset: usize, size: usize) -> bool {
++    if let Some(end) = offset.checked_add(size_of::<U>()) {
++        end <= size && (base.wrapping_add(offset) % align_of::<U>() == 0)
+     } else {
+         false
+     }
+@@ -220,14 +221,16 @@ pub trait IoCapable<T> {
+     ///
+     /// # Safety
+     ///
+-    /// The range `[address..address + size_of::<T>()]` must be within the bounds of `Self`.
++    /// - The range `[address..address + size_of::<T>()]` must be within the bounds of `Self`.
++    /// - `address` must be aligned.
+     unsafe fn io_read(&self, address: usize) -> T;
  
-     /// Returns the maximum size of this mapping.
-     fn maxsize(&self) -> usize;
+     /// Performs an I/O write of `value` at `address`.
+     ///
+     /// # Safety
+     ///
+-    /// The range `[address..address + size_of::<T>()]` must be within the bounds of `Self`.
++    /// - The range `[address..address + size_of::<T>()]` must be within the bounds of `Self`.
++    /// - `address` must be aligned.
+     unsafe fn io_write(&self, value: T, address: usize);
+ }
  
-+    /// Returns the absolute I/O address for a given `offset`,
-+    /// performing compile-time bound checks.
-+    // Always inline to optimize out error path of `build_assert`.
-+    #[inline(always)]
-+    fn io_addr_assert<U>(&self, offset: usize) -> usize {
-+        build_assert!(offset_valid::<U>(offset, Self::Target::MIN_SIZE));
-+
-+        self.addr() + offset
-+    }
-+
-     /// Returns the absolute I/O address for a given `offset`,
+@@ -309,7 +312,11 @@ pub trait Io {
+     // Always inline to optimize out error path of `build_assert`.
+     #[inline(always)]
+     fn io_addr_assert<U>(&self, offset: usize) -> usize {
+-        build_assert!(offset_valid::<U>(offset, Self::Target::MIN_SIZE));
++        // We cannot check alignment with `offset_valid` using `self.addr()`. So set 0 for it and
++        // ensure alignment by checking that the alignment of `U` is smaller or equal to the
++        // alignment of `Self::Target`.
++        const_assert!(Alignment::of::<U>().as_usize() <= Self::Target::MIN_ALIGN.as_usize());
++        build_assert!(offset_valid::<U>(0, offset, Self::Target::MIN_SIZE));
+ 
+         self.addr() + offset
+     }
+@@ -318,7 +325,7 @@ fn io_addr_assert<U>(&self, offset: usize) -> usize {
      /// performing runtime bound checks.
      #[inline]
-@@ -336,7 +403,7 @@ fn try_write64(&self, value: u64, offset: usize) -> Result
-     #[inline(always)]
-     fn read8(&self, offset: usize) -> u8
-     where
--        Self: IoKnownSize + IoCapable<u8>,
-+        Self: IoCapable<u8>,
-     {
-         self.read(offset)
-     }
-@@ -345,7 +412,7 @@ fn read8(&self, offset: usize) -> u8
-     #[inline(always)]
-     fn read16(&self, offset: usize) -> u16
-     where
--        Self: IoKnownSize + IoCapable<u16>,
-+        Self: IoCapable<u16>,
-     {
-         self.read(offset)
-     }
-@@ -354,7 +421,7 @@ fn read16(&self, offset: usize) -> u16
-     #[inline(always)]
-     fn read32(&self, offset: usize) -> u32
-     where
--        Self: IoKnownSize + IoCapable<u32>,
-+        Self: IoCapable<u32>,
-     {
-         self.read(offset)
-     }
-@@ -363,7 +430,7 @@ fn read32(&self, offset: usize) -> u32
-     #[inline(always)]
-     fn read64(&self, offset: usize) -> u64
-     where
--        Self: IoKnownSize + IoCapable<u64>,
-+        Self: IoCapable<u64>,
-     {
-         self.read(offset)
-     }
-@@ -372,7 +439,7 @@ fn read64(&self, offset: usize) -> u64
-     #[inline(always)]
-     fn write8(&self, value: u8, offset: usize)
-     where
--        Self: IoKnownSize + IoCapable<u8>,
-+        Self: IoCapable<u8>,
-     {
-         self.write(offset, value)
-     }
-@@ -381,7 +448,7 @@ fn write8(&self, value: u8, offset: usize)
-     #[inline(always)]
-     fn write16(&self, value: u16, offset: usize)
-     where
--        Self: IoKnownSize + IoCapable<u16>,
-+        Self: IoCapable<u16>,
-     {
-         self.write(offset, value)
-     }
-@@ -390,7 +457,7 @@ fn write16(&self, value: u16, offset: usize)
-     #[inline(always)]
-     fn write32(&self, value: u32, offset: usize)
-     where
--        Self: IoKnownSize + IoCapable<u32>,
-+        Self: IoCapable<u32>,
-     {
-         self.write(offset, value)
-     }
-@@ -399,7 +466,7 @@ fn write32(&self, value: u32, offset: usize)
-     #[inline(always)]
-     fn write64(&self, value: u64, offset: usize)
-     where
--        Self: IoKnownSize + IoCapable<u64>,
-+        Self: IoCapable<u64>,
-     {
-         self.write(offset, value)
-     }
-@@ -582,7 +649,7 @@ fn try_update<T, L, F>(&self, location: L, f: F) -> Result
-     fn read<T, L>(&self, location: L) -> T
-     where
-         L: IoLoc<T>,
--        Self: IoKnownSize + IoCapable<L::IoType>,
-+        Self: IoCapable<L::IoType>,
-     {
-         let address = self.io_addr_assert::<L::IoType>(location.offset());
+     fn io_addr<U>(&self, offset: usize) -> Result<usize> {
+-        if !offset_valid::<U>(offset, self.maxsize()) {
++        if !offset_valid::<U>(self.addr(), offset, self.maxsize()) {
+             return Err(EINVAL);
+         }
  
-@@ -614,7 +681,7 @@ fn read<T, L>(&self, location: L) -> T
-     fn write<T, L>(&self, location: L, value: T)
-     where
-         L: IoLoc<T>,
--        Self: IoKnownSize + IoCapable<L::IoType>,
-+        Self: IoCapable<L::IoType>,
-     {
-         let address = self.io_addr_assert::<L::IoType>(location.offset());
-         let io_value = value.into();
-@@ -658,7 +725,7 @@ fn write_reg<T, L, V>(&self, value: V)
-     where
-         L: IoLoc<T>,
-         V: LocatedRegister<Location = L, Value = T>,
--        Self: IoKnownSize + IoCapable<L::IoType>,
-+        Self: IoCapable<L::IoType>,
-     {
-         let (location, value) = value.into_io_op();
- 
-@@ -690,7 +757,7 @@ fn write_reg<T, L, V>(&self, value: V)
-     fn update<T, L, F>(&self, location: L, f: F)
-     where
-         L: IoLoc<T>,
--        Self: IoKnownSize + IoCapable<L::IoType> + Sized,
-+        Self: IoCapable<L::IoType> + Sized,
-         F: FnOnce(T) -> T,
-     {
-         let address = self.io_addr_assert::<L::IoType>(location.offset());
-@@ -704,28 +771,6 @@ fn update<T, L, F>(&self, location: L, f: F)
-     }
- }
- 
--/// Trait for types with a known size at compile time.
--///
--/// This trait is implemented by I/O backends that have a compile-time known size,
--/// enabling the use of infallible I/O accessors with compile-time bounds checking.
--///
--/// Types implementing this trait can use the infallible methods in [`Io`] trait
--/// (e.g., `read8`, `write32`), which require `Self: IoKnownSize` bound.
--pub trait IoKnownSize: Io {
--    /// Minimum usable size of this region.
--    const MIN_SIZE: usize;
--
--    /// Returns the absolute I/O address for a given `offset`,
--    /// performing compile-time bound checks.
--    // Always inline to optimize out error path of `build_assert`.
--    #[inline(always)]
--    fn io_addr_assert<U>(&self, offset: usize) -> usize {
--        build_assert!(offset_valid::<U>(offset, Self::MIN_SIZE));
--
--        self.addr() + offset
--    }
--}
--
- /// Implements [`IoCapable`] on `$mmio` for `$ty` using `$read_fn` and `$write_fn`.
- macro_rules! impl_mmio_io_capable {
-     ($mmio:ident, $(#[$attr:meta])* $ty:ty, $read_fn:ident, $write_fn:ident) => {
-@@ -758,6 +803,8 @@ unsafe fn io_write(&self, value: $ty, address: usize) {
- );
- 
- impl<const SIZE: usize> Io for Mmio<SIZE> {
-+    type Target = Region<SIZE>;
-+
-     /// Returns the base address of this mapping.
-     #[inline]
-     fn addr(&self) -> usize {
-@@ -771,10 +818,6 @@ fn maxsize(&self) -> usize {
-     }
- }
- 
--impl<const SIZE: usize> IoKnownSize for Mmio<SIZE> {
--    const MIN_SIZE: usize = SIZE;
--}
--
- impl<const SIZE: usize> Mmio<SIZE> {
-     /// Converts an `MmioRaw` into an `Mmio` instance, providing the accessors to the MMIO mapping.
-     ///
-@@ -798,6 +841,8 @@ pub unsafe fn from_raw(raw: &MmioRaw<SIZE>) -> &Self {
- pub struct RelaxedMmio<const SIZE: usize = 0>(Mmio<SIZE>);
- 
- impl<const SIZE: usize> Io for RelaxedMmio<SIZE> {
-+    type Target = Region<SIZE>;
-+
-     #[inline]
-     fn addr(&self) -> usize {
-         self.0.addr()
-@@ -809,10 +854,6 @@ fn maxsize(&self) -> usize {
-     }
- }
- 
--impl<const SIZE: usize> IoKnownSize for RelaxedMmio<SIZE> {
--    const MIN_SIZE: usize = SIZE;
--}
--
- impl<const SIZE: usize> Mmio<SIZE> {
-     /// Returns a [`RelaxedMmio`] reference that performs relaxed I/O operations.
-     ///
-diff --git a/rust/kernel/lib.rs b/rust/kernel/lib.rs
-index 9512af7156df..68f4d9a3425d 100644
---- a/rust/kernel/lib.rs
-+++ b/rust/kernel/lib.rs
-@@ -16,6 +16,9 @@
- // Please see https://github.com/Rust-for-Linux/linux/issues/2 for details on
- // the unstable features in use.
- //
-+// Stable since Rust 1.87.0.
-+#![feature(unsigned_is_multiple_of)]
-+//
- // Stable since Rust 1.89.0.
- #![feature(generic_arg_infer)]
- //
-diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-index 5071cae6543f..c6d6bd8f251d 100644
---- a/rust/kernel/pci.rs
-+++ b/rust/kernel/pci.rs
-@@ -43,7 +43,6 @@
- pub use self::io::{
-     Bar,
-     ConfigSpace,
--    ConfigSpaceKind,
-     ConfigSpaceSize,
-     Extended,
-     Normal, //
-diff --git a/rust/kernel/pci/io.rs b/rust/kernel/pci/io.rs
-index 0461e01aaa20..b4996aa059d8 100644
---- a/rust/kernel/pci/io.rs
-+++ b/rust/kernel/pci/io.rs
-@@ -10,11 +10,12 @@
-     io::{
-         Io,
-         IoCapable,
--        IoKnownSize,
-         Mmio,
--        MmioRaw, //
-+        MmioRaw,
-+        Region, //
-     },
--    prelude::*, //
-+    prelude::*,
-+    ptr::KnownSize, //
- };
- use core::{
-     marker::PhantomData,
-@@ -46,28 +47,21 @@ pub const fn into_raw(self) -> usize {
-     }
- }
- 
--/// Marker type for normal (256-byte) PCI configuration space.
--pub struct Normal;
-+/// Alias for normal (256-byte) PCI configuration space.
-+pub type Normal = Region<256>;
- 
--/// Marker type for extended (4096-byte) PCIe configuration space.
--pub struct Extended;
-+/// Alias for extended (4096-byte) PCIe configuration space.
-+pub type Extended = Region<4096>;
- 
- /// Trait for PCI configuration space size markers.
- ///
- /// This trait is implemented by [`Normal`] and [`Extended`] to provide
- /// compile-time knowledge of the configuration space size.
--pub trait ConfigSpaceKind {
--    /// The size of this configuration space in bytes.
--    const SIZE: usize;
--}
-+pub trait ConfigSpaceKind: KnownSize {}
- 
--impl ConfigSpaceKind for Normal {
--    const SIZE: usize = 256;
--}
-+impl ConfigSpaceKind for Normal {}
- 
--impl ConfigSpaceKind for Extended {
--    const SIZE: usize = 4096;
--}
-+impl ConfigSpaceKind for Extended {}
- 
- /// The PCI configuration space of a device.
- ///
-@@ -77,7 +71,7 @@ impl ConfigSpaceKind for Extended {
- /// The generic parameter `S` indicates the maximum size of the configuration space.
- /// Use [`Normal`] for 256-byte legacy configuration space or [`Extended`] for
- /// 4096-byte PCIe extended configuration space (default).
--pub struct ConfigSpace<'a, S: ConfigSpaceKind = Extended> {
-+pub struct ConfigSpace<'a, S: ?Sized + ConfigSpaceKind = Extended> {
-     pub(crate) pdev: &'a Device<device::Bound>,
-     _marker: PhantomData<S>,
- }
-@@ -85,7 +79,7 @@ pub struct ConfigSpace<'a, S: ConfigSpaceKind = Extended> {
- /// Implements [`IoCapable`] on [`ConfigSpace`] for `$ty` using `$read_fn` and `$write_fn`.
- macro_rules! impl_config_space_io_capable {
-     ($ty:ty, $read_fn:ident, $write_fn:ident) => {
--        impl<'a, S: ConfigSpaceKind> IoCapable<$ty> for ConfigSpace<'a, S> {
-+        impl<'a, S: ?Sized + ConfigSpaceKind> IoCapable<$ty> for ConfigSpace<'a, S> {
-             unsafe fn io_read(&self, address: usize) -> $ty {
-                 let mut val: $ty = 0;
- 
-@@ -118,7 +112,9 @@ unsafe fn io_write(&self, value: $ty, address: usize) {
- impl_config_space_io_capable!(u16, pci_read_config_word, pci_write_config_word);
- impl_config_space_io_capable!(u32, pci_read_config_dword, pci_write_config_dword);
- 
--impl<'a, S: ConfigSpaceKind> Io for ConfigSpace<'a, S> {
-+impl<'a, S: ?Sized + ConfigSpaceKind> Io for ConfigSpace<'a, S> {
-+    type Target = S;
-+
-     /// Returns the base address of the I/O region. It is always 0 for configuration space.
-     #[inline]
-     fn addr(&self) -> usize {
-@@ -132,10 +128,6 @@ fn maxsize(&self) -> usize {
-     }
- }
- 
--impl<'a, S: ConfigSpaceKind> IoKnownSize for ConfigSpace<'a, S> {
--    const MIN_SIZE: usize = S::SIZE;
--}
--
- /// A PCI BAR to perform I/O-Operations on.
- ///
- /// I/O backend assumes that the device is little-endian and will automatically
-diff --git a/rust/kernel/ptr.rs b/rust/kernel/ptr.rs
-index 3f3e529e9f58..82acb531b17b 100644
---- a/rust/kernel/ptr.rs
-+++ b/rust/kernel/ptr.rs
-@@ -235,11 +235,20 @@ fn align_up(self, alignment: Alignment) -> Option<Self> {
- ///
- /// This is a generalization of [`size_of`] that works for dynamically sized types.
- pub trait KnownSize {
-+    /// Minimum size of this type known at compile-time.
-+    const MIN_SIZE: usize;
-+
-+    /// Minimum alignment of this type known at compile-time.
-+    const MIN_ALIGN: Alignment;
-+
-     /// Get the size of an object of this type in bytes, with the metadata of the given pointer.
-     fn size(p: *const Self) -> usize;
- }
- 
- impl<T> KnownSize for T {
-+    const MIN_SIZE: usize = size_of::<T>();
-+    const MIN_ALIGN: Alignment = Alignment::of::<T>();
-+
-     #[inline(always)]
-     fn size(_: *const Self) -> usize {
-         size_of::<T>()
-@@ -247,6 +256,9 @@ fn size(_: *const Self) -> usize {
- }
- 
- impl<T> KnownSize for [T] {
-+    const MIN_SIZE: usize = 0;
-+    const MIN_ALIGN: Alignment = Alignment::of::<T>();
-+
-     #[inline(always)]
-     fn size(p: *const Self) -> usize {
-         p.len() * size_of::<T>()
 
 -- 
 2.54.0
