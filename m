@@ -1,194 +1,210 @@
-Return-Path: <linux-pwm+bounces-9424-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9425-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id pDT9OdWxPmp5KQkAu9opvQ
-	(envelope-from <linux-pwm+bounces-9424-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Fri, 26 Jun 2026 19:07:33 +0200
+	id BDGlBrvGPmoQLgkAu9opvQ
+	(envelope-from <linux-pwm+bounces-9425-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Fri, 26 Jun 2026 20:36:43 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 863EB6CF582
-	for <lists+linux-pwm@lfdr.de>; Fri, 26 Jun 2026 19:07:33 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [IPv6:2600:3c09:e001:a7::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9C0296CFB36
+	for <lists+linux-pwm@lfdr.de>; Fri, 26 Jun 2026 20:36:42 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=suse.com header.s=google header.b=McaFOsB3;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9424-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9424-lists+linux-pwm=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=suse.com;
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Aw4Gu7aO;
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9425-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 2600:3c09:e001:a7::12fc:5321 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9425-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7B303305489F
-	for <lists+linux-pwm@lfdr.de>; Fri, 26 Jun 2026 17:05:48 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 1FAC83014241
+	for <lists+linux-pwm@lfdr.de>; Fri, 26 Jun 2026 18:36:42 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 54AB5400E0A;
-	Fri, 26 Jun 2026 17:05:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 427B43B7B71;
+	Fri, 26 Jun 2026 18:36:41 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com [209.85.128.45])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7D873839B8
-	for <linux-pwm@vger.kernel.org>; Fri, 26 Jun 2026 17:05:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0790C3B38B0;
+	Fri, 26 Jun 2026 18:36:40 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782493548; cv=none; b=gI/g7MgwjWOgJbnoxWo0w7Ts9rV3bhv+5gpiU0MY8Uy1uU6kMFXP7VKu78J2ZlcH/hA6cSaj0SU8q/03QOay8aIlof2ChoPoRWQDYCsWGzDoH6zSett5LySULCe/2PZMrXfFAVJnLjZ0u5p1gF3vRRckq4mLh2V1l96XkWx7+es=
+	t=1782499001; cv=none; b=M5Sq96H8qiIMTaopQdcMZUzA5yZUkFwdnBGas5EXy8kvf3KZpoIdJoDfmEwdsfwgVjtc4MGSozL35s5Bk7U4t1An5KIK+yRSmDcJRZCMJtk/ze/c1mbCq8lZUjmMHT28nvcX2pd+1mOPrnIUPyBeq3LO4986tHAfuh5MdLzgE/c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782493548; c=relaxed/simple;
-	bh=XR8MOukhdb4119CLjtzkhC3PmY5hiwGnrBNevd09pJw=;
-	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gTL1r9FOvCs/7oVKoG/AZnbmlT3sILDcVg2buG0CLLurxopQk5jmT4WvRc51wVtopQixLfykA3uFr2U7/r3JlRd7+EVncq0MHTiNvX/qsAsHKdAWuD8DfAX1sjfaYkdH/OFcv57IsK4KZNzbdfQKjO5kEVrz4gy31fJXFWhANe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=McaFOsB3; arc=none smtp.client-ip=209.85.128.45
-Received: by mail-wm1-f45.google.com with SMTP id 5b1f17b1804b1-4923fb1f095so11841795e9.1
-        for <linux-pwm@vger.kernel.org>; Fri, 26 Jun 2026 10:05:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1782493544; x=1783098344; darn=vger.kernel.org;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=MJMulB6FHoz3UwRU2js2Yx9wDg7dc99Kfk97uaLSZ70=;
-        b=McaFOsB3pyEjPyeAdIflDv75XopeHatu+YSzKhNHhQtlOkGyx85Ij7KbmajKq2+mjR
-         z/fU2cUtdulbHYDdK6qOP/lJKMcz6E1mu6PFfLU7lwLoqNdXaGx0oVyDv8cZ9l/SqBoO
-         lreN028lCyzALA1YSHSBaXL/z/CjhHtYo4FFmi7ilIMXTh1TywTmcgvpQMq0D3UpDofX
-         zhHA35JJoFLRl9NsUvbdc8LgmWQMVjEIZxHIOQeSRlQz02zZIpx3W/QFcVB36ugeO02v
-         8QnJkBT/Hxmnx3UaG72Zm/hPPP+o/N3ObBvfih8S0m19LQoX64UkcURGJ/AdtmxOaPjd
-         p5sw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782493544; x=1783098344;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:date:from:x-gm-gg:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=MJMulB6FHoz3UwRU2js2Yx9wDg7dc99Kfk97uaLSZ70=;
-        b=Aor56S3kFqyA0qeEvxcdUNq/7aAIj6x+rCMg1eMjH4NYphtrXF1oy03v6eWovpOLJf
-         j7hGS5rW3cNkEBM0CVWdT6QzkD6+/z/py0pbnNkVVPTyVKWNWn4+QmX3lASweKQjn4UV
-         69EHTFoLG5E6MWYQsXTuxq4LD/6W0bzgxIbfotTjS8ugG2hwzRxKXnsuzFn/Qvxwr/iY
-         JmYLodclpp+J9cPIy4nSMvSYIQnPxF5+nd86rxgyg0tla+AIMlHiVSknHZhPSCvHxgNa
-         YyJkYyfIYYuJueMEQEqEFiDb3XTWWVqsk+e4o0JuMIBT5C4Gu7bBF+z+kRwJtyDrIsQp
-         gQQQ==
-X-Forwarded-Encrypted: i=1; AFNElJ+qfdvx3ICb7H9Y0Ao+zF7Sz0DpT8xF8+aD4fB8ydx6BcKYpedq4GQAsQng10Vo0T/Juy9wcGhe5Go=@vger.kernel.org
-X-Gm-Message-State: AOJu0YzAs2K1LEixVaScCIOHL37aw6i8nuveI/7wYvmfD/BIlJWTSSuH
-	1+tnsK6dPADAP4VufCorIpU+AJoMsCuAAk2TSAMs7qHbGElq757mOyWuXEknP6iWJaw=
-X-Gm-Gg: AfdE7ck7ey2yhb6hqknUVnHAlJDFDYg3Yygf6TKpxnMR7n/6cwsfG1xUzq7IaRu9bjb
-	Db6fOf/dmCjE1ofvqELQ1AA+w7dvHUuTcryT27bSn32mySQfWo2bg/eK5eALqnMnx0XHu6T2RYE
-	DwLPDJG65z2nfZjlnbRbarFTYnzGE1KHW4EPMEF4sqpcQKQg3xNVXiBBCk+ODKRzTG9M8w7vGXQ
-	q5nQgWkWCIhNe3yBt+nNEArVTdVutNPFSqYvjiAGVd8WzXBoJFLQ8pLtk9ZmA15ywZ1w03BdXHB
-	SwhLl4/ltgrYZHwUJw1A0Gnux/Ve2S9Yn85QCkMWFlPEufNQy8ejIy+9tmlmlQllGm5tibgwkLO
-	URu/YNNkdMeCU/zqmuXj+eZJHwmFBaGJNMpf7GUSRgEslvLfX7o/vIPHBdfB+zcDFM4cgnNMTfS
-	K5h4oO0EEmCg==
-X-Received: by 2002:a05:600c:3549:b0:492:4363:e7eb with SMTP id 5b1f17b1804b1-492668acc8cmr114223385e9.32.1782493544245;
-        Fri, 26 Jun 2026 10:05:44 -0700 (PDT)
-Received: from localhost ([195.94.150.2])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-49269009163sm100940205e9.11.2026.06.26.10.05.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 26 Jun 2026 10:05:43 -0700 (PDT)
-From: Andrea della Porta <andrea.porta@suse.com>
-X-Google-Original-From: Andrea della Porta <aporta@suse.de>
-Date: Fri, 26 Jun 2026 19:09:08 +0200
-To: Stanimir Varbanov <svarbanov@suse.de>
-Cc: Andrea della Porta <andrea.porta@suse.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	linux-pwm@vger.kernel.org, Rob Herring <robh@kernel.org>,
-	Krzysztof Kozlowski <krzk+dt@kernel.org>,
-	Conor Dooley <conor+dt@kernel.org>,
-	Florian Fainelli <florian.fainelli@broadcom.com>,
-	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
-	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
-	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Naushir Patuck <naush@raspberrypi.com>, mbrugger@suse.com,
-	Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-Subject: Re: [PATCH v5 1/3] dt-bindings: pwm: Add Raspberry Pi RP1 PWM
- controller
-Message-ID: <aj6yNJQZaQviXugB@apocalypse>
-References: <cover.1780670224.git.andrea.porta@suse.com>
- <350c2fb454951fd2c9d959f1d94802fea8fa8152.1780670224.git.andrea.porta@suse.com>
- <5b167316-ed50-448c-aa05-6a041a6544d5@suse.de>
+	s=arc-20240116; t=1782499001; c=relaxed/simple;
+	bh=fargNlghZ/3htKgOlr4ecSSwYBEh7zEpFbePuaB9ivk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=DAQkv4yrSaIXJyozjCalII0POWyvan/4DEYbIZuJyqekJOlZeOtr8TS7Ntf0UflR5quGUtgClySlzcQD+3uu3xT/Z3DvVl33eK9Uiu1IBzC/EPcXHxsCfRCBIN4yVKZTmtpY5qn9qo3EyyekHFC+g5iU6sSIbrzkHocOHiBa/4E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Aw4Gu7aO; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E20321F000E9;
+	Fri, 26 Jun 2026 18:36:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782498999;
+	bh=4ohhSdR4uLkHiWRbMexAantHFBpBzZI6WmGjwL2KC3o=;
+	h=From:To:Cc:Subject:Date;
+	b=Aw4Gu7aOmaqbgsNADbHax24oeNXpOSXZx5SXpUdMyrGGeFHsWamP319IlTBhIGhJM
+	 cQOPs1aZriEKiCWZK+GufH1B9zF0XZDJXqg66mNdeWTpNtHQupGiP+98JQjBldBlWy
+	 LO7JMcjFU6VB1M3uyQvm0GzYFkYt8oqx3fDAjnIJG5N2JaIWy+JMH7Lq+RWsvUx+cR
+	 BfhqTJjLqL6FQd82v/zWPLZuEJQ+j2AU6/IwX2j8Aff3thBoLOWrm4pCDW5er7/1Ao
+	 pZFB69zwhfoVWmDtQZDhZUWGoriTiNJKzPAFB+AdHcDDjJruFkOuX/1XpAofcE+mhz
+	 t8M93MWjffiVg==
+From: Danilo Krummrich <dakr@kernel.org>
+To: gregkh@linuxfoundation.org,
+	rafael@kernel.org,
+	dakr@kernel.org,
+	ojeda@kernel.org,
+	boqun@kernel.org,
+	gary@garyguo.net,
+	bjorn3_gh@protonmail.com,
+	lossin@kernel.org,
+	a.hindborg@kernel.org,
+	aliceryhl@google.com,
+	tmgross@umich.edu,
+	acourbot@nvidia.com,
+	ecourtney@nvidia.com,
+	m.wilczynski@samsung.com,
+	david.m.ertman@intel.com,
+	ira.weiny@intel.com,
+	leon@kernel.org,
+	daniel.almeida@collabora.com,
+	bhelgaas@google.com,
+	kwilczynski@kernel.org
+Cc: driver-core@lists.linux.dev,
+	linux-kernel@vger.kernel.org,
+	nova-gpu@lists.linux.dev,
+	dri-devel@lists.freedesktop.org,
+	linux-pwm@vger.kernel.org,
+	rust-for-linux@vger.kernel.org
+Subject: [PATCH v4 0/7] ForLt/CovariantForLt split, auxiliary closure API and DevresLt
+Date: Fri, 26 Jun 2026 20:36:07 +0200
+Message-ID: <20260626183630.2585057-1-dakr@kernel.org>
+X-Mailer: git-send-email 2.54.0
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5b167316-ed50-448c-aa05-6a041a6544d5@suse.de>
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.16 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
+X-Spamd-Result: default: False [-3.66 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	MID_CONTAINS_FROM(1.00)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[suse.com,quarantine];
-	R_DKIM_ALLOW(-0.20)[suse.com:s=google];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_MISSING_CHARSET(0.50)[];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c09:e001:a7::/64:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9424-lists,linux-pwm=lfdr.de];
-	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:svarbanov@suse.de,m:andrea.porta@suse.com,m:ukleinek@kernel.org,m:linux-pwm@vger.kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:florian.fainelli@broadcom.com,m:bcm-kernel-feedback-list@broadcom.com,m:devicetree@vger.kernel.org,m:linux-rpi-kernel@lists.infradead.org,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:naush@raspberrypi.com,m:mbrugger@suse.com,m:krzysztof.kozlowski@oss.qualcomm.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[andrea.porta@suse.com,linux-pwm@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9425-lists,linux-pwm=lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_RECIPIENTS(0.00)[m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:dakr@kernel.org,m:ojeda@kernel.org,m:boqun@kernel.org,m:gary@garyguo.net,m:bjorn3_gh@protonmail.com,m:lossin@kernel.org,m:a.hindborg@kernel.org,m:aliceryhl@google.com,m:tmgross@umich.edu,m:acourbot@nvidia.com,m:ecourtney@nvidia.com,m:m.wilczynski@samsung.com,m:david.m.ertman@intel.com,m:ira.weiny@intel.com,m:leon@kernel.org,m:daniel.almeida@collabora.com,m:bhelgaas@google.com,m:kwilczynski@kernel.org,m:driver-core@lists.linux.dev,m:linux-kernel@vger.kernel.org,m:nova-gpu@lists.linux.dev,m:dri-devel@lists.freedesktop.org,m:linux-pwm@vger.kernel.org,m:rust-for-linux@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[dakr@kernel.org,linux-pwm@vger.kernel.org];
+	FREEMAIL_TO(0.00)[linuxfoundation.org,kernel.org,garyguo.net,protonmail.com,google.com,umich.edu,nvidia.com,samsung.com,intel.com,collabora.com];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	RCPT_COUNT_TWELVE(0.00)[26];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[andrea.porta@suse.com,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[suse.com:+];
-	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	MISSING_XM_UA(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dakr@kernel.org,linux-pwm@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	TO_DN_NONE(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c09::/32, country:SG];
+	ALIAS_RESOLVED(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,devicetree.org:url,apocalypse:mid,raspberrypi.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,suse.com:dkim,suse.com:email,suse.com:from_mime]
+	TAGGED_RCPT(0.00)[linux-pwm];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sto.lore.kernel.org:rdns,sto.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 863EB6CF582
+X-Rspamd-Queue-Id: 9C0296CFB36
 
-Hi Stan,
+The ForLt trait currently guarantees covariance, which allows safe
+lifetime shortening via cast_ref(). However, some types (e.g. those
+containing Mutex<&'bound T>) are invariant over their lifetime parameter
+and cannot safely use cast_ref().
 
-On 18:24 Fri 12 Jun     , Stanimir Varbanov wrote:
-> 
-> 
-> On 6/12/26 5:01 PM, Andrea della Porta wrote:
-> > From: Naushir Patuck <naush@raspberrypi.com>
-> > 
-> > Add the devicetree binding documentation for the PWM
-> > controller found in the Raspberry Pi RP1 chipset.
-> > 
-> > Signed-off-by: Naushir Patuck <naush@raspberrypi.com>
-> > Co-developed-by: Stanimir Varbanov <svarbanov@suse.de>
-> > Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
-> > Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
-> > Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
-> > ---
-> >  .../bindings/pwm/raspberrypi,rp1-pwm.yaml     | 54 +++++++++++++++++++
-> >  1 file changed, 54 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pwm/raspberrypi,rp1-pwm.yaml
-> > 
-> > diff --git a/Documentation/devicetree/bindings/pwm/raspberrypi,rp1-pwm.yaml b/Documentation/devicetree/bindings/pwm/raspberrypi,rp1-pwm.yaml
-> > new file mode 100644
-> > index 0000000000000..6f8461d0454f7
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pwm/raspberrypi,rp1-pwm.yaml
-> > @@ -0,0 +1,54 @@
-> > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/pwm/raspberrypi,rp1-pwm.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Raspberry Pi RP1 PWM controller
-> > +
-> > +maintainers:
-> > +  - Naushir Patuck <naush@raspberrypi.com>
-> 
-> Could you add you or me as a maintainer as well. I'm not sure Naushir
-> had agreed to maintain the bindings in mainline.
-> 
+This series splits ForLt into two traits:
 
-Sure, will do.
-Thanks,
+  - ForLt: base trait for all lifetime-parameterized types, providing
+    only the Of<'a> GAT.
 
-Andrea
+  - CovariantForLt: unsafe subtrait that guarantees covariance,
+    providing a safe cast_ref() method.
 
-> ~Stan
+For invariant types, a closure-based API (registration_data_with()) is
+added to the auxiliary subsystem. The closure's HRTB prevents the caller
+from choosing a concrete lifetime, which would be unsound for invariant
+types.
+
+On top of that, this series adds DevresLt<F: ForLt>, a thin wrapper
+around Devres<F::Of<'static>> that shortens the stored 'static lifetime
+back to the caller's borrow scope. DevresLt provides both closure-based
+access (access_with/try_access_with for ForLt types) and direct
+reference access (access/try_access for CovariantForLt types).
+
+Also implement ForLt and CovariantForLt for Bar, IoMem and
+ExclusiveIoMem, and update their into_devres() methods to return
+DevresLt. Provide convenience type aliases DevresBar, DevresIoMem and
+DevresExclusiveIoMem.
+
+Changes in v4:
+- ForLt! macro: run the Prover and emit ProveWf structs for
+  well-formedness checks
+- DevresLt: change Send bound from F::Of<'static>: Send to the
+  correct for<'a> F::Of<'a>: Send
+- Add #[inline] to forwarding functions in registration_data_with,
+  registration_data, and all DevresLt accessors
+
+Changes in v3:
+- Keep UnsafeForLtImpl as the shared helper for both ForLt! and
+  CovariantForLt!, distinguished by const generic N
+- Remove cast_ref_unchecked() from ForLt; lifetime shortening is
+  handled by borrowing with the target lifetime directly or by
+  decoupling the HRTB from the outer reference lifetime
+
+Changes in v2:
+- Fold the ForLt -> CovariantForLt rename and the new ForLt base trait
+  into this series
+- Add closure-based registration_data_with() for auxiliary ForLt types
+- Add auxiliary sample demonstrating ForLt with an invariant Mutex type
+- DevresLt: add closure-based access_with()/try_access_with() for ForLt
+  types alongside direct access()/try_access() for CovariantForLt types
+- Make DevresLt::new() unsafe; callers must guarantee the data outlives
+  the device binding
+- Implement both ForLt and CovariantForLt (previously just ForLt) for
+  Bar, IoMem, ExclusiveIoMem
+- Various safety comment and documentation improvements
+
+Danilo Krummrich (7):
+  rust: types: rename ForLt to CovariantForLt
+  rust: types: introduce ForLt base trait for CovariantForLt
+  rust: auxiliary: add registration_data_with() for ForLt types
+  rust: auxiliary: sample: demonstrate ForLt with invariant Mutex type
+  rust: devres: add DevresLt for ForLt-aware device resource access
+  rust: pci: return DevresLt from Bar::into_devres()
+  rust: io: mem: return DevresLt from
+    IoMem/ExclusiveIoMem::into_devres()
+
+ drivers/gpu/nova-core/driver.rs       |   4 +-
+ drivers/pwm/pwm_th1520.rs             |   5 +-
+ rust/kernel/auxiliary.rs              |  78 ++++++++++++++-----
+ rust/kernel/devres.rs                 | 106 ++++++++++++++++++++++++++
+ rust/kernel/io/mem.rs                 |  65 +++++++++++-----
+ rust/kernel/pci.rs                    |   1 +
+ rust/kernel/pci/io.rs                 |  37 ++++++---
+ rust/kernel/types.rs                  |   1 +
+ rust/kernel/types/for_lt.rs           |  95 ++++++++++++++++-------
+ rust/macros/for_lt.rs                 |  72 +++++++++++------
+ rust/macros/lib.rs                    |  18 ++++-
+ samples/rust/rust_driver_auxiliary.rs |  96 ++++++++++++++++-------
+ 12 files changed, 447 insertions(+), 131 deletions(-)
+
+
+base-commit: 51cb1aa1250c36269474b8b6ca6b6319e170f5a5
+-- 
+2.54.0
+
 
