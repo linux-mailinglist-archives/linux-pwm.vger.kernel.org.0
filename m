@@ -1,200 +1,172 @@
-Return-Path: <linux-pwm+bounces-9434-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9435-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id fpaBBZLBP2rWXwkAu9opvQ
-	(envelope-from <linux-pwm+bounces-9434-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Sat, 27 Jun 2026 14:26:58 +0200
+	id DWBwBmfVP2rtYgkAu9opvQ
+	(envelope-from <linux-pwm+bounces-9435-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Sat, 27 Jun 2026 15:51:35 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 763386D1EC4
-	for <lists+linux-pwm@lfdr.de>; Sat, 27 Jun 2026 14:26:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 621A16D20BB
+	for <lists+linux-pwm@lfdr.de>; Sat, 27 Jun 2026 15:51:34 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=gmail.com header.s=20251104 header.b=UmpjQN+d;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9434-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9434-lists+linux-pwm=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=none) header.from=gmail.com;
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=2")
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=aEuj47Vk;
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9435-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9435-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 48CC43014567
-	for <lists+linux-pwm@lfdr.de>; Sat, 27 Jun 2026 12:26:56 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 197F830075EC
+	for <lists+linux-pwm@lfdr.de>; Sat, 27 Jun 2026 13:51:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id F3EFA3590AE;
-	Sat, 27 Jun 2026 12:26:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E015E340298;
+	Sat, 27 Jun 2026 13:51:31 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-dy1-f173.google.com (mail-dy1-f173.google.com [74.125.82.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4F89149DF1
-	for <linux-pwm@vger.kernel.org>; Sat, 27 Jun 2026 12:26:54 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782563215; cv=pass; b=WcFnzKALEyh9uyB6JFjWd+P1f/3Z16soZn4zgBIxHJDVypi/Hpg5ZfUEjY2HfQQ1P8kOR5P3kaZOgUmUgWtl056W+gY1PDt+ebTDt6BRqovcfTlTroiXX76TmftucobF47/rJf3ytvQGbNEWYM0w1GzfQ9/Hfp0gVDj1+Hj5YU4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782563215; c=relaxed/simple;
-	bh=tiA1M5jTZ3Y/iPMgDja4ldkoTBXhRz6JYbn7HUdPCGE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=MQ3SN3y6naEvgY9K0LOvRzH6nQUD2LHboTxuEJ0YNvMzWgBP6uUhEnh/DzRJtJ2xOiQ9tu1T/X2mwEpaaRwr3hYj0XMLukerhZm4MHAI4fp/WiM7q0yR4YiCpc4lmQu+r+Of1rKZtbqp+R9XMtXnX2Ta5B6KOi5Rr+tiMDgWzdY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UmpjQN+d; arc=pass smtp.client-ip=74.125.82.173
-Received: by mail-dy1-f173.google.com with SMTP id 5a478bee46e88-30e869ebc19so6264eec.0
-        for <linux-pwm@vger.kernel.org>; Sat, 27 Jun 2026 05:26:54 -0700 (PDT)
-ARC-Seal: i=1; a=rsa-sha256; t=1782563214; cv=none;
-        d=google.com; s=arc-20260327;
-        b=r0VrTZun/pPEnOMVBkWSG88QlpZPTfqHxMLbRlSkJhM+h4b50bg2X35dK2nAZvH3UL
-         ONFuwxWsEwVn0iblrrpt4rbhT5iVKdksbx0DtwF23lclHxoEI6dgLrK8hfahog3a6OW1
-         Gk4cAKbKYHj0z5w6LoGXS+Aa4mCBqp9zyZhRl/5fqGmmvqWAox56B3O9LhiUntfsJnS2
-         6ZilgCQ6IwOLrFmmeZsb2ukQrtDSfTejQ/jOYwSVX33DZsKRgzHjC9l1tMs3kYijszl4
-         ZB362FvYc5dZhRKVDO9JJekI/sPTj/0fH5eNA6iCKyNL6FAYCh3AhFTR4hncDdOXdUuS
-         BCYg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:dkim-signature;
-        bh=FFA3P0ucfKK/nr2i/TjAG0TaOdJ/VCYkxmATJyLWDko=;
-        fh=AJSAyfro2fUsVG3zAJMzmJbqDKeZgFJDkZX4bRNjmdU=;
-        b=r1FTzBR6Kt7on5dFFEDciRiHuBKJ9Qxw5DuBKv3YrR0rU+esadczVa5BAr81tuAv/u
-         hyeMj1I5qRlgiSrl7vcFOk4zL4CRYFkT3cHVb0AR0Mlq6Bg6aXROI8HGcmUyaGn/toyQ
-         o57Z7pXxhRVrzEiinvpBjoOaDwb0ttpGLF2s3uYwlk7vKna4rexlokJbgAopDQeyFkoi
-         dx07dls6GdsZ04chiPDwwJUiB2OjDpmSj0Us9ZdfG00dgAqrOM4h0SwKIUNsji7h35No
-         xDjoRF1nFDV6GnonfjqzvMQaUVIn1yoUA/kcdDuEmYXo02AG/23ZG7IGVrdU0ORF4GR2
-         lebQ==;
-        darn=vger.kernel.org
-ARC-Authentication-Results: i=1; mx.google.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20251104; t=1782563214; x=1783168014; darn=vger.kernel.org;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
-         :date:message-id:reply-to:content-type;
-        bh=FFA3P0ucfKK/nr2i/TjAG0TaOdJ/VCYkxmATJyLWDko=;
-        b=UmpjQN+dbFsh7cj/TVQnupfZ2TWKdFD3KmaLWZqt5wrAlZOdMBFMmyvAF0qHYagFCo
-         6hDiJPGGwmSeh5YioWD1iIYM+lk4VVl4qjK9DV4tQyx4aRuSQtWoSzx8pAsAE7pTYD0+
-         U0O9nzz9i1SUCYPl5wGqBdfn8Cdb7zOivdDEg0SxgNCRMBAuq27G/XE0tYZ8Lv6GnQRM
-         oW4ETaTpYIK+am1brMtlY3CR+egEc5lXcJVOEN4o9Wjrd8E7wR3TZVYkQlhTMbPrwQtO
-         /pLywOlTx6c6JPuoRaFhtX7uQ1pd/efvEnGilwswyGny8UygqneNM6knxq4/p1OR0MdS
-         833w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1782563214; x=1783168014;
-        h=content-transfer-encoding:content-type:cc:to:subject:message-id
-         :date:from:in-reply-to:references:mime-version:x-gm-gg
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :content-type;
-        bh=FFA3P0ucfKK/nr2i/TjAG0TaOdJ/VCYkxmATJyLWDko=;
-        b=keIK65zB/rPtDil3m2sbyYBiXhXFRDtbKxsEJ6ZHr9FpnNVpgOpamcbOaCopSaK8br
-         lUg7ZN85t/lDW/p/U6VSFs+e4Dff+ofdnWZSjbQdUMMOz5+zcVHbhIau5IL2EkNYTBOx
-         Fwi52F3Kq+WAo5gldalHlqqTt8e2hFI6WB2+LAmjgp2PxAkYALIgbOPXQVmuRHg7F8hB
-         NYTAC/SAq+VvLQAB8KtZKfaDwj4f2EdoFX/yglJrXW3+Ct5708dk81Z4V27OpWOPgnsR
-         3jAUOBzFWgwrI93n17JGwCp02TqnooTJvr0CRBe2itavkR5F86TfsLkET1bvseoqdi3T
-         Ot8g==
-X-Forwarded-Encrypted: i=1; AHgh+RqSKwiyUSMaYd5Yk3Agi0Z325fuXDtU1xRms3mhcADenmzuJnie+bSqieNGBFA6fJONthVubOyYfoc=@vger.kernel.org
-X-Gm-Message-State: AOJu0YxMRc3Z3ws41OEZv7oPXONdZAEuaP3GHXbA3MyWNtG70d/AqGS0
-	AfP2xYvqtLXXoXDKgpFCJrcBqLkxOMyWcrdntGc/3MU9ZpJMdW7Y1GKUcxOnuEyBWzbo0txnBOd
-	RWQGa3hH+Sc7izubIUJxZiDcqbH/nj7U=
-X-Gm-Gg: AfdE7cnSoQGN5IJrpbPtyM747LofhG0ELyQCk762tSxzVCgJIUq7DATS7gDeroPKg57
-	L+mi+OipqHTSE16hBxL0zj6olzBTrksxHvITfXJYIaqMv1p8zBQzZtcEQF7OD5SFXHglt/P1ohn
-	o60huz0amKiI38PAEolqQ1xMDtWAocS/hL5fqoTj6p7RFum2bqcC8sRT6VqOz3nFKKofh4ERvR2
-	cTPKaJOvIqnlZLgUZhADyDyCKoSFS245eGwVUA9C2Sw1C5qup95SqQ55Mq/fEsSc1xis6jzTbBP
-	enLm7ZvlUKCpQa0js2vQ4JkQurwOj54tG9nKz+nphPOhKKcFnjoDZjuOPmXgw0VmdGMjCADfsb8
-	2dBROL4Cj4jeafs8AyEyT9q4=
-X-Received: by 2002:a05:7301:608e:b0:30c:a4bb:71c9 with SMTP id
- 5a478bee46e88-30ca4bb7593mr2120179eec.0.1782563213899; Sat, 27 Jun 2026
- 05:26:53 -0700 (PDT)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02DC43AEF3A;
+	Sat, 27 Jun 2026 13:51:29 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782568291; cv=none; b=go1VQqZBufjGtRX+Z/HXQo23KbeBRix76v7osrAMxbirBG9ZGCr/hWrHTndZ++aTRrdkB6tQMcUCZ5ed7uWYroyLCeHRYdT47z+LHnLdJOHMPZf9wi1LOPIsvi8Hhmbx7L0YfJaqdPvzQHzSNFdfvFp4Yu/rP7qVFg0NIwh4+lU=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782568291; c=relaxed/simple;
+	bh=Mp3HhFnT4Dn5tymA/irC+FaVJe06bKlOkR6goezdd/I=;
+	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
+	 References:In-Reply-To; b=JA/ASURRJbw2H6Xc6ggFjiYk88QPq+CO1DXupRyGBk1USWmd4EF3HPpOqucV7JXpMXhLBhxKmejoTG9nQi32XEWGRJIuDUw44g1Fq06SZm1bZVtYgiKsJwjaUsNBLQ4AxAZskubl7NAxnYYpfhZWfXd936eG1XtnRfMeA1TxhDw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aEuj47Vk; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D076D1F000E9;
+	Sat, 27 Jun 2026 13:51:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1782568289;
+	bh=sZ7kMHOM/UusQZj89sqfP5ZckFAGYTvVqUakUPkV1uQ=;
+	h=Date:Subject:Cc:To:From:References:In-Reply-To;
+	b=aEuj47VkimWwfxAw2ZHAEfGEMZKtEMZ6WNWLDw+s3570SNvTizAl0ILVOI17i2A7L
+	 AYudOp4K9ZVQti0oj3sp0GHOY0v4wg9twuayqUoC0Jz8/xQZJVi+PWbRe1rcVUcme0
+	 23YyTXp4+62dyWzGDNBhKH2kKEDhJpJ9iOPCebxN+YhIKYhKB+vSuhClJuLo0ZnDcP
+	 r1yz3J+EducA4gN7IrvtGppM1/3YMfsdh7g816Lb13ia+OwEkpPtg4uviqtif2YGp2
+	 jYR49KtLMnGOr/62DXdveI87ZGy85POyH0eHlU74bdr0niz5rL0MFYESyY7yLZ7OX6
+	 2Vh7Ryq7ce8VA==
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-References: <20260626183630.2585057-1-dakr@kernel.org> <20260626183630.2585057-3-dakr@kernel.org>
-In-Reply-To: <20260626183630.2585057-3-dakr@kernel.org>
-From: Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date: Sat, 27 Jun 2026 14:26:40 +0200
-X-Gm-Features: AVVi8CfTJDNVo1KxD-2qMWkEFrV45PAxG53CiKejEkAqP1d75q9UdnCynZyU0Y4
-Message-ID: <CANiq72=0OOgc6NtbpF0Ysdk3ytRWCGGbWg00u0Le2AzQmKGKxg@mail.gmail.com>
-Subject: Re: [PATCH v4 2/7] rust: types: introduce ForLt base trait for CovariantForLt
-To: Danilo Krummrich <dakr@kernel.org>
-Cc: gregkh@linuxfoundation.org, rafael@kernel.org, ojeda@kernel.org, 
-	boqun@kernel.org, gary@garyguo.net, bjorn3_gh@protonmail.com, 
-	lossin@kernel.org, a.hindborg@kernel.org, aliceryhl@google.com, 
-	tmgross@umich.edu, acourbot@nvidia.com, ecourtney@nvidia.com, 
-	m.wilczynski@samsung.com, david.m.ertman@intel.com, ira.weiny@intel.com, 
-	leon@kernel.org, daniel.almeida@collabora.com, bhelgaas@google.com, 
-	kwilczynski@kernel.org, driver-core@lists.linux.dev, 
-	linux-kernel@vger.kernel.org, nova-gpu@lists.linux.dev, 
-	dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org, 
-	rust-for-linux@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
 Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sat, 27 Jun 2026 15:51:23 +0200
+Message-Id: <DJJVPW8H183T.1927SIBS40Z40@kernel.org>
+Subject: Re: [PATCH v4 2/7] rust: types: introduce ForLt base trait for
+ CovariantForLt
+Cc: <gregkh@linuxfoundation.org>, <rafael@kernel.org>, <ojeda@kernel.org>,
+ <boqun@kernel.org>, <gary@garyguo.net>, <bjorn3_gh@protonmail.com>,
+ <lossin@kernel.org>, <a.hindborg@kernel.org>, <aliceryhl@google.com>,
+ <tmgross@umich.edu>, <acourbot@nvidia.com>, <ecourtney@nvidia.com>,
+ <m.wilczynski@samsung.com>, <david.m.ertman@intel.com>,
+ <ira.weiny@intel.com>, <leon@kernel.org>, <daniel.almeida@collabora.com>,
+ <bhelgaas@google.com>, <kwilczynski@kernel.org>,
+ <driver-core@lists.linux.dev>, <linux-kernel@vger.kernel.org>,
+ <nova-gpu@lists.linux.dev>, <dri-devel@lists.freedesktop.org>,
+ <linux-pwm@vger.kernel.org>, <rust-for-linux@vger.kernel.org>
+To: "Miguel Ojeda" <miguel.ojeda.sandonis@gmail.com>
+From: "Danilo Krummrich" <dakr@kernel.org>
+References: <20260626183630.2585057-1-dakr@kernel.org>
+ <20260626183630.2585057-3-dakr@kernel.org>
+ <CANiq72=0OOgc6NtbpF0Ysdk3ytRWCGGbWg00u0Le2AzQmKGKxg@mail.gmail.com>
+In-Reply-To: <CANiq72=0OOgc6NtbpF0Ysdk3ytRWCGGbWg00u0Le2AzQmKGKxg@mail.gmail.com>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-2.16 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
-	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+X-Spamd-Result: default: False [-3.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	MV_CASE(0.50)[];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9434-lists,linux-pwm=lfdr.de];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:dakr@kernel.org,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:ojeda@kernel.org,m:boqun@kernel.org,m:gary@garyguo.net,m:bjorn3_gh@protonmail.com,m:lossin@kernel.org,m:a.hindborg@kernel.org,m:aliceryhl@google.com,m:tmgross@umich.edu,m:acourbot@nvidia.com,m:ecourtney@nvidia.com,m:m.wilczynski@samsung.com,m:david.m.ertman@intel.com,m:ira.weiny@intel.com,m:leon@kernel.org,m:daniel.almeida@collabora.com,m:bhelgaas@google.com,m:kwilczynski@kernel.org,m:driver-core@lists.linux.dev,m:linux-kernel@vger.kernel.org,m:nova-gpu@lists.linux.dev,m:dri-devel@lists.freedesktop.org,m:linux-pwm@vger.kernel.org,m:rust-for-linux@vger.kernel.org,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[miguelojedasandonis@gmail.com,linux-pwm@vger.kernel.org];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FREEMAIL_FROM(0.00)[gmail.com];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[26];
+	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-9435-lists,linux-pwm=lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FREEMAIL_CC(0.00)[linuxfoundation.org,kernel.org,garyguo.net,protonmail.com,google.com,umich.edu,nvidia.com,samsung.com,intel.com,collabora.com,lists.linux.dev,vger.kernel.org,lists.freedesktop.org];
+	FREEMAIL_TO(0.00)[gmail.com];
+	RCPT_COUNT_TWELVE(0.00)[26];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:ojeda@kernel.org,m:boqun@kernel.org,m:gary@garyguo.net,m:bjorn3_gh@protonmail.com,m:lossin@kernel.org,m:a.hindborg@kernel.org,m:aliceryhl@google.com,m:tmgross@umich.edu,m:acourbot@nvidia.com,m:ecourtney@nvidia.com,m:m.wilczynski@samsung.com,m:david.m.ertman@intel.com,m:ira.weiny@intel.com,m:leon@kernel.org,m:daniel.almeida@collabora.com,m:bhelgaas@google.com,m:kwilczynski@kernel.org,m:driver-core@lists.linux.dev,m:linux-kernel@vger.kernel.org,m:nova-gpu@lists.linux.dev,m:dri-devel@lists.freedesktop.org,m:linux-pwm@vger.kernel.org,m:rust-for-linux@vger.kernel.org,m:miguel.ojeda.sandonis@gmail.com,m:miguelojedasandonis@gmail.com,s:lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[dakr@kernel.org,linux-pwm@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
+	DKIM_TRACE(0.00)[kernel.org:+];
 	ALIAS_RESOLVED(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[dakr@kernel.org,linux-pwm@vger.kernel.org];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[miguelojedasandonis@gmail.com,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[gmail.com:+];
-	MID_RHS_MATCH_FROMTLD(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-pwm];
+	FREEMAIL_CC(0.00)[linuxfoundation.org,kernel.org,garyguo.net,protonmail.com,google.com,umich.edu,nvidia.com,samsung.com,intel.com,collabora.com,lists.linux.dev,vger.kernel.org,lists.freedesktop.org];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TO_DN_SOME(0.00)[];
+	TAGGED_RCPT(0.00)[linux-pwm];
 	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,mail.gmail.com:mid]
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 763386D1EC4
+X-Rspamd-Queue-Id: 621A16D20BB
 
-On Fri, Jun 26, 2026 at 8:36=E2=80=AFPM Danilo Krummrich <dakr@kernel.org> =
-wrote:
->
-> Add a new ForLt trait as a base for CovariantForLt:
->
->   - ForLt (non-unsafe): represents a type generic over a lifetime, with
->     no covariance guarantee.
->
->   - CovariantForLt (unsafe): becomes a subtrait of ForLt that
->     additionally proves the type is covariant over its lifetime
->     parameter, providing a safe cast_ref() method.
->
-> This split allows non-covariant types (e.g. types behind a Mutex) to
-> implement ForLt and participate in DevresLt / registration data patterns
-> that use HRTB closures for sound access, without requiring a covariance
-> proof that would fail to compile.
->
-> Both macros share the UnsafeForLtImpl helper type, distinguished by
-> a const generic N: ForLt! emits N =3D 0 (no covariance proof),
-> CovariantForLt! emits N =3D 1 (with compile-time covariance proof).
->
-> Signed-off-by: Danilo Krummrich <dakr@kernel.org>
+On Sat Jun 27, 2026 at 2:26 PM CEST, Miguel Ojeda wrote:
+> If this goes in at the same time as the move (as I assume), then am I
+> understanding it right that if someone else was using `ForLt`
+> (trait/macro) things would either break at compile-time (which is OK)
+> or, in the covariant type case with no `cast_ref()`, it would build,
+> but someone could in principle have relied on `ForLt` providing the
+> covariance guarantee in unsafe code?
 
-If this goes in at the same time as the move (as I assume), then am I
-understanding it right that if someone else was using `ForLt`
-(trait/macro) things would either break at compile-time (which is OK)
-or, in the covariant type case with no `cast_ref()`, it would build,
-but someone could in principle have relied on `ForLt` providing the
-covariance guarantee in unsafe code?
+If someone would have unsafely asserted covariance for ForLt it would break=
+ at
+compile-time like this:
 
-Acked-by: Miguel Ojeda <ojeda@kernel.org>
+	error[E0199]: implementing the trait `types::for_lt::ForLt` is not unsafe
+	   --> rust/kernel/pci/io.rs:158:1
+	    |
+	158 | unsafe impl<const SIZE: usize> ForLt for Bar<'static, SIZE> {
+	    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+	    |
+	help: remove `unsafe` from this trait implementation
+	    |
+	158 - unsafe impl<const SIZE: usize> ForLt for Bar<'static, SIZE> {
+	158 + impl<const SIZE: usize> ForLt for Bar<'static, SIZE> {
+	    |
+=09
+	error: aborting due to 1 previous error
 
-We could take the chance to add some missing intra-doc links, but I
-can add a good first issue.
+The only way this could silently break would be to use ForLt!(), but then d=
+on't
+use the explicitly provided safe cast_ref() method, and instead open-code i=
+t
+with an unsafe transmute() assuming covariance from ForLt!().
+
+Even though very unlikely, I do however have an eye on whether another user=
+ of
+this API appears.
+
+(The whole series also goes into a topic branch based on -rc1 anyway, so I =
+can
+also always provide a signed tag with just patch 1 and 2 based on -rc1 shou=
+ld
+the need arise.)
+
+> Acked-by: Miguel Ojeda <ojeda@kernel.org>
 
 Thanks!
 
-Cheers,
-Miguel
+> We could take the chance to add some missing intra-doc links, but I
+> can add a good first issue.
+
+I can add them on apply, or we leave them as good first issue, as you prefe=
+r.
+
+Thanks,
+Danilo
 
