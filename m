@@ -1,325 +1,256 @@
-Return-Path: <linux-pwm+bounces-9445-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9457-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id KMZBMEKwQWpQtgkAu9opvQ
-	(envelope-from <linux-pwm+bounces-9445-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jun 2026 01:37:38 +0200
+	id IoM4BHsnQmou1AkAu9opvQ
+	(envelope-from <linux-pwm+bounces-9457-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jun 2026 10:06:19 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 155216D547A
-	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jun 2026 01:37:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 39F496D749D
+	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jun 2026 10:06:18 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=oO3ino49;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9445-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9445-lists+linux-pwm=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	dkim=none;
+	dmarc=fail reason="SPF not aligned (relaxed), No valid DKIM" header.from=starfivetech.com (policy=quarantine);
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9457-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9457-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 9620D300A116
-	for <lists+linux-pwm@lfdr.de>; Sun, 28 Jun 2026 23:37:36 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 75BA73168D53
+	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jun 2026 07:47:13 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39676372B4B;
-	Sun, 28 Jun 2026 23:37:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 248493DCDBF;
+	Mon, 29 Jun 2026 07:45:20 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+Received: from CHN02-BJS-obe.outbound.protection.partner.outlook.cn (mail-bjschn02on2138.outbound.protection.partner.outlook.cn [139.219.17.138])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F12DA3451B3;
-	Sun, 28 Jun 2026 23:37:34 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782689856; cv=none; b=DJA1YjlIYDEq9ptu+Go8dF4FG1JrrT1j75rGEr8sSR/bMq5fx9FCRwX4MUNP+PJfV+hYOMUZhX6SV4Pez9SJyo9qwevqA3GmXhAZ2IO6aWEGJkkwuKMp4tbA+uzh38V56Q5OW0pELY+/phTO9hHUVd0gfvJ2AF9etwUMTgTKojg=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782689856; c=relaxed/simple;
-	bh=oFEFVBD5fcKXppEp1kF7LsfMNyXXyuvUCfJ3219R1aw=;
-	h=Mime-Version:Content-Type:Date:Message-Id:Subject:Cc:To:From:
-	 References:In-Reply-To; b=BYF5rxwVmogJDStG2SbI4Mwutt2NkI8L4gjV00kVmED+rECOZcJ/CvEq4vrGD9tDrpLMtR2YN7Ji88N3lpZmHCW57VMlJMDjlX+Um7ILmn2Z2I5CWM11Cev1B3l9lAy/dylsNPWH9MGGTXCXbyQBEFhcLBC+/BmXF7GWRft1ts4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oO3ino49; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDF541F000E9;
-	Sun, 28 Jun 2026 23:37:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782689854;
-	bh=AsaiapX2vikYIk/w5nfyMPF/cTpFXSz56W7bWM4Pb2M=;
-	h=Date:Subject:Cc:To:From:References:In-Reply-To;
-	b=oO3ino49R89n61CsRkBCR9diZ+DKsLiRHMwwMxaYp9HQ173yN75E/utZi7wXI1Zcf
-	 Q6bczIwGlyrmxzGJocFWVRoqN7oB17NuaydphaHrEIz+kQ7h97Ju7w3e7jpckDEfhg
-	 ktpRG4kICCVC3V0sbHoXH++Dsog9uBdzBqkuzrpAn4Kw913UmAZWd1hwwv83tc0kkz
-	 MMTDHUh2jCW9uHlzUzyksf2bAuvZzWfSMSRf58AaaRzD2dtc+qVIPxhR7qgq01N7rJ
-	 k96hLOo3hvvJ7p9+lkeC5/B1aO/8vwUEvJRI3Km6w9HQuDe4J8rk5+GF0h6OtoJNEE
-	 s5fOAwSZbkgOw==
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A03A53D905F;
+	Mon, 29 Jun 2026 07:45:10 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782719119; cv=fail; b=nnqDugxQgojlZfcc0EK97gcTsN0iJYyP2Ud4iw3akPJ3BEsrKHBqgav3ZAR7svaKY5ZiOOOZPT+TIQDQjU00GiVfBzlrqmwzUvYoJM//V2ksY+xEfU5nkUVP+y1dJbHBzV+rYk/198wzmpC0H8LQlp9QVqGcJ7I1mXFhO1RxbNM=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782719119; c=relaxed/simple;
+	bh=INX3l8g9eEOWtIJr0gucljJJhwccaQZ4GJIhnnUSel8=;
+	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
+	 Content-Type:MIME-Version; b=cUCoAaiAl8XjM+PaJi2KmUK8gR6ZRIoqi4zWHbGFQcAejeXzwlWgywSPZZ0F0sN0ValNjkL9AP5yC/LeGR8RRiqShVbT0aOhPTlI2VqUtuQzH4P/XzCwLSKy/98/6l2NFJW9wir3Jq4IORfIuntR2ldaoARjgmtAtO60JjPp2Nk=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=starfivetech.com; spf=pass smtp.mailfrom=starfivetech.com; arc=fail smtp.client-ip=139.219.17.138
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=TnEdndAvh8U6sgLlTxDZEVq8mRvWv75xWZuHL3FwkIoAjVPaZcdJbeBehCz6jOZQtT96O9GyYL7dCnAziYwgOpTETfLcvSFeoi0sUj0WGIC6IU8F1HMZ2rGOoeQdMbFZ1itWY6RZDAYkKllYsEVFzPjl9Hlmt9ZS0w1FMa7jSF+bVGDTVdqtOGtTATF1PhxQc5vMcvxV2xgzsTegzFnN/chWNCt+cUtdjeO+5URzKWyLgWhWCID6QtpclUfK2fGrg5OFNYbJH8wtjt6qHBvpzWx5+uHH97kMli2fFCPPYf5i022H0A7+HAEo3VV5ay+LAJoUuA+6aFQnvM5Fm83Eew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=sEBoUnmkAlAqhavEz/RdJAnjV8hQJTGrF4zmjVwzNOQ=;
+ b=J0LIG00Z1g6zmO/jDqvcolbXsL3ph6t0e/Ur/qxyCCc5Mhu6aeGGkxcxBVexTJ4rNVSFaKSm/px5EtMgXhSNT3dHDaopUTAcL9hPo8wbhpDVVKHopG0FM8CGHzqQAj1MsXlwg3dI7U7bg7wJXTd3OVf2Xd07BcW6fqwgQgg23GJ1Wqd7Dn+xI0fcuLHKACDbDfFMA8K1e1BWCAAYNV8OpkAajC7G/rN5BOTFTYRwd5qRWa5gRmCLMDq+1toMBpZ27iIgq7ci6fYN1b6e75/WfL6dEnMmObJRTPKyxF0elHBEWWJ3VZye2n5h9gNbyvyoB18Rfn9n/GA3THYUzdjVew==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=starfivetech.com; dmarc=pass action=none
+ header.from=starfivetech.com; dkim=pass header.d=starfivetech.com; arc=none
+Received: from ZQ4PR01MB1299.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:15::9) by ZQ4PR01MB1202.CHNPR01.prod.partner.outlook.cn
+ (2406:e500:c550:17::6) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.113.23; Mon, 29 Jun
+ 2026 02:09:25 +0000
+Received: from ZQ4PR01MB1299.CHNPR01.prod.partner.outlook.cn
+ ([fe80::9284:55ac:8499:dfc2]) by
+ ZQ4PR01MB1299.CHNPR01.prod.partner.outlook.cn ([fe80::9284:55ac:8499:dfc2%4])
+ with mapi id 15.21.0113.020; Mon, 29 Jun 2026 02:09:25 +0000
+From: Hal Feng <hal.feng@starfivetech.com>
+To: Conor Dooley <conor@kernel.org>
+CC: =?iso-8859-1?Q?Uwe_Kleine-K=F6nig?= <ukleinek@kernel.org>, Philipp Zabel
+	<p.zabel@pengutronix.de>, Rob Herring <robh@kernel.org>, Krzysztof Kozlowski
+	<krzk+dt@kernel.org>, Emil Renner Berthing
+	<emil.renner.berthing@canonical.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+	Paul Walmsley <pjw@kernel.org>, Albert Ou <aou@eecs.berkeley.edu>,
+	"linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>,
+	"devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v19 1/3] dt-bindings: pwm: opencores: Update compatibles,
+ examples and maintainers
+Thread-Topic: [PATCH v19 1/3] dt-bindings: pwm: opencores: Update compatibles,
+ examples and maintainers
+Thread-Index: AQHc/N/BbYwhFywv1U+0WhLg7DD1frY/zFoAgBUSgjA=
+Date: Mon, 29 Jun 2026 02:09:25 +0000
+Message-ID:
+ <ZQ4PR01MB1299D0EB20EE30602AD13A2BE6E82@ZQ4PR01MB1299.CHNPR01.prod.partner.outlook.cn>
+References: <20260615155759.129210-1-hal.feng@starfivetech.com>
+ <20260615155759.129210-2-hal.feng@starfivetech.com>
+ <20260615-crescent-equation-d948fcc46cd1@spud>
+In-Reply-To: <20260615-crescent-equation-d948fcc46cd1@spud>
+Accept-Language: zh-CN, en-US
+Content-Language: zh-CN
+X-MS-Has-Attach:
+X-MS-TNEF-Correlator:
+x-ms-publictraffictype: Email
+x-ms-traffictypediagnostic: ZQ4PR01MB1299:EE_|ZQ4PR01MB1202:EE_
+x-ms-office365-filtering-correlation-id: bf25ee96-9daf-4277-20b9-08ded5837184
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam:
+ BCL:0;ARA:13230040|366016|7416014|1800799024|376014|23010399003|18002099003|22082099003|38070700021|3023799007|56012099006|4143699003;
+x-microsoft-antispam-message-info:
+ mw9bMNSVrOb3vCRqCaV2mwhXXM+0A+EjE1xqrmIQdLxlSkHER1/UsIELOCZWQS/Q2SJU0w/M+ScavcnTVyz2Bv8eBMgE+ILBNlD/I0q/qOFGNQSf84gnwgdTddcNGbU1iuqMZVej/O61MYAoP0Zwxex6qfQz+J0GxZDzlYvBKFDTmJBavktsWPlnE5Vse6qiEuZpmP3BnrXHOG79AyObu32zAfTgG6agBgyduL7FjrQ66jZPBhdGMXiRyQFjMjaoUL34/m02RwBvxlskEQP8zswJF/r5tQSGn4rxHNTvIuqXhO4Nqg3spPkqbuzeAwqDCnHu+jcuwvHS7dyFbvJpYCEtOhwm6FpHQBhrxVPeYaXJ2w23eX/C9JNkM9fsWndDoXGOuE8GjjTa1d49V2/8m/sVLJEclGrKPSQqTA8Sl2mOuaK3tQl7dTO8nstAIoo2veOtR74Tw8dDvpxuwbCXE9MD3fNl+gCVtqGhKUetM8jU01p+Z4YcZWjfbZvEWwDLmmSRAJa7uBHXlGNgwCiDZcjXrNXOX6SS2lXlannciwZ6K3uBYOe8MNAgTqae1oj9
+x-forefront-antispam-report:
+ CIP:255.255.255.255;CTRY:;LANG:zh-cn;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:ZQ4PR01MB1299.CHNPR01.prod.partner.outlook.cn;PTR:;CAT:NONE;SFS:(13230040)(366016)(7416014)(1800799024)(376014)(23010399003)(18002099003)(22082099003)(38070700021)(3023799007)(56012099006)(4143699003);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:
+ =?iso-8859-1?Q?LXyYL4ojFS3EokgCZrVJUbsNiqYxwur42EDCOBFBBrXIMlOvL0CGguWk41?=
+ =?iso-8859-1?Q?uMI6MYB74ZjrC7rNO7BPw8nwcCIHdJhpnyUjMLkNpsKdbXB7kiJWat72jK?=
+ =?iso-8859-1?Q?NPVBEaGJQuB/8AtcAonZ3hoePbwALvL2gtN4G++x/ZJAKVYfyu77WMyQbK?=
+ =?iso-8859-1?Q?qW/7RAxu5cQumZuMX0YrVkJbsQ9nCtNWDCVasygCg6ziDBDk3fQfJ3PRiw?=
+ =?iso-8859-1?Q?taDbq/AcX6UV2pgtM/H19SBRw7MTTKCADAxRMXokVXlR8vMmZ/7vFlGxZg?=
+ =?iso-8859-1?Q?tdR5NLT/g6niPnZUOPyGRJUuMf7zgiRxkedfiBxYxJj531rpgIZrtSW5Ie?=
+ =?iso-8859-1?Q?ywj8jHqzJnG7yIH09MGgVvyFqZ7a919DHC6oFKCrpyO/Hm/3OpS4SBP+0D?=
+ =?iso-8859-1?Q?drbq81JrINnKFsTxpL+TTNQTKeG+B50WZhNOcka3jUdUHy1gvhAJmMjnRD?=
+ =?iso-8859-1?Q?XF2tYaXC7Hj4/so2B2PUR/bozbs2CT+47c6MgNWXq879Qd2FXmtuMMgeLx?=
+ =?iso-8859-1?Q?C/9yF80m1Qiet2qiy3ThgIS5xpvHIF+Vjs+37KUMvtk5chYP5NCyzFA0s+?=
+ =?iso-8859-1?Q?psnzqhp5Xr9heAsvw2ZJc2EB5bx7D3Ejyc34lctotlhpa+Nn4njktDyfjG?=
+ =?iso-8859-1?Q?Klp1swghJEm0wkIvMk1a3oM5s21Hqj22lnEJpkJOKylqdULQqDlosujRWe?=
+ =?iso-8859-1?Q?iBDVuO+FAGgLdbyOcI2hNHj08HEQMkHBd2t4ZWZ1Q25NwwpFi5+9t17cv+?=
+ =?iso-8859-1?Q?EQ1umVKXlcb1oVAuS7HLhbKVuuxe0fN4ERaWEh7rNwEefJuIVEHl+ZUb8w?=
+ =?iso-8859-1?Q?BwIsUE3+dUoT6Ug3Q+98wiP3Kk5Vay2IyTZkwW/v0YFr7TjR55xwLaUouF?=
+ =?iso-8859-1?Q?FytLHNlxgpBsKgOlybw2TALbxhu35kXFX99YPtEZdCMDHmu2XwRkCmuRTL?=
+ =?iso-8859-1?Q?+1xeRSCOi35AgM/2p6s5TJgG2crNBngcflTOvp9wb8F8TQwUZAHHsMJbdF?=
+ =?iso-8859-1?Q?UAmOE2pOGhAKNd34M4aCA47GElQLLEDHcCahJMwQQ5CuSNpuy+eFifew1q?=
+ =?iso-8859-1?Q?jhiqaFK0OjNIbfWw/jlIv1ZfRu8P7cTJC3d0U8cVggeYtDeeNP+b331oHb?=
+ =?iso-8859-1?Q?upAwJcUOyireBuTcx3QNMFgVsuY0uJxP4M/UY96eFAvnP/ZVmjMigFBjTX?=
+ =?iso-8859-1?Q?Q/yq0LFd+2tQ+lbbnr+M38AH6iB0pXGKL5cDQGrlw7nkmdaCRauv6lOTw+?=
+ =?iso-8859-1?Q?Ne5yJ7aaO6solweApY9386hWm9fee/cgA2HEXX5Mqdy3FaCXsf35WuVGbv?=
+ =?iso-8859-1?Q?cCswZHQVj8+zfQYi8Y2XVy0oQ0Z7pgWCCOu6DeL6ZJRRu8eDENkjIag7Bd?=
+ =?iso-8859-1?Q?RhkfwlaLEDddezTBTN3zsuZzfBCQ4MYbMN0rQrBG2fkQxs6qpNkGww36Dv?=
+ =?iso-8859-1?Q?hwpY46cYpnTfFuSoWyVH/4U9dx+LOIV+KC///Vvyj83vA53/Z9u1tlAV6u?=
+ =?iso-8859-1?Q?WTfi6N+BjqV20xg3nKkncB/nOgZDA8N9x7so3aLhWiiXBMj1wttcHYamUB?=
+ =?iso-8859-1?Q?lL2QDHpTKtnTgbGoYgbDiLnrR7ssYZdKba8HfNxu2x7aLecpUxr/H6OrUf?=
+ =?iso-8859-1?Q?j+ZtBpM10x7Gh+vznRRW94JGF5XbuQx8Je6REOZt2Kem24eq5rjlMEDBT8?=
+ =?iso-8859-1?Q?BMRTQW6Y05A0/cXB3MLhh/WlWJhi3txJ2yGpYxHJgS4OllBgMqwya7h4r/?=
+ =?iso-8859-1?Q?EFg9AsJlPpvm43xaL9nVoRk2hxZuy8dl2rm3cNgGfUOAyQUh3i9GFb3X+H?=
+ =?iso-8859-1?Q?aJIzvbmj4A=3D=3D?=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Mon, 29 Jun 2026 01:37:27 +0200
-Message-Id: <DJL2T5XDC53F.3C2QC5L1V2H6@kernel.org>
-Subject: Re: [PATCH v5 00/20] rust: I/O type generalization and projection
-Cc: "Alice Ryhl" <aliceryhl@google.com>, "Daniel Almeida"
- <daniel.almeida@collabora.com>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- "Miguel Ojeda" <ojeda@kernel.org>, "Boqun Feng" <boqun@kernel.org>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <lossin@kernel.org>, "Andreas Hindborg" <a.hindborg@kernel.org>, "Trevor
- Gross" <tmgross@umich.edu>, "Tamir Duberstein" <tamird@kernel.org>,
- =?utf-8?q?Onur_=C3=96zkan?= <work@onurozkan.dev>, "Bjorn Helgaas"
- <bhelgaas@google.com>, =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
- <kwilczynski@kernel.org>, "Abdiel Janulgue" <abdiel.janulgue@gmail.com>,
- "Robin Murphy" <robin.murphy@arm.com>, "Alexandre Courbot"
- <acourbot@nvidia.com>, "David Airlie" <airlied@gmail.com>, "Simona Vetter"
- <simona@ffwll.ch>, "Michal Wilczynski" <m.wilczynski@samsung.com>,
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- <driver-core@lists.linux.dev>, <rust-for-linux@vger.kernel.org>,
- <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
- <nova-gpu@lists.linux.dev>, <dri-devel@lists.freedesktop.org>,
- <linux-pwm@vger.kernel.org>, "Laura Nao" <laura.nao@collabora.com>
-To: "Gary Guo" <gary@garyguo.net>
-From: "Danilo Krummrich" <dakr@kernel.org>
-References: <20260626-io_projection-v5-0-d0961471ae50@garyguo.net>
-In-Reply-To: <20260626-io_projection-v5-0-d0961471ae50@garyguo.net>
+MIME-Version: 1.0
+X-OriginatorOrg: starfivetech.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: ZQ4PR01MB1299.CHNPR01.prod.partner.outlook.cn
+X-MS-Exchange-CrossTenant-Network-Message-Id: bf25ee96-9daf-4277-20b9-08ded5837184
+X-MS-Exchange-CrossTenant-originalarrivaltime: 29 Jun 2026 02:09:25.4756
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 06fe3fa3-1221-43d3-861b-5a4ee687a85c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: uIJuPEbVH0Nrs7EDhXAsmx3FvLrvowcAcihcrF1+FZDgS/Wam2nWbuN15PZfA64VbKIMAiAcBP3RfxNri7c/6mDGjNZsg2Cl2ytbcu+ugw4=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: ZQ4PR01MB1202
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-3.16 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
+X-Spamd-Result: default: False [3.54 / 15.00];
+	DMARC_POLICY_QUARANTINE(1.50)[starfivetech.com : SPF not aligned (relaxed), No valid DKIM,quarantine];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MV_CASE(0.50)[];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9445-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9457-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[dakr@kernel.org,linux-pwm@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[30];
-	FORGED_RECIPIENTS(0.00)[m:aliceryhl@google.com,m:daniel.almeida@collabora.com,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:ojeda@kernel.org,m:boqun@kernel.org,m:bjorn3_gh@protonmail.com,m:lossin@kernel.org,m:a.hindborg@kernel.org,m:tmgross@umich.edu,m:tamird@kernel.org,m:work@onurozkan.dev,m:bhelgaas@google.com,m:kwilczynski@kernel.org,m:abdiel.janulgue@gmail.com,m:robin.murphy@arm.com,m:acourbot@nvidia.com,m:airlied@gmail.com,m:simona@ffwll.ch,m:m.wilczynski@samsung.com,m:ukleinek@kernel.org,m:driver-core@lists.linux.dev,m:rust-for-linux@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-pci@vger.kernel.org,m:nova-gpu@lists.linux.dev,m:dri-devel@lists.freedesktop.org,m:linux-pwm@vger.kernel.org,m:laura.nao@collabora.com,m:gary@garyguo.net,m:abdieljanulgue@gmail.com,s:lists@lfdr.de];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FREEMAIL_CC(0.00)[google.com,collabora.com,linuxfoundation.org,kernel.org,protonmail.com,umich.edu,onurozkan.dev,gmail.com,arm.com,nvidia.com,ffwll.ch,samsung.com,lists.linux.dev,vger.kernel.org,lists.freedesktop.org];
+	FORGED_RECIPIENTS(0.00)[m:conor@kernel.org,m:ukleinek@kernel.org,m:p.zabel@pengutronix.de,m:robh@kernel.org,m:krzk+dt@kernel.org,m:emil.renner.berthing@canonical.com,m:palmer@dabbelt.com,m:pjw@kernel.org,m:aou@eecs.berkeley.edu,m:linux-pwm@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-riscv@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:krzk@kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[hal.feng@starfivetech.com,linux-pwm@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[13];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dakr@kernel.org,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-pwm];
+	MIME_TRACE(0.00)[0:+];
+	TO_DN_EQ_ADDR_SOME(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	MISSING_XM_UA(0.00)[];
+	TO_DN_SOME(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[hal.feng@starfivetech.com,linux-pwm@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	R_DKIM_NA(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp]
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,starfivetech.com:from_mime,starfivetech.com:email,devicetree.org:url]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 155216D547A
+X-Rspamd-Queue-Id: 39F496D749D
 
-On Fri Jun 26, 2026 at 4:45 PM CEST, Gary Guo wrote:
-> This series presents a major rework of I/O types, as a summary:
+> On 26.06.16 00:22, Conor Dooley wrote:
+> On Mon, Jun 15, 2026 at 11:57:57PM +0800, Hal Feng wrote:
+> > Remove the jh8100 compatible since the JH8100 SoC has been canceled
+> > and will not be released. Add the jhb100 compatible to replace it.
+>=20
+> > Use a oneOf construct to support the single-string opencores,pwm-v1
+> > compatible.
+>=20
+> No thanks. Simple as this IP might be, I still want soc-specific compatib=
+les to be a
+> requirement.
+> pw-bot: changes-requested
 
-There are two minor rustdoc warnings:
+Okay, will update accordingly. Thanks for your review.
 
-	warning: unresolved link to `include/linux/iosys-map.h`
-	    --> rust/kernel/io.rs:1456:7
-	     |
-	1456 | /// [`include/linux/iosys-map.h`] in C.
-	     |       ^^^^^^^^^^^^^^^^^^^^^^^^^ no item named `include/linux/iosys-=
-map.h` in scope
-	     |
-	     =3D help: to escape `[` and `]` characters, add '\' before them like =
-`\[` or `\]`
-	     =3D note: `#[warn(rustdoc::broken_intra_doc_links)]` on by default
-=09
-	warning: unresolved link to `View`
-	    --> rust/kernel/io.rs:1620:74
-	     |
-	1620 | /// In addition to projecting from [`Io`], you may also project fro=
-m a [`View`] of an [`Io`].
-	     |                                                                    =
-      ^^^^ no item named `View` in scope
-	     |
-	     =3D help: to escape `[` and `]` characters, add '\' before them like =
-`\[` or `\]`
-=09
-	warning: 2 warnings emitted
+Best regards,
+Hal
 
-> Gary Guo (19):
->       rust: io: add dynamically-sized `Region` type
->       rust: io: add missing safety requirement in `IoCapable` methods
->       rust: io: restrict untyped IO access and `register!` to `Region`
->       rust: io: implement `Io` on reference types instead
->       rust: io: generalize `MmioRaw` to pointer to arbitrary type
->       rust: io: rename `Mmio` to `MmioOwned`
->       rust: io: implement `Mmio` as view type
->       rust: pci: io: make `ConfigSpace` a view
->       rust: io: use view types instead of addresses for `Io`
->       pwm: th1520: remove unnecessary `deref`
->       rust: io: remove `MmioOwned`
->       rust: io: move `Io` methods to extension trait
->       rust: io: add projection macro and methods
->       rust: io: implement a view type for `Coherent`
->       rust: io: add `read_val` and `write_val` functions on `Io`
->       gpu: nova-core: use I/O projection for cleaner encapsulation
->       rust: dma: drop `dma_read!` and `dma_write!` API
->       rust: io: add copying methods
->       rust: io: implement `IoSysMap`
->
-> Laura Nao (1):
->       rust: io: add I/O backend for system memory with volatile access
-
-For sharing with the drm-rust tree:
-
-diff --git a/rust/kernel/drm/gem/shmem.rs b/rust/kernel/drm/gem/shmem.rs
-index 3ee19ef6264e..6868b5d80ab7 100644
---- a/rust/kernel/drm/gem/shmem.rs
-+++ b/rust/kernel/drm/gem/shmem.rs
-@@ -29,9 +29,10 @@
-         to_result, //
-     },
-     io::{
--        Io,
--        IoCapable,
--        IoKnownSize, //
-+        IoBase,
-+        Region,
-+        SysMem,
-+        SysMemBackend, //
-     },
-     prelude::*,
-     scatterlist,
-@@ -467,6 +468,28 @@ pub fn owner(&self) -> &Object<D, C> {
-     }
- }
-
-+impl<'a, D, R, C, const SIZE: usize> IoBase<'a> for &'a VMap<D, R, C, SIZE=
->
-+where
-+    D: DriverObject,
-+    C: DeviceContext,
-+    R: Deref<Target =3D Object<D, C>>,
-+{
-+    type Backend =3D SysMemBackend;
-+    type Target =3D Region<SIZE>;
-+
-+    #[inline]
-+    fn as_view(self) -> SysMem<'a, Region<SIZE>> {
-+        let ptr =3D Region::ptr_from_raw_parts_mut(self.addr.cast(), self.=
-owner.size());
-+
-+        // SAFETY: Per type invariants of `VMap`:
-+        // - `addr .. addr + owner.size()` is a valid kernel accessible me=
-mory region.
-+        // - `addr` is page-aligned, which satisfies `Region`'s 4-byte ali=
-gnment requirement.
-+        // - The memory remains valid until this `VMap` is dropped; since =
-`self` is `&'a VMap`,
-+        //   the borrow prevents the `VMap` from being dropped for the lif=
-etime `'a`.
-+        unsafe { SysMem::new(ptr) }
-+    }
-+}
-+
- impl<D, R, C, const SIZE: usize> Drop for VMap<D, R, C, SIZE>
- where
-     D: DriverObject,
-@@ -508,69 +531,6 @@ unsafe impl<D, R, C, const SIZE: usize> Sync for VMap<=
-D, R, C, SIZE>
- {
- }
-
--impl<D, R, C, const SIZE: usize> Io for VMap<D, R, C, SIZE>
--where
--    D: DriverObject,
--    C: DeviceContext,
--    R: Deref<Target =3D Object<D, C>>,
--{
--    #[inline]
--    fn addr(&self) -> usize {
--        self.addr as usize
--    }
--
--    #[inline]
--    fn maxsize(&self) -> usize {
--        self.owner.size()
--    }
--}
--
--impl<D, R, C, const SIZE: usize> IoKnownSize for VMap<D, R, C, SIZE>
--where
--    D: DriverObject,
--    C: DeviceContext,
--    R: Deref<Target =3D Object<D, C>>,
--{
--    const MIN_SIZE: usize =3D SIZE;
--}
--
--macro_rules! impl_vmap_io_capable {
--    ($ty:ty) =3D> {
--        impl<D, R, C, const SIZE: usize> IoCapable<$ty> for VMap<D, R, C, =
-SIZE>
--        where
--            D: DriverObject,
--            C: DeviceContext,
--            R: Deref<Target =3D Object<D, C>>,
--        {
--            #[inline]
--            unsafe fn io_read(&self, address: usize) -> $ty {
--                let ptr =3D address as *mut $ty;
--
--                // SAFETY: The safety contract of `io_read` guarantees tha=
-t address is a valid
--                // address within the bounds of `Self` of at least the siz=
-e of $ty, and is properly
--                // aligned.
--                unsafe { ptr::read_volatile(ptr) }
--            }
--
--            #[inline]
--            unsafe fn io_write(&self, value: $ty, address: usize) {
--                let ptr =3D address as *mut $ty;
--
--                // SAFETY: The safety contract of `io_write` guarantees th=
-at address is a valid
--                // address within the bounds of `Self` of at least the siz=
-e of $ty, and is properly
--                // aligned.
--                unsafe { ptr::write_volatile(ptr, value) }
--            }
--        }
--    };
--}
--
--impl_vmap_io_capable!(u8);
--impl_vmap_io_capable!(u16);
--impl_vmap_io_capable!(u32);
--#[cfg(CONFIG_64BIT)]
--impl_vmap_io_capable!(u64);
--
- /// A reference to a GEM object that is known to have a mapped [`SGTable`]=
-.
- ///
- /// This is used by the Rust bindings with [`Devres`] in order to ensure t=
-hat mappings for SGTables
-@@ -638,6 +598,7 @@ mod tests {
-             UnregisteredDevice, //
-         },
-         faux,
-+        io::Io,
-         page::PAGE_SIZE, //
-     };
-
-@@ -714,7 +675,7 @@ fn compile_time_vmap_sizes() -> Result {
-         assert!(ptr::eq(vmap.owner(), obj.deref()));
-
-         // Verify the max size matches the actual object size
--        assert_eq!(vmap.maxsize(), PAGE_SIZE);
-+        assert_eq!(vmap.size(), PAGE_SIZE);
-
-         // Make sure creating a vmap that's too large fails
-         assert!(obj.vmap::<{ PAGE_SIZE + 200 }>().is_err());
+>=20
+> >
+> > Change the register size in examples to 0x10, since an OpenCores PTC
+> > IP has only 4 32-bit registers: CNTR, HRC, LRC and CTRL.
+> >
+> > I will maintain this pwm module in place of William.
+> >
+> > Signed-off-by: Hal Feng <hal.feng@starfivetech.com>
+> > ---
+> >  .../devicetree/bindings/pwm/opencores,pwm.yaml   | 16 +++++++++-------
+> >  1 file changed, 9 insertions(+), 7 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pwm/opencores,pwm.yaml
+> > b/Documentation/devicetree/bindings/pwm/opencores,pwm.yaml
+> > index 52a59d245cdb..5f05606a2d3d 100644
+> > --- a/Documentation/devicetree/bindings/pwm/opencores,pwm.yaml
+> > +++ b/Documentation/devicetree/bindings/pwm/opencores,pwm.yaml
+> > @@ -7,7 +7,7 @@ $schema: http://devicetree.org/meta-schemas/core.yaml#
+> >  title: OpenCores PWM controller
+> >
+> >  maintainers:
+> > -  - William Qiu <william.qiu@starfivetech.com>
+> > +  - Hal Feng <hal.feng@starfivetech.com>
+> >
+> >  description:
+> >    The OpenCores PTC ip core contains a PWM controller. When operating
+> > in PWM @@ -19,12 +19,14 @@ allOf:
+> >
+> >  properties:
+> >    compatible:
+> > -    items:
+> > -      - enum:
+> > -          - starfive,jh7100-pwm
+> > -          - starfive,jh7110-pwm
+> > -          - starfive,jh8100-pwm
+> > +    oneOf:
+> >        - const: opencores,pwm-v1
+> > +      - items:
+> > +        - enum:
+> > +            - starfive,jh7100-pwm
+> > +            - starfive,jh7110-pwm
+> > +            - starfive,jhb100-pwm
+> > +        - const: opencores,pwm-v1
+> >
+> >    reg:
+> >      maxItems: 1
+> > @@ -49,7 +51,7 @@ examples:
+> >    - |
+> >      pwm@12490000 {
+> >          compatible =3D "starfive,jh7110-pwm", "opencores,pwm-v1";
+> > -        reg =3D <0x12490000 0x10000>;
+> > +        reg =3D <0x12490000 0x10>;
+> >          clocks =3D <&clkgen 181>;
+> >          resets =3D <&rstgen 109>;
+> >          #pwm-cells =3D <3>;
+> > --
+> > 2.43.2
+> >
 
