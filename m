@@ -1,70 +1,70 @@
-Return-Path: <linux-pwm+bounces-9462-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9464-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id a4IYMtttQmrW6wkAu9opvQ
-	(envelope-from <linux-pwm+bounces-9462-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jun 2026 15:06:35 +0200
+	id OZV0IxluQmro6wkAu9opvQ
+	(envelope-from <linux-pwm+bounces-9464-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jun 2026 15:07:37 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 61EE56DABF7
-	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jun 2026 15:06:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 009D56DAC3F
+	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jun 2026 15:07:36 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=garyguo.net header.s=selector1 header.b=DNDeV1aM;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9462-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9462-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=garyguo.net header.s=selector1 header.b=iEqpYhwL;
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9464-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9464-lists+linux-pwm=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=none) header.from=garyguo.net;
 	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 6AC74318EDBB
-	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jun 2026 12:40:00 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 578A431F0055
+	for <lists+linux-pwm@lfdr.de>; Mon, 29 Jun 2026 12:40:32 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 578984028F2;
-	Mon, 29 Jun 2026 12:39:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 86F98404BF3;
+	Mon, 29 Jun 2026 12:39:49 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from LO3P265CU004.outbound.protection.outlook.com (mail-uksouthazon11020122.outbound.protection.outlook.com [52.101.196.122])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A095D367B92;
-	Mon, 29 Jun 2026 12:39:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F303403AE5;
+	Mon, 29 Jun 2026 12:39:47 +0000 (UTC)
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782736787; cv=fail; b=AEraK5GbIzPyyHg2WUWG3VsrPD+Qq82SgLx+44wsKJq0XMTjZZv1RRWQ+V/QQ7dMyhbKC17PpfCe8SXh1a/k7uL69TWhFJfV2Dpyaz8DB5xMmq64GMdbCqdsolO91uX4TftEUZ3Rc39h4zBqRYbzH2wPQElaC/Baio0m3sl9HfQ=
+	t=1782736789; cv=fail; b=BJ48KuSga3rXJFMlJHrSENoYDBLLKQ5EVf59aQ0zXCrSorC4cKKlBPjpNnAuMTp7mb1d/UWbNn4oCKVZIn/ksRhCkTR/xnJ1w9qVYsDsrDfz6XxIOBK66ZVeTT8eF4HflWrksi6BEygQj/OtO3Z/JthuPCqrU1TcgjPVCgayxDE=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782736787; c=relaxed/simple;
-	bh=2dT/k0xdyDAv/VId4TJjbcCnwySmY8Qww6TVUXxc1A8=;
+	s=arc-20240116; t=1782736789; c=relaxed/simple;
+	bh=EaiIK7mJUxsKKAaPSJP5dSMBvLBsngcCBY7JKZZlemw=;
 	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=fH/FT46qsI/ZD1hjib1rcomksnUL/3NizjkctoWzfs3aejeHT3e3vlEi/9IwnnxfybjoUA1JhVkwb7Y+NmH0e3Ooc2bNRNmfQpNZqkv24fau6DMWtPmYgavU+TVJc76EEFEs5xRr9Zu92gyBhGsIph5vXg5VQPZUNDeoH+n6H5k=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=DNDeV1aM; arc=fail smtp.client-ip=52.101.196.122
+	 To:Cc:MIME-Version; b=hH+NAGup3/GRiLNiFAJKM1KLN+wl5LDbTGc1eXBJ00r+iwJ0QGp5DGpyQB+8hDem5g2ay6Nl19vPpJbgq3Sa+dJDA381OR1HMeVSk57vVARMRvrX+SIrUyLy+QQuw4H5hhzyYIe45wqImcSl4vJUTQaxHd9QNduNSWUMFvrVaWg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=iEqpYhwL; arc=fail smtp.client-ip=52.101.196.122
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=c4Iq6wZKhRmPiEX4gJfgl524KARbPQM9cz12C2Aa24fZaUoGgGLZUAdqgzRy8GNwXzx4wP930W0n4iD8m2PZH0NOQkFnUrrR7N+Kfyy3OdL8A+rGFvCzLmqn8jQoba9SUWo20MgLaNZ0DjeQd6mC2+Z0bJ22QdBkuHLf2QMm1K/tDAZe2rhzqFwnQuIc0EzP6idmkq5YlWYdd4m3NIvxKOTQ6R7bcYZwJ6egGPhIW5DOcZSYZH/UhZ1WiRpb/GcUAMXuBY027zdoTkXVYUKGBRoeJzxoxMbgZWEhHUZdc8/b/7VULyLYm+1Lqz/tqpUzQXuJQ/7Dtrr2B8jBZritJg==
+ b=Jj6fuMeF/0ul/OULnokpEMrS1ZXibxvfN3J+94bFbAT0lTYlCBco2j/LOaJo23rQAwsLI2HPapdUHCJZ3/EPXhde0667LfPDS2OGjNYUzd93lo4qt9zLOBLppB6WEFzMPWFei7AmylkrrvFW5SwE62OTvtR+Uy+tzDAVo618CDbHMNAg1khW7wL3tf6P6y5g/nAw1pmT0Z94bEhrCTlxph9eiEBI7lhZXdThDWm7h+LmaSD6fXy4UQKkdsCna0NrMz4ZAxHArRsxRMIBv/DJo//9IvYLMolA48BCOWX9rCMu51hwVqg24w9AOv+bXEzsJKKsy6O+uKx1CojC1cZ3kQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=gYhqXbWIhT3rqYCl5LJZ7ER8BbRtoBickjLIbda0PYs=;
- b=B/WslompsM5lnTYU++cDBwC8DDpUNWyUdH4qHb2+BpEpKt4ixVnT79rb3VWKfufqMUBCe3s/4b7W1QxH8Mw6uATu+u+5HqLH3HW8cFESSTbzRN+yyNcx4aZj4brYqCL/FavlQa7DqmA8CmO2TAwo+9xkBJ1tN181/N26GB7Li309xYWhARrm7m5cv6PMjV3QZbP38REZunJWoSJj6+UcAI6aihaw5yDkvXSp2661cKw3AXIR4NJ9C05Bq73Xyfor2PYkYldYNCtid7Gx87mE3Wp47unnOUs9Vj/+khGfFl43aRxwEm0bHDMmb9H9j4+wsUFv2dQ3NauhT3ZkHLtg8Q==
+ bh=2/zVxBWtCknBlZRaTTNkYFsiBZhtA2stuzb7apCX1Jc=;
+ b=DvgH42Zt0wP6AWIj1EFjnc9llPDQRv5lvvFWomq81+qKDCDSE+8XwCLePC7dkFIGL8O9zV6stWN20U1oJj2vXxcZ1/L1rnEx5WKF48HCXZM3IfxuEUNXRLnABjTM4g1iYhzpx5giweV8C6/IAKKko6rtpZKjlKXa2Zrm3GvYNJ9H6+QuHhYHFm5QGc3DA3IokF45LLcMuW+yhn8j/knzTwyOJmFcHekHiNCdQZnurx8Q2G2P5GD9z3HrP/GwPuuQK3Utdvv2x/7enKmaE0HdirBNCKM10qFyfA7KeY9W+PShZQZu/XTg/Swmp9WNSsYZ/Jhbp/Y9CghF0mCHlwFnug==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=garyguo.net; dmarc=pass action=none header.from=garyguo.net;
  dkim=pass header.d=garyguo.net; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garyguo.net;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=gYhqXbWIhT3rqYCl5LJZ7ER8BbRtoBickjLIbda0PYs=;
- b=DNDeV1aM+dqiCm/aK3KACu1R3t0pXVzTb2klFGVvHf5SC1m1QjLzXH4YjLkmwLGqD0Wexb6CUPEECtdw/aNLQamoAG9Rlv+eXAJkQeAigIiQv8aNuVdGJYYilOkF2Dbgm+egH7P+U1rjehJrSkedJOZn+FOAJ5RS0KeiTVaF7KM=
+ bh=2/zVxBWtCknBlZRaTTNkYFsiBZhtA2stuzb7apCX1Jc=;
+ b=iEqpYhwLtf5f+siAGieSH+gJRwClG+uAw8bpy+N8dx+GbFgRPrdKZh1mV1/6O3uE3hsVRuR4g01SYcOWCLgONyxYe6lfxSjVcaP4UusHZ5ax0hhBC+g8sUPJwkd6ffCsUr7bW6sxP8iX0ESNVa5W1xJbnUK8xfP8d/QK3f3tlxw=
 Received: from LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:488::16)
  by LO8P265MB7414.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:3b1::9) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.19; Mon, 29 Jun
- 2026 12:39:41 +0000
+ 2026 12:39:42 +0000
 Received: from LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
  ([fe80::1c3:ceba:21b4:9986]) by LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
  ([fe80::1c3:ceba:21b4:9986%4]) with mapi id 15.21.0159.018; Mon, 29 Jun 2026
- 12:39:41 +0000
+ 12:39:42 +0000
 From: Gary Guo <gary@garyguo.net>
-Date: Mon, 29 Jun 2026 13:39:37 +0100
-Subject: [PATCH v2 03/11] rust: pci: use `Option<&IdInfo>` for device ID
+Date: Mon, 29 Jun 2026 13:39:38 +0100
+Subject: [PATCH v2 04/11] rust: usb: use `Option<&IdInfo>` for device ID
  info
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260629-id_info-v2-3-56fccbe9c5ef@garyguo.net>
+Message-Id: <20260629-id_info-v2-4-56fccbe9c5ef@garyguo.net>
 References: <20260629-id_info-v2-0-56fccbe9c5ef@garyguo.net>
 In-Reply-To: <20260629-id_info-v2-0-56fccbe9c5ef@garyguo.net>
 To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
@@ -99,11 +99,11 @@ Cc: driver-core@lists.linux.dev, rust-for-linux@vger.kernel.org,
  linux-pwm@vger.kernel.org, linux-usb@vger.kernel.org, 
  Gary Guo <gary@garyguo.net>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1782736778; l=4445;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1782736778; l=2545;
  i=gary@garyguo.net; s=20221204; h=from:subject:message-id;
- bh=2dT/k0xdyDAv/VId4TJjbcCnwySmY8Qww6TVUXxc1A8=;
- b=3vblXVaQHQDIWS8Y6okOSztEaQudKzclVeuGq0eRTJ7RpQTQ8aQPFA6+3fjbfPltnIT83ZJiQ
- rlzX/Ygy64LBf7evIqSPPBb9UhRK3Walu8Thdp2+x/K2BOMDVqkTkKN
+ bh=EaiIK7mJUxsKKAaPSJP5dSMBvLBsngcCBY7JKZZlemw=;
+ b=NYq+Hy8DAqTYaN19le6JV4pYNc+T1whjdViasW5wkNsC/C5zPDMKKKCL7u0oGTB96a0i7a8gs
+ nZUXzIK6SseC1Xd1uj3TC5xU+G8sYcg6ZW+zbCIXeGggl/9MZSwMS1G
 X-Developer-Key: i=gary@garyguo.net; a=ed25519;
  pk=vB3uIX95SM4eVrIqo1DWNWKDKD2xzB+yLLLr0yOPYMo=
 X-ClientProxiedBy: LO4P265CA0091.GBRP265.PROD.OUTLOOK.COM
@@ -117,66 +117,66 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: LOVP265MB8871:EE_|LO8P265MB7414:EE_
-X-MS-Office365-Filtering-Correlation-Id: d5e5046b-1706-4af8-d292-08ded5db7dae
+X-MS-Office365-Filtering-Correlation-Id: 52838ce3-7a14-4778-f29d-08ded5db7e21
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|376014|23010399003|7416014|10070799003|6133799003|921020|3023799007|22082099003|18002099003|56012099006;
+	BCL:0;ARA:13230040|1800799024|366016|376014|23010399003|7416014|10070799003|6133799003|921020|22082099003|18002099003|56012099006;
 X-Microsoft-Antispam-Message-Info:
-	1zS6QrYRMSHOOhL9214ZXpTvEQa/itGTbCiizim8Jw0yYZ4VqzuEULVR39D6KOWBHP/vVIb1xXpNVUoaE9Mb8L4aNoNI/ps/cUusmyGQW4q3pu1r+dzCHilVbu37gsQqXg8YFcQ52qYifRm6CovFSUsU5gCPoO7vwUTWl31RGRWngL5ofVjRrRNrXf2ocIsLxkshQS9UQjgbcxNF0bCeptqyDXKDkvnXYcM5EyyaaOM9OQD57WUiW/Op9hQhhmRUeNeb2Vt7ctu+ycXGC9SDEwWnlZlwmvHq+iU8V0tZcg2kAyTejpKM6ex9zIJ09bwEdy0oXUECvPWm0e/pcPFfCNlwG9SKaVZNzBBsnKMM5Vkl00zTBTC88xd3sEGgRYm2E38hF6Duldnw51Y9N0u5hlu2/nFMAFjGdjuSd2d96lW9g76VP5sasA5774BRrJezOjgBOkNfKONPqpgV7eRN14nJDfNoXMCTvXXWo6vTV42lktSMhBWDK23VZKWo03i8pF4o4STdGyRx51kxF3s9FlZ2GkqBK6ChEu8Z2DJ4vxTLUMVv3ijjY1wCIVpvu6OuYsbTJLe8wT2V0I5zpEgzhONqfa/DmNj7p4Y9HkkwYm6ASVc0rgQIkt/IKJduMjfQEzT5nFSAyarKkchNqApBmU08mEY4eXcigx73WEdh9SzXWqCUj4h2jhrO6aTPJrm+vmtb1zYnG7kTLjerlJy/0g==
+	31Exp6v2FJGMW13CG5uwXnIb+vKLO011pWspCzkeWtMqWtmT9owdxJQ9dyjcLpNr+BB13FUpjGMWWkyQCAq/KRug8A2NZet7Ze0+0835vKNN6OVGVCoizh7Zgk6JxE55BygD0ysQbLBfQE7lTIpC3afdD5aPkPKwIdZ0LTDONZrdtO5dHB7t2j4+ErNd+rZX1jhbFcu9JNep/nB3lidnRd4+QlPca1YCmnXCv84ZM5SG65HDYmQ7dMY0eJNXmMhYuZVxgJsoTLHPBgYNYAT675kmHj85pYWA1V0nkF9vDsv0W0fGhJxjCprw87IHBjP654C+jot4BCMWTXZ2V308lTFOOUrhp3KO8qTkCt8/h48pi5h5j9Teuuersdl8e6FFSjKw2rrmrpd51j1B1x77eKTnckHoUdROZ6xdMCZ68i2pjix8FSUwTw7u7uFCriBnkCVlZkHOndQBkEugJ8K7SEFdbmzh+GxERSCrw9NFSDrjbGWjo/Q0HmIvMtMyUy6TBjNZglVgotMK2N6fjIFp0spsJC8CJGVEQkYuDPuHmb+4a+dN8aaPnaSm1NePF2qYtgLCSUkC8bmePGK8OJej6DfkX2kBRRcvi1yXYTIL6X6TZk2BAjw0Abz6xfb0ANiaX6ZPI0XMBB2WpO7ZGaqbxLisUOHoBTPgqPhkxlOAw2GuOz3ADY4jJOHrLLv3xwbhefDM9WccdyyD8PCNiEQSUw==
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(23010399003)(7416014)(10070799003)(6133799003)(921020)(3023799007)(22082099003)(18002099003)(56012099006);DIR:OUT;SFP:1102;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(376014)(23010399003)(7416014)(10070799003)(6133799003)(921020)(22082099003)(18002099003)(56012099006);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?aWc2TysreHlRTmtwK1FCY0NIdFBOeWVjVENMTy91d2lhMnpFWm9vRmdXVVFz?=
- =?utf-8?B?aGI0Mk44YWpEdk5jNjNUNm9hWVdWYmllQ3ZnM3MydDVlK3RyQTY1Qk5hYUsz?=
- =?utf-8?B?eWJyY24rSUhIbTZnSXlPdlpBWXQ4aVErbHIzWlBZVFh3Z2FvU0NtRVBiNUFY?=
- =?utf-8?B?TDdTbVNOeXVXN1hjaTE0UjJ2RVR1TFpDb3d3dDJpQ0h2LytMV0ZxczlaUnBX?=
- =?utf-8?B?eERJZkdqOC9FVEN3eDBWVEFZdlloRmNvaE5JS3lOUUN3UzJWUi9aTXpmSFVD?=
- =?utf-8?B?d0xNOTRWSzQvRlV5UkRQUTl2emYwOHZVWnhUQ3lLNnVNaEtDNmQ3WUQybGJP?=
- =?utf-8?B?MjJPeGx1WGMrOTFyV3JpVlQ5TnVUN3M4WjF0eHNMZkxnRlhKa0pzRWQ3RmNm?=
- =?utf-8?B?TEpnTHIyUW5aVGFuVzdJYk1ka2RaanEyMzdWK0g3M3M3Y3N3dkRxeGR0YWNF?=
- =?utf-8?B?akczUnRicjVPWGRldnE3clM4Ni8zd3g2TG9QQThIcGp1MDg2ZjQ2YXJ4SXEr?=
- =?utf-8?B?dWkzTnFEZENNcnQzdTRzTUpOM21QazNTTlp0cXFyc2hoRUxTaXhYRXY2dXV5?=
- =?utf-8?B?NUJqR2lRalZjNDhzVmF4d0tacWR3NlJFL2hXUDlxMHd2blcvZ096UzA5d3lw?=
- =?utf-8?B?SXNJSE9CbHgwUEt0Ymg5bnhQL2JEK1dWdmxwOUNrMStwOTFLeVNzNUJEUi94?=
- =?utf-8?B?T1JnL2dJc3djTGZkeE5SbUUvYkZyNDRaSDIzZGd2VVhCMGdBWEFObUhWQVdW?=
- =?utf-8?B?dVRCZmdZOUswQ1RDY2pwWi81ZjN0Qy9mWGVlWmRYcEpVYlJ1NmEvQUwrRjR5?=
- =?utf-8?B?L3Npeis2MitKYndmZ25LYkhLYW5BNHY3bzlwUUYwcTZ0bWtYbm1IeVI3YVdJ?=
- =?utf-8?B?SFBBN1VFRGVPU1JRUDV2dWo3Z2NMZW54anhsbFV4TndqbUZENVA4Uk9wSVhn?=
- =?utf-8?B?eUQycE8veExMYUkvQWVwRW1OWWprL251NkJvbStnVG9NdVIrVWl1eXA4TVdL?=
- =?utf-8?B?MzY4enRhZno2RENlOHFJam1UU2V1QmFCZm5xbytwRHJES25oYU9rMVF3MlI5?=
- =?utf-8?B?cHhTaURWUlhzdVJUd2w1NDdRMTREWnJrbmhmc3ZJRVp5Q2JPa3VTMWs2QzZp?=
- =?utf-8?B?Qml3ZEFBU29hNWlwZmw5UG02QWhyMCt0N0dnMUdFTVZRZGlxR3dRKzBWbHRi?=
- =?utf-8?B?Mk03Uk1zakoybW0yZFRta2U4Skl2aTJ6THRqekFrM0VQNVY1NFBveitGN3dR?=
- =?utf-8?B?QnlYZzJGWWF6MzZ4QXBHRnhVYlJjMW12MDZIaS9rbGE3SUE5V2dnNkFJNGxJ?=
- =?utf-8?B?NGlFSEg2R1pwME1QcU14TDMyYytNbVpMV2lKUW1HdFZaaVVlUlplTXFmd0Vp?=
- =?utf-8?B?ZkRkb3B6SkZ5R29UZjhtSTFiME9NVmMzMlB5MTVydXpscitIbENmRng5YjEx?=
- =?utf-8?B?WjNQR3NnNXFyVE9CWFY0RkttRytuK1FCM2NkOVpxNlp2N0RxVlBvNitIV2tD?=
- =?utf-8?B?UUorTmRpY1VWWlMzZmgxK2I2cUwyMXJGM2tsTGlCY0psUndES0p2MXVCOW1y?=
- =?utf-8?B?b0p1Nk5rcWM3WmZVNWVXYkhDUVY1U081MUo2YkVybll2eUtsanByeDJIWlEw?=
- =?utf-8?B?RDZKZWl1emxWdXFNVlR2aVdpbStVNTd0SkNoTDJrTWJwYjlxR3M3V0dscUlN?=
- =?utf-8?B?NEdJUFplWTJsQU9rMDJ5Ujc1aWlLbHBucjBramFNbEs1MVVyNDRFVG1rQklJ?=
- =?utf-8?B?NzF2ODVpbGtUaU1rTUQ5U1NBOXZOTDhwM2lQT0dZMW1wQ2F5VGxqQ0RqSTJQ?=
- =?utf-8?B?REE1ajZpWjZuVlRudUV4NGhpeXJWbmk0SklZTWRlV3VWd3Z2TFFybjR1QzlX?=
- =?utf-8?B?aWY2YnN0NVJTRGdGcmFjSVJqUXZudGtHbFpCZXRaWVo2dUpobWRIdzJKRE5L?=
- =?utf-8?B?aGk4WmkzTC9GRnVCVU1TVXYvL3l4SnFXV1Q1OCtsVmlmSTRJNkl4MnR0YmtP?=
- =?utf-8?B?eDMzVGR6WTEzWXRyR1B5MDZ1bmJmYmo2MFEyWmdjbHJ6Z0VOMmR3aVJkS2M2?=
- =?utf-8?B?OXU1U245V3NmRlBTUU82Rzlvb2NOT1RqMUl4azRWQnJ6TklVOHQ2Z3drSXpC?=
- =?utf-8?B?czJ6NEV6YzcwczFxQ3k2d2dsODZuYm43eThHZzZnU25tSzR6UnZOU1BKT0Vx?=
- =?utf-8?B?QUZMcytuSUVtMktVVzdLMFFuRnlaRWk2citRTlNVWHdLd0x4c1ZtVXZtR2pW?=
- =?utf-8?B?NFVvd0wrZW1RS2dMdzZRZnhlQWhMRWtudTJxWUUrOUM2NExoODVuTEtGWE95?=
- =?utf-8?B?U1l6VSszbks2YklRRnZPQUp1cmM0S0FjaktaaWpoOXNlMGxoVEt5Zz09?=
+	=?utf-8?B?UVROQmlBdnFoNldRc2FzSSs5WkFkVWdKTnRkK2EzbEIxYldGVG5DL3RUYVZl?=
+ =?utf-8?B?bE9ycFdlVXo3aWlMcG0vaUNNbzc1VC9BTWNNMUxmYUQ5ZzRSNURaNFFQTXJt?=
+ =?utf-8?B?dlZpRGtZWFNyelRwV1d0U2wyMzZmdUpuN0lnbmh0SkJvWEJjdGd3MlZ2bncr?=
+ =?utf-8?B?V2xzQ1NLOXViQmk2SDhXbFJuWlpoQ2dmc0JyV3Y4am9hSGJLeElBRFpUSDIx?=
+ =?utf-8?B?MWplVFM4SnJoeUdxZWtReGtsQnR3Q0t5ZHdrSjJieDFtU295Ly9PSERMYUZM?=
+ =?utf-8?B?c1dkVU81WEVwMGxtU21pU3pZUzhTRk0wVGdRRG5jRThzVlBINEFDcE52UWpC?=
+ =?utf-8?B?aUFpbzRObit5bThobXRaQ3BocHdQaDFkUjhEKysvUy9mdlVqVlo0ZVFjV1JV?=
+ =?utf-8?B?RWJxaXAxb2kwQzZXdHZFM2s2RHkxRmJlNzRJKzhuSzJ0MEM0ZEROK2hOWHQ0?=
+ =?utf-8?B?Qm1PVGJvd01tRXlPVWdTbUdyKzFEWG5uMjljaHZ0eU5rL1B3Z1h3ZG1qcEtI?=
+ =?utf-8?B?ek56eVdaYlFEbmNUTHg1MU0yaVpBeXZwOXdERlhDRmJxUzU0OWlGR2o5dEpE?=
+ =?utf-8?B?aWxuWmwvRFVPeXhITDhLYWxvdXpaSjRybVZXT3lubkNNdkxMMmJtUmk3OGd4?=
+ =?utf-8?B?a2xsWWlaR1pqMEFrRGVEdXNOaHRreHVta2grVTQ0M3ZOTW5uUWJBekxTbi9X?=
+ =?utf-8?B?NkI5Skx0eXhyalFBdFFlYklrV29UeHQ4UjJBcHZFR0lnMUxybFBOY0FneTJk?=
+ =?utf-8?B?Q01tN1F2WkhYaTFBNklZYlh2TGliWW5teGlmZkpSOGQ2bk43ZHhhSEo1cHdR?=
+ =?utf-8?B?dVN1WjFJRy9aMmtFRGZrK3NLanBhRmVvbFlrY01DcnVqajRtZk5JdUQ4Q3Rp?=
+ =?utf-8?B?R2JHT0tvYjlkTEhrMTNZaEtWOHBCek9ady9VMkNVNFVxMUxNMHFrUTBjak45?=
+ =?utf-8?B?TUU3RTM0bGVGNHR5cWYxaGVVN1d0U09lci92WWZHNy9FRE82UXRXQlhhTnR3?=
+ =?utf-8?B?YXhoLzd1eFV6SWFnaUQzeHVOdlFLeVp2cmNuejZQQXBHM0M5dGRVNVFqYmxM?=
+ =?utf-8?B?Z3A3MnN1V1kzdmo4cjhTa1B3YThkcEdwNDFqNkx0OVFmVndZaU1OSHR2aDkv?=
+ =?utf-8?B?TEVwc3VLQmxPR0JiTURGS1hKRDFNZ2lFVDRqOEwwcm5KWnBLa2F4MEFXK2Yw?=
+ =?utf-8?B?ZExoemxLQ21VWnpnMDQ2ZEl3Snd4SWZHa0xjRm9oSVFjc1EvUHJCdG5jRHhK?=
+ =?utf-8?B?YldEZnBOTm91SlUrMU82UlYzK2UvaWdSYkhDc1g5VU9CcWw3WW1TQkMzN3k3?=
+ =?utf-8?B?aWEzbE5UUVUwUWwxOXVUQXpkMGhaL1ZoOHlhTXZ2R2ZwYnFKTHVnNmJwdWhD?=
+ =?utf-8?B?Uy9Oc0taSm5LY3Vjby9oQVhuS05rS0hWeEx6U25qcTBzRzRZSmhXdzRod1Ir?=
+ =?utf-8?B?UE5ZNzNaMk1IN2ZjV2lFbUdJOEpHK1JPMXlzSjRuUTBIa0FNeTRjbHhuRm5O?=
+ =?utf-8?B?MnlBLytzWkdraXlibFRxT01LSmdGZzl5SWNMUlVnazNheUJJdDFhUStTc2VK?=
+ =?utf-8?B?eHdlT3BwQkJUeXFCckcvcUM4eHh1OWpZSzZyVkVFblF2ek9CamwxL2RtNVlN?=
+ =?utf-8?B?Y1ZXRFpxRVBSMEppaGhIdzlwMy9JVE5xSndycER3WXVPNmI2Q1pvZDVDc0tJ?=
+ =?utf-8?B?U0x1K0xGUE1aU0xYWjAvNlJlVWhYYk5xOXdPYXByODNsNndBeG9XVUZ2ZWRw?=
+ =?utf-8?B?MnF4S2p4ZzJCd3h6VkVlcW1rckN3S2Y1R1c3M1pSL3lvUUJ0VlhGdlp4K0Nq?=
+ =?utf-8?B?MzBRVFpvbyt4TDNET2Q2Rkd3SHRXVnZBd25GWUEzMWx3ZG55WExOZVBQbFU5?=
+ =?utf-8?B?Qk5IaEJialIyQnFwOHo0eGMwWXNRK2ozZ21LM0JDeUlsMHQvMUNQcHZWQU9i?=
+ =?utf-8?B?ajJYaW5UTkVoUW9FRzBGWkRSV3NLS3J5TE95cmRtVnc4OWdySDJveHpPdnRR?=
+ =?utf-8?B?SFJJbmlNaEpHSGkxVXBEV2U4MkJkSStGUWU4R3RzWjQ1OFBVTG50czJYSUVr?=
+ =?utf-8?B?c1cvSDhoT0tuQ25EUU9EN0xncm0vaTM4RVRsb0hMK3Z6QTFadkdBMFpodlRQ?=
+ =?utf-8?B?RnNNVS9KbTZaMFZ0Z0xNZjErMVFyTSt4ZzJiUDY0Zm43S3ZzaVlWMmRrNVZv?=
+ =?utf-8?B?cDJZZzFrU1FjcVlxRXl5N3Fod1pSLytCeGY0REFMQ2t3UFh3dENQVjgwY094?=
+ =?utf-8?B?VnZ4WG5mckZRdThCeUtHOWtPZHZuWUwwL0hvRFowZjJHanlxMGtVL0pDQjFl?=
+ =?utf-8?B?S2JpcVNaUWhuNENYRVlPWmcvUDdpRklzNFFxeDFZbVVHQTBtVmxDUT09?=
 X-OriginatorOrg: garyguo.net
-X-MS-Exchange-CrossTenant-Network-Message-Id: d5e5046b-1706-4af8-d292-08ded5db7dae
+X-MS-Exchange-CrossTenant-Network-Message-Id: 52838ce3-7a14-4778-f29d-08ded5db7e21
 X-MS-Exchange-CrossTenant-AuthSource: LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jun 2026 12:39:41.6936
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 29 Jun 2026 12:39:42.4654
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: bbc898ad-b10f-4e10-8552-d9377b823d45
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: OoJV/h21u6XhIHuSYGm75m7SWzTbCFJqLUiy5PQoe8GSf2IaXZQ+GJDBnqXlrb4vRa1lDjdOFktSR4QR0TkaiQ==
+X-MS-Exchange-CrossTenant-UserPrincipalName: ftkeTZWtieU789burGU2WFredB4mejJIp0tm6NmkvcqKyVNuQYjC2U/UczoVm52Tgn1E0YrFaqS2oRYmdAFBAA==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO8P265MB7414
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [1.34 / 15.00];
@@ -191,7 +191,7 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	MIME_TRACE(0.00)[0:+];
 	RCPT_COUNT_TWELVE(0.00)[47];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9462-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9464-lists,linux-pwm=lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FREEMAIL_TO(0.00)[linuxfoundation.org,kernel.org,protonmail.com,google.com,umich.edu,collabora.com,nvidia.com,onurozkan.dev,gmail.com,ffwll.ch,arm.com,intel.com,linux.dev,linaro.org,samsung.com,redhat.com];
 	FORGED_RECIPIENTS(0.00)[m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:dakr@kernel.org,m:ojeda@kernel.org,m:boqun@kernel.org,m:bjorn3_gh@protonmail.com,m:lossin@kernel.org,m:a.hindborg@kernel.org,m:aliceryhl@google.com,m:tmgross@umich.edu,m:daniel.almeida@collabora.com,m:tamird@kernel.org,m:acourbot@nvidia.com,m:work@onurozkan.dev,m:fujita.tomonori@gmail.com,m:airlied@gmail.com,m:simona@ffwll.ch,m:bhelgaas@google.com,m:kwilczynski@kernel.org,m:abdiel.janulgue@gmail.com,m:robin.murphy@arm.com,m:david.m.ertman@intel.com,m:iweiny@kernel.org,m:leon@kernel.org,m:lenb@kernel.org,m:igor.korotin@linux.dev,m:robh@kernel.org,m:saravanak@kernel.org,m:viresh.kumar@linaro.org,m:m.wilczynski@samsung.com,m:fustini@kernel.org,m:guoren@kernel.org,m:wefu@redhat.com,m:ukleinek@kernel.org,m:driver-core@lists.linux.dev,m:rust-for-linux@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:netdev@vger.kernel.org,m:nova-gpu@lists.linux.dev,m:dri-devel@lists.freedesktop.org,m:linux-pci@vger.kernel.org,m:lin
@@ -211,14 +211,14 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	MID_RHS_MATCH_FROM(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-pwm];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,garyguo.net:dkim,garyguo.net:email,garyguo.net:mid,garyguo.net:from_mime]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,vger.kernel.org:from_smtp,garyguo.net:dkim,garyguo.net:email,garyguo.net:mid,garyguo.net:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 61EE56DABF7
+X-Rspamd-Queue-Id: 009D56DAC3F
 
-It is possible that `pci_device_id_any` will be passed to the driver, e.g.
-`driver_override` is used on the device. Therefore, the driver must be able
-to handle the case where `driver_data` is 0. Thus, update the `probe`
-functions to get `Option`.
+It is possible that ID without driver_data will be passed to the driver,
+e.g. `new_id` is used to dynamically create a new ID without data.
+Therefore, the driver must be able to handle the case where `driver_data`
+is 0. Thus, update the `probe` functions to get `Option`.
 
 The current code cannot tell if the info does not exist or is the first
 entry; however this will be achievable once the code is updated to use a
@@ -226,104 +226,54 @@ entry; however this will be achievable once the code is updated to use a
 
 Signed-off-by: Gary Guo <gary@garyguo.net>
 ---
- drivers/gpu/nova-core/driver.rs       | 2 +-
- rust/kernel/pci.rs                    | 6 +++---
- samples/rust/rust_dma.rs              | 2 +-
- samples/rust/rust_driver_auxiliary.rs | 2 +-
- samples/rust/rust_driver_pci.rs       | 3 ++-
- 5 files changed, 8 insertions(+), 7 deletions(-)
+ rust/kernel/usb.rs              | 6 +++---
+ samples/rust/rust_driver_usb.rs | 2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/gpu/nova-core/driver.rs b/drivers/gpu/nova-core/driver.rs
-index 5738d4ac521b..5a5f0b63e0f3 100644
---- a/drivers/gpu/nova-core/driver.rs
-+++ b/drivers/gpu/nova-core/driver.rs
-@@ -70,7 +70,7 @@ impl pci::Driver for NovaCoreDriver {
+diff --git a/rust/kernel/usb.rs b/rust/kernel/usb.rs
+index 7aff0c82d0af..6750a49e466b 100644
+--- a/rust/kernel/usb.rs
++++ b/rust/kernel/usb.rs
+@@ -90,7 +90,7 @@ extern "C" fn probe_callback(
+             let id = unsafe { &*id.cast::<DeviceId>() };
  
-     fn probe<'bound>(
-         pdev: &'bound pci::Device<Core<'_>>,
--        _info: &'bound Self::IdInfo,
-+        _info: Option<&'bound Self::IdInfo>,
-     ) -> impl PinInit<Self::Data<'bound>, Error> + 'bound {
-         pin_init::pin_init_scope(move || {
-             dev_dbg!(pdev, "Probe Nova Core GPU driver.\n");
-diff --git a/rust/kernel/pci.rs b/rust/kernel/pci.rs
-index 5071cae6543f..0e055e4df99e 100644
---- a/rust/kernel/pci.rs
-+++ b/rust/kernel/pci.rs
-@@ -113,7 +113,7 @@ extern "C" fn probe_callback(
-         let info = T::ID_TABLE.info(id.index());
+             let info = T::ID_TABLE.info(id.index());
+-            let data = T::probe(intf, id, info);
++            let data = T::probe(intf, id, Some(info));
  
-         from_result(|| {
--            let data = T::probe(pdev, info);
-+            let data = T::probe(pdev, Some(info));
- 
-             pdev.as_ref().set_drvdata(data)?;
-             Ok(0)
-@@ -284,7 +284,7 @@ macro_rules! pci_device_table {
- ///
+             let dev: &device::Device<device::CoreInternal<'_>> = intf.as_ref();
+             dev.set_drvdata(data)?;
+@@ -293,7 +293,7 @@ macro_rules! usb_device_table {
  ///     fn probe<'bound>(
- ///         _pdev: &'bound pci::Device<Core<'_>>,
--///         _id_info: &'bound Self::IdInfo,
-+///         _id_info: Option<&'bound Self::IdInfo>,
+ ///         _interface: &'bound usb::Interface<Core<'_>>,
+ ///         _id: &usb::DeviceId,
+-///         _info: &'bound Self::IdInfo,
++///         _info: Option<&'bound Self::IdInfo>,
  ///     ) -> impl PinInit<Self::Data<'bound>, Error> + 'bound {
  ///         Err(ENODEV)
  ///     }
-@@ -313,7 +313,7 @@ pub trait Driver {
-     /// attempt to initialize the device here.
+@@ -322,7 +322,7 @@ pub trait Driver {
      fn probe<'bound>(
-         dev: &'bound Device<device::Core<'_>>,
+         interface: &'bound Interface<device::Core<'_>>,
+         id: &DeviceId,
 -        id_info: &'bound Self::IdInfo,
 +        id_info: Option<&'bound Self::IdInfo>,
      ) -> impl PinInit<Self::Data<'bound>, Error> + 'bound;
  
-     /// PCI driver unbind.
-diff --git a/samples/rust/rust_dma.rs b/samples/rust/rust_dma.rs
-index 5046b4628d0e..9beb37275e0d 100644
---- a/samples/rust/rust_dma.rs
-+++ b/samples/rust/rust_dma.rs
-@@ -63,7 +63,7 @@ impl pci::Driver for DmaSampleDriver {
- 
+     /// USB driver disconnect.
+diff --git a/samples/rust/rust_driver_usb.rs b/samples/rust/rust_driver_usb.rs
+index 02bd5085f9bc..176ef625ed75 100644
+--- a/samples/rust/rust_driver_usb.rs
++++ b/samples/rust/rust_driver_usb.rs
+@@ -32,7 +32,7 @@ impl usb::Driver for SampleDriver {
      fn probe<'bound>(
-         pdev: &'bound pci::Device<Core<'_>>,
+         intf: &'bound usb::Interface<Core<'_>>,
+         _id: &usb::DeviceId,
 -        _info: &'bound Self::IdInfo,
 +        _info: Option<&'bound Self::IdInfo>,
      ) -> impl PinInit<Self, Error> + 'bound {
-         pin_init::pin_init_scope(move || {
-             dev_info!(pdev, "Probe DMA test driver.\n");
-diff --git a/samples/rust/rust_driver_auxiliary.rs b/samples/rust/rust_driver_auxiliary.rs
-index 2c1351040e45..73c63afc046a 100644
---- a/samples/rust/rust_driver_auxiliary.rs
-+++ b/samples/rust/rust_driver_auxiliary.rs
-@@ -79,7 +79,7 @@ impl pci::Driver for ParentDriver {
- 
-     fn probe<'bound>(
-         pdev: &'bound pci::Device<Core<'_>>,
--        _info: &'bound Self::IdInfo,
-+        _info: Option<&'bound Self::IdInfo>,
-     ) -> impl PinInit<Self::Data<'bound>, Error> + 'bound {
-         Ok(ParentData {
-             // SAFETY: `ParentData` is the driver's private data, which is dropped when the
-diff --git a/samples/rust/rust_driver_pci.rs b/samples/rust/rust_driver_pci.rs
-index 1aa8197d8698..5547dd704a1b 100644
---- a/samples/rust/rust_driver_pci.rs
-+++ b/samples/rust/rust_driver_pci.rs
-@@ -144,7 +144,7 @@ impl pci::Driver for SampleDriver {
- 
-     fn probe<'bound>(
-         pdev: &'bound pci::Device<Core<'_>>,
--        info: &'bound Self::IdInfo,
-+        info: Option<&'bound Self::IdInfo>,
-     ) -> impl PinInit<Self::Data<'bound>, Error> + 'bound {
-         let vendor = pdev.vendor_id();
-         dev_dbg!(
-@@ -153,6 +153,7 @@ fn probe<'bound>(
-             vendor,
-             pdev.device_id()
-         );
-+        let info = info.ok_or(ENODEV)?;
- 
-         pdev.enable_device_mem()?;
-         pdev.set_master();
+         let dev: &device::Device<Core<'_>> = intf.as_ref();
+         dev_info!(dev, "Rust USB driver sample probed\n");
 
 -- 
 2.54.0
