@@ -1,220 +1,335 @@
-Return-Path: <linux-pwm+bounces-9490-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9491-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id N7IaNt//Q2qAnAoAu9opvQ
-	(envelope-from <linux-pwm+bounces-9490-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Tue, 30 Jun 2026 19:41:51 +0200
+	id MboSLGdiRGrTtwoAu9opvQ
+	(envelope-from <linux-pwm+bounces-9491-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Wed, 01 Jul 2026 02:42:15 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 615706E6FC8
-	for <lists+linux-pwm@lfdr.de>; Tue, 30 Jun 2026 19:41:51 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
+	by mail.lfdr.de (Postfix) with ESMTPS id 22C786E8F16
+	for <lists+linux-pwm@lfdr.de>; Wed, 01 Jul 2026 02:42:15 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b="QRBYu/IS";
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9490-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9490-lists+linux-pwm=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=none;
+	dmarc=none;
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9491-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9491-lists+linux-pwm=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0D42F3040FB0
-	for <lists+linux-pwm@lfdr.de>; Tue, 30 Jun 2026 17:39:41 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 290A130233C5
+	for <lists+linux-pwm@lfdr.de>; Wed,  1 Jul 2026 00:42:14 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B9ECD3DB30C;
-	Tue, 30 Jun 2026 17:39:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id AD8DD20E334;
+	Wed,  1 Jul 2026 00:42:13 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A35AE366541;
-	Tue, 30 Jun 2026 17:39:39 +0000 (UTC)
+Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [52.229.168.213])
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id EEC3611CA9;
+	Wed,  1 Jul 2026 00:42:09 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782841180; cv=none; b=njv5xpshC/cuRJjc8PR0FecR/wZkVWM3SMaRTTeGOsFb4/vk0XkCzXrlmthNba2ESKSJVd6qnx9xqy7CBstSWO8zMNxXqxjn98O9HNiT5IhO4eO2jBu89SQhNtRdYvHy/fR6q2va69N5Cf+04mFYLBZVGU8DIToQ40g/TD5qVj8=
+	t=1782866533; cv=none; b=ec6rPllRGJ0SU0S1cDt/j9DC28GSdLs63ky3Qch4waLM2Hz0t7A46U+chEZ1tGF5zRj6/FUdTTNxFJDBRfCh3MDplbrMG8FtbdD6dczfKCjBLpKdq2uxqQuqZ9PLBkRVE7VMUoFlde5AWCyWYW+oe83Or5OCvsD98pFnNJ1M7FM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782841180; c=relaxed/simple;
-	bh=GVhSEjcUNDWjNrRCPcM8sK039JUB21hjqgUtF6Vyco8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HyGOsAvujlY7TaphbBH3tnrEUByyHgZKxvXWxjnznylsv+L22/i0dCwpbI6ymWFpvGvON6KlzJ9TZnt+VBjNtCTIwp5DfQty8zzm4p3e5Wy1kd0J+fNShuXMJd7xAWDiU36PYdPbuhLMdtgKNHScs846LVpLNZGxl9zblbnXiUQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QRBYu/IS; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id 004331F000E9;
-	Tue, 30 Jun 2026 17:39:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1782841179;
-	bh=ZSYKIMdaa8r55idhdlD4ARTKtizj6Luf8eogMh4Ab54=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=QRBYu/ISphMBIeZ86mvArT+CRnur19O0WjXXiSJ6rOrfeV1BmL0qKGj71oqDoZL6s
-	 1rjZaEBd73saORKRmmBmn2U5T3omqp1eIcPbthNGJC8RJSF2V/ck/b/JxvSpzhU2TE
-	 fePBFa4bO+x1D/af5qd7xAcJUmp2aO3Jj6BRqegaV00UqbW2dJLA+1eDB38JSPEg6m
-	 4gcxNK41ZqjKVL6rOQElB6+ptaQDc5zOnAHYF1tghofuW+dBQ9K/vOywwjwLheNsQa
-	 KuiO845XZTpnHQCOwKt+tq7Z8tvZK9XwhIzzEci/JXyZl81jSl3sYEG2vJUqyFhTEx
-	 r2aybJyysDqWw==
-Date: Tue, 30 Jun 2026 19:39:36 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Jon Hunter <jonathanh@nvidia.com>
-Cc: Mikko Perttunen <mperttunen@nvidia.com>, 
-	Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh@kernel.org>, 
-	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, linux-pwm@vger.kernel.org, 
-	linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 
-	Thierry Reding <treding@nvidia.com>, Yi-Wei Wang <yiweiw@nvidia.com>
-Subject: Re: [PATCH v5 0/7] Tegra264 PWM support
-Message-ID: <akP-KK1TUFAGXxpk@monoceros>
-References: <20260529-t264-pwm-v5-0-7bf9e405a96a@nvidia.com>
- <e7b0d66e-ef2f-47d8-8844-38ae63eaf7fb@nvidia.com>
- <add09636-7b0e-4a99-8503-d98a75c14f4c@nvidia.com>
+	s=arc-20240116; t=1782866533; c=relaxed/simple;
+	bh=+Vk2KJJU+e6niFHzOZwRY9ZJVITjUv4FsmqPrHDpjZ0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=f3V+WivCSTVJWbxhZzQqMXrjzKf6RGHMuBdZVmNIk6Syv+me6tXZG03r1Rvpu+BNkbAYm6lAVmWBYGBVJ3qNguDPQGkLKQN/Ie/VU0u6YAmbe9lE72ON76/X9j+TyGufLjmKSzWf6+8I+SxEqH56dynO9xDt8YwNNWOIY0JXJ1c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=52.229.168.213
+Received: from E0005152DT.eswin.cn (unknown [10.12.96.41])
+	by app2 (Coremail) with SMTP id TQJkCgC3y55SYkRqqVgwAA--.53514S2;
+	Wed, 01 Jul 2026 08:41:55 +0800 (CST)
+From: dongxuyang@eswincomputing.com
+To: ukleinek@kernel.org,
+	robh@kernel.org,
+	krzk+dt@kernel.org,
+	conor+dt@kernel.org,
+	ben-linux@fluff.org,
+	ben.dooks@codethink.co.uk,
+	p.zabel@pengutronix.de,
+	linux-pwm@vger.kernel.org,
+	devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Cc: ningyu@eswincomputing.com,
+	linmin@eswincomputing.com,
+	xuxiang@eswincomputing.com,
+	wangguosheng@eswincomputing.com,
+	pinkesh.vaghela@einfochips.com,
+	Xuyang Dong <dongxuyang@eswincomputing.com>
+Subject: [PATCH v9 0/3] Update designware pwm driver
+Date: Wed,  1 Jul 2026 08:41:39 +0800
+Message-Id: <20260701004139.347-1-dongxuyang@eswincomputing.com>
+X-Mailer: git-send-email 2.31.1.windows.1
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="lyf4usywgl62u5tb"
-Content-Disposition: inline
-In-Reply-To: <add09636-7b0e-4a99-8503-d98a75c14f4c@nvidia.com>
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID:TQJkCgC3y55SYkRqqVgwAA--.53514S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxuw17WF45XF1DWF4rJFWxXrb_yoWDGw1xpF
+	4xWrW3tr1kXryxtan7GF18uFyFg3Z8JFW5Kr1rW3W7Zw15ZayjqrWrKFyYva4qvr1qga45
+	GFyfWa1Sya4jyF7anT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUBl14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+	rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+	1l84ACjcxK6xIIjxv20xvE14v26r4j6ryUM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+	6r4UJwA2z4x0Y4vEx4A2jsIE14v26r4UJVWxJr1l84ACjcxK6I8E87Iv6xkF7I0E14v26F
+	4UJVW0owAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC0VAKzVAqx4xG6I80ewAv
+	7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr1lOx8S6xCaFVCjc4AY6r
+	1j6r4UM4x0Y48IcxkI7VAKI48JM4x0x7Aq67IIx4CEVc8vx2IErcIFxwACI402YVCY1x02
+	628vn2kIc2xKxwAKzVCY07xG64k0F24lc7CjxVAaw2AFwI0_Jw0_GFylc2xSY4AK6svPMx
+	AIw28IcxkI7VAKI48JMxC20s026xCaFVCjc4AY6r1j6r4UMI8I3I0E5I8CrVAFwI0_Jr0_
+	Jr4lx2IqxVCjr7xvwVAFwI0_JrI_JrWlx4CE17CEb7AF67AKxVW8ZVWrXwCIc40Y0x0EwI
+	xGrwCI42IY6xIIjxv20xvE14v26r1j6r1xMIIF0xvE2Ix0cI8IcVCY1x0267AKxVW8JVWx
+	JwCI42IY6xAIw20EY4v20xvaj40_Jr0_JF4lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcV
+	C2z280aVCY1x0267AKxVW8JVW8JrUvcSsGvfC2KfnxnUUI43ZEXa7VUbknY7UUUUU==
+X-CM-SenderInfo: pgrqw5xx1d0w46hv4xpqfrz1xxwl0woofrz/
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-6.76 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	SIGNED_PGP(-2.00)[];
+X-Spamd-Result: default: False [1.54 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	MID_CONTAINS_FROM(1.00)[];
+	R_MISSING_CHARSET(0.50)[];
+	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:jonathanh@nvidia.com,m:mperttunen@nvidia.com,m:thierry.reding@gmail.com,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:linux-pwm@vger.kernel.org,m:linux-tegra@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:devicetree@vger.kernel.org,m:treding@nvidia.com,m:yiweiw@nvidia.com,m:thierryreding@gmail.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[ukleinek@kernel.org,linux-pwm@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[12];
+	FORGED_RECIPIENTS(0.00)[m:ukleinek@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:ben-linux@fluff.org,m:ben.dooks@codethink.co.uk,m:p.zabel@pengutronix.de,m:linux-pwm@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:ningyu@eswincomputing.com,m:linmin@eswincomputing.com,m:xuxiang@eswincomputing.com,m:wangguosheng@eswincomputing.com,m:pinkesh.vaghela@einfochips.com,m:dongxuyang@eswincomputing.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9491-lists,linux-pwm=lfdr.de];
+	DMARC_NA(0.00)[eswincomputing.com];
 	RCVD_TLS_LAST(0.00)[];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	RCPT_COUNT_TWELVE(0.00)[16];
+	RCVD_COUNT_THREE(0.00)[4];
 	FORWARDED(0.00)[lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-9490-lists,linux-pwm=lfdr.de];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_SENDER(0.00)[dongxuyang@eswincomputing.com,linux-pwm@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ukleinek@kernel.org,linux-pwm@vger.kernel.org];
-	FREEMAIL_CC(0.00)[nvidia.com,gmail.com,kernel.org,vger.kernel.org];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	FROM_NEQ_ENVFROM(0.00)[dongxuyang@eswincomputing.com,linux-pwm@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[monoceros:mid,nvidia.com:email,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,sashiko.dev:url,vger.kernel.org:from_smtp]
+	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	R_DKIM_NA(0.00)[];
+	FROM_NO_DN(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:rdns,tor.lore.kernel.org:helo,microchip.com:email,intel.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 615706E6FC8
+X-Rspamd-Queue-Id: 22C786E8F16
 
+From: Xuyang Dong <dongxuyang@eswincomputing.com>
 
---lyf4usywgl62u5tb
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v5 0/7] Tegra264 PWM support
-MIME-Version: 1.0
+There is already a patch [1] for the DesignWare PWM driver,
+which is posted by Ben and still under review.
+Based on this patch, this series is a continuation of [1]
+to add support for IP versions 2.11a and later, which
+includes support for "Pulse Width Modulation with 0%
+and 100% Duty Cycle".
 
-Hello,
+Supported chips:
+ESWIN EIC7700 series SoC.
 
-On Tue, Jun 30, 2026 at 02:54:51PM +0100, Jon Hunter wrote:
-> On 02/06/2026 10:16, Jon Hunter wrote:
-> >=20
-> > On 29/05/2026 03:47, Mikko Perttunen wrote:
-> > > Hello,
-> > >=20
-> > > this adds support for the PWM controller on Tegra264. The controller
-> > > is similar to previous generations, but the register fields are
-> > > widened, the depth is made configurable, and the enable bit moves
-> > > to a different spot.
-> > >=20
-> > > This series adds only basic support with fixed depth -- configurable
-> > > depth will come later.
-> > >=20
-> > > Patch 1 adds device tree bindings for Tegra264 PWM (compatible
-> > > =A0=A0 string).
-> > >=20
-> > > Patch 2 prefixes driver-local macros and static helpers with
-> > > =A0=A0 tegra_/TEGRA_ to make their scoping clear.
-> > >=20
-> > > Patches 3 to 6 contain the PWM driver changes for Tegra264.
-> > >=20
-> > > Patch 7 adds device tree nodes for the PWM controllers on Tegra264.
-> >=20
-> > ...
-> >=20
-> > > Mikko Perttunen (4):
-> > > =A0=A0=A0=A0=A0=A0 pwm: tegra: Prefix driver-local macros and functio=
-ns
-> > > =A0=A0=A0=A0=A0=A0 pwm: tegra: Modify read/write accessors for multi-=
-register channel
-> > > =A0=A0=A0=A0=A0=A0 pwm: tegra: Parametrize duty and scale field widths
-> > > =A0=A0=A0=A0=A0=A0 pwm: tegra: Add support for Tegra264
-> > >=20
-> > > Thierry Reding (2):
-> > > =A0=A0=A0=A0=A0=A0 dt-bindings: pwm: Document Tegra264 controller
-> > > =A0=A0=A0=A0=A0=A0 arm64: tegra: Add PWM controllers on Tegra264
-> > >=20
-> > > Yi-Wei Wang (1):
-> > > =A0=A0=A0=A0=A0=A0 pwm: tegra: Avoid hard-coded max clock frequency
-> > >=20
-> > > =A0 .../bindings/pwm/nvidia,tegra20-pwm.yaml=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0 |=A0=A0 1 +
-> > > =A0 arch/arm64/boot/dts/nvidia/tegra264.dtsi=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0 |=A0 72 ++++++++++
-> > > =A0 drivers/pwm/pwm-tegra.c=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=
-=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0=A0 | 155
-> > > +++++++++++ +++-------
-> > > =A0 3 files changed, 176 insertions(+), 52 deletions(-)
-> >=20
-> >=20
-> > For the series ...
-> >=20
-> > Tested-by: Jon Hunter <jonathanh@nvidia.com>
-> > Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
-> >=20
-> > Uwe, if you are OK with the version, we would like to get this into -ne=
-xt.
->=20
-> This still applies fine on next-20260629 and so unless you have any
-> objections could we get this into -next?
+Test:
+Tested this patch on the Sifive HiFive Premier P550 (which uses the EIC7700
+SoC).
 
-I dropped this patch series from my queue due to sashiko's replies. I
-just notice these were not sent to the linux-pwm list, otherwise I would
-have mentioned it. :-(
+[1] https://lore.kernel.org/lkml/20230907161242.67190-1-ben.dooks@codethink.co.uk/
 
-So check on either
+Updates:
+  Changes in v9:
+  - YAML:
+    - Add 'Acked-by: Conor Dooley <conor.dooley@microchip.com>' for
+      patch 1 and 2.
+  - Driver:
+    - __dwc_pwm_configure_timer():
+      reads state->polarity and swaps registers:
+      NORMAL (active-high): duty_cycle to DWC_TIM_LD_CNT2 (HIGH),
+      remainder to DWC_TIM_LD_CNT (LOW)
+      INVERSED (active-low): duty_cycle to DWC_TIM_LD_CNT (LOW),
+      remainder to DWC_TIM_LD_CNT2 (HIGH)
+      Applies to both 0N100 and classic paths.
+      dwc_pwm_apply():
+      removed -EINVAL polarity guard; both polarities accepted.
+      dwc_pwm_get_state():
+      reconstructs polarity from pwm->state.polarity (last apply() value);
+      initial read zero-initialized to PWM_POLARITY_NORMAL; decode mirrors
+      apply() swap logic for consistent round-trip.
+      Update this in the commit message (Sashiko review of v8).
+    - Replace pm_runtime_get_sync() with pm_runtime_resume_and_get() in
+      dwc_pwm_apply() and add error checking (Sashiko review of v8).
+    - Add a non-zero check for clk_rate in dwc_pwm_get_state().
+      Add a non-zero check for dwc->clk_rate in probe (Sashiko review of v8).
+    - When pwm_en is true, adding 'goto disable_clk;'. When pwm_en is false,
+      return early from pm_disable without falling through to disable_clk.
+      (Sashiko review of v8).
+    - Replace pm_runtime_get_sync() with pm_runtime_resume_and_get() in
+      dwc_pwm_plat_remove() and add error checking.
+      On failure, skip register reads and pm_runtime_put_sync()
+      (Sashiko review of v8).
+    - Remove the -EBUSY check in dwc_pwm_suspend() and save all contexts
+      (Sashiko review of v8).
+    - Replace pm_runtime_get_sync() with pm_runtime_resume_and_get() in
+      dwc_pwm_resume() (Sashiko review of v8).
 
-	https://lore.kernel.org/all/add09636-7b0e-4a99-8503-d98a75c14f4c@nvidia.co=
-m/
+  - Link to v8: https://lore.kernel.org/all/20260623071329.2034-1-dongxuyang@eswincomputing.com/
 
-or
+  Changes in v8:
+  - YAML:
+    - Split the v7 binding into two patches.
+      Patch 1 explains why to add the resets property.
+      Patch 2 adds the eswin compatible string and specified reset.
+  - Driver:
+    - Use mul_u64_u64_div_u64() to safely scale the values and avoid
+      64-bit multiplication overflow in __dwc_pwm_configure_timer()
+      and dwc_pwm_get_state().
+      Add the include for linux/math64.h (Sashiko review of v7).
+    - Keep the current usage of pwm->args.polarity until a better solution
+      is available.
+    - Use pm_runtime_resume_and_get() in dwc_pwm_get_state() instead of
+      pm_runtime_get_sync(), so that register access is skipped if the
+      device fails to resume (Sashiko review of v7).
+    - Replace devm_pwmchip_add() with pwmchip_add() and move it after
+      pm_runtime_enable(), so that the PWM chip is registered only after
+      runtime PM has been fully initialized (Sashiko review of v7).
+    - Remove the reset_assert label and reset_control_assert()
+      (Sashiko review of v7).
+    - Remove the pm_runtime_status_suspended() check and unconditionally
+      use pm_runtime_get_sync() instead (Sashiko review of v7).
+    - Remove  the pwm_en flag, but keep the pm_runtime_put_noidle() call
+      (Sashiko review of v7; see email for explanation)
+    - Use pm_runtime_status_suspended() to check the runtime PM status.
+      If the device is not suspended (i.e., active), call
+      clk_disable_unprepare(). If it is suspended, skip this block
+      (Sashiko review of v7).
+    - Use an explicit pwmchip_remove() as the first step of .remove(),
+      instead of relying on devm_pwmchip_add() to unregister the chip
+      after .remove() returns. This prevents the hardware teardown that
+      follows from racing against a still-registered chip
+      (Sashiko review of v7).
+    - Add a check for dwc->rst before asserting reset in the remove path
+      (Sashiko review of v7).
+    - Drop the return value check from pm_runtime_put_sync()
+      (Sashiko review of v7).
 
-	https://sashiko.dev/#/patchset/20260529-t264-pwm-v5-0-7bf9e405a96a%40nvidi=
-a.com
+  - Link to v7: https://lore.kernel.org/all/20260605082242.1541-1-dongxuyang@eswincomputing.com/
 
-=2E
+  Changes in v7:
+  - YAML:
+    - Dropped Conor's Acked-by due to significant schema changes.
+    - Rename patch 1 from "dt-bindings: pwm: dwc: add optional reset" to
+      "dt-bindings: pwm: dwc: Add eswin compatible and resets property".
+    - Update the commit message to explain why the EIC7700 supports only
+      one reset.
+    - Add constraints 'minItems: 1' and 'maxItems: 1' for the 'resets'
+      property of eswin,eic7700-pwm.
+    - Add an example for eswin,eic7700-pwm.
 
-I only invested a quick glance, but the feedback seems relevant. If you
-don't agree, please point out why it's wrong/irrelevant.
+  - Link to v6: https://lore.kernel.org/all/20260424094529.1691-1-dongxuyang@eswincomputing.com/
 
-Best regards
-Uwe
+  Changes in v6:
+  - YAML:
+    - Drop properties resets and its items description for eswin,eic7700-pwm.
 
---lyf4usywgl62u5tb
-Content-Type: application/pgp-signature; name="signature.asc"
+  - Link to v5: https://lore.kernel.org/all/20260423083644.1168-1-dongxuyang@eswincomputing.com/
 
------BEGIN PGP SIGNATURE-----
+  Changes in v5:
+  - YAML:
+    - Add 'eswin,eic7700-pwm' compatible string.
+    - Add the items description for the resets property and set minItems to 1.
+    - Require resets property with exactly 1 reset for eswin,eic7700-pwm compatible.
+  - Driver:
+    - Add support for 'eswin,eic7700-pwm' compatible.
+    - Add structure dwc_pwm_plat_data to manage the API for obtaining resets.
 
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmpD/1QACgkQj4D7WH0S
-/k5jgwgAkr72tIWgpzv/b+0mePymyvuVqmG86UilwIjrl2ZM3wJM1BynJZbVfWQd
-0iDdtbZWMV2WOQzzF/7lAZ0+uAFCu2zHbjc4VHEwsw8RFm1/QxiOpWg58qT3XUX3
-9m7U2PEucVXF1hml7RCLfHxsLfjiQRPIwDEi1IJy+hpjW8lROm95eG/SPl7XU2dZ
-TOzQKBQ196edIa40cEtlwvgkiTWG9ABv3+R01rCd7AgpUV/8mQItVt8Q2oT0ROiG
-ixd18yy/3XqbQuPU34voKC2oIbGQbAbLqQZUGb1rMdUkO+Ii6sP+sdJZdiR5NrKe
-b+QeSDXG2Sh4EMJhbCFCC3bRlikdug==
-=pRHi
------END PGP SIGNATURE-----
+  - Link to v4: https://lore.kernel.org/all/20260415094908.1539-1-dongxuyang@eswincomputing.com/
 
---lyf4usywgl62u5tb--
+  Changes in v4:
+  - YAML:
+    - Change maxItems from 1 to 2. As there is a corresponding reset signal
+      for each clock domain, the effective maxItems of the resets property
+      is set to 2.
+    - Update the YAML commit message to describe the hardware.
+  - Driver:
+    - Replace devm_reset_control_get_optional_exclusive() with
+      devm_reset_control_array_get_optional_exclusive(). Since the number
+      of reset signals has increased from one to two, we need to use the
+      array API to acquire them.
+
+  - Link to v3: https://lore.kernel.org/all/20260402091718.1608-1-dongxuyang@eswincomputing.com/
+
+  Changes in v3:
+  - YAML:
+    - Added a clear justification for the optional resets property. It is
+      required to support proper controller initialization when no PWM
+      channel is active at boot time, while allowing the driver to skip
+      reset deassertion if any channel is already enabled.
+  - Driver:
+    - Update the boundary value check of tmp in __dwc_pwm_configure_timer()
+      for DWC_TIM_CTRL_0N100PWM_EN.
+    - Replace 'sizeof(struct dwc_pwm_drvdata)' with
+      'struct_size(data, chips, 1)'.
+    - Drop devm_clk_get_enabled() in favor of devm_clk_get() with explicit
+      clk_prepare_enable() and clk_disable_unprepare() allowing runtime PM
+      to manage clock state.
+    - Replace devm_reset_control_get_optional_exclusive_deasserted() with
+      devm_reset_control_get_optional_exclusive() and issue a full reset via
+      reset_control_reset() only when no PWM channel is active at probe time.
+    - Detect bootloader-enabled PWM channels by reading the enable bit, and
+      initialize runtime PM as active for those channels by calling
+      pm_runtime_set_active() and pm_runtime_get_noresume().
+    - Remove autosuspend as it is not required for this driver.
+    - Use explicit pm_runtime_enable() and pm_runtime_disable() instead of
+      the managed devm_pm_runtime_enable() variant to ensure correct cleanup.
+    - On device removal, recheck the channel enable status. If any channel
+      remains active, call pm_runtime_put_noidle() before disabling clocks
+      via clk_disable_unprepare().
+      Resume device before register access during removal if it is runtime
+      suspended, and re-suspend it afterward.
+    - If device is suspended, resume it before register access during system
+      resume/suspend.
+    - Use pm_ptr() instead of pm_sleep_ptr() for correct PM operation.
+
+  - Link to v2: https://lore.kernel.org/all/20260306093000.2065-1-dongxuyang@eswincomputing.com/
+
+  Changes in v2:
+  - YAML:
+    - Remove eswin,eic7700-pwm.yaml. Use snps,dw-apb-timers-pwm2.yaml.
+      The description in snps,dw-apb-timers-pwm2.yaml is better.
+    - Add the resets property as optional, as defined in the databook.
+    - Remove snps,pwm-full-range-enable as no additional property is needed.
+  - Driver:
+    - Change the file from pwm-dwc-eic7700.c to pwm-dwc-of.c from [1].
+    - Define DWC_TIM_VERSION_ID_2_11A 2.11a as the baseline version.
+    - Enable the 0% and 100% duty cycle mode by setting dwc->feature if
+      the version read from the TIMERS_COMP_VERSION register is later
+      than or equal to DWC_TIM_VERSION_ID_2_11A.
+    - Use the DIV_ROUND_UP_ULL() to calculate width in the .apply and
+      .get_state.
+    - Additionally, Power Management (PM) support has been added to the
+      pwm-dwc-of.c driver.
+    - Drop the headers that are not used.
+    - Use devm_clk_get_enabled() instead of devm_clk_get().
+    - Drop of_match_ptr.
+    - Fix build error with 1ULL << 32.
+      Reported-by: kernel test robot <lkp@intel.com>
+      Closes: https://lore.kernel.org/oe-kbuild-all/202512061720.j31AsgM7-lkp@intel.com/
+
+  - Link to v1: https://lore.kernel.org/all/20251205090411.1388-1-dongxuyang@eswincomputing.com/
+  - Link to v9: https://lore.kernel.org/lkml/20230907161242.67190-1-ben.dooks@codethink.co.uk/
+
+Xuyang Dong (3):
+  dt-bindings: pwm: dwc: Document optional resets property
+  dt-bindings: pwm: dwc: Add eswin compatible
+  pwm: dwc: add of/platform support
+
+ .../bindings/pwm/snps,dw-apb-timers-pwm2.yaml |  37 +-
+ drivers/pwm/Kconfig                           |  10 +
+ drivers/pwm/Makefile                          |   1 +
+ drivers/pwm/pwm-dwc-core.c                    | 161 ++++++--
+ drivers/pwm/pwm-dwc-of.c                      | 356 ++++++++++++++++++
+ drivers/pwm/pwm-dwc.h                         |  25 +-
+ 6 files changed, 548 insertions(+), 42 deletions(-)
+ create mode 100644 drivers/pwm/pwm-dwc-of.c
+
+--
+2.34.1
+
 
