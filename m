@@ -1,844 +1,314 @@
-Return-Path: <linux-pwm+bounces-9494-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9495-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id q2SyBcliRGrytwoAu9opvQ
-	(envelope-from <linux-pwm+bounces-9494-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Wed, 01 Jul 2026 02:43:53 +0200
+	id HR/VCd18RGqnvgoAu9opvQ
+	(envelope-from <linux-pwm+bounces-9495-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Wed, 01 Jul 2026 04:35:09 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 64BB26E8F43
-	for <lists+linux-pwm@lfdr.de>; Wed, 01 Jul 2026 02:43:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 698F16E9441
+	for <lists+linux-pwm@lfdr.de>; Wed, 01 Jul 2026 04:35:08 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=none;
-	dmarc=none;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9494-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9494-lists+linux-pwm=lfdr.de@vger.kernel.org";
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	dkim=pass header.d=Nvidia.com header.s=selector2 header.b=YDvkvr++;
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9495-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9495-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=reject) header.from=nvidia.com;
+	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 24D9330534FF
-	for <lists+linux-pwm@lfdr.de>; Wed,  1 Jul 2026 00:43:51 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 30F8C3018087
+	for <lists+linux-pwm@lfdr.de>; Wed,  1 Jul 2026 02:35:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id DC69821ADC7;
-	Wed,  1 Jul 2026 00:43:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id E7C43355F35;
+	Wed,  1 Jul 2026 02:35:06 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from azure-sdnproxy.icoremail.net (azure-sdnproxy.icoremail.net [52.175.55.52])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5A2511891A9;
-	Wed,  1 Jul 2026 00:43:48 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1782866630; cv=none; b=UjYPP3aLzLcixgFVZHy82XDCC782ZiEr+Vpn+OgXGhgbKD7TYp3zEJnlKtc0q4+T2LjzCsqP+TpfOUrJ1hXf3cq/4c8s8vz5DwopuwGlICn17twLAnXE9fKN4vKIPvE+cMQZFzE9rNIvt2+UW9aqPHKDVVFcW2escYzA97fRhkk=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1782866630; c=relaxed/simple;
-	bh=6K0NSdb+IkJA5qYxgSDQJ2EXdpqrYu6blT9dzru0ds0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gxwVsiDJ99LgxBETOhpe66v85cHr+AvUbaPydKXZl3yg3ZuI03/EHMrmwDa8n3UxiB7VaoHIFY0/gYlmye5NcoDCf/FJx/Uxn//Wb3dYf2N4CzamWG6xidrXRQx2UOVpgjiR85xMA4x8TfYGt5Ca32DByKAAumcIQ4MGEk0758U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=52.175.55.52
-Received: from E0005152DT.eswin.cn (unknown [10.12.96.41])
-	by app2 (Coremail) with SMTP id TQJkCgD3DKC5YkRqz1gwAA--.33060S2;
-	Wed, 01 Jul 2026 08:43:38 +0800 (CST)
-From: dongxuyang@eswincomputing.com
-To: ukleinek@kernel.org,
-	robh@kernel.org,
-	krzk+dt@kernel.org,
-	conor+dt@kernel.org,
-	ben-linux@fluff.org,
-	ben.dooks@codethink.co.uk,
-	p.zabel@pengutronix.de,
-	linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org,
-	linux-kernel@vger.kernel.org
-Cc: ningyu@eswincomputing.com,
-	linmin@eswincomputing.com,
-	xuxiang@eswincomputing.com,
-	wangguosheng@eswincomputing.com,
-	pinkesh.vaghela@einfochips.com,
-	Xuyang Dong <dongxuyang@eswincomputing.com>
-Subject: [PATCH v9 3/3] pwm: dwc: add of/platform support
-Date: Wed,  1 Jul 2026 08:43:34 +0800
-Message-Id: <20260701004334.515-1-dongxuyang@eswincomputing.com>
-X-Mailer: git-send-email 2.31.1.windows.1
-In-Reply-To: <20260701004139.347-1-dongxuyang@eswincomputing.com>
-References: <20260701004139.347-1-dongxuyang@eswincomputing.com>
+Received: from MW6PR02CU001.outbound.protection.outlook.com (mail-westus2azon11012045.outbound.protection.outlook.com [52.101.48.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 760801FD4;
+	Wed,  1 Jul 2026 02:35:04 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1782873306; cv=fail; b=bNBohaP7vLCeeJqQl3cT4GbDd/a5ZRWCLJYsXbYZ75PJRWlPOAi6Y/g6y4PkPWSufTcKtbUB1NptazJpEPlM1iJlrS6RjH5U4qzACJT2vmwRsMcrsmD/db6XOjWNI1H4izXzfZ7/GG2/uU91/CawYd8jogZgVKIG55+hNCTPZgY=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1782873306; c=relaxed/simple;
+	bh=A61dZyE2WafuvEti+QfcwEQjzwDOBw+I5uqxWGrm4Uw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=JofwIJEb2SwA5QmVnsMB9V7G2S/6lsOWNJoQUoX2Uh/clJXWpnbOi82lq+IyVEv8qj0BjyHDnvKaIKz3JXGQn5xiExGMIsjGrlvU9Th9FS/pV1jeRZw6hs4uyqHpISwm8YbMvN7awrYTLAsLvuil7YOnGBmVKmFHyN5qqH2abCg=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=YDvkvr++; arc=fail smtp.client-ip=52.101.48.45
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=xCTMUxSRD/AGjB3IL3wTf2Ov0ek8cuzT7pM+TdLLF3pVQVc05ReKo+4dvs2y4/6DcqJ+AVuCkxnjg33WRRZX3OdCqVi8Aqb4RtzS8LzQ4LFgYJMZFUOIBMa8Ba5vJ2yb11To8HLy5grrEhIHkH/oVCb5npMRFwZrY+YFXZIDFBTgqIYT1LEpPU+tZnKz4K0JWGjx7s9ZyAvG83UkFnyfhbQMpgdn0K+dBMEkz5+KoCDUVNvjilb2fOww2fLw1EC5IcjJm5tajF/JaXCt8skkHYCgfOshGF81B9vafTX9eTj1Kr6zCxy/SREYTCjeFK0hrch65zBK1W9c77IPELV9Dg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=BiJrx1KOHV8gdIAc040a5wBLvOZJs2tdlS1eTXybarI=;
+ b=ePQWW7mBw/s5zb2gzuBJIsoAFaV2xYXcEa8gdbuS6SFjiGhQz6JOEGZY4XYfPGaYt/tY+5DaZjvcsBTxSdVBPB625mQJmKFCz1SN1Mk1rzjVv4zzyELDlt7iu1YClpfAGJbCn224CFiJbXD2FsfwCjFzzdHjHrw6S2yirHHiqViNIyzGBFGIn91/xNA49PBxtY46uZ29eYt/5D/Yh1mXXtInOGzd9js1Juk/d4DlFLfh3E3JiNl9WWC/q/E6O//zcD9zmmo//Y3Yw/+USIbpTniur9J9nrPqOwKr07AN40ABUbUJNbNuNulq8JykH2/aVca+DOlkPILmhFP7N0Wm/A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
+ dkim=pass header.d=nvidia.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BiJrx1KOHV8gdIAc040a5wBLvOZJs2tdlS1eTXybarI=;
+ b=YDvkvr++n+4VoHl7g1RqzMw6kVXKxdBtJ9CPMY00jJjJ5Udjd+ia4jQKwdB6UBnD94XVEE8tuY6dcSl4eAmWLPP4tnP9hX85WeM6vo6hdEFpcYbkCA0kq4AHGdd3BvL4um56toa5xf7nu0s+z6sYRmnSgzoZhlPUUEwEe1PY53kSFhapZdT5Sv7UMS14oyAdolFTgT0EwK7AksXy1oFBtIibPEuRuNNgXpPU5erdn/jxrPxjOp8RNoK7c+w0+cgeH6/jN1LNhVmqUxi9tphGuxSVEN2G+hIR6MGMhNFk+Pzdd3VBI9GVrhbO1vqDwTdXXEoesqKgXIpDhq71sx0Ozw==
+Received: from SJ2PR12MB9161.namprd12.prod.outlook.com (2603:10b6:a03:566::20)
+ by PH7PR12MB5594.namprd12.prod.outlook.com (2603:10b6:510:134::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.8; Wed, 1 Jul 2026
+ 02:35:01 +0000
+Received: from SJ2PR12MB9161.namprd12.prod.outlook.com
+ ([fe80::d9d1:8c49:a703:b017]) by SJ2PR12MB9161.namprd12.prod.outlook.com
+ ([fe80::d9d1:8c49:a703:b017%6]) with mapi id 15.21.0159.018; Wed, 1 Jul 2026
+ 02:35:01 +0000
+From: Mikko Perttunen <mperttunen@nvidia.com>
+To: Jon Hunter <jonathanh@nvidia.com>,
+ Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org,
+ linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+ Thierry Reding <treding@nvidia.com>, Yi-Wei Wang <yiweiw@nvidia.com>
+Subject: Re: [PATCH v5 0/7] Tegra264 PWM support
+Date: Wed, 01 Jul 2026 11:34:49 +0900
+Message-ID: <t5mhnEQVRSmL2SdFhD88-A@nvidia.com>
+In-Reply-To: <akP-KK1TUFAGXxpk@monoceros>
+References:
+ <20260529-t264-pwm-v5-0-7bf9e405a96a@nvidia.com>
+ <add09636-7b0e-4a99-8503-d98a75c14f4c@nvidia.com>
+ <akP-KK1TUFAGXxpk@monoceros>
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+X-ClientProxiedBy: OS0P286CA0112.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:604:169::20) To SJ2PR12MB9161.namprd12.prod.outlook.com
+ (2603:10b6:a03:566::20)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:TQJkCgD3DKC5YkRqz1gwAA--.33060S2
-X-Coremail-Antispam: 1UD129KBjvAXoWfCrW8JF4kWrWDJFyfuFyDWrg_yoW8ury3Wo
-	WSkr1fXw18KFn5J397Ca42kayjvw4ktas3ur1rWF4DCFn8Za15Aa4jgw4Ygw1Iqw1YyFWf
-	Ar4xJr1fAF4fJw48n29KB7ZKAUJUUUU8529EdanIXcx71UUUUU7v73VFW2AGmfu7bjvjm3
-	AaLaJ3UjIYCTnIWjp_UUUY_7AC8VAFwI0_Gr0_Xr1l1xkIjI8I6I8E6xAIw20EY4v20xva
-	j40_Wr0E3s1l1IIY67AEw4v_Jr0_Jr4l8cAvFVAK0II2c7xJM28CjxkF64kEwVA0rcxSw2
-	x7M28EF7xvwVC0I7IYx2IY67AKxVW8JVW5JwA2z4x0Y4vE2Ix0cI8IcVCY1x0267AKxVW8
-	Jr0_Cr1UM28EF7xvwVC2z280aVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIEc7CjxVAFwI
-	0_GcCE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2Wl
-	Yx0E2Ix0cI8IcVAFwI0_Jrv_JF1lYx0Ex4A2jsIE14v26r1j6r4UMcvjeVCFs4IE7xkEbV
-	WUJVW8JwACjcxG0xvY0x0EwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7Cj
-	xVA2Y2ka0xkIwI1lw4CEc2x0rVAKj4xxMxkF7I0En4kS14v26r1q6r43MxkIecxEwVCm-w
-	CF04k20xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j
-	6r18MI8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_GFv_WrylIxkGc2Ij64
-	vIr41lIxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Cr0_
-	Gr1UMIIF0xvE42xK8VAvwI8IcIk0rVWUJVWUCwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42
-	IY6I8E87Iv6xkF7I0E14v26r4j6r4UJbIYCTnIWIevJa73UjIFyTuYvjfUOEfODUUUU
-X-CM-SenderInfo: pgrqw5xx1d0w46hv4xpqfrz1xxwl0woofrz/
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: SJ2PR12MB9161:EE_|PH7PR12MB5594:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0e7f335b-eb67-435e-e3f6-08ded719599c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|1800799024|23010399003|366016|10070799003|376014|11063799006|56012099006|4143699003|3023799007|6133799003|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	e46GG1iTNdGU7UAyHv+YzEmeIMkFbcPIjwBkvG2YKCN3xxvl/86EuFZx+PEbGmzcakxkUKyu3GqCYYHfK8F4loHYLR7BSFcs6C7ltHo4QlR9LUjtLdcAcjLBU7r97mQADyUjqQwfC367gtuuaT5Pv2uTqG0+0eNYdPPHNCn0OnOWNBNktP8iW9Cvy7Su7uzD747CmxHdQNqhHvm1EiQR/Sao0VfbNpdIeuy0+8IgOiKG2ikUbPdKZnqz/tIURkXaiqd6WH6GmfyXL5TI625HrVnaWV0BWwBxbHeMNTTgs7ykla31qm6thg3yRq60PylIUCdkjC/skF8m1smAmg0V062jJkgzJm3kWuo2dgKi3YvZho1vus0RKScnXHhS3MY7VAHDB8pjMF6VjlD6mYYELKoeOU9g89ttGi13xAYEZ51rjsFsSC/o+6aKD9A1BCPqJG9KdJNKIWct4Z9ezrWW5kWTb2x09uaIsCtWXEj2qwltjfLx5WlCdi0S6Jjyrwea/om1OPZQ9Wveu2CNBohdUomqJ4+Sr9rxFNWwshQNnA2+MU1eOAeFs2rmTD6GwBoGkGcPKR5Iy93BHrfWC9kcC6SB7KGTIAzVCVTwoIwrSdA2Kgedt2W7LZJVU41qJpVfzug6ngUoy4p/YrlPlIy+VQ179tdf/VK9DP8q/51YVn8=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB9161.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(23010399003)(366016)(10070799003)(376014)(11063799006)(56012099006)(4143699003)(3023799007)(6133799003)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 2
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dFVtYVdtVXIxci83Y0NLa1Ywb01OTkdLVXZCeFZtaExmVlhRSjkyeS80V3Bv?=
+ =?utf-8?B?VlpmSWlxdVhnY2sxSmNRQ0hVQmErVjRvK0N4clM1VitDdDZYVVZsc2xseTh1?=
+ =?utf-8?B?U2IxOTUwNFBROHFxWUJkRG00NTkvaWoyQXFBbUc0aWZJeHIyZlUveG5DZDJJ?=
+ =?utf-8?B?SFowTjZZeDYzSmFGdGF2UXlrM2tZVHZONWlrZFh2QndsYVpiQW0vRmh6cU5v?=
+ =?utf-8?B?QWphUld5b1gyS20zU2ptTVRmakZ0dENhbkRyY1N3WG5rajdWaVd1WE1qMEJV?=
+ =?utf-8?B?NERqc0plZFU2TmZFejdFWGFYdWZtTHg3RWF2RkZWTzZTaXRJMUV4NWlqdUhB?=
+ =?utf-8?B?MHVMTkJiWWQ4eldmMXlDQWl1TTRUQTVIUXo0MXZLNkNuRXBCUG0ydUhkZ0dk?=
+ =?utf-8?B?RjZhMU5FZ2VYTzJmYTFpZnY4WjVPOFNlOWNidE1kS0ZiTk1oeXB2TUtwbktR?=
+ =?utf-8?B?cWpGY2tqS2JUNlUrVlcySTA5YmhObUUyTUxIMm9lajdjV1ZkcjhwL2NJN25n?=
+ =?utf-8?B?d0ROT3EwWDFVUGE3NzhDbS9jVmp1NkJXSlhjUzJCaG5tcVpXMFBVSDRvNmdv?=
+ =?utf-8?B?TU9hK1VrY2tIMElUTzJPZEdaYitpVXpUdDJmU3JlMEJybDFiV25lSzlOK2M1?=
+ =?utf-8?B?OWM0cm4rV2JzditEN3RXRENvYlg5dFo3dlVzYmtia09jRFYxV2trNkJKMEJk?=
+ =?utf-8?B?eCtzYytJOURWZDNNZXpTVkpMU1UwamtTSTU3c3lCZ1RkR1cxOHZjejE4UUYw?=
+ =?utf-8?B?dElkdTlUK3QyRnVWZnhuZmdRcFBYUGR2eWFiOFlMYXZwRFVFeTV3eEpjeHFo?=
+ =?utf-8?B?RmpTUE1aWlV1Vy9ZdEJCVjAxQW53SEtnYmM3cENzZ0xrNDZLUDlUNHE2YzFG?=
+ =?utf-8?B?dUdVTUVrTDEyUEJHMmJmemMyS2dJc3pwRFhkcEdJQUNYekJIQXhYWnNZdmRy?=
+ =?utf-8?B?ZHpkdkQ4aEhjcGptSWVCam4wZFNrQ2RvRHIrRVFRcWFXV2YwWC9EdldiQ3Z2?=
+ =?utf-8?B?QmZKR3MrVHRpR3RWd0JEM1RTVlpoM3N4em9zM1FkNGE3eVZtdGpkNW1QaEhs?=
+ =?utf-8?B?dFFoMjBic2JEMzBTYlNKdFZYeDRmbnowOW9QQys4cVFlQmJmbEZDWHVNS0d0?=
+ =?utf-8?B?OVF5ZjViK0QrNW5oNmtrUklLbHN1Ym1teHQxWEZta0NJRmZVdzFGWG5Remxp?=
+ =?utf-8?B?TzRFY1dCeTVGQnlLZFBGcU1PODFabVJBYW5nSWhjbFBHcnYrZS9kWHpaazRJ?=
+ =?utf-8?B?ZHYvWDNPRDZjK2VYV2VzMzZubjBiUzFjTGxmeE5WRmdIZkJzVDdaNmJWTE5l?=
+ =?utf-8?B?MFpHVStBei9JMThvZ2NjenRxMldNMC92SFA0b0tWekpSc1ZjdFFCYURNRlFp?=
+ =?utf-8?B?QWZwc2k5MURzZ1lqbHc5YThEVThqYXRUWk01RWJNT0RaVHExd3pEOFhsbUcr?=
+ =?utf-8?B?ajZiMFF2S01IcjkwZFJjbWJtTGM1WU5KeWdzNXpCMGRINkNsaGZlS3R3UEp1?=
+ =?utf-8?B?c0QvV3RHR3JnQW5kaHdCTk1BNVRRMEtnWE5wMVdvVzZqcSttZlY5UE4yMy9V?=
+ =?utf-8?B?dGN3MDY1NGN3ajNUN1JRYkxDT1cxa1gwT0Z4K2loTEE3T293bXZPbTFzc2tV?=
+ =?utf-8?B?Qm93NmlvdnZ4eHdHK211YWt4bHZjckJVWi9ld2V5TG5PWS9ubThXMGlkaFFB?=
+ =?utf-8?B?WnZUY1VodTk2ZVZCaUlPaURNdE5TMVpLOFBRcE11MjRZWjBjTThDYmNjZDJ2?=
+ =?utf-8?B?V2V0SWU3eVJOOUU5NkZnaUxmQ1RGMU1sM2Ixc0VMMTZpckMza2xFMXBrTlBv?=
+ =?utf-8?B?NjQ0UTBjRzZXQ2pYSVMxREkwZUEwcjhyaThrcUNzVVJNRlpBbkl0bjZieXNP?=
+ =?utf-8?B?RVd6NEd1M1NlMTlHNmFQMEVZUzBtcjlsejYybDJadkhwdTBQRXpOSEhicjBo?=
+ =?utf-8?B?dmFSU3ZYRGdBRjR4bFJndE9VTk82aFRFUmlRZVByZUtSUzFOZG1TOHlRWDJX?=
+ =?utf-8?B?blAxZGpna2lRQ2MxNEl3dnloMExVOVlmT3VZU0xlZ2hWcmg5alJBSU1QelZS?=
+ =?utf-8?B?S3BsQkpkRENmV1NmZFVhb1hnWmJKb1NwTElOdjZBVkQyVjZwQVEzODMyVjJC?=
+ =?utf-8?B?RXRiQmtQL1ZlVHNReU5kRTc4VzlMWkNzTm1tY1BHSExMZ21kRk9janVraVhQ?=
+ =?utf-8?B?L2tWS2lZZHRNdm9aL0V3VGc5dWhaeEFhV1IrcXEwY2YrRlJkMjgyQmMwRVcx?=
+ =?utf-8?B?bVZwQ1J6QTZHQ1llclQyRkw3N25DR3dnR1JKN2dxRzBtWmFPeGNuTTNmNFVo?=
+ =?utf-8?B?MmRWOGY3Q2FnQ2QvQzJRS0NHdmpLcVZUU2prTUxQMWdKKzgzQzBZaUgyajdY?=
+ =?utf-8?Q?LSMGImWR7/3UQIOhhT7sIuKjjlPL4R/rT5NjtTMVhm/5s?=
+X-MS-Exchange-AntiSpam-MessageData-1: h7PFK5XLvSjYlw==
+X-OriginatorOrg: Nvidia.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0e7f335b-eb67-435e-e3f6-08ded719599c
+X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB9161.namprd12.prod.outlook.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 01 Jul 2026 02:35:01.3075
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Hpn1Meua8RjGPCMyUGwBVWuyW+PJwabIkO8JIw2R9P5Ar7MpVzM7o+ezDyT+Mi+leUHSuyAjJ2Eg6v41qpcVxQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PH7PR12MB5594
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [1.54 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
+X-Spamd-Result: default: False [-7.16 / 15.00];
+	WHITELIST_DMARC(-7.00)[nvidia.com:D:+];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[nvidia.com,reject];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[Nvidia.com:s=selector2];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORGED_RECIPIENTS(0.00)[m:ukleinek@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:ben-linux@fluff.org,m:ben.dooks@codethink.co.uk,m:p.zabel@pengutronix.de,m:linux-pwm@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:ningyu@eswincomputing.com,m:linmin@eswincomputing.com,m:xuxiang@eswincomputing.com,m:wangguosheng@eswincomputing.com,m:pinkesh.vaghela@einfochips.com,m:dongxuyang@eswincomputing.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-9494-lists,linux-pwm=lfdr.de];
-	DMARC_NA(0.00)[eswincomputing.com];
-	RCVD_TLS_LAST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
-	RCVD_COUNT_THREE(0.00)[4];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[dongxuyang@eswincomputing.com,linux-pwm@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[12];
 	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-9495-lists,linux-pwm=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:jonathanh@nvidia.com,m:ukleinek@kernel.org,m:thierry.reding@gmail.com,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:linux-pwm@vger.kernel.org,m:linux-tegra@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:devicetree@vger.kernel.org,m:treding@nvidia.com,m:yiweiw@nvidia.com,m:thierryreding@gmail.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[mperttunen@nvidia.com,linux-pwm@vger.kernel.org];
+	FREEMAIL_CC(0.00)[gmail.com,kernel.org,vger.kernel.org,nvidia.com];
+	FROM_HAS_DN(0.00)[];
+	MISSING_XM_UA(0.00)[];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[mperttunen@nvidia.com,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[Nvidia.com:+];
+	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	TO_DN_SOME(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dongxuyang@eswincomputing.com,linux-pwm@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	R_DKIM_NA(0.00)[];
-	FROM_NO_DN(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,eswincomputing.com:email,eswincomputing.com:mid,eswincomputing.com:from_mime,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo]
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:rdns,sea.lore.kernel.org:helo,sashiko.dev:url,Nvidia.com:dkim,nvidia.com:email,nvidia.com:mid,nvidia.com:from_mime]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 64BB26E8F43
+X-Rspamd-Queue-Id: 698F16E9441
 
-From: Xuyang Dong <dongxuyang@eswincomputing.com>
+On Wednesday, July 1, 2026 2:39=E2=80=AFAM Uwe Kleine-K=C3=B6nig wrote:
+> Hello,
+>=20
+> On Tue, Jun 30, 2026 at 02:54:51PM +0100, Jon Hunter wrote:
+> > On 02/06/2026 10:16, Jon Hunter wrote:
+> > >=20
+> > > On 29/05/2026 03:47, Mikko Perttunen wrote:
+> > > > Hello,
+> > > >=20
+> > > > this adds support for the PWM controller on Tegra264. The controlle=
+r
+> > > > is similar to previous generations, but the register fields are
+> > > > widened, the depth is made configurable, and the enable bit moves
+> > > > to a different spot.
+> > > >=20
+> > > > This series adds only basic support with fixed depth -- configurabl=
+e
+> > > > depth will come later.
+> > > >=20
+> > > > Patch 1 adds device tree bindings for Tegra264 PWM (compatible
+> > > >    string).
+> > > >=20
+> > > > Patch 2 prefixes driver-local macros and static helpers with
+> > > >    tegra_/TEGRA_ to make their scoping clear.
+> > > >=20
+> > > > Patches 3 to 6 contain the PWM driver changes for Tegra264.
+> > > >=20
+> > > > Patch 7 adds device tree nodes for the PWM controllers on Tegra264.
+> > >=20
+> > > ...
+> > >=20
+> > > > Mikko Perttunen (4):
+> > > >        pwm: tegra: Prefix driver-local macros and functions
+> > > >        pwm: tegra: Modify read/write accessors for multi-register c=
+hannel
+> > > >        pwm: tegra: Parametrize duty and scale field widths
+> > > >        pwm: tegra: Add support for Tegra264
+> > > >=20
+> > > > Thierry Reding (2):
+> > > >        dt-bindings: pwm: Document Tegra264 controller
+> > > >        arm64: tegra: Add PWM controllers on Tegra264
+> > > >=20
+> > > > Yi-Wei Wang (1):
+> > > >        pwm: tegra: Avoid hard-coded max clock frequency
+> > > >=20
+> > > >   .../bindings/pwm/nvidia,tegra20-pwm.yaml           |   1 +
+> > > >   arch/arm64/boot/dts/nvidia/tegra264.dtsi           |  72 ++++++++=
+++
+> > > >   drivers/pwm/pwm-tegra.c                            | 155
+> > > > +++++++++++ +++-------
+> > > >   3 files changed, 176 insertions(+), 52 deletions(-)
+> > >=20
+> > >=20
+> > > For the series ...
+> > >=20
+> > > Tested-by: Jon Hunter <jonathanh@nvidia.com>
+> > > Reviewed-by: Jon Hunter <jonathanh@nvidia.com>
+> > >=20
+> > > Uwe, if you are OK with the version, we would like to get this into -=
+next.
+> >=20
+> > This still applies fine on next-20260629 and so unless you have any
+> > objections could we get this into -next?
+>=20
+> I dropped this patch series from my queue due to sashiko's replies. I
+> just notice these were not sent to the linux-pwm list, otherwise I would
+> have mentioned it. :-(
 
-The dwc pwm controller can be used in non-PCI systems, so allow
-either platform or OF based probing.
+Sashiko replies are not sent to linux-tegra either, so I tend to miss
+them. E-mail is hard :(
 
-The controller is reset only when no PWM channel is enabled.
-Otherwise, clocks are enabled and the runtime PM state is updated
-to reflect the active hardware configuration.
+>=20
+> So check on either
+>=20
+> 	https://lore.kernel.org/all/add09636-7b0e-4a99-8503-d98a75c14f4c@nvidia.=
+com/
+>=20
+> or
+>=20
+> 	https://sashiko.dev/#/patchset/20260529-t264-pwm-v5-0-7bf9e405a96a%40nvi=
+dia.com
+>=20
+> .
+>=20
+> I only invested a quick glance, but the feedback seems relevant. If you
+> don't agree, please point out why it's wrong/irrelevant.
+>=20
+> Best regards
+> Uwe
 
-The DWC PWM controller does not provide a hardware polarity bit.
-Currently, the driver only supports active-low output, which is
-incompatible with devices requiring active-high waveforms (e.g.,
-backlight controllers, fan speed regulators).
+Sashiko:
+> Does setting the target frequency to ULONG_MAX work safely with OPP
+> tables?
 
-Implement polarity control by exploiting the timer's dual load
-registers. The hardware uses:
-- LD_CNT:  LOW period count
-- LD_CNT2: HIGH period count
+This is not a concern. The OPP tables are designed with top OPP at the
+maximum clock frequency. Indeed, before this patch, the hardcoded max
+frequency in the driver matches what ULONG_MAX gets rounded to so
+there is no change in functionality.
 
-The total period is defined as (LD_CNT + LD_CNT2). By swapping the
-duty cycle between these registers, we invert the polarity while
-keeping the period unchanged:
-- PWM_POLARITY_NORMAL:  write duty_cycle to LD_CNT2 (HIGH period)
-- PWM_POLARITY_INVERSED: write duty_cycle to LD_CNT  (LOW period)
+Sashiko:
+> Is it possible for pc->clk_rate to be less than 256 here?
 
-Implementation:
-Update both apply() and get_state() to handle state->polarity
-consistently. Since the hardware does not store polarity, get_state()
-returns the last successfully applied software state, ensuring that
-read-back matches what was originally set.
+I.e. is it possible for clk_get_rate to return 0 after we have
+successfully requested a rate of ULONG_MAX. I suppose that's technically
+possible -- maybe if the clock is virtualized and read-only and left
+disabled by boot? I can add a sanity check for clk_rate =3D=3D 0, though
+we'll just have to fail the probe in that case, but at least it avoids a
+division by zero.
 
-Co-developed-by: Ben Dooks <ben.dooks@codethink.co.uk>
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-Signed-off-by: Xiang Xu <xuxiang@eswincomputing.com>
-Signed-off-by: Guosheng Wang <wangguosheng@eswincomputing.com>
-Signed-off-by: Xuyang Dong <dongxuyang@eswincomputing.com>
----
- drivers/pwm/Kconfig        |  10 ++
- drivers/pwm/Makefile       |   1 +
- drivers/pwm/pwm-dwc-core.c | 161 +++++++++++++----
- drivers/pwm/pwm-dwc-of.c   | 356 +++++++++++++++++++++++++++++++++++++
- drivers/pwm/pwm-dwc.h      |  25 ++-
- 5 files changed, 515 insertions(+), 38 deletions(-)
- create mode 100644 drivers/pwm/pwm-dwc-of.c
+Sashiko:
+> Could this cause a regression where the PWM output is left in a
+> broken state if the hardware resets the DEPTH field to 0?
 
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index e8886a9b64d9..fd1d68beab67 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -249,6 +249,16 @@ config PWM_DWC
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-dwc.
- 
-+config PWM_DWC_OF
-+	tristate "DesignWare PWM Controller (OF bus)"
-+	depends on HAS_IOMEM && (OF || COMPILE_TEST)
-+	select PWM_DWC_CORE
-+	help
-+	  PWM driver for Synopsys DWC PWM Controller on an OF bus or
-+	  a platform bus.
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-dwc-of.
-+
- config PWM_EP93XX
- 	tristate "Cirrus Logic EP93xx PWM support"
- 	depends on ARCH_EP93XX || COMPILE_TEST
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 5630a521a7cf..acd7dfe98dff 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -20,6 +20,7 @@ obj-$(CONFIG_PWM_CRC)		+= pwm-crc.o
- obj-$(CONFIG_PWM_CROS_EC)	+= pwm-cros-ec.o
- obj-$(CONFIG_PWM_DWC_CORE)	+= pwm-dwc-core.o
- obj-$(CONFIG_PWM_DWC)		+= pwm-dwc.o
-+obj-$(CONFIG_PWM_DWC_OF)	+= pwm-dwc-of.o
- obj-$(CONFIG_PWM_EP93XX)	+= pwm-ep93xx.o
- obj-$(CONFIG_PWM_FSL_FTM)	+= pwm-fsl-ftm.o
- obj-$(CONFIG_PWM_GPIO)		+= pwm-gpio.o
-diff --git a/drivers/pwm/pwm-dwc-core.c b/drivers/pwm/pwm-dwc-core.c
-index 6dabec93a3c6..1387d006946a 100644
---- a/drivers/pwm/pwm-dwc-core.c
-+++ b/drivers/pwm/pwm-dwc-core.c
-@@ -12,8 +12,10 @@
- #define DEFAULT_SYMBOL_NAMESPACE "dwc_pwm"
- 
- #include <linux/bitops.h>
-+#include <linux/clk.h>
- #include <linux/export.h>
- #include <linux/kernel.h>
-+#include <linux/math64.h>
- #include <linux/module.h>
- #include <linux/pci.h>
- #include <linux/pm_runtime.h>
-@@ -44,21 +46,73 @@ static int __dwc_pwm_configure_timer(struct dwc_pwm *dwc,
- 	u32 high;
- 	u32 low;
- 
--	/*
--	 * Calculate width of low and high period in terms of input clock
--	 * periods and check are the result within HW limits between 1 and
--	 * 2^32 periods.
--	 */
--	tmp = DIV_ROUND_CLOSEST_ULL(state->duty_cycle, dwc->clk_ns);
--	if (tmp < 1 || tmp > (1ULL << 32))
--		return -ERANGE;
--	low = tmp - 1;
--
--	tmp = DIV_ROUND_CLOSEST_ULL(state->period - state->duty_cycle,
--				    dwc->clk_ns);
--	if (tmp < 1 || tmp > (1ULL << 32))
--		return -ERANGE;
--	high = tmp - 1;
-+	if (dwc->clk)
-+		dwc->clk_rate = clk_get_rate(dwc->clk);
-+
-+	if (dwc->features & DWC_TIM_CTRL_0N100PWM_EN) {
-+		/*
-+		 * Calculate width of low and high period in terms of input
-+		 * clock periods and check are the result within HW limits
-+		 * between 0 and 2^32 periods.
-+		 * Use mul_u64_u64_div_u64() to avoid overflowing the 64-bit
-+		 * intermediate result and to round down to the nearest
-+		 * achievable hardware value, as required by the PWM core.
-+		 */
-+		tmp = mul_u64_u64_div_u64(state->duty_cycle, dwc->clk_rate,
-+					  NSEC_PER_SEC);
-+		if (tmp >= (1ULL << 32))
-+			return -ERANGE;
-+
-+		/*
-+		 * The hardware has no polarity register. Polarity inversion is
-+		 * achieved by swapping the low and high load-count registers:
-+		 * NORMAL (active-high): duty_cycle ->
-+		 *				HIGH period (DWC_TIM_LD_CNT2)
-+		 * INVERSED (active-low): duty_cycle ->
-+		 *				LOW period (DWC_TIM_LD_CNT)
-+		 */
-+		if (state->polarity == PWM_POLARITY_NORMAL)
-+			high = tmp;
-+		else
-+			low = tmp;
-+
-+		tmp = mul_u64_u64_div_u64(state->period - state->duty_cycle,
-+					  dwc->clk_rate, NSEC_PER_SEC);
-+		if (tmp >= (1ULL << 32))
-+			return -ERANGE;
-+
-+		if (state->polarity == PWM_POLARITY_NORMAL)
-+			low = tmp;
-+		else
-+			high = tmp;
-+	} else {
-+		/*
-+		 * Calculate width of low and high period in terms of input
-+		 * clock periods and check are the result within HW limits
-+		 * between 1 and 2^32 periods.
-+		 * Polarity inversion uses the same register-swap technique as
-+		 * the 0N100 path above.
-+		 */
-+		tmp = mul_u64_u64_div_u64(state->duty_cycle, dwc->clk_rate,
-+					  NSEC_PER_SEC);
-+		if (tmp < 1 || tmp > (1ULL << 32))
-+			return -ERANGE;
-+
-+		if (state->polarity == PWM_POLARITY_NORMAL)
-+			high = tmp - 1;
-+		else
-+			low = tmp - 1;
-+
-+		tmp = mul_u64_u64_div_u64(state->period - state->duty_cycle,
-+					  dwc->clk_rate, NSEC_PER_SEC);
-+		if (tmp < 1 || tmp > (1ULL << 32))
-+			return -ERANGE;
-+
-+		if (state->polarity == PWM_POLARITY_NORMAL)
-+			low = tmp - 1;
-+		else
-+			high = tmp - 1;
-+	}
- 
- 	/*
- 	 * Specification says timer usage flow is to disable timer, then
-@@ -74,6 +128,7 @@ static int __dwc_pwm_configure_timer(struct dwc_pwm *dwc,
- 	 * width of low period and latter the width of high period in terms
- 	 * multiple of input clock periods:
- 	 * Width = ((Count + 1) * input clock period).
-+	 * Width = (Count * input clock period) : supported 0% and 100%.
- 	 */
- 	dwc_pwm_writel(dwc, low, DWC_TIM_LD_CNT(pwm->hwpwm));
- 	dwc_pwm_writel(dwc, high, DWC_TIM_LD_CNT2(pwm->hwpwm));
-@@ -85,6 +140,9 @@ static int __dwc_pwm_configure_timer(struct dwc_pwm *dwc,
- 	 * periods are set by Load Count registers.
- 	 */
- 	ctrl = DWC_TIM_CTRL_MODE_USER | DWC_TIM_CTRL_PWM;
-+	if (dwc->features & DWC_TIM_CTRL_0N100PWM_EN)
-+		ctrl |= DWC_TIM_CTRL_0N100PWM_EN;
-+
- 	dwc_pwm_writel(dwc, ctrl, DWC_TIM_CTRL(pwm->hwpwm));
- 
- 	/*
-@@ -99,14 +157,18 @@ static int dwc_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 			 const struct pwm_state *state)
- {
- 	struct dwc_pwm *dwc = to_dwc_pwm(chip);
--
--	if (state->polarity != PWM_POLARITY_INVERSED)
--		return -EINVAL;
-+	int ret;
- 
- 	if (state->enabled) {
--		if (!pwm->state.enabled)
--			pm_runtime_get_sync(pwmchip_parent(chip));
--		return __dwc_pwm_configure_timer(dwc, pwm, state);
-+		if (!pwm->state.enabled) {
-+			ret = pm_runtime_resume_and_get(pwmchip_parent(chip));
-+			if (ret < 0)
-+				return ret;
-+		}
-+		ret = __dwc_pwm_configure_timer(dwc, pwm, state);
-+		if (ret && !pwm->state.enabled)
-+			pm_runtime_put_sync(pwmchip_parent(chip));
-+		return ret;
- 	} else {
- 		if (pwm->state.enabled) {
- 			__dwc_pwm_set_enable(dwc, pwm->hwpwm, false);
-@@ -121,10 +183,23 @@ static int dwc_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 			     struct pwm_state *state)
- {
- 	struct dwc_pwm *dwc = to_dwc_pwm(chip);
--	u64 duty, period;
-+	unsigned long clk_rate;
- 	u32 ctrl, ld, ld2;
-+	u64 duty, period;
-+	int ret;
-+
-+	ret = pm_runtime_resume_and_get(pwmchip_parent(chip));
-+	if (ret)
-+		return ret;
- 
--	pm_runtime_get_sync(pwmchip_parent(chip));
-+	if (dwc->clk)
-+		dwc->clk_rate = clk_get_rate(dwc->clk);
-+
-+	clk_rate = dwc->clk_rate;
-+	if (!clk_rate) {
-+		pm_runtime_put_sync(pwmchip_parent(chip));
-+		return -EINVAL;
-+	}
- 
- 	ctrl = dwc_pwm_readl(dwc, DWC_TIM_CTRL(pwm->hwpwm));
- 	ld = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT(pwm->hwpwm));
-@@ -132,22 +207,46 @@ static int dwc_pwm_get_state(struct pwm_chip *chip, struct pwm_device *pwm,
- 
- 	state->enabled = !!(ctrl & DWC_TIM_CTRL_EN);
- 
-+	/*
-+	 * The hardware has no polarity status register; polarity is encoded
-+	 * implicitly by which of DWC_TIM_LD_CNT / DWC_TIM_LD_CNT2 holds the
-+	 * duty-cycle period (see __dwc_pwm_configure_timer). Report the
-+	 * polarity that was last programmed by apply(). On the initial read
-+	 * (before any apply call), pwm->state.polarity defaults to
-+	 * PWM_POLARITY_NORMAL, which is the natural zero-initialised value.
-+	 */
-+	state->polarity = pwm->state.polarity;
-+
- 	/*
- 	 * If we're not in PWM, technically the output is a 50-50
- 	 * based on the timer load-count only.
- 	 */
- 	if (ctrl & DWC_TIM_CTRL_PWM) {
--		duty = (ld + 1) * dwc->clk_ns;
--		period = (ld2 + 1)  * dwc->clk_ns;
--		period += duty;
-+		if (dwc->features & DWC_TIM_CTRL_0N100PWM_EN) {
-+			/*
-+			 * NORMAL: duty_cycle was written to DWC_TIM_LD_CNT2.
-+			 * INVERSED: duty_cycle was written to DWC_TIM_LD_CNT.
-+			 */
-+			if (state->polarity == PWM_POLARITY_NORMAL)
-+				duty = ld2;
-+			else
-+				duty = ld;
-+			period = (u64)ld + ld2;
-+		} else {
-+			if (state->polarity == PWM_POLARITY_NORMAL)
-+				duty = ld2 + 1;
-+			else
-+				duty = ld + 1;
-+			period = (u64)ld + ld2 + 2;
-+		}
- 	} else {
--		duty = (ld + 1) * dwc->clk_ns;
-+		duty = ld + 1;
- 		period = duty * 2;
-+		state->polarity = PWM_POLARITY_INVERSED;
- 	}
- 
--	state->polarity = PWM_POLARITY_INVERSED;
--	state->period = period;
--	state->duty_cycle = duty;
-+	state->period = mul_u64_u64_div_u64(period, NSEC_PER_SEC, clk_rate);
-+	state->duty_cycle = mul_u64_u64_div_u64(duty, NSEC_PER_SEC, clk_rate);
- 
- 	pm_runtime_put_sync(pwmchip_parent(chip));
- 
-@@ -169,7 +268,7 @@ struct pwm_chip *dwc_pwm_alloc(struct device *dev)
- 		return chip;
- 	dwc = to_dwc_pwm(chip);
- 
--	dwc->clk_ns = 10;
-+	dwc->clk_rate = NSEC_PER_SEC / 10;
- 	chip->ops = &dwc_pwm_ops;
- 
- 	return chip;
-diff --git a/drivers/pwm/pwm-dwc-of.c b/drivers/pwm/pwm-dwc-of.c
-new file mode 100644
-index 000000000000..80700e9bd6e9
---- /dev/null
-+++ b/drivers/pwm/pwm-dwc-of.c
-@@ -0,0 +1,356 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * DesignWare PWM Controller driver OF
-+ *
-+ * Copyright (C) 2026 SiFive, Inc.
-+ */
-+
-+#define DEFAULT_SYMBOL_NAMESPACE "dwc_pwm_of"
-+
-+#include <linux/clk.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/pwm.h>
-+#include <linux/reset.h>
-+
-+#include "pwm-dwc.h"
-+
-+struct dwc_pwm_plat_data {
-+	bool reset_required;
-+};
-+
-+static int dwc_pwm_plat_probe(struct platform_device *pdev)
-+{
-+	const struct dwc_pwm_plat_data *pdata;
-+	struct device *dev = &pdev->dev;
-+	struct dwc_pwm_drvdata *data;
-+	u32 ctrl[DWC_TIMERS_TOTAL];
-+	struct pwm_chip *chip;
-+	struct dwc_pwm *dwc;
-+	bool pwm_en = false;
-+	u32 nr_pwm, tim_id;
-+	unsigned int i;
-+	int ret;
-+
-+	data = devm_kzalloc(dev, struct_size(data, chips, 1), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	chip = dwc_pwm_alloc(dev);
-+	if (IS_ERR(chip))
-+		return dev_err_probe(dev, PTR_ERR(chip),
-+				     "failed to alloc pwm\n");
-+
-+	dwc = to_dwc_pwm(chip);
-+
-+	dwc->base = devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(dwc->base))
-+		return PTR_ERR(dwc->base);
-+
-+	if (!device_property_read_u32(dev, "snps,pwm-number", &nr_pwm)) {
-+		if (nr_pwm > DWC_TIMERS_TOTAL)
-+			dev_warn(dev, "too many PWMs (%d), capping at %d\n",
-+				 nr_pwm, chip->npwm);
-+		else
-+			chip->npwm = nr_pwm;
-+	}
-+
-+	dwc->bus_clk = devm_clk_get(dev, "bus");
-+	if (IS_ERR(dwc->bus_clk))
-+		return dev_err_probe(dev, PTR_ERR(dwc->bus_clk),
-+				     "failed to get bus clock\n");
-+
-+	dwc->clk = devm_clk_get(dev, "timer");
-+	if (IS_ERR(dwc->clk))
-+		return dev_err_probe(dev, PTR_ERR(dwc->clk),
-+				     "failed to get timer clock\n");
-+
-+	ret = devm_clk_rate_exclusive_get(dev, dwc->clk);
-+	if (ret)
-+		return dev_err_probe(dev, ret,
-+				     "failed to get exclusive rate\n");
-+
-+	dwc->clk_rate = clk_get_rate(dwc->clk);
-+	if (!dwc->clk_rate)
-+		return dev_err_probe(dev, -EINVAL,
-+				     "failed to get a valid clock rate\n");
-+
-+	pdata = device_get_match_data(dev);
-+	if (pdata && pdata->reset_required)
-+		dwc->rst = devm_reset_control_get_exclusive(dev, NULL);
-+	else
-+		dwc->rst = devm_reset_control_array_get_optional_exclusive(dev);
-+
-+	if (IS_ERR(dwc->rst))
-+		return dev_err_probe(dev, PTR_ERR(dwc->rst),
-+				     "failed to get reset control\n");
-+
-+	ret = clk_prepare_enable(dwc->bus_clk);
-+	if (ret)
-+		return dev_err_probe(dev, ret,
-+				     "failed to enable bus clock\n");
-+
-+	ret = clk_prepare_enable(dwc->clk);
-+	if (ret) {
-+		dev_err(dev, "failed to enable timer clock\n");
-+		goto disable_busclk;
-+	}
-+
-+	/*
-+	 * Check all channels to see if any channel is enabled.
-+	 * Read the control register of each channel and extract the enable bit
-+	 */
-+	for (i = 0; i < chip->npwm; i++) {
-+		ctrl[i] = dwc_pwm_readl(dwc, DWC_TIM_CTRL(i)) & DWC_TIM_CTRL_EN;
-+		if (ctrl[i])
-+			pwm_en = true;
-+	}
-+
-+	/*
-+	 * Only issue a reset pulse when all channels are disabled, so a PWM
-+	 * channel already running (e.g. configured by firmware before Linux
-+	 * took over) is left undisturbed.
-+	 */
-+	if (!pwm_en) {
-+		ret = reset_control_reset(dwc->rst);
-+		if (ret) {
-+			dev_err(dev, "failed to reset\n");
-+			goto disable_clk;
-+		}
-+	}
-+
-+	/* init PWM feature */
-+	dwc->features = 0;
-+	/*
-+	 * Support for 0% and 100% duty cycle mode was added in version 2.11a
-+	 * and later.
-+	 */
-+	tim_id = dwc_pwm_readl(dwc, DWC_TIMERS_COMP_VERSION);
-+	if (tim_id >= DWC_TIM_VERSION_ID_2_11A)
-+		dwc->features |= DWC_TIM_CTRL_0N100PWM_EN;
-+
-+	data->chips[0] = chip;
-+	dev_set_drvdata(dev, data);
-+
-+	/*
-+	 * If any PWM channel is enabled, mark device active and hold runtime PM
-+	 * references for each enabled channel. Otherwise, gate the clocks.
-+	 */
-+	if (pwm_en) {
-+		pm_runtime_set_active(dev);
-+		for (i = 0; i < chip->npwm; i++) {
-+			if (ctrl[i])
-+				pm_runtime_get_noresume(dev);
-+		}
-+	} else {
-+		clk_disable_unprepare(dwc->clk);
-+		clk_disable_unprepare(dwc->bus_clk);
-+	}
-+
-+	pm_runtime_enable(dev);
-+
-+	ret = pwmchip_add(chip);
-+	if (ret) {
-+		dev_err(dev, "failed to add pwm chip\n");
-+		goto pm_disable;
-+	}
-+
-+	return 0;
-+
-+pm_disable:
-+	pm_runtime_disable(dev);
-+	if (pwm_en) {
-+		for (i = 0; i < chip->npwm; i++) {
-+			if (ctrl[i])
-+				pm_runtime_put_noidle(dev);
-+		}
-+		goto disable_clk;
-+	}
-+
-+	return ret;
-+
-+disable_clk:
-+	clk_disable_unprepare(dwc->clk);
-+disable_busclk:
-+	clk_disable_unprepare(dwc->bus_clk);
-+
-+	return ret;
-+}
-+
-+static void dwc_pwm_plat_remove(struct platform_device *pdev)
-+{
-+	struct dwc_pwm_drvdata *data = platform_get_drvdata(pdev);
-+	struct pwm_chip *chip = data->chips[0];
-+	struct dwc_pwm *dwc = to_dwc_pwm(chip);
-+	unsigned int idx;
-+	int ret;
-+
-+	pwmchip_remove(chip);
-+
-+	ret = pm_runtime_resume_and_get(&pdev->dev);
-+	if (ret < 0) {
-+		dev_warn(&pdev->dev, "failed to resume device: %d\n", ret);
-+	} else {
-+		for (idx = 0; idx < chip->npwm; idx++) {
-+			if (dwc_pwm_readl(dwc, DWC_TIM_CTRL(idx)) &
-+					  DWC_TIM_CTRL_EN)
-+				pm_runtime_put_noidle(&pdev->dev);
-+		}
-+		pm_runtime_put_sync(&pdev->dev);
-+	}
-+
-+	if (!pm_runtime_status_suspended(&pdev->dev)) {
-+		clk_disable_unprepare(dwc->clk);
-+		clk_disable_unprepare(dwc->bus_clk);
-+	}
-+	pm_runtime_disable(&pdev->dev);
-+
-+	if (dwc->rst) {
-+		ret = reset_control_assert(dwc->rst);
-+		if (ret)
-+			dev_warn(&pdev->dev, "failed to assert reset: %d\n",
-+				 ret);
-+	}
-+}
-+
-+static int dwc_pwm_runtime_suspend(struct device *dev)
-+{
-+	struct dwc_pwm_drvdata *data = dev_get_drvdata(dev);
-+	struct pwm_chip *chip = data->chips[0];
-+	struct dwc_pwm *dwc = to_dwc_pwm(chip);
-+
-+	clk_disable_unprepare(dwc->clk);
-+	clk_disable_unprepare(dwc->bus_clk);
-+
-+	return 0;
-+}
-+
-+static int dwc_pwm_runtime_resume(struct device *dev)
-+{
-+	struct dwc_pwm_drvdata *data = dev_get_drvdata(dev);
-+	struct pwm_chip *chip = data->chips[0];
-+	struct dwc_pwm *dwc = to_dwc_pwm(chip);
-+	int ret;
-+
-+	ret = clk_prepare_enable(dwc->bus_clk);
-+	if (ret) {
-+		dev_err(dev, "failed to enable bus clock: %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(dwc->clk);
-+	if (ret) {
-+		dev_err(dev, "failed to enable timer clock: %d\n", ret);
-+		clk_disable_unprepare(dwc->bus_clk);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int dwc_pwm_suspend(struct device *dev)
-+{
-+	struct dwc_pwm_drvdata *data = dev_get_drvdata(dev);
-+	struct pwm_chip *chip = data->chips[0];
-+	struct dwc_pwm *dwc = to_dwc_pwm(chip);
-+	unsigned int idx;
-+	int ret;
-+
-+	if (pm_runtime_status_suspended(dev)) {
-+		ret = dwc_pwm_runtime_resume(dev);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	for (idx = 0; idx < chip->npwm; idx++) {
-+		dwc->ctx[idx].cnt = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT(idx));
-+		dwc->ctx[idx].cnt2 = dwc_pwm_readl(dwc, DWC_TIM_LD_CNT2(idx));
-+		dwc->ctx[idx].ctrl = dwc_pwm_readl(dwc, DWC_TIM_CTRL(idx));
-+	}
-+
-+	ret = dwc_pwm_runtime_suspend(dev);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static int dwc_pwm_resume(struct device *dev)
-+{
-+	struct dwc_pwm_drvdata *data = dev_get_drvdata(dev);
-+	struct pwm_chip *chip = data->chips[0];
-+	struct dwc_pwm *dwc = to_dwc_pwm(chip);
-+	unsigned int idx;
-+	bool pm_flags;
-+	int ret;
-+
-+	/* Check if device was runtime suspended before system resume */
-+	pm_flags = pm_runtime_status_suspended(dev);
-+	if (pm_flags) {
-+		/*
-+		 * Use PM framework to resume device
-+		 * (calls dwc_pwm_runtime_resume)
-+		 */
-+		ret = pm_runtime_resume_and_get(dev);
-+		if (ret < 0)
-+			return ret;
-+	} else {
-+		/*
-+		 * Device was active, but clocks might be off after system
-+		 * sleep.
-+		 * Call runtime_resume directly to restore hardware state.
-+		 */
-+		ret = dwc_pwm_runtime_resume(dev);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	for (idx = 0; idx < chip->npwm; idx++) {
-+		dwc_pwm_writel(dwc, dwc->ctx[idx].cnt, DWC_TIM_LD_CNT(idx));
-+		dwc_pwm_writel(dwc, dwc->ctx[idx].cnt2, DWC_TIM_LD_CNT2(idx));
-+		dwc_pwm_writel(dwc, dwc->ctx[idx].ctrl, DWC_TIM_CTRL(idx));
-+	}
-+
-+	if (pm_flags) {
-+		/*
-+		 * Balance the refcount taken by pm_runtime_resume_and_get
-+		 * if it was used.
-+		 */
-+		pm_runtime_put_sync(dev);
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops dwc_pwm_pm_ops = {
-+	RUNTIME_PM_OPS(dwc_pwm_runtime_suspend, dwc_pwm_runtime_resume, NULL)
-+	SYSTEM_SLEEP_PM_OPS(dwc_pwm_suspend, dwc_pwm_resume)
-+};
-+
-+static const struct dwc_pwm_plat_data pwm_eic7700_pdata = {
-+	.reset_required = true,
-+};
-+
-+static const struct of_device_id dwc_pwm_dt_ids[] = {
-+	{ .compatible = "snps,dw-apb-timers-pwm2" },
-+	{ .compatible = "eswin,eic7700-pwm", .data = &pwm_eic7700_pdata },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, dwc_pwm_dt_ids);
-+
-+static struct platform_driver dwc_pwm_plat_driver = {
-+	.driver = {
-+		.name = "dwc-pwm",
-+		.pm = pm_ptr(&dwc_pwm_pm_ops),
-+		.of_match_table = dwc_pwm_dt_ids,
-+	},
-+	.probe = dwc_pwm_plat_probe,
-+	.remove = dwc_pwm_plat_remove,
-+};
-+
-+module_platform_driver(dwc_pwm_plat_driver);
-+
-+MODULE_ALIAS("platform:dwc-pwm-of");
-+MODULE_AUTHOR("Ben Dooks <ben.dooks@codethink.co.uk>");
-+MODULE_DESCRIPTION("DesignWare PWM Controller");
-+MODULE_LICENSE("GPL");
-diff --git a/drivers/pwm/pwm-dwc.h b/drivers/pwm/pwm-dwc.h
-index 1562594e7f85..75f7c2d031c4 100644
---- a/drivers/pwm/pwm-dwc.h
-+++ b/drivers/pwm/pwm-dwc.h
-@@ -26,12 +26,19 @@ MODULE_IMPORT_NS("dwc_pwm");
- #define DWC_TIMERS_TOTAL	8
- 
- /* Timer Control Register */
--#define DWC_TIM_CTRL_EN		BIT(0)
--#define DWC_TIM_CTRL_MODE	BIT(1)
--#define DWC_TIM_CTRL_MODE_FREE	(0 << 1)
--#define DWC_TIM_CTRL_MODE_USER	(1 << 1)
--#define DWC_TIM_CTRL_INT_MASK	BIT(2)
--#define DWC_TIM_CTRL_PWM	BIT(3)
-+#define DWC_TIM_CTRL_EN			BIT(0)
-+#define DWC_TIM_CTRL_MODE		BIT(1)
-+#define DWC_TIM_CTRL_MODE_FREE		(0 << 1)
-+#define DWC_TIM_CTRL_MODE_USER		BIT(1)
-+#define DWC_TIM_CTRL_INT_MASK		BIT(2)
-+#define DWC_TIM_CTRL_PWM		BIT(3)
-+#define DWC_TIM_CTRL_0N100PWM_EN	BIT(4)
-+
-+/*
-+ * The version 2.11a and later add "Pulse Width Modulation with
-+ * 0% and 100% Duty Cycle".
-+ */
-+#define DWC_TIM_VERSION_ID_2_11A	0x3231312a
- 
- struct dwc_pwm_info {
- 	unsigned int nr;
-@@ -52,8 +59,12 @@ struct dwc_pwm_ctx {
- 
- struct dwc_pwm {
- 	void __iomem *base;
--	unsigned int clk_ns;
-+	struct clk *bus_clk;
-+	struct clk *clk;
-+	unsigned long clk_rate;
-+	struct reset_control *rst;
- 	struct dwc_pwm_ctx ctx[DWC_TIMERS_TOTAL];
-+	u32 features;
- };
- 
- static inline struct dwc_pwm *to_dwc_pwm(struct pwm_chip *chip)
--- 
-2.34.1
+The hardware reset value for the field is 256, so that is not the case.
+
+The other item is a pre-existing issue. Worth fixing, but not
+necessarily in the purview of this feature.
+
+I can respin to add the clk_rate =3D=3D 0 check.
+
+Cheers
+Mikko
+
 
 
