@@ -1,79 +1,81 @@
-Return-Path: <linux-pwm+bounces-9545-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9546-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 7JuXOxPrR2pAhgAAu9opvQ
-	(envelope-from <linux-pwm+bounces-9545-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Fri, 03 Jul 2026 19:02:12 +0200
+	id GiVoHRvrR2pKhgAAu9opvQ
+	(envelope-from <linux-pwm+bounces-9546-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Fri, 03 Jul 2026 19:02:19 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 4661070478F
-	for <lists+linux-pwm@lfdr.de>; Fri, 03 Jul 2026 19:02:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 16AA17047A9
+	for <lists+linux-pwm@lfdr.de>; Fri, 03 Jul 2026 19:02:19 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=suse.com header.s=google header.b="JtqtdeH/";
+	dkim=pass header.d=suse.com header.s=google header.b=MUVnOYcy;
 	dmarc=pass (policy=quarantine) header.from=suse.com;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9545-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9545-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9546-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9546-lists+linux-pwm=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 0673E3010D9C
-	for <lists+linux-pwm@lfdr.de>; Fri,  3 Jul 2026 17:02:10 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3BFFE301184C
+	for <lists+linux-pwm@lfdr.de>; Fri,  3 Jul 2026 17:02:11 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id BCB431DE4E0;
-	Fri,  3 Jul 2026 17:02:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D39D02F1FEC;
+	Fri,  3 Jul 2026 17:02:09 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f52.google.com (mail-wm1-f52.google.com [209.85.128.52])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1EEAF145B27
-	for <linux-pwm@vger.kernel.org>; Fri,  3 Jul 2026 17:02:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E7B1A6834
+	for <linux-pwm@vger.kernel.org>; Fri,  3 Jul 2026 17:02:08 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783098128; cv=none; b=SjfV7GDgK/1Mgcsl4mWNXDW3bLADlis7tabS5gwqGEDmpV43E6hxr1AbfawXt0UjvagQYSa4Fsk4TmedCxIbMw28qK9wWmp+wQ9cK26+NFikpJ6J1s8yYDdt/crhf4E8vzZ7g5J6wWJvuni3U4GksVkK2ONsbdcunPwxGWPdReE=
+	t=1783098129; cv=none; b=McZ/H7jkw6t0mEGMaOcpSKvqedtkk+hrmrV1WgHYNsqCqRS0HSu6B0Bl/d5fcWS9DlAx2qvpMKYnIOPB/IGc+6LdR/bC0Fi0iIgSr/pG2WRirLpWCdVSdcGlIgk0k6RlqttJdhzPo8Ec4QGYxHt3htIeN+DcRpRQY9+fnyGOC2o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783098128; c=relaxed/simple;
-	bh=JJntkUC9rBut4Ox3VlLSu6avviUJ1OqJzK+qpFIyVRg=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version; b=iTnhV2dSQ/RfseUrNgjZtvYzO8GMdxPNbhNwDCK+44NkSm5gPLsq8tphSQESDUL+rWYaVq2AT/bfu7Y6m66UVMl8BdCp96neh9lUw1kIZM3sEFLNsbg9P5VWSxAeymDZNquB8tkykKzH6wuXhfT3XUEF3KDenvhRgPtx5Bvdo/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=JtqtdeH/; arc=none smtp.client-ip=209.85.128.52
-Received: by mail-wm1-f52.google.com with SMTP id 5b1f17b1804b1-493c1950518so9825285e9.1
-        for <linux-pwm@vger.kernel.org>; Fri, 03 Jul 2026 10:02:06 -0700 (PDT)
+	s=arc-20240116; t=1783098129; c=relaxed/simple;
+	bh=YW9uoiEy5CuC0sIxOCa9X8yJ3i0+Ho0/5+EeRbYnQYs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=UtzSnb/sjBzbk1wk1/fn1Hlktc/c85mmalOJA+pjJHOaMJCW4P9J1ZIxMA5oT1sVvK9cSt7JQpORoHGQNjZ99lMqo9V8miSH6gNo/0gODamVKJ8KSZz7C9L2ZTKA/Fs01+eAl292iijiSRp2SATTLdbvmyN595xTfB5W/jfisiE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=MUVnOYcy; arc=none smtp.client-ip=209.85.128.49
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-493b68b4643so4338885e9.0
+        for <linux-pwm@vger.kernel.org>; Fri, 03 Jul 2026 10:02:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=suse.com; s=google; t=1783098125; x=1783702925; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:from:to:cc:subject:date:message-id:reply-to;
-        bh=q/1K0BV/G7Gec3azOultr+oMUL4gfypJwfwS0OJxpVY=;
-        b=JtqtdeH/3/Zw1T9WgVatOVDLfv5RmS4eyNm2nTweAFP3qH63Rykzd5Ips/R+JcoVDg
-         cBl1BjmJlOSCwLwYAS3VvteW0q8qVfSNYyY6f4NzyXszgP8JMoQjhm/LsNhbBc8+8/4A
-         zAix9djFdduiaDoN5LVb9J3M6F7nb42xOR1abnHwQYq6s+vWdsLfHrL0TljpBN5I+2xp
-         Xn6dQyxhOvjkpum60g3YE40hQNJcn7uag7uT+2mEEYxqUVFBCkWDPnX5BaPXkXCMzHhP
-         lWQ/J4jpH0cMW+FARYddzOk74w9QwMz6Z7e9nH8sFyGsxnQuKGlEEa+JrPyPlyh+eNaU
-         Q25Q==
+        d=suse.com; s=google; t=1783098127; x=1783702927; darn=vger.kernel.org;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to:content-type;
+        bh=x3KtQbiImBVgvP9LE+N4FWws0mqbw5SWS+roXC5ImXQ=;
+        b=MUVnOYcy4rbx6+YZPTVD1wfAjhqSreCJ6JheSeNM/jgkUUWC7Tlai/C9T+2ucgrlWq
+         SQwD6uh20h5ALxSlk05DjRGHvowPE5N4k1kLOQCFmQdlNUV8XwI5BIXqfov6oLP3Eqzk
+         haZnJS6xw3be7qpMuqMW/1zV6xDQ8qHd68Ys0PQyv7RPIfX2n/M6C8Yes3PMp3ftDoAT
+         xBLkeFlRL5k+NQ58wQg14q9+D5ddsLCzvpKacQesky4g70ud8PSUGEeWAa7y7VMMz409
+         Qgucl8ugOdb1uS3RImk36kSek0cFvBdJQl7ErOG52zIMP/zFhR9R7diE+w4S3+M8v/yP
+         1M8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783098125; x=1783702925;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:to
-         :from:x-gm-gg:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=q/1K0BV/G7Gec3azOultr+oMUL4gfypJwfwS0OJxpVY=;
-        b=jbFVitgfrdE13qUVHV7d/g+ycewcMjky9yBXzxI3NrvPHne4+/FBpDoXG3+Uoiq5F9
-         PT4JpurY0CLx2+GY6L+++qSp5YvJtlsnm+9Zgbf+uN84UXX4N46oQ1fiymfNbZ+C8ZKL
-         eXUuYl/83XV65FxayoVPg/cN/7lZ62AXxyToGS+HPYRRJIPKLGEaLXkKeA8YdwwD8mBJ
-         kIszavX8W0xt7qmkPeLcL5T72RZKIaY+T5ZJ2hrVnawD8Mz4jNUzAikVKvQ+6Hj27fdD
-         BTdrmI0gDKyFahI9LQPM/jrWYNSBc90pLPWk4xbsoTlOkR7iceGl4OcD0pUyVP+ulPIU
-         GD8Q==
-X-Forwarded-Encrypted: i=1; AFNElJ/1T8QMUf4MMUEJI33bG4yNiW+52N0E+Tjc5eyEnHaZ9e4FmLekd5d3mdWzbjD2EnpAuc8ZQYeg2Z0=@vger.kernel.org
-X-Gm-Message-State: AOJu0Yx1oM8dmUjCKYpewcrDpXP056zmoTiEjZGa43NBUrite0gEU7q5
-	5oOTMtvYC/VcF6gOcd1EFdjcNUNdiyagFUXi3pYKqFuff056FhOsqoKFPkgse94Ygi8=
-X-Gm-Gg: AfdE7cmcD+GCH9mZHZUE1J9NzLK6ji9OKtHw7RKe5/FFZ4t1/c0aX3LVUxM2E1V5/PV
-	xN1hfYQBZk711fzKqVJ4DAbLU29Ubo0T25sw/dfurBwu6VjAhnL9QLL0QW2t3jv5CvFU3y+tMxL
-	BHuxqJQHAYFfszK0HycW2T/kkUhZV86A09u0fQ+DnQfxnSxQQryHGY1yh7FBEy1S6XbbKOP4PM0
-	vpQQzytJQzozOhmElMv0auzuXRUZmCAiP2QBz6yQNUsnMUgU9iebPWasDCGB+aqBvmvinL8OBbC
-	Q/Ly/8gu7IYRjiRAP0M7M5ifMQUknT5NDCdXDNYskh5zmHMSbbBSdBWfcNJRQr242o+jJq48iwp
-	aQGPrd5m0IiN2tXxBmQYBZl6UnJcfHjHhIts4urmVfBxnrYj4Pzb5I+x5+b8lW28W0hgvSFhzv0
-	bmwxX3QVlKhlQ=
-X-Received: by 2002:a05:600c:6287:b0:490:af63:2cb1 with SMTP id 5b1f17b1804b1-493d128b6e3mr24185e9.7.1783098125539;
-        Fri, 03 Jul 2026 10:02:05 -0700 (PDT)
+        d=1e100.net; s=20251104; t=1783098127; x=1783702927;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to:content-type;
+        bh=x3KtQbiImBVgvP9LE+N4FWws0mqbw5SWS+roXC5ImXQ=;
+        b=p67fDg/0HXVcpSCpL9UPBwxaQUE63gINxMC/TWgNqp3hFagzF8KL/fZVooVzSe2j6F
+         wvvKbzKPsNPmH61A9Ufd0cbYwygLcUB9kMu7djqCeW8xmbdf4nzH5hLiz+Dn+hLH0ari
+         N+/I3dKFCKQeS7GXRMNDIICVcvKPJBtbcEPdFdzQPtB+6FuFOvtl4CrTmLOR6++9zWvb
+         W7k2fR6N4qfRRIm6kr+7EbupXBuNR1jMAY3ZDE+WYvML0ACVjVH5XSarGGvU8Rku7m0h
+         9n7YnUFE/kQUIuro0wlHwAm9M/19O6CjPLlG38AXGiRX75BSNaGRSn1xOG7TOcE7Vis+
+         Cjsw==
+X-Forwarded-Encrypted: i=1; AFNElJ8oOYepEUKaKfYcYOOiE+VQb4BVIGGSo8OnxaRi0VshvGpLl3jQNsBYOOTEns6iF9M3bOtZS1zcsXg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yw4Ek5ftfKxkQK2YKMTNAlKypFcJ5X6a+WoYTnAMMDIvqULelgL
+	TSZv2pe3y95SuXqpHfEEXXATKKCy9BEddzgCbBSn0vRobqdwB7sIXiOOuauDO0paUcc=
+X-Gm-Gg: AfdE7clnA5rYT5O7qMj2jj3XLl8Sr6H7FHxhUQ+jk/NwiuZXbKz/MtbG7g+AT2XrAc9
+	7avAs+iBBHIXAwc+9D8g+8ut53zE8J59e7w0+/QBIOy5YwijseT0fr90V6OS7mahNtJ5bMcdN4s
+	moU8IzzU/8KJ/4VmKep+VKeaosutg/cYCpkRVTWmqK6xiszDCfztBVnoUmVJ9mHxua2ulUhAgxY
+	KIVsxelAFTq1a5NBZ99KEFNeiAt8kLaFB4uTzN3+j1bM32o/6QG85DWhyyHJ59AZbE4DHYtRqCR
+	Tj+KC6F431TTAua7v0QNXTn4N1HmUL72CE7fILJRNNXiPF+KTmMc+9jjO/k2mP9ovcK8vsRi9YZ
+	/iQOn877wTK2fKWDB0/Dq6ZgQBiwUXeG08OIbmhlbihchxiLCO06Tg5hu4S6rb3A2U+dofJ/YNi
+	owGyAz4XSjCHQ=
+X-Received: by 2002:a05:600c:529a:b0:493:b7cb:c5f with SMTP id 5b1f17b1804b1-493d11d7f58mr1680335e9.11.1783098126588;
+        Fri, 03 Jul 2026 10:02:06 -0700 (PDT)
 Received: from localhost ([195.94.145.62])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-493c63172fesm252158015e9.0.2026.07.03.10.02.05
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-47a9e4d7801sm762345f8f.16.2026.07.03.10.02.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 Jul 2026 10:02:05 -0700 (PDT)
+        Fri, 03 Jul 2026 10:02:06 -0700 (PDT)
 From: Andrea della Porta <andrea.porta@suse.com>
 To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
 	linux-pwm@vger.kernel.org,
@@ -92,10 +94,13 @@ To: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
 	mbrugger@suse.com,
 	Sean Young <sean@mess.org>,
 	Julian Braha <julianbraha@gmail.com>
-Subject: [PATCH v6 0/3] Add RP1 PWM controller support
-Date: Fri,  3 Jul 2026 19:05:23 +0200
-Message-ID: <cover.1783097764.git.andrea.porta@suse.com>
+Cc: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+Subject: [PATCH v6 1/3] dt-bindings: pwm: Add Raspberry Pi RP1 PWM controller
+Date: Fri,  3 Jul 2026 19:05:24 +0200
+Message-ID: <67d51a7210f0d7410dbe34e3d93813db1fecd622.1783097764.git.andrea.porta@suse.com>
 X-Mailer: git-send-email 2.51.0
+In-Reply-To: <cover.1783097764.git.andrea.porta@suse.com>
+References: <cover.1783097764.git.andrea.porta@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -116,14 +121,14 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[17];
+	RCPT_COUNT_TWELVE(0.00)[18];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9545-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9546-lists,linux-pwm=lfdr.de];
 	FREEMAIL_TO(0.00)[kernel.org,vger.kernel.org,broadcom.com,suse.com,lists.infradead.org,raspberrypi.com,suse.de,mess.org,gmail.com];
 	RECEIVED_HELO_LOCALHOST(0.00)[];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_RECIPIENTS(0.00)[m:ukleinek@kernel.org,m:linux-pwm@vger.kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:florian.fainelli@broadcom.com,m:bcm-kernel-feedback-list@broadcom.com,m:andrea.porta@suse.com,m:devicetree@vger.kernel.org,m:linux-rpi-kernel@lists.infradead.org,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:naush@raspberrypi.com,m:svarbanov@suse.de,m:mbrugger@suse.com,m:sean@mess.org,m:julianbraha@gmail.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:ukleinek@kernel.org,m:linux-pwm@vger.kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:florian.fainelli@broadcom.com,m:bcm-kernel-feedback-list@broadcom.com,m:andrea.porta@suse.com,m:devicetree@vger.kernel.org,m:linux-rpi-kernel@lists.infradead.org,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:naush@raspberrypi.com,m:svarbanov@suse.de,m:mbrugger@suse.com,m:sean@mess.org,m:julianbraha@gmail.com,m:krzysztof.kozlowski@oss.qualcomm.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[andrea.porta@suse.com,linux-pwm@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
@@ -138,60 +143,97 @@ X-Spamd-Result: default: False [0.84 / 15.00];
 	ALIAS_RESOLVED(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,suse.com:from_mime,suse.com:dkim,suse.com:mid]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,suse.com:from_mime,suse.com:email,suse.com:mid,suse.com:dkim,qualcomm.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 4661070478F
+X-Rspamd-Queue-Id: 16AA17047A9
 
-This patchset adds support for the PWM controller found on the
-Raspberry Pi RP1 southbridge. This is necessary to operate the
-cooling fan connected to one of the PWM channels.
+From: Naushir Patuck <naush@raspberrypi.com>
 
-The tachometer pin for the fan speed is managed by the firmware 
-running on the RP1's M-core. It uses the PHASE2 register
-to report the RPM, which is then exported by this driver via
-syscon registers. A subsequent patch will add a new device
-and driver to read the RPM and export this value via hwmon.
- 
-Subsequent patches will also add the CPU thermal zone, which
-acts as a consumer of the PWM device.
+Add the devicetree binding documentation for the PWM
+controller found in the Raspberry Pi RP1 chipset.
 
-Best regards,
-Andrea
-
-CHANGES in V6:
-
-- dt-bindings: added Andrea and Stanimir as maintiners, Naushir if
-  you want to be dropped from the maintainer list, please just give
-  me a shout
-- dt-bindings: added dmas properties in case the driver will support
-  that in the future
-- _tohw(): fetch the actual polarity in the disable case to avoid
-  potential glitch due to garbage data in the passed-in param
-- _tohw(): fixed a compilation error on 32 bit target due to missing
-  64 bit divider helper function
-- _fromhw(): division by clk_rate explicitly cast to 32 bit for the
-  divisor
-- _fromhw(): fixed an unsigned underflow in ticks calculation
-- set the atomic flag to allow calling from atomic context
-
-
-Naushir Patuck (2):
-  dt-bindings: pwm: Add Raspberry Pi RP1 PWM controller
-  pwm: rp1: Add RP1 PWM controller driver
-
-Stanimir Varbanov (1):
-  arm64: dts: broadcom: rpi-5: Add RP1 PWM node
-
- .../bindings/pwm/raspberrypi,rp1-pwm.yaml     |  66 +++
- .../boot/dts/broadcom/bcm2712-rpi-5-b.dts     |  12 +
- arch/arm64/boot/dts/broadcom/rp1-common.dtsi  |   9 +
- drivers/pwm/Kconfig                           |   9 +
- drivers/pwm/Makefile                          |   1 +
- drivers/pwm/pwm-rp1.c                         | 435 ++++++++++++++++++
- 6 files changed, 532 insertions(+)
+Signed-off-by: Naushir Patuck <naush@raspberrypi.com>
+Co-developed-by: Stanimir Varbanov <svarbanov@suse.de>
+Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
+Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
+---
+ .../bindings/pwm/raspberrypi,rp1-pwm.yaml     | 66 +++++++++++++++++++
+ 1 file changed, 66 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/pwm/raspberrypi,rp1-pwm.yaml
- create mode 100644 drivers/pwm/pwm-rp1.c
 
+diff --git a/Documentation/devicetree/bindings/pwm/raspberrypi,rp1-pwm.yaml b/Documentation/devicetree/bindings/pwm/raspberrypi,rp1-pwm.yaml
+new file mode 100644
+index 0000000000000..970d0f3b33bbb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pwm/raspberrypi,rp1-pwm.yaml
+@@ -0,0 +1,66 @@
++# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/pwm/raspberrypi,rp1-pwm.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Raspberry Pi RP1 PWM controller
++
++maintainers:
++  - Naushir Patuck <naush@raspberrypi.com>
++  - Andrea della Porta <andrea.porta@suse.com>
++  - Stanimir Varbanov <svarbanov@suse.de>
++
++allOf:
++  - $ref: pwm.yaml#
++
++description: |
++  The PWM peripheral is a flexible waveform generator with a
++  variety of operational modes. It has the following features:
++   - four independent output channels
++   - 32-bit counter widths
++   - Seven output generation modes
++   - Optional per-channel output inversion
++   - Optional duty-cycle data FIFO with DMA support
++   - Optional sigma-delta noise shaping engine
++  Serves as a fan speed provider to other nodes for a PWM-connected
++  fan using shared registers (syscon).
++
++properties:
++  compatible:
++    const: raspberrypi,rp1-pwm
++
++  reg:
++    maxItems: 1
++
++  clocks:
++    maxItems: 1
++
++  "#pwm-cells":
++    const: 3
++
++  dmas:
++    maxItems: 1
++    description: |
++      Phandle to the DMA controller and the channel specifier for
++      the duty-cycle FIFO.
++
++  dma-names:
++    items:
++      - const: tx
++
++required:
++  - compatible
++  - reg
++  - clocks
++
++unevaluatedProperties: false
++
++examples:
++  - |
++    pwm@98000 {
++      compatible = "raspberrypi,rp1-pwm";
++      reg = <0x98000 0x100>;
++      clocks = <&rp1_clocks 17>;
++      #pwm-cells = <3>;
++    };
 -- 
 2.35.3
 
