@@ -1,229 +1,160 @@
-Return-Path: <linux-pwm+bounces-9543-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9544-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id eT8ZODrdR2r1gQAAu9opvQ
-	(envelope-from <linux-pwm+bounces-9543-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Fri, 03 Jul 2026 18:03:06 +0200
+	id Prz+EfjmR2plhQAAu9opvQ
+	(envelope-from <linux-pwm+bounces-9544-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Fri, 03 Jul 2026 18:44:40 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 3B3C27041CF
-	for <lists+linux-pwm@lfdr.de>; Fri, 03 Jul 2026 18:03:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id B7C4770460F
+	for <lists+linux-pwm@lfdr.de>; Fri, 03 Jul 2026 18:44:39 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=none;
-	dmarc=none;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9543-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9543-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=Ggyc7vlG;
+	dmarc=pass (policy=none) header.from=gmail.com;
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9544-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9544-lists+linux-pwm=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 7A5E330142AB
-	for <lists+linux-pwm@lfdr.de>; Fri,  3 Jul 2026 16:00:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id DC19530207EE
+	for <lists+linux-pwm@lfdr.de>; Fri,  3 Jul 2026 16:39:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5696E2DCBE3;
-	Fri,  3 Jul 2026 16:00:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id BB34D301486;
+	Fri,  3 Jul 2026 16:38:59 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mx1.white.stw.pengutronix.de (mx1.white.stw.pengutronix.de [185.203.200.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f54.google.com (mail-wm1-f54.google.com [209.85.128.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 734B82C0296;
-	Fri,  3 Jul 2026 16:00:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 425B830674D
+	for <linux-pwm@vger.kernel.org>; Fri,  3 Jul 2026 16:38:58 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783094458; cv=none; b=rvIJqr6QEcUv1MT3fj9T61WC6IRLOFSxaSYbT52Z0gJUhoJrZw02e3IAh4Mmwf8OIQDRT4cYPaEkSHGjsnEe6J2rh0SFPKyAL1YVigGx9RNJGOWawOW06HTYit4gLgq/yMCalLppWgEm7VzjnT3VMSVwWhpl6ivUpBLjl6DEt/U=
+	t=1783096739; cv=none; b=tsB20+LquF2klbYPF951xp7lkwXpnYr+9DV9p2lgL/5Sgov7KiGvc/CMU6Jvos0dfUtyIkebbihV8UpHiiyZ1K+8YUtiQztZNGdDS3gDYy0Z1pqsEzYnd5ngbExxBwWRXQXAO9H/CdmHKRWLPqc7S1XC22M9rfvInqLd63YHolk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783094458; c=relaxed/simple;
-	bh=6hagPdbe22KiMs/rgwFE/aaU5MN8++BzsZdpTEe46yI=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=MvD660M2NDZ2yvfB6tsJHW/FyHFpOAt1pjBnajwEjOQkRb81kI0rgqDtQHYHhNi+qXrz30ieaVE2ZEznam5Lf9qaiNa8RtACxT8qO9cMzviG7fnNraNXsYDOZbXK6wf53hcxjCB1A3ATtUHfrhLNN6rGeyLudaCVJD/aHdVUEVw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=pengutronix.de; spf=pass smtp.mailfrom=pengutronix.de; arc=none smtp.client-ip=185.203.200.13
-Received: from drehscheibe.grey.stw.pengutronix.de (drehscheibe.grey.stw.pengutronix.de [IPv6:2a0a:edc0:0:c01:1d::a2])
-	(Authenticated sender: relay-from-drehscheibe.grey.stw.pengutronix.de)
-	by mx1.white.stw.pengutronix.de (Postfix) with ESMTPSA id D67FE20094B;
-	Fri, 03 Jul 2026 18:00:46 +0200 (CEST)
-Received: from lupine.office.stw.pengutronix.de ([2a0a:edc0:0:900:1d::4e] helo=lupine)
-	by drehscheibe.grey.stw.pengutronix.de with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-	(Exim 4.96)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1wfgJq-005wDU-2X;
-	Fri, 03 Jul 2026 18:00:46 +0200
-Received: from pza by lupine with local (Exim 4.98.2)
-	(envelope-from <p.zabel@pengutronix.de>)
-	id 1wfgJq-00000000GYt-2okH;
-	Fri, 03 Jul 2026 18:00:46 +0200
-Message-ID: <3926e4b7ebde9d0fa83c6b4fa15256eab0c7d9e6.camel@pengutronix.de>
-Subject: Re: [PATCH v7 2/4] pwm: sun8i: Add H616 PWM support
-From: Philipp Zabel <p.zabel@pengutronix.de>
-To: Richard Genoud <richard.genoud@bootlin.com>, Uwe
- =?ISO-8859-1?Q?Kleine-K=F6nig?=	 <ukleinek@kernel.org>, Rob Herring
- <robh@kernel.org>, Krzysztof Kozlowski	 <krzk+dt@kernel.org>, Conor Dooley
- <conor+dt@kernel.org>, Chen-Yu Tsai	 <wens@kernel.org>, Jernej Skrabec
- <jernej.skrabec@gmail.com>, Samuel Holland	 <samuel@sholland.org>, Michael
- Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Brian
- Masney <bmasney@redhat.com>
-Cc: Paul Kocialkowski <paulk@sys-base.io>, Thomas Petazzoni	
- <thomas.petazzoni@bootlin.com>, John Stultz <jstultz@google.com>, Joao
- Schim	 <joao@schimsalabim.eu>, bigunclemax@gmail.com,
- linux-pwm@vger.kernel.org, 	devicetree@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, 	linux-sunxi@lists.linux.dev,
- linux-kernel@vger.kernel.org, 	linux-clk@vger.kernel.org
-Date: Fri, 03 Jul 2026 18:00:46 +0200
-In-Reply-To: <20260703152215.192859-3-richard.genoud@bootlin.com>
-References: <20260703152215.192859-1-richard.genoud@bootlin.com>
-	 <20260703152215.192859-3-richard.genoud@bootlin.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.56.2-0+deb13u1 
+	s=arc-20240116; t=1783096739; c=relaxed/simple;
+	bh=nrFUeTISsssZEEKhYbH1QGl9yO+vtAmYijszoSwDM+A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gaPRWZmvhTxwiJ0rPynGve8riY/WutyUNipK9j35RG+CgO8r2aaDdzaMj1/1a6LtXQn1Xnv8xia6BC4zoggeZollfVri3hF2vgStDcfYMUNyROLX2r2bFF/qTYDOfffJStudF9u0NU96Bg9BlSNsfitoxKXNU4+2nUz1gi+6biE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ggyc7vlG; arc=none smtp.client-ip=209.85.128.54
+Received: by mail-wm1-f54.google.com with SMTP id 5b1f17b1804b1-490cf3000f0so6668475e9.1
+        for <linux-pwm@vger.kernel.org>; Fri, 03 Jul 2026 09:38:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783096737; x=1783701537; darn=vger.kernel.org;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :sender:from:to:cc:subject:date:message-id:reply-to;
+        bh=Dq50xUh9vnokWwn/2MgFrw6Bt3+wGtcUaeVmHV+z9uw=;
+        b=Ggyc7vlGYIbSvGqthNUShze+DJZAsTFUaDbHlq36g348Cdb5niXyXxp+sUWKHgjZWW
+         eAktUxb/FEeX2zjqolnvhIFfjnsSUM6IF+vE0DeFqf2e2MklvJ8S24i3B6z6IMQ+ZY57
+         9fHaoxM8umqHAHCrQ/dL+d7M3gZqPtFvsf6FWe0+LEzGlVDNpXdJsP7zlzGMXwogqbPm
+         6El1qBPJ5EOA+2SusUKKkFY+eO2ZuhsElxh+wP4lOQu4/Rqad1xhZUlR1/P9B07S/iw0
+         dos78O+MNfgcRplb6Pal03bPOllpnhKNakd0DUCNuEPonPvHYJHLGjmZ25GfyhNZJvfH
+         9QEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783096737; x=1783701537;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :sender:x-gm-gg:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Dq50xUh9vnokWwn/2MgFrw6Bt3+wGtcUaeVmHV+z9uw=;
+        b=Sdy6bL0Uvtnem3JJYh5e95LScwK7RanmFtDeVd7FxQP6ElfR8p9s2kI2RujX79fDIo
+         a4E8UuL16u2s7aiIiTs4/jaIvzMp269xnJol7E0CQR0eRPbzcnn9ISy05QePiPE9X0mJ
+         +UIlq8pTc+fBgJX7IYtNJ637N9MYPe7pZIc5WWXO/W90z50InGdzl/NjsQhKeC3rUF9R
+         ZeBdIxgiIyyDvsKSB1+Y4VVx9snmcJqpYVKOrjiXLj/MSIsaml0x4lhs0Q09dqhOC7xi
+         Y/DfAx9VHfctb+UxoTn1YwVJiYEr3GUTmxwwtRc5Gma5QmYz2GdMw8UieMRodIBpGCag
+         nu/Q==
+X-Forwarded-Encrypted: i=1; AFNElJ/qfKscJ1F575Gjk1XT6CSOnmzo2CFvr+B1Fd7Qq6zyAw7JjdQHUj0pKXLeHsd2iVY8V6Qpd7QT8hg=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yy4xp4lzgRaDqf/8WtnCC+vuNjg88fq9fVZKUWdlX6jde+Zr6+r
+	uUzAV0SI0j4wvz6yALb/jT3j9C0BPo520/cqO/JRwJ8u2combheovUN/
+X-Gm-Gg: AfdE7cl7FP3Hq1ZgczHjjEnOZqEfNA9sRz0G0Oq7BhDMPzRGfU0YPVR+ZD9IFhu8Qul
+	CePtMKRQSRcl3xkE7lOCbfHfu1IdTk1+ez9Iuy72T8ufT/cavIeuqfRSoGv9PdH9gredTuOTj/W
+	SYKYnhjfuNa8hAj/5ZoLkXZirSvNSVYEC29+UHuQIBJASpRiJzs34z9xBDXl5e0LT0lsO07TQeo
+	oTMJfSIwJ8GZsXQx0MkXXuSsJyM+bjA3lo6AwaMKJQRokVWao9xJb21444mrNuJByScNusQnaqZ
+	s/VvSuCtnw2ZyDmWks42uR8ScJR1lrtZdOSUU35/rNg464Xa1Zqis3SsXqIGL3NkEknei5rN2Vq
+	qPyaCYS0nbZCOpj+S30IQugJAmg+6X6qOqRfV5tXC+08b8axvhrdb20TeX2zdWSlmpDe5EE68dx
+	mDVq4dWEyb+xnsWlD8ovwLk/dDvNOd4V53OztYx/DIGvs2ELMSyhS+18623ST+esqjdNl2jHBGI
+	t8hriJl
+X-Received: by 2002:a05:600c:8105:b0:493:aaa2:f034 with SMTP id 5b1f17b1804b1-493d11f6cfamr400035e9.26.1783096736053;
+        Fri, 03 Jul 2026 09:38:56 -0700 (PDT)
+Received: from [10.128.11.240] (195-23-151-163.net.novis.pt. [195.23.151.163])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-493cce040b4sm82259395e9.10.2026.07.03.09.38.54
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 03 Jul 2026 09:38:55 -0700 (PDT)
+Sender: Julian Braha <julian.braha@gmail.com>
+Message-ID: <c4c658e5-9c67-4e19-aeab-39d98aa71f45@gmail.com>
+Date: Fri, 3 Jul 2026 17:38:53 +0100
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v5 2/3] pwm: rp1: Add RP1 PWM controller driver
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ linux-pwm@vger.kernel.org, Rob Herring <robh@kernel.org>,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley
+ <conor+dt@kernel.org>, Florian Fainelli <florian.fainelli@broadcom.com>,
+ Broadcom internal kernel review list
+ <bcm-kernel-feedback-list@broadcom.com>, devicetree@vger.kernel.org,
+ linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+ linux-kernel@vger.kernel.org, Naushir Patuck <naush@raspberrypi.com>,
+ Stanimir Varbanov <svarbanov@suse.de>, mbrugger@suse.com
+References: <cover.1780670224.git.andrea.porta@suse.com>
+ <f8dd46a553351adaf9d29fbba9f98e803b672fe7.1780670224.git.andrea.porta@suse.com>
+ <0b6a7f41-b753-48dc-b46e-77aaf0e999f4@gmail.com> <ai-dNlC1_nbQTy5Z@monoceros>
+ <6babbdea-fa93-4cd7-8198-5cd3accc34cc@gmail.com>
+ <akfNrGoa0bitVSu9@apocalypse>
+Content-Language: en-US
+From: Julian Braha <julianbraha@gmail.com>
+In-Reply-To: <akfNrGoa0bitVSu9@apocalypse>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [0.04 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	DMARC_NA(0.00)[pengutronix.de];
-	TAGGED_FROM(0.00)[bounces-9543-lists,linux-pwm=lfdr.de];
+	RCPT_COUNT_TWELVE(0.00)[15];
+	TAGGED_FROM(0.00)[bounces-9544-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[bootlin.com,kernel.org,gmail.com,sholland.org,baylibre.com,redhat.com];
-	FORGED_SENDER(0.00)[p.zabel@pengutronix.de,linux-pwm@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[22];
-	FORGED_RECIPIENTS(0.00)[m:richard.genoud@bootlin.com,m:ukleinek@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:wens@kernel.org,m:jernej.skrabec@gmail.com,m:samuel@sholland.org,m:mturquette@baylibre.com,m:sboyd@kernel.org,m:bmasney@redhat.com,m:paulk@sys-base.io,m:thomas.petazzoni@bootlin.com,m:jstultz@google.com,m:joao@schimsalabim.eu,m:bigunclemax@gmail.com,m:linux-pwm@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-arm-kernel@lists.infradead.org,m:linux-sunxi@lists.linux.dev,m:linux-kernel@vger.kernel.org,m:linux-clk@vger.kernel.org,m:krzk@kernel.org,m:conor@kernel.org,m:jernejskrabec@gmail.com,s:lists@lfdr.de];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER(0.00)[julianbraha@gmail.com,linux-pwm@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:andrea.porta@suse.com,m:ukleinek@kernel.org,m:linux-pwm@vger.kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:florian.fainelli@broadcom.com,m:bcm-kernel-feedback-list@broadcom.com,m:devicetree@vger.kernel.org,m:linux-rpi-kernel@lists.infradead.org,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:naush@raspberrypi.com,m:svarbanov@suse.de,m:mbrugger@suse.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FREEMAIL_CC(0.00)[sys-base.io,bootlin.com,google.com,schimsalabim.eu,gmail.com,vger.kernel.org,lists.infradead.org,lists.linux.dev];
+	FROM_HAS_DN(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[6];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[p.zabel@pengutronix.de,linux-pwm@vger.kernel.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[julianbraha@gmail.com,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
 	ALIAS_RESOLVED(0.00)[];
-	MID_RHS_MATCH_FROM(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	TO_DN_SOME(0.00)[];
-	R_DKIM_NA(0.00)[];
+	MID_RHS_MATCH_FROM(0.00)[];
 	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,bootlin.com:email,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 3B3C27041CF
+X-Rspamd-Queue-Id: B7C4770460F
 
-On Fr, 2026-07-03 at 17:22 +0200, Richard Genoud wrote:
-> Add driver for Allwinner H616 PWM controller, supporting up to 6
-> channels.
-> Those channels output can be either a PWM signal output or a clock
-> output, thanks to the bypass.
->=20
-> The channels are paired (0/1, 2/3 and 4/5) and each pair has a
-> prescaler/mux/gate.
-> Moreover, each channel has its own prescaler and bypass.
->=20
-> The clock provider part of this driver is needed not only because the
-> H616 PWM controller provides also clocks when bypass is enabled, but
-> really because pwm-clock isn't fit to handle all cases here.
-> pwm-clock would work if the 100MHz clock is requested, but if a lower
-> clock is requested (like 24MHz), it will request a 42ns period to the
-> PWM driver which will happily serve, with the 100MHz clock as input a
-> 25MHz frequency and a duty cycle adjustable in the range [0-4]/4,
-> because that is a sane thing to do for a PWM.
-> The information missing is that a real clock is resquested, not a PWM.
->=20
-> Tested-by: John Stultz <jstultz@google.com>
-> Tested-by: Joao Schim <joao@schimsalabim.eu>
-> Signed-off-by: Richard Genoud <richard.genoud@bootlin.com>
-> ---
->  drivers/pwm/Kconfig     |  12 +
->  drivers/pwm/Makefile    |   1 +
->  drivers/pwm/pwm-sun8i.c | 938 ++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 951 insertions(+)
->  create mode 100644 drivers/pwm/pwm-sun8i.c
->=20
-[...]
-> diff --git a/drivers/pwm/pwm-sun8i.c b/drivers/pwm/pwm-sun8i.c
-> new file mode 100644
-> index 000000000000..8f1023e3a2e5
-> --- /dev/null
-> +++ b/drivers/pwm/pwm-sun8i.c
-> @@ -0,0 +1,938 @@
-[...]
-> +struct sun8i_pwm_chip {
-> +	struct clk_pwm_pdata *clk_pdata;
-> +	struct sun8i_pwm_channel *channels;
-> +	struct clk *bus_clk;
-> +	struct reset_control *rst;
+Hi Andrea,
 
-The rst field is unused, I suggest you remove it.
+On 7/3/26 15:56, Andrea della Porta wrote:
+> Honestly I don't have a strong opinion on that, but documenting is basically
+> the same than just selecting the option (well with the addition of the #), so
+> not really a difference. If there's no major concern about that I also wouuld
+> prefer to expicitly declare teh selecion of REGMAP_MMIO. 
 
-> +	void __iomem *base;
-> +	const struct sun8i_pwm_data *data;
-> +};
-[...]
-> +static int sun8i_pwm_probe(struct platform_device *pdev)
-> +{
-[...]
-> +	ret =3D sun8i_pwm_init_clocks(pdev, sun8i_chip);
-> +	if (ret)
-> +		return ret;
-> +
-> +	for (unsigned int i =3D 0; i < data->npwm; i++) {
-> +		struct sun8i_pwm_channel *chan =3D &sun8i_chip->channels[i];
-> +		struct clk_hw **hw =3D &sun8i_chip->clk_pdata->hw_data->hws[i];
-> +
-> +		chan->pwm_clk =3D devm_clk_hw_get_clk(dev, *hw, NULL);
-> +		if (IS_ERR(chan->pwm_clk)) {
-> +			ret =3D dev_err_probe(dev, PTR_ERR(chan->pwm_clk),
-> +					    "Failed to register PWM clock %d\n", i);
-> +			return ret;
+My preference seems to be unpopular, so I've adjusted my reviews.
 
-If this returns ...
-
-> +		}
-> +		chan->mode =3D SUN8I_PWM_MODE_NONE;
-> +	}
-> +
-> +	ret =3D devm_of_clk_add_hw_provider(dev, sun8i_pwm_of_clk_get, sun8i_ch=
-ip);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Failed to add HW clock provider\n");
-
-... or this returns ...
-
-> +
-> +	ret =3D devm_add_action_or_reset(dev, sun8i_pwm_unregister_clk,
-> +				       sun8i_chip->clk_pdata->hw_data);
-
-... the clk_hw registered in sun8i_pwm_init_clocks() are never cleaned
-up, so this devres action should be set up right after
-sun8i_pwm_init_clocks().
-
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Failed to add devm action\n");
-> +
-> +	/* Deassert reset */
-> +	sun8i_chip->rst =3D devm_reset_control_get_shared_deasserted(dev, NULL)=
-;
-
-rst is never used again. It should be a local variable.
-
-> +	if (IS_ERR(sun8i_chip->rst))
-> +		return dev_err_probe(dev, PTR_ERR(sun8i_chip->rst),
-> +				     "Failed to get reset control\n");
-> +
-> +	ret =3D devm_pwmchip_add(dev, chip);
-> +	if (ret < 0)
-> +		return dev_err_probe(dev, ret, "Failed to add PWM chip\n");
-> +
-> +	platform_set_drvdata(pdev, chip);
-> +
-> +	return 0;
-> +}
-
-regards
-Philipp
+- Julian Braha
 
