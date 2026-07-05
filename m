@@ -1,155 +1,257 @@
-Return-Path: <linux-pwm+bounces-9576-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9578-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id WoaTKkh1SmrrDQEAu9opvQ
-	(envelope-from <linux-pwm+bounces-9576-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Sun, 05 Jul 2026 17:16:24 +0200
+	id NvCiFBiKSmoIEgEAu9opvQ
+	(envelope-from <linux-pwm+bounces-9578-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Sun, 05 Jul 2026 18:45:12 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 0153A70A708
-	for <lists+linux-pwm@lfdr.de>; Sun, 05 Jul 2026 17:16:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 7F29870A9B2
+	for <lists+linux-pwm@lfdr.de>; Sun, 05 Jul 2026 18:45:11 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=baylibre.com header.s=google header.b=ogDYoaBk;
-	dmarc=none;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9576-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9576-lists+linux-pwm=lfdr.de@vger.kernel.org";
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	dkim=pass header.d=garyguo.net header.s=selector1 header.b=lnX6bjPk;
+	dmarc=pass (policy=none) header.from=garyguo.net;
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9578-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9578-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D442E300D6BF
-	for <lists+linux-pwm@lfdr.de>; Sun,  5 Jul 2026 15:14:48 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 079B6300614F
+	for <lists+linux-pwm@lfdr.de>; Sun,  5 Jul 2026 16:45:10 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 7130738A72B;
-	Sun,  5 Jul 2026 15:14:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9DFAD3002B3;
+	Sun,  5 Jul 2026 16:45:09 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from LO2P265CU024.outbound.protection.outlook.com (mail-uksouthazon11021095.outbound.protection.outlook.com [52.101.95.95])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D19A73812EC
-	for <linux-pwm@vger.kernel.org>; Sun,  5 Jul 2026 15:14:45 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783264487; cv=none; b=ffQkcYIA3zJHtQxNyFsAGV4V58PKX0rb5S0yFTZjgDGFAY9ub+ECm0mASuEd7pBJpEn7AH9jXU60mkSaErHxCDXe0aRSyz7L5YDrNXz77PCs9uu/uATM+fC/loA4TtO4NG2EqQRjzyHqlcoqpmsZ8mgJ11/JXzV4tgOsZ9txMME=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783264487; c=relaxed/simple;
-	bh=nQg1zr12uErvKfv4CjdDXREaeCl7UBYzwGESaPAzRn4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=UqFMQpJf3m2ShaFkC6ejWksvh79Kf/ZSOzgl0867bIHVj1WuSIGkyRlpTxQAZ9b4Hy+Zooh4iZ08bvQnAORbEzVCFqnh9WzTHLmc0TTDiy2njG+UroYCfeyOAOO5eD2VfhFweaMk5So/RRgFHSxXb8t+8sgDtitJJ1S1C4wJytg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=baylibre.com; spf=pass smtp.mailfrom=baylibre.com; dkim=pass (2048-bit key) header.d=baylibre.com header.i=@baylibre.com header.b=ogDYoaBk; arc=none smtp.client-ip=209.85.128.41
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-493c2b3dc8bso14800005e9.2
-        for <linux-pwm@vger.kernel.org>; Sun, 05 Jul 2026 08:14:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre.com; s=google; t=1783264484; x=1783869284; darn=vger.kernel.org;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZR+FvhpeFlO5SaKYOf2iYX9QVp9scXDqtxu7Lek4dW8=;
-        b=ogDYoaBkra1XwFG9xrZbxININzyBH1zkWJqQVzZtJBvvO4j6+8WO93hTE308rYm8JH
-         OCBgtNdE4PSt37uwpp/PRbdmE6MjuypXDHS51ZPRTQ5CKTKYvsXN2mysXO3LoaY/x4H7
-         +lWXKwFg2QnZXQe//yFAy8V2ZaADI1OAK6PaW9ZBZvTmxCfpC9K6BSiwx8v781cJS7Xh
-         bBxbOY8DME+clRHZ7C9z19Xs5qLpkThBdc0LS8aGd7Ca8NhDU1Bgzld2nTdtruUgOqLH
-         synr/mRZPhfDpg9/O+webiS+Mtck5OEFsprztGdfadinqgDeNqCpzzChi2ynP9Yjmz92
-         pcYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20251104; t=1783264484; x=1783869284;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-gg:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ZR+FvhpeFlO5SaKYOf2iYX9QVp9scXDqtxu7Lek4dW8=;
-        b=XjtPKULav9j/HuhL8ytbO/fngK26Bwq9bKWNkk8fAWcKwpKuaXKAGkrz2EqleNk7D3
-         Gp46goa6H+9ipupdzP6WT4sTOcQ2SGWOJb2TQGLVQoc9Q508BWoSrL2RDI7PcnqWqFoO
-         74HK9aOtmUxfkeRhOxbAHyBwVPbByxtqOi3r73vqz61g2s/pgjVZtIS/XbytPSvel/ii
-         cQkbc24KC8Oqn2Qq+7bs2PsB0EwE+3T3at8lp9zW+BQjlb5BpJr+lQd46vkoOmaFg6Hb
-         Xeviv0skAU+9wB5B7w/hDNlpbQbqUuSW9QnBGv9jCINsEjrTY6an34ushwPLa2Qm5A5l
-         +dow==
-X-Gm-Message-State: AOJu0YzLy9j6wRfixaSlLutjVEChfWje68THYRAmLn0n+vFzPaEJ4VGH
-	nv2xKMVHtrntN5k4XJ7otmKwxanS4FJYU5KVibo3sjxqrxT2skrSYvtwfm3BI4hZftqFGRNRImL
-	blkWl
-X-Gm-Gg: AfdE7cmrTW4dJiio841gA+UN01IpqSGZTpiyKS8uBFFkSNSpkgrxv3t7AnnyZ88zR3a
-	HFE6cTFy/zoGchrrEcOc5G27FqTfM3wEBvNZZ0cTWIl93S+9LSR/R7CiVR5pRdOncibjKVu01W+
-	l9KavZl6nLkDZqT3EGTksvS3AnpXocclp9GfwtVRguNuBoH8Ry0k0LEVaicGFDg9epGUq+sKXEn
-	CgV720ntFDhpjRl3s6Mg2ve1qXHjsEPFir8JhnCpeqQWlp9xeVFYLqpgzhx8Ew6JGilfU86RH3Q
-	NqOGTckL3Lc234cl+rNr43QzQwDeTMf/qqZNwksPR8UO5eKGe30Q5QjiXKvJTvIFBSRj0rcIIqQ
-	vmYR+K++uOj81joouis0YTK1HvH6iPcBVCO26/nP1C8BPU04zStzpM8/UixgeE6BEsNWHhBMWpu
-	8+4OTsBY5Ei3FDpocJXg==
-X-Received: by 2002:a05:600c:3f0a:b0:492:4a50:41fe with SMTP id 5b1f17b1804b1-493d11f05a3mr78159155e9.22.1783264484228;
-        Sun, 05 Jul 2026 08:14:44 -0700 (PDT)
-Received: from localhost ([2a02:8071:56d1:2de0:1d24:d58d:2b65:c291])
-        by smtp.gmail.com with UTF8SMTPSA id 5b1f17b1804b1-493c6375764sm261922565e9.5.2026.07.05.08.14.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 05 Jul 2026 08:14:43 -0700 (PDT)
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig=20=28The=20Capable=20Hub=29?= <u.kleine-koenig@baylibre.com>
-To: linux-pwm@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Subject: [PATCH v1 5/5] pwm: lpss-pci: Unify coding style of pci_device_id array
-Date: Sun,  5 Jul 2026 17:14:17 +0200
-Message-ID:  <235336ce4e90ca7568303119b6f09fb77adca45c.1783263835.git.ukleinek@kernel.org>
-X-Mailer: git-send-email 2.55.0.11.g153666a7d9bb
-In-Reply-To: <cover.1783263835.git.ukleinek@kernel.org>
-References: <cover.1783263835.git.ukleinek@kernel.org>
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7AF72FE071;
+	Sun,  5 Jul 2026 16:45:07 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783269909; cv=fail; b=Q+HMmyCybR610Gw6/VexDtSUGh+MQM3D4qgq9kw3BEP+C9XE24F5CUnRq0/9hsDPofJSxZGOkB2t2n2oKsjix3ApH2yqEC4zLd8lwZEvKANGdQun3SaRPflFoaIkqoeobRFNPVXVlYCF0ojNyI7APGftkgGzDxFkAgKQAAz5SzE=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783269909; c=relaxed/simple;
+	bh=rqGf6nJ0fEVcmtr4+GEUj1i5pIF7PGqQcnrus6yaoB8=;
+	h=Content-Type:Date:Message-Id:Subject:From:To:Cc:References:
+	 In-Reply-To:MIME-Version; b=cbylde8n0yBBOiNfFzwdmqBJp5mShvmSLpCD0xo8SdOiL5Xpiqh5yH2hRww5GQz7ha4X2ePqDBclt3kacWLe1e3k9qfAiCQ97G3fFPzZdBTgKT4pIbz0ygnC4w04SN5juuJ1hQhXs3eCYjlnAO/u3BWlQayTv06ays2qAFVToOM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=lnX6bjPk; arc=fail smtp.client-ip=52.101.95.95
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=whg7R14qc0jI9T+oCz2muwPeNL7v/Baetutg9ZPrnMhCtsUd7CXWWuTywpNqK0axmwrckESU9Nd9Ecnz54CV3qOgDucOMpUvg/zc7Hp8QGwXaX0kdcXQnbiQUUJAoCHS1kAm5KZNHl4iLdu0sGUjkgym1V+mSAWhIGbsp2RivChRRcV21oLMBQq2pjouNKG8uYRD2JQkUIG7yVJpmixJd4VcKvp3Mzlei860+2cBf2FkRO2XbJemYV3kC0KYOyUlpeX0QxLrjwM3gwkue9xD3UTOLjiJ8vXt/Nq+7A1cl7qtbF1IsdGb7iU3NR4FEE8JgRp6NqBUjzuc2UuOjB7G8g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=l8Sdi+Mjyw7Bgzq7oGaLUd1mt6x4rF27k9S4N9IJzSQ=;
+ b=NESekU8p4q0hLsBp2JfXVuB8T2iW3MivC8xD/x7495dd1nnHZPeYUUWZjcEwOIPPZLLOWHKp1wTzb4QBEulb+Ep+/zDkTcjlnTq0u8l0XbZJzZOwE5U6BbPCpycvHk568xHnvfAKO4q9+6zcBog5RWWE1DH5nAO6mw4AnPFQfhYlft0n1jyZwU4KQlUc5UypZseEyiVeSOMZ3LUcm/lpTQjoAFm6E/6iQy5kYrY4Ex2Je3HvZ51h+F5Dq47vrquLqn7EXb2Y+Gy8hYTzarPuj92IAy/vXH0YWqYLgWGs2IkgkQX0ION4LiwviHwn90Ln0JM7H9j3viFxY6dk1MYdrA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=garyguo.net; dmarc=pass action=none header.from=garyguo.net;
+ dkim=pass header.d=garyguo.net; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garyguo.net;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=l8Sdi+Mjyw7Bgzq7oGaLUd1mt6x4rF27k9S4N9IJzSQ=;
+ b=lnX6bjPkLyV5fTFbtwD5/dXfYCxW1CWWi/DvaOOKZjunvRLxnwoxIL0gp0Hw1PXXgaeoVA4HIcTtgDieN6sk7P97HO781iSoOocEup9GcqNuSl+D+AvBuQpqIIexUbNa7zuu9C8jYr7xun+Kl4E3JN7Bw61jm3GEDS3GBfS1f/I=
+Received: from LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:488::16)
+ by LO7P265MB7479.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:41b::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.10; Sun, 5 Jul
+ 2026 16:45:04 +0000
+Received: from LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::1c3:ceba:21b4:9986]) by LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
+ ([fe80::1c3:ceba:21b4:9986%4]) with mapi id 15.21.0181.008; Sun, 5 Jul 2026
+ 16:45:04 +0000
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Date: Sun, 05 Jul 2026 17:45:03 +0100
+Message-Id: <DJQSF84B204K.3KVYKIRG35SY3@garyguo.net>
+Subject: Re: [PATCH v5 02/20] rust: io: add missing safety requirement in
+ `IoCapable` methods
+From: "Gary Guo" <gary@garyguo.net>
+To: "Alexandre Courbot" <acourbot@nvidia.com>, "Gary Guo" <gary@garyguo.net>
+Cc: "Alice Ryhl" <aliceryhl@google.com>, "Daniel Almeida"
+ <daniel.almeida@collabora.com>, "Greg Kroah-Hartman"
+ <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
+ "Miguel Ojeda" <ojeda@kernel.org>, "Boqun Feng" <boqun@kernel.org>,
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
+ <lossin@kernel.org>, "Andreas Hindborg" <a.hindborg@kernel.org>, "Trevor
+ Gross" <tmgross@umich.edu>, "Tamir Duberstein" <tamird@kernel.org>,
+ =?utf-8?q?Onur_=C3=96zkan?= <work@onurozkan.dev>, "Bjorn Helgaas"
+ <bhelgaas@google.com>, =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
+ <kwilczynski@kernel.org>, "Abdiel Janulgue" <abdiel.janulgue@gmail.com>,
+ "Robin Murphy" <robin.murphy@arm.com>, "David Airlie" <airlied@gmail.com>,
+ "Simona Vetter" <simona@ffwll.ch>, "Michal Wilczynski"
+ <m.wilczynski@samsung.com>, =?utf-8?q?Uwe_Kleine-K=C3=B6nig?=
+ <ukleinek@kernel.org>, "Danilo Krummrich" <dakr@kernel.org>,
+ <driver-core@lists.linux.dev>, <rust-for-linux@vger.kernel.org>,
+ <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+ <nova-gpu@lists.linux.dev>, <dri-devel@lists.freedesktop.org>,
+ <linux-pwm@vger.kernel.org>
+X-Mailer: aerc 0.21.0
+References: <20260626-io_projection-v5-0-d0961471ae50@garyguo.net>
+ <20260626-io_projection-v5-2-d0961471ae50@garyguo.net>
+ <DJOLKP1V1IDU.1GWHOHBG9CS7@nvidia.com>
+ <DJOXUW6ODKCI.1GLNDU00TDJWU@garyguo.net>
+ <DJOYL5QPEM76.1N99BVDVHB8VS@nvidia.com>
+ <DJOZFG9XDNYV.1Z0BXKIODDTAF@garyguo.net>
+ <DJQOWA2VOJ3G.2YGSYJGK7HPBJ@nvidia.com>
+In-Reply-To: <DJQOWA2VOJ3G.2YGSYJGK7HPBJ@nvidia.com>
+X-ClientProxiedBy: LO4P265CA0068.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:2af::22) To LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
+ (2603:10a6:600:488::16)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-Developer-Signature: v=1; a=openpgp-sha256; l=831; i=u.kleine-koenig@baylibre.com; h=from:subject:message-id; bh=nQg1zr12uErvKfv4CjdDXREaeCl7UBYzwGESaPAzRn4=; b=owEBbQGS/pANAwAKAY+A+1h9Ev5OAcsmYgBqSnTQLaAQ+HEQsKe6Q9v7PL5+x9pFoh1nC1A39 ouGGGlZcNuJATMEAAEKAB0WIQQ/gaxpOnoeWYmt/tOPgPtYfRL+TgUCakp00AAKCRCPgPtYfRL+ TjftB/9s37AzFwHzRAqPwyPcZJ78oUkQOpe5Dx0egx8NuexeN7ZqK1N8fODflFWr6LkI8QHfGqC YdLKySy4ba6aZlK4IZTNEP3Su2L7M2LAqZ4v9VGb9rtiAEvVvgiVGZ0y9kHvLO/vPd56M1XmVuz 5HLuzfgEdg+QJeHvszuyjJAvk5so+a4GXa4DzaWM46x+ogvxbj7H7IuWSvtVhq0tNFJba0+Hyqe LUMOWibUc7h5eSCk/NZ0uhEcHUxPwL4jphQT0+jirQR4aoQAJniGebgcU32dQS6baCo+ydL+bTy ndx8jiDkAyMBoNUV6QGd6up+ELxZxA1VCrAijJqGNONgU3Cw
-X-Developer-Key: i=u.kleine-koenig@baylibre.com; a=openpgp; fpr=0D2511F322BFAB1C1580266BE2DCDD9132669BD6
-Content-Transfer-Encoding: 8bit
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: LOVP265MB8871:EE_|LO7P265MB7479:EE_
+X-MS-Office365-Filtering-Correlation-Id: 861e1c19-e0af-477e-4c92-08dedab4c35c
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam:
+	BCL:0;ARA:13230040|376014|23010399003|7416014|10070799003|1800799024|366016|4143699003|56012099006|22082099003|18002099003;
+X-Microsoft-Antispam-Message-Info:
+	EZ77z2F866ilvDrW9Tb9xCYy5y9eZJiaHJcXN7lsQWVejHg+zcxoCl1Z+D+HsB9FfoWKY2YlKj3Vf4JHnCfY4tCATFVG1LfLTxzGUm9svcrvW4CxF7BmSUwRtHD+dDXv8WXLfUaRfziwrCrGyDZjHPg9PzsHGxjjYilRVjxDk1EKudFa9bnexaudF/bCBM0ltktiH/lkpZyNmmP8yiSbmjTF+my+d/Z0j0z/ddDZ2s+67APwlUHhPXed5grXbCNqQOK+h/UFpqsGNlxkxVxd/C3IzlYMFKCG8BSOI55XqzwDLwzmUI1BxP+guwwyVYWOIDrn2iwioTRgxBOB3kTKeHZSF1nV5BQrzmDl534zNqUD3PbQwQV4nenYCQLGW0CXIuR5MhlCVJPrpGK9mu5ltYwbftCRXL2MQSFHHsY9QciOqW6B8g2ofHrTV+9xX/tMGKFLhkddk2uNCxvS+8nWrZZ2vH9eZg7paoBPaM4lv/spUwC/IlDj/z3P7nDJ2oIXUXU1RiDEpFr1sAVXkdtARBneMXn0jaskISZ/R3Y69WFlbq4eN075fiSNXxXHS0ZFWlr89CpDQf5A4PX1ZiCg04Qy3zwqBas0WaXxWAutyng=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(376014)(23010399003)(7416014)(10070799003)(1800799024)(366016)(4143699003)(56012099006)(22082099003)(18002099003);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?SlZwcUxQTEtaN1M2Q1pqK00weStRMWk5TXE2OEJNcjlhSjhQc3BRb0x1Nzlt?=
+ =?utf-8?B?WkdnVWREOURzT2tXeUNTV2hjTDJmZ2VYaWFtSFptVG9rZ3JJWGQ1Q3FFdWlR?=
+ =?utf-8?B?NlBVZ3ZhU2c2ZGI2SWdMQ2VrRnV5MVRPTE5MK2JDdGNTd2JtZ2RpQTZzVWZ3?=
+ =?utf-8?B?T2JPYWtXN2JCWFlJQlB1akNDU2x0amF0STZLOVIxTlNUeTRCZXAra0NPK1Yx?=
+ =?utf-8?B?TDczYm0vM0syNkp5eTJSdFBQb2lDSlpCa2FMRFR2aE9CakhVQXdmb2krZUlX?=
+ =?utf-8?B?U3FQVDVrY2RPYUtvUEFRcVUyZ2NuNVV1OEpqZjgrYXJqYWh6NzVja0hlTnoy?=
+ =?utf-8?B?cERyTlhBYlF3M0dubWFNUWZLaHlXRWIxZWFpdmJlQU9lYVhpakhkVUJDU3ZZ?=
+ =?utf-8?B?ZU12KzMzV0dZRUg1d01ETXE1VW0xaVdFdXpKcVcyc0dvakd3T0FtZ1ZEODNz?=
+ =?utf-8?B?Zm5JTDZGendPT29XWjdsY0RhYWVWSWxla29aN1Z6MlRiQjNsd1REMC9ES252?=
+ =?utf-8?B?Y1hzdDU2bmJkM0xQNGd5bHdKMk5Ld2pKeXRZVU5TM2pHelV2LytmS1k3S3BT?=
+ =?utf-8?B?dmgwajdVVThsUFlQZU1pS3dOSE1Va0NYWHBQTXRIdGdiZklqcnE0bEVUWGVI?=
+ =?utf-8?B?SEtWUUJRdStBRXdMTHJXblRxRFQ0bEdMRWNTTklWUjF3MHpMbFU0VURnTVRE?=
+ =?utf-8?B?WTZ0K0pwK053ZmFVYnNzVkdDdERJa3diRW5pRlMrd05lWGhUNGVZRFRWcGp6?=
+ =?utf-8?B?VWtVSCtNcEdlS3VuU2lIZWRXdlYvanBHUVZWVENQTmU2bkVJc21IbkxXQUMx?=
+ =?utf-8?B?QzBCQzBJZ2pDYzhlOGtqMW5ldTZ0bjFHODhHN2psczh1WFpVMlpiSUUxMTlq?=
+ =?utf-8?B?cVFtbWlaSjZ4b2c1NWVPVUlPRVIwdm1kenpjTDhwd1lvNDRza2pkc0kzajBT?=
+ =?utf-8?B?MFo5VktxQlJLOUQrdjFPbFFGZU9xRUN4aC9xUTdCSzc0ckZuN3NnQy9qZktm?=
+ =?utf-8?B?RXZCZWRuRGxvbWtkT2NLMVhhR1JOdHBHclJMVUxRdUd4a1llclRZeTFmMkFa?=
+ =?utf-8?B?VU9IUkNhcC8zc2kyRjk3ZW53aXMveTE5NDZFQkEramdscTBvMDlnK05vMm1K?=
+ =?utf-8?B?dExRQnRlKzlaRDFlWVR3cGphZVF1dTJwcmZaZ29OK3RCV2YxWkp0TWlsOEpG?=
+ =?utf-8?B?YzlYZWMyUW1GTW5qUW41cWJrdjFZVjBTM1UydXFuM1RkNU94czBlTmd4Y1h3?=
+ =?utf-8?B?VWhTdDlmVHFkNEluY2RXZXRvaWV1M0daaGhpZTVtWjVkL1p0OEtxa3gzQVAw?=
+ =?utf-8?B?VTczSUp1V2Q0VlBpNmp6ZDNJVGVvS052cUc1Nk5tZGUxOGoxSUh4eEJjNkQ4?=
+ =?utf-8?B?NEFOcnhUZkUrZkozVk03dnpxRnI3UHV1ZFI4bTNrMWovYXZ2cGtHSmplS1RI?=
+ =?utf-8?B?anBjOE9NTTNIZUhwaXBqdWlGMGZmTEIwbEE0cjdTQjNzVU1vS2dRQmsyOVQ2?=
+ =?utf-8?B?eEttU1pMMlp3aGVQOUtja1AxY3ppSjFMWkRuT2Z0TzdPRVVxMENPOGJHOVhn?=
+ =?utf-8?B?RXdqdE83ZkdqaVRzWS9JV1V3Z3phaGxTVXZQTTFIYitwa1hGYzJWOXV2L09S?=
+ =?utf-8?B?bHV2YklwZ3NIOXplbXlMUTlVb3NyeDliak1IcDdiaWx1a00yR0J4ZEdIQ1Bm?=
+ =?utf-8?B?ZEVuS2NKK2VMamVLMWw2dWQ4Ui9HL3Z2a01VMmJ4Q2ZYWVBhd3gxbTFLdlU2?=
+ =?utf-8?B?TXhMS2hLS1g2TjhoS2cwdEpDeG55UDlzVjFwS3ZYamNabWlJMjN3ekFuTUZI?=
+ =?utf-8?B?RFhiZGhyRDUwQ2k4OUFyK3h6aTYxdExnUmZtelJqQXpib0FiRTBHSnFGanVy?=
+ =?utf-8?B?eXJmdWR3c2lyU2lUejhUS21QRlhrMG84YmlpY1JaSFBiWE10SktQT2djL1lR?=
+ =?utf-8?B?ZVRncVNkVy95MzRpaC8wK1RkY0h3R1FVcGxBYjhLUVd4SG1yaUJKN3BvZ3JI?=
+ =?utf-8?B?Z0Q4TFFDZGJ2c1ZSWURZR3lsdFIvTm1JLzlIRGlQWUtTNDh5aE00d3dhL1Jo?=
+ =?utf-8?B?cm9xTVRSdmhkVmJVNXh6c05UQ1ZDa0JtdmRBd0dNQXhlcjV6Z2pkWUZURHlC?=
+ =?utf-8?B?cFQ0ZEY4UWRiTmRBQmVhR3M3NDB6Ung0ZW9VZ3RFWXdCTkNvalJOMTJuY0Mw?=
+ =?utf-8?B?S0ljSjBURHVpS2JiVmFHZWFkaVJjYk5GaEttUEdHQnpjZ3Y5aG9icVdxOTJw?=
+ =?utf-8?B?eXJTaGZjVHRwVU45WG9IQlJ5QXdiWlZHQjdyZlpRbk1ZSTVOVjdsdzdMSFRK?=
+ =?utf-8?B?U1Q4Ui9zMnRSRlF6SzVMQ3VsY29rZW9oRUNNeGtzTmFYYVpQaG9GUT09?=
+X-OriginatorOrg: garyguo.net
+X-MS-Exchange-CrossTenant-Network-Message-Id: 861e1c19-e0af-477e-4c92-08dedab4c35c
+X-MS-Exchange-CrossTenant-AuthSource: LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Jul 2026 16:45:04.0520
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: bbc898ad-b10f-4e10-8552-d9377b823d45
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: ywR9br1V2Xz9CUURa2iMCr85snfXtjcROvkxKwqcvMRJRNgSV2ez9+ocyOOee+nRyWZELXQ8zsgs7niRSgMMlw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO7P265MB7479
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-1.66 / 15.00];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+X-Spamd-Result: default: False [1.34 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_REJECT(1.00)[cv is fail on i=2];
+	DMARC_POLICY_ALLOW(-0.50)[garyguo.net,none];
+	R_DKIM_ALLOW(-0.20)[garyguo.net:s=selector1];
 	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[baylibre.com:s=google];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	TAGGED_FROM(0.00)[bounces-9578-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:linux-pwm@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	RCPT_COUNT_TWO(0.00)[2];
-	RECEIVED_HELO_LOCALHOST(0.00)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	TAGGED_FROM(0.00)[bounces-9576-lists,linux-pwm=lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	DMARC_NA(0.00)[baylibre.com];
-	FORGED_SENDER(0.00)[u.kleine-koenig@baylibre.com,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[baylibre.com:+];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	FORGED_SENDER(0.00)[gary@garyguo.net,linux-pwm@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[30];
+	FORGED_RECIPIENTS(0.00)[m:acourbot@nvidia.com,m:gary@garyguo.net,m:aliceryhl@google.com,m:daniel.almeida@collabora.com,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:ojeda@kernel.org,m:boqun@kernel.org,m:bjorn3_gh@protonmail.com,m:lossin@kernel.org,m:a.hindborg@kernel.org,m:tmgross@umich.edu,m:tamird@kernel.org,m:work@onurozkan.dev,m:bhelgaas@google.com,m:kwilczynski@kernel.org,m:abdiel.janulgue@gmail.com,m:robin.murphy@arm.com,m:airlied@gmail.com,m:simona@ffwll.ch,m:m.wilczynski@samsung.com,m:ukleinek@kernel.org,m:dakr@kernel.org,m:driver-core@lists.linux.dev,m:rust-for-linux@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-pci@vger.kernel.org,m:nova-gpu@lists.linux.dev,m:dri-devel@lists.freedesktop.org,m:linux-pwm@vger.kernel.org,m:abdieljanulgue@gmail.com,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[u.kleine-koenig@baylibre.com,linux-pwm@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FREEMAIL_CC(0.00)[google.com,collabora.com,linuxfoundation.org,kernel.org,protonmail.com,umich.edu,onurozkan.dev,gmail.com,arm.com,ffwll.ch,samsung.com,lists.linux.dev,vger.kernel.org,lists.freedesktop.org];
+	DKIM_TRACE(0.00)[garyguo.net:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[gary@garyguo.net,linux-pwm@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	TO_DN_NONE(0.00)[];
-	TAGGED_RCPT(0.00)[linux-pwm];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[baylibre.com:from_mime,baylibre.com:email,baylibre.com:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	MID_RHS_MATCH_FROM(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	TAGGED_RCPT(0.00)[linux-pwm];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,nvidia.com:email,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 0153A70A708
+X-Rspamd-Queue-Id: 7F29870A9B2
 
-Don't use a comma after an array terminator.
+On Sun Jul 5, 2026 at 2:59 PM BST, Alexandre Courbot wrote:
+> On Fri Jul 3, 2026 at 10:49 PM JST, Gary Guo wrote:
+>> On Fri Jul 3, 2026 at 2:09 PM BST, Alexandre Courbot wrote:
+>>> On Fri Jul 3, 2026 at 9:35 PM JST, Gary Guo wrote:
+>>>> On Fri Jul 3, 2026 at 3:57 AM BST, Alexandre Courbot wrote:
+>>>>> On Fri Jun 26, 2026 at 11:45 PM JST, Gary Guo wrote:
+>>>>> <...>
+>>>>>> @@ -309,7 +312,11 @@ pub trait Io {
+>>>>>>      // Always inline to optimize out error path of `build_assert`.
+>>>>>>      #[inline(always)]
+>>>>>>      fn io_addr_assert<U>(&self, offset: usize) -> usize {
+>>>>>> -        build_assert!(offset_valid::<U>(offset, Self::Target::MIN_S=
+IZE));
+>>>>>> +        // We cannot check alignment with `offset_valid` using `sel=
+f.addr()`. So set 0 for it and
+>>>>>> +        // ensure alignment by checking that the alignment of `U` i=
+s smaller or equal to the
+>>>>>> +        // alignment of `Self::Target`.
+>>>>>> +        const_assert!(Alignment::of::<U>().as_usize() <=3D Self::Ta=
+rget::MIN_ALIGN.as_usize());
+>>>>>
+>>>>> With `Region::MIN_ALIGN` being `4`, my understanding is that this wil=
+l
+>>>>> make `read64` and other infallible 64-bit accessors unusable on untyp=
+ed
+>>>>> I/O regions?
+>>>>
+>>>> That's correct.
+>>>
+>>> Isn't that a limitation we may want to eventually address? The fallible
+>>> accessors are still usable, but it seems arbitrary that the non-fallibl=
+e
+>>> ones stop at 32 bits...
+>>
+>> It'd probably be solved by having typed regions. 32-bit is the most comm=
+on
+>> alignment for I/O memory, so that's chosen.
+>>
+>> None of the existing Rust drivers require 64-bit accessors yet.
+>
+> Mmm I'd like to see whether we can't make it work for untyped regions as
+> well, but since we don't have many users (nor do we expect many to come
+> I guess) this can be a follow-up.
+>
+> Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
 
-Signed-off-by: Uwe Kleine-König (The Capable Hub) <u.kleine-koenig@baylibre.com>
----
- drivers/pwm/pwm-lpss-pci.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+See https://rust-for-linux.zulipchat.com/#narrow/channel/288089-General/top=
+ic/Generic.20I.2FO.20backends/near/601402429
 
-diff --git a/drivers/pwm/pwm-lpss-pci.c b/drivers/pwm/pwm-lpss-pci.c
-index 3a0fd6593520..bcbfda1a6624 100644
---- a/drivers/pwm/pwm-lpss-pci.c
-+++ b/drivers/pwm/pwm-lpss-pci.c
-@@ -57,7 +57,7 @@ static const struct pci_device_id pwm_lpss_pci_ids[] = {
- 	{ PCI_VDEVICE(INTEL, 0x2289), .driver_data = (unsigned long)&pwm_lpss_bsw_info },
- 	{ PCI_VDEVICE(INTEL, 0x31c8), .driver_data = (unsigned long)&pwm_lpss_bxt_info },
- 	{ PCI_VDEVICE(INTEL, 0x5ac8), .driver_data = (unsigned long)&pwm_lpss_bxt_info },
--	{ },
-+	{ }
- };
- MODULE_DEVICE_TABLE(pci, pwm_lpss_pci_ids);
- 
--- 
-2.55.0.11.g153666a7d9bb
+However, I'd prefer we eventually use typed regions.
 
+Best,
+Gary
 
