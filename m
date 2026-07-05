@@ -1,53 +1,52 @@
-Return-Path: <linux-pwm+bounces-9564-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9565-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 8YqtCqtZSmqUBgEAu9opvQ
-	(envelope-from <linux-pwm+bounces-9564-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Sun, 05 Jul 2026 15:18:35 +0200
+	id NnpJMr9ZSmqdBgEAu9opvQ
+	(envelope-from <linux-pwm+bounces-9565-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Sun, 05 Jul 2026 15:18:55 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
 Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id DD19370A0E4
-	for <lists+linux-pwm@lfdr.de>; Sun, 05 Jul 2026 15:18:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 9B8B170A102
+	for <lists+linux-pwm@lfdr.de>; Sun, 05 Jul 2026 15:18:55 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=cyberchaos.dev header.s=mail header.b=slVSOrn4;
+	dkim=pass header.d=cyberchaos.dev header.s=mail header.b=xzH47AYA;
 	dmarc=pass (policy=reject) header.from=cyberchaos.dev;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9564-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9564-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9565-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9565-lists+linux-pwm=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 2D77930117B6
-	for <lists+linux-pwm@lfdr.de>; Sun,  5 Jul 2026 13:18:07 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id DD7E030174E9
+	for <lists+linux-pwm@lfdr.de>; Sun,  5 Jul 2026 13:18:16 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 97A73383990;
-	Sun,  5 Jul 2026 13:17:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8D44A3845BD;
+	Sun,  5 Jul 2026 13:17:39 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from mail.cyberchaos.dev (mail.cyberchaos.dev [195.39.247.168])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7680381AE7;
-	Sun,  5 Jul 2026 13:17:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCCA43822B5;
+	Sun,  5 Jul 2026 13:17:37 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783257458; cv=none; b=i0HMwX1jYBMmPVUXmY56Na4zRW+LQHiBIneSeDPPgO/VFdlRNb/UUFzPA3SVYcXyCnc/MA46MPoRQ1JUnDgawnDOcLqGVeL52uZxfcMbB9bCzTQWim5sMVKXG8F/vI8VdwNbWyuEGs0Aqir1m/AtAwHwLRt5dOB405jKKgSJf+Q=
+	t=1783257459; cv=none; b=LxkUFqcA6kRggoOoJ99kXEOMWpTLWHGoHOsDpYSkVxhZKwVKWGsot6rstTl5vMwt8OXnD1zaLgGVH91pyVsTt5Em/XVMF76bivkd4T4/B+LdTm/uMO3jGDTLAK90xNba+x0+IjpgX1GQwOitigq/fMSCCeTWRfrC6HBazEdpq+o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783257458; c=relaxed/simple;
-	bh=D7Uyn7qmz7QETRTMV2mSIs6n9h1PEV3+JIsiEdj7+fg=;
+	s=arc-20240116; t=1783257459; c=relaxed/simple;
+	bh=5NqD8PAadPFVOVwmwilQ9wbqdH3b+LHheQ4/rFFXBpY=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IXICN5hBlo+VZM5IEBYcIJDocVmFIoWFq4gWvnfiaDiLo/gwv9eYfw/d2+s9LJ7OJt5SYoHYm1VoYwImZYOmHouIK5y7Nd76WxP5IaiMqsIMnu45R9yEBpDk4m2JQegBOgPqvB5eNojfFgwyyc45Acl4JRpQRpsSNFdcufMhLlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyberchaos.dev; spf=pass smtp.mailfrom=cyberchaos.dev; dkim=pass (1024-bit key) header.d=cyberchaos.dev header.i=@cyberchaos.dev header.b=slVSOrn4; arc=none smtp.client-ip=195.39.247.168
+	 In-Reply-To:To:Cc; b=sY2k6ZcvlrLEqS4TcmRKEYXx0gFZuoICqg7QfU36Zd8TNqKwvB8FH+VFJ7hnL9ezddGNTeweRvQLV56eS6XCn4+wnnlDo7eDYoHNHlAOGVg3fWUErFiiEZZDVpvlfmD5MYdiUTIoyBSubxVUhbIZqXW/1IGtMf38/nau6+0VwY4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=cyberchaos.dev; spf=pass smtp.mailfrom=cyberchaos.dev; dkim=pass (1024-bit key) header.d=cyberchaos.dev header.i=@cyberchaos.dev header.b=xzH47AYA; arc=none smtp.client-ip=195.39.247.168
 From: Yureka Lilian <yureka@cyberchaos.dev>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cyberchaos.dev;
-	s=mail; t=1783257455;
+	s=mail; t=1783257456;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Gduy/AtSH7oZHtZSjmD3JijsgUcwsJ67NBS9jh3fBIY=;
-	b=slVSOrn4DLi5tGv93JAAA1cXdJ0gDgl6DiztkQRtY9Cyu4bh33fVT4ZO0t4e+b+HC2ROeL
-	MChlrJXHgVgvtGqZiTPsMsCG+ib5bv6uX4kRuJPa1w7/WyNKDoevGNrttq+DsMY53p8cE5
-	pk50zCDwM3K7bzmZTLVzoqpW/7LlAyM=
-Date: Sun, 05 Jul 2026 15:17:25 +0200
-Subject: [PATCH 06/10] dt-bindings: pinctrl: apple,pinctrl: Add t8132
- compatible
+	bh=idbUQuAKfpIE1TbIv8vahS9BMFuUzHFUu8j1Ytbw+d0=;
+	b=xzH47AYAMfjruc5+0fSYddyGsE7LbsdpMkmeXqA7SMk0dBaup0b/RKSMRexsO5LR9uPuJk
+	ZPC9jygbTWxnomS36PGBNS6Cw3cZizKOPRS/dthYjiyLxgnfHa+kzSKKwtBoQ5SptLg8hr
+	4VZyTuUSnKKwk93yfAzX1qvOf41lqSc=
+Date: Sun, 05 Jul 2026 15:17:26 +0200
+Subject: [PATCH 07/10] dt-bindings: i2c: apple,i2c: Add t8132 compatible
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
@@ -56,7 +55,7 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260705-apple-m4-initial-devicetrees-v1-6-e5655ee56523@cyberchaos.dev>
+Message-Id: <20260705-apple-m4-initial-devicetrees-v1-7-e5655ee56523@cyberchaos.dev>
 References: <20260705-apple-m4-initial-devicetrees-v1-0-e5655ee56523@cyberchaos.dev>
 In-Reply-To: <20260705-apple-m4-initial-devicetrees-v1-0-e5655ee56523@cyberchaos.dev>
 To: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
@@ -86,7 +85,7 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9564-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9565-lists,linux-pwm=lfdr.de];
 	FORGED_RECIPIENTS(0.00)[m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:lpieralisi@kernel.org,m:sven@kernel.org,m:j@jannau.net,m:neal@gompa.dev,m:tglx@kernel.org,m:wim@linux-watchdog.org,m:linux@roeck-us.net,m:marcan@marcan.st,m:linusw@kernel.org,m:kettenis@openbsd.org,m:andi.shyti@kernel.org,m:ukleinek@kernel.org,m:k@chaosmail.tech,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:asahi@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-watchdog@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-i2c@vger.kernel.org,m:linux-pwm@vger.kernel.org,m:yureka@cyberchaos.dev,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[yureka@cyberchaos.dev,linux-pwm@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
@@ -109,29 +108,29 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
 	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,cyberchaos.dev:from_mime,cyberchaos.dev:email,cyberchaos.dev:mid,cyberchaos.dev:dkim,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: DD19370A0E4
+X-Rspamd-Queue-Id: 9B8B170A102
 
-The pin controller on the Apple silicon t8132 (M4) SoC is compatible
-with the existing driver. Add "apple,t8132-pinctrl" as SoC specific
-compatible under "apple,t8103-pinctrl" used by the driver.
+The i2c block on the Apple silicon t8132 (M4) SoC is compatible with the
+existing driver. Add "apple,t8132-i2c" as SoC specific compatible under
+"apple,t8103-i2c" used by the driver.
 
 Signed-off-by: Yureka Lilian <yureka@cyberchaos.dev>
 ---
- Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml | 1 +
+ Documentation/devicetree/bindings/i2c/apple,i2c.yaml | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
-index 41073176bc69..ef106f9326f3 100644
---- a/Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
-+++ b/Documentation/devicetree/bindings/pinctrl/apple,pinctrl.yaml
-@@ -21,6 +21,7 @@ properties:
+diff --git a/Documentation/devicetree/bindings/i2c/apple,i2c.yaml b/Documentation/devicetree/bindings/i2c/apple,i2c.yaml
+index 9e59200ad37b..8ce77258e2e5 100644
+--- a/Documentation/devicetree/bindings/i2c/apple,i2c.yaml
++++ b/Documentation/devicetree/bindings/i2c/apple,i2c.yaml
+@@ -25,6 +25,7 @@ properties:
            - enum:
-               - apple,t6020-pinctrl
-               - apple,t8122-pinctrl
-+              - apple,t8132-pinctrl
-           - const: apple,t8103-pinctrl
+               - apple,t6020-i2c
+               - apple,t8122-i2c
++              - apple,t8132-i2c
+           - const: apple,t8103-i2c
        - items:
-           # Do not add additional SoC to this list.
+           - enum:
 
 -- 
 2.54.0
