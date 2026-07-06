@@ -1,375 +1,282 @@
-Return-Path: <linux-pwm+bounces-9602-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9612-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 4wN4JmyrS2oOYQEAu9opvQ
-	(envelope-from <linux-pwm+bounces-9602-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Mon, 06 Jul 2026 15:19:40 +0200
+	id tJsaJ47dS2qqbgEAu9opvQ
+	(envelope-from <linux-pwm+bounces-9612-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Mon, 06 Jul 2026 18:53:34 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
 Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id EA6427112A2
-	for <lists+linux-pwm@lfdr.de>; Mon, 06 Jul 2026 15:19:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 328D371388A
+	for <lists+linux-pwm@lfdr.de>; Mon, 06 Jul 2026 18:53:34 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=garyguo.net header.s=selector1 header.b=scPapFyr;
-	dmarc=pass (policy=none) header.from=garyguo.net;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9602-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9602-lists+linux-pwm=lfdr.de@vger.kernel.org";
-	arc=reject ("cv is fail on i=2")
+	dkim=pass header.d=collabora.com header.s=zohomail header.b="PT/dVq1Y";
+	dmarc=pass (policy=none) header.from=collabora.com;
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9612-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9612-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 324013576C8F
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 Jul 2026 12:46:54 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 7D03A368BA0A
+	for <lists+linux-pwm@lfdr.de>; Mon,  6 Jul 2026 14:39:00 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A20CC434E2F;
-	Mon,  6 Jul 2026 12:44:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id D86933DDAE0;
+	Mon,  6 Jul 2026 14:38:45 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from CWXP265CU009.outbound.protection.outlook.com (mail-ukwestazon11021091.outbound.protection.outlook.com [52.101.100.91])
+Received: from sender4-op-o11.zoho.com (sender4-op-o11.zoho.com [136.143.188.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E6094314B7;
-	Mon,  6 Jul 2026 12:44:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22EFA3BE17D;
+	Mon,  6 Jul 2026 14:38:43 +0000 (UTC)
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783341888; cv=fail; b=Qft72d7p9lDrByqRyzmuruUvWr8A9/aiJ4UXAumJH4TBOH9cZjnoDJj3NkGJdl7VyOWA8cErvGTIvRbl+yxatVYaXRnl/3h7GM4ciruvSEmivFP5UqToaMn/Ru7PFc0QMrYasxwtc2+/dqJLMCKIm8/CpUu8OdaVChf9vc8lPz0=
+	t=1783348725; cv=pass; b=GCq8akFoI+emSNG2/giQhhn35N/lFNsphlixpdYTJYqhLGqj6N5wVq05TexmtiLUFtca4b3MmYnuSvec1ViCe25jnroyp+crVzfMmkW43DgpbErniZq2e8FMqLft1PkXomxEjYMSNA9Iehb2nyfhkt9MWNxbrAF5RiM76z+2OrA=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783341888; c=relaxed/simple;
-	bh=f40x2uAgYkZFTkSBXEl7NLxZFkKxwyMRylJreq/QsEQ=;
-	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=WNpkAkAjZ0Fu5iacpE+VKm9QGDtJ95+VEao7zG845mwzN6iy7s2zEQiV5yWTb5gKUshsS9LA9jQbQbpOeF4wocQUMlJMBBgLIa7DOJURCpYqqDug17JuiPXHUJAfZkCl4XKUT7GjeWEjjQDQNj/ABB7WZJacuTzu7KK/WqWca7o=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=scPapFyr; arc=fail smtp.client-ip=52.101.100.91
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=LhCRDy7mAzaKL1zJMJdXwpznYaAM16mM8AFqNai3ZnP0l3yGqi2VK3P2dNYaUJ8gDcvPvKw3Rfbm+aiTX4ozlV1gOJxYC15HyPECgisvquOftK34Wto7yHqWScPRpC9xl+tS/Xr+qYR4CYt+WwT0c//ZF95zHUNIE0TXPWR+uaXww9mJEGanCCo1yHwoogbfK8ANWIAOSzscPLDRGYl+MInT6hfZLW9sW83A1rL7SwmCQiecJyV4wtM21sx6ABau7Edu4q9ccnrcHM7tslugU+gx7Fv5Ihj03r866ciDffT52D1UwSFb43Weyrifvh5hMNzahZOK7bluJlB8RlA6+A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=FX3mB9fqNs2fzdtIUwXeB9H7h4f0nVPMqbsdwwZUth8=;
- b=Z+dEbnJMd3gFtZofQ6rnEeypuyHat80rvSfJ36t9xlKlRMU97lWOn4VBOVOP7aaQzrAW6P/JQDHVouT0h+f+2TEXYZtWkx/lEmk8IFKdgHG6Fpew+GUjEvOcQA7DsrF6nn3jVmOebLw0s5/yNDP7uQT9+9UOXSC+aHgBogcT59bbrf+u86IjuknEwrQUQlCJ2c7qM6k3B0+DPdmuBDjP+YtQ5Zz5WIgfhKFoLnNpvXq0uSHuLI13N8ujRf90XqAe5JmlpnvZ8QSW4kvxXDSng8hURp0PYtKuW0xQL0vG4WKElfgQ3izw7nRKYZZ9zpokce9e2MguaA1k/BSwogfYtg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=garyguo.net; dmarc=pass action=none header.from=garyguo.net;
- dkim=pass header.d=garyguo.net; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garyguo.net;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=FX3mB9fqNs2fzdtIUwXeB9H7h4f0nVPMqbsdwwZUth8=;
- b=scPapFyrP4n8vSjeY0vQCupGN3x/4zJ3YEZ4Sc0jHotCikXNPBEu99z3ZF9FirZTrJXx1kHWuwGDAW+T+g6yHKjjGN4YFhlC69lYuXXcMCjBhe4rNXi6fsDxijqesl6LcOKkiUEx91eqHJVMJ0MqVV3TL8lVZ2xHg5Obm9i0cLM=
-Received: from LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:488::16)
- by LO4P265MB6188.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:278::9) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.10; Mon, 6 Jul
- 2026 12:44:33 +0000
-Received: from LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
- ([fe80::1c3:ceba:21b4:9986]) by LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
- ([fe80::1c3:ceba:21b4:9986%4]) with mapi id 15.21.0181.008; Mon, 6 Jul 2026
- 12:44:33 +0000
-From: Gary Guo <gary@garyguo.net>
-Date: Mon, 06 Jul 2026 13:44:33 +0100
-Subject: [PATCH v6 20/20] rust: io: implement `IoSysMap`
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20260706-io_projection-v6-20-72cd5d055d54@garyguo.net>
-References: <20260706-io_projection-v6-0-72cd5d055d54@garyguo.net>
-In-Reply-To: <20260706-io_projection-v6-0-72cd5d055d54@garyguo.net>
-To: Alice Ryhl <aliceryhl@google.com>, 
- Daniel Almeida <daniel.almeida@collabora.com>, 
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>, 
- "Rafael J. Wysocki" <rafael@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
- Boqun Feng <boqun@kernel.org>, Gary Guo <gary@garyguo.net>, 
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
- Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
- Trevor Gross <tmgross@umich.edu>, Tamir Duberstein <tamird@kernel.org>, 
- =?utf-8?q?Onur_=C3=96zkan?= <work@onurozkan.dev>, 
- Bjorn Helgaas <bhelgaas@google.com>, 
- =?utf-8?q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>, 
- Abdiel Janulgue <abdiel.janulgue@gmail.com>, 
- Robin Murphy <robin.murphy@arm.com>, 
- Alexandre Courbot <acourbot@nvidia.com>, David Airlie <airlied@gmail.com>, 
- Simona Vetter <simona@ffwll.ch>, 
- Michal Wilczynski <m.wilczynski@samsung.com>, 
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-Cc: Danilo Krummrich <dakr@kernel.org>, driver-core@lists.linux.dev, 
- rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-pci@vger.kernel.org, nova-gpu@lists.linux.dev, 
- dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org
-X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1783341864; l=5604;
- i=gary@garyguo.net; s=20221204; h=from:subject:message-id;
- bh=f40x2uAgYkZFTkSBXEl7NLxZFkKxwyMRylJreq/QsEQ=;
- b=9Ou0aepdbSz67RBYa+t07D1TYuA2OCtKfvPTgNCuD2Bpidh/xyMMQ2BFkzCZXoopi65PKjdKD
- IuUHVEkPdXTBlDztdvIBReAVoTl0PWQ7fGMVpa5mMusOf3GtzVcUCfc
-X-Developer-Key: i=gary@garyguo.net; a=ed25519;
- pk=vB3uIX95SM4eVrIqo1DWNWKDKD2xzB+yLLLr0yOPYMo=
-X-ClientProxiedBy: LO4P265CA0177.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:312::20) To LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:488::16)
+	s=arc-20240116; t=1783348725; c=relaxed/simple;
+	bh=sMZmaj1YmGIROeZqohwKCCGi8Wvn2wWReeQd18UcWUc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=AIDKzWzAsHypdjHBEijcgKJEQEgsN3qlKl++csZiv2JAADRzkvKDVM5Z1fggSrgQflYnGy1/MDGqqMATGk+ncVwyvCGCCDzi/PQg1UhdZOlbVoZD7+us19/mVN2W40te5zvwevrb0o0z4zm8zMZiK778lozG4dPZO4odLAoyyUo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=PT/dVq1Y; arc=pass smtp.client-ip=136.143.188.11
+ARC-Seal: i=1; a=rsa-sha256; t=1783348654; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=C2vV/Zv8rnqycP3X/i18vOoOF4ItlKiKlXuyEVsdSSztOG0uonFooKFIMu30oIjkAc9JHKtt6+LDDPCwI0lNA6tZzUKjT1q6QFVcauwZZYcG7mUGmyfh+QUb6Ho+wWczeCGu3iQHhee1W9YuG7SmMr2Io3GjfvYP2FAqbZfcd7w=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1783348654; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:MIME-Version:Message-ID:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=3BGnFRvuYHig+06rp+UmmAvcj1kSjosNAxgMkDDKtVc=; 
+	b=PIlDvqQ2NUaeMfP+VfRmShY+BBGSdOn0hlJwav8EhzHt3v7VdurC9jqnnVxCrspPHOZK8jSXNFKbvyNGGWRbswdIGNfC1K8r7stxmULRsrxh3ke3yCunS9fiZJOeMU2WWOCRP86A9tgCDQwDYqgUsLmfMTn9b4OC5a1gYen62vk=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1783348654;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=From:From:Subject:Subject:Date:Date:Message-Id:Message-Id:MIME-Version:Content-Type:Content-Transfer-Encoding:To:To:Cc:Cc:Reply-To;
+	bh=3BGnFRvuYHig+06rp+UmmAvcj1kSjosNAxgMkDDKtVc=;
+	b=PT/dVq1YT2WIilYpgQK6vreaafhwTqD/29rkn1FUwkofb5StCq9wrwMN0cTl6x4L
+	WBSL3cVw0GrGain4ig1lAsFjmh+339IVulIlJqIvNN/qYAT3ZL4VZC+HDFWYxOgkZ/l
+	fcjsjY3YPb1qulruhZwvNoP4vZTq+J5ty8IB1Oc8=
+Received: by mx.zohomail.com with SMTPS id 1783348651535783.6421995425076;
+	Mon, 6 Jul 2026 07:37:31 -0700 (PDT)
+From: Daniel Almeida <daniel.almeida@collabora.com>
+Subject: [PATCH v5 0/4] Clk improvements
+Date: Mon, 06 Jul 2026 11:37:11 -0300
+Message-Id: <20260706-clk-type-state-v5-0-67c5f326a16c@collabora.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LOVP265MB8871:EE_|LO4P265MB6188:EE_
-X-MS-Office365-Filtering-Correlation-Id: 29cd8c6a-efdd-4819-295e-08dedb5c549f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|1800799024|366016|10070799003|376014|7416014|23010399003|22082099003|18002099003|6133799003|5023799004|56012099006|921020;
-X-Microsoft-Antispam-Message-Info:
-	9rotePqCEXRPjyxjsScaBj64tCCoQs0Z+o0W19uhCjpl2QiOxuTTum9Org2jyPGR0s3wRCtKI7MLmE2thM9QoJJIsX9CkWMgzvIN+PU99QslgOmsgJ5ieaPun6eoGo49+81uEWdTMtkR97OfEdeCwWHHVs+1E8dXNSx7FagTgDF5DbTm/ltWW1eSz84l4GrI9SVuUzFwk9g/bCRRZiXNQQdSU/ucuxgl2KXLbqa9xAfV27NSMTUyNUG9nTIuMsyJ0uZTKWzb11adTG0VvKKzQ9BHTU49TegvP3oT0iUkpg2mXb7Aw+Qz4NesVw6ZhJ1h8ZTsVyQ29Ft6PjviJcKm/B2UmAZBu4jmlx7In7KLdBqPN1YuX4VfIRb1C5BNDOfGDG+Ull+hzKjNlG4eDjc4BXUKbeEiN0MGHMb9XreK8fN55Rzxy4j57ytIPZXICTjUn+IHLt+uW2MkcTvwt7eXj+dTD1CWuld95uKYIOqYGCnQMvRlJ/sFMHIrIe8QflpYvoaKNvE8FauO7nVx2I2a5/dkLFBorT82YDg6e5m86I7IAMT1+xa681+G8Tk9RbGWxSCCgNUHy33fcGvJ5/j4+iQPsy6qcNY7WaPY82HJSqY+HbEt8P7iVigBR2hhG12cmiI+v406To6QIxq5NjMSplG7VRlHYSW6cLkNZkVh6h0rv3+1L1tLNDYWPmLCg0MkBo5R4HlkHFFBtOHV1TBw1Q==
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(366016)(10070799003)(376014)(7416014)(23010399003)(22082099003)(18002099003)(6133799003)(5023799004)(56012099006)(921020);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?UUdDTmM4a21HMzB2bHpqNnlHRGMzVFN5aXpzSDJCcmRpTGdRREo4YVNtZENq?=
- =?utf-8?B?REE0MkVqTXY4dDR5QmNLTFZ0UjNIZklzMGs5TFUvdnZYSFo2b3FzNEY0WEZj?=
- =?utf-8?B?Y2Vhb0pUU2Q2YUkwOG13dXlDbk1CSHFUOVMxR3NLVVM1am9UdEYrZHJUNzVy?=
- =?utf-8?B?S3R6V3AzQlJ4MW1KUXM0M3JGZ2NkN1IyVnJ2QTRTSWxNTzdQR0VXTlBmNjJ6?=
- =?utf-8?B?V2xOWS9DQjJkMXloT0l3Z3ZjOVh5cE9mZkYzMWovRm5zbUt6TU8rR25uV2t4?=
- =?utf-8?B?OUt5Vm45M2w5WUxGQ2tGbXJSVDNGd3lJVjlES1dHSGZTN2o3S2p0S2RKczFa?=
- =?utf-8?B?dXVXSGF0blI2QTg2TlNOVldnLzc0R1Jrd042TmhkNnZ4b2hsRzFZaDdjY21S?=
- =?utf-8?B?S3lsNzRPVXUyREtSTzloU2kreWhZNkl0MFdXWE1LaUJHWmc4MENTcnZKd2RF?=
- =?utf-8?B?eGJYQWZ1N0RCQkt3dWJSWXNLajVESUN5QWdCR0w3eDlsajdHWkdIMm10bGUv?=
- =?utf-8?B?YjdlMlAvYkNwZ2g3SUZRdXZMU1ZvRDN1bUxXbk4ybXhQQUY5bmp2clBFUzhZ?=
- =?utf-8?B?WTVJVktuY3dteEtWWnhLaEIyMFRNWjN6ZEpzdVNsdkx0WDkzZEpleE16b2hJ?=
- =?utf-8?B?bUgvMVZIOVlvVXljSE5uYUpqc3VMZ21yWXdOOEE3TnlZZmFRQnpBbHNOSzlT?=
- =?utf-8?B?Q2I5dHRhQmVMa0Q4Ym5NTFFWVWhwZTJmTlJidllSVnlrRWlBOVU1T1JteEFV?=
- =?utf-8?B?L1NsanlZTDdVcUYycTBZbXFMV3hiWWRjRWp4MndBY2huMEpLQmo5cC9DV0kw?=
- =?utf-8?B?MzZaZy81MVpjT25GTlY4aEkrN09aOVJLUHRMdGU0eDB3QmRTenFlVHNmbHNl?=
- =?utf-8?B?RDBhNzFTejRxWkFnREFsVUhSOEdjb1FKbGVyNk0xc3BKbUJxNmcwMXVoRm43?=
- =?utf-8?B?UUdXeW1JSVo2R0pXWkZhc05XM1NSQWF5cVh1azhuUkh4TnVJQ2xHK0hYOHh4?=
- =?utf-8?B?STdiTUxIZnI5cTlJOERKRmlQSmVDbjZaTkZwYzRJVUN3WFdINGRBVldmVi9K?=
- =?utf-8?B?dXJVYUp4QjA4VzczY1c0anVOZzRnc3gyYm5lOUNIdTlvMkpGQURFYm9xbDBq?=
- =?utf-8?B?VmFIbDRLMFlYazI3VldBeEpkbTE1MnlwYkYzNFI0VVhRN2FsVWxxSHc1MHVI?=
- =?utf-8?B?ZHpDdkhwdjZkL3VEaDVwdmlkT3E2bkNCQTBCWVBTZkFHWnBBWGxGNWt5eWJB?=
- =?utf-8?B?YURKdFBSVHphSnpDUjBvL1ZLV1dqV1dPUjQvUlJvbTArcURXTTR5WjI0MEFI?=
- =?utf-8?B?YlNvK2FNc0c5WXBneTdqSXV6MnVCV0xLSDNsdC8za09ib2VxSGdaZTJ2Q0Rw?=
- =?utf-8?B?c0t5Y2k5cUV3WEtyZzBDcGJ4b3JYb0xDY0ZGK2poVVdDaTZKN1d2a0FYNkNr?=
- =?utf-8?B?ZEx5SGgyYkhJNGVLU1VlU0kweGs4M3QxNFlxTUZtdk9FdnR4cFdQUG5WQ0tO?=
- =?utf-8?B?ajZ5K0pTYWJ4K3FaeWtkd2ZER0xUMUkvTVBVeW4xZWdncUZ6cjVBUVl3dVNJ?=
- =?utf-8?B?TUZhaDNCS1JjWVU3Sk9sZUtycDFURFcvMmUrU1Q0TWpDNGpuZFRrR1NsSTI0?=
- =?utf-8?B?UWpYZlgyejFuVS91UGgxTmxHaVBpWXlXUHQ5WFlBOFJlQ0dTK2ZTM2k3ZE1u?=
- =?utf-8?B?S29hMGVLSGtETVY5Q2w0ZHZmdjBPRm9hRjJFSVFZc29PcFh1QUhaOUJLRGxF?=
- =?utf-8?B?b0h5U215OGNmNDRvNitmbUZYdUwyVk1qMFBsMmhRRlB0SU8zWUZsRE83QnZ6?=
- =?utf-8?B?bnIyaHR4NGxYc2JRNzZtdVh0am95WWl1SDd1YTBzZVBwQ2tBNk1hbTJoa2RN?=
- =?utf-8?B?VXFrOFRWQ0psaVN2ZVhHeVJqd2lOaTVHRmliY01TM25EMmIwRmxDaVMxVGF2?=
- =?utf-8?B?L0RGalFwVnR2Zk5jb0trem54OFovRWF3SGkwdXNSY1ZTTXE0VjIxR2ZRMHpI?=
- =?utf-8?B?TTdnSFFHOFZJamh6d3ZrcWM5MUFrZ2FtUS9hVHFnREl6OFhLaWhMSW1JWGIx?=
- =?utf-8?B?dzUvNHhnWVJyeWJTNmVQVWtHY29VMjBpTXdNeWNjblFLd1pBL2tkeTlUYjg3?=
- =?utf-8?B?RGhGUjhpbHA5L2xvYnZxdzhQUlFrMkIyc3YwYk4xdndYM2wyc2p3amI3MnRY?=
- =?utf-8?B?QjdTMmpZMzVFT3FnSkZwTXFXVTlpOEpVNThwS21RVXBaQlJMaXRlWklzdzFy?=
- =?utf-8?B?T01HVVNPSEtDUHpsMGJlVTlLNzZ4cFZQbDYrdzdKUWhQdFIrYkw4L2pEZlBK?=
- =?utf-8?B?WXZCQy85M05JR1BLY3NUZnZieVlMVDk1M3NxTk1paDladzZJbitwUT09?=
-X-OriginatorOrg: garyguo.net
-X-MS-Exchange-CrossTenant-Network-Message-Id: 29cd8c6a-efdd-4819-295e-08dedb5c549f
-X-MS-Exchange-CrossTenant-AuthSource: LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jul 2026 12:44:33.7138
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: bbc898ad-b10f-4e10-8552-d9377b823d45
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 5zR0n9a9KyfZINkeJgml1x2Yo++LMIOY/pJAJWJenfAJeSYhMBOy/1wV6s1SdZRfF1Si3QkCBqPUpqMLRWShaQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO4P265MB6188
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/6XRTW7DIBAF4KtErEs1A+HHXfUeVRaAxzWqE1JMr
+ EaR716ctIoUd9flW7wPZubCRsqRRvayubBMUxxjOtSgnjYs9O7wTjy2NTMBQkEDDQ/DBy/nI/G
+ xuEI8ADpn2lYpbFktHTN18esKvu1q7nLa89JncnfGiBUzIUduG+2VtKg7419DGgbnU3bPIe0Xu
+ Y9jSfl8/ekkFv8/2m0ehFVVcODoGxMQvdcSH6rLTJP8fV0DglkRshLGtJIkkWqC+IvY3gmNdkV
+ sK2E9gRXGarDwSMy3VWf6PNWTlZ99z/M3M87OONABAAA=
+X-Change-ID: 20250909-clk-type-state-c01aa7dd551d
+To: "Rafael J. Wysocki" <rafael@kernel.org>, 
+ Viresh Kumar <viresh.kumar@linaro.org>, Danilo Krummrich <dakr@kernel.org>, 
+ Alice Ryhl <aliceryhl@google.com>, 
+ Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, 
+ Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, 
+ David Airlie <airlied@gmail.com>, Simona Vetter <simona@ffwll.ch>, 
+ Drew Fustini <fustini@kernel.org>, Guo Ren <guoren@kernel.org>, 
+ Fu Wei <wefu@redhat.com>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Michael Turquette <mturquette@baylibre.com>, 
+ Stephen Boyd <sboyd@kernel.org>, Miguel Ojeda <ojeda@kernel.org>, 
+ Gary Guo <gary@garyguo.net>, 
+ =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, 
+ Benno Lossin <lossin@kernel.org>, Andreas Hindborg <a.hindborg@kernel.org>, 
+ Trevor Gross <tmgross@umich.edu>, 
+ Daniel Almeida <daniel.almeida@collabora.com>, 
+ Michal Wilczynski <m.wilczynski@samsung.com>, Boqun Feng <boqun@kernel.org>, 
+ Boqun Feng <boqun@kernel.org>
+Cc: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ dri-devel@lists.freedesktop.org, linux-riscv@lists.infradead.org, 
+ linux-pwm@vger.kernel.org, linux-clk@vger.kernel.org, 
+ rust-for-linux@vger.kernel.org, 
+ Boris Brezillon <boris.brezillon@collabora.com>, 
+ =?utf-8?q?Onur_=C3=96zkan?= <work@onurozkan.dev>, Maurice <mhi@mailbox.org>
+X-Mailer: b4 0.15.2
+X-ZohoMailClient: External
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [1.34 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[garyguo.net,none];
-	R_DKIM_ALLOW(-0.20)[garyguo.net:s=selector1];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[collabora.com,none];
 	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	R_DKIM_ALLOW(-0.20)[collabora.com:s=zohomail];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[30];
+	FORGED_RECIPIENTS(0.00)[m:rafael@kernel.org,m:viresh.kumar@linaro.org,m:dakr@kernel.org,m:aliceryhl@google.com,m:maarten.lankhorst@linux.intel.com,m:mripard@kernel.org,m:tzimmermann@suse.de,m:airlied@gmail.com,m:simona@ffwll.ch,m:fustini@kernel.org,m:guoren@kernel.org,m:wefu@redhat.com,m:ukleinek@kernel.org,m:mturquette@baylibre.com,m:sboyd@kernel.org,m:ojeda@kernel.org,m:gary@garyguo.net,m:bjorn3_gh@protonmail.com,m:lossin@kernel.org,m:a.hindborg@kernel.org,m:tmgross@umich.edu,m:daniel.almeida@collabora.com,m:m.wilczynski@samsung.com,m:boqun@kernel.org,m:linux-pm@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:dri-devel@lists.freedesktop.org,m:linux-riscv@lists.infradead.org,m:linux-pwm@vger.kernel.org,m:linux-clk@vger.kernel.org,m:rust-for-linux@vger.kernel.org,m:boris.brezillon@collabora.com,m:work@onurozkan.dev,m:mhi@mailbox.org,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9602-lists,linux-pwm=lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FREEMAIL_TO(0.00)[google.com,collabora.com,linuxfoundation.org,kernel.org,garyguo.net,protonmail.com,umich.edu,onurozkan.dev,gmail.com,arm.com,nvidia.com,ffwll.ch,samsung.com];
-	FORGED_RECIPIENTS(0.00)[m:aliceryhl@google.com,m:daniel.almeida@collabora.com,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:ojeda@kernel.org,m:boqun@kernel.org,m:gary@garyguo.net,m:bjorn3_gh@protonmail.com,m:lossin@kernel.org,m:a.hindborg@kernel.org,m:tmgross@umich.edu,m:tamird@kernel.org,m:work@onurozkan.dev,m:bhelgaas@google.com,m:kwilczynski@kernel.org,m:abdiel.janulgue@gmail.com,m:robin.murphy@arm.com,m:acourbot@nvidia.com,m:airlied@gmail.com,m:simona@ffwll.ch,m:m.wilczynski@samsung.com,m:ukleinek@kernel.org,m:dakr@kernel.org,m:driver-core@lists.linux.dev,m:rust-for-linux@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-pci@vger.kernel.org,m:nova-gpu@lists.linux.dev,m:dri-devel@lists.freedesktop.org,m:linux-pwm@vger.kernel.org,m:abdieljanulgue@gmail.com,s:lists@lfdr.de];
-	FORGED_SENDER(0.00)[gary@garyguo.net,linux-pwm@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	DKIM_TRACE(0.00)[garyguo.net:+];
+	FREEMAIL_TO(0.00)[kernel.org,linaro.org,google.com,linux.intel.com,suse.de,gmail.com,ffwll.ch,redhat.com,baylibre.com,garyguo.net,protonmail.com,umich.edu,collabora.com,samsung.com];
+	FORGED_SENDER(0.00)[daniel.almeida@collabora.com,linux-pwm@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[35];
+	RCVD_COUNT_THREE(0.00)[4];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9612-lists,linux-pwm=lfdr.de];
+	DKIM_TRACE(0.00)[collabora.com:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[gary@garyguo.net,linux-pwm@vger.kernel.org];
+	FROM_NEQ_ENVFROM(0.00)[daniel.almeida@collabora.com,linux-pwm@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
 	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-pwm];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:email,vger.kernel.org:from_smtp,garyguo.net:from_mime,garyguo.net:email,garyguo.net:mid,garyguo.net:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: EA6427112A2
+X-Rspamd-Queue-Id: 328D371388A
 
-Add an enum as sum type for `Mmio` and `SysMem`. This serves similar
-purpose of `iosys_map`. Thanks to Rust's type system, all of projection and
-struct read/write can be handled by the generic I/O projection mechanism
-(i.e. `io_project!`, `io_read!, `io_write!`) for free, and there is no need
-to provide things like `iosys_map_rd_field` or `iosys_map_wr_field`. An
-enum type also makes it very easy to construct or destruct.
+This series contains a few improvements that simplifies clock handling for
+drivers.
 
-This could be made more generic by implementing on a general purpose sum
-type like `Either`; however this is kept specific unless a need arises that
-warrants this to be generic over other I/O backends.
+Patch 1 implements the same typestate pattern that has been used
+successfully for Regulators. This is needed because otherwise drivers
+will be responsible for unpreparing and disabling clocks themselves and
+ultimately handling the reference counts on their own. This is
+undesirable. The patch automatically encodes this information using the
+type system so that no misuse can occur.
 
-Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
-Signed-off-by: Gary Guo <gary@garyguo.net>
+Patch 2 implements Clone for Clk<T>, so that a driver can hold a
+long-lived clock in one state while temporarily moving an independent
+clone of it through the other states. This is the outcome of the
+discussion in v3 with Boris Brezillon and Gary Guo.
+
+Patch 3 makes things more convenient by offering devres-managed APIs. This
+lets drivers set clock parameters once and forget about lifetime
+management.
+
+Patch 4 converts clk.rs to the newer kernel-vertical style in order to make
+future changes easier.
+
+The pre-existing error-path imbalance in the C function
+devm_clk_get_optional_enabled_with_rate() that was noted during the v4
+review is a C-side issue and will be addressed by a separate patch.
+
 ---
- rust/kernel/io.rs | 137 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 137 insertions(+)
+Changes in v5:
+- Rebased onto the latest clk-next.
+- New patch: "rust: clk: implement Clone for Clk<T>". Each clone is an
+  independent view of the same underlying clock, owning its own
+  prepare/enable counts; the raw pointer is shared through an Arc so
+  clk_get()/clk_put() stay balanced. Follows the v3 discussion with
+  Boris Brezillon and Gary Guo.
+- Moved rate() and set_rate() from Clk<Enabled> to all states; the C API
+  does not restrict these to enabled clocks, and some clocks can only
+  change rate before being prepared.
+- Made Clk::<Enabled>::disable() infallible, matching unprepare() and
+  the void C API (Onur).
+- Fixed a typo in the "# Invariants" section, fixed SAFETY comments
+  that referred to the non-existent `self.0` field, and added missing
+  INVARIANT comments on the state transitions.
+- Added the missing rustdoc link definitions for clk_unprepare and
+  clk_put (Maurice).
+- Dropped the redundant `Result` import and the `use
+  kernel::error::Result;` lines from the doctests; the prelude already
+  provides it (Miguel).
+- Added #[inline] to the devm_* helpers.
+- Link to v4: https://patch.msgid.link/20260618-clk-type-state-v4-0-8be082786080@collabora.com
 
-diff --git a/rust/kernel/io.rs b/rust/kernel/io.rs
-index 9df4e982c5d8..7c9f7b85bca3 100644
---- a/rust/kernel/io.rs
-+++ b/rust/kernel/io.rs
-@@ -1465,6 +1465,143 @@ fn as_view(self) -> <Self::Backend as IoBackend>::View<'a, Self::Target> {
-     }
- }
- 
-+/// I/O Backend for [`IoSysMap`].
-+pub struct IoSysMapBackend;
-+
-+/// Either [`Mmio`] or [`SysMem`].
-+///
-+/// This can be used when a piece of logic may wish to handle both MMIO or system memory but does
-+/// not want or cannot be generic over I/O backends. This serves a similar purpose to
-+/// [`include/linux/iosys-map.h`] in C.
-+///
-+/// This type can be used like any other types that implements [`Io`]; this also include
-+/// [`io_project!`], [`io_read!`], [`io_write!`].
-+///
-+/// [`include/linux/iosys-map.h`]: srctree/include/linux/iosys-map.h
-+pub enum IoSysMap<'a, T: ?Sized> {
-+    /// The view is I/O memory.
-+    Io(Mmio<'a, T>),
-+    /// The view is system memory.
-+    Sys(SysMem<'a, T>),
-+}
-+
-+impl<T: ?Sized> Copy for IoSysMap<'_, T> {}
-+impl<T: ?Sized> Clone for IoSysMap<'_, T> {
-+    #[inline]
-+    fn clone(&self) -> Self {
-+        *self
-+    }
-+}
-+
-+impl<'a, T: ?Sized> From<Mmio<'a, T>> for IoSysMap<'a, T> {
-+    #[inline]
-+    fn from(value: Mmio<'a, T>) -> Self {
-+        IoSysMap::Io(value)
-+    }
-+}
-+
-+impl<'a, T: ?Sized> From<SysMem<'a, T>> for IoSysMap<'a, T> {
-+    #[inline]
-+    fn from(value: SysMem<'a, T>) -> Self {
-+        IoSysMap::Sys(value)
-+    }
-+}
-+
-+impl IoBackend for IoSysMapBackend {
-+    type View<'a, T: ?Sized + KnownSize> = IoSysMap<'a, T>;
-+
-+    #[inline]
-+    fn as_ptr<'a, T: ?Sized + KnownSize>(view: Self::View<'a, T>) -> *mut T {
-+        match view {
-+            IoSysMap::Io(l) => MmioBackend::as_ptr(l),
-+            IoSysMap::Sys(r) => SysMemBackend::as_ptr(r),
-+        }
-+    }
-+
-+    #[inline]
-+    unsafe fn project_view<'a, T: ?Sized + KnownSize, U: ?Sized + KnownSize>(
-+        view: Self::View<'a, T>,
-+        ptr: *mut U,
-+    ) -> Self::View<'a, U> {
-+        match view {
-+            // SAFETY: Per safety requirement.
-+            IoSysMap::Io(l) => IoSysMap::Io(unsafe { MmioBackend::project_view(l, ptr) }),
-+            // SAFETY: Per safety requirement.
-+            IoSysMap::Sys(r) => IoSysMap::Sys(unsafe { SysMemBackend::project_view(r, ptr) }),
-+        }
-+    }
-+}
-+
-+impl<T> IoCapable<T> for IoSysMapBackend
-+where
-+    MmioBackend: IoCapable<T>,
-+    SysMemBackend: IoCapable<T>,
-+{
-+    #[inline]
-+    fn io_read(view: Self::View<'_, T>) -> T {
-+        match view {
-+            IoSysMap::Io(l) => MmioBackend::io_read(l),
-+            IoSysMap::Sys(r) => SysMemBackend::io_read(r),
-+        }
-+    }
-+
-+    #[inline]
-+    fn io_write<'a>(view: Self::View<'a, T>, value: T) {
-+        match view {
-+            IoSysMap::Io(l) => MmioBackend::io_write(l, value),
-+            IoSysMap::Sys(r) => SysMemBackend::io_write(r, value),
-+        }
-+    }
-+}
-+
-+impl IoCopyable for IoSysMapBackend {
-+    #[inline]
-+    unsafe fn copy_from_io(view: Self::View<'_, [u8]>, buffer: *mut u8) {
-+        match view {
-+            // SAFETY: Per safety requirement.
-+            IoSysMap::Io(l) => unsafe { MmioBackend::copy_from_io(l, buffer) },
-+            // SAFETY: Per safety requirement.
-+            IoSysMap::Sys(r) => unsafe { SysMemBackend::copy_from_io(r, buffer) },
-+        }
-+    }
-+
-+    #[inline]
-+    unsafe fn copy_to_io(view: Self::View<'_, [u8]>, buffer: *const u8) {
-+        match view {
-+            // SAFETY: Per safety requirement.
-+            IoSysMap::Io(l) => unsafe { MmioBackend::copy_to_io(l, buffer) },
-+            // SAFETY: Per safety requirement.
-+            IoSysMap::Sys(r) => unsafe { SysMemBackend::copy_to_io(r, buffer) },
-+        }
-+    }
-+
-+    #[inline]
-+    fn copy_read<T: FromBytes>(view: Self::View<'_, T>) -> T {
-+        match view {
-+            IoSysMap::Io(l) => MmioBackend::copy_read(l),
-+            IoSysMap::Sys(r) => SysMemBackend::copy_read(r),
-+        }
-+    }
-+
-+    #[inline]
-+    fn copy_write<T: IntoBytes>(view: Self::View<'_, T>, value: T) {
-+        match view {
-+            IoSysMap::Io(l) => MmioBackend::copy_write(l, value),
-+            IoSysMap::Sys(r) => SysMemBackend::copy_write(r, value),
-+        }
-+    }
-+}
-+
-+impl<'a, T: ?Sized + KnownSize> IoBase<'a> for IoSysMap<'a, T> {
-+    type Backend = IoSysMapBackend;
-+    type Target = T;
-+
-+    #[inline]
-+    fn as_view(self) -> IoSysMap<'a, T> {
-+        self
-+    }
-+}
-+
- // This helper turns associated functions to methods so it can be invoked in macro.
- // Used by `io_project!()` only.
- #[doc(hidden)]
+Changes in v4:
+- Rebased onto clk-next. Alice Ryhl's "rust: clk: implement Send and Sync"
+  series is now merged upstream, so it is no longer carried as a dependency.
+- Fixed the build with CONFIG_CPUFREQ_DT_RUST=y. The generic DT cpufreq
+  driver only has the (unbound) per-CPU device, so it cannot hand a
+  &Device<Bound> to Policy::set_clk(). Added a pub(crate) Clk::get_unbound()
+  for the few in-tree abstractions that operate on a device outside a bind
+  scope; set_clk() now takes &Device and uses it. Clk::get()/get_optional()
+  and the devm_* helpers still require &Device<Bound>.
+- Added impl From<Error<State>> for kernel::error::Error, so the fallible
+  state transitions can be used with `?` (and chained) instead of
+  .map_err(|e| e.error).
+- Added Clk::<Prepared>::with_enabled(), which runs a closure with the clock
+  temporarily enabled, scoping the Enabled state without giving up the
+  prepared clock.
+- Documented how to change a clock's state at runtime via an enum, for
+  drivers that enable/disable across resume/suspend.
+- Link to v3: https://lore.kernel.org/r/20260107-clk-type-state-v3-0-77d3e3ee59c2@collabora.com
 
--- 
-2.54.0
+Changes in v3:
+- Rebased on top of 6.19-rc4
+- Dropped patch 1 (from Alice), added her series as a dependency instead
+- Fixed Tyr, PWM_TH1520 drivers
+- Changed clk.rs imports to kernel-vertical style
+- Added support get_optional shortcut for Prepared and Enabled (i.e.:
+  Clk::<Enabled>::get_optional())
+- Fixed misplaced #[inline] tag
+
+Thanks, Danilo {
+  - Moved the devres changes into its own patch
+  - Require &Device<Bound> for all functions where a &Device is used
+  - Account for con_in in SAFETY comments where applicable
+  - Added backticks
+}
+
+- Link to v2: https://lore.kernel.org/r/20250910-clk-type-state-v2-0-1b97c11bb631@collabora.com
+
+Changes in v2:
+- Added Alice's patch as patch 1, since it is a dependency.
+- Added devm helpers (like we did for Regulator<T>)
+- Fixed missing clk_put() call in Drop (Danilo)
+- Fixed missing parenthesis and wrong docs (Viresh)
+- Removed extra "dev" parameter from "shutdown" example (Danilo)
+- Removed useless type annotation from example (Danilo)
+- Link to v1: https://lore.kernel.org/rust-for-linux/20250729-clk-type-state-v1-1-896b53816f7b@collabora.com/#r
+
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+To: Danilo Krummrich <dakr@kernel.org>
+To: Alice Ryhl <aliceryhl@google.com>
+To: Daniel Almeida <daniel.almeida@collabora.com>
+To: David Airlie <airlied@gmail.com>
+To: Simona Vetter <simona@ffwll.ch>
+To: Michal Wilczynski <m.wilczynski@samsung.com>
+To: Drew Fustini <fustini@kernel.org>
+To: Guo Ren <guoren@kernel.org>
+To: Fu Wei <wefu@redhat.com>
+To: Uwe Kleine-König <ukleinek@kernel.org>
+To: Michael Turquette <mturquette@baylibre.com>
+To: Stephen Boyd <sboyd@kernel.org>
+To: Miguel Ojeda <ojeda@kernel.org>
+To: Boqun Feng <boqun@kernel.org>
+To: Gary Guo <gary@garyguo.net>
+To: Björn Roy Baron <bjorn3_gh@protonmail.com>
+To: Benno Lossin <lossin@kernel.org>
+To: Andreas Hindborg <a.hindborg@kernel.org>
+To: Trevor Gross <tmgross@umich.edu>
+Cc: linux-pm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: dri-devel@lists.freedesktop.org
+Cc: linux-riscv@lists.infradead.org
+Cc: linux-pwm@vger.kernel.org
+Cc: linux-clk@vger.kernel.org
+Cc: rust-for-linux@vger.kernel.org
+
+---
+Daniel Almeida (4):
+      rust: clk: use the type-state pattern
+      rust: clk: implement Clone for Clk<T>
+      rust: clk: add devres-managed clks
+      rust: clk: use 'kernel vertical style' for imports
+
+ drivers/cpufreq/rcpufreq_dt.rs |   2 +-
+ drivers/gpu/drm/tyr/driver.rs  |  37 +--
+ drivers/pwm/pwm_th1520.rs      |  17 +-
+ rust/kernel/clk.rs             | 722 +++++++++++++++++++++++++++++++++--------
+ rust/kernel/cpufreq.rs         |   8 +-
+ 5 files changed, 602 insertions(+), 184 deletions(-)
+---
+base-commit: 92010229c4b38897f1319d260162d2f96925ed17
+change-id: 20250909-clk-type-state-c01aa7dd551d
+
+Best regards,
+--  
+Daniel Almeida <daniel.almeida@collabora.com>
 
 
