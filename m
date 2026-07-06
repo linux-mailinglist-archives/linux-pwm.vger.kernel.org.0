@@ -1,69 +1,70 @@
-Return-Path: <linux-pwm+bounces-9603-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9604-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id wzBnJJykS2qKXgEAu9opvQ
-	(envelope-from <linux-pwm+bounces-9603-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Mon, 06 Jul 2026 14:50:36 +0200
+	id egytE8W5S2oGZQEAu9opvQ
+	(envelope-from <linux-pwm+bounces-9604-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Mon, 06 Jul 2026 16:20:53 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
-	by mail.lfdr.de (Postfix) with ESMTPS id 280D0710C76
-	for <lists+linux-pwm@lfdr.de>; Mon, 06 Jul 2026 14:50:36 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id A21B9711E05
+	for <lists+linux-pwm@lfdr.de>; Mon, 06 Jul 2026 16:20:52 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=garyguo.net header.s=selector1 header.b=Q2kTwKXO;
+	dkim=pass header.d=garyguo.net header.s=selector1 header.b=jPOc2+Ej;
 	dmarc=pass (policy=none) header.from=garyguo.net;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9603-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9603-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9604-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9604-lists+linux-pwm=lfdr.de@vger.kernel.org";
 	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sto.lore.kernel.org (Postfix) with ESMTP id 41D653062CC4
-	for <lists+linux-pwm@lfdr.de>; Mon,  6 Jul 2026 12:47:04 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id ACF6F309B057
+	for <lists+linux-pwm@lfdr.de>; Mon,  6 Jul 2026 12:47:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3791B436BFF;
-	Mon,  6 Jul 2026 12:44:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 18286438471;
+	Mon,  6 Jul 2026 12:44:52 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from CWXP265CU010.outbound.protection.outlook.com (mail-ukwestazon11022091.outbound.protection.outlook.com [52.101.101.91])
+Received: from LO0P265CU003.outbound.protection.outlook.com (mail-uksouthazon11022076.outbound.protection.outlook.com [52.101.96.76])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11FA7433BB1;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06E84435A91;
 	Mon,  6 Jul 2026 12:44:46 +0000 (UTC)
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783341889; cv=fail; b=rQt7gOAuEnlwSNQLs/yx71gI4zxMOEc6VuxrTrwydt+kTG+ZxGei8lv7WqICAmGKRq4DbAeP4ly6A+iDleHzgBPXTBLRVbPX9uBvLsM9z5y7WW6ITapITmQ5lzCJN7IvAK8HIrhxGcFnqsgfLL8LnyRFLdIg06XDHvSDI712MLk=
+	t=1783341891; cv=fail; b=CVpXneYc8c94Yi/CaSLf3EEdLxY/DQW+CTqt7QIKmkRLKEea2m7nhoyRxK2Mj7gQ+RzK/nBc8IBtUh6yTVjyNjx3SbdeKBplb8qdhCWQYfriOeFrfdY2+ujflq7I7VN6Ye7pUkdY+BHxa6J7nJhHueYLgHYeBTjJI8pl9V2YGB8=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783341889; c=relaxed/simple;
-	bh=iuUeO26ZkAqr/0gNyHWhANyroy7Ni3LlQ8Cf56MUbEA=;
+	s=arc-20240116; t=1783341891; c=relaxed/simple;
+	bh=FcbEdyhZBdxYKJ9aSp+byJgqDnoTz5fH8sepIK14zAA=;
 	h=From:Date:Subject:Content-Type:Message-Id:References:In-Reply-To:
-	 To:Cc:MIME-Version; b=RNy7sXB9yKJH3cfbUxbaQL9mZ+lOJZa2aOMz/5I+hgBHUQ1P9HSV4xlS144j/9+PqP6dpICH1GBTofIbKu/VCewS6kW/39QigpPMBDS8dH7vqirHWPNXq6gydEJHmBLwocv9X2wFb/mFMNxBWdCvb3tX5b2Rod4wYXXCaGl1Bic=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=Q2kTwKXO; arc=fail smtp.client-ip=52.101.101.91
+	 To:Cc:MIME-Version; b=gDCz/ZO/nSHwqct5B+EQueVV1yqIMOB4SCHCo/a6IeWqnDQQz/bJ08GcYS0ENKEI0JJyJObUYZkD4BLMMUSsrrqzWgmH14PLfN2i2wgrPVr35OgKDtYyr4COIPLOpu83X6uouOzhsZaybjkBZhSreRqf3FNzQO7oVyeSiDzKLCo=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=jPOc2+Ej; arc=fail smtp.client-ip=52.101.96.76
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=M36wUErHDtIHTXOdAx00PWrU58Sut6GF95CBMfDMHuHGw8bqPucDNJS0a7nXuiR/9dFWuyJSd5TohPCDf4j63YKMr9/QjiBMzwc8OkfgZ8z67bD/NYOW3B79PnQTCv6rTJHuS3LCcmm8BrV1i7t6MQ05a9lwRju401DZgZ/WPUokHGRiqDySBXAMQtDbHRKH6NULI13QJqGzcFgfnG5t0ysdoZ7PSoWGFKSwVvh7tVViK86X5kaJzptb9wD8G09RS02CmMCnLDkI5/GEmyrqHG3my6q5l3P9EHEIkShMqUL/hB3NIgzKnvCJR0vQU1th8C4Ximybq44ieyhCBDcCSQ==
+ b=l+0C0M5N19Tp2GlVdIhopAsHOoJi9yA7nBRPIwvR/kOdzoJsoVh10/OoWvYSKE5nFroUXzgX2U7qnuP19tjugdV+mcyU5dDOKub2Cb9d2KGTSzCVHb+ZJhdpOQbo60fBKjh0ZnKqjCTwwTbp91IUqWqaHT/wjZuvxbLtlG5FQgOJLOpSJ7BQxSNBv+G/H7hhM5pbqzYkkpLzmBxGC9m239i8GZZQKzCK5ozmMhyqg4HZP4CI/+FdUqVQIpRLketmstSPPoF2i10nnK62pZd/MeUcS1IWPRa+ku62eaf45ucsiXNFoK3t8nl8cQg+vwhSvPACEdp+KduUL2M++mZ63w==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=vUyW2drMKEzUMIH8zFzt2TpbpYmjYxANtK55crlYnqs=;
- b=fv7VbCQgWnNRIKtPLWZfoqS7DYsIEHDTQDJedmCmfi8bMZjME/AHIqwqA397FLkj/ELp4vgWnAeSRThqt3O0D1Y/4ynAaQ/KHJcTkkzyH/NRaeyvqMd/pOgIPGbuEizBNMVgesRw5iFRyuCGv9N4i4rbQql1p11WEgqgmtpRK8svtXYuQ4Md6esjuZeqQdrChNjIP3fpfDzRyCmMtAOHUyevrim0uBp1rI59b1/WACnzezV2HFUYyiFJhXzblyumEyIeIAh/XzWB/w+/ah4vBWRkMCqoMNKz09NvHYEuuzPBwbgcb+k2h8bEUrPZWKSXWRFcjWRsu1fYU4GrWhgA7g==
+ bh=eApU9nREzvPqxoSO2eUOt1k/2nUNXPLYi91GdKENVU8=;
+ b=K4tUa6ehrflAgxVctTQOn6X5QHfjlQLniCKaeAfMGzxJlYmWmD6K0fMIlQUxwQ5opf42i5KgmQ1xSobyIyBi4V9hpxpdGddA18lgNwVT8fWqHuuRLwetBFeLOMUo0koIPFvtdXwao1X4ujA1zmNM7RDunfl8VsLjbcW9mLLQS1k37sk+UVvILO35Kgiy2eVSk+wX5vNHqhXD50ok+fjc0wEkK/mQBw9GlD636PGYJJ/iN8So2J9lkk2kcgrLutsBTMsMFpb2dYRbv6K1VocHQgu2yQJ+8y3sXQe+BmpCZdUO1N1EBQHqJ/zrskbtS4cuOh+dap6bxDfrdw6h8Zb3DA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=garyguo.net; dmarc=pass action=none header.from=garyguo.net;
  dkim=pass header.d=garyguo.net; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garyguo.net;
  s=selector1;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=vUyW2drMKEzUMIH8zFzt2TpbpYmjYxANtK55crlYnqs=;
- b=Q2kTwKXOpjfMI14O2KX2zqRVv+sgBXHB2gJhbCad5J1SEox2e1Osw9TeLL/hPHwCjA2z9gdq+N7wlCl52HkSxPYNJwn6oDKqx0bpA+FKfm4hNcQLCysyVD2GKZsosytjNc+YdZN7vB9loP12/GeP81z2ralQBJ1XPzpJmjuBbuo=
+ bh=eApU9nREzvPqxoSO2eUOt1k/2nUNXPLYi91GdKENVU8=;
+ b=jPOc2+EjAQGdD40s5DzeHcqnlPbtqVVwxQKLm0P5PZOXzs7e/e7j2jDJIrjiU5GSl7t8XyqwSfTTtmRH26dBiJ+7fMC7aENkJTE5WTpLhs+0WA6OMOzigFyTQkLCfpNOd3RsHZjbZyYfuRCWYvd5nF5RrgUwKx5mqlTtRS+fleA=
 Received: from LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:488::16)
  by LO7P265MB7617.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:40c::10) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.181.10; Mon, 6 Jul
- 2026 12:44:30 +0000
+ 2026 12:44:31 +0000
 Received: from LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
  ([fe80::1c3:ceba:21b4:9986]) by LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
  ([fe80::1c3:ceba:21b4:9986%4]) with mapi id 15.21.0181.008; Mon, 6 Jul 2026
- 12:44:30 +0000
+ 12:44:31 +0000
 From: Gary Guo <gary@garyguo.net>
-Date: Mon, 06 Jul 2026 13:44:26 +0100
-Subject: [PATCH v6 13/20] rust: io: add projection macro and methods
+Date: Mon, 06 Jul 2026 13:44:27 +0100
+Subject: [PATCH v6 14/20] rust: io: add I/O backend for system memory with
+ volatile access
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20260706-io_projection-v6-13-72cd5d055d54@garyguo.net>
+Message-Id: <20260706-io_projection-v6-14-72cd5d055d54@garyguo.net>
 References: <20260706-io_projection-v6-0-72cd5d055d54@garyguo.net>
 In-Reply-To: <20260706-io_projection-v6-0-72cd5d055d54@garyguo.net>
 To: Alice Ryhl <aliceryhl@google.com>, 
@@ -86,13 +87,14 @@ To: Alice Ryhl <aliceryhl@google.com>,
 Cc: Danilo Krummrich <dakr@kernel.org>, driver-core@lists.linux.dev, 
  rust-for-linux@vger.kernel.org, linux-kernel@vger.kernel.org, 
  linux-pci@vger.kernel.org, nova-gpu@lists.linux.dev, 
- dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org
+ dri-devel@lists.freedesktop.org, linux-pwm@vger.kernel.org, 
+ Laura Nao <laura.nao@collabora.com>
 X-Mailer: b4 0.15.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1783341863; l=5819;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1783341863; l=5328;
  i=gary@garyguo.net; s=20221204; h=from:subject:message-id;
- bh=iuUeO26ZkAqr/0gNyHWhANyroy7Ni3LlQ8Cf56MUbEA=;
- b=+FX6Pp0mpXzpkifXFgAgNK03P+dWRS8Zv1nyUVRO2VexbjpqhVIo1VRPYTUUZ17d4VrYlIVIE
- LHMs9RBf84qAyK09htItjq4P8Q/9A0BO4OJFy394oSeScyVTlG8Z7EH
+ bh=WVyNphkQnBa/m3UwVD6oWZfIOnK1r8nU4Zwse3BHU04=;
+ b=JfcCBKrPSDgU6LnrTOmS3GvdAgLgj3RorTuIxUHkAY2DcCn7jncT+8mfQGq3DgtOudvWTrt5v
+ 9kCYx44twS5C1CotEc9fdGua8WECgpDMyT8yGFERCi9oOxBrONDAcA5
 X-Developer-Key: i=gary@garyguo.net; a=ed25519;
  pk=vB3uIX95SM4eVrIqo1DWNWKDKD2xzB+yLLLr0yOPYMo=
 X-ClientProxiedBy: LO4P265CA0177.GBRP265.PROD.OUTLOOK.COM
@@ -106,66 +108,66 @@ List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
 X-MS-TrafficTypeDiagnostic: LOVP265MB8871:EE_|LO7P265MB7617:EE_
-X-MS-Office365-Filtering-Correlation-Id: fff4ab70-7ef4-410c-e46a-08dedb5c52b2
+X-MS-Office365-Filtering-Correlation-Id: 84c9557b-36f3-4c19-20e1-08dedb5c52fc
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
 	BCL:0;ARA:13230040|23010399003|366016|1800799024|376014|7416014|10070799003|18002099003|921020|5023799004|6133799003|56012099006|22082099003;
 X-Microsoft-Antispam-Message-Info:
-	J5xg+/UZNPoq7431DvNmqh7KibkojJDYnFCvlIrQ7/rnR3JU05PzenVm7nrZvwwHtC37kaQAU324PhelUaxxocTABW92lY85ZIGrIVZrda3O435fmSATzWde3dpGrnQTL5hM9W9oDL45MNHHqFdiJEHdrh8FqVkENVG09RpaxoRev7QysMxVikn2zJjgvaw4iAVsZIyekZ6d27RRo1Vm0NpEoNQt3eSAapHKoj9t54enFGp6wwOV5qiv1DZZSIFc5RFkRetstag0PbZTF0MjTCM+zXqN2SD5KNSQ7xuDaxUqouWvAxmiZaP8hj+uldZfFtdsZITHETcUDCZgyJaiCa/Wubd1GZCcA4VdOwwaCZcYoS1UCYfjDfilKhG0EZlBEFM0cYpmDxXoYKHLzSqueh3vyEe6y+RE6wKq6FJj/XvlaS32TeOUibtLtW5kje3xlqQbL9Nbd0taYS++r3vLO++O4eTT0BNuaGF5VSRBFhoq+gGWvBJbYjC54s0EYjREJvXNDiLJC5VHh6xHx5uGv2GQRciksVSVd3BNn7Kk/HgjOi6ZRwVCiRqkqAtM7xIDRORrf8z1bs8jXQgWa3uplwzw1kI5uoZPj+rnpgGg2LA4NaXlhqV8rt0hdhsReZANtFL6f6fEAogtXYTA/kY+nDavQRP3n6fSsh9Mmt9iQ6mJ9NYodHYNEvdd/abrTAVEB+h+jsuRITPkr58mxbIRww==
+	wmpwzeileoPMfy7IfWeXZIMCSy9TYGXDvKvoJ9w/mIIUf1ONSuZoICA/P2Xip9OsqiiIXUEPaGN1Po7QK2O1NHDJF3YMz3plnvZ7BuwU3GPY2Myq3iaLwtNb9SGHq+IFYKSlb6vxWtugHbsm93iBAFcGAdUB2SDuHP7pTKoH91IhwP8rs8XGtz3y0PIRABpi0hi1UF+18vH87fbtErJi2gHLh7+gIUz74pR/2Edvg29A7/HVhkp1SjBtlflHBwyCoGxVlk8poMRodWNRRjcMEkgfTSmEZcakjymp9UgXrwRsfGzi/kFyedIamYcBUYGWMEJprd2PJHuGR0a1SZcPpHAKSkGFgHxQF59S1aB7NsI70uKcfHtv8oNzQY0lJIi1B+/u3/s+/zAXDxoAFbGwrHFihqUsU48eCV884NcpoiDFEyYFrdPyCKqnKIuhuHF3QgmUwQhhBHUZvHwc1/mMB97c6CyP9j/twY/iAGNW+DNNZCX+bD7syZ7SrvM0+ZXLhxOqp+7OQJpBi/gxaq9xVCaPElyPimh3qGVbkWMiRIGqoZg1tVWGCx/38rzKvYwb+Qq5A+jEE4bEBuCDCvwZ3Xjrwzrh4tAb4/A0Goo/wNVZ1RQl/v3s5sY3i359fa7Jnl3Dd5WqtyBd+IYlOZ3+oyZbiW5qWdxQLF7foY59qhapALGVSV4VRTxbo/q71WdlQBRVDWvx5NN55geCK+TzlQ==
 X-Forefront-Antispam-Report:
 	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(366016)(1800799024)(376014)(7416014)(10070799003)(18002099003)(921020)(5023799004)(6133799003)(56012099006)(22082099003);DIR:OUT;SFP:1102;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?S1RwM2xPYXhGWjhyWFgrRDljQmg2aFZiNUU2b2ZpbnJzRENZclEvWkdHaTN3?=
- =?utf-8?B?Tnlkd3ZXQ3V2V1BkM3BGRC9EMDQzSVhiY2NzaURGTEl5S1h6dVpMekxZOUJw?=
- =?utf-8?B?OFc4SURoS1l6amJtL1JlNnJ3TzdDelBRdEFrTTM0RGpMRUhTMTNEL215bUpj?=
- =?utf-8?B?VlZIYXc3aFVBcTY0Z3dsWC9ERzh1ZUlHZzRHT1EwYzhwbjJ3dWViQm5HVGxQ?=
- =?utf-8?B?MVJSZi9HWCtYYzVZa255dm1kNUJqZk44UzZweTBBaFJlNmhTVnRqOFZJUGEr?=
- =?utf-8?B?a1dFbk1Cc3k2bzNnZitPMUZQTXFqUFRidlVXZVBTajB1ODhuSHdrUDZqT2tK?=
- =?utf-8?B?R09qUkZGcTQvMEU0SEMxeGpQMnNqNFpTQkhFVzRRc2pHRkcxZ043dHBlMDE2?=
- =?utf-8?B?VnZpaDFUNTBKandLRm5Xdlo2V0NWd0R1eFRzdW53eUxaVG50SWIwMFVUcWRM?=
- =?utf-8?B?ekRNRDF5c3dvK05lSW5ydzRLZ21uZzNPYTZzM244TDlIZ1FpMmdmdzN4RHVT?=
- =?utf-8?B?YnRtVjlZOEFsRzhCbDFESmFVQXRYS2dmdml4Zjg4NDRHTDZQYmdyTjJMSnpM?=
- =?utf-8?B?WWtuZ0VTaTlrUlFkdmlXdmE0bHhmRVMxY01iQWk3TzltUCtISUJZOFAwSDVi?=
- =?utf-8?B?b0lDdTB3cUpqWXQweExGSzdtTGlMOEFjemVCV1gvQmhkQTZVeWRCZmpSdjNu?=
- =?utf-8?B?bnRUMU5qbHBSczhaRHl2R0wrYk11VkpybnFxc0JOYjRLSFdNUmM1T25uN3E1?=
- =?utf-8?B?cUliRGR3ckVpTjB3YlZLSjhoS2dhSjRQSWdaWHRKdHNzbEVEWlBhaWh1azZW?=
- =?utf-8?B?U1ZDZXlTcTViNkdiaTBzZDFnc3RkRG9MTmE5eGRhc1pSYTNwQTd4ZzZUaVhL?=
- =?utf-8?B?aEo0RHdPay9MaDlMTVFWcVByMlVkNWp0RXQ5bEErbnVJWXU0QVdmQjFqZmdu?=
- =?utf-8?B?QUQralp5MTJXUS9IcTB0OFVOVmJuRmRyTE1URDlMZ1NCMm55V3Yxa3BGdjQ5?=
- =?utf-8?B?WXNjNDBGSHRZYWRFWFdYUkR4M1NXa090NW5henFwY2M0UmwyYS9mYUFjck12?=
- =?utf-8?B?M01EbzcrdVo2T2NGNE1mOXp4VkxCRDBocWhFM3pkd1RiNVRpQStISkNVNWNH?=
- =?utf-8?B?NE1kdENCaTcrQWdVVEJ5SnFrVEgySEMrRlNERkJlNUg5aXEwYUxJWkJST24x?=
- =?utf-8?B?S3JWekF1RTJLNFRzUFJmSm1MMSs4cUloa01zQWh1YjBCekFPR004ODE1QUdt?=
- =?utf-8?B?NEFJZTFPcFM1L0ZjekVxdU1OakFKY1JrWEJ4a3lQUTFOZWdXM281YTBocDho?=
- =?utf-8?B?K1htQWFJNkZmUWNxMFIwLytXQkZtaFRsYVNzRVd0R2tOQXV5Z0RRRWcwSWRE?=
- =?utf-8?B?am10Ri90NWdIaUZVUncxZ3RVVWE5YWtvS3hBQWIwUmZXVDNzckhMUUp0Z0ZC?=
- =?utf-8?B?RmcyYXdCL0dsd0Z0d09ydTNESTVnOTBUWVBhTWhVMkRNMVd4cmJnK0ZpTnN5?=
- =?utf-8?B?WTIrY0pzMml3SW5PWGgwMTNjVW5teTJNeWhlaWlYMmYwdUs3eXhQRk8wZ1dl?=
- =?utf-8?B?TWxjRWIxRHFIeU1tM3o1RFhzak1ndFNsSTNwSlRxK1NZamFEeXdmcnlhK2hI?=
- =?utf-8?B?dkZZdjF6bStJWUhmZGNnNzVXNGNXVXVzd0pKQWVFV0lUTFdjRmZ4NHp4ZDdq?=
- =?utf-8?B?RSs5cGFmbTBLT3kvQnNaczBYQzN6eUZlQVg4VU5vREJwWEdPSk1xZlNVQU00?=
- =?utf-8?B?RVpDUHhRQUNWejhkeXdRdDlWUzN5RXo1b1E5MUJrU0VMU2FCa3BFNENRSkhO?=
- =?utf-8?B?dk8xdzZJcUxDUEFHL3NZTjZnMlgvSTJQODZuTy81MExxS0Z6amNQNTN1M2Jh?=
- =?utf-8?B?L1Y4cHlPK3dEeTUxblBndVVWQ3NJWDk3T2h2NUgwUFRCRjNoZklNSWFadzdE?=
- =?utf-8?B?TVpQcW84OG83OXhHV1BRbFArOFdJVjA2eE80bXBIVmZvYWF5SkhseWN5S2Zr?=
- =?utf-8?B?TVVDamZ6R0hXQ2tTNE1saEJCZUNKbG9QeHJSQW9zeThZZjNpb0tkOVM1czg0?=
- =?utf-8?B?bU0zdkgwVy9RTWtRbDhZcmFJYTh4WFBWQlNhWXk5R0VyOVpwQ1hGbldzbXJk?=
- =?utf-8?B?SXkvRHN3WDZPQ1NvRGtjQkNPVG5ldkg3TXo1NnRqYTgwb3pYSzB0dnZtRFNO?=
- =?utf-8?B?VHc2S1JVYXFvdzZ6OHRYTkJ6bTNuRmE3MWljNG84cmMwbEc0VExNUk91RmRL?=
- =?utf-8?B?YU9ueEl2STdUdE1PQ0RLSnRXd284dnZLRVdFbmF6VXRQWGZuMGx2N2VyYis0?=
- =?utf-8?B?L205SVp3cWVSVGgrQUgwN1F2VUV2OGdjWjF6QUNOTjQ1bHFzT0RQQT09?=
+	=?utf-8?B?VmZiN3grRzJFY01ZemtoWXBPZndvdmFFb2NvUDlObDRZMm5WejZ4aVBDOXk1?=
+ =?utf-8?B?OWJ4bkFORC9PVmsxczNhOEF5bnI3TlhIVUVZbDNuV1N0UEt6MU0vRXA2TDJn?=
+ =?utf-8?B?RFVXSEV5N1RBUWc2QWlyYTl2L1BPVUNKRjJadFg2Y2xZdkFnT0UyZHVZZ2o4?=
+ =?utf-8?B?bm9Gdi8xdnM5ekkvaElEcG1wN1NRem5IOFNTVEY1cVBUaU9RZ1NvUzJZZVE0?=
+ =?utf-8?B?b3I1MXV2aEpnckIrN2Ftb3JLQUhqYTVsK3JJVWh1UFJXYXZKNnpvWE9xdjRE?=
+ =?utf-8?B?ZUdlRnhaNEhaU1pyRWNWTW8xMTdwdTBkUGFwYTk3aHMyZzB0a2VEZWppOTdy?=
+ =?utf-8?B?UDZLM0cyZXNVUlM2a0tWbmxWZ0ZKUm9kY21hRjNYYjYrU1h2V1pWd1hxTllE?=
+ =?utf-8?B?S3Y2TDhoci9sYXpMSmhKc1VkZndVakxHRGozblFJbGRXR1ROSnBua0Z0bXhE?=
+ =?utf-8?B?RlZEUWdoWkdCbWJJL3NSYkVDaEJkVHMreXFGUFo5dVlqVUdUVlJ2Yi9WSmZo?=
+ =?utf-8?B?M3ZWZnVxaTJUQlhuU1dIWUFSTnFNcUFjLyt1Q1FWRUZpcy9YanFvZ2pPcXhU?=
+ =?utf-8?B?d280eUlRdytWTm1aNzVyaURmL1pHeGlITTlieitUVW9iclkyTUxMZkwxanBl?=
+ =?utf-8?B?RGJuQmtDOWVLcC9aT1cvMFYrMER1aVB1aFl0UDRYYWxCcnErMVFqK0FrYW1t?=
+ =?utf-8?B?TC8wQkJkRm13STNFRTNrWFNMSVg3Q3l5Q1F5RENuZlFRaUpteDZMWldPVkVJ?=
+ =?utf-8?B?eERFNWp1aFg3Q2hvMlZ5L0NidHhING4zVVYvak9hT1E2U3pLMnhQaDEycFlr?=
+ =?utf-8?B?QXR2LzY3bk5hOTJrQ0hRYW12U1dsZ1lUL2RSb1hyRCtJQWYyYUV1bmhSbzNW?=
+ =?utf-8?B?YTZvUVl6Y1RjSjZseCs0MEhsemlDQkFRVHZJUnZNM3R3TGdZQ0crNkN3bUtG?=
+ =?utf-8?B?Y1RKajVBbWZsREp2bFd2V0gxOHJGUFpLaUNVNnR5YktNcGVkbEs3eTF1NEFh?=
+ =?utf-8?B?OFdVakcwVytqd1JKZU5LVVVaZU5DYlVsT1JGZTlaK3RJN2RxWU9MREFRRVg2?=
+ =?utf-8?B?UnFJYUlOanowdVV5TEhXMjhHaWhFaytCL0gxWTFhcVR2dXRVL1FWZFRramhz?=
+ =?utf-8?B?UXVSYWNXWFgrR241WENZQk9wbk5YbUdBL082N2pZSlMrcVpGaWJxUGw4bkMx?=
+ =?utf-8?B?NHJITUMyTFdlKy9ZdFVISnNscTIrMDBFR2tSMWdVN2ZyZUZQWDJmS2h1MkdN?=
+ =?utf-8?B?eEpMZVhtanZHUi9jOWtVMzRXWlk2Vzd4Yjl0aFZKRjlwa1FsZWFCMVovd2Ux?=
+ =?utf-8?B?bFBOaHdBM09MWW9qL0xSYTFHUU1yeGlSWmlncWwxaUNEUlYrNDZrMHZRZnRJ?=
+ =?utf-8?B?YUlnTFNBcEpqL1FTS0IyeCs5LzdDcVZkMUZZYUErTDV3ckVSclh4V3doVy84?=
+ =?utf-8?B?am9VVEo0SG1OdkpEWXZCR3hpWHM1QzdNdmZPeW1pL0JlZmpPUldWZFArYzda?=
+ =?utf-8?B?TjBCM3JHQWF4eFQ1NUNvVndVQjNrN0R2Rkwvem01K2M0WEt5TnBPcGYzaG1a?=
+ =?utf-8?B?Zkx3bFh2V2p2SXd2Z1lwM3diV3p3d2loNHpuT1BHTGg5MTVPS1U3SHluaXVj?=
+ =?utf-8?B?cC8xaC9XZllDSnVJWit5NEFkWkhNUUw2eHNmQ2EzcDNiUDBlM21OQ3QwZGpH?=
+ =?utf-8?B?UndiWC80eW5HcU9iY3haR2NBZ2tGc2V5ZHJrcVJrNTlxd1o3Zk1hV2JYQ2dY?=
+ =?utf-8?B?dk5YcWUvVEVyZXUyRnJUaENoNkl0aTJoRTZWRFI5NmFlSUhWS3dsdTdLUW84?=
+ =?utf-8?B?TFU5YWg2K0xpd1RWNXhiekVaT2dtRlltNHN1YmwrZmo1MitTN3ZyVWhjSGcy?=
+ =?utf-8?B?UTExU2pnSm5KcDlaWnJ5QlRMRGsxWVZVUnQzV2xqOFR3T3lDR2Q1RnF3b3E2?=
+ =?utf-8?B?azZjVkJLUU44TDdjWFFUYktSaFBBTGpKVVV3SGJpaE05OHd4czh1NXlzK20r?=
+ =?utf-8?B?bnAxK2RiUEc5TGtEVVZUZ0JJYTNpK1owVTNiN2UzTXJDV1FzVUc2MG1YUHBj?=
+ =?utf-8?B?azJmMDlGbnVmNmlzSVZHbi9xZE9VUXNYM3ZoNTVuQVdkV2Y3YjFKQVhQR1Q2?=
+ =?utf-8?B?UkdacndjOTJKNFIwbEs4YWpsTVkrSW5oUU9QQ0VmRDhWYUdnT0NDSkNoU2wz?=
+ =?utf-8?B?N2ljeGdkVjNhTzkxMm9hejYvT0NITGNOWTBoV0QrbDFHUElEeis2eGI2OUl4?=
+ =?utf-8?B?UFJ1QWhPdmJEQkVnb2dFL0dSdXBKQ2JlNkFIblRIZjFUeWdLeDNEaWtXQkVZ?=
+ =?utf-8?B?MC9ra1hlUDVyMHVuZWk4c0ltNElFamVEYmZONnFmNXhET2p5aVRmUT09?=
 X-OriginatorOrg: garyguo.net
-X-MS-Exchange-CrossTenant-Network-Message-Id: fff4ab70-7ef4-410c-e46a-08dedb5c52b2
+X-MS-Exchange-CrossTenant-Network-Message-Id: 84c9557b-36f3-4c19-20e1-08dedb5c52fc
 X-MS-Exchange-CrossTenant-AuthSource: LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jul 2026 12:44:30.4887
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Jul 2026 12:44:30.9523
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: bbc898ad-b10f-4e10-8552-d9377b823d45
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: wzwTDTS0gV3JLLr00blZ8QtxhtHJLgcgiblpXlrVgLgfSdc93A1UiKMVwjZfsGqaW1FgpvNySpOG3jz6vRDU8A==
+X-MS-Exchange-CrossTenant-UserPrincipalName: UJf0EkfUqOzUhHClolcl3cQ0nWj0l2wg/0UvOkGbyvUGAxk1NYf59PVglQTpudWrEOdUYNgkSxNjN7ZXvxpMfg==
 X-MS-Exchange-Transport-CrossTenantHeadersStamped: LO7P265MB7617
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [1.34 / 15.00];
@@ -173,17 +175,17 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	ARC_REJECT(1.00)[cv is fail on i=2];
 	DMARC_POLICY_ALLOW(-0.50)[garyguo.net,none];
 	R_DKIM_ALLOW(-0.20)[garyguo.net:s=selector1];
-	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	MIME_TRACE(0.00)[0:+];
-	RCPT_COUNT_TWELVE(0.00)[30];
+	RCPT_COUNT_TWELVE(0.00)[31];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9603-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9604-lists,linux-pwm=lfdr.de];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FREEMAIL_TO(0.00)[google.com,collabora.com,linuxfoundation.org,kernel.org,garyguo.net,protonmail.com,umich.edu,onurozkan.dev,gmail.com,arm.com,nvidia.com,ffwll.ch,samsung.com];
-	FORGED_RECIPIENTS(0.00)[m:aliceryhl@google.com,m:daniel.almeida@collabora.com,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:ojeda@kernel.org,m:boqun@kernel.org,m:gary@garyguo.net,m:bjorn3_gh@protonmail.com,m:lossin@kernel.org,m:a.hindborg@kernel.org,m:tmgross@umich.edu,m:tamird@kernel.org,m:work@onurozkan.dev,m:bhelgaas@google.com,m:kwilczynski@kernel.org,m:abdiel.janulgue@gmail.com,m:robin.murphy@arm.com,m:acourbot@nvidia.com,m:airlied@gmail.com,m:simona@ffwll.ch,m:m.wilczynski@samsung.com,m:ukleinek@kernel.org,m:dakr@kernel.org,m:driver-core@lists.linux.dev,m:rust-for-linux@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-pci@vger.kernel.org,m:nova-gpu@lists.linux.dev,m:dri-devel@lists.freedesktop.org,m:linux-pwm@vger.kernel.org,m:abdieljanulgue@gmail.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:aliceryhl@google.com,m:daniel.almeida@collabora.com,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:ojeda@kernel.org,m:boqun@kernel.org,m:gary@garyguo.net,m:bjorn3_gh@protonmail.com,m:lossin@kernel.org,m:a.hindborg@kernel.org,m:tmgross@umich.edu,m:tamird@kernel.org,m:work@onurozkan.dev,m:bhelgaas@google.com,m:kwilczynski@kernel.org,m:abdiel.janulgue@gmail.com,m:robin.murphy@arm.com,m:acourbot@nvidia.com,m:airlied@gmail.com,m:simona@ffwll.ch,m:m.wilczynski@samsung.com,m:ukleinek@kernel.org,m:dakr@kernel.org,m:driver-core@lists.linux.dev,m:rust-for-linux@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-pci@vger.kernel.org,m:nova-gpu@lists.linux.dev,m:dri-devel@lists.freedesktop.org,m:linux-pwm@vger.kernel.org,m:laura.nao@collabora.com,m:abdieljanulgue@gmail.com,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[gary@garyguo.net,linux-pwm@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FROM_HAS_DN(0.00)[];
@@ -197,181 +199,165 @@ X-Spamd-Result: default: False [1.34 / 15.00];
 	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-pwm];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sto.lore.kernel.org:helo,sto.lore.kernel.org:rdns,garyguo.net:from_mime,garyguo.net:email,garyguo.net:mid,garyguo.net:dkim,nvidia.com:email,vger.kernel.org:from_smtp]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,garyguo.net:from_mime,garyguo.net:email,garyguo.net:mid,garyguo.net:dkim,vger.kernel.org:from_smtp,nvidia.com:email,collabora.com:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 280D0710C76
+X-Rspamd-Queue-Id: A21B9711E05
 
-Add an `io_project!()` macro to allow projection from `Io` to a subview of
-it, using the pointer projection mechanism to perform compile-time checks.
+From: Laura Nao <laura.nao@collabora.com>
 
-For cases where type-casting is required, the `try_cast()` function may be
-used where the size and alignment checks are performed at runtime.
+Add `SysMem`, an `Io` trait implementation for kernel virtual address
+ranges. It uses volatile accessors to provide safe access to shared
+memory that may be concurrently accessed by external hardware. Implement
+`IoCapable` for `u8`, `u16`, `u32`, and `u64` (for 64-bit system).
 
-Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
+This can be used instead of `Coherent` for cases where a different layer
+takes care of mapping the system memory to the device (e.g. dma-buf or
+GPUVM).
+
+Signed-off-by: Laura Nao <laura.nao@collabora.com>
+[ Rebased and adapted on top of I/O rework. - Gary ]
+Co-developed-by: Gary Guo <gary@garyguo.net>
 Signed-off-by: Gary Guo <gary@garyguo.net>
+Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
 ---
- rust/kernel/io.rs | 128 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 128 insertions(+)
+ rust/kernel/io.rs | 122 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 122 insertions(+)
 
 diff --git a/rust/kernel/io.rs b/rust/kernel/io.rs
-index ab970e8b2e78..62643b23e904 100644
+index 62643b23e904..78c6ae2a0db8 100644
 --- a/rust/kernel/io.rs
 +++ b/rust/kernel/io.rs
-@@ -49,6 +49,7 @@
- /// - Size of the region is at least as large as the `SIZE` generic parameter.
- /// - Size of the region is multiple of 4.
- #[repr(C, align(4))]
-+#[derive(FromBytes)]
- pub struct Region<const SIZE: usize = 0> {
-     inner: [u8],
- }
-@@ -90,6 +91,19 @@ fn size(p: *const Self) -> usize {
-     }
- }
- 
-+// SAFETY:
-+// - Values read from I/O are always treated as initialized.
-+// - Per type invariant the size is multiple of 4 and the type is 4-byte aligned, so it is padding
-+//   free.
-+//
-+// This cannot be derived as `derive(IntoBytes)` as the padding free property comes from type
-+// invariant which the macro does not know.
-+unsafe impl<const SIZE: usize> IntoBytes for Region<SIZE> {
-+    #[inline]
-+    #[allow(unused)] // Rust 1.87+ stops requiring this and will emit unused warnings.
-+    fn only_derive_is_allowed_to_implement_this_trait() {}
-+}
-+
- /// Raw representation of an MMIO region.
- ///
- /// `MmioRaw<T>` is equivalent to `T __iomem *` in C.
-@@ -339,6 +353,51 @@ fn size(self) -> usize {
-         KnownSize::size(Self::Backend::as_ptr(self.as_view()))
-     }
- 
-+    /// Try to convert into a different typed I/O view.
-+    ///
-+    /// A runtime check is performed to ensure that the target type is of same or smaller size to
-+    /// current type, and the current view is properly aligned for the target type. Returns
-+    /// `Err(EINVAL)` if the runtime check fails.
-+    ///
-+    /// # Examples
-+    ///
-+    /// ```no_run
-+    /// use kernel::io::{
-+    ///     io_project,
-+    ///     Mmio,
-+    ///     Io,
-+    ///     Region,
-+    /// };
-+    /// #[derive(FromBytes, IntoBytes)]
-+    /// #[repr(C)]
-+    /// struct MyStruct { field: u32, }
-+    ///
-+    /// # fn test(mmio: &Mmio<'_, Region>) -> Result {
-+    /// // let mmio: Mmio<'_, Region>;
-+    /// let whole: Mmio<'_, MyStruct> = mmio.try_cast()?;
-+    /// # Ok::<(), Error>(()) }
-+    /// ```
-+    #[inline]
-+    fn try_cast<U>(self) -> Result<<Self::Backend as IoBackend>::View<'a, U>>
-+    where
-+        Self::Target: FromBytes + IntoBytes,
-+        U: FromBytes + IntoBytes,
-+    {
-+        let view = self.as_view();
-+        let ptr = Self::Backend::as_ptr(view);
-+
-+        if size_of::<U>() > KnownSize::size(ptr) {
-+            return Err(EINVAL);
-+        }
-+
-+        if ptr.addr() % align_of::<U>() != 0 {
-+            return Err(EINVAL);
-+        }
-+
-+        // SAFETY: We have checked bounds and alignment, so this is a valid projection.
-+        Ok(unsafe { Self::Backend::project_view(view, ptr.cast()) })
-+    }
-+
-     /// Fallible 8-bit read with runtime bounds check.
-     #[inline(always)]
-     fn try_read8(self, offset: usize) -> Result<u8>
-@@ -979,3 +1038,72 @@ pub fn relaxed(self) -> RelaxedMmio<'a, T> {
- // MMIO regions on 64-bit systems also support 64-bit accesses.
+@@ -1039,6 +1039,128 @@ pub fn relaxed(self) -> RelaxedMmio<'a, T> {
  #[cfg(CONFIG_64BIT)]
  impl_mmio_io_capable!(RelaxedMmioBackend, u64, readq_relaxed, writeq_relaxed);
+ 
++/// I/O Backend for system memory.
++pub struct SysMemBackend;
 +
-+// This helper turns associated functions to methods so it can be invoked in macro.
-+// Used by `io_project!()` only.
-+#[doc(hidden)]
-+#[derive(Clone, Copy)]
-+pub struct ProjectHelper<T>(pub T);
++impl IoBackend for SysMemBackend {
++    type View<'a, T: ?Sized + KnownSize> = SysMem<'a, T>;
 +
-+impl<'a, T> ProjectHelper<T>
-+where
-+    T: Io<'a, Backend: IoBackend<View<'a, T::Target> = T>>,
-+{
-+    // These helper methods must not have symbols present in the binary to avoid confusion.
-+    #[inline(always)]
-+    pub fn as_ptr(self) -> *mut T::Target {
-+        T::Backend::as_ptr(self.0)
++    #[inline]
++    fn as_ptr<'a, T: ?Sized + KnownSize>(view: Self::View<'a, T>) -> *mut T {
++        view.ptr
 +    }
 +
++    #[inline]
++    unsafe fn project_view<'a, T: ?Sized + KnownSize, U: ?Sized + KnownSize>(
++        _view: Self::View<'a, T>,
++        ptr: *mut U,
++    ) -> Self::View<'a, U> {
++        // INVARIANT: Per safety requirement, `ptr` is projection from `view`, so it is also a valid
++        // kernel accessible memory region.
++        SysMem {
++            ptr,
++            phantom: PhantomData,
++        }
++    }
++}
++
++/// Implements [`IoCapable`] on `SysMemBackend` for `$ty` using `read_volatile` and
++/// `write_volatile`.
++macro_rules! impl_sysmem_io_capable {
++    ($ty:ty) => {
++        impl IoCapable<$ty> for SysMemBackend {
++            #[inline]
++            fn io_read(view: SysMem<'_, $ty>) -> $ty {
++                // SAFETY:
++                // - Per type invariant, `ptr` is valid and aligned.
++                // - Using read_volatile() here so that race with hardware is well-defined.
++                // - Using read_volatile() here is not sound if it races with other CPU per Rust
++                //   rules, but this is allowed per LKMM.
++                // - The macro is only used on primitives so all bit patterns are valid.
++                unsafe { view.ptr.read_volatile() }
++            }
++
++            #[inline]
++            fn io_write(view: SysMem<'_, $ty>, value: $ty) {
++                // SAFETY:
++                // - Per type invariant, `ptr` is valid and aligned.
++                // - Using write_volatile() here so that race with hardware is well-defined.
++                // - Using write_volatile() here is not sound if it races with other CPU per Rust
++                //   rules, but this is allowed per LKMM.
++                unsafe { view.ptr.write_volatile(value) }
++            }
++        }
++    };
++}
++
++impl_sysmem_io_capable!(u8);
++impl_sysmem_io_capable!(u16);
++impl_sysmem_io_capable!(u32);
++#[cfg(CONFIG_64BIT)]
++impl_sysmem_io_capable!(u64);
++
++/// A view of a system memory region.
++///
++/// Provides `Io` trait implementation for kernel virtual address ranges,
++/// using volatile read/write to safely access shared memory that may be
++/// concurrently accessed by external hardware.
++///
++/// # Invariants
++///
++/// `self.ptr.addr() .. self.ptr.addr() + KnownSize::size(self.ptr)` is valid and aligned kernel
++/// accessible memory region for the lifetime `'a`.
++pub struct SysMem<'a, T: ?Sized> {
++    ptr: *mut T,
++    phantom: PhantomData<&'a ()>,
++}
++
++impl<T: ?Sized> Copy for SysMem<'_, T> {}
++impl<T: ?Sized> Clone for SysMem<'_, T> {
++    #[inline]
++    fn clone(&self) -> Self {
++        *self
++    }
++}
++
++// SAFETY: `SysMem<'_, T>` is conceptually `&T`.
++unsafe impl<T: ?Sized + Sync> Send for SysMem<'_, T> {}
++
++// SAFETY: `SysMem<'_, T>` is conceptually `&T`.
++unsafe impl<T: ?Sized + Sync> Sync for SysMem<'_, T> {}
++
++impl<'a, T: ?Sized> SysMem<'a, T> {
++    /// Create a `SysMem` from a raw pointer.
++    ///
 +    /// # Safety
 +    ///
-+    /// Same as `IoBackend::project_view`
-+    #[inline(always)]
-+    pub unsafe fn project_view<U: ?Sized + KnownSize>(
-+        self,
-+        ptr: *mut U,
-+    ) -> <T::Backend as IoBackend>::View<'a, U> {
-+        // SAFETY: Per safety requirement.
-+        unsafe { T::Backend::project_view::<T::Target, _>(self.0, ptr) }
++    /// `ptr.addr() .. ptr.addr() + KnownSize::size(ptr)` must be valid and aligned kernel
++    /// accessible memory region for the lifetime `'a`.
++    #[inline]
++    pub unsafe fn new(ptr: *mut T) -> Self {
++        // INVARIANT: Per safety requirement.
++        Self {
++            ptr,
++            phantom: PhantomData,
++        }
++    }
++
++    /// Obtain the raw pointer to the memory.
++    #[inline]
++    pub fn as_ptr(self) -> *mut T {
++        self.ptr
 +    }
 +}
 +
-+/// Project an I/O type to a subview of it.
-+///
-+/// The syntax is of form `io_project!(io, proj)` where `io` is an expression to a type that
-+/// implements [`Io`] and `proj` is a [projection specification](kernel::ptr::project!).
-+///
-+/// # Examples
-+///
-+/// ```
-+/// use kernel::io::{
-+///     io_project,
-+///     Mmio,
-+/// };
-+/// #[repr(C)]
-+/// struct MyStruct { field: u32, }
-+///
-+/// # fn test(mmio: Mmio<'_, [MyStruct]>) -> Result {
-+/// // let mmio: Mmio<[MyStruct]>;
-+/// let field: Mmio<'_, u32> = io_project!(mmio, [try: 1].field);
-+/// let whole: Mmio<'_, MyStruct> = io_project!(mmio, [try: 2]);
-+/// let nested: Mmio<'_, u32> = io_project!(whole, .field);
-+/// # Ok::<(), Error>(()) }
-+/// ```
-+#[macro_export]
-+#[doc(hidden)]
-+macro_rules! io_project {
-+    ($io:expr, $($proj:tt)*) => {{
-+        #[allow(unused)]
-+        use $crate::io::IoBase as _;
-+        let view = $crate::io::ProjectHelper($io.as_view());
-+        let ptr = $crate::ptr::project!(
-+            mut view.as_ptr(), $($proj)*
-+        );
-+        #[allow(unused_unsafe)]
-+        // SAFETY: `ptr` is a projection.
-+        unsafe { view.project_view(ptr) }
-+    }};
++impl<'a, T: ?Sized + KnownSize> IoBase<'a> for SysMem<'a, T> {
++    type Backend = SysMemBackend;
++    type Target = T;
++
++    #[inline]
++    fn as_view(self) -> <Self::Backend as IoBackend>::View<'a, Self::Target> {
++        self
++    }
 +}
-+#[doc(inline)]
-+pub use crate::io_project;
++
+ // This helper turns associated functions to methods so it can be invoked in macro.
+ // Used by `io_project!()` only.
+ #[doc(hidden)]
 
 -- 
 2.54.0
