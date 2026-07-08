@@ -1,333 +1,164 @@
-Return-Path: <linux-pwm+bounces-9640-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9641-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id CvYeDMpRTmq6KgIAu9opvQ
-	(envelope-from <linux-pwm+bounces-9640-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Wed, 08 Jul 2026 15:34:02 +0200
+	id SMa4KSFaTmqSLAIAu9opvQ
+	(envelope-from <linux-pwm+bounces-9641-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Wed, 08 Jul 2026 16:09:37 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 857D4726D5D
-	for <lists+linux-pwm@lfdr.de>; Wed, 08 Jul 2026 15:34:01 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 14F5F727207
+	for <lists+linux-pwm@lfdr.de>; Wed, 08 Jul 2026 16:09:37 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=collabora.com header.s=zohomail header.b=LJa8K7tM;
-	dmarc=pass (policy=none) header.from=collabora.com;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9640-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9640-lists+linux-pwm=lfdr.de@vger.kernel.org";
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=2")
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=mkgCQ1Cm;
+	dmarc=none;
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9641-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9641-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id E3A4330376B6
-	for <lists+linux-pwm@lfdr.de>; Wed,  8 Jul 2026 13:29:25 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 2590030CEE41
+	for <lists+linux-pwm@lfdr.de>; Wed,  8 Jul 2026 14:01:09 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 5423F34575D;
-	Wed,  8 Jul 2026 13:29:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C368C44D00D;
+	Wed,  8 Jul 2026 14:00:21 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from sender4-op-o11.zoho.com (sender4-op-o11.zoho.com [136.143.188.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95A3D3451AF;
-	Wed,  8 Jul 2026 13:29:23 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783517365; cv=pass; b=lhVCcB0CAatZUQggwLw4ML1R5Quw2tY2sNieC3jgSWEXk1cGE7jhVjrN1Jm7gN4UlsFd68nSV5IAJk2Erz3jG7si1JSztJfaduoRKKfukZfBvHPKxIp339QlgTLIDbt3gKpVUmNum6RKq2i7BOs6knK56BAseF06T8kxYuDOj9g=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783517365; c=relaxed/simple;
-	bh=ETQdonLxG6BeOHA2ebnsm6g2M7LbKtjJ01Uu/UKKt3o=;
-	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=lgsXmVIvONk6AUwSUexCRGDV+vgutfPHXyTrth/Dd0h3xRJhchBrp8bdP4utN6pTVxRT/4oICkr1OY1huW4kLkbbD6J4Pitt1yGtaT7HTVstelXrIhcV003uGi4LQVaMZCAXtjtWLvY+GWinzVvEx3jh9ZRRSyEb2v0FfJdjg38=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=LJa8K7tM; arc=pass smtp.client-ip=136.143.188.11
-ARC-Seal: i=1; a=rsa-sha256; t=1783517327; cv=none; 
-	d=zohomail.com; s=zohoarc; 
-	b=B+Egv0Lv2asl5B+0Cz16zaqh+07u7bw/Z4PcDRUSCEp+Vg0J9eIaBCfrOLLfDFWE8vXa2bW5PqcCvTPlKLnNTQpeQf8YCfh2DuLflyV4Dj6xkS77wQJRi8voG+J1D8vqdtwkwE3arZhieL/72+4/eUB+P3QT+EPtoo4NZGDkszc=
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1783517327; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=ZHKUpaaxOG3TiKrgenFjszrnO2+S4PB/WTF9AEj1jxc=; 
-	b=iYVogWpR7vcbX78qbgwKLENddeH4eO5kNoh+cYZIf8Vem02s+hnpZU8qmcF2taAYOM1r/36v+qFP6hFHPtj1DXrhz2pWho42ppgyMLMn/hKdYAFu5o7p/hXpocaYdjqm6hquwe4NcxaKoar+uQ4LUkOWZUUnp2GuZvTmFeNWROs=
-ARC-Authentication-Results: i=1; mx.zohomail.com;
-	dkim=pass  header.i=collabora.com;
-	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
-	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1783517327;
-	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
-	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=ZHKUpaaxOG3TiKrgenFjszrnO2+S4PB/WTF9AEj1jxc=;
-	b=LJa8K7tMVVJNWGHpCGK3WFWR/3cneDzKZ6v8lQFSFL4wI9kDLA1FI7GN2sC2i0Zk
-	ZLdi1xXwKIG4LkYS9sPFvUKEoeev27ZUbx+zCoR5v0mx3cxcfM2l2GPOEZesq/9lkDL
-	RwNV2BHrJ/zIMx058CSwVWtL1nA/JH0DBB1NSufI=
-Received: by mx.zohomail.com with SMTPS id 1783517324399189.77230306485933;
-	Wed, 8 Jul 2026 06:28:44 -0700 (PDT)
-Content-Type: text/plain;
-	charset=us-ascii
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFB8040B6E3
+	for <linux-pwm@vger.kernel.org>; Wed,  8 Jul 2026 14:00:19 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783519221; cv=none; b=tKSbCCI0115BXeka+L/Yxegi9GNgGq649sErA52CWMbvlA0VlAbrQSKHfBZ/6A5sc99uo2LuPMaafCOIWl+ZCh5dLwmS14c7sVm6RwVmp3NCrCph0Va6fDME6pNooVFoBfczCMRj7M1BcUu6qfQmCAO3PJE9echyW8/HpTM2u+0=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783519221; c=relaxed/simple;
+	bh=+v9vy7krakGFeXF6TzAUAnw0/rePpUUz3AXWVtluiys=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t9BJNeCwaqmlP2QKKezVlezUFlCqk24H+WHS4TF+zufAzqP8PHEw2gnAy5xY2pVNs8oe1xZh9iP04xe4uqwIstyWCWaJbdMd9tZbYeciaMuSwTb0O55qzRBg3uBq/5Bwm3f6Yq2P8+aTZmP6eLbjESSDMsP6i4Tgj1wqlYvq74I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=roeck-us.net; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mkgCQ1Cm; arc=none smtp.client-ip=209.85.216.47
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-36b9d265355so737651a91.2
+        for <linux-pwm@vger.kernel.org>; Wed, 08 Jul 2026 07:00:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783519219; x=1784124019; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:sender:from:to:cc
+         :subject:date:message-id:reply-to:content-type;
+        bh=MXKeSE96P/DSTkSX0hfZLI8OogkntC/gTUwapWrQ2Q8=;
+        b=mkgCQ1CmdnIweyRa4WhpzMCueBmIKRUM6wi1Isnd1iWqA1FPSnSJg54FDGYWG6Z4iy
+         HDlpifybzxvrVq687Fjz3r3RSoRFePAxf3Gx0zTNDLbrfZcorj1kug5UH68tOWnspxUT
+         gR/0B6cZDpiJ6s70n7Kvy6XyaWH95+svuBhugOEdxmt6WxHReE/XSTzjOMy7qxGTY0FV
+         9HHuS95GEE4IGTmO3jgkw+oq5ngFjc80PA5jyiLbKivWL+1UjspBLSX6WAThfchxLdqI
+         6qqE0n+hN9B9i2RpRne24V2WwpfZJrTnVUQVFF41/L+9n7Aqw+GcSSg6SHa4WyR6pQdH
+         Ltag==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783519219; x=1784124019;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:from:date:sender:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=MXKeSE96P/DSTkSX0hfZLI8OogkntC/gTUwapWrQ2Q8=;
+        b=ScMLkafFrdvHA0ZtcBonO8Tr5Ezlc8mI2LJ5j763n8KDifEdMkDLv2qejA/J51TPk6
+         58Yh1Ld7CfsHRmK/LZSaucD5baXaNPsPX1ObMbW78Kv6yzRMjt+MMtic+QqZnm1GYBL4
+         jQ8dS70upJffbQHlwn5caAVSjb0S6MCKOO+Bg1YwXk3w0EakxJoM1j0rQuKmEhKtO+x5
+         GrWU7vJX98RjhxGV3P2FcukwN++IroV5aZsWqvh8L0m5M/nwLE3JcXZDpQ73j8PeJfnV
+         7UEKMjeUdZAlxczswMPFxVEbanjJwsUjNz3BPLXxCPgeEAfVl6u/bwKzcz+DG5JXS04F
+         aPCg==
+X-Forwarded-Encrypted: i=1; AHgh+RoZJ3golikYa1ZBUX7OvO6ghlH85Jgw+kei9l6sGPa9ThwM456n02X3AvrQonDo8zbMdwLosVIeXS0=@vger.kernel.org
+X-Gm-Message-State: AOJu0YysVgIQp+3CgwMVXDgCwVGds7LVzaAd6+OwKQgeqTzxVw1hUeQc
+	odMyPZkInTRdZkmmIMpTy/wdwO6YbCPjWqhCLLIC7/R8sOp0DPGGfFkh
+X-Gm-Gg: AfdE7clrlMG6+8Or5FAYqoxaALF8rrU3Q28gKBHRji3TU2H73f2U/bI5SjgF/4af8kz
+	J4eKQ6Z2HRNnm3B8AhujghLLY1rXCDFXngU6DpCmqhdlaIjI8LHNrb713Onlka7BJZ5WPqH/2W3
+	wVERwR5SKiUGv74iFX3w4OqT5clabAtJ6WOd7wOQL2ldqVPnyAPOteoVFV8XFe9yNGpnh9KQoS3
+	aIggiaiaelPPdPnaLMOyafFHvrTkyhaW9Rw2X4PaMeirsSouFS0zwWHfNwUunZmlKIjZA/xvDkJ
+	oQpCZX6fLM7Lng16OWJ+8bAbgljKvAdUtYLK8AdMuEQt9xmDFC7YETrZbcbRXr/xFkcnW9y70u5
+	j+xztZs/jRZwLShWsTu1uG5xBNEFWGmVelUw9GjcoN9pxWv/RzDiqCBZzE3ldAVqvV5lYA4ASWL
+	x3lfrSsG8BRdYWwZy9xqpA2XEzFA==
+X-Received: by 2002:a17:90b:3512:b0:37f:ec5e:12d9 with SMTP id 98e67ed59e1d1-3894034404bmr2572315a91.16.1783519218978;
+        Wed, 08 Jul 2026 07:00:18 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:da43:aeff:fecc:bfd5])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-388fdc9a066sm569937a91.1.2026.07.08.07.00.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 Jul 2026 07:00:18 -0700 (PDT)
+Sender: Guenter Roeck <groeck7@gmail.com>
+Date: Wed, 8 Jul 2026 07:00:16 -0700
+From: Guenter Roeck <linux@roeck-us.net>
+To: Yureka Lilian <yureka@cyberchaos.dev>
+Cc: Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Lorenzo Pieralisi <lpieralisi@kernel.org>,
+	Sven Peter <sven@kernel.org>, Janne Grunau <j@jannau.net>,
+	Neal Gompa <neal@gompa.dev>, Thomas Gleixner <tglx@kernel.org>,
+	Wim Van Sebroeck <wim@linux-watchdog.org>,
+	Hector Martin <marcan@marcan.st>, Linus Walleij <linusw@kernel.org>,
+	Mark Kettenis <kettenis@openbsd.org>,
+	Andi Shyti <andi.shyti@kernel.org>,
+	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	Sasha Finkelstein <k@chaosmail.tech>, devicetree@vger.kernel.org,
+	linux-kernel@vger.kernel.org, asahi@lists.linux.dev,
+	linux-arm-kernel@lists.infradead.org,
+	linux-watchdog@vger.kernel.org, linux-gpio@vger.kernel.org,
+	linux-i2c@vger.kernel.org, linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 03/10] dt-bindings: watchdog: apple,wdt: Add t8132
+ compatible
+Message-ID: <a03c19ee-cf74-4f26-826d-f2bfb816fb3f@roeck-us.net>
+References: <20260705-apple-m4-initial-devicetrees-v1-0-e5655ee56523@cyberchaos.dev>
+ <20260705-apple-m4-initial-devicetrees-v1-3-e5655ee56523@cyberchaos.dev>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.700.81\))
-Subject: Re: [PATCH v6 08/20] rust: pci: io: make `ConfigSpace` a view
-From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <20260706-io_projection-v6-8-72cd5d055d54@garyguo.net>
-Date: Wed, 8 Jul 2026 10:28:23 -0300
-Cc: Alice Ryhl <aliceryhl@google.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- "Rafael J. Wysocki" <rafael@kernel.org>,
- Miguel Ojeda <ojeda@kernel.org>,
- Boqun Feng <boqun@kernel.org>,
- =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
- Benno Lossin <lossin@kernel.org>,
- Andreas Hindborg <a.hindborg@kernel.org>,
- Trevor Gross <tmgross@umich.edu>,
- Tamir Duberstein <tamird@kernel.org>,
- =?utf-8?Q?Onur_=C3=96zkan?= <work@onurozkan.dev>,
- Bjorn Helgaas <bhelgaas@google.com>,
- =?utf-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
- Abdiel Janulgue <abdiel.janulgue@gmail.com>,
- Robin Murphy <robin.murphy@arm.com>,
- Alexandre Courbot <acourbot@nvidia.com>,
- David Airlie <airlied@gmail.com>,
- Simona Vetter <simona@ffwll.ch>,
- Michal Wilczynski <m.wilczynski@samsung.com>,
- =?utf-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
- Danilo Krummrich <dakr@kernel.org>,
- driver-core@lists.linux.dev,
- rust-for-linux@vger.kernel.org,
- linux-kernel@vger.kernel.org,
- linux-pci@vger.kernel.org,
- nova-gpu@lists.linux.dev,
- dri-devel@lists.freedesktop.org,
- linux-pwm@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <043E32BB-789D-4ABA-9491-185108A19EAE@collabora.com>
-References: <20260706-io_projection-v6-0-72cd5d055d54@garyguo.net>
- <20260706-io_projection-v6-8-72cd5d055d54@garyguo.net>
-To: Gary Guo <gary@garyguo.net>
-X-Mailer: Apple Mail (2.3826.700.81)
-X-ZohoMailClient: External
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20260705-apple-m4-initial-devicetrees-v1-3-e5655ee56523@cyberchaos.dev>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-0.66 / 15.00];
+X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
-	DMARC_POLICY_ALLOW(-0.50)[collabora.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	R_DKIM_ALLOW(-0.20)[collabora.com:s=zohomail];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9640-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9641-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	RCVD_COUNT_THREE(0.00)[4];
-	FREEMAIL_CC(0.00)[google.com,linuxfoundation.org,kernel.org,protonmail.com,umich.edu,onurozkan.dev,gmail.com,arm.com,nvidia.com,ffwll.ch,samsung.com,lists.linux.dev,vger.kernel.org,lists.freedesktop.org];
-	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:aliceryhl@google.com,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:ojeda@kernel.org,m:boqun@kernel.org,m:bjorn3_gh@protonmail.com,m:lossin@kernel.org,m:a.hindborg@kernel.org,m:tmgross@umich.edu,m:tamird@kernel.org,m:work@onurozkan.dev,m:bhelgaas@google.com,m:kwilczynski@kernel.org,m:abdiel.janulgue@gmail.com,m:robin.murphy@arm.com,m:acourbot@nvidia.com,m:airlied@gmail.com,m:simona@ffwll.ch,m:m.wilczynski@samsung.com,m:ukleinek@kernel.org,m:dakr@kernel.org,m:driver-core@lists.linux.dev,m:rust-for-linux@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-pci@vger.kernel.org,m:nova-gpu@lists.linux.dev,m:dri-devel@lists.freedesktop.org,m:linux-pwm@vger.kernel.org,m:gary@garyguo.net,m:abdieljanulgue@gmail.com,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[daniel.almeida@collabora.com,linux-pwm@vger.kernel.org];
-	FORGED_SENDER_MAILLIST(0.00)[];
+	FORGED_RECIPIENTS(0.00)[m:yureka@cyberchaos.dev,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:lpieralisi@kernel.org,m:sven@kernel.org,m:j@jannau.net,m:neal@gompa.dev,m:tglx@kernel.org,m:wim@linux-watchdog.org,m:marcan@marcan.st,m:linusw@kernel.org,m:kettenis@openbsd.org,m:andi.shyti@kernel.org,m:ukleinek@kernel.org,m:k@chaosmail.tech,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:asahi@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-watchdog@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-i2c@vger.kernel.org,m:linux-pwm@vger.kernel.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
+	DMARC_NA(0.00)[roeck-us.net];
+	MIME_TRACE(0.00)[0:+];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_SENDER(0.00)[linux@roeck-us.net,linux-pwm@vger.kernel.org];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[29];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	RCPT_COUNT_TWELVE(0.00)[24];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[daniel.almeida@collabora.com,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[collabora.com:+];
-	MID_RHS_MATCH_FROM(0.00)[];
-	TAGGED_RCPT(0.00)[linux-pwm];
-	APPLE_MAILER_COMMON(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[linux@roeck-us.net,linux-pwm@vger.kernel.org];
+	MISSING_XM_UA(0.00)[];
+	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	MID_RHS_MATCH_FROM(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
 	TO_DN_SOME(0.00)[]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 857D4726D5D
+X-Rspamd-Queue-Id: 14F5F727207
 
+On Sun, Jul 05, 2026 at 03:17:22PM +0200, Yureka Lilian wrote:
+> The watchdog on the Apple silicon t8132 (M4) SoC is compatible with the
+> existing driver. Add "apple,t8132-wdt" as SoC specific compatible under
+> "apple,t8103-wdt" used by the driver.
+> 
+> The M4 wdt block additionally has a secondary watchdog, which is
+> disabled by m1n1 and can safely be ignored by Linux.
+> 
+> Signed-off-by: Yureka Lilian <yureka@cyberchaos.dev>
+> Acked-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 
+Applied.
 
-> On 6 Jul 2026, at 09:44, Gary Guo <gary@garyguo.net> wrote:
->=20
-> In order to support I/O projection, we are splitting I/O types into =
-two
-> categories: owned objects and views. Owned objects have a specific =
-type
-> that is related to setting up and tearing down, while views can have =
-their
-> type changed with I/O projection.
->=20
-> Things like `IoMem` or `Bar` are owned objects, which requires setting =
-up
-> mapping and cleaning up on drop. On the other side, `ConfigSpace` is =
-really
-> just a view, as the resource is associated with the `pci::Device`.
->=20
-> Remove the `ConfigSpaceKind` bound on `ConfigSpace` and make it a =
-generic
-> view. This means that `ConfigSpace` object now represents a subregion =
-and
-> therefore encodes offset (as address of pointers) and size (as =
-metadata of
-> pointers) itself. The full region case is still supported with offset =
-0 and
-> size of `cfg_size`.
->=20
-> Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
-> Signed-off-by: Gary Guo <gary@garyguo.net>
-> ---
-> rust/kernel/pci/io.rs | 64 =
-+++++++++++++++++++++++++++++----------------------
-> 1 file changed, 36 insertions(+), 28 deletions(-)
->=20
-> diff --git a/rust/kernel/pci/io.rs b/rust/kernel/pci/io.rs
-> index e0acb62f58a2..89f4bb483a7f 100644
-> --- a/rust/kernel/pci/io.rs
-> +++ b/rust/kernel/pci/io.rs
-> @@ -18,7 +18,6 @@
->     ptr::KnownSize, //
-> };
-> use core::{
-> -    marker::PhantomData,
->     ops::Deref, //
-> };
->=20
-> @@ -53,33 +52,42 @@ pub const fn into_raw(self) -> usize {
-> /// Alias for extended (4096-byte) PCIe configuration space.
-> pub type Extended =3D Region<4096>;
->=20
-> -/// Trait for PCI configuration space size markers.
-> -///
-> -/// This trait is implemented by [`Normal`] and [`Extended`] to =
-provide
-> -/// compile-time knowledge of the configuration space size.
-> -pub trait ConfigSpaceKind: KnownSize {}
-> -
-> -impl ConfigSpaceKind for Normal {}
-> -
-> -impl ConfigSpaceKind for Extended {}
-> -
-> -/// The PCI configuration space of a device.
-> +/// A view of PCI configuration space of a device.
-> ///
-> /// Provides typed read and write accessors for configuration =
-registers
-> /// using the standard `pci_read_config_*` and `pci_write_config_*` =
-helpers.
-> ///
-> -/// The generic parameter `S` indicates the maximum size of the =
-configuration space.
-> -/// Use [`Normal`] for 256-byte legacy configuration space or =
-[`Extended`] for
-> -/// 4096-byte PCIe extended configuration space (default).
-> -pub struct ConfigSpace<'a, S: ?Sized + ConfigSpaceKind =3D Extended> =
-{
-> +/// The generic parameter `T` is the type of the view. The full =
-configuration space is also a
-> +/// special type of view; in such cases, `T` can be [`Normal`] for =
-256-byte legacy configuration
-> +/// space or [`Extended`] for 4096-byte PCIe extended configuration =
-space (default).
-> +///
-> +/// # Invariants
-> +///
-> +/// `ptr` is aligned and range `ptr..ptr + KnownSize::size(ptr)` is =
-within
-> +/// `0..pdev.cfg_size().into_raw()`.
-> +pub struct ConfigSpace<'a, T: ?Sized =3D Extended> {
->     pub(crate) pdev: &'a Device<device::Bound>,
-> -    _marker: PhantomData<S>,
-> +    ptr: *mut T,
-> }
->=20
-> +impl<T: ?Sized> Copy for ConfigSpace<'_, T> {}
-> +impl<T: ?Sized> Clone for ConfigSpace<'_, T> {
-> +    #[inline]
-> +    fn clone(&self) -> Self {
-> +        *self
-> +    }
-> +}
-> +
-> +// SAFETY: `ConfigSpace<'_, T>` is conceptually `&T` but in I/O =
-memory.
-> +unsafe impl<T: ?Sized + Sync> Send for ConfigSpace<'_, T> {}
-> +
-> +// SAFETY: `ConfigSpace<'_, T>` is conceptually `&T` but in I/O =
-memory.
-> +unsafe impl<T: ?Sized + Sync> Sync for ConfigSpace<'_, T> {}
-> +
-> /// Implements [`IoCapable`] on [`ConfigSpace`] for `$ty` using =
-`$read_fn` and `$write_fn`.
-> macro_rules! impl_config_space_io_capable {
->     ($ty:ty, $read_fn:ident, $write_fn:ident) =3D> {
-> -        impl<'a, S: ?Sized + ConfigSpaceKind> IoCapable<$ty> for =
-&ConfigSpace<'a, S> {
-> +        impl<'a, T: ?Sized> IoCapable<$ty> for ConfigSpace<'a, T> {
->             unsafe fn io_read(self, address: usize) -> $ty {
->                 let mut val: $ty =3D 0;
->=20
-> @@ -112,19 +120,17 @@ unsafe fn io_write(self, value: $ty, address: =
-usize) {
-> impl_config_space_io_capable!(u16, pci_read_config_word, =
-pci_write_config_word);
-> impl_config_space_io_capable!(u32, pci_read_config_dword, =
-pci_write_config_dword);
->=20
-> -impl<'a, S: ?Sized + ConfigSpaceKind> Io for &ConfigSpace<'a, S> {
-> -    type Target =3D S;
-> +impl<'a, T: ?Sized + KnownSize> Io for ConfigSpace<'a, T> {
-> +    type Target =3D T;
->=20
-> -    /// Returns the base address of the I/O region. It is always 0 =
-for configuration space.
->     #[inline]
->     fn addr(self) -> usize {
-> -        0
-> +        self.ptr.addr()
->     }
->=20
-> -    /// Returns the maximum size of the configuration space.
->     #[inline]
->     fn maxsize(self) -> usize {
-> -        self.pdev.cfg_size().into_raw()
-> +        KnownSize::size(self.ptr)
->     }
-> }
->=20
-> @@ -281,23 +287,25 @@ pub fn cfg_size(&self) -> ConfigSpaceSize {
->         }
->     }
->=20
-> -    /// Return an initialized normal (256-byte) config space object.
-> +    /// Return a view of the normal (256-byte) config space.
->     pub fn config_space<'a>(&'a self) -> ConfigSpace<'a, Normal> {
-> +        // INVARIANT: null is aligned and the range is within config =
-space.
->         ConfigSpace {
->             pdev: self,
-> -            _marker: PhantomData,
-> +            ptr: =
-Normal::ptr_from_raw_parts_mut(core::ptr::null_mut(), =
-self.cfg_size().into_raw()),
->         }
->     }
->=20
-> -    /// Return an initialized extended (4096-byte) config space =
-object.
-> +    /// Return a view of the extended (4096-byte) config space.
->     pub fn config_space_extended<'a>(&'a self) -> =
-Result<ConfigSpace<'a, Extended>> {
->         if self.cfg_size() !=3D ConfigSpaceSize::Extended {
->             return Err(EINVAL);
->         }
->=20
-> +        // INVARIANT: null is aligned and we just checked the =
-`cfg_size`.
->         Ok(ConfigSpace {
->             pdev: self,
-> -            _marker: PhantomData,
-> +            ptr: =
-Extended::ptr_from_raw_parts_mut(core::ptr::null_mut(), 4096),
->         })
->     }
-> }
->=20
-> --=20
-> 2.54.0
->=20
-
-Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
-
+Thanks,
+Guenter
 
