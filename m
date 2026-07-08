@@ -1,59 +1,59 @@
-Return-Path: <linux-pwm+bounces-9645-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9644-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id CkbSEbdnTmpBMAIAu9opvQ
-	(envelope-from <linux-pwm+bounces-9645-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Wed, 08 Jul 2026 17:07:35 +0200
+	id PgKZHQ1rTmpMMQIAu9opvQ
+	(envelope-from <linux-pwm+bounces-9644-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Wed, 08 Jul 2026 17:21:49 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id AD3A8727C05
-	for <lists+linux-pwm@lfdr.de>; Wed, 08 Jul 2026 17:07:34 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id BC782727EDB
+	for <lists+linux-pwm@lfdr.de>; Wed, 08 Jul 2026 17:21:48 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=collabora.com header.s=zohomail header.b=GKhYUiCc;
+	dkim=pass header.d=collabora.com header.s=zohomail header.b=BqgX68aZ;
 	dmarc=pass (policy=none) header.from=collabora.com;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9645-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9645-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9644-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9644-lists+linux-pwm=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id 6D42430C0D18
-	for <lists+linux-pwm@lfdr.de>; Wed,  8 Jul 2026 14:52:58 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 1F05F319811B
+	for <lists+linux-pwm@lfdr.de>; Wed,  8 Jul 2026 14:51:40 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59A283B8BA4;
-	Wed,  8 Jul 2026 14:49:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 629204D8D84;
+	Wed,  8 Jul 2026 14:49:42 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from sender4-op-o11.zoho.com (sender4-op-o11.zoho.com [136.143.188.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5DAFA4D2EF1;
-	Wed,  8 Jul 2026 14:49:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E00F0380FFB;
+	Wed,  8 Jul 2026 14:49:36 +0000 (UTC)
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783522188; cv=pass; b=Z+kLb7yaIWTo4aQPOngdsvASvBWKUjqdlp4gPPLdB2pLbZKKSZRgl7N5Uw6McCPeCgdFd7mLOtj7e6n6XYCklaAdsjHhrQBi5JMjKbZAD6GEyPHFvG9tRbgDseLIY0XxcWILr5NvPo+Lsa+rkui34IB4wwzOv0iRNNwlJsc40NA=
+	t=1783522180; cv=pass; b=LE3sYy5IP1PgRj2KiSf8//rtXXqovNp9XJ8YIaQV+WGoFHRjJ3YXT9ANIc0BG2rCMfmg3dDnL9ui8SszjpZLLXa6VJtOb9weQ1PZAkIt+vtzjOf5ck7bLwl6sPgeoBDQze0XLXwpp52AJ7WizovnILbYgo1KUoGKIZwajPOFFlY=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783522188; c=relaxed/simple;
+	s=arc-20240116; t=1783522180; c=relaxed/simple;
 	bh=p9UVZdQviaIM7RRmMiAoAltcfQyAv+LLnchHDDFUqR8=;
 	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=Q84ADda2/EJUjF5TLvTCf74DZRGKB25Kq2Vet08GEKDPo34lJ3gYZCNlRfkFOFhqYoqkM+suoZezPTXYAA0zkuQtcPiG53XeJ8FyHaa19gAlJO422nk6ntFnJAgqCoqxgI0X4lN2xZTBGHS8I0rxDUnKNBRHXnpud7ll/0Z67Vw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=GKhYUiCc; arc=pass smtp.client-ip=136.143.188.11
-ARC-Seal: i=1; a=rsa-sha256; t=1783522141; cv=none; 
+	 Message-Id:References:To; b=nP6ANwFNooje+yHVm1tGc1piaD2eIVMCt2zlQ6Yj0TA6dv9MTY2ToXy/YX4dtlAxKYaoby8LzFscF81LV9xnPpSgzOGCOZKMoEZuL0XYX93n48uHtBmIox9W30ZQDy6p15FHO8EjDU9UrYZmXI5dbH7AW2nPeijpgrmO+2uS/t8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=BqgX68aZ; arc=pass smtp.client-ip=136.143.188.11
+ARC-Seal: i=1; a=rsa-sha256; t=1783522135; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=hV/rQjFKRB/eifJBDi2O9xtS6/9UmEAvxFqdXof/YfPVrP7+E3EDjZkYUFa3y+GOB7gcqMcA6G52NvKxBvilR9UjnWLwfzOk5JqKUGgIM+9GZY/YLKrWEBhYkmwqrKYColx/Z2rIiR1+3ol1qbYTzt9NNHNez57KXiHkvqLDCuU=
+	b=bpdfpAPoLcSj38gcmEk2W/IMuf6DLCeA1M8IV40jkNqT5xVAIxBmWxuxqB7ExufSghrKFbSVfQcs5J27DAy2Ut8z+NZbwCCnr8FUYKxZ9o1xQ2idOIp/hlNVhyywtN6G9wYvS2eVzalpAgO2OV8UYnxgPIqZIidkV+dzJd9igX8=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1783522141; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	t=1783522135; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
 	bh=4szMuqOI9JIjS8/kOAhVMC5VSKoQ9b+UCMsEA4pJKao=; 
-	b=ljs9zaXD4/bDEiQd9U+oF3S1vteOIRgQhh8Ngq7zagmd3R0+XLor+4iI/3HMtmkmM4GGzGJDzokMTz8LsM2QBfcDXxAFqcNFfsrQPB9JFzGNGl69iA944IHeAohS7Ey7k/A6qqPT2IX6QVI3n08c9IZE51PgLMNvjYf3Sikin50=
+	b=Q9Q2usmguFIY0JgQ8ctP2lfmqHIvDkwdj5XxEO0ghHgtG1xSNAeu3lzU70jxmsPU0lL3ept8wRTIbfssk0ZyqguMLJyijIna5ZOYLyzNsEOXMc1olPEt1MfHPNuMebvHmVGrdVBL8YhjBFlrsMdAEDnlKAH7iWIeyMcaonpBc54=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
 	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1783522140;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1783522135;
 	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
 	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
 	bh=4szMuqOI9JIjS8/kOAhVMC5VSKoQ9b+UCMsEA4pJKao=;
-	b=GKhYUiCc2/tIHPPHslkhGCy9+HNmby01z5e1+ojOAYnoReuGlgwKBr2LF3FASY/1
-	bFL43YA8IUhnlvVxOYQjoF/fwvc/gyXKg9IqLQimHZVE59t8jcrtKjTHOc4N4T0Mgsp
-	CY6sMuNVIIa7XVP1Hxyv+bM4tlX1JMYlucHoUSbA=
-Received: by mx.zohomail.com with SMTPS id 1783522139037419.44265589536326;
-	Wed, 8 Jul 2026 07:48:59 -0700 (PDT)
+	b=BqgX68aZ2rJ5M0QZeOx8Q+mChiooQJyvC8he/hgev0iHS+XBMjSR779q2FrhT3W7
+	l8lWrFxj4G9ICt6BRakEGDBlQBJitE8uoetb4bKLUc7muIoR6m/XnuWdmXU51Zlm4zp
+	IbKX1oM2tbfP+poX6TmhAwenoHQCtzdU7wMUZKks=
+Received: by mx.zohomail.com with SMTPS id 1783522133821946.0992772309626;
+	Wed, 8 Jul 2026 07:48:53 -0700 (PDT)
 Content-Type: text/plain;
 	charset=us-ascii
 Precedence: bulk
@@ -106,13 +106,13 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
 	DMARC_POLICY_ALLOW(-0.50)[collabora.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[collabora.com:s=zohomail];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9645-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9644-lists,linux-pwm=lfdr.de];
 	FROM_HAS_DN(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	FORGED_SENDER(0.00)[daniel.almeida@collabora.com,linux-pwm@vger.kernel.org];
@@ -133,10 +133,10 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-pwm];
 	APPLE_MAILER_COMMON(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[collabora.com:from_mime,collabora.com:email,collabora.com:mid,collabora.com:dkim,vger.kernel.org:from_smtp,self.io:url,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,nvidia.com:email,garyguo.net:email]
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,self.io:url,nvidia.com:email,collabora.com:from_mime,collabora.com:email,collabora.com:mid,collabora.com:dkim,garyguo.net:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: AD3A8727C05
+X-Rspamd-Queue-Id: BC782727EDB
 
 
 
