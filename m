@@ -1,239 +1,400 @@
-Return-Path: <linux-pwm+bounces-9635-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9636-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id F/ZfJbk9TmonJgIAu9opvQ
-	(envelope-from <linux-pwm+bounces-9635-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Wed, 08 Jul 2026 14:08:25 +0200
+	id HPMUJmtCTmpKJwIAu9opvQ
+	(envelope-from <linux-pwm+bounces-9636-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Wed, 08 Jul 2026 14:28:27 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id E5432726251
-	for <lists+linux-pwm@lfdr.de>; Wed, 08 Jul 2026 14:08:24 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id DDEE47264E4
+	for <lists+linux-pwm@lfdr.de>; Wed, 08 Jul 2026 14:28:26 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=garyguo.net header.s=selector1 header.b=vMyNi9xf;
-	dmarc=pass (policy=none) header.from=garyguo.net;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9635-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9635-lists+linux-pwm=lfdr.de@vger.kernel.org";
-	arc=reject ("cv is fail on i=2")
+	dkim=pass header.d=collabora.com header.s=zohomail header.b=ESZxBkzq;
+	dmarc=pass (policy=none) header.from=collabora.com;
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9636-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9636-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id EB06E3005AC3
-	for <lists+linux-pwm@lfdr.de>; Wed,  8 Jul 2026 12:05:44 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3F99A300B61D
+	for <lists+linux-pwm@lfdr.de>; Wed,  8 Jul 2026 12:23:38 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 59413433BBB;
-	Wed,  8 Jul 2026 12:05:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 1634843D50C;
+	Wed,  8 Jul 2026 12:23:37 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from LO3P265CU004.outbound.protection.outlook.com (mail-uksouthazon11020096.outbound.protection.outlook.com [52.101.196.96])
+Received: from sender4-op-o11.zoho.com (sender4-op-o11.zoho.com [136.143.188.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B9964314B9;
-	Wed,  8 Jul 2026 12:05:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EFFD43DA50;
+	Wed,  8 Jul 2026 12:23:35 +0000 (UTC)
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783512344; cv=fail; b=SscTeRX9Ui5rXT1+xbkEgQvWq9RKZpibvHX4M6XHdD146osvyOL9fATMKrM9yixrCplLPtUh3squH3eVMsurIrKxQtyH0X3D0n+Uw1XZRpJAhnwio9dDwUAB4cnasBXt5O7ObYTerrc9g2vDz5e5sjehttbI/jaJqPatFlSVFrE=
+	t=1783513417; cv=pass; b=q8rHElNfi0BfYRq+pBwSHujtUHieH4nVQ21/JYznAF2VLz/s6/ZK5+ivRImNXItQEKmnt8AaN1x8Hi8mWVvPQLkNE5Y6OmkaquzpOZSjJZ+Z0gOFcfRAkZ5IJ6PiBEnzrUSGghtF0k6fORrOtR5rGZbE/+d6BsBqkSQJS7+oN+Q=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783512344; c=relaxed/simple;
-	bh=KM+yhD/2lu4D9Cz/UCHDHuYp9+bo+O8+EVVil7Hhfi8=;
-	h=Content-Type:Date:Message-Id:From:To:Cc:Subject:References:
-	 In-Reply-To:MIME-Version; b=oDrbcWXLPZlY0azvVonNf9NrSo48L7NLMi+beCaDZMdmEVaeEW7yqu0AjfJvJUZQuLgoNUyA7yRK/1v3mDJJg7O4G4rEcjLdtTiiHaC3vOd5bJrjN34z/kriwpUtGfdtZNbxifeaaR6EQUdL81oHc/HlFDnCZVmVUdQ+SdEvlvQ=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=garyguo.net; spf=pass smtp.mailfrom=garyguo.net; dkim=pass (1024-bit key) header.d=garyguo.net header.i=@garyguo.net header.b=vMyNi9xf; arc=fail smtp.client-ip=52.101.196.96
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=n8fc53ErGqjk9gssxdz2ynHqXQ995UviHMeXuODSStDVt2ssveV4BJu7ZNYCoyt6tzeuc1tAD1++ksROaQltiIFTtaDarBNdca3SnorkYQKskcF+vovQ1JADojR0q8oK1OK1XNdhe/pWNLd6cPPcoYI6Rz2d0No0W8pMqmGlWUaMRwbm/ORCgrPrXsQFwHkW9C7tzNMzdXP6y236LR9STphx8BmbwiZLZoVqxnPX4QwIX7spWCdUv1XXFjaQTf9jc1j+2zGwKCMjJxvbuSTpMP1b83EJ3vy5V/Dz8fDjBKYfZB2vBWHHsOwcRb1T2vKGOe7tmiHymt+vhOjdY+h/Og==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=Gs3A3jKx9mXo0cQLWuBUqz8btk337I0lh2f9SHMb8SM=;
- b=qit0MOTTHmPvY4LNpFYw1CvKErbeJ06dOtusJdc6gAUVKR40/yZ27RMrqLr8EHOzGGIxRzuQoMWEUlt7CIo1U2PqXvZSS6xqbUnJmezP9m8LXp/7TUM2eLWZVhFwFwKeHAmq0QVfaogXD3gmmQNotVEILslJqOqn9N7qgKsjXcOOfaZ1Am+G7QAlrjKz7HONkPDBBnpKYVk+6OxpY0aoh8QLrwa3XQwHAy6ypaiAE9AvHIhdlqSAWOA9ogogMEjSG8FkuMbNgZiFWUCViA266s9NUmUvvK1jUaGrPMAeKe4kNNDqShwSZCiUpPbo0mkMVIHRn88vQ2pWAlm+TYu+pg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=garyguo.net; dmarc=pass action=none header.from=garyguo.net;
- dkim=pass header.d=garyguo.net; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=garyguo.net;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Gs3A3jKx9mXo0cQLWuBUqz8btk337I0lh2f9SHMb8SM=;
- b=vMyNi9xfhsMFvuughn6H8A/EpMMt2v02io64iC3jmIF/cHmKlnDQM2qga80WMMpeEhP6K+fjkLuZ+orWTP2j+Hrv7wjTmphFAgXBERue9jfRuveSwfvgmv+KUsxTtT6uQ4fxsThR/Wlvpj7wRhpkfgePPl+nX9tg7C39uwN9DJU=
-Received: from LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:488::16)
- by LOVP265MB8837.GBRP265.PROD.OUTLOOK.COM (2603:10a6:600:48a::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.159.19; Wed, 8 Jul
- 2026 12:05:39 +0000
-Received: from LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
- ([fe80::1c3:ceba:21b4:9986]) by LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
- ([fe80::1c3:ceba:21b4:9986%4]) with mapi id 15.21.0181.008; Wed, 8 Jul 2026
- 12:05:39 +0000
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset=UTF-8
-Date: Wed, 08 Jul 2026 13:05:38 +0100
-Message-Id: <DJT6CXCU2PRC.1ZUZFVVEDR6L7@garyguo.net>
-From: "Gary Guo" <gary@garyguo.net>
-To: "Daniel Almeida" <daniel.almeida@collabora.com>, "Gary Guo"
- <gary@garyguo.net>
-Cc: "Alice Ryhl" <aliceryhl@google.com>, "Greg Kroah-Hartman"
- <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rafael@kernel.org>,
- "Miguel Ojeda" <ojeda@kernel.org>, "Boqun Feng" <boqun@kernel.org>,
- =?utf-8?q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>, "Benno Lossin"
- <lossin@kernel.org>, "Andreas Hindborg" <a.hindborg@kernel.org>, "Trevor
- Gross" <tmgross@umich.edu>, "Tamir Duberstein" <tamird@kernel.org>,
- =?utf-8?q?Onur_=C3=96zkan?= <work@onurozkan.dev>, "Bjorn Helgaas"
- <bhelgaas@google.com>, =?utf-8?q?Krzysztof_Wilczy=C5=84ski?=
- <kwilczynski@kernel.org>, "Abdiel Janulgue" <abdiel.janulgue@gmail.com>,
- "Robin Murphy" <robin.murphy@arm.com>, "Alexandre Courbot"
- <acourbot@nvidia.com>, "David Airlie" <airlied@gmail.com>, "Simona Vetter"
- <simona@ffwll.ch>, "Michal Wilczynski" <m.wilczynski@samsung.com>,
- =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, "Danilo Krummrich"
- <dakr@kernel.org>, <driver-core@lists.linux.dev>,
- <rust-for-linux@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
- <linux-pci@vger.kernel.org>, <nova-gpu@lists.linux.dev>,
- <dri-devel@lists.freedesktop.org>, <linux-pwm@vger.kernel.org>
-Subject: Re: [PATCH v6 04/20] rust: io: implement `Io` on reference types
- instead
-X-Mailer: aerc 0.21.0
-References: <20260706-io_projection-v6-0-72cd5d055d54@garyguo.net>
- <20260706-io_projection-v6-4-72cd5d055d54@garyguo.net>
- <88183651-927C-4A64-A3C9-BC5C4FE6C831@collabora.com>
-In-Reply-To: <88183651-927C-4A64-A3C9-BC5C4FE6C831@collabora.com>
-X-ClientProxiedBy: LO4P265CA0115.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:2c3::19) To LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
- (2603:10a6:600:488::16)
+	s=arc-20240116; t=1783513417; c=relaxed/simple;
+	bh=8SAa2e7iupLurhRilDkBkFWovq0PL38k2YJCr75gcfo=;
+	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
+	 Message-Id:References:To; b=n+tccWZOv07H1ri/C0homPlcQaqX2p6NNob1hi3A06h+ewg8q8uKQv0EePaIektfNuhZnAyjD8PtbctGIpIopJP3KywnlReKhSjl0wv8jc/QkGBGLV+oq6TR5rLnhyMtxv4QvJtwrWnWMpdpTwDnsmNcNGaClPvZnN9ztPHmGXE=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=ESZxBkzq; arc=pass smtp.client-ip=136.143.188.11
+ARC-Seal: i=1; a=rsa-sha256; t=1783513382; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=KmWcnKzZTM2HpwSs+20JHKwKYN+FC9ZvcBXkAiJm1qkxaeeHjfddKTQlQw/7mUgA0EJ3riu0rKiwuKO7D2hFFpsXRrpkPfnDQ75KdJx8R7tF/3iC3wqnO3zCrJBrcEGKff5KXMfM0Yi3CG7IdxZJCvfKTZYjAsa6YKL6QILehMg=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1783513382; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=rDex9A1n2fSjeQf1stLpqjUWTbdQC9qSK9Rh1huGF/s=; 
+	b=OC3BM2g9Q1DKUk5vFXuHFUL2AyqnoLP2Umn8exQYZT0CYoAWN+3B+SyEnughrqxkJ05teuxSyFZSRMPAnsQF7ZxekzmmwpTMvNwCliecc+MUvBDWe4lOiFx+wGAL8ZfgwBcoEL2waZMkVfGBmE90jxLdc00qwrqMVqx5WOXckZw=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=collabora.com;
+	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
+	dmarc=pass header.from=<daniel.almeida@collabora.com>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1783513382;
+	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
+	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
+	bh=rDex9A1n2fSjeQf1stLpqjUWTbdQC9qSK9Rh1huGF/s=;
+	b=ESZxBkzqA+Qd94MjQ0d6uoHyfroLZx+g15ox0/0S7cHA4bs+eCdUNNCPcqlxwlQ2
+	J7JF4+1DdzZso8EJt5AjzBY1r8caZDbtg5ZhkW8K/jFTNfKrG393GVOe4c+puYDOK4S
+	5U7sTwR3yq+Iy8eNWAjR0fKe8lUNV9p6d81xJ6lk=
+Received: by mx.zohomail.com with SMTPS id 1783513380950428.34528060883395;
+	Wed, 8 Jul 2026 05:23:00 -0700 (PDT)
+Content-Type: text/plain;
+	charset=us-ascii
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
-MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LOVP265MB8871:EE_|LOVP265MB8837:EE_
-X-MS-Office365-Filtering-Correlation-Id: bbbf84a9-39ac-4bc6-85c7-08dedce93a03
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|10070799003|23010399003|376014|7416014|1800799024|366016|22082099003|18002099003|56012099006|4143699003;
-X-Microsoft-Antispam-Message-Info:
-	NFNAiwh/euaVf2Fyx1OZo59F+UwZmZ6WOG72oOJRI9pMvPlcwB/azsduyJnXYwGgbGb7kf+6joYLJ0MdXR1nrCQ8WSQTunNfzO1yvLGhD5sebWBZ11suSV0AZFt9hAYG++6es8leFBUzs8qOazFIcEOjDAuCTakW0hPQWn3eB7SjkJOmP9+BnhctUQyyRekgs3fRIqZpSpoEhM3dycExsxFtfTI0CQgar3/MIoFD63FLI7JJtkTQT0a7IHr6V93lv8J3gKqTf6nacADR5atDQFubB1IoiNKcmcQNKfe6MohMgR6RWdyiW8KxCUKlV8kbpnNdd3hidjM219Cjiap3SpYM4OM3gQHJcnYJM3iUO3J3zL+ne+FAO0+BsMmoBJ7fY+Zs+UmIL3rALkNmBhGEPKp3ckulM79HjGr0bKv7IZy5LRwnwJVk3KMyG2YcNxTigMHyRndpG5sSrHT4flVPn53VFCesb6azFS6vi4Fabd4NOlVfnRE5vocaC6ahC9ndCsFtFNt1K0lFVLKNDZ8P9nJnr45FQEzw+Y60wuGaUwGEHWSVrYR9nShMV45rooUl0q2sZPK80+ggGEET7iLJdaxM5Rz1kEM7Wdq1Af/cFOrpj6XTq9m8xihmBxgkF3n4m8Kvr5561RcIIGexg0RJVJdztFLkRMfRtWsH7mPP7uo=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(10070799003)(23010399003)(376014)(7416014)(1800799024)(366016)(22082099003)(18002099003)(56012099006)(4143699003);DIR:OUT;SFP:1102;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?WlViUndUaytUMUtLSGJkc1N5NXg1MDYvYUkxYmZ3bUo5VmRBNjFVTll2UzY3?=
- =?utf-8?B?c2JVZm9SK0xnZlNQeHhuNXZ3NW02NTNEYXRIcTN6dlFKTXQ4QjFOWkhvREUy?=
- =?utf-8?B?VWI4UklxYnNkbHRxUHZkeEZoRC9GZUdIeWdCREhGOEhtNTA3ZlErdU5PejVu?=
- =?utf-8?B?M21IOXZHRXBlM2Y1bHNvV0ZmZit1MWIvcHdSU1hNT0dRZUMwenV0MEtMaDJB?=
- =?utf-8?B?a0h6S1RwdDVLeG8yTk85NGtCcXFQc0VNclpFSjMrbDlkM2xXaVAxemN0QTgx?=
- =?utf-8?B?TThGQlFEZzZwMS80aFRhemZuZFdvZ2RqcjdsSldEdUMreHR1Tk1Wa3lYN0Ry?=
- =?utf-8?B?dkZzVFpXc2xwRFAxUjBlOG5heTdWV0hwYXJsRnhRcjJXN3FTci8rMU1EZ3dQ?=
- =?utf-8?B?cFkwM0UrRG1SblIzTlNrUUxBbmRZam5DejJYWHB6QUh1S3doN1FYdEVtN09H?=
- =?utf-8?B?OVp1MEpBVW8wT05RaW9yb1NpTmZNU010dU9VT0tjU2c4ZE9YaUVqSHA0YXZT?=
- =?utf-8?B?RGpldThKVGZJWnJUWUVmVVEzYS8yZW5WdG9tNG9pNWxuVVd3ZXdvN0VIQVk1?=
- =?utf-8?B?ZFZZTjl4NEcyYUFmR1JTV1lZT1l6dmtvU3IyVHZBQVlPaXQvMlFXUHcwTmtP?=
- =?utf-8?B?RnJzcjZLeDY1S201K1R0Z3RUSlZTWWEzYnZMUldzVXhPQ2hOUlZrdlVLckFp?=
- =?utf-8?B?MGxpb3hCbHJrMHEyWTA3MjRzREVXbWc3QmV1Qkg3a21JK2JFQWpUemdyaEdY?=
- =?utf-8?B?RktESXFZN2hscmwyem1nMWZXaG5vRmNnSkY1WUp3R01mSkMvL0dIRXZLVTdM?=
- =?utf-8?B?dW1FRDBsS2lXeGs2V1FuTGltMWs2ajBoVm55RnVhQit0V3RLTWVTd2s5em0y?=
- =?utf-8?B?cUdtSytkUWFvUjFWRmFFMlg2d0hrQldRNG1FMzZ2akxJNHN0TE04UVhFc1Yz?=
- =?utf-8?B?NHZTME4ydVdkMkhlY2xTaUw5VEtwMThNN01PV0Njdjd3UVl0NjA4TG9IWnJl?=
- =?utf-8?B?ZkxVZlBnQnhBVHVtNUpjbXZic0VMbldRK2I0NUI4ai8wNG1LUmV1L3M0WUVz?=
- =?utf-8?B?a29BNnlkNnVob0NxZW1WWEN0V0RrVkszRHlYL25rQWNLbVp2bDV4SkJQNCtQ?=
- =?utf-8?B?MU8xNTBZYWlVLzJ4bkpFTGxwQi9sUVJhQkxnaFpUS29LcVdWZmx4dWkwYVcv?=
- =?utf-8?B?R010M2xNSXdUcjBHTmp3NlBsaEsvbzY3a01sVWFhN1lEWGRrZ2JOQlVDTWFr?=
- =?utf-8?B?ZnJNUWs4aVgrZm84dkZubzRhcFRhTis4cVZXWEhrVlJtSks5K2VXWUM5VTE1?=
- =?utf-8?B?ZEkyNkt5L1BDZ1JLYjlTOHNBTk1nWmxURXFmdVhsanJITkQ4dEkySzBjQkVI?=
- =?utf-8?B?bU1UUmkyVjAwZis3NWZJd3g2REE3WVkyRFIzWGxxZzNFei8rWGYrdnJxTlZY?=
- =?utf-8?B?ekRPanpJdGM0SVZ6T2xKeDAxcjlCT3lvbTRwL01GdlhaY3dvVEtrem1TTGZp?=
- =?utf-8?B?c1dkRXMrMzFRUERxRTJMcVFUT2Qvckd3MXhYdkNBeUUvdHpOMUl1UDVaNGhn?=
- =?utf-8?B?cldEbGcrNEgveGlhQUQ0cXkzU1dxcXR0Q2t5MW5MSzFZYlV6VkZqOXBaVW40?=
- =?utf-8?B?OVBZVVBBNy90ZG9NeVZQOUdhQnl5MDF3ZkFkMk50bm8yeUN6Ri96ZGtHckJx?=
- =?utf-8?B?eXVMeEFSeHZqMVdsZVMzaHBDOUh3SUpNaUFLQWdqclpOVE0wRkZiRWR1UFNC?=
- =?utf-8?B?elFOdlNFck1VZ1JCU3BUR2RGeEo0SG9DbmpnUkFIQUxmN294UlVDdDFLMDZP?=
- =?utf-8?B?c0VsK1E0K1JKTzlsQmJoRGdoczZrbGJDTk9Kc2p1a2o5NHk2N3hJQVZWNkFq?=
- =?utf-8?B?WGppK0tkYXdISGhtZXJVMjRET29ZTWtxWjFwNkl5a3UyL3l0QjVHKzlSaDV2?=
- =?utf-8?B?eGU2bFdKQWE5Vll2ZE5SemNDa2N6cjQ2K0dnM0c2cG5NbWVFelVia04yK0g5?=
- =?utf-8?B?T1dnMG9rKzdFeVZDZ1BQV3BaeTA2Qm1yVEkrN3liT0EyeFBscUFLL0VXZXF5?=
- =?utf-8?B?Z0ZYbTdNRE5DdG5CdWUwRE1PRVFLWmNDT3JWS0lxdUdIWUZ2elBUNkpSbHIw?=
- =?utf-8?B?ZDByeGpDT29sUlRWRUNCMDdJWlgrY0VMbWg0cktjSko3OGY4dDNidUVGZG9H?=
- =?utf-8?B?K1VDbDM1cC9yOHc5ZzNOSVhhTVBwYmhZM3Q4TEZTMGNzVnNvdUtXTDYwNW92?=
- =?utf-8?B?czVYWEZtb0hUZTRBSXZLdVFRMDV2eEpXb0dyalZCL0I5blN3MXlmQVpHWStu?=
- =?utf-8?B?Nmp0cWZnRklUS0xBZjFFU2gyT0ZkL0NLa1pWeUNjcVZUZllXZ2RBdz09?=
-X-OriginatorOrg: garyguo.net
-X-MS-Exchange-CrossTenant-Network-Message-Id: bbbf84a9-39ac-4bc6-85c7-08dedce93a03
-X-MS-Exchange-CrossTenant-AuthSource: LOVP265MB8871.GBRP265.PROD.OUTLOOK.COM
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 08 Jul 2026 12:05:39.2964
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: bbc898ad-b10f-4e10-8552-d9377b823d45
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: kjMLkE42PrRgUFkLJz14Q2ZbaSr8psh2xA2/aWix4ibG62ssOJxmd/rWSm/jalsG+Nbxc/T+Q7deT66OWqeHxA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LOVP265MB8837
+Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.700.81\))
+Subject: Re: [PATCH v6 05/20] rust: io: generalize `MmioRaw` to pointer to
+ arbitrary type
+From: Daniel Almeida <daniel.almeida@collabora.com>
+In-Reply-To: <20260706-io_projection-v6-5-72cd5d055d54@garyguo.net>
+Date: Wed, 8 Jul 2026 09:22:39 -0300
+Cc: Alice Ryhl <aliceryhl@google.com>,
+ Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+ "Rafael J. Wysocki" <rafael@kernel.org>,
+ Miguel Ojeda <ojeda@kernel.org>,
+ Boqun Feng <boqun@kernel.org>,
+ =?utf-8?Q?Bj=C3=B6rn_Roy_Baron?= <bjorn3_gh@protonmail.com>,
+ Benno Lossin <lossin@kernel.org>,
+ Andreas Hindborg <a.hindborg@kernel.org>,
+ Trevor Gross <tmgross@umich.edu>,
+ Tamir Duberstein <tamird@kernel.org>,
+ =?utf-8?Q?Onur_=C3=96zkan?= <work@onurozkan.dev>,
+ Bjorn Helgaas <bhelgaas@google.com>,
+ =?utf-8?Q?Krzysztof_Wilczy=C5=84ski?= <kwilczynski@kernel.org>,
+ Abdiel Janulgue <abdiel.janulgue@gmail.com>,
+ Robin Murphy <robin.murphy@arm.com>,
+ Alexandre Courbot <acourbot@nvidia.com>,
+ David Airlie <airlied@gmail.com>,
+ Simona Vetter <simona@ffwll.ch>,
+ Michal Wilczynski <m.wilczynski@samsung.com>,
+ =?utf-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ Danilo Krummrich <dakr@kernel.org>,
+ driver-core@lists.linux.dev,
+ rust-for-linux@vger.kernel.org,
+ linux-kernel@vger.kernel.org,
+ linux-pci@vger.kernel.org,
+ nova-gpu@lists.linux.dev,
+ dri-devel@lists.freedesktop.org,
+ linux-pwm@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <6E91DF0B-6753-4584-BC15-08CE0211E5B3@collabora.com>
+References: <20260706-io_projection-v6-0-72cd5d055d54@garyguo.net>
+ <20260706-io_projection-v6-5-72cd5d055d54@garyguo.net>
+To: Gary Guo <gary@garyguo.net>
+X-Mailer: Apple Mail (2.3826.700.81)
+X-ZohoMailClient: External
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [1.34 / 15.00];
+X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[garyguo.net,none];
-	R_DKIM_ALLOW(-0.20)[garyguo.net:s=selector1];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[collabora.com,none];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[collabora.com:s=zohomail];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9635-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9636-lists,linux-pwm=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[gary@garyguo.net,linux-pwm@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[30];
-	FORGED_RECIPIENTS(0.00)[m:daniel.almeida@collabora.com,m:gary@garyguo.net,m:aliceryhl@google.com,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:ojeda@kernel.org,m:boqun@kernel.org,m:bjorn3_gh@protonmail.com,m:lossin@kernel.org,m:a.hindborg@kernel.org,m:tmgross@umich.edu,m:tamird@kernel.org,m:work@onurozkan.dev,m:bhelgaas@google.com,m:kwilczynski@kernel.org,m:abdiel.janulgue@gmail.com,m:robin.murphy@arm.com,m:acourbot@nvidia.com,m:airlied@gmail.com,m:simona@ffwll.ch,m:m.wilczynski@samsung.com,m:ukleinek@kernel.org,m:dakr@kernel.org,m:driver-core@lists.linux.dev,m:rust-for-linux@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-pci@vger.kernel.org,m:nova-gpu@lists.linux.dev,m:dri-devel@lists.freedesktop.org,m:linux-pwm@vger.kernel.org,m:abdieljanulgue@gmail.com,s:lists@lfdr.de];
+	RCVD_COUNT_THREE(0.00)[4];
+	FORGED_SENDER(0.00)[daniel.almeida@collabora.com,linux-pwm@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[29];
+	FORGED_RECIPIENTS(0.00)[m:aliceryhl@google.com,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:ojeda@kernel.org,m:boqun@kernel.org,m:bjorn3_gh@protonmail.com,m:lossin@kernel.org,m:a.hindborg@kernel.org,m:tmgross@umich.edu,m:tamird@kernel.org,m:work@onurozkan.dev,m:bhelgaas@google.com,m:kwilczynski@kernel.org,m:abdiel.janulgue@gmail.com,m:robin.murphy@arm.com,m:acourbot@nvidia.com,m:airlied@gmail.com,m:simona@ffwll.ch,m:m.wilczynski@samsung.com,m:ukleinek@kernel.org,m:dakr@kernel.org,m:driver-core@lists.linux.dev,m:rust-for-linux@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-pci@vger.kernel.org,m:nova-gpu@lists.linux.dev,m:dri-devel@lists.freedesktop.org,m:linux-pwm@vger.kernel.org,m:gary@garyguo.net,m:abdieljanulgue@gmail.com,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FREEMAIL_CC(0.00)[google.com,linuxfoundation.org,kernel.org,protonmail.com,umich.edu,onurozkan.dev,gmail.com,arm.com,nvidia.com,ffwll.ch,samsung.com,lists.linux.dev,vger.kernel.org,lists.freedesktop.org];
-	DKIM_TRACE(0.00)[garyguo.net:+];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[gary@garyguo.net,linux-pwm@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
+	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[daniel.almeida@collabora.com,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[collabora.com:+];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
 	TAGGED_RCPT(0.00)[linux-pwm];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[garyguo.net:from_mime,garyguo.net:email,garyguo.net:mid,garyguo.net:dkim,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,collabora.com:email,nvidia.com:email]
+	APPLE_MAILER_COMMON(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[nvidia.com:email,vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,collabora.com:from_mime,collabora.com:email,collabora.com:mid,collabora.com:dkim,garyguo.net:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: E5432726251
+X-Rspamd-Queue-Id: DDEE47264E4
 
-On Wed Jul 8, 2026 at 12:58 PM BST, Daniel Almeida wrote:
->
->> On 6 Jul 2026, at 09:44, Gary Guo <gary@garyguo.net> wrote:
->>=20
->> Currently, `Io` is implemented on owned I/O objects (e.g. `Bar`). This i=
-s
->> going to change with I/O projections, as then `Io` needs to work both fo=
-r
->> owned objects and views of them. Views are themselves reference-like
->> (however they obviously cannot be references, because they belong to a
->> different address space).
->>=20
->> To facilitate the change, change `Io` to be implemented on reference typ=
-es
->> for the owned I/O objects, and make methods take `self` instead of `&sel=
-f`.
->> When I/O views are implemented, we can then naturally implement `Io` for
->> these objects.
->>=20
->> Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
->> Signed-off-by: Gary Guo <gary@garyguo.net>
->> ---
->> rust/kernel/io.rs     | 82 ++++++++++++++++++++++++++-------------------=
-------
->> rust/kernel/pci/io.rs | 12 ++++----
->> 2 files changed, 48 insertions(+), 46 deletions(-)
->>=20
->
-> Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
 
-Hi Daniel,
 
-Thanks for reviewing, however, it would be helpful if you can trim messages=
- in
-replies.
+> On 6 Jul 2026, at 09:44, Gary Guo <gary@garyguo.net> wrote:
+>=20
+> Conceptually, `MmioRaw` is just `__iomem *`, so it should work for any
+> types. Update the existing use case where it represents a region of
+> compile-time known minimum size and run-time known actual size to use =
+the
+> dynamic-sized type `Region<SIZE>` instead. Rename `maxsize` method to
+> reflect that it is the actual size (not a bound) of the region.
+>=20
+> Implement `Clone` and `Copy` manually, which cannot be derived due to =
+the
+> generic parameter. The use of raw pointers also cause the `Send` and =
+`Sync`
+> auto trait implementation to be lost, so add them back by manual
+> implementation.
+>=20
+> Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
+> Signed-off-by: Gary Guo <gary@garyguo.net>
+> ---
+> rust/kernel/devres.rs |  7 +++---
+> rust/kernel/io.rs     | 67 =
++++++++++++++++++++++++++++++++++++++--------------
+> rust/kernel/io/mem.rs |  5 ++--
+> rust/kernel/pci/io.rs |  4 +--
+> 4 files changed, 57 insertions(+), 26 deletions(-)
+>=20
+> diff --git a/rust/kernel/devres.rs b/rust/kernel/devres.rs
+> index ed30ccc6e68e..d0c677fd7932 100644
+> --- a/rust/kernel/devres.rs
+> +++ b/rust/kernel/devres.rs
+> @@ -70,14 +70,15 @@ struct Inner<T> {
+> ///         Io,
+> ///         Mmio,
+> ///         MmioRaw,
+> -///         PhysAddr, //
+> +///         PhysAddr,
+> +///         Region, //
+> ///     },
+> ///     prelude::*,
+> /// };
+> /// use core::ops::Deref;
+> ///
+> /// // See also [`pci::Bar`] for a real example.
+> -/// struct IoMem<const SIZE: usize>(MmioRaw<SIZE>);
+> +/// struct IoMem<const SIZE: usize>(MmioRaw<Region<SIZE>>);
+> ///
+> /// impl<const SIZE: usize> IoMem<SIZE> {
+> ///     /// # Safety
+> @@ -92,7 +93,7 @@ struct Inner<T> {
+> ///             return Err(ENOMEM);
+> ///         }
+> ///
+> -///         Ok(IoMem(MmioRaw::new(addr as usize, SIZE)?))
+> +///         Ok(IoMem(MmioRaw::new_region(addr as usize, SIZE)?))
+> ///     }
+> /// }
+> ///
+> diff --git a/rust/kernel/io.rs b/rust/kernel/io.rs
+> index 9f060dd29182..12be266d7ed7 100644
+> --- a/rust/kernel/io.rs
+> +++ b/rust/kernel/io.rs
+> @@ -88,37 +88,67 @@ fn size(p: *const Self) -> usize {
+>=20
+> /// Raw representation of an MMIO region.
+> ///
+> +/// `MmioRaw<T>` is equivalent to `T __iomem *` in C.
+> +///
+> /// By itself, the existence of an instance of this structure does not =
+provide any guarantees that
+> /// the represented MMIO region does exist or is properly mapped.
+> ///
+> /// Instead, the bus specific MMIO implementation must convert this =
+raw representation into an
+> /// `Mmio` instance providing the actual memory accessors. Only by the =
+conversion into an `Mmio`
+> /// structure any guarantees are given.
+> -pub struct MmioRaw<const SIZE: usize =3D 0> {
+> -    addr: usize,
+> -    maxsize: usize,
+> +pub struct MmioRaw<T: ?Sized> {
+> +    /// Pointer is in I/O address space.
+> +    ///
+> +    /// The provenance does not matter, only the address and metadata =
+do.
+> +    ptr: *mut T,
+> }
+>=20
+> -impl<const SIZE: usize> MmioRaw<SIZE> {
+> -    /// Returns a new `MmioRaw` instance on success, an error =
+otherwise.
+> -    pub fn new(addr: usize, maxsize: usize) -> Result<Self> {
+> -        if maxsize < SIZE {
+> -            return Err(EINVAL);
+> +impl<T: ?Sized> Copy for MmioRaw<T> {}
+> +impl<T: ?Sized> Clone for MmioRaw<T> {
+> +    #[inline]
+> +    fn clone(&self) -> Self {
+> +        *self
+> +    }
+> +}
+> +
+> +// SAFETY: `MmioRaw` is just an address, so is thread-safe.
+> +unsafe impl<T: ?Sized> Send for MmioRaw<T> {}
+> +// SAFETY: `MmioRaw` is just an address, so is thread-safe.
+> +unsafe impl<T: ?Sized> Sync for MmioRaw<T> {}
+> +
+> +impl<T> MmioRaw<T> {
+> +    /// Create a `MmioRaw` from address.
+> +    #[inline]
+> +    pub fn new(addr: usize) -> Self {
+> +        Self {
+> +            ptr: core::ptr::without_provenance_mut(addr),
+>         }
+> +    }
+> +}
+>=20
+> -        Ok(Self { addr, maxsize })
+> +impl<const SIZE: usize> MmioRaw<Region<SIZE>> {
+> +    /// Create a `MmioRaw` representing a I/O region with given size.
+> +    ///
+> +    /// The size is checked against the minimum size specified via =
+const generics.
+> +    #[inline]
+> +    pub fn new_region(addr: usize, size: usize) -> Result<Self> {
+> +        Ok(Self {
+> +            ptr: =
+Region::ptr_try_from_raw_parts_mut(core::ptr::without_provenance_mut(addr)=
+, size)?,
+> +        })
+>     }
+> +}
+>=20
+> +impl<T: ?Sized + KnownSize> MmioRaw<T> {
+>     /// Returns the base address of the MMIO region.
+>     #[inline]
+>     pub fn addr(&self) -> usize {
+> -        self.addr
+> +        self.ptr.addr()
+>     }
+>=20
+> -    /// Returns the maximum size of the MMIO region.
+> +    /// Returns the size of the MMIO region.
+>     #[inline]
+> -    pub fn maxsize(&self) -> usize {
+> -        self.maxsize
+> +    pub fn size(&self) -> usize {
+> +        KnownSize::size(self.ptr)
+>     }
+> }
+>=20
+> @@ -143,12 +173,13 @@ pub fn maxsize(&self) -> usize {
+> ///         Mmio,
+> ///         MmioRaw,
+> ///         PhysAddr,
+> +///         Region,
+> ///     },
+> /// };
+> /// use core::ops::Deref;
+> ///
+> /// // See also `pci::Bar` for a real example.
+> -/// struct IoMem<const SIZE: usize>(MmioRaw<SIZE>);
+> +/// struct IoMem<const SIZE: usize>(MmioRaw<Region<SIZE>>);
+> ///
+> /// impl<const SIZE: usize> IoMem<SIZE> {
+> ///     /// # Safety
+> @@ -163,7 +194,7 @@ pub fn maxsize(&self) -> usize {
+> ///             return Err(ENOMEM);
+> ///         }
+> ///
+> -///         Ok(IoMem(MmioRaw::new(addr as usize, SIZE)?))
+> +///         Ok(IoMem(MmioRaw::new_region(addr as usize, SIZE)?))
+> ///     }
+> /// }
+> ///
+> @@ -193,7 +224,7 @@ pub fn maxsize(&self) -> usize {
+> /// # }
+> /// ```
+> #[repr(transparent)]
+> -pub struct Mmio<const SIZE: usize =3D 0>(MmioRaw<SIZE>);
+> +pub struct Mmio<const SIZE: usize =3D 0>(MmioRaw<Region<SIZE>>);
+>=20
+> /// Checks whether an access of type `U` at the given `base` and the =
+given `offset`
+> /// is valid within this region.
+> @@ -840,7 +871,7 @@ fn addr(self) -> usize {
+>     /// Returns the maximum size of this mapping.
+>     #[inline]
+>     fn maxsize(self) -> usize {
+> -        self.0.maxsize()
+> +        self.0.size()
+>     }
+> }
+>=20
+> @@ -851,7 +882,7 @@ impl<const SIZE: usize> Mmio<SIZE> {
+>     ///
+>     /// Callers must ensure that `addr` is the start of a valid I/O =
+mapped memory region of size
+>     /// `maxsize`.
+> -    pub unsafe fn from_raw(raw: &MmioRaw<SIZE>) -> &Self {
+> +    pub unsafe fn from_raw(raw: &MmioRaw<Region<SIZE>>) -> &Self {
+>         // SAFETY: `Mmio` is a transparent wrapper around `MmioRaw`.
+>         unsafe { &*core::ptr::from_ref(raw).cast() }
+>     }
+> diff --git a/rust/kernel/io/mem.rs b/rust/kernel/io/mem.rs
+> index fc2a3e24f8d5..9e15bc8fde78 100644
+> --- a/rust/kernel/io/mem.rs
+> +++ b/rust/kernel/io/mem.rs
+> @@ -229,7 +229,7 @@ fn deref(&self) -> &Self::Target {
+> /// start of the I/O memory mapped region.
+> pub struct IoMem<'a, const SIZE: usize =3D 0> {
+>     dev: &'a Device<Bound>,
+> -    io: MmioRaw<SIZE>,
+> +    io: MmioRaw<super::Region<SIZE>>,
+> }
+>=20
+> impl<'a, const SIZE: usize> IoMem<'a, SIZE> {
+> @@ -264,8 +264,7 @@ fn ioremap(dev: &'a Device<Bound>, resource: =
+&Resource) -> Result<Self> {
+>             return Err(ENOMEM);
+>         }
+>=20
+> -        let io =3D MmioRaw::new(addr as usize, size)?;
+> -
+> +        let io =3D MmioRaw::new_region(addr as usize, size)?;
+>         Ok(IoMem { dev, io })
+>     }
+>=20
+> diff --git a/rust/kernel/pci/io.rs b/rust/kernel/pci/io.rs
+> index 505305cd9b86..42f840d64a6f 100644
+> --- a/rust/kernel/pci/io.rs
+> +++ b/rust/kernel/pci/io.rs
+> @@ -139,7 +139,7 @@ fn maxsize(self) -> usize {
+> /// memory mapped PCI BAR and its size.
+> pub struct Bar<'a, const SIZE: usize =3D 0> {
+>     pdev: &'a Device<device::Bound>,
+> -    io: MmioRaw<SIZE>,
+> +    io: MmioRaw<crate::io::Region<SIZE>>,
+>     num: i32,
+> }
+>=20
+> @@ -179,7 +179,7 @@ pub(super) fn new(
+>             return Err(ENOMEM);
+>         }
+>=20
+> -        let io =3D match MmioRaw::new(ioptr, len as usize) {
+> +        let io =3D match MmioRaw::new_region(ioptr, len as usize) {
+>             Ok(io) =3D> io,
+>             Err(err) =3D> {
+>                 // SAFETY:
+>=20
+> --=20
+> 2.54.0
+>=20
 
-Thanks,
-Gary
+Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
 
 
