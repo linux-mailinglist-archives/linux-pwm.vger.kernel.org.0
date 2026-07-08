@@ -1,181 +1,129 @@
-Return-Path: <linux-pwm+bounces-9627-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9628-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id J8O/FhYATmruBQIAu9opvQ
-	(envelope-from <linux-pwm+bounces-9627-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Wed, 08 Jul 2026 09:45:26 +0200
+	id 9CgINjoNTmomCQIAu9opvQ
+	(envelope-from <linux-pwm+bounces-9628-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Wed, 08 Jul 2026 10:41:30 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id A3A9A722CB5
-	for <lists+linux-pwm@lfdr.de>; Wed, 08 Jul 2026 09:45:25 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 295FD723451
+	for <lists+linux-pwm@lfdr.de>; Wed, 08 Jul 2026 10:41:30 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=none;
-	dmarc=temperror reason="server fail" header.from=linkmauve.fr (policy=temperror);
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9627-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9627-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=SwYQ5wlG;
+	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9628-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9628-lists+linux-pwm=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 1BAD33003EE8
-	for <lists+linux-pwm@lfdr.de>; Wed,  8 Jul 2026 07:39:48 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 3191A30075D3
+	for <lists+linux-pwm@lfdr.de>; Wed,  8 Jul 2026 08:35:33 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 8FC633EE1C4;
-	Wed,  8 Jul 2026 07:39:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 36D764014B2;
+	Wed,  8 Jul 2026 08:35:32 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from luna.linkmauve.fr (82-65-109-163.subs.proxad.net [82.65.109.163])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B7B73F54B0;
-	Wed,  8 Jul 2026 07:39:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 143DC3FE369;
+	Wed,  8 Jul 2026 08:35:30 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783496385; cv=none; b=P+BfUAl2ZUh+dd9M1Oio0zn3IH98rIlGD51HqFvHKELrAMPPS7hyTK7CKAoylurN8wWGQ6qRTtTNhQWUQt2gB+SX6ktDXnBdoPaoFRcez0LcZAeXfQchtP+aBL0KyopdvZwfkhMNaD2uAyyHxu/2dgPwImO1v85ZprAXu/MW7hE=
+	t=1783499732; cv=none; b=KD3e2mqKxl8vBkQaOxoP85vpisxHShEHncsslWYOCs8D7QERx6CF4AAWzU3n/p8Yw2pBL96ALu+FxWmIa8/DQjPct6yJsbFoXefnitoIcOFFFTz/KaTVw3UXwlE3MlIagBRe1PaQEyZX+812DD40BirAeyCxi+98ohx/fVVBFiQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783496385; c=relaxed/simple;
-	bh=hE80zLMucVCYhHzwDByDl4nPpyiOoITY4WrX5mG/B9k=;
+	s=arc-20240116; t=1783499732; c=relaxed/simple;
+	bh=cdMZlEKgaBkmZ7as1tEhqS76PekiIrVy5DSTeC4EliE=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=E4h1KJ/j5RjjxHVltfMsSgwOZx+bf6AqRJqg/iLrHct1XQ5vTavC+7BTOXOoizFVKmQMUBBKrm7JqtkkRd5qEmjpHCJUNPa77aQYaFY0IodrHurwmBa0D9Cx/qgAQ71XuFczFDW4+df49GPJZJOseOPkv5qUVTgxSlL/6rWmETY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linkmauve.fr; spf=pass smtp.mailfrom=linkmauve.fr; arc=none smtp.client-ip=82.65.109.163
-Received: by luna.linkmauve.fr (Postfix, from userid 1000)
-	id 1183CF40CC8; Wed, 08 Jul 2026 09:39:25 +0200 (CEST)
-Date: Wed, 8 Jul 2026 09:39:25 +0200
-From: Link Mauve <linkmauve@linkmauve.fr>
-To: Guru Das Srinagesh <linux@gurudas.dev>
-Cc: Michal Wilczynski <m.wilczynski@samsung.com>,
-	Drew Fustini <fustini@kernel.org>, Guo Ren <guoren@kernel.org>,
-	Fu Wei <wefu@redhat.com>,
-	Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
-	Miguel Ojeda <ojeda@kernel.org>, Boqun Feng <boqun@kernel.org>,
-	Gary Guo <gary@garyguo.net>,
-	=?iso-8859-1?Q?Bj=F6rn?= Roy Baron <bjorn3_gh@protonmail.com>,
-	Benno Lossin <lossin@kernel.org>,
-	Andreas Hindborg <a.hindborg@kernel.org>,
-	Alice Ryhl <aliceryhl@google.com>, Trevor Gross <tmgross@umich.edu>,
-	Danilo Krummrich <dakr@kernel.org>,
-	Daniel Almeida <daniel.almeida@collabora.com>,
-	Tamir Duberstein <tamird@kernel.org>,
-	Alexandre Courbot <acourbot@nvidia.com>,
-	Onur =?iso-8859-1?Q?=D6zkan?= <work@onurozkan.dev>,
-	Nathan Chancellor <nathan@kernel.org>,
-	Nick Desaulniers <nick.desaulniers+lkml@gmail.com>,
-	Bill Wendling <morbo@google.com>,
-	Justin Stitt <justinstitt@google.com>,
-	linux-riscv@lists.infradead.org, linux-pwm@vger.kernel.org,
-	linux-kernel@vger.kernel.org, rust-for-linux@vger.kernel.org,
-	llvm@lists.linux.dev
-Subject: Re: [PATCH] pwm: th1520: use vertical import style
-Message-ID: <ak3-rU3IRYaLTCC5@luna>
-References: <20260705-pwm-rust-vert-imp-v1-1-753dbbfc6061@gurudas.dev>
+	 Content-Type:Content-Disposition:In-Reply-To; b=a5gobDMyYJdrwYn3PW8Oo/sCo+CCxixqmAAx1VY09mRPIHZQmolJsn5C2MxmKm1ld5troFUDXyB+zPBdTYpJitAoS8xEiYAR5gYYf24PHIY/I0KfEvN64LzzNavS6joRncOZ6DIA0vh0uEsoPfjV/zpLMDdowtqzj9HVzX99aFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SwYQ5wlG; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B42561F000E9;
+	Wed,  8 Jul 2026 08:35:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
+	s=k20260515; t=1783499730;
+	bh=OKsbeaL/EYCCjslIHscKdnfqt9TnC3LQo/o4fxsqdJg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To;
+	b=SwYQ5wlGAgqRjGWeZC+QJ2+/Lf4qkCA9L/NkByYOA6tyKvNukd/wH4AblpspyMfa6
+	 ohztbXxM5V7q1DJid4+qC00xO6YK91jiFwvru0NG7+owxsPXFlZmTKVLWoFtyoF4Zg
+	 6CfORrAihXEK6Sd7LW+TOwg2XyXc1h9NpUedmnXP/s/0AIKl+VNWphsts/mz6EGpf/
+	 RIhZnn0pYAPqg3HrVwtETrjMeDkjY6ju+/kPYMQ4XKmzjnjUX7uvLKD8Jk1oPQ3IEa
+	 jcfraojWbW8yc8K5bEFnrq/KOpSaIp/A3jZXvgul/W57DyWfK6JjOppgkLKwGztv7C
+	 1/4ijKu+4HqXA==
+Date: Wed, 8 Jul 2026 10:35:26 +0200
+From: Krzysztof Kozlowski <krzk@kernel.org>
+To: Yureka Lilian <yureka@cyberchaos.dev>
+Cc: Rob Herring <robh@kernel.org>, 
+	Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>, 
+	Lorenzo Pieralisi <lpieralisi@kernel.org>, Sven Peter <sven@kernel.org>, Janne Grunau <j@jannau.net>, 
+	Neal Gompa <neal@gompa.dev>, Thomas Gleixner <tglx@kernel.org>, 
+	Wim Van Sebroeck <wim@linux-watchdog.org>, Guenter Roeck <linux@roeck-us.net>, 
+	Hector Martin <marcan@marcan.st>, Linus Walleij <linusw@kernel.org>, 
+	Mark Kettenis <kettenis@openbsd.org>, Andi Shyti <andi.shyti@kernel.org>, 
+	Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, Sasha Finkelstein <k@chaosmail.tech>, devicetree@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+	linux-watchdog@vger.kernel.org, linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org, 
+	linux-pwm@vger.kernel.org
+Subject: Re: [PATCH 02/10] dt-bindings: interrupt-controller: apple,aic2: Add
+ apple,t8132 compatible
+Message-ID: <20260708-hospitable-impressive-ibis-3db61a@quoll>
+References: <20260705-apple-m4-initial-devicetrees-v1-0-e5655ee56523@cyberchaos.dev>
+ <20260705-apple-m4-initial-devicetrees-v1-2-e5655ee56523@cyberchaos.dev>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20260705-pwm-rust-vert-imp-v1-1-753dbbfc6061@gurudas.dev>
-Jabber-ID: linkmauve@linkmauve.fr
+In-Reply-To: <20260705-apple-m4-initial-devicetrees-v1-2-e5655ee56523@cyberchaos.dev>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [0.54 / 15.00];
+X-Spamd-Result: default: False [-3.16 / 15.00];
+	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
+	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FROM_HAS_DN(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9627-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:linux@gurudas.dev,m:m.wilczynski@samsung.com,m:fustini@kernel.org,m:guoren@kernel.org,m:wefu@redhat.com,m:ukleinek@kernel.org,m:ojeda@kernel.org,m:boqun@kernel.org,m:gary@garyguo.net,m:bjorn3_gh@protonmail.com,m:lossin@kernel.org,m:a.hindborg@kernel.org,m:aliceryhl@google.com,m:tmgross@umich.edu,m:dakr@kernel.org,m:daniel.almeida@collabora.com,m:tamird@kernel.org,m:acourbot@nvidia.com,m:work@onurozkan.dev,m:nathan@kernel.org,m:nick.desaulniers+lkml@gmail.com,m:morbo@google.com,m:justinstitt@google.com,m:linux-riscv@lists.infradead.org,m:linux-pwm@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:rust-for-linux@vger.kernel.org,m:llvm@lists.linux.dev,m:nickdesaulniers@gmail.com,s:lists@lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[28];
-	FORGED_SENDER(0.00)[linkmauve@linkmauve.fr,linux-pwm@vger.kernel.org];
+	FROM_HAS_DN(0.00)[];
+	FORGED_SENDER(0.00)[krzk@kernel.org,linux-pwm@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[25];
+	FORGED_RECIPIENTS(0.00)[m:yureka@cyberchaos.dev,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:lpieralisi@kernel.org,m:sven@kernel.org,m:j@jannau.net,m:neal@gompa.dev,m:tglx@kernel.org,m:wim@linux-watchdog.org,m:linux@roeck-us.net,m:marcan@marcan.st,m:linusw@kernel.org,m:kettenis@openbsd.org,m:andi.shyti@kernel.org,m:ukleinek@kernel.org,m:k@chaosmail.tech,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:asahi@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-watchdog@vger.kernel.org,m:linux-gpio@vger.kernel.org,m:linux-i2c@vger.kernel.org,m:linux-pwm@vger.kernel.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FREEMAIL_CC(0.00)[samsung.com,kernel.org,redhat.com,garyguo.net,protonmail.com,google.com,umich.edu,collabora.com,nvidia.com,onurozkan.dev,gmail.com,lists.infradead.org,vger.kernel.org,lists.linux.dev];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
+	TAGGED_FROM(0.00)[bounces-9628-lists,linux-pwm=lfdr.de];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[linkmauve@linkmauve.fr,linux-pwm@vger.kernel.org];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DMARC_DNSFAIL(0.00)[linkmauve.fr : server fail];
-	TAGGED_RCPT(0.00)[linux-pwm,lkml];
-	R_DKIM_NA(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[krzk@kernel.org,linux-pwm@vger.kernel.org];
+	TO_DN_SOME(0.00)[];
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[linkmauve.fr:from_mime,luna:mid,vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,quoll:mid,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: A3A9A722CB5
+X-Rspamd-Queue-Id: 295FD723451
 
-On Sun, Jul 05, 2026 at 07:52:05PM -0700, Guru Das Srinagesh wrote:
-> Convert `use` imports to vertical layout for better readability and
-> maintainability.
+On Sun, Jul 05, 2026 at 03:17:21PM +0200, Yureka Lilian wrote:
+> The Apple t8132 (M4) SoC uses an AIC3 as interrupt controller, same as
+> the M3 predecessor.
 > 
-> Signed-off-by: Guru Das Srinagesh <linux@gurudas.dev>
+> Signed-off-by: Yureka Lilian <yureka@cyberchaos.dev>
 > ---
-> Came across a recent commit bc58905eb07 ("samples: rust_misc_device: use
-> vertical import style") and found a few more locations that could
-> benefit from this cleanup. No functional changes.
-> 
-> Separating out patches per-subsystem as per the review feedback in [0].
-> 
-> Tested via:
-> 
->     $ make LLVM=1 rustfmtcheck || echo "fail"
->     $
-> 
-> [0]: https://lore.kernel.org/lkml/20260628-b4-rust-vertical-imports-v1-0-98bc71d4810b@gurudas.dev/
-> ---
->  drivers/pwm/pwm_th1520.rs | 12 +++++++++---
->  1 file changed, 9 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm_th1520.rs b/drivers/pwm/pwm_th1520.rs
-> index 3e3fa51ccef9..2a3b107157ac 100644
-> --- a/drivers/pwm/pwm_th1520.rs
-> +++ b/drivers/pwm/pwm_th1520.rs
-> @@ -23,15 +23,21 @@
->  use core::ops::Deref;
->  use kernel::{
->      clk::Clk,
-> -    device::{Bound, Core, Device},
-> +    device::{
-> +        Bound,
-> +        Core,
-> +        Device, //
-> +    },
->      devres,
->      io::{
->          mem::IoMem,
->          Io, //
->      },
-> -    of, platform,
-> +    of,
-> +    platform, //
+>  Documentation/devicetree/bindings/interrupt-controller/apple,aic2.yaml | 1 +
+>  1 file changed, 1 insertion(+)
 
-Same here, you just need the empty comment after time, not the one after
-platform.
+Reviewed-by: Krzysztof Kozlowski <krzysztof.kozlowski@oss.qualcomm.com>
 
->      prelude::*,
-> -    pwm, time,
-> +    pwm,
-> +    time, //
->  };
->  
->  const TH1520_MAX_PWM_NUM: u32 = 6;
-> 
-> ---
-> base-commit: 1a4920940ebfd8d907858abd8f8dd09b13752946
-> change-id: 20260705-pwm-rust-vert-imp-59a3d18bd0cf
-> 
-> Best regards,
-> --  
-> Guru Das Srinagesh <linux@gurudas.dev>
-> 
-> 
+Best regards,
+Krzysztof
 
--- 
-Link Mauve
 
