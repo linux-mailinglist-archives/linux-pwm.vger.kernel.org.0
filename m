@@ -1,187 +1,323 @@
-Return-Path: <linux-pwm+bounces-9650-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9651-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id t+G/HbT3TmrhXwIAu9opvQ
-	(envelope-from <linux-pwm+bounces-9650-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Thu, 09 Jul 2026 03:21:56 +0200
+	id 3/kMNIhNT2rUdwIAu9opvQ
+	(envelope-from <linux-pwm+bounces-9651-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Thu, 09 Jul 2026 09:28:08 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id D28DC72BA7C
-	for <lists+linux-pwm@lfdr.de>; Thu, 09 Jul 2026 03:21:55 +0200 (CEST)
+Received: from tor.lore.kernel.org (tor.lore.kernel.org [IPv6:2600:3c04:e001:36c::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 3E0E872DB06
+	for <lists+linux-pwm@lfdr.de>; Thu, 09 Jul 2026 09:28:08 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=none;
-	dmarc=none;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9650-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9650-lists+linux-pwm=lfdr.de@vger.kernel.org";
-	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
+	dkim=pass header.d=gmail.com header.s=20251104 header.b=TVt7xgRP;
+	dmarc=pass (policy=none) header.from=gmail.com;
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9651-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 2600:3c04:e001:36c::12fc:5321 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9651-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 20D6B3006B55
-	for <lists+linux-pwm@lfdr.de>; Thu,  9 Jul 2026 01:21:24 +0000 (UTC)
+	by tor.lore.kernel.org (Postfix) with ESMTP id 29A923035ABE
+	for <lists+linux-pwm@lfdr.de>; Thu,  9 Jul 2026 07:26:36 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id CA8D838B7B4;
-	Thu,  9 Jul 2026 01:21:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 606FB28466C;
+	Thu,  9 Jul 2026 07:26:20 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from zg8tmja5ljk3lje4mi4ymjia.icoremail.net (zg8tmja5ljk3lje4mi4ymjia.icoremail.net [209.97.182.222])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C2D131B4223;
-	Thu,  9 Jul 2026 01:21:20 +0000 (UTC)
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783560083; cv=none; b=tpXbcVjDm3dPKY/iVyaIcRSrlV8oT3dKY0bYc2tqV6VEWO3+YcrgVKKOasE5ognBwZXt+9G5aHLp4ydln6LQE0MvFUpnv8rfvyxvkkNaSH9vjL3KD8CAgKQz6aG5oiDHgAsItzp3+hTrJyN1D3BJAKZbgPWj5hWgHCMI8nTZ9T4=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783560083; c=relaxed/simple;
-	bh=6TrxWkbaxN0/bZBlsK9YOj23oJ+KR30cjtgITH92HIs=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:Content-Type:
-	 MIME-Version:Message-ID; b=ejBwYiWS/rYvoKs/4cxzhUAmZ9bwJdI+I7ik/rAs7udqLaMSgOVJ3lTzfOLrLBZyhojURpmvfpLO/he/cZv75j7J0EpaBcvzdYh9bkv06QAkwDhmprGv183zZdn3/eDtWvascMf9mFUmwhtxBJ0poq2eW9r/GwQBwdMRbUpL0fc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=eswincomputing.com; spf=pass smtp.mailfrom=eswincomputing.com; arc=none smtp.client-ip=209.97.182.222
-Received: from dongxuyang$eswincomputing.com ( [10.12.96.41] ) by
- ajax-webmail-app2 (Coremail) ; Thu, 9 Jul 2026 09:21:08 +0800 (GMT+08:00)
-Date: Thu, 9 Jul 2026 09:21:08 +0800 (GMT+08:00)
-X-CM-HeaderCharset: UTF-8
-From: "Xuyang Dong" <dongxuyang@eswincomputing.com>
-To: sashiko-reviews@lists.linux.dev
-Cc: ukleinek@kernel.org, robh@kernel.org, krzk+dt@kernel.org,
-	conor+dt@kernel.org, ben-linux@fluff.org, ben.dooks@codethink.co.uk,
-	p.zabel@pengutronix.de, linux-pwm@vger.kernel.org,
-	devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-	ningyu@eswincomputing.com, linmin@eswincomputing.com,
-	xuxiang@eswincomputing.com, wangguosheng@eswincomputing.com,
-	pinkesh.vaghela@einfochips.com
-Subject: Re: Re: [PATCH v10 3/3] pwm: dwc: add of/platform support
-X-Priority: 3
-X-Mailer: Coremail Webmail Server Version 2024.2-cmXT6 build
- 20241203(6b039d88) Copyright (c) 2002-2026 www.mailtech.cn
- mispb-72143050-eaf5-4703-89e0-86624513b4ce-eswincomputing.com
-In-Reply-To: <20260703094710.723361F000E9@smtp.kernel.org>
-References: <20260703093308.482-1-dongxuyang@eswincomputing.com>
- <20260703093430.699-1-dongxuyang@eswincomputing.com>
- <20260703094710.723361F000E9@smtp.kernel.org>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset=UTF-8
+Received: from mail-lf1-f47.google.com (mail-lf1-f47.google.com [209.85.167.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D78D3C988E
+	for <linux-pwm@vger.kernel.org>; Thu,  9 Jul 2026 07:26:18 +0000 (UTC)
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1783581980; cv=pass; b=CVjAkgqBnMKwcrIGo4YbZ+WsKAT3BlzjrsJn+Xlms1IiXQFbkZgVb193tPa6ilv6nBpe7az6k1j8mNUyRU/3TZj1pLVDuI3ogww3WrQ+4dzuiR2PLB+1d+WqBSXkSzJk4plTnMi5dvhVrJYKqEnwIOvV9/f4y50i62Ph213zvCs=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1783581980; c=relaxed/simple;
+	bh=atm+PdMZl1wW0B9PRYBjvl0TgU7wVgqfSo6gBSDacKU=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=VrN938v3aAyADJpeb0Q9ZD3D1/PhHZA/zIFFEoDAruuJwX5g85xAGVJMs88H8b/i/IkJMlrrFLOX24cnP1K9qVVNQ5TElTKFfwnFZ35xeDB4WlwwTuFVFTx+hhPvjtS7LQicIZWVTqYpiJM+jv0zuL755fJoqjHgXoy9hVh65jM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TVt7xgRP; arc=pass smtp.client-ip=209.85.167.47
+Received: by mail-lf1-f47.google.com with SMTP id 2adb3069b0e04-5aeb8c19017so1560442e87.0
+        for <linux-pwm@vger.kernel.org>; Thu, 09 Jul 2026 00:26:18 -0700 (PDT)
+ARC-Seal: i=1; a=rsa-sha256; t=1783581977; cv=none;
+        d=google.com; s=arc-20260327;
+        b=bIJVHVyGqmk8vuTU4aRAcVJnc5eOmvQFtKHk1qEe3ToBza6i9KhAuD19SfuKU+VZ3V
+         Ff2DR2WXSMFsWEPrIvaFcGEUAbVwyyQ/TXJ6uF2rNRYbLjGpJhcEo8an2LrbZsSKUBzB
+         gH3icYnQhTdMLn39uhFai4mito6UUzyZvJCjFTzeBEpivVE7C67jBZj9J7Nr6okHwWHS
+         7XwFvRQ5+C8bcDFxUjMxCb51n59UnmHAQmVXVHY03pWyp69M2QRiY71V2hg/E4Q0pt0b
+         ahOc8lcZGU1c90oO/mbSha1FAEyeSTPXK/gFA0knTSs2Sv4gNHZFiZWFxLup2ZR6668J
+         7H6A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=google.com; s=arc-20260327;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:dkim-signature;
+        bh=RKfQcGkaq73R9SJOhnc9GR7mrRhdzvak40FCluSHJsM=;
+        fh=fgljPGkhB+22q0EGU55Ztey5Vdp7MybxgMklzUrVCb8=;
+        b=o0Eps1U2kFxQuVmmklPYLCH7/BU+mfcS1nW3yOe3xfaDHtkfEmg/RbhDakMRjTToGT
+         LBOT3SHXvv3fPJ47gMhYzIhXyvT7pD00AGDzl2oU9PC7rwCIWP3Dpo57O521V1mS6Ok5
+         o6ugH4Jm90q0l2hI0MLw7UgDDWKNguTD0JYl2GLwPRoLHvxphF+ytX7dEzBK0NXE/wYy
+         PrF40hNLwdayzMQ30RLqHcuzj/u/Kx99b1KoFO5/4XQShBNv3dlVrbF/gcAsVoFZru7u
+         a2VABATUvdM41UaNzgQxaZN+zWuBTlvM3zJoKoWii0/wuQVhnnSfWlvg5BazJz1RLGbG
+         qRUA==;
+        darn=vger.kernel.org
+ARC-Authentication-Results: i=1; mx.google.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20251104; t=1783581977; x=1784186777; darn=vger.kernel.org;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=RKfQcGkaq73R9SJOhnc9GR7mrRhdzvak40FCluSHJsM=;
+        b=TVt7xgRPqm+jHZvblFAM3jPSNeHg4joDJojkGM62n/n+wdAnoLtIjf2rEOOZUZzTU1
+         ZeNXhVbBo5WhMtcK2Zh2AlKjbLRO3vUNgiZU/07QbI9XNyCKrEvQ5H4l+BTVhlO5lwq8
+         TydwjgBDr9qlf7lJ4+oFLgAWoFECxiEe0KWdHEOrCeA07CDnCnrdnmGUjyc6/v1dryTx
+         ttehKy9b408bPHgXKuT3+1l79E3ds1omY8Nnlu10qfFZR5cr94u4o+FRXkIseSyn6P1e
+         9+A5Fc76y2F+fzSZtFOZYpRJWOvjZeWau0t4LHt2DZxo/I/w1J2V2/RLoS60lboMRjT3
+         KUFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1783581977; x=1784186777;
+        h=content-transfer-encoding:content-type:cc:to:subject:message-id
+         :date:from:in-reply-to:references:mime-version:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=RKfQcGkaq73R9SJOhnc9GR7mrRhdzvak40FCluSHJsM=;
+        b=VGlUZKD5RMqlQsHRBI2CLTzR77HRH+IhaG1s649xOBtFzP//6jhWxw9NDYl7MPSN38
+         nQ5bNyQSC38pW09uVC0fFCRs3Z/tZf+tmoT6N2uTOFVoSklzZbVY2BiI/XPRMGoWptnT
+         5OpdEu2SLO9lMGC4/XZVSnjHt3quw4d4dn1yFA0MGvNNSiFXET2e/xKMPv39NFEu+/iO
+         7CcYFfuHCt722LMSk8lzoTkfrDPK96oJgaNCYRYzTWmHSwrG1advm9TTsgbogivN1PDO
+         F8n2TeVT0K44/IUlYyofqk9uK7aGtdfqevAG3C04sniYeTRlwRqg8J8EPMok+hujHS0q
+         RohA==
+X-Forwarded-Encrypted: i=1; AHgh+RomUebYz8ShAEER8lHg5KpZ0L7KV1rQZ6TmctEukPnXIQ0MMR8JVsgV/nwyRRGOvuY/t1BvT4RcN68=@vger.kernel.org
+X-Gm-Message-State: AOJu0YwHLRnFMPYS16wgxowCJwA54ManfFSkHAcVWdUgvdSm3QdBiPX2
+	FCe2YF29fj6jOo9ndij16FyY3XOSzSThJ+DjzRwh4bvu4BWuuY4CpyKbgiz4tQ/1NDCqdNmZWLn
+	Jf70JPPnqVgZH5VjZI8yo2pWWqH3A+0M=
+X-Gm-Gg: AfdE7ckrJtlsGE2XbWUaAKOcrbWKSxvqFNW4LdrVKkOhPthXWbVGcZgHtkECfYBlhui
+	HaUCaVW3ZKPX39cwFc7ReqsEoxo45fFRHrAQgzotmaO97MjonIHBeJ6PIyjIF+FnADNd4KFuCae
+	f0tm8NBBRFxb92DmgW8ztvurCDYakf6S+cJ6/p2X5+mcjnNmNYW3bj5WSQe/KLJW/2mHBHoGcYt
+	ASrmmm5379PP8V7RjsukreSL1rx80neD/v4qLI2FDc/QJ7ju6O51nTzOdTVNDFIFj6uYD3gWTuQ
+	YWKD9zk+MlezlPX43faZW9/5t41nfGJ74UbT6I+nJDdPpiCb0MSghjE+YnE=
+X-Received: by 2002:a05:6512:8344:b0:5ae:adbb:43c2 with SMTP id
+ 2adb3069b0e04-5b01148629dmr1009622e87.33.1783581976467; Thu, 09 Jul 2026
+ 00:26:16 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Message-ID: <476c5c3b.82a5.19f4476dc69.Coremail.dongxuyang@eswincomputing.com>
-X-Coremail-Locale: zh_CN
-X-CM-TRANSID:TQJkCgDH3aCE905qb58yAA--.9066W
-X-CM-SenderInfo: pgrqw5xx1d0w46hv4xpqfrz1xxwl0woofrz/1tbiAgEDAmpOfBoHp
-	wABsh
-X-Coremail-Antispam: 1Ur529EdanIXcx71UUUUU7IcSsGvfJ3iIAIbVAYjsxI4VWDJw
-	CS07vEb4IE77IF4wCS07vE1I0E4x80FVAKz4kxMIAIbVAFxVCaYxvI4VCIwcAKzIAtYxBI
-	daVFxhVjvjDU=
+References: <20260626-pwm-loongson-fix-v2-0-5492db953879@gmail.com>
+ <20260626-pwm-loongson-fix-v2-1-5492db953879@gmail.com> <aktdkn-NcQt7J1YS@monoceros>
+In-Reply-To: <aktdkn-NcQt7J1YS@monoceros>
+From: Keguang Zhang <keguang.zhang@gmail.com>
+Date: Thu, 9 Jul 2026 15:25:38 +0800
+X-Gm-Features: AUfX_mw1L65BnLDzO4DEx0lLk4EBSXiuaFJGZAnZ_MP9FsBu2pBvYEQR8kYZzBo
+Message-ID: <CAJhJPsVffZLTzXyA41rxm=A54sZhROVg-+K-gWo1KEzuKGv15w@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] pwm: loongson: Fix low pulse buffer register handling
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <ukleinek@kernel.org>
+Cc: Binbin Zhou <zhoubinbin@loongson.cn>, linux-pwm@vger.kernel.org, 
+	linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [1.14 / 15.00];
-	SUSPICIOUS_RECIPS(1.50)[];
-	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_CONTAINS_FROM(1.00)[];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+X-Spamd-Result: default: False [-2.16 / 15.00];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
+	DMARC_POLICY_ALLOW(-0.50)[gmail.com,none];
+	R_DKIM_ALLOW(-0.20)[gmail.com:s=20251104];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c04:e001:36c::/64:c];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
-	MIME_BASE64_TEXT(0.10)[];
 	HAS_LIST_UNSUB(-0.01)[];
-	DMARC_NA(0.00)[eswincomputing.com];
+	FORGED_RECIPIENTS(0.00)[m:ukleinek@kernel.org,m:zhoubinbin@loongson.cn,m:linux-pwm@vger.kernel.org,m:linux-kernel@vger.kernel.org,s:lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9650-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9651-lists,linux-pwm=lfdr.de];
+	FORGED_SENDER(0.00)[keguangzhang@gmail.com,linux-pwm@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	TO_DN_SOME(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
-	FORGED_RECIPIENTS(0.00)[m:sashiko-reviews@lists.linux.dev,m:ukleinek@kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:ben-linux@fluff.org,m:ben.dooks@codethink.co.uk,m:p.zabel@pengutronix.de,m:linux-pwm@vger.kernel.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:ningyu@eswincomputing.com,m:linmin@eswincomputing.com,m:xuxiang@eswincomputing.com,m:wangguosheng@eswincomputing.com,m:pinkesh.vaghela@einfochips.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
-	FORGED_SENDER(0.00)[dongxuyang@eswincomputing.com,linux-pwm@vger.kernel.org];
 	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	RCPT_COUNT_TWELVE(0.00)[16];
+	RCPT_COUNT_THREE(0.00)[4];
+	FREEMAIL_FROM(0.00)[gmail.com];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	TO_DN_NONE(0.00)[];
-	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[dongxuyang@eswincomputing.com,linux-pwm@vger.kernel.org];
-	HAS_X_PRIO_THREE(0.00)[3];
 	ALIAS_RESOLVED(0.00)[];
-	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	R_DKIM_NA(0.00)[];
+	PRECEDENCE_BULK(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[keguangzhang@gmail.com,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[gmail.com:+];
+	MID_RHS_MATCH_FROMTLD(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c04::/32, country:SG];
+	TAGGED_RCPT(0.00)[linux-pwm];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[eswincomputing.com:from_mime,eswincomputing.com:email,eswincomputing.com:mid,vger.kernel.org:from_smtp,sashiko.dev:url,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	MISSING_XM_UA(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[mail.gmail.com:mid,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: D28DC72BA7C
+X-Rspamd-Queue-Id: 3E0E872DB06
 
-PiAKPiBUaGFuayB5b3UgZm9yIHlvdXIgY29udHJpYnV0aW9uISBTYXNoaWtvIEFJIHJldmlldyBm
-b3VuZCAzIHBvdGVudGlhbCBpc3N1ZShzKSB0byBjb25zaWRlcjoKPiAKPiBOZXcgaXNzdWVzOgo+
-IC0gW0hpZ2hdIEhhcmR3YXJlIHJlc2V0IGlzIGFzc2VydGVkIGFmdGVyIGdhdGluZyBjbG9ja3Ms
-IHdoaWNoIGNhbiBjYXVzZSBidXMgaGFuZ3MuCj4gLSBbSGlnaF0gUmFjZSBjb25kaXRpb24gYmV0
-d2VlbiBydW50aW1lIFBNIGNoZWNrIGFuZCBkaXNhYmxlIGNhdXNlcyBhIHBlcm1hbmVudCBjbG9j
-ayBsZWFrLgo+IAo+IFByZS1leGlzdGluZyBpc3N1ZXM6Cj4gLSBbSGlnaF0gVW5tYXNraW5nIHRo
-ZSB0aW1lciBpbnRlcnJ1cHQgd2l0aG91dCBhbiBJUlEgaGFuZGxlciBjYW4gY2F1c2UgYSBzZXZl
-cmUgaW50ZXJydXB0IHN0b3JtLgo+IC0tCj4gCj4gY29tbWl0IGE1MDYwOWJhOTY5MzhjMDJmYmM5
-NGY1NDMxOGM5NTU2MWY2NjE3NTgKPiBBdXRob3I6IFh1eWFuZyBEb25nIDxkb25neHV5YW5nQGVz
-d2luY29tcHV0aW5nLmNvbT4KPiBTdWJqZWN0OiBwd206IGR3YzogYWRkIG9mL3BsYXRmb3JtIHN1
-cHBvcnQKPiAKPiBUaGUgZHdjIHB3bSBjb250cm9sbGVyIGNhbiBiZSB1c2VkIGluIG5vbi1QQ0kg
-c3lzdGVtcywgc28gYWxsb3cgZWl0aGVyIAo+IHBsYXRmb3JtIG9yIE9GIGJhc2VkIHByb2Jpbmcu
-IEltcGxlbWVudHMgcG9sYXJpdHkgY29udHJvbCBieSBleHBsb2l0aW5nIAo+IHRoZSB0aW1lcidz
-IGR1YWwgbG9hZCByZWdpc3RlcnMuCj4gCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9wd20vcHdt
-LWR3Yy1jb3JlLmMgYi9kcml2ZXJzL3B3bS9wd20tZHdjLWNvcmUuYwo+ID4gaW5kZXggNmRhYmVj
-OTNhM2M2NC4uNDlmMDY1N2Q0YWQ0NCAxMDA2NDQKPiA+IC0tLSBhL2RyaXZlcnMvcHdtL3B3bS1k
-d2MtY29yZS5jCj4gPiArKysgYi9kcml2ZXJzL3B3bS9wd20tZHdjLWNvcmUuYwo+IAo+IFsgLi4u
-IF0KPiAKPiA+IEBAIC04NSw2ICsxMzgsOSBAQCBzdGF0aWMgaW50IF9fZHdjX3B3bV9jb25maWd1
-cmVfdGltZXIoc3RydWN0IGR3Y19wd20gKmR3YywKPiA+ICAJICogcGVyaW9kcyBhcmUgc2V0IGJ5
-IExvYWQgQ291bnQgcmVnaXN0ZXJzLgo+ID4gIAkgKi8KPiA+ICAJY3RybCA9IERXQ19USU1fQ1RS
-TF9NT0RFX1VTRVIgfCBEV0NfVElNX0NUUkxfUFdNOwo+ID4gKwlpZiAoZHdjLT5mZWF0dXJlcyAm
-IERXQ19USU1fQ1RSTF8wTjEwMFBXTV9FTikKPiA+ICsJCWN0cmwgfD0gRFdDX1RJTV9DVFJMXzBO
-MTAwUFdNX0VOOwo+ID4gKwo+ID4gIAlkd2NfcHdtX3dyaXRlbChkd2MsIGN0cmwsIERXQ19USU1f
-Q1RSTChwd20tPmh3cHdtKSk7Cj4gCj4gW1NldmVyaXR5OiBIaWdoXQo+IFRoaXMgaXNuJ3QgYSBi
-dWcgaW50cm9kdWNlZCBieSB0aGlzIHBhdGNoLCBidXQgZG9lcyB3cml0aW5nIHRoaXMgY29udHJv
-bAo+IHJlZ2lzdGVyIHVubWFzayB0aGUgdGltZXIgaW50ZXJydXB0Pwo+IAo+IFRoZSBjdHJsIHZh
-bHVlIGlzIGNvbnN0cnVjdGVkIHdpdGhvdXQgRFdDX1RJTV9DVFJMX0lOVF9NQVNLIHNldC4gSWYg
-dGhpcwo+IGhhcmR3YXJlIGlzIG9uIGFuIE9GIHBsYXRmb3JtIHdoZXJlIGludGVycnVwdHMgYXJl
-IGNvbW1vbmx5IHNoYXJlZCwgY291bGQKPiB0aGlzIHVubWFza2VkIHRpbWVyIGZsb29kIHRoZSBz
-eXN0ZW0gd2l0aCBpbnRlcnJ1cHRzIHNpbmNlIHRoZXJlIGlzIG5vCj4gSVJRIGhhbmRsZXI/Cj4g
-CgpIaSBTYXNoaWtvLAoKV2lsbCBhZGQgRFdDX1RJTV9DVFJMX0lOVF9NQVNLIGluIHRoZSBuZXh0
-IHZlcnNpb24uCgo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcHdtL3B3bS1kd2Mtb2YuYyBiL2Ry
-aXZlcnMvcHdtL3B3bS1kd2Mtb2YuYwo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+IGluZGV4
-IDAwMDAwMDAwMDAwMDAuLjdiYmJmOThkNzY5N2EKPiA+IC0tLSAvZGV2L251bGwKPiA+ICsrKyBi
-L2RyaXZlcnMvcHdtL3B3bS1kd2Mtb2YuYwo+IAo+IFsgLi4uIF0KPiAKPiA+ICtzdGF0aWMgdm9p
-ZCBkd2NfcHdtX3BsYXRfcmVtb3ZlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpCj4gPiAr
-ewo+ID4gKwlzdHJ1Y3QgZHdjX3B3bV9kcnZkYXRhICpkYXRhID0gcGxhdGZvcm1fZ2V0X2RydmRh
-dGEocGRldik7Cj4gPiArCXN0cnVjdCBwd21fY2hpcCAqY2hpcCA9IGRhdGEtPmNoaXBzWzBdOwo+
-ID4gKwlzdHJ1Y3QgZHdjX3B3bSAqZHdjID0gdG9fZHdjX3B3bShjaGlwKTsKPiA+ICsJdW5zaWdu
-ZWQgaW50IGlkeDsKPiA+ICsJaW50IHJldDsKPiA+ICsKPiA+ICsJcHdtY2hpcF9yZW1vdmUoY2hp
-cCk7Cj4gPiArCj4gPiArCXJldCA9IHBtX3J1bnRpbWVfcmVzdW1lX2FuZF9nZXQoJnBkZXYtPmRl
-dik7Cj4gPiArCWlmIChyZXQgPCAwKSB7Cj4gPiArCQlkZXZfd2FybigmcGRldi0+ZGV2LCAiZmFp
-bGVkIHRvIHJlc3VtZSBkZXZpY2U6ICVkXG4iLCByZXQpOwo+ID4gKwl9IGVsc2Ugewo+ID4gKwkJ
-Zm9yIChpZHggPSAwOyBpZHggPCBjaGlwLT5ucHdtOyBpZHgrKykgewo+ID4gKwkJCWlmIChkd2Nf
-cHdtX3JlYWRsKGR3YywgRFdDX1RJTV9DVFJMKGlkeCkpICYKPiA+ICsJCQkJCSAgRFdDX1RJTV9D
-VFJMX0VOKQo+ID4gKwkJCQlwbV9ydW50aW1lX3B1dF9ub2lkbGUoJnBkZXYtPmRldik7Cj4gPiAr
-CQl9Cj4gPiArCQlwbV9ydW50aW1lX3B1dF9zeW5jKCZwZGV2LT5kZXYpOwo+ID4gKwl9Cj4gPiAr
-Cj4gPiArCWlmICghcG1fcnVudGltZV9zdGF0dXNfc3VzcGVuZGVkKCZwZGV2LT5kZXYpKSB7Cj4g
-PiArCQljbGtfZGlzYWJsZV91bnByZXBhcmUoZHdjLT5jbGspOwo+ID4gKwkJY2xrX2Rpc2FibGVf
-dW5wcmVwYXJlKGR3Yy0+YnVzX2Nsayk7Cj4gPiArCX0KPiA+ICsJcG1fcnVudGltZV9kaXNhYmxl
-KCZwZGV2LT5kZXYpOwo+IAo+IFtTZXZlcml0eTogSGlnaF0KPiBDb3VsZCB0aGlzIG9yZGVyaW5n
-IGNhdXNlIGEgcGVybWFuZW50IGNsb2NrIGxlYWsgaWYgYSBjb25jdXJyZW50IHJ1bnRpbWUKPiBQ
-TSByZXN1bWUgb2NjdXJzPwo+IAo+IElmIHVzZXJzcGFjZSB0cmlnZ2VycyBhIHJlc3VtZSAoZS5n
-LiB2aWEgc3lzZnMpIGJldHdlZW4gdGhlCj4gcG1fcnVudGltZV9zdGF0dXNfc3VzcGVuZGVkKCkg
-Y2hlY2sgYW5kIHBtX3J1bnRpbWVfZGlzYWJsZSgpLCB0aGUKPiBkd2NfcHdtX3J1bnRpbWVfcmVz
-dW1lKCkgY2FsbGJhY2sgd2lsbCByZS1lbmFibGUgdGhlIGNsb2Nrcy4KPiAKPiBPbmNlIHBtX3J1
-bnRpbWVfZGlzYWJsZSgpIHJ1bnMsIHRoZSBQTSBzdGF0ZSBpcyBmcm96ZW4sIGJ1dCB0aGUgZHJp
-dmVyIHdpbGwKPiBoYXZlIGxvc3QgdHJhY2sgb2YgdGhlIHJlLWVuYWJsZWQgY2xvY2tzLiBTaG91
-bGQgcG1fcnVudGltZV9kaXNhYmxlKCkgYmUKPiBjYWxsZWQgYmVmb3JlIG1hbnVhbGx5IHJvbGxp
-bmcgYmFjayB0aGUgY2xvY2sgc3RhdGU/Cj4gCgpDYWxsIHBtX3J1bnRpbWVfZGlzYWJsZSgpIGJl
-Zm9yZSBtYW51YWxseSByb2xsaW5nIGJhY2sgdGhlIGNsb2NrIHN0YXRlLgoKPiA+ICsKPiA+ICsJ
-aWYgKGR3Yy0+cnN0KSB7Cj4gPiArCQlyZXQgPSByZXNldF9jb250cm9sX2Fzc2VydChkd2MtPnJz
-dCk7Cj4gCj4gW1NldmVyaXR5OiBIaWdoXQo+IERvZXMgYXNzZXJ0aW5nIHRoZSByZXNldCB3aGls
-ZSB0aGUgSVAgYmxvY2sncyBjbG9ja3MgYXJlIGRpc2FibGVkIGNhdXNlCj4gYSBidXMgbG9ja3Vw
-Pwo+IAo+IEluIGR3Y19wd21fcGxhdF9yZW1vdmUoKSwgdGhlIGNsb2NrcyBhcmUgZ3VhcmFudGVl
-ZCB0byBiZSBvZmYgaGVyZQo+IChlaXRoZXIgaW1wbGljaXRseSBieSBhbGxvd2luZyB0aGUgZGV2
-aWNlIHRvIHN1c3BlbmQsIG9yIGV4cGxpY2l0bHkgdmlhIHRoZQo+IGNsa19kaXNhYmxlX3VucHJl
-cGFyZSgpIGNhbGxzIGp1c3QgYWJvdmUpLgo+IAo+IE9uIEFNQkEvQVBCIGJ1c2VzLCBhc3NlcnRp
-bmcgYSByZXNldCBvbiBhbiB1bmNsb2NrZWQgSVAgYmxvY2sgb2Z0ZW4gcHJldmVudHMKPiB0aGUg
-cmVzZXQgc2lnbmFsIGZyb20gcHJvcGFnYXRpbmcsIGxlYWRpbmcgdG8gYSBzeXN0ZW0gaGFuZyB3
-aGVuIHRoZSByZXNldAo+IGNvbnRyb2xsZXIgYXR0ZW1wdHMgdG8gY29tcGxldGUgdGhlIHRyYW5z
-YWN0aW9uLgo+IAoKUmVtb3ZlIHJlc2V0IGFzc2VydCBpbiByZW1vdmUgZnVuY3Rpb24sIGFzIGRp
-c2FibGluZyBQTSBhbmQgY2xvY2tzCnByZXZlbnRzIGZ1cnRoZXIgb3BlcmF0aW9uCgpCZXN0IHJl
-Z2FyZHMsClh1eWFuZyBEb25nCgo+ID4gKwkJaWYgKHJldCkKPiA+ICsJCQlkZXZfd2FybigmcGRl
-di0+ZGV2LCAiZmFpbGVkIHRvIGFzc2VydCByZXNldDogJWRcbiIsCj4gPiArCQkJCSByZXQpOwo+
-ID4gKwl9Cj4gPiArfQo+IAo+IC0tIAo+IFNhc2hpa28gQUkgcmV2aWV3IMK3IGh0dHBzOi8vc2Fz
-aGlrby5kZXYvIy9wYXRjaHNldC8yMDI2MDcwMzA5MzMwOC40ODItMS1kb25neHV5YW5nQGVzd2lu
-Y29tcHV0aW5nLmNvbT9wYXJ0PTMK
+On Mon, Jul 6, 2026 at 4:00=E2=80=AFPM Uwe Kleine-K=C3=B6nig <ukleinek@kern=
+el.org> wrote:
+>
+> Hello,
+>
+> On Fri, Jun 26, 2026 at 08:24:22PM +0800, Keguang Zhang via B4 Relay wrot=
+e:
+> > From: Keguang Zhang <keguang.zhang@gmail.com>
+> >
+> > The Loongson PWM register at offset 0x4 is documented as the Low
+> > Pulse Buffer Register, which stores the low pulse width rather than
+> > the duty cycle.
+> >
+> > However, this register was incorrectly defined and treated as a
+> > duty-cycle register. As a result, the duty cycle and low pulse cycle
+> > are swapped in the generated PWM waveform.
+> >
+> > Program the low pulse (period - duty) into the register and
+> > adjust pwm_loongson_get_state() accordingly when reconstructing the
+> > duty cycle.
+> >
+> > Fixes: 2b62c89448dd ("pwm: Add Loongson PWM controller support")
+> > Signed-off-by: Keguang Zhang <keguang.zhang@gmail.com>
+> > ---
+> >  drivers/pwm/pwm-loongson.c | 30 +++++++++++++++++-------------
+> >  1 file changed, 17 insertions(+), 13 deletions(-)
+> >
+> > diff --git a/drivers/pwm/pwm-loongson.c b/drivers/pwm/pwm-loongson.c
+> > index 31a57edecfd0..69514b5a1324 100644
+> > --- a/drivers/pwm/pwm-loongson.c
+> > +++ b/drivers/pwm/pwm-loongson.c
+> > @@ -22,6 +22,7 @@
+> >   */
+> >
+> >  #include <linux/acpi.h>
+> > +#include <linux/bitfield.h>
+> >  #include <linux/clk.h>
+> >  #include <linux/device.h>
+> >  #include <linux/init.h>
+> > @@ -33,10 +34,13 @@
+> >  #include <linux/units.h>
+> >
+> >  /* Loongson PWM registers */
+> > -#define LOONGSON_PWM_REG_DUTY                0x4 /* Low Pulse Buffer R=
+egister */
+> > +#define LOONGSON_PWM_REG_LOW         0x4 /* Low Pulse Buffer Register =
+*/
+> >  #define LOONGSON_PWM_REG_PERIOD              0x8 /* Pulse Period Buffe=
+r Register */
+> >  #define LOONGSON_PWM_REG_CTRL                0xc /* Control Register *=
+/
+> >
+> > +#define LOONGSON_PWM_MAX_LOW         GENMASK(31, 0)
+> > +#define LOONGSON_PWM_MAX_PERIOD              GENMASK(31, 0)
+> > +
+> >  /* Control register bits */
+> >  #define LOONGSON_PWM_CTRL_REG_EN     BIT(0)  /* Counter Enable Bit */
+> >  #define LOONGSON_PWM_CTRL_REG_OE     BIT(3)  /* Pulse Output Enable Co=
+ntrol Bit, Valid Low */
+> > @@ -118,20 +122,20 @@ static int pwm_loongson_enable(struct pwm_chip *c=
+hip, struct pwm_device *pwm)
+> >  static int pwm_loongson_config(struct pwm_chip *chip, struct pwm_devic=
+e *pwm,
+> >                              u64 duty_ns, u64 period_ns)
+> >  {
+> > -     u64 duty, period;
+> > +     u64 low, period;
+> >       struct pwm_loongson_ddata *ddata =3D to_pwm_loongson_ddata(chip);
+> >
+> > -     /* duty =3D duty_ns * ddata->clk_rate / NSEC_PER_SEC */
+> > -     duty =3D mul_u64_u64_div_u64(duty_ns, ddata->clk_rate, NSEC_PER_S=
+EC);
+> > -     if (duty > U32_MAX)
+> > -             duty =3D U32_MAX;
+> > +     /* low =3D (period_ns - duty_ns) * ddata->clk_rate / NSEC_PER_SEC=
+ */
+> > +     low =3D mul_u64_u64_div_u64_roundup(period_ns - duty_ns, ddata->c=
+lk_rate, NSEC_PER_SEC);
+>
+> This is wrong. Consider clk_rate =3D 1234567 and the request duty_ns =3D
+> 1234 [ns] and period_ns =3D 123456 [ns]
+>
+> Then you get
+>
+>         low =3D (123456 - 1234) * 1234567 // 1e9 =3D 150
+>         period =3D 123456 * 1234567 // 1e9 =3D 152
+>
+> so the actual duty cycle is (152 - 150) * 1e9 / 1234567 =3D
+> 1620.0011826008633 which is bigger than the requested value.
+>
+> The correct approach is
+>
+>         duty =3D mul_u64_u64_div_u64_roundup(duty_ns, ddata->clk_rate, NS=
+EC_PER_SEC);
+>         period =3D mul_u64_u64_div_u64(period_ns, ddata->clk_rate, NSEC_P=
+ER_SEC);
+>
+>         low =3D period - duty;
+>
+> which yields
+>
+>         duty =3D 1
+>         period =3D 152 (as before)
+>         low =3D 151
+>
+> .
+>
+
+Thanks for catching this. I'll update the calculation as you suggested
+in the next version.
+
+> > +     if ((!FIELD_FIT(LOONGSON_PWM_MAX_LOW, low)))
+> > +             low =3D LOONGSON_PWM_MAX_LOW;
+> >
+> >       /* period =3D period_ns * ddata->clk_rate / NSEC_PER_SEC */
+> >       period =3D mul_u64_u64_div_u64(period_ns, ddata->clk_rate, NSEC_P=
+ER_SEC);
+> > -     if (period > U32_MAX)
+> > -             period =3D U32_MAX;
+> > +     if ((!FIELD_FIT(LOONGSON_PWM_MAX_PERIOD, period)))
+> > +             period =3D LOONGSON_PWM_MAX_PERIOD;
+> >
+> > -     pwm_loongson_writel(ddata, duty, LOONGSON_PWM_REG_DUTY);
+> > +     pwm_loongson_writel(ddata, low, LOONGSON_PWM_REG_LOW);
+> >       pwm_loongson_writel(ddata, period, LOONGSON_PWM_REG_PERIOD);
+> >
+> >       return 0;
+> > @@ -166,15 +170,15 @@ static int pwm_loongson_apply(struct pwm_chip *ch=
+ip, struct pwm_device *pwm,
+> >  static int pwm_loongson_get_state(struct pwm_chip *chip, struct pwm_de=
+vice *pwm,
+> >                                 struct pwm_state *state)
+> >  {
+> > -     u32 duty, period, ctrl;
+> > +     u32 low, period, ctrl;
+> >       struct pwm_loongson_ddata *ddata =3D to_pwm_loongson_ddata(chip);
+> >
+> > -     duty =3D pwm_loongson_readl(ddata, LOONGSON_PWM_REG_DUTY);
+> > +     low =3D pwm_loongson_readl(ddata, LOONGSON_PWM_REG_LOW);
+> >       period =3D pwm_loongson_readl(ddata, LOONGSON_PWM_REG_PERIOD);
+> >       ctrl =3D pwm_loongson_readl(ddata, LOONGSON_PWM_REG_CTRL);
+> >
+> > -     /* duty & period have a max of 2^32, so we can't overflow */
+> > -     state->duty_cycle =3D DIV64_U64_ROUND_UP((u64)duty * NSEC_PER_SEC=
+, ddata->clk_rate);
+> > +     /* low & period have a max of 2^32, so we can't overflow */
+> > +     state->duty_cycle =3D DIV64_U64_ROUND_UP((u64)(period - low) * NS=
+EC_PER_SEC, ddata->clk_rate);
+>
+> What happens if low > period?
+
+pwm_state_valid() in drivers/pwm/core.c ensures that duty_cycle <=3D
+period before the framework calls the driver's .apply(). Since this
+driver always programs low =3D period - duty, low cannot exceed period
+when configured through the PWM framework.
+>
+> >       state->period =3D DIV64_U64_ROUND_UP((u64)period * NSEC_PER_SEC, =
+ddata->clk_rate);
+> >       state->polarity =3D (ctrl & LOONGSON_PWM_CTRL_REG_INVERT) ? PWM_P=
+OLARITY_INVERSED :
+> >                         PWM_POLARITY_NORMAL;
+>
+> Best regards
+> Uwe
+
+
+
+--=20
+Best regards,
+
+Keguang Zhang
 
