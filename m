@@ -1,59 +1,59 @@
-Return-Path: <linux-pwm+bounces-9689-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9690-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id UsT/NO+bUWrmGgMAu9opvQ
-	(envelope-from <linux-pwm+bounces-9689-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Sat, 11 Jul 2026 03:27:11 +0200
+	id RP+6D22dUWokGwMAu9opvQ
+	(envelope-from <linux-pwm+bounces-9690-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Sat, 11 Jul 2026 03:33:33 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1C2E873FEEE
-	for <lists+linux-pwm@lfdr.de>; Sat, 11 Jul 2026 03:27:11 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [IPv6:2600:3c0a:e001:db::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 8698373FF1E
+	for <lists+linux-pwm@lfdr.de>; Sat, 11 Jul 2026 03:33:32 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=collabora.com header.s=zohomail header.b=WjJzkoEo;
+	dkim=pass header.d=collabora.com header.s=zohomail header.b=Lk3Gm7qQ;
 	dmarc=pass (policy=none) header.from=collabora.com;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9689-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9689-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9690-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 2600:3c0a:e001:db::12fc:5321 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9690-lists+linux-pwm=lfdr.de@vger.kernel.org";
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id D44BC3006B57
-	for <lists+linux-pwm@lfdr.de>; Sat, 11 Jul 2026 01:27:09 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id CB51C300A38A
+	for <lists+linux-pwm@lfdr.de>; Sat, 11 Jul 2026 01:33:30 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 39C2F1DD525;
-	Sat, 11 Jul 2026 01:27:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3E1C02E36F8;
+	Sat, 11 Jul 2026 01:33:29 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from sender4-op-o11.zoho.com (sender4-op-o11.zoho.com [136.143.188.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1DFF28F5;
-	Sat, 11 Jul 2026 01:27:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 375992DEA8F;
+	Sat, 11 Jul 2026 01:33:25 +0000 (UTC)
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1783733229; cv=pass; b=F2k1xP6rPqVtCaBZncYZQWhk/nMTSC/nJIMPaG29e094HEPhG0AdyrPjO6V1sVQELyVGBDpf9J9d4oegGYkUb5IUep9SYWvNcRh85cn+QkdJOrc3f7rOOB5RqCOVMWKp1qMkvdM05sdB01NRdqZx2GwjToum5/y9mMTyWvLDCB0=
+	t=1783733608; cv=pass; b=S8OIA/5VKmmqiqtLe91xfKPqZdMgDLfapNPT49nz+re+8tcT+WeDDWwB5N/R9MVmPq70sMI1aPGp5oF+2bOPRZSWE562MAuVJaEQ70jm6XfKjOdqUQ0ySl1oTxyw5vxfnrnfXeGcItDQRnUqa7lcYyeKuFXB2v1myjPkJJGVseg=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1783733229; c=relaxed/simple;
-	bh=XatPcgaBayRgywKUDu6SUeeMeB8y2HW7cvkwmV/GjR0=;
+	s=arc-20240116; t=1783733608; c=relaxed/simple;
+	bh=gsEBn5BVLhSEw5ug7SJs/gukax1NOc7EBju/0jnVA5g=;
 	h=Content-Type:Mime-Version:Subject:From:In-Reply-To:Date:Cc:
-	 Message-Id:References:To; b=baKIq6tVoOOKvtjIi0dd+tAkK8CbGmvUSuN+agUeKPQ/PsxY7OxEWhLBFo/YMTTkKSVLKJLL5opid9yiHg+8DNgel7q2htqGYkT3xDwzZfDblBCmt/LmUC4JqRKIgJV6hA0LyRO0NHeKEaG1UOxLg3SJmSQr63Na9C9wVRsYnCc=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=WjJzkoEo; arc=pass smtp.client-ip=136.143.188.11
-ARC-Seal: i=1; a=rsa-sha256; t=1783733197; cv=none; 
+	 Message-Id:References:To; b=De3e5oWIYWAtSrgTWcfiaterCsdCBF//MFSON7/1GaNPNyFTrin9lGSo34hPH94gyuSVfvGDeCXRdzGdywxPix5gHJ/XQJJtD/MgkRH8ZGTEylqX7Ba1JuJQXvzguwh3wIpn+twxPYcnHweadpnLckkoBVGwm9GaDuoaVGOR8y4=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (1024-bit key) header.d=collabora.com header.i=daniel.almeida@collabora.com header.b=Lk3Gm7qQ; arc=pass smtp.client-ip=136.143.188.11
+ARC-Seal: i=1; a=rsa-sha256; t=1783733568; cv=none; 
 	d=zohomail.com; s=zohoarc; 
-	b=RYw/ccei8GfX2ZZYi5r7tnJpr9sLHJfVlXIfaYz6xZDpSAiaTQu3ouXyU1/NM0I+K+fIrjZbPGqChW360+2dPur+0MYqE3MqDBgf9ZrGxl4PLJlpbl2oxjWJ8IQ1Gi7ne1e9zke6/gQx5PNP6C/ngrxk5aqV/m5Oo0mG7SMtq78=
+	b=P+rA1fb/Bq9WYuI5gaQivLqn86Tb+lS7bz93XnHLR7dnhtHikoHyBwjdxTsMJWTK7VSpVv+U3Vq3QxbtmC9X7utgq5vHrMs/TQsE4kyD2MlYi2Ww8/cq34E6Jj4bEzJEv/D0q9T6C/n6IyC3MG7q2Sbvd/uLUbG+KEMb26EAcP0=
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
-	t=1783733197; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
-	bh=NdyoGdZ9jTNEWZfdQkrxE0H2N74xEabOBVRJ0yaV9C4=; 
-	b=XgeW3bYosXFnYvL8k6DprxzOzjOeMRRc5q8wXX0fmNu1J6GE32zwaNigLYbqYTqsFFJJDrRIrq2MpyW+VlZ/rOMcCE8TrQFPEKi/Xhvb9bUn+W6DlSJ3wS82Qhwb5qihD+XCYC3CNSzaJikvoyTjM1nDI3JMtROT2D9Hvgv1KIM=
+	t=1783733568; h=Content-Type:Content-Transfer-Encoding:Cc:Cc:Date:Date:From:From:In-Reply-To:MIME-Version:Message-ID:References:Subject:Subject:To:To:Message-Id:Reply-To; 
+	bh=8gMf0nxC2d5C8ZjOmix2w/Kv6DOVRcZKwqCijuR/pd0=; 
+	b=CvuhtN1aIE4EaGwS/5xxIifC4zTYSTVITmkCp2u+NnlYDYf7kp77nMWzux+1ZDsKQzVtLnUeAnLK85o7AVt8IXT2HJbpDc5e7tZXlN41L7loQmnqxFCNxWct3+mDyYbZdKelHN1+2efeZs1I/lxaYzRlWp09+CRTolUiof/Vwlk=
 ARC-Authentication-Results: i=1; mx.zohomail.com;
 	dkim=pass  header.i=collabora.com;
 	spf=pass  smtp.mailfrom=daniel.almeida@collabora.com;
 	dmarc=pass header.from=<daniel.almeida@collabora.com>
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1783733197;
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1783733568;
 	s=zohomail; d=collabora.com; i=daniel.almeida@collabora.com;
 	h=Content-Type:Mime-Version:Subject:Subject:From:From:In-Reply-To:Date:Date:Cc:Cc:Content-Transfer-Encoding:Message-Id:Message-Id:References:To:To:Reply-To;
-	bh=NdyoGdZ9jTNEWZfdQkrxE0H2N74xEabOBVRJ0yaV9C4=;
-	b=WjJzkoEo1YrCsUfjHkpDs2EXhf3fABLES5atC/TwYWQDR935XA5wRg6Lku1BcIb2
-	rZS7XoaDHB/H+glh+j+18u3elU7PyJxwqtQbwzjgiTcKo9qT2+k14vzfyFrwBvIwyF0
-	smSD55wEbPye66OlSdu3dQYOJV8aD2IabDA8ELr4=
-Received: by mx.zohomail.com with SMTPS id 1783733193918344.7896144010489;
-	Fri, 10 Jul 2026 18:26:33 -0700 (PDT)
+	bh=8gMf0nxC2d5C8ZjOmix2w/Kv6DOVRcZKwqCijuR/pd0=;
+	b=Lk3Gm7qQdkD35x+m0iZkvf6kdo8NS2R4Am8Xbeo8E2/wQmnYYDW2bxj4EUa+x0H8
+	DZsOPVSrWVCjmUBdSmcrXFqSc24vMcAP0JABBvPzX+djPl4a70Uc0g8P+g3b8d+FTIe
+	q7KevwQ6mji2Xa05+WlOW39cuB6OCWkCJ+MHHVU8=
+Received: by mx.zohomail.com with SMTPS id 178373356638357.65623280407033;
+	Fri, 10 Jul 2026 18:32:46 -0700 (PDT)
 Content-Type: text/plain;
 	charset=us-ascii
 Precedence: bulk
@@ -62,11 +62,10 @@ List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 Mime-Version: 1.0 (Mac OS X Mail 16.0 \(3826.700.81\))
-Subject: Re: [PATCH v6 14/20] rust: io: add I/O backend for system memory with
- volatile access
+Subject: Re: [PATCH v6 15/20] rust: io: implement a view type for `Coherent`
 From: Daniel Almeida <daniel.almeida@collabora.com>
-In-Reply-To: <20260706-io_projection-v6-14-72cd5d055d54@garyguo.net>
-Date: Fri, 10 Jul 2026 22:26:12 -0300
+In-Reply-To: <20260706-io_projection-v6-15-72cd5d055d54@garyguo.net>
+Date: Fri, 10 Jul 2026 22:32:27 -0300
 Cc: Alice Ryhl <aliceryhl@google.com>,
  Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
  "Rafael J. Wysocki" <rafael@kernel.org>,
@@ -94,12 +93,11 @@ Cc: Alice Ryhl <aliceryhl@google.com>,
  linux-pci@vger.kernel.org,
  nova-gpu@lists.linux.dev,
  dri-devel@lists.freedesktop.org,
- linux-pwm@vger.kernel.org,
- Laura Nao <laura.nao@collabora.com>
+ linux-pwm@vger.kernel.org
 Content-Transfer-Encoding: quoted-printable
-Message-Id: <926125C1-22E2-47BC-AFD4-788BA300601C@collabora.com>
+Message-Id: <C8CF4F99-0E14-464D-B78A-83D9F0431024@collabora.com>
 References: <20260706-io_projection-v6-0-72cd5d055d54@garyguo.net>
- <20260706-io_projection-v6-14-72cd5d055d54@garyguo.net>
+ <20260706-io_projection-v6-15-72cd5d055d54@garyguo.net>
 To: Gary Guo <gary@garyguo.net>
 X-Mailer: Apple Mail (2.3826.700.81)
 X-ZohoMailClient: External
@@ -108,22 +106,22 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=2];
 	DMARC_POLICY_ALLOW(-0.50)[collabora.com,none];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c0a:e001:db::/64:c];
 	R_DKIM_ALLOW(-0.20)[collabora.com:s=zohomail];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
 	RCVD_TLS_LAST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9689-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9690-lists,linux-pwm=lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:aliceryhl@google.com,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:ojeda@kernel.org,m:boqun@kernel.org,m:bjorn3_gh@protonmail.com,m:lossin@kernel.org,m:a.hindborg@kernel.org,m:tmgross@umich.edu,m:tamird@kernel.org,m:work@onurozkan.dev,m:bhelgaas@google.com,m:kwilczynski@kernel.org,m:abdiel.janulgue@gmail.com,m:robin.murphy@arm.com,m:acourbot@nvidia.com,m:airlied@gmail.com,m:simona@ffwll.ch,m:m.wilczynski@samsung.com,m:ukleinek@kernel.org,m:dakr@kernel.org,m:driver-core@lists.linux.dev,m:rust-for-linux@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-pci@vger.kernel.org,m:nova-gpu@lists.linux.dev,m:dri-devel@lists.freedesktop.org,m:linux-pwm@vger.kernel.org,m:laura.nao@collabora.com,m:gary@garyguo.net,m:abdieljanulgue@gmail.com,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:aliceryhl@google.com,m:gregkh@linuxfoundation.org,m:rafael@kernel.org,m:ojeda@kernel.org,m:boqun@kernel.org,m:bjorn3_gh@protonmail.com,m:lossin@kernel.org,m:a.hindborg@kernel.org,m:tmgross@umich.edu,m:tamird@kernel.org,m:work@onurozkan.dev,m:bhelgaas@google.com,m:kwilczynski@kernel.org,m:abdiel.janulgue@gmail.com,m:robin.murphy@arm.com,m:acourbot@nvidia.com,m:airlied@gmail.com,m:simona@ffwll.ch,m:m.wilczynski@samsung.com,m:ukleinek@kernel.org,m:dakr@kernel.org,m:driver-core@lists.linux.dev,m:rust-for-linux@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-pci@vger.kernel.org,m:nova-gpu@lists.linux.dev,m:dri-devel@lists.freedesktop.org,m:linux-pwm@vger.kernel.org,m:gary@garyguo.net,m:abdieljanulgue@gmail.com,s:lists@lfdr.de];
 	FORGED_SENDER(0.00)[daniel.almeida@collabora.com,linux-pwm@vger.kernel.org];
-	RCPT_COUNT_TWELVE(0.00)[30];
+	RCPT_COUNT_TWELVE(0.00)[29];
 	RCVD_COUNT_THREE(0.00)[4];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
-	FREEMAIL_CC(0.00)[google.com,linuxfoundation.org,kernel.org,protonmail.com,umich.edu,onurozkan.dev,gmail.com,arm.com,nvidia.com,ffwll.ch,samsung.com,lists.linux.dev,vger.kernel.org,lists.freedesktop.org,collabora.com];
+	FREEMAIL_CC(0.00)[google.com,linuxfoundation.org,kernel.org,protonmail.com,umich.edu,onurozkan.dev,gmail.com,arm.com,nvidia.com,ffwll.ch,samsung.com,lists.linux.dev,vger.kernel.org,lists.freedesktop.org];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
@@ -135,190 +133,214 @@ X-Spamd-Result: default: False [-0.66 / 15.00];
 	TAGGED_RCPT(0.00)[linux-pwm];
 	APPLE_MAILER_COMMON(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp,nvidia.com:email,garyguo.net:email,collabora.com:from_mime,collabora.com:email,collabora.com:mid,collabora.com:dkim]
+	ASN(0.00)[asn:63949, ipnet:2600:3c0a::/32, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[collabora.com:from_mime,collabora.com:email,collabora.com:mid,collabora.com:dkim,nvidia.com:email,garyguo.net:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 1C2E873FEEE
+X-Rspamd-Queue-Id: 8698373FF1E
 
 
 
 > On 6 Jul 2026, at 09:44, Gary Guo <gary@garyguo.net> wrote:
 >=20
-> From: Laura Nao <laura.nao@collabora.com>
+> Implement a `CoherentView` type which is a view of `Coherent`. To be =
+able
+> to give out DMA handles, the view type contains both CPU and DMA =
+pointers,
+> and the projection method projects both at once.
 >=20
-> Add `SysMem`, an `Io` trait implementation for kernel virtual address
-> ranges. It uses volatile accessors to provide safe access to shared
-> memory that may be concurrently accessed by external hardware. =
-Implement
-> `IoCapable` for `u8`, `u16`, `u32`, and `u64` (for 64-bit system).
+> Delegate most of the `Io` implementation to `SysMemBackend`. Provide a
+> method to erase the DMA handle and give out a `SysMem` view, if the =
+user
+> does not need the `dma_handle`.
 >=20
-> This can be used instead of `Coherent` for cases where a different =
-layer
-> takes care of mapping the system memory to the device (e.g. dma-buf or
-> GPUVM).
->=20
-> Signed-off-by: Laura Nao <laura.nao@collabora.com>
-> [ Rebased and adapted on top of I/O rework. - Gary ]
-> Co-developed-by: Gary Guo <gary@garyguo.net>
-> Signed-off-by: Gary Guo <gary@garyguo.net>
 > Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
+> Signed-off-by: Gary Guo <gary@garyguo.net>
 > ---
-> rust/kernel/io.rs | 122 =
-++++++++++++++++++++++++++++++++++++++++++++++++++++++
-> 1 file changed, 122 insertions(+)
+> rust/kernel/dma.rs | 138 =
+++++++++++++++++++++++++++++++++++++++++++++++++++++-
+> 1 file changed, 136 insertions(+), 2 deletions(-)
 >=20
-> diff --git a/rust/kernel/io.rs b/rust/kernel/io.rs
-> index 62643b23e904..78c6ae2a0db8 100644
-> --- a/rust/kernel/io.rs
-> +++ b/rust/kernel/io.rs
-> @@ -1039,6 +1039,128 @@ pub fn relaxed(self) -> RelaxedMmio<'a, T> {
-> #[cfg(CONFIG_64BIT)]
-> impl_mmio_io_capable!(RelaxedMmioBackend, u64, readq_relaxed, =
-writeq_relaxed);
+> diff --git a/rust/kernel/dma.rs b/rust/kernel/dma.rs
+> index 200def84fb69..1535bc6eec64 100644
+> --- a/rust/kernel/dma.rs
+> +++ b/rust/kernel/dma.rs
+> @@ -14,14 +14,21 @@
+>     },
+>     error::to_result,
+>     fs::file,
+> +    io::{
+> +        IoBackend,
+> +        IoBase,
+> +        IoCapable,
+> +        SysMem,
+> +        SysMemBackend, //
+> +    },
+>     prelude::*,
+>     ptr::KnownSize,
+>     sync::aref::ARef,
+>     transmute::{
+>         AsBytes,
+>         FromBytes, //
+> -    }, //
+> -    uaccess::UserSliceWriter,
+> +    },
+> +    uaccess::UserSliceWriter, //
+> };
+> use core::{
+>     ops::{
+> @@ -1133,6 +1140,133 @@ unsafe impl Send for CoherentHandle {}
+> // plain `Copy` values.
+> unsafe impl Sync for CoherentHandle {}
 >=20
-> +/// I/O Backend for system memory.
-> +pub struct SysMemBackend;
-> +
-> +impl IoBackend for SysMemBackend {
-> +    type View<'a, T: ?Sized + KnownSize> =3D SysMem<'a, T>;
-> +
-> +    #[inline]
-> +    fn as_ptr<'a, T: ?Sized + KnownSize>(view: Self::View<'a, T>) -> =
-*mut T {
-> +        view.ptr
-> +    }
-> +
-> +    #[inline]
-> +    unsafe fn project_view<'a, T: ?Sized + KnownSize, U: ?Sized + =
-KnownSize>(
-> +        _view: Self::View<'a, T>,
-> +        ptr: *mut U,
-> +    ) -> Self::View<'a, U> {
-> +        // INVARIANT: Per safety requirement, `ptr` is projection =
-from `view`, so it is also a valid
-> +        // kernel accessible memory region.
-> +        SysMem {
-> +            ptr,
-> +            phantom: PhantomData,
-> +        }
-> +    }
+> +/// View type for `Coherent`.
+> +///
+> +/// This is same as [`SysMem`] but with additional information that =
+allows handing out a DMA handle.
+> +pub struct CoherentView<'a, T: ?Sized> {
+> +    cpu_addr: SysMem<'a, T>,
+> +    dma_handle: DmaAddress,
 > +}
 > +
-> +/// Implements [`IoCapable`] on `SysMemBackend` for `$ty` using =
-`read_volatile` and
-> +/// `write_volatile`.
-> +macro_rules! impl_sysmem_io_capable {
-> +    ($ty:ty) =3D> {
-> +        impl IoCapable<$ty> for SysMemBackend {
-> +            #[inline]
-> +            fn io_read(view: SysMem<'_, $ty>) -> $ty {
-> +                // SAFETY:
-> +                // - Per type invariant, `ptr` is valid and aligned.
-> +                // - Using read_volatile() here so that race with =
-hardware is well-defined.
-> +                // - Using read_volatile() here is not sound if it =
-races with other CPU per Rust
-> +                //   rules, but this is allowed per LKMM.
-> +                // - The macro is only used on primitives so all bit =
-patterns are valid.
-> +                unsafe { view.ptr.read_volatile() }
-> +            }
-> +
-> +            #[inline]
-> +            fn io_write(view: SysMem<'_, $ty>, value: $ty) {
-> +                // SAFETY:
-> +                // - Per type invariant, `ptr` is valid and aligned.
-> +                // - Using write_volatile() here so that race with =
-hardware is well-defined.
-> +                // - Using write_volatile() here is not sound if it =
-races with other CPU per Rust
-> +                //   rules, but this is allowed per LKMM.
-> +                unsafe { view.ptr.write_volatile(value) }
-> +            }
-> +        }
-> +    };
-> +}
-> +
-> +impl_sysmem_io_capable!(u8);
-> +impl_sysmem_io_capable!(u16);
-> +impl_sysmem_io_capable!(u32);
-> +#[cfg(CONFIG_64BIT)]
-> +impl_sysmem_io_capable!(u64);
-> +
-> +/// A view of a system memory region.
-> +///
-> +/// Provides `Io` trait implementation for kernel virtual address =
-ranges,
-> +/// using volatile read/write to safely access shared memory that may =
-be
-> +/// concurrently accessed by external hardware.
-> +///
-> +/// # Invariants
-> +///
-> +/// `self.ptr.addr() .. self.ptr.addr() + KnownSize::size(self.ptr)` =
-is valid and aligned kernel
-> +/// accessible memory region for the lifetime `'a`.
-> +pub struct SysMem<'a, T: ?Sized> {
-> +    ptr: *mut T,
-> +    phantom: PhantomData<&'a ()>,
-> +}
-> +
-> +impl<T: ?Sized> Copy for SysMem<'_, T> {}
-> +impl<T: ?Sized> Clone for SysMem<'_, T> {
+> +impl<T: ?Sized> Copy for CoherentView<'_, T> {}
+> +impl<T: ?Sized> Clone for CoherentView<'_, T> {
 > +    #[inline]
 > +    fn clone(&self) -> Self {
 > +        *self
 > +    }
 > +}
 > +
-> +// SAFETY: `SysMem<'_, T>` is conceptually `&T`.
-> +unsafe impl<T: ?Sized + Sync> Send for SysMem<'_, T> {}
+> +impl<'a, T: ?Sized> CoherentView<'a, T> {
+> +    /// Erase the DMA handle information and obtain a [`SysMem`] view =
+of the same memory region.
+> +    #[inline]
+> +    pub fn as_sys_mem(self) -> SysMem<'a, T> {
+> +        self.cpu_addr
+> +    }
 > +
-> +// SAFETY: `SysMem<'_, T>` is conceptually `&T`.
-> +unsafe impl<T: ?Sized + Sync> Sync for SysMem<'_, T> {}
+> +    /// Returns a DMA handle which may be given to the device as the =
+DMA address base of the region.
+> +    #[inline]
+> +    pub fn dma_handle(self) -> DmaAddress {
+> +        self.dma_handle
+> +    }
 > +
-> +impl<'a, T: ?Sized> SysMem<'a, T> {
-> +    /// Create a `SysMem` from a raw pointer.
+> +    /// Returns a reference to the data in the region.
 > +    ///
 > +    /// # Safety
 > +    ///
-> +    /// `ptr.addr() .. ptr.addr() + KnownSize::size(ptr)` must be =
-valid and aligned kernel
-> +    /// accessible memory region for the lifetime `'a`.
+> +    /// * Callers must ensure that the device does not read/write =
+to/from memory while the returned
+> +    ///   reference is live.
+> +    /// * Callers must ensure that this call does not race with a =
+write (including call to `as_mut`)
+> +    ///   to the same region while the returned reference is live.
 > +    #[inline]
-> +    pub unsafe fn new(ptr: *mut T) -> Self {
-> +        // INVARIANT: Per safety requirement.
-> +        Self {
-> +            ptr,
-> +            phantom: PhantomData,
-> +        }
+> +    pub unsafe fn as_ref(self) -> &'a T {
+> +        // SAFETY: pointer is aligned and valid per type invariant. =
+Aliasing rule is satisfied per
+> +        // safety requirement.
+> +        unsafe { &*self.cpu_addr.as_ptr() }
 > +    }
 > +
-> +    /// Obtain the raw pointer to the memory.
+> +    /// Returns a mutable reference to the data in the region.
+> +    ///
+> +    /// # Safety
+> +    ///
+> +    /// * Callers must ensure that the device does not read/write =
+to/from memory while the returned
+> +    ///   reference is live.
+> +    /// * Callers must ensure that this call does not race with a =
+read (including call to `as_ref`)
+> +    ///   or write (including call to `as_mut`) to the same region =
+while the returned reference is
+> +    ///   live.
 > +    #[inline]
-> +    pub fn as_ptr(self) -> *mut T {
-> +        self.ptr
+> +    pub unsafe fn as_mut(self) -> &'a mut T {
+> +        // SAFETY: pointer is aligned and valid per type invariant. =
+Aliasing rule is satisfied per
+> +        // safety requirement.
+> +        unsafe { &mut *self.cpu_addr.as_ptr() }
 > +    }
 > +}
 > +
-> +impl<'a, T: ?Sized + KnownSize> IoBase<'a> for SysMem<'a, T> {
-> +    type Backend =3D SysMemBackend;
+> +/// `IoBackend` implementation for `Coherent`.
+> +pub struct CoherentIoBackend;
+> +
+> +impl IoBackend for CoherentIoBackend {
+> +    type View<'a, T: ?Sized + KnownSize> =3D CoherentView<'a, T>;
+> +
+> +    #[inline]
+> +    fn as_ptr<'a, T: ?Sized + KnownSize>(view: Self::View<'a, T>) -> =
+*mut T {
+> +        SysMemBackend::as_ptr(view.cpu_addr)
+> +    }
+> +
+> +    #[inline]
+> +    unsafe fn project_view<'a, T: ?Sized + KnownSize, U: ?Sized + =
+KnownSize>(
+> +        view: Self::View<'a, T>,
+> +        ptr: *mut U,
+> +    ) -> Self::View<'a, U> {
+> +        let offset =3D ptr.addr() - view.cpu_addr.as_ptr().addr();
+> +        // CAST: The offset DMA address can never overflow.
+> +        let dma_handle =3D view.dma_handle + offset as DmaAddress;
+> +        CoherentView {
+> +            dma_handle,
+> +            // SAFETY: Per safety requirement.
+> +            cpu_addr: unsafe { =
+SysMemBackend::project_view(view.cpu_addr, ptr) },
+> +        }
+> +    }
+> +}
+> +
+> +impl<T> IoCapable<T> for CoherentIoBackend
+> +where
+> +    SysMemBackend: IoCapable<T>,
+> +{
+> +    #[inline]
+> +    fn io_read<'a>(view: Self::View<'a, T>) -> T {
+> +        SysMemBackend::io_read(view.cpu_addr)
+> +    }
+> +
+> +    #[inline]
+> +    fn io_write<'a>(view: Self::View<'a, T>, value: T) {
+> +        SysMemBackend::io_write(view.cpu_addr, value)
+> +    }
+> +}
+> +
+> +impl<'a, T: ?Sized + KnownSize> IoBase<'a> for CoherentView<'a, T> {
+> +    type Backend =3D CoherentIoBackend;
 > +    type Target =3D T;
 > +
 > +    #[inline]
-> +    fn as_view(self) -> <Self::Backend as IoBackend>::View<'a, =
-Self::Target> {
+> +    fn as_view(self) -> CoherentView<'a, Self::Target> {
 > +        self
 > +    }
 > +}
 > +
-> // This helper turns associated functions to methods so it can be =
-invoked in macro.
-> // Used by `io_project!()` only.
-> #[doc(hidden)]
+> +impl<'a, T: ?Sized + KnownSize> IoBase<'a> for &'a Coherent<T> {
+> +    type Backend =3D CoherentIoBackend;
+> +    type Target =3D T;
+> +
+> +    #[inline]
+> +    fn as_view(self) -> CoherentView<'a, Self::Target> {
+> +        CoherentView {
+> +            // SAFETY: `cpu_addr` is valid and aligned kernel =
+accessible memory.
+> +            cpu_addr: unsafe { SysMem::new(self.cpu_addr.as_ptr()) },
+> +            dma_handle: self.dma_handle,
+> +        }
+> +    }
+> +}
+> +
+> /// Reads a field of an item from an allocated region of structs.
+> ///
+> /// The syntax is of the form `kernel::dma_read!(dma, proj)` where =
+`dma` is an expression evaluating
 >=20
 > --=20
 > 2.54.0
+>=20
 >=20
 
 Reviewed-by: Daniel Almeida <daniel.almeida@collabora.com>
