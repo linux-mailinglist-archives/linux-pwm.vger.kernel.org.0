@@ -1,229 +1,195 @@
-Return-Path: <linux-pwm+bounces-9708-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9709-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 3B4xN3L+VWovxgAAu9opvQ
-	(envelope-from <linux-pwm+bounces-9708-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Tue, 14 Jul 2026 11:16:34 +0200
+	id vCdnKAUAVmrFxgAAu9opvQ
+	(envelope-from <linux-pwm+bounces-9709-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Tue, 14 Jul 2026 11:23:17 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 2EDE0752B8D
-	for <lists+linux-pwm@lfdr.de>; Tue, 14 Jul 2026 11:16:34 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id 9754A752CDE
+	for <lists+linux-pwm@lfdr.de>; Tue, 14 Jul 2026 11:23:16 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=SVLt9lGm;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9708-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9708-lists+linux-pwm=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=quarantine) header.from=kernel.org;
+	dkim=pass header.d=suse.com header.s=google header.b=BhxCTw10;
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9709-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9709-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	dmarc=pass (policy=quarantine) header.from=suse.com;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id 3B4BD301AA5F
-	for <lists+linux-pwm@lfdr.de>; Tue, 14 Jul 2026 09:15:00 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id CF4CA301CCF5
+	for <lists+linux-pwm@lfdr.de>; Tue, 14 Jul 2026 09:22:44 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id B8EE643CEF6;
-	Tue, 14 Jul 2026 09:14:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0AFF943F8CC;
+	Tue, 14 Jul 2026 09:22:28 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 75C0543CED2;
-	Tue, 14 Jul 2026 09:14:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9545643F8AE
+	for <linux-pwm@vger.kernel.org>; Tue, 14 Jul 2026 09:22:23 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784020499; cv=none; b=s2VU58HhdELrb9MWw1HdwRaPG3t4iqKgnNEMRfyHLpNGAGC0GbNdKJgbSPcWefD0NImJZ8zsi3b6cxCyERioy4pTZsh7Qth5ZacdV1/8xdMZzgC5Dy2ZVFtavYP2erpZEaxnInEMvObaoCVPDTM7LNR6fIxVu91TAU+hkTdDCgs=
+	t=1784020947; cv=none; b=qMXao22+LLEA7wqDTyw5XkARynDzBkQ/NniPXxbydsCU7gsD/dg0XIMSYZe0KiNn0iJSQocny/GVQqAYr3IM8OTitDfpEEQWnhpJxMM3Kkp/mOp/3n0NBOXSWGGNbqj4+7US1vFZSfXsGIPPvjh4nckzVT1YESwpCwMg8crsETI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784020499; c=relaxed/simple;
-	bh=ntaX10T+l7fqMbR+dGbqfrjrfCYGygcO5GmmObgI3Dw=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=CUm7FfEchFSpNYRZZ0UQo9ODKVxZZzkXMy8saqstzE9INr++9X4Dz1LvK2v0BuftnoprLELKNtDLK2/lCZqPHUp7XCUPinYmOK2AitVaWVz4hxpZzRlqTCYZiv3m8zf0DbBjJnya56tx4IgQWEpp0kLYeYOuzwzOlii+eaaHcPE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SVLt9lGm; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id 8F11B1F000E9;
-	Tue, 14 Jul 2026 09:14:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784020498;
-	bh=brxNjFFy9om48qRoAb792mhLDXah3EnrFZs6Q+OXfKE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=SVLt9lGmBSR2mBzo8KlRtisylJEmyNQ5oOB347SIQKvIbNFCXpFSRHrl1xBph4bEd
-	 kgYLOvxgUcIQV92rlaIlb1a+8f7Spvnf/4myRjFr+7gIlLHAePxY10ifDxL6OKdoNB
-	 BHUf6vwq332+M7OC+I0/rCuE4vaTyeeKr3TQ3jXdnmwOtSiAGalNWXDYA2EmynZN+M
-	 WGd4fjOg1w/oRz61AG9wXjKlm67u8h1XLJOPphLH1o7W49W9egMtg7YuzOXjnjsD5Y
-	 3MpBCrNZ4/75KwnHp+SNy52OczI3eq6qfo8GTje5oqv8u2tll6HxA9qlD45gwqhuF9
-	 7HxUPlN4xk77g==
-Date: Tue, 14 Jul 2026 11:14:55 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: "Ola Chr. Vaage" <o.c.vage@gmail.com>
-Cc: Thierry Reding <thierry.reding@kernel.org>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, "Ola Chr. Vaage" <ola.christoffer.vage@scoutdi.com>
-Subject: Re: [PATCH] pwm: tegra: fix doubled output frequency due to divider
- truncation
-Message-ID: <alX5fmfHs1CW_bps@monoceros>
-References: <20260713111541.473547-1-o.c.vage@gmail.com>
+	s=arc-20240116; t=1784020947; c=relaxed/simple;
+	bh=uGWUfxnxIY0NKJB4tV1A7WYuOfk3qaqaeqns9woe9G0=;
+	h=From:Date:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=C4ZUbGX3PukMj2kIflYR2xmZqGAcHdqjqPRjgNJ+CTkSbBx20fiJNRLMdhwfFl+VmryCjQ936E0afyjYSjYnJZDj/NMeRAx1JOOqe5/RGzChLS87hXZ30d7sPogPtvw/DAT0n+aKFUP+5AFEJC4TuiyUuYUwpLNnfTX7gGdRKGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=suse.com; spf=pass smtp.mailfrom=suse.com; dkim=pass (2048-bit key) header.d=suse.com header.i=@suse.com header.b=BhxCTw10; arc=none smtp.client-ip=209.85.128.51
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-493b7612475so31834545e9.3
+        for <linux-pwm@vger.kernel.org>; Tue, 14 Jul 2026 02:22:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=suse.com; s=google; t=1784020940; x=1784625740; darn=vger.kernel.org;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:from:to:cc:subject
+         :date:message-id:reply-to:content-type;
+        bh=a6rmzsH2Z8JYzFqIg2uMkj0gt9jdeZsll9yf1qnb10c=;
+        b=BhxCTw10pMGuJ7cWbSUGb7gGi/Cj/kbJHXgvc42Y01vMdyqMjCLZNlelC/X99G4JJp
+         q1wHIDQ3tQXEozuLxJPoyo25EONtRNBnpzdUw8FgZGOKS/XisSJ5ETUWgvEkHCL+n3h2
+         Mzl/YZKK9G8DkigQQpMMVYiGMS/evTk6Vn7UAxrpamUC+lCYFAOaQpImG6YCASQR3c4G
+         rULR0Jk1UKH/RVvM8Sg5ToAnCnAI3XmEQ/IBMsySYN5Q2UmHcJdCkF5GEpXi/Jhu6DD9
+         ezfBrQO++TlIiXUX/fWX5334IdfmpjRxNODVthDTqYfuXVDc05WQLDESOfnnNuEcOO4a
+         /WUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20251104; t=1784020940; x=1784625740;
+        h=in-reply-to:content-disposition:content-type:mime-version
+         :references:message-id:subject:cc:to:date:from:x-gm-gg
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
+         :content-type;
+        bh=a6rmzsH2Z8JYzFqIg2uMkj0gt9jdeZsll9yf1qnb10c=;
+        b=mgUypCc7ooGPLlDHOqH1aAez0hwnCOkJnLH7yel35oGOFF0T4CcniLa0CoFIggP4Fx
+         dW9+Wd9Tow2jT4RDQf1rcANmCKsMIiRK7Ds5qTMiVYQQ4lFbb6Dv/vvwqfqfWhynQ68M
+         I6Lry2qCHgdm5dKZB4aktY2kmb70zaLL6+lby+MydILcLYDfKalIL5EtrV+AtmbRKbVH
+         0EB6YSJfvXBBBF/YcS4caxXFmT4Q8zMWN/aFT7NHpbW3rJX84wwAVPn1SHX76TXWzkuT
+         c12vhSoeaKvnBSbqYhTZlMOWHjfVj/YWoXAxsAXh3JPxGkFxTiDkKY3tY1wBiYSg6rsf
+         L7ZA==
+X-Forwarded-Encrypted: i=1; AHgh+RpHVpEj77BfrOpbgo1AVWjtdMm4CtqLMiX7SGpNFIb/RHu9mPd17XVirtfEhNuWJZeSnbuodf7ZnGs=@vger.kernel.org
+X-Gm-Message-State: AOJu0Yz4+qzUee8B6PhlmBt939A4o8mAshvCtOJhYpop2pvFHxa3+N63
+	jwM5KlaNP06psIQfLEAoj1TvtNppXQEy4ZZGtV4bw1RN63LPHY9Npz2Tkz15qnJHAJs=
+X-Gm-Gg: AfdE7cmgUm1bsQVBn4coza7bEWOLmhmtqcpHv5PAwD5+hXm+87+1Pg7ygoTvitET6lG
+	aliDGamZoEhchmFHJsDdNL4e8njofuVu5NCj7mVxyiDc+++YOtWawXBKbTdEhE2QmxkI/UTDrBI
+	mbD/ZxBxnhm207Zg/4LkEgXSXYpzV4Yp+SaUMkX1t71i4rYqpJkzsGifQ1S9XvU7A99Ji3pBhzk
+	7HTermp70sRt/HAQZiFAHovOshVBGlazhHzo1l1gPls3JsbuPY03bW2EMm9IP4qcXb8A/AQleIC
+	oHD95pHtRNMXv46ISvY6lRU7Fb6b2UbB9CUK+MYeIQswqGEp8oOhS7QWuj/COQPBGdDuNFqfyQs
+	NiD3QGEQxQ+ogyWgANswNChrrOXrkHsfWWBBT0FmFxUsxxZFi24eU3fRRB/hqaet8IZMLDGHQiU
+	XfmT2NJv5+vE4=
+X-Received: by 2002:a05:600c:524b:b0:490:44eb:c1ea with SMTP id 5b1f17b1804b1-495159060f6mr32557165e9.24.1784020940226;
+        Tue, 14 Jul 2026 02:22:20 -0700 (PDT)
+Received: from localhost ([195.94.145.62])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-493f2dd8376sm214271875e9.2.2026.07.14.02.22.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Jul 2026 02:22:19 -0700 (PDT)
+From: Andrea della Porta <andrea.porta@suse.com>
+X-Google-Original-From: Andrea della Porta <aporta@suse.de>
+Date: Tue, 14 Jul 2026 11:25:48 +0200
+To: Andrea della Porta <andrea.porta@suse.com>
+Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <ukleinek@kernel.org>,
+	linux-pwm@vger.kernel.org, Rob Herring <robh@kernel.org>,
+	Krzysztof Kozlowski <krzk+dt@kernel.org>,
+	Conor Dooley <conor+dt@kernel.org>,
+	Florian Fainelli <florian.fainelli@broadcom.com>,
+	Broadcom internal kernel review list <bcm-kernel-feedback-list@broadcom.com>,
+	devicetree@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Naushir Patuck <naush@raspberrypi.com>,
+	Stanimir Varbanov <svarbanov@suse.de>, mbrugger@suse.com,
+	Sean Young <sean@mess.org>, Julian Braha <julianbraha@gmail.com>
+Subject: Re: [PATCH v6 2/3] pwm: rp1: Add RP1 PWM controller driver
+Message-ID: <alYAnJ66npeYbncs@apocalypse>
+References: <cover.1783097764.git.andrea.porta@suse.com>
+ <5171610d8bebdd10eea44bff5236502d765b5918.1783097764.git.andrea.porta@suse.com>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="3lqlu3v5zgu43npu"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20260713111541.473547-1-o.c.vage@gmail.com>
+In-Reply-To: <5171610d8bebdd10eea44bff5236502d765b5918.1783097764.git.andrea.porta@suse.com>
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-5.26 / 15.00];
-	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	SIGNED_PGP(-2.00)[];
+X-Spamd-Result: default: False [-0.16 / 15.00];
 	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	DMARC_POLICY_ALLOW(-0.50)[suse.com,quarantine];
 	MID_RHS_NOT_FQDN(0.50)[];
-	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
+	R_DKIM_ALLOW(-0.20)[suse.com:s=google];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	RCVD_COUNT_THREE(0.00)[4];
+	TAGGED_FROM(0.00)[bounces-9709-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
-	FREEMAIL_TO(0.00)[gmail.com];
-	FORGED_SENDER(0.00)[ukleinek@kernel.org,linux-pwm@vger.kernel.org];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	FORGED_RECIPIENTS(0.00)[m:o.c.vage@gmail.com,m:thierry.reding@kernel.org,m:jonathanh@nvidia.com,m:linux-pwm@vger.kernel.org,m:linux-tegra@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:ola.christoffer.vage@scoutdi.com,m:ocvage@gmail.com,s:lists@lfdr.de];
-	FORWARDED(0.00)[lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:andrea.porta@suse.com,m:ukleinek@kernel.org,m:linux-pwm@vger.kernel.org,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:florian.fainelli@broadcom.com,m:bcm-kernel-feedback-list@broadcom.com,m:devicetree@vger.kernel.org,m:linux-rpi-kernel@lists.infradead.org,m:linux-arm-kernel@lists.infradead.org,m:linux-kernel@vger.kernel.org,m:naush@raspberrypi.com,m:svarbanov@suse.de,m:mbrugger@suse.com,m:sean@mess.org,m:julianbraha@gmail.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[andrea.porta@suse.com,linux-pwm@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[17];
+	RECEIVED_HELO_LOCALHOST(0.00)[];
+	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TAGGED_FROM(0.00)[bounces-9708-lists,linux-pwm=lfdr.de];
+	FORWARDED(0.00)[lists@lfdr.de];
+	FREEMAIL_CC(0.00)[kernel.org,vger.kernel.org,broadcom.com,lists.infradead.org,raspberrypi.com,suse.de,suse.com,mess.org,gmail.com];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	ALIAS_RESOLVED(0.00)[];
+	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ukleinek@kernel.org,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[kernel.org:+];
-	RCPT_COUNT_SEVEN(0.00)[7];
-	TAGGED_RCPT(0.00)[linux-pwm];
-	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	FROM_NEQ_ENVFROM(0.00)[andrea.porta@suse.com,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[suse.com:+];
+	ALIAS_RESOLVED(0.00)[];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
 	MISSING_XM_UA(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,vger.kernel.org:from_smtp]
+	FORGED_RECIPIENTS_FORWARDING(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[raspberrypi.com:email,suse.com:from_mime,suse.com:email,suse.com:dkim,vger.kernel.org:from_smtp,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,suse.de:email,apocalypse:mid]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 2EDE0752B8D
+X-Rspamd-Queue-Id: 9754A752CDE
 
+Hi Uwe,
 
---3lqlu3v5zgu43npu
-Content-Type: text/plain; protected-headers=v1; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH] pwm: tegra: fix doubled output frequency due to divider
- truncation
-MIME-Version: 1.0
-
-Hello Ola,
-
-On Mon, Jul 13, 2026 at 01:15:41PM +0200, Ola Chr. Vaage wrote:
-> From: "Ola Chr. Vaage" <ola.christoffer.vage@scoutdi.com>
->=20
-> The PWM_SCALE frequency divider is computed by rounding down
->=20
-> 	clk_rate * period_ns / (NSEC_PER_SEC << PWM_DUTY_WIDTH)
->=20
-> With dynamic clock scaling (Tegra186 and later), the driver doubles its
-> clock-rate request when the provider cannot meet it. The provider then
-> typically grants slightly less than the doubled request, the exact
-> divider lands just below 2, and the round-down truncates it to 1: the
-> output runs at double the requested frequency. On Tegra234 the BPMP
-> grants PWM clock rates as 408 MHz / N, so nearly every requested period
-> is affected: requesting 40000 ns produces 20078 ns, 100000 ns produces
-> 50195 ns. The duty ratio is computed independently and stays correct,
-> which hides the problem from duty-only consumers such as backlights;
-> frequency-sensitive loads break.
->=20
-> Measured on a Jetson Orin NX board with the 45334 ns fan period used in
-> NVIDIA device trees:
->=20
-> 	required_clk_rate =3D ceil((1e9 << 8) / 45334) =3D 5646977
-> 	clk_round_rate() =3D 5589041 (408 MHz / 73) -> request doubled
-> 	dev_pm_opp_set_rate(11293954) grants 11027028 (408 MHz / 37)
-> 	divider =3D trunc(1.953) =3D 1 -> output period 23217 ns, 43.07 kHz
->=20
-> 43 kHz is outside the 21-28 kHz band that 4-wire fan PWM inputs are
-> designed for. The fan on this board cannot start below duty 110/255 and
-> stalls below 88/255, so closed-loop fan control oscillates between a
-> stalled fan and full speed.
->=20
-> Round the divider to the closest integer instead. This bounds the
-> period error to half a divider step rather than a full one, and
-> restores what this configuration did before commit 8c193f4714df
-> ("pwm: tegra: Optimize period calculation") switched the rounding from
-> closest to down: divider round(0.99) =3D 1 on the undoubled 5589041 Hz
-> grant, period 45802 ns, +1.0%. Between that commit and commit
-> 5eccd0d9fabc ("pwm: tegra: Ensure the clock rate is not less than
-> needed") the same request failed with -EINVAL instead. Verified on the
-> Orin NX with this patch applied: PWM_SCALE reads 1 (21.54 kHz, +2.4%
-> period), the fan starts at duty <=3D 50/255 and sustains 80/255, and
-> closed-loop control is stable. There is no round-closest variant of
-> mul_u64_u64_div_u64(), so compute twice the quotient and round up the
-> halving.
->=20
-> Fixes: 5eccd0d9fabc ("pwm: tegra: Ensure the clock rate is not less than =
-needed")
-> Signed-off-by: Ola Chr. Vaage <ola.christoffer.vage@scoutdi.com>
+On 19:05 Fri 03 Jul     , Andrea della Porta wrote:
+> From: Naushir Patuck <naush@raspberrypi.com>
+> 
+> The Raspberry Pi RP1 southbridge features an embedded PWM
+> controller with 4 output channels, alongside an RPM interface
+> to read the fan speed on the Raspberry Pi 5.
+> 
+> Add the supporting driver.
+> 
+> Signed-off-by: Naushir Patuck <naush@raspberrypi.com>
+> Co-developed-by: Stanimir Varbanov <svarbanov@suse.de>
+> Signed-off-by: Stanimir Varbanov <svarbanov@suse.de>
+> Signed-off-by: Andrea della Porta <andrea.porta@suse.com>
 > ---
->  drivers/pwm/pwm-tegra.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
-> index 172063b51d4..a5adc4f3ce6 100644
-> --- a/drivers/pwm/pwm-tegra.c
-> +++ b/drivers/pwm/pwm-tegra.c
-> @@ -163,9 +163,15 @@ static int tegra_pwm_config(struct pwm_chip *chip, s=
-truct pwm_device *pwm,
->  		pc->clk_rate =3D clk_get_rate(pc->clk);
->  	}
-> =20
-> -	/* Consider precision in PWM_SCALE_WIDTH rate calculation */
-> -	rate =3D mul_u64_u64_div_u64(pc->clk_rate, period_ns,
-> +	/*
-> +	 * Consider precision in PWM_SCALE_WIDTH rate calculation. Round to
-> +	 * the closest integer: there is no round-closest variant of
-> +	 * mul_u64_u64_div_u64(), so compute twice the quotient and round up
-> +	 * the halving.
-> +	 */
-> +	rate =3D mul_u64_u64_div_u64(pc->clk_rate, 2 * (u64)period_ns,
->  				   (u64)NSEC_PER_SEC << PWM_DUTY_WIDTH);
-> +	rate =3D DIV_ROUND_UP_ULL(rate, 2);
-> =20
->  	/*
->  	 * Since the actual PWM divider is the register's frequency divider
+>  drivers/pwm/Kconfig   |   9 +
+>  drivers/pwm/Makefile  |   1 +
+>  drivers/pwm/pwm-rp1.c | 435 ++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 445 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-rp1.c
+> 
 
-The usual behaviour for .apply() is to pick the largest possible period
-not larger than the requested period (and similar for duty_cycle). The
-tegra PWM driver doesn't do that and instead trys to pick a nearest
-match. If you change how the configuration happens, the only acceptable
-way is to migrate to the usual behaviour, still better, convert to the
-waveform callbacks.
+<...snip...>
 
-The driver also lacks a .get_state() callback and should not use
-pwm_is_enabled(). Also calling tegra_pwm_config() discards bits from
-state->duty_cycle and state->period if they are bigger than INT_MAX.
+> +	.driver = {
+> +		.name = "rp1-pwm",
+> +		.of_match_table = rp1_pwm_of_match,
+> +		.pm = pm_ptr(&rp1_pwm_pm_ops),
+> +		.suppress_bind_attrs = true,
+> +	},
+> +};
+> +builtin_platform_driver(rp1_pwm_driver);
+> +
+> +MODULE_DESCRIPTION("RP1 PWM driver");
+> +MODULE_AUTHOR("Naushir Patuck <naush@raspberrypi.com>");
+> +MODULE_AUTHOR("Andrea della Porta <andrea.porta@suse.com>");
+> +MODULE_LICENSE("GPL");
+> -- 
+> 2.35.3
+>
 
-So there are some things to work on in that driver, but don't make the
-clock selection not more complicated as it already is and as is
-necessary.
+I didn't get any feedback after I replied to Sashiko's latest concerns, which I
+don't think are relevant. Can we proceed with this patch or are there other 
+concerns about it?
 
-Best regards
-Uwe
-
---3lqlu3v5zgu43npu
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmpV/g0ACgkQj4D7WH0S
-/k6WQgf7Bk37pb5NU5Yvl9/heLHuSrI+edhIGSqQlVsHuG6XbLJgC5IUbvDM6427
-4B76RKd81FNuPXO9QQBO5PS/5CGH1Gtew/TAaoc61sPTAdcqpyGtyd/rQFT9WRbX
-UGp3AG13ErlZftyUYJa4C3bs66RIPahC9PVfHnZ4QiQvA+IKHaBgtHaGG2wLoF2n
-zdLvPpSVAsurHqPW27xRozZZaLPj3bWKs0G0XTyUWOaO1FvRrwA/hdRrFDVdlnh8
-yAdhtQwXTHHv/JmysayXzVqKC86kxVepnqAa8qXx9omqNK/WVlOjSFzmgiyL95x9
-xhIUkrSzWoNxqDnzWxTGmSImuebZVQ==
-=6u4x
------END PGP SIGNATURE-----
-
---3lqlu3v5zgu43npu--
+Many thanks,
+Andrea
 
