@@ -1,211 +1,210 @@
-Return-Path: <linux-pwm+bounces-9720-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9721-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id e81ROZ5EVmoe2gAAu9opvQ
-	(envelope-from <linux-pwm+bounces-9720-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Tue, 14 Jul 2026 16:15:58 +0200
+	id 8QpvLLCSVmoP9wAAu9opvQ
+	(envelope-from <linux-pwm+bounces-9721-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Tue, 14 Jul 2026 21:49:04 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
-	by mail.lfdr.de (Postfix) with ESMTPS id 5F279755A47
-	for <lists+linux-pwm@lfdr.de>; Tue, 14 Jul 2026 16:15:58 +0200 (CEST)
+Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
+	by mail.lfdr.de (Postfix) with ESMTPS id B6B69758763
+	for <lists+linux-pwm@lfdr.de>; Tue, 14 Jul 2026 21:49:03 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=FTIYMNa7;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9720-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9720-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=hJjbRkjo;
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9721-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9721-lists+linux-pwm=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sea.lore.kernel.org (Postfix) with ESMTP id BD67C322B708
-	for <lists+linux-pwm@lfdr.de>; Tue, 14 Jul 2026 14:09:15 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 75B163002F77
+	for <lists+linux-pwm@lfdr.de>; Tue, 14 Jul 2026 19:48:12 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0F13D480974;
-	Tue, 14 Jul 2026 14:07:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 3F77A43552A;
+	Tue, 14 Jul 2026 19:48:10 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45B5E480967;
-	Tue, 14 Jul 2026 14:07:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 159FC433047;
+	Tue, 14 Jul 2026 19:48:06 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784038052; cv=none; b=V28RVHYvsMgJDUUcAbrjPstqm1BYVNlD1FcnF6sWnhqkxlPnul8fSYP6VaisR4dxQED4dBVH+bm3ReJnoiF4hzDFSz31fOtbyRvfJlwURrgUWJIy2GBppbEJjFUOIqzUqJ6jNblO5UiIrovof7e+hvS1Ms520MCOEjrh9gxvtAE=
+	t=1784058489; cv=none; b=kynygfMhhQd3WfJfzl5e8SoAbv5R55v1aby+WYd0eo4WutPOIta68rzKzDe6K70CkI8UNOdy1IGLtZAPD6lt9wCHFfcguE7soNOkg5WJqkXaULdXTJMBOcnJHycxcm9oB29wkkWxapdkCWjeteoPmC0Lr/tpPU76Nuo6Ir9LUL0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784038052; c=relaxed/simple;
-	bh=E3G5xNEKDTz0OrN3bzAq6Wy0YXH79M66kWpp4gvTbpA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=oy0Se2QektuvXpShLoNH1LJ9eKsW0/hUeAVeIkuD5cm1Fyoc24i1TS/F9PjI86RqnAwT1KfFnPQwVGYH6MCEQssRavyiQ2M02Tzfe0PKzybxz0aSb9/KtwN8JHNmtkWW/ITUIMrUhONb+qNEF8JlbTW4dN7QsWQ3bhHys/KtMTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FTIYMNa7; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id 894061F000E9;
-	Tue, 14 Jul 2026 14:07:25 +0000 (UTC)
+	s=arc-20240116; t=1784058489; c=relaxed/simple;
+	bh=B/L/X9V9PjtyIkDoHFL2DD8jdxZBz4bQhuxjlzo8bYw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rmHfFip1KZ0MS6/52yRV6KASDPEaPLdQNYotWUEHwncfOHAB2oZB9BwstYWbmE0jnye6mjklkNjWo7YWXfjBnhRmmeYDLZqAizX4KRNHG9f6uelnrJa/icigTLBZ0kWMIZoVYU5C5nOF3jmiwLH/9UktkRXpzsvelmGCnAJ0eMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hJjbRkjo; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8CA91F000E9;
+	Tue, 14 Jul 2026 19:48:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784038046;
-	bh=nxc7WBXciEQorazQv2JDOTT5n2+bXoePoUOXsR4EZI8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=FTIYMNa7zy+yRYvkzvz39xtBUahWMijuS0IbfQLIIfwlXmRkHZz879R1CY6S9VZLl
-	 QTBpEgXTNtfjNRTmi5RCZtF/P6eo/lpZ+4xICh1mM/pwVuHo3B053T9ishAwbrzhu5
-	 Ts/p91T2OPkKMSjE6Y0oEo9sfSfKG6n7hJXjqDKKzlgq7frwe+ql7g6M7Ny+1ix9WM
-	 Jahu4rcc+ljl1MLy4VhhIhjt3CSQ33sVYanTdBJKTIuEZCyD2AFRQaUU1FuwrR3A7Z
-	 OIl2OiShyllFQeycpCxDwWKjNVKObTNDXN8+TA7Ox9x7G2wSx6bZMpAJvGtShTeyHT
-	 7s4SA/BTLmnXw==
-Date: Tue, 14 Jul 2026 16:07:23 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Thierry Reding <thierry.reding@kernel.org>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, Mikko Perttunen <mperttunen@nvidia.com>, 
-	linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v1 4/6] pwm: tegra: Simplify using
- devm_reset_control_get_exclusive_deasserted()
-Message-ID: <alZAzcG-2uuTsxxk@monoceros>
-References: <cover.1784030076.git.ukleinek@kernel.org>
- <1f12ae7f9479aa910fcaf066fae82c7b7cb89073.1784030076.git.ukleinek@kernel.org>
- <cf1bd92a11661c99802867581b599617ef69f503.camel@pengutronix.de>
+	s=k20260515; t=1784058486;
+	bh=oUqzUmCd5C8LaJR7q3XMrWlHVSAMJDyXvnpn53blVaI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To;
+	b=hJjbRkjodStNV3aFkSroSh3RyI1uRsygLQn7A7gDs39Y2nFzt9uMuVciIxK1tCwid
+	 66Zsi7OXdiuAxDKyEIZCZr3Y9I8GCiLF/6JSPmQZtGTO8IhFtkj+duE81iHc26IQn2
+	 sGcHzOYVs7sqGGWXhxqTLkkpdp94MM5U3iMnjO88g90e1AK0JU0DxA1vT9yJ/oIBbD
+	 K6F0yyuRNESCDE6QhmYjyn5BKZVDrwP3/e/WhQLW4pw6uiJDgBOq28fGTs/p01Oh+b
+	 Hyzzf9nPwI6aCkawKUD5Q+mQgyttB7YY8h5gKwGVoQ4zWjrPBvu3GeScAb0VXeMkTr
+	 MNslCVmGm6Uqg==
+Message-ID: <6c3a01f7-957d-4dc4-a892-3af2826928af@kernel.org>
+Date: Tue, 14 Jul 2026 21:47:59 +0200
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="l42umjqts7ahp2rv"
-Content-Disposition: inline
-In-Reply-To: <cf1bd92a11661c99802867581b599617ef69f503.camel@pengutronix.de>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH 10/10] arm64: dts: apple: Add minimal t8132 (M4) device
+ trees
+To: Yureka Lilian <yureka@cyberchaos.dev>
+Cc: Hector Martin <marcan@marcan.st>, devicetree@vger.kernel.org,
+ linux-kernel@vger.kernel.org, asahi@lists.linux.dev,
+ linux-arm-kernel@lists.infradead.org, linux-watchdog@vger.kernel.org,
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, Rob Herring <robh@kernel.org>,
+ =?UTF-8?Q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>,
+ Neal Gompa <neal@gompa.dev>, Janne Grunau <j@jannau.net>,
+ Lorenzo Pieralisi <lpieralisi@kernel.org>, Guenter Roeck
+ <linux@roeck-us.net>, Wim Van Sebroeck <wim@linux-watchdog.org>,
+ Linus Walleij <linusw@kernel.org>, Sasha Finkelstein <k@chaosmail.tech>,
+ linux-gpio@vger.kernel.org, linux-i2c@vger.kernel.org,
+ Thomas Gleixner <tglx@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
+ linux-pwm@vger.kernel.org, Andi Shyti <andi.shyti@kernel.org>,
+ Mark Kettenis <kettenis@openbsd.org>
+References: <20260705-apple-m4-initial-devicetrees-v1-0-e5655ee56523@cyberchaos.dev>
+ <20260705-apple-m4-initial-devicetrees-v1-10-e5655ee56523@cyberchaos.dev>
+Content-Language: en-US
+From: Sven Peter <sven@kernel.org>
+In-Reply-To: <20260705-apple-m4-initial-devicetrees-v1-10-e5655ee56523@cyberchaos.dev>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-6.76 / 15.00];
+X-Spamd-Result: default: False [-3.66 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	SIGNED_PGP(-2.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
-	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
+	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	MIME_TRACE(0.00)[0:+];
+	TAGGED_FROM(0.00)[bounces-9721-lists,linux-pwm=lfdr.de];
+	RCVD_TLS_LAST(0.00)[];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:p.zabel@pengutronix.de,m:thierry.reding@kernel.org,m:jonathanh@nvidia.com,m:mperttunen@nvidia.com,m:linux-pwm@vger.kernel.org,m:linux-tegra@vger.kernel.org,s:lists@lfdr.de];
-	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[ukleinek@kernel.org,linux-pwm@vger.kernel.org];
+	FORGED_RECIPIENTS(0.00)[m:yureka@cyberchaos.dev,m:marcan@marcan.st,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:asahi@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:linux-watchdog@vger.kernel.org,m:krzk+dt@kernel.org,m:robh@kernel.org,m:ukleinek@kernel.org,m:neal@gompa.dev,m:j@jannau.net,m:lpieralisi@kernel.org,m:linux@roeck-us.net,m:wim@linux-watchdog.org,m:linusw@kernel.org,m:k@chaosmail.tech,m:linux-gpio@vger.kernel.org,m:linux-i2c@vger.kernel.org,m:tglx@kernel.org,m:conor+dt@kernel.org,m:linux-pwm@vger.kernel.org,m:andi.shyti@kernel.org,m:kettenis@openbsd.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
+	FORGED_SENDER(0.00)[sven@kernel.org,linux-pwm@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[24];
 	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
-	RCVD_TLS_LAST(0.00)[];
+	FROM_HAS_DN(0.00)[];
 	FORGED_RECIPIENTS_MAILLIST(0.00)[];
-	DKIM_TRACE(0.00)[kernel.org:+];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ukleinek@kernel.org,linux-pwm@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-9720-lists,linux-pwm=lfdr.de];
+	FROM_NEQ_ENVFROM(0.00)[sven@kernel.org,linux-pwm@vger.kernel.org];
+	DKIM_TRACE(0.00)[kernel.org:+];
+	MID_RHS_MATCH_FROM(0.00)[];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
-	TAGGED_RCPT(0.00)[linux-pwm];
-	RCPT_COUNT_FIVE(0.00)[6];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns]
+	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 5F279755A47
+X-Rspamd-Queue-Id: B6B69758763
 
 
---l42umjqts7ahp2rv
-Content-Type: text/plain; protected-headers=v1; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v1 4/6] pwm: tegra: Simplify using
- devm_reset_control_get_exclusive_deasserted()
-MIME-Version: 1.0
 
-On Tue, Jul 14, 2026 at 02:12:38PM +0200, Philipp Zabel wrote:
-> On Di, 2026-07-14 at 14:02 +0200, Uwe Kleine-K=F6nig wrote:
-> > This function ensures the reset is already deasserted at probe time and
-> > asserted at unbind. So the remove function and the error paths in the
-> > probe function can be simplified accordingly.
-> >=20
-> > Signed-off-by: Uwe Kleine-K=F6nig <ukleinek@kernel.org>
-> > ---
-> >  drivers/pwm/pwm-tegra.c | 14 ++++----------
-> >  1 file changed, 4 insertions(+), 10 deletions(-)
-> >=20
-> > diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
-> > index e99e1c5b18c3..d7f4baa4cd9b 100644
-> > --- a/drivers/pwm/pwm-tegra.c
-> > +++ b/drivers/pwm/pwm-tegra.c
-> > @@ -108,7 +108,6 @@ struct tegra_pwm_soc {
-> > =20
-> >  struct tegra_pwm_chip {
-> >  	struct clk *clk;
-> > -	struct reset_control*rst;
-> > =20
-> >  	unsigned long clk_rate;
-> >  	unsigned long min_period_ns;
-> > @@ -319,6 +318,7 @@ static int tegra_pwm_probe(struct platform_device *=
-pdev)
-> >  	struct device *dev =3D &pdev->dev;
-> >  	struct pwm_chip *chip;
-> >  	struct tegra_pwm_chip *pc;
-> > +	struct reset_control*rst;
->=20
-> You could use this opportunity to add a space between reset_control and
-> *rst.
+On 7/5/26 15:17, Yureka Lilian wrote:
+> Added device trees for the following devices:
+> - apple,j604 - MacBook Pro (14-inch, M4, 2024)
+> - apple,j623 - iMac (24-inch, 2x USB-C, M4, 2024)
+> - apple,j624 - iMac (24-inch, 4x USB-C, M4, 2024)
+> - apple,j713 - MacBook Air (13-inch, M4, 2025)
+> - apple,j715 - MacBook Air (15-inch, M4, 2025)
+> - apple,j773g - Mac mini (M4, 2024)
+>
+> The device trees have a minimal set of devices limited to CPU cores,
+> interrupt controller, power states, watchdog, serial, pin controller,
+> i2c and framebuffer.
+> The device trees for the notebooks add a PWM controller for the keyboard
+> LED illumination.
+>
+> Using the macOS 26.6b3 iBoot/firmware, the Mac mini reliably boots on a
+> single core using the stock kernel.
+> Booting with smp requires avoiding the wfi and wfit instructions
+> in the idle loop and `delay()` respectively, since those instructions
+> cause a loss of architectural state on the secondary cores, and even
+> then boot is unreliable.
+>
+> Signed-off-by: Yureka Lilian <yureka@cyberchaos.dev>
+> ---
+>   arch/arm64/boot/dts/apple/Makefile        |    6 +
+>   arch/arm64/boot/dts/apple/t8132-j604.dts  |   35 +
+>   arch/arm64/boot/dts/apple/t8132-j623.dts  |   18 +
+>   arch/arm64/boot/dts/apple/t8132-j624.dts  |   18 +
+>   arch/arm64/boot/dts/apple/t8132-j713.dts  |   35 +
+>   arch/arm64/boot/dts/apple/t8132-j715.dts  |   35 +
+>   arch/arm64/boot/dts/apple/t8132-j773g.dts |   25 +
+>   arch/arm64/boot/dts/apple/t8132-jxxx.dtsi |   48 ++
+>   arch/arm64/boot/dts/apple/t8132-pmgr.dtsi | 1125 +++++++++++++++++++++++++++++
+>   arch/arm64/boot/dts/apple/t8132.dtsi      |  440 +++++++++++
+>   10 files changed, 1785 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/apple/Makefile b/arch/arm64/boot/dts/apple/Makefile
+> index 6fc3349a5842..181bd0e28965 100644
+> --- a/arch/arm64/boot/dts/apple/Makefile
+> +++ b/arch/arm64/boot/dts/apple/Makefile
+> @@ -1,4 +1,10 @@
+>   # SPDX-License-Identifier: GPL-2.0
+> +dtb-$(CONFIG_ARCH_APPLE) += t8132-j604.dtb
+> +dtb-$(CONFIG_ARCH_APPLE) += t8132-j623.dtb
+> +dtb-$(CONFIG_ARCH_APPLE) += t8132-j624.dtb
+> +dtb-$(CONFIG_ARCH_APPLE) += t8132-j713.dtb
+> +dtb-$(CONFIG_ARCH_APPLE) += t8132-j715.dtb
+> +dtb-$(CONFIG_ARCH_APPLE) += t8132-j773g.dtb
+Please put these at the correct position in the Makefile and not at the 
+very top.
 
-Oh indeed. I thought I called checkpatch, but there are two more
-warnings in this series that I'm not aware of, so it seems I didn't
-check before sending :-o
+>   dtb-$(CONFIG_ARCH_APPLE) += s5l8960x-j71.dtb
+>   dtb-$(CONFIG_ARCH_APPLE) += s5l8960x-j73.dtb
+>   dtb-$(CONFIG_ARCH_APPLE) += s5l8960x-j85m.dtb
+> diff --git a/arch/arm64/boot/dts/apple/t8132-j604.dts b/arch/arm64/boot/dts/apple/t8132-j604.dts
+> new file mode 100644
+> index 000000000000..c4be915cb33a
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/apple/t8132-j604.dts
+> @@ -0,0 +1,35 @@
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+> +/*
+> + * Apple MacBook Pro (14-inch, M4, 2024)
+> + *
+> + * target-type: J604
+> + *
 
-> >  	const struct tegra_pwm_soc *soc;
-> >  	int ret;
-> > =20
-> > @@ -391,20 +391,17 @@ static int tegra_pwm_probe(struct platform_device=
- *pdev)
-> >  	pc->min_period_ns =3D
-> >  	    (NSEC_PER_SEC / (pc->clk_rate / TEGRA_PWM_DEPTH)) + 1;
-> > =20
-> > -	pc->rst =3D devm_reset_control_get_exclusive(dev, "pwm");
-> > -	if (IS_ERR(pc->rst)) {
-> > -		ret =3D dev_err_probe(dev, PTR_ERR(pc->rst), "Failed to get reset co=
-ntrol\n");
-> > +	rst =3D devm_reset_control_get_exclusive_deasserted(dev, "pwm");
-> > +	if (IS_ERR(rst)) {
-> > +		ret =3D dev_err_probe(dev, PTR_ERR(rst), "Failed to get reset contro=
-l\n");
-> >  		goto put_pm;
-> >  	}
-> > =20
-> > -	reset_control_deassert(pc->rst);
-> > -
-> >  	chip->ops =3D &tegra_pwm_ops;
-> > =20
-> >  	ret =3D pwmchip_add(chip);
-> >  	if (ret < 0) {
-> >  		dev_err_probe(dev, ret, "Adding pwmchip failed\n");
-> > -		reset_control_assert(pc->rst);
->=20
-> With this change, pm_runtime_put_sync_suspend() and
-> pm_runtime_force_suspend() are called before the reset control is
-> asserted again in the error case. Is this safe?
+[...]
 
-Ah, this is true for pm_runtime_put_sync_suspend(). Too bad this isn't
-easily fixable :-\ I would expect this not to be a problem, but given
-that I don't have the hardware, I guess being conservative here is
-needed.
+> +
+> +		pmgr: power-management@380700000 {
+> +			compatible = "apple,t8132-pmgr", "apple,t8103-pmgr", "syscon", "simple-mfd";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			reg = <0x3 0x80700000 0 0x14000>;
+> +			/* child nodes are added in t8132-pmgr.dtsi */
+> +		};
+> +
+> +		aic: interrupt-controller@381180000 {
+> +			compatible = "apple,t8132-aic3", "apple,t8122-aic3";
+> +			#interrupt-cells = <3>;
+> +			interrupt-controller;
+> +			reg = <0x00000003 0x81000000 0x00000000 0x1cc000>,
 
-Thanks for catching this.
+You have 381180000 in the node name but 381000000 here, I guess the node 
+name is a copy paste error. W=1 flags this fwiw.
 
-Uwe
 
---l42umjqts7ahp2rv
-Content-Type: application/pgp-signature; name="signature.asc"
+Sven
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmpWQpkACgkQj4D7WH0S
-/k4IaggApNtCtObSgmCp33qZAYG4ljuOGbY+ElTdtZYDd4LA2P8X7M3CodebGbND
-BrFlastkoqvc/1dTPy8DmKFZvlxAwtNNqz/HInW+HaaDYUhGoG6Ks5FnuIDcIcR4
-jybTXmW2JikqiVOsyg4dgOyBwSaouFqEE3gXTG2wTQppNMY6E2fdael65DtGvnjs
-jNig9auoiPZm2JzUkWnPVwi7JEMki+kslNYwEJt1Z8QuETv9EsNPvFI//XgNSXjz
-ZSH5UeCmBnsOZ1RP4MGpY2lKactyuVrN8VgbCd+HvCfjK+WOid/UKWcVYMwG7HXw
-WzTKEGk4ArHMgYTIPY9WzbZ405Ns8g==
-=8zwh
------END PGP SIGNATURE-----
-
---l42umjqts7ahp2rv--
 
