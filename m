@@ -1,81 +1,83 @@
-Return-Path: <linux-pwm+bounces-9726-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9727-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id LkhrGkENV2qKEgEAu9opvQ
-	(envelope-from <linux-pwm+bounces-9726-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Jul 2026 06:32:01 +0200
+	id H/ShJa8RV2pSEwEAu9opvQ
+	(envelope-from <linux-pwm+bounces-9727-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Jul 2026 06:50:55 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from tor.lore.kernel.org (tor.lore.kernel.org [172.105.105.114])
-	by mail.lfdr.de (Postfix) with ESMTPS id C059E75A77B
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Jul 2026 06:32:00 +0200 (CEST)
+Received: from sea.lore.kernel.org (sea.lore.kernel.org [172.234.253.10])
+	by mail.lfdr.de (Postfix) with ESMTPS id 142B875A866
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Jul 2026 06:50:55 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=Nvidia.com header.s=selector2 header.b=gnySk8od;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9726-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.105.105.114 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9726-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=Nvidia.com header.s=selector2 header.b="gBkwz/u3";
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9727-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.234.253.10 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9727-lists+linux-pwm=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=reject) header.from=nvidia.com;
 	arc=reject ("cv is fail on i=2")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by tor.lore.kernel.org (Postfix) with ESMTP id B6EE53019C95
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Jul 2026 04:31:59 +0000 (UTC)
+	by sea.lore.kernel.org (Postfix) with ESMTP id 93061304F22D
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Jul 2026 04:50:43 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id C75701FECCD;
-	Wed, 15 Jul 2026 04:31:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 15DC33B42D7;
+	Wed, 15 Jul 2026 04:50:43 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from SN4PR2101CU001.outbound.protection.outlook.com (mail-southcentralusazon11012017.outbound.protection.outlook.com [40.93.195.17])
+Received: from DM1PR04CU001.outbound.protection.outlook.com (mail-centralusazon11010052.outbound.protection.outlook.com [52.101.61.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D54B912FF69;
-	Wed, 15 Jul 2026 04:31:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BAB33B27ED;
+	Wed, 15 Jul 2026 04:50:41 +0000 (UTC)
 ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784089918; cv=fail; b=D6O6MEat3ZPdUZ+ul+5zpzqoaZp4KsFXEUvL2uVB9uBkh1YEdiNsGtCP5Dh2qC2b+4pdccTeJkDcDET+2IwRuR9fAgol67CerBBlQLwYwU6CxgSOhCaCqUoskjTbYnj6WZhGay04axhJbDW7IRD+JwXDIL5y+5h4KIRw3QuLGqM=
+	t=1784091043; cv=fail; b=nMOJrdGo2fOdR5zO+814c4Bc768kthgbsM1su6c/waHv5Vvn6/SH05IRYnsbqi/Ak2iVte1QChaQCw4BeiQX06JHBBgsVhCN96VPE4yDfJETmSbT0tTTTIFlSw4chhpPuFDi8baF2FW0xieEVXAGF5LUxgFwVXfUe6f5qJ9/fHU=
 ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784089918; c=relaxed/simple;
-	bh=oA+epdRAuvuwaPqFqyly4Y/qShjJmzv0h4TTU3szTB0=;
+	s=arc-20240116; t=1784091043; c=relaxed/simple;
+	bh=DeLjAlCHss+/y+N8flVX4wKVXvdq0MfkGnpjEItxPs0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JQT59UiWjZdnc9Y6zd5zvt6QImVHHy9OIYTVputPOBLn1z1dHasyNjkbMKIysCE91LNtB8lJZaLEDG5L2hC9Msj2A8LSyT2nzonao47SUG8/Wn7kYYIObyIyYSe9zJZt2pYp/91g/ACsvZBdyzAcHtP434oym8f/y6mFVRPAnl8=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=gnySk8od; arc=fail smtp.client-ip=40.93.195.17
+	 Content-Type:MIME-Version; b=HS/wPQ4LWv7Xw3T8Y5GIZA4dA7wlvsWvaPswtJ0DNpRyZZKPqa7KCsYQWg4OxGITh+e7pgBN1M0a8uFHoJVImR3ZKwWi3LRVU5NDBYaITzsFaI+RoMEnpadnoXViE6p+sgaCJN6Tt3cotpFFlih+qj9wYDCGIqgKopG+1/7eFa8=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=gBkwz/u3; arc=fail smtp.client-ip=52.101.61.52
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=BmplO29oaxB3i5lsEXV6CQzu5NhDr6XLe5Qd5bhLmQvrOitXmvZ8mt2ZnMBOG49G6ieXr1jICBy7gBCUmuuksv6H/0mVytju1w7GGMIrgQ8ksTPNmK+typfoLRcfV1KCTNPt4DGOiJe4DegqDyJIZWRYiCVlBIh7zhnCUmnzRdyURqHa/mQQXuAnixrd3YwZHN6umnq4b3otn48MjfQRv/Bve6nP+LyIX4cLhQFIQZQs85qPcukgywyUEzWugV+FxmK+aAKh8RloSXO26trGoheyf4/J+6P+zHG8kTJ7HN04Vm2NbRAwSEOtfvjm4S/f+Jt7enCjzLm1ky7bbRPCAw==
+ b=J+G8CHJ1PxMNhf3A+sOmOECgB3+Mt1eyeWSIVVkxTIiTa2cY75NgtYC5St4k/z1iqVhXsE0LTNQzGy424XzZ7x3YLiDM3/KRHsZA6LmSbnMOXmqWfzzevUEsx/wGqBsl9IYx1lcbZv0b77i9BeyFXxuSl/pjNPQSnIvZTshbrS9047SNNAXzCRVv0XmOuVRm7IeDb33xQB2PjA3udnMS65njeL5bjVTecVCMLmaHjaF27jts4Brv2fRyFP6SWNMLaQnPNRSBk/EAvTNfQ8f6UzjM0lOKz6wbH5shdABEZtXQ+gs95i0GkSOjOJ8k8L6WouJskGVsxz5nlmagBNX3yQ==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector10001;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=BFDVX5T2hT2S12+bMZOThpAAiIu8f15U7IzbQbUodgo=;
- b=jx+tPCXmwQFgJzZU9ByWFGbew2bfnNr4dVeyL+Tt3zPp7MV3vDt93ZTQ8qBm3N7M294fStviwiPjZ8mvg251CTl7itSW5tgmdOOw5aCIj235mDFhs9EL5mDRCayfg3GcdAD+u/Cq2+2EvMEQv+QNW79vjtYJYiG5+KyXDhNEXSQIQr0ATvbBG9auet2Wnm+KaLBxXsxl2OorSl6DTRBu4f3jiL8kT5HTBAAuL0qz2vKX8oY8rGO1EgJHkqY/UQIRllgNTzeEPW6+v0082+jfFltoR/jQkdX3/+nbUCTTPWrx9oEJ+4Tw+N3Wr9DqLQvU4k4ppYNTZLJjE1bBNkeRUA==
+ bh=25MV+I0Qjw9eM6AoePgpgxP1he1TT/ajsOcHBn3zEKE=;
+ b=CGDUOYWXR3pdvnwnztzy5pds1sXWaDZ+A9ImRKIZbcR00rAE9JBJrBa7mqYbcn4pRz1NTcKFnbAvEwOXgl6BoCl61+l/fAZgWkwXsQwQp2jchatOfFZSOkuAmHCKvNrUn+MaIw8BSK8Uk1ozkSokqcfOCIbAxdDL/ITuUGE+oaqDKt3Iy2DFYkmnvfYgQRzfHZ4bz92TinjcLL/BNAxaD9BLxeepQwotuEM3YFpKyLEJxQol3hL+QA8f16UeyD1GsWcMX+wDfMwFiAiy5oQdJu30m1iwojfBSNAWFhIHsdd2tZzjrt4v3A+MD946EZ9cuHb4nk9zS6E6CNQhWCxFdg==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
  smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
  dkim=pass header.d=nvidia.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
  s=selector2;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=BFDVX5T2hT2S12+bMZOThpAAiIu8f15U7IzbQbUodgo=;
- b=gnySk8odhQ1T+zIOFCVzFCoMM+5ITXd1IYXwiRde071BsFh5nT6gjjn2BJoDn1o5k0pnTv1dtWZSYeadzDXN5fkfglwJHWSGOjgKMIvbDEuwMreYaenaZOkto6wSCvxVx8mT8CIbNUDdFExP4ViotmkLkMfW7BtnhcyoP7duu7H2pUCPfWK0jc96FbDbWplFmOhrt7rCa7aXdNNRn8CQ/ZmD+ockdpmbUYVR5rXHDJ7UQ6sQWS0zjTFBmBQfp3CUqbdQvVrkAn5OVGncTL1x2/NWZszKOhevnRrmC4McY8RTmebkgsrB2mx0bLJErXkIciMQGdcb2bYjOPSeD5X96Q==
+ bh=25MV+I0Qjw9eM6AoePgpgxP1he1TT/ajsOcHBn3zEKE=;
+ b=gBkwz/u3ti8tLfIxHmLCxeHFK+92gcn4AYrpYzq2kbtVbs0x77Ly7RtOwrjX+92J4JHHBthzQbOeXeOmMIqYqolcVhHjTco29QB3NRTOwfR0f5NJvTAQQq2WnPor7GnrFXXVJIagzGZ878fKT9lFK9Uqb8zOj9tPrbHGzk7s0Q2tI2PItCY02WdlhSjDquxlfHz+FQnC0I+LR0gJZIjZ25BGJ1b9q4+x5yT6ikjJ05vLptDs3vJcfrXs3XiYVuPu5Qp0q8fenpWIkroAeV7ornH1Ea9nxk4jyxTu66+TtI4wCFV1eYwoaLh9y+Vq+Zy5nGBIXU/wShPH8oje/v5XuA==
 Received: from SJ2PR12MB9161.namprd12.prod.outlook.com (2603:10b6:a03:566::20)
- by DM6PR12MB4074.namprd12.prod.outlook.com (2603:10b6:5:218::11) with
+ by CH3PR12MB8972.namprd12.prod.outlook.com (2603:10b6:610:169::11) with
  Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.223.11; Wed, 15 Jul
- 2026 04:31:51 +0000
+ 2026 04:50:37 +0000
 Received: from SJ2PR12MB9161.namprd12.prod.outlook.com
  ([fe80::d9d1:8c49:a703:b017]) by SJ2PR12MB9161.namprd12.prod.outlook.com
  ([fe80::d9d1:8c49:a703:b017%6]) with mapi id 15.21.0181.019; Wed, 15 Jul 2026
- 04:31:51 +0000
+ 04:50:37 +0000
 From: Mikko Perttunen <mperttunen@nvidia.com>
-To: Thierry Reding <thierry.reding@kernel.org>,
- Jonathan Hunter <jonathanh@nvidia.com>,
+To: Philipp Zabel <p.zabel@pengutronix.de>,
  Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>
-Cc: linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org
+Cc: Thierry Reding <thierry.reding@kernel.org>,
+ Jonathan Hunter <jonathanh@nvidia.com>, linux-pwm@vger.kernel.org,
+ linux-tegra@vger.kernel.org
 Subject:
- Re: [PATCH v1 3/6] pwm: tegra: Use devm function for pm_runtime_enable()
-Date: Wed, 15 Jul 2026 13:31:47 +0900
-Message-ID: <MAZ-TeVzRkyeyWYe-mCm7g@nvidia.com>
-In-Reply-To:
- <a7b7386ee7705b25cc1cd345c188e14978ab2e9d.1784030076.git.ukleinek@kernel.org>
+ Re: [PATCH v1 4/6] pwm: tegra: Simplify using
+ devm_reset_control_get_exclusive_deasserted()
+Date: Wed, 15 Jul 2026 13:50:32 +0900
+Message-ID: <5haHJyqESQOPJU-ofv6iCQ@nvidia.com>
+In-Reply-To: <alZAzcG-2uuTsxxk@monoceros>
 References:
  <cover.1784030076.git.ukleinek@kernel.org>
- <a7b7386ee7705b25cc1cd345c188e14978ab2e9d.1784030076.git.ukleinek@kernel.org>
+ <cf1bd92a11661c99802867581b599617ef69f503.camel@pengutronix.de>
+ <alZAzcG-2uuTsxxk@monoceros>
 Content-Transfer-Encoding: quoted-printable
 Content-Type: text/plain; charset="utf-8"
-X-ClientProxiedBy: TY4PR01CA0073.jpnprd01.prod.outlook.com
- (2603:1096:405:36c::9) To SJ2PR12MB9161.namprd12.prod.outlook.com
+X-ClientProxiedBy: TY4P286CA0096.JPNP286.PROD.OUTLOOK.COM
+ (2603:1096:405:369::18) To SJ2PR12MB9161.namprd12.prod.outlook.com
  (2603:10b6:a03:566::20)
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
@@ -84,92 +86,92 @@ List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
 X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR12MB9161:EE_|DM6PR12MB4074:EE_
-X-MS-Office365-Filtering-Correlation-Id: bfa3c6af-9b3e-41b5-1c4c-08dee229fdb9
+X-MS-TrafficTypeDiagnostic: SJ2PR12MB9161:EE_|CH3PR12MB8972:EE_
+X-MS-Office365-Filtering-Correlation-Id: 86b760d3-fea1-493e-b875-08dee22c9c23
 X-MS-Exchange-SenderADCheck: 1
 X-MS-Exchange-AntiSpam-Relay: 0
 X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|366016|10070799003|1800799024|23010399003|376014|4143699003|56012099006|11063799006|22082099003|18002099003;
+	BCL:0;ARA:13230040|23010399003|376014|10070799003|1800799024|366016|22082099003|18002099003|4143699003|56012099006|5023799004|11063799006;
 X-Microsoft-Antispam-Message-Info:
-	eOslHbz38jl0rRljS5xt9Be3aF60x4q/FOlWvefAl22wjSSgXAi0qtT0GVt+cPJu25nPlg7aAX8omvekAh8Q5iKsIW0irGF3QGRzX1Bw4+hGokVRmQ8ijb/RWRva/ZXxEyN3MqZw67GivJcMOPDdVT00nF+diG18Y+Bn7KNNLTuFX4zn1WIme/4hqY3qozC7BfQ41cwM53EHcFGz3pAfSGjokDcj/BSJtHQB3dk1dn/lXwYD5MLN+IHpJnEsiLTXXL6BM8AyDyjnkuPKfs6NGuu2oNErO52UiJqk7nKZFDzir5N28QEh6oYW81GFP6EW0hyhx1xzFZtW5vByKzeqFEafENqhewi84m4E3q7LjayQKIOHsecVTKyK5QMkn/MxmPb6vn9twfin510LCncxVvrBMr25cbcJFwxccG9xNOJBpjoQDisArzxmHW6cLFunr05Yay9EMvMoWs1jf8FytZQ0tKoGuNOrg87gTVJc51pMcKoWCJH2xZ6dteOqvvi1uSDkyfwq/jheif1fWbOxuy7d8Y4wBkcGhstd09SvTBqQ8xFGxYaaruQNJwK8P1joDjDV4Z2uSouSB3f0pW3kbnM77CNhIz5dzMGXSWMeQzRLWMnehNFZAEca8chtnjP0xwHlRENYoP3+8aNp64dO8viPc/Plh8VFDpbtNpB9n7E=
+	fKZInjTkdiw6fZTzwOLKlkO24w1VPB0CHiuo3N4zrJfFGOWxb6NfABTWGxj5XfTRuiVHrsPaoTvJG+lHKnKQQkgWpSmJq/RE0Ns6XtwedNN5O/8YCx9Q0KSQ2qruOAbVkqVV1bv8YsTE9JRWUlPVCOGb5F95zMCOiide904IbMVEDXUcm93G9e+cL9d/DWtarLSmC3jXZPfiBzzgCElamQWN7A5M3NXvLnNGr6pqkwWUkL1Xp2z/z9575l3pg0JLj9v2rJeQSjuBb2CR3XQMKAIpqPho6g2UJysWQC8LhXsEhSK3tNfMqXXtopB/LHHjqb2Bfdcr1e71tsVtf9Y+Sx7aKuFmkOO6ZHowNoh40qgG3NgnxjVkLydGtyxtCkbsZdTgGPZR0dBs6MtERaqZZcWkYKFx4iM+nuHCsQ3fF0739dz/kfB0R94oKF900XlJ7ohcdEqtVqzUGaymGcNk0J2wcMS1bP+0zGATvmlQSPHZGz4HG9EbeZ+B7dQdVLowgLo6FHBKMdCsWdOiU1M+HdaXoIbUqXj9jnh8qdlm4vhIJSNq9k8NGQPh22eHRT7v2gSJaoLEO2rwz7s7vueSp5ZZ9LOFA4of2K9WTgzyalSHOOkHyDVnan4VULpOUJg3bqFV/M99poDOZ0K5I7JiIAc/WgdNIp+oWdAjnETyPpk=
 X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB9161.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(366016)(10070799003)(1800799024)(23010399003)(376014)(4143699003)(56012099006)(11063799006)(22082099003)(18002099003);DIR:OUT;SFP:1101;
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB9161.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(23010399003)(376014)(10070799003)(1800799024)(366016)(22082099003)(18002099003)(4143699003)(56012099006)(5023799004)(11063799006);DIR:OUT;SFP:1101;
 X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 2
 X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?VE1zTElGbFcxc1JHUnFhaHdZZVJMVmJVVDdaWTlVV2FuRUo1RGR4ZzJFZVFJ?=
- =?utf-8?B?NE12L0szWEF5V3FwNXR1alRpUlZmdzB4UzZaRjY5SGN6S1hLUU1UOUY4UUNF?=
- =?utf-8?B?NlZYQnBEZG1PTjdJZ0F5T1ViVXVkZXFZZ2h5RTRHMk9LeEVaaytuemU0aVNn?=
- =?utf-8?B?RnJLTVVjYkd6Y052THFGaGp5YlFaYisrTVloU2huVW1ZREpoNmpYazg5dlBU?=
- =?utf-8?B?U3MzNWR4WW1SMVRqWEFGd01sNktpd01YYUF1VlFIcXJuYm5VVzdKUWRFZ1Ez?=
- =?utf-8?B?cm5MVHBqTGZOcXZ6b3RrQzR0WFQxRWl1a3NiVEJlcWhOeGlMaDR4bktZY2NR?=
- =?utf-8?B?M0x4bXByMjhCYVFEcWFWWXkzTHp3UStVbzdwRzViR2wyRXhrUEJsQWFyRTFH?=
- =?utf-8?B?NkNaL2l0VUlKcDZvUDFESVlpRFNDMy9oSy93ci9jdVV3Tng0aXdnMDlybTl1?=
- =?utf-8?B?WjMvOENDTnJUanBaVmh4THNrUFcrbzhsenhvY3BtZWFveldNem91KzNHbURE?=
- =?utf-8?B?dXd4YVJ1UGZ0YlRUR0hEL0x5WEFlNXE4eW93bFJlbTFDWlhkeG4yTXJGMk5T?=
- =?utf-8?B?c1lUbDBMUXZOTkNzRTJENEdzYnV4SmJkYzJjSk51end6ZkVFcXR5ZC93THRS?=
- =?utf-8?B?NmU1M01TSUQ2Njk4OHF5ekVyUDRJcU1YSWVFbDkrZ0p5bVhoTHkzWjRBVEpH?=
- =?utf-8?B?aXRBd2pleUFMNUZrWlhIdG5CeWJoaisrUmtETGZPTlk2Q0ZlSDNlNWFJOTRT?=
- =?utf-8?B?YnVZNGJYejlwL2lSQXJqRG9lMUx6VXVQRmxKaDJvei9YY2ptVUxLYTRWS0hE?=
- =?utf-8?B?ZFZKdnZXWVBQSHp4dnF6WFZmdy8zb2xpY0lNMTFWc2p6bENYS2x0UjJORjVQ?=
- =?utf-8?B?b2lTMExSdUhCSDZIT0FRUG9XMGhTQ1FGNlVwSlJObHBiL3lpQXRuZjNuaXZM?=
- =?utf-8?B?ZXZqeW1rMFM3YU0zUVIweU9GNmtsb3JzSWtDVjZHVllBVGZWSjBDVkM5K1hH?=
- =?utf-8?B?MXVjMkVFTVdkb0txNzJRak94MDJCNzFYcDZaM1Y5RUF5TzluZ2xtSjN2UEhj?=
- =?utf-8?B?emlzRGRqbkplM3lwUkY0VWp3QkJGYkxSeVNWdEpKMFpEbWRyTkRTbFZqZU03?=
- =?utf-8?B?bnVJQ0wwY3g5dDFYa0NoWEFucTZCY3EzdW16Ym41djByYTFIZng3RjlwTEVM?=
- =?utf-8?B?MUdjVDVDVWtybkJ0TWs4akJtVXhNcCt0RGljQ21rNEd6VXE4b2R5U0JVemdz?=
- =?utf-8?B?ODFZM2hIQnVXZEkrQVJxRWxNWFRlWDBza2tyUjVxbHp0eUhNM2JhTzVmbjVF?=
- =?utf-8?B?RkhIYURDNng5aG9mV3p4bnZQT01abUFtVlpQY1NVOVI4cVlJUk1qalhzZzJZ?=
- =?utf-8?B?TnN6dlM1QmNjeXpQZXVJNU0vbVB4TzBnNXRXV3dEajJnVlRtRmtRZmFSSS80?=
- =?utf-8?B?bVo2dFplNzBCaXA2U011dUp1bnI2VUlCdVdPTkM2OGw3dXlmTFZKMjUvVDU1?=
- =?utf-8?B?NndkalpUbXduNWZyRHlmQkw3M1pVbEtTTktqRk14bFcxeGdaMytUbThYd09y?=
- =?utf-8?B?a0hkK0l5bVZqaDRCYWNkMy9WdXQxRFBycis3MzBlWUdLeXoxcXppNGtpbGxN?=
- =?utf-8?B?WEpudmJMYXNPYitCRWp1dlE4dU82a0cybHdsbUlHZlh3Y3ltdllOUEE5ZkJh?=
- =?utf-8?B?c1YwbzFiclJPai9zd2Q2cGNudW5MTjBZRjFrUUNOVjMwdDZzZ2pNb3J0S1hl?=
- =?utf-8?B?WmZWSXlBanZYdXlMd1Jsa25mRDVBTzcxWVlnWHpqRmJHS2ZEL1N2cjZaQjBP?=
- =?utf-8?B?N3JiN05FRjRrYjV5WFliajh0bVIvYkkveHMrcFVBY2FPZVJJRDNsUjNscTVo?=
- =?utf-8?B?TGZNSlQrMUxxSjM3SklrNGRFWTBjUkFwdGtRMnBnWWpXbW1JK1VRVDUvU2tp?=
- =?utf-8?B?Zko4L3U5VTZpcUF5RnVPR0cvM2N1Sjh5YWdYUms4dWp6cDV0b1RzWEFNY25Z?=
- =?utf-8?B?dExhNk00ZVRoMTUzTjFNbUpLbnBSOG1nUThQK054WTI1MFZXUW4zS0x0RkdR?=
- =?utf-8?B?MEl6UTNjZFhlZG5CNDVZL2MyYnZNQmNmZmxqdXA3d0pVTnFVSUVBdFVpYWo0?=
- =?utf-8?B?d1BzVk8rdTlLTDFETjRtTmtNS2FuOVFQbnk0Q1h6Um9PeU8yS0djRlBnK1VT?=
- =?utf-8?B?SzljeDh5U2cwdjRkcGpjUm5ZQXNFWVZ1dUVFTWppcW9GdExJZklsWnRZL2l5?=
- =?utf-8?B?NmJZbDQ5Y1FnOGFmamJMR1RsZ0Jzekp1QzhtWG1abnc1cTdGRlp4b0JMSHRX?=
- =?utf-8?B?dzBtWUlNb0VkdU9XeVNrYkdsdXNNa3R2a0pjOFdtOHErSndrUk94ZjdGdnF3?=
- =?utf-8?Q?zINkl48QI4sLsv9YRj7WpXE5Z85kRvD5fci+hp5lvFIPy?=
-X-MS-Exchange-AntiSpam-MessageData-1: JxFRZfq2KIHg6A==
+	=?utf-8?B?QXdTQU1TenBoWHRMaWpQZVRHV3EwNE5ERG1ySVJKdlJPR3Fsc1pxQzE2RmYw?=
+ =?utf-8?B?enBJNVJJOThrOE9ZTTJrS3JpYVExSEtGQXNKeG1Jc2tSZ0VqZTkvaEFsYnVY?=
+ =?utf-8?B?VmkweVF4R1l2V0NNK3ZvU09KMWo2RjdwWlFXSFlqV1FwSVRWSllDdUJuK2dv?=
+ =?utf-8?B?bDlmSzVKSHNlMjRDT040cjJmUmFodmFDRFEyaVk3NVhnZXM3UFErZ0wybExM?=
+ =?utf-8?B?bEVFR2NCWWtpanR1UCthSW0zL3Z5Y3NES0lZZ2JGL0w5M1orSmhDU2g4SWpS?=
+ =?utf-8?B?cy9ZRFh5U0NVUndjeHByN2I0V3ZEaFhPWTI5cVd4YlBhMld2Z2p1eTQ4NXhB?=
+ =?utf-8?B?MzU4YVNjUWoySmxVcEY0N1hmSDZGUGdaOFNGbnIvcnJrSUhueFp4T2g4d3dp?=
+ =?utf-8?B?ZzZlOUtneGFVQy9zZ05FekhNWVlBdnJzTW9Gd0hCNTRrTGdGUUdUajlOSnZ0?=
+ =?utf-8?B?Qll6V0lxOWJheDdlYW5ma2ZqUWJBbEN4d0REVnp5TitRZ2ZRaGJBK2xlRjlr?=
+ =?utf-8?B?UlRxcysxLzl5Y09RRDIwWmtKejJZcUtaL3ZPbW94Q0V6RERkUWtTOGZnTkx3?=
+ =?utf-8?B?ZmhMQ3EzVUJ0cjBITUtDZmhNVkEweGh2R1ZyUXBCMi9RU3Y1N2FqU2JDU2l5?=
+ =?utf-8?B?STFOTjkxZVBmUnBoZUIyMEtLQmQrQXg4NzRXalJSRU9kREZoejE5Vm5WVzh5?=
+ =?utf-8?B?aXFiMDZRUElLaTdVdGJtS3dodjdxVlkrU25xb1VHZHI4Q0JwNUJEeE9mUDFC?=
+ =?utf-8?B?cTJRbGNzSTlJaUdWZHF3R01JQjROc2g1TEFCUHhXL0dqVHhMRmZMSXJkNUph?=
+ =?utf-8?B?eGhIMHNDeUxLdnlBNEpvQmFWWkw2QTlJUTkxU0kwUU81ZWcrSXdQRTZENDBw?=
+ =?utf-8?B?RlVaTTlwY1NGOFhqeFNmUTg1ZzNNYWdkcXVVVTBrT0xlQUJqYkticGI4NXJ6?=
+ =?utf-8?B?Q0NMQml6RFBGQzk3bWVKQWJhKzZiRUpJOUpqL1B3SEpYeWVrZ08zM2pwZXBU?=
+ =?utf-8?B?WUYxcGc0elAzU1k3a0RMNzVvazBwTjBUZ2IvY0FvUm5wUjQ3by8wV1BsbnJN?=
+ =?utf-8?B?UVNPSkZjc3NRYVAyME00ZEVHckgrRzNFNUdLR0ZOdnVWaVBVK2ZDQ2g3WFN0?=
+ =?utf-8?B?OW5OUXdqdlI0R2svVk01aG1CVHJpcXFNN0Fxd1Z1Y0h0RFpkNXkwbi9ESWww?=
+ =?utf-8?B?UzBidVZoWXo3d2diOHlJUVE0emYyWEdRM3JvWkhBZFJjdVh2Z0MzSFo1dWR2?=
+ =?utf-8?B?WWp1Q1VIcDgxR0ZLTXl5QmFXSlR1MWRJR0M5NnpaaG5hZW96bCtSeWxLdDVm?=
+ =?utf-8?B?dDlxaVFxQzV4R2lNcnE4eEp0UzJEUWVmZk9aR3lYMkE0QTZDdjBGTzRKQ3pL?=
+ =?utf-8?B?MW95YjlJOE5ZTC9odjNjUjFnNTYzRXNKcmgwTWdyQndZWDlvOTUzcW9yelVF?=
+ =?utf-8?B?bXkvYnEzdy80anZPcG4wWFlqeC84K2l1aGRwQzlmb2hWdkhlU3lzSkdMc3R0?=
+ =?utf-8?B?NEpMM1RnY3NPQUxQQmhpVlhod2c3N2pqOGxMODZteklVcXA4eEc1MVN5WWJs?=
+ =?utf-8?B?VVM3ZzU3VXZNNEFjbStMSnlwT1ZRQnV1cFZwanhjN2xtdm5hWXA5ckVuWGFG?=
+ =?utf-8?B?eXJZM3pFbG02Q3BlMUV4eXBUREtmdHUwL25MUW13S2xWNU5nTXR3bzVKa1Qw?=
+ =?utf-8?B?eEZTcEdjcGtlN2NQSjIrbkczMTNmSE5mdTVqWENmdVdJZjZ1UUNwU29yVkVY?=
+ =?utf-8?B?Z1dWUjZYaVRnRjBkb1l1amFHWTFRanFkWFlWeUVCRFRkZTFneHdTSktoTVZN?=
+ =?utf-8?B?R3ZxZTM3Ykc5a0lzN2dXa2llRDZsd3RPZWFoaGlPMC9xY3JSMTNmNEt1SnBL?=
+ =?utf-8?B?ZmwrYzBjdE1DSGRqbTNtUWRlbFZiY043UWsyclVsMERPelo3Q3cvNWU2R25t?=
+ =?utf-8?B?NHBmUU1jc01jajcra3ZzUndzd3Q3MmtCbU9VaXlOUlpKZUNsZ0RxNDZRdlBP?=
+ =?utf-8?B?STFnTXAwbWR1NE1aWW9jVzNucENkVWc2WDBXRWFzeit5VGxyQmwwSkRyR3RE?=
+ =?utf-8?B?UDFlNUFXM0tWK2s2c2FQMGNLMzFIRXo5cUxCVzF2OHgzY3dTY2RHTTB5enRy?=
+ =?utf-8?B?RzZnT2VabHhEWHppWEtvZ2g3NE5pTndsZXNoVTJoeUFNbVlrRE4rSzRiL0dE?=
+ =?utf-8?B?RlkrcFMvWVYzZ2hpeHhVQ3JrRkJteThZMWpHWTA1YWhUcjRCUDZ0bXVQMlh1?=
+ =?utf-8?B?S3ZhaXhmUWY2QjdEaWdXU3VXRmxoR0dWZlFFcFgrY0NsZTRJNzBkazdncldO?=
+ =?utf-8?B?MDFmaW9TcWZqREN1aXNUQmN3SHdLcU5mZFphRWgvM3doYkp6bkJ0emordms3?=
+ =?utf-8?Q?IgFjOP9YoPCcajMUMQAg92KoJAO2avLc1jUT79tHKy9Ao?=
+X-MS-Exchange-AntiSpam-MessageData-1: Ebx2h8mQkBHFsQ==
 X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: bfa3c6af-9b3e-41b5-1c4c-08dee229fdb9
+X-MS-Exchange-CrossTenant-Network-Message-Id: 86b760d3-fea1-493e-b875-08dee22c9c23
 X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB9161.namprd12.prod.outlook.com
 X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2026 04:31:51.4952
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2026 04:50:36.1737
  (UTC)
 X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
 X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
 X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: TyBPJDuUCSuh7vUo8YD9PRSwjA/Ubs5sm8sW4R0bxdWvOkhXe1pz5dOu5KGCZY6c5u5kfLtrH/zp9dy0R/XXUw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB4074
+X-MS-Exchange-CrossTenant-UserPrincipalName: W0OgML4FoHrmtkW+Dquvm5iTunrBgfj1y0FKppznjg9sKv0kjUAuqqJH4r63p/drOpwFmj5p2eTtTn4gSxvDEQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8972
 X-Rspamd-Action: no action
 X-Spamd-Result: default: False [-7.16 / 15.00];
 	WHITELIST_DMARC(-7.00)[nvidia.com:D:+];
 	ARC_REJECT(1.00)[cv is fail on i=2];
 	DMARC_POLICY_ALLOW(-0.50)[nvidia.com,reject];
-	R_SPF_ALLOW(-0.20)[+ip4:172.105.105.114:c];
+	R_SPF_ALLOW(-0.20)[+ip4:172.234.253.10:c];
 	R_DKIM_ALLOW(-0.20)[Nvidia.com:s=selector2];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	TAGGED_FROM(0.00)[bounces-9726-lists,linux-pwm=lfdr.de];
+	TAGGED_FROM(0.00)[bounces-9727-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
 	FROM_HAS_DN(0.00)[];
 	FORGED_SENDER(0.00)[mperttunen@nvidia.com,linux-pwm@vger.kernel.org];
 	TO_DN_SOME(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:thierry.reding@kernel.org,m:jonathanh@nvidia.com,m:ukleinek@kernel.org,m:linux-pwm@vger.kernel.org,m:linux-tegra@vger.kernel.org,s:lists@lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:p.zabel@pengutronix.de,m:ukleinek@kernel.org,m:thierry.reding@kernel.org,m:jonathanh@nvidia.com,m:linux-pwm@vger.kernel.org,m:linux-tegra@vger.kernel.org,s:lists@lfdr.de];
 	MIME_TRACE(0.00)[0:+];
 	FORGED_SENDER_MAILLIST(0.00)[];
 	FORWARDED(0.00)[lists@lfdr.de];
 	DKIM_TRACE(0.00)[Nvidia.com:+];
 	MISSING_XM_UA(0.00)[];
-	RCPT_COUNT_FIVE(0.00)[5];
+	RCPT_COUNT_FIVE(0.00)[6];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	RCVD_COUNT_FIVE(0.00)[5];
 	PRECEDENCE_BULK(0.00)[];
@@ -178,77 +180,97 @@ X-Spamd-Result: default: False [-7.16 / 15.00];
 	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:172.105.96.0/20, country:SG];
+	ASN(0.00)[asn:63949, ipnet:172.234.224.0/19, country:SG];
 	TAGGED_RCPT(0.00)[linux-pwm];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,tor.lore.kernel.org:helo,tor.lore.kernel.org:rdns,nvidia.com:from_mime,nvidia.com:mid,Nvidia.com:dkim]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sea.lore.kernel.org:helo,sea.lore.kernel.org:rdns,nvidia.com:from_mime,nvidia.com:mid,Nvidia.com:dkim,vger.kernel.org:from_smtp]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: C059E75A77B
+X-Rspamd-Queue-Id: 142B875A866
 
-On Tuesday, July 14, 2026 9:02=E2=80=AFPM Uwe Kleine-K=C3=B6nig wrote:
-> This simplifies the error paths as pwm_runtime_disable() is called
-> automatatically by the driver core.
-
-Typo, s/ta//
-
+On Tuesday, July 14, 2026 11:07=E2=80=AFPM Uwe Kleine-K=C3=B6nig wrote:
+> On Tue, Jul 14, 2026 at 02:12:38PM +0200, Philipp Zabel wrote:
+> > On Di, 2026-07-14 at 14:02 +0200, Uwe Kleine-K=C3=B6nig wrote:
+> > > This function ensures the reset is already deasserted at probe time a=
+nd
+> > > asserted at unbind. So the remove function and the error paths in the
+> > > probe function can be simplified accordingly.
+> > >=20
+> > > Signed-off-by: Uwe Kleine-K=C3=B6nig <ukleinek@kernel.org>
+> > > ---
+> > >  drivers/pwm/pwm-tegra.c | 14 ++++----------
+> > >  1 file changed, 4 insertions(+), 10 deletions(-)
+> > >=20
+> > > diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
+> > > index e99e1c5b18c3..d7f4baa4cd9b 100644
+> > > --- a/drivers/pwm/pwm-tegra.c
+> > > +++ b/drivers/pwm/pwm-tegra.c
+> > > @@ -108,7 +108,6 @@ struct tegra_pwm_soc {
+> > > =20
+> > >  struct tegra_pwm_chip {
+> > >  	struct clk *clk;
+> > > -	struct reset_control*rst;
+> > > =20
+> > >  	unsigned long clk_rate;
+> > >  	unsigned long min_period_ns;
+> > > @@ -319,6 +318,7 @@ static int tegra_pwm_probe(struct platform_device=
+ *pdev)
+> > >  	struct device *dev =3D &pdev->dev;
+> > >  	struct pwm_chip *chip;
+> > >  	struct tegra_pwm_chip *pc;
+> > > +	struct reset_control*rst;
+> >=20
+> > You could use this opportunity to add a space between reset_control and
+> > *rst.
 >=20
-> Note that pwm_runtime_disable() is the right function to undo
-> pm_runtime_enable(); pm_runtime_force_suspend() "should only be used
-> during system-wide PM transitions to sleep states".
+> Oh indeed. I thought I called checkpatch, but there are two more
+> warnings in this series that I'm not aware of, so it seems I didn't
+> check before sending :-o
 >=20
-> Signed-off-by: Uwe Kleine-K=C3=B6nig <ukleinek@kernel.org>
-> ---
->  drivers/pwm/pwm-tegra.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> > >  	const struct tegra_pwm_soc *soc;
+> > >  	int ret;
+> > > =20
+> > > @@ -391,20 +391,17 @@ static int tegra_pwm_probe(struct platform_devi=
+ce *pdev)
+> > >  	pc->min_period_ns =3D
+> > >  	    (NSEC_PER_SEC / (pc->clk_rate / TEGRA_PWM_DEPTH)) + 1;
+> > > =20
+> > > -	pc->rst =3D devm_reset_control_get_exclusive(dev, "pwm");
+> > > -	if (IS_ERR(pc->rst)) {
+> > > -		ret =3D dev_err_probe(dev, PTR_ERR(pc->rst), "Failed to get reset =
+control\n");
+> > > +	rst =3D devm_reset_control_get_exclusive_deasserted(dev, "pwm");
+> > > +	if (IS_ERR(rst)) {
+> > > +		ret =3D dev_err_probe(dev, PTR_ERR(rst), "Failed to get reset cont=
+rol\n");
+> > >  		goto put_pm;
+> > >  	}
+> > > =20
+> > > -	reset_control_deassert(pc->rst);
+> > > -
+> > >  	chip->ops =3D &tegra_pwm_ops;
+> > > =20
+> > >  	ret =3D pwmchip_add(chip);
+> > >  	if (ret < 0) {
+> > >  		dev_err_probe(dev, ret, "Adding pwmchip failed\n");
+> > > -		reset_control_assert(pc->rst);
+> >=20
+> > With this change, pm_runtime_put_sync_suspend() and
+> > pm_runtime_force_suspend() are called before the reset control is
+> > asserted again in the error case. Is this safe?
 >=20
-> diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
-> index dba9a05675e3..e99e1c5b18c3 100644
-> --- a/drivers/pwm/pwm-tegra.c
-> +++ b/drivers/pwm/pwm-tegra.c
-> @@ -361,7 +361,10 @@ static int tegra_pwm_probe(struct platform_device *p=
-dev)
->  		 */
->  		return ret;
-> =20
-> -	pm_runtime_enable(dev);
-> +	ret =3D devm_pm_runtime_enable(dev);
-> +	if (ret)
-> +		return dev_err_probe(dev, ret, "Failed to enable runtime PM\n");
-> +
->  	ret =3D pm_runtime_resume_and_get(dev);
->  	if (ret)
->  		return dev_err_probe(dev, ret, "Failed to runtime resume device\n");
-> @@ -410,7 +413,6 @@ static int tegra_pwm_probe(struct platform_device *pd=
-ev)
->  	return 0;
->  put_pm:
->  	pm_runtime_put_sync_suspend(dev);
-> -	pm_runtime_force_suspend(dev);
->  	return ret;
->  }
-> =20
-> @@ -422,8 +424,6 @@ static void tegra_pwm_remove(struct platform_device *=
-pdev)
->  	pwmchip_remove(chip);
-> =20
->  	reset_control_assert(pc->rst);
-> -
-> -	pm_runtime_force_suspend(&pdev->dev);
+> Ah, this is true for pm_runtime_put_sync_suspend(). Too bad this isn't
+> easily fixable :-\ I would expect this not to be a problem, but given
+> that I don't have the hardware, I guess being conservative here is
+> needed.
+>=20
+> Thanks for catching this.
+>=20
+> Uwe
 
-I'm guessing the pm_runtime_force_suspend was there to runtime_suspend
-the device if it was on. I agree that pm_runtime_force_suspend is not
-the right way to do that, but some replacement would be needed.
+I agree that it's unlikely anything bad would happen in practice
+if asserting the reset after disabling the clock, but the proper
+sequence indeed to my understanding is the other way around.
 
-Thank you
 Mikko
-
->  }
-> =20
->  static int __maybe_unused tegra_pwm_runtime_suspend(struct device *dev)
-> --=20
-> 2.55.0.11.g153666a7d9bb
->=20
->=20
-
 
 
 
