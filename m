@@ -1,197 +1,151 @@
-Return-Path: <linux-pwm+bounces-9745-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9746-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id b55PDtibV2ppXwAAu9opvQ
-	(envelope-from <linux-pwm+bounces-9745-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Jul 2026 16:40:24 +0200
+	id nVKTMn6dV2rLXwAAu9opvQ
+	(envelope-from <linux-pwm+bounces-9746-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Jul 2026 16:47:26 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
-Received: from sin.lore.kernel.org (sin.lore.kernel.org [IPv6:2600:3c15:e001:75::12fc:5321])
-	by mail.lfdr.de (Postfix) with ESMTPS id 1482675F7C5
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Jul 2026 16:40:23 +0200 (CEST)
+Received: from sto.lore.kernel.org (sto.lore.kernel.org [172.232.135.74])
+	by mail.lfdr.de (Postfix) with ESMTPS id 5575375F8A3
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Jul 2026 16:47:26 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=kernel.org header.s=k20260515 header.b=ZNTxi35b;
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9745-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 2600:3c15:e001:75::12fc:5321 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9745-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	dkim=pass header.d=kernel.org header.s=k20260515 header.b=Kp04aKsB;
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9746-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 172.232.135.74 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9746-lists+linux-pwm=lfdr.de@vger.kernel.org";
 	dmarc=pass (policy=quarantine) header.from=kernel.org;
 	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id 9C59F3006818
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Jul 2026 14:20:42 +0000 (UTC)
+	by sto.lore.kernel.org (Postfix) with ESMTP id 9D12E3006788
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Jul 2026 14:47:25 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id A16B33271EA;
-	Wed, 15 Jul 2026 14:20:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id C678639184A;
+	Wed, 15 Jul 2026 14:47:23 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-alma10-1.taild15c8.ts.net [100.103.45.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8171F2BD022;
-	Wed, 15 Jul 2026 14:20:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8F7037C907;
+	Wed, 15 Jul 2026 14:47:22 +0000 (UTC)
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784125241; cv=none; b=JrERAU/THVAQOe87WIlgpDznqyJiPqQnrzb4aWSnQCQfzuao6wlZjdnAQkxvEvsABvbaUzqiIyC3ee9T+44LHvBPCbkzRbSj/vjxPbfY6x05lCuQhaMltebDcmInyv1C1jlA9BX5pfcwF1FA9yZQADNXYZL8KcCiD+3APiV86Kk=
+	t=1784126843; cv=none; b=BO1ytVgdDKNhb5+nS4ns+p5WcXf/vjcsPx2uDn/kgaGf3Xd1+t6qB+I5kG2hOi51vf3RFabfEgakZu7AVfG9qH9N+TbSrup3BPN5gJJ4IPcAKBHCJMFE5PcurQwJvpkD+dpWv1DBa9dF51Mk+6qL1KETy08VKYibo3IKD2emJf4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784125241; c=relaxed/simple;
-	bh=ro6VRXspuxMXfvly+fYFaPaYy/M2NHDAOqdhR+YRyik=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=XghnSMhKajexEvChG5oEYnE87CcxFSY88s3M6koOI009gXDNzSiQwikD0j0xkpGeZ5H6LgiZE4PRwDZ/cLQL26SqR3Wq49QfqeLZ9rgpawq01YbW/T5Wi79DaMh7dk5pY7Ex76TGzS+mkJBfm8N8NQ7gjqFr1sxt6+cc86wBDXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZNTxi35b; arc=none smtp.client-ip=100.103.45.18
-Received: by smtp.kernel.org (Postfix) with UTF8SMTPSA id 8B6F01F000E9;
-	Wed, 15 Jul 2026 14:20:39 +0000 (UTC)
+	s=arc-20240116; t=1784126843; c=relaxed/simple;
+	bh=xHG4Cgmp0u4sP3xzDzY3WvztI9ASDmdcF3CfBU0mdu0=;
+	h=MIME-Version:Content-Type:Subject:From:To:Cc:In-Reply-To:
+	 References:Date:Message-Id; b=H/Wf2Przjdm6gqb4PjNFao/UxwqE4XCwNMp9FAXgpiezUC0hYR7nVcdcpkHkGaZn0nmnIq7vvDriz/VlXUVPNQwVKkpkCzmD0Htd8WWD4OkKNvrtggMYRbtxh/5fXdwuWF1aOMKb44Ts7xIIwdES/+BM0yJOKbpSgKe8fOIJMWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kp04aKsB; arc=none smtp.client-ip=100.103.45.18
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F9D31F000E9;
+	Wed, 15 Jul 2026 14:47:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kernel.org;
-	s=k20260515; t=1784125240;
-	bh=g6AJyQM50c0yTW+18pkw5ecn5PlX/W2Oc8QKRSrrxlg=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=ZNTxi35byK8tuaGnOvKX438ww+ILUo3EZF2PpjoopMYWEKRGC6A31AoqeQQcr5fKT
-	 cPCjd3cNXFtT+00JQDmzGoTZH/6YFSaHjAh6BsSzxuq2ii3I3iSh1tzDLylDSEGyNl
-	 Eoz1PYTK7olPM+KIymleyeTrtX0VBPUruk4HUwTFlUv5ZoB3BXVOO2qSsApfMz/uGL
-	 swssnPWbpLEBuey/v+7YB9C5of3tj7E3fuAsvey9x/ilcTYAB78XYXzgDrqfsHZ7nP
-	 Fxq4AmQNqQsYZ0g2somnlx5U7VgpOJ2+WWkXd8pmeZMqQBN1QnhcyURz85q7plxDaz
-	 +Maq5mgkLJpBA==
-Date: Wed, 15 Jul 2026 16:20:37 +0200
-From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <ukleinek@kernel.org>
-To: Mikko Perttunen <mperttunen@nvidia.com>
-Cc: Thierry Reding <thierry.reding@kernel.org>, 
-	Jonathan Hunter <jonathanh@nvidia.com>, linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org
-Subject: Re: [PATCH v1 1/6] pwm: tegra: Check for match_data being NULL
-Message-ID: <aleHtUjVKlhP7loE@monoceros>
-References: <cover.1784030076.git.ukleinek@kernel.org>
- <c7d4a3ee8c615f5f6f468c0040fdb0e8864152ba.1784030076.git.ukleinek@kernel.org>
- <Mlcy4yaiRVq9tB-a8gkHvA@nvidia.com>
+	s=k20260515; t=1784126842;
+	bh=4/AlFWwnDA/SV5JENDj0Z4O7qhKDad5syaPLp/K1Aq8=;
+	h=Subject:From:To:Cc:In-Reply-To:References:Date;
+	b=Kp04aKsBor216y3M2IQhJWClxfjKrVp0CdavYdhymjRdXGcmmZCVNHfmmmUijU61h
+	 0R406OBsN0NucPYLhUQBScrmhq7/FGcHl64Z+trYg6pXWD0II9VhDj2VCThGtVLVJS
+	 wAlueNQBgkYBSUCUjDvewxz81e4UMTuIZuWb255e7oDoAxlt7a1YVqavt4P/wMoMwz
+	 kqnmct5VkUpV5EOBxklqwQ131oTjAiveXcuVWDRS1AIMgk7EUytNiClppxdUlL/moG
+	 k9RZBfPLeKJsgx4GKgXTPZqY1bFYqW6iBvmYXZffgAegMoFVWTg8IgXZsnVXXTsIC9
+	 JYiRAsHC3J1lg==
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="cjwt26vckx67l6lr"
-Content-Disposition: inline
-In-Reply-To: <Mlcy4yaiRVq9tB-a8gkHvA@nvidia.com>
-X-Spamd-Result: default: False [-6.76 / 15.00];
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v2 09/10] arm64: dts: apple: Initial T603[124] (M3 Max
+ and Ultra) device trees
+From: Sven Peter <sven@kernel.org>
+To: Janne Grunau <j@jannau.net>
+Cc: Sven Peter <sven@kernel.org>, Neal Gompa <neal@gompa.dev>, 
+ Rob Herring <robh@kernel.org>, Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
+ Wim Van Sebroeck <wim@linux-watchdog.org>, 
+ Guenter Roeck <linux@roeck-us.net>, Andi Shyti <andi.shyti@kernel.org>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Sasha Finkelstein <k@chaosmail.tech>, asahi@lists.linux.dev, 
+ linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, 
+ linux-i2c@vger.kernel.org, linux-pwm@vger.kernel.org
+In-Reply-To: <20260715-apple-t603x-initial-devices-v2-9-df65b2485710@jannau.net>
+References: <20260715-apple-t603x-initial-devices-v2-0-df65b2485710@jannau.net>
+ <20260715-apple-t603x-initial-devices-v2-9-df65b2485710@jannau.net>
+Date: Wed, 15 Jul 2026 16:46:42 +0200
+Message-Id: <178412680283.41818.6965684846949512896.b4-review@b4>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=951; i=sven@kernel.org;
+ h=from:subject:message-id; bh=xHG4Cgmp0u4sP3xzDzY3WvztI9ASDmdcF3CfBU0mdu0=;
+ b=owGbwMvMwCXmIlirolUq95LxtFoSQ1b43Oj86Yu4eCfMP6ClwXZn39N2zu7eUsOExA6D+QJTr
+ Ir7rpR0lLIwiHExyIopsmzfb2/65OEbwaWbLr2HmcPKBDKEgYtTACZiqsfI0MOrkmnX4NJqyyxd
+ NUex4Aa3RW3W01WMKfnrbl19du3XCob/+f/ObMyzePIrKaNg14XX0Vv1UrpP9WSd89VPm1exyG4
+ mAwA=
+X-Developer-Key: i=sven@kernel.org; a=openpgp;
+ fpr=A1E3E34A2B3C820DBC4955E5993B08092F131F93
+X-Spamd-Result: default: False [-3.16 / 15.00];
 	WHITELIST_SPF_DKIM(-3.00)[kernel.org:d:+,kernel.org:s:+];
-	SIGNED_PGP(-2.00)[];
+	SUSPICIOUS_RECIPS(1.50)[];
 	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
 	MID_RHS_NOT_FQDN(0.50)[];
 	DMARC_POLICY_ALLOW(-0.50)[kernel.org,quarantine];
-	R_SPF_ALLOW(-0.20)[+ip6:2600:3c15:e001:75::/64:c];
-	MIME_GOOD(-0.20)[multipart/signed,text/plain];
+	R_SPF_ALLOW(-0.20)[+ip4:172.232.135.74:c];
 	R_DKIM_ALLOW(-0.20)[kernel.org:s=k20260515];
 	MAILLIST(-0.15)[generic];
+	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
+	FORGED_RECIPIENTS(0.00)[m:j@jannau.net,m:sven@kernel.org,m:neal@gompa.dev,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:tglx@kernel.org,m:wim@linux-watchdog.org,m:linux@roeck-us.net,m:andi.shyti@kernel.org,m:ukleinek@kernel.org,m:k@chaosmail.tech,m:asahi@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-watchdog@vger.kernel.org,m:linux-i2c@vger.kernel.org,m:linux-pwm@vger.kernel.org,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	RCVD_COUNT_THREE(0.00)[4];
-	FORGED_RECIPIENTS(0.00)[m:mperttunen@nvidia.com,m:thierry.reding@kernel.org,m:jonathanh@nvidia.com,m:linux-pwm@vger.kernel.org,m:linux-tegra@vger.kernel.org,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	FORGED_SENDER(0.00)[ukleinek@kernel.org,linux-pwm@vger.kernel.org];
-	FORWARDED(0.00)[lists@lfdr.de];
 	FORGED_SENDER_MAILLIST(0.00)[];
-	TO_DN_SOME(0.00)[];
-	MIME_TRACE(0.00)[0:+,1:+,2:~];
+	RCPT_COUNT_TWELVE(0.00)[19];
+	FORGED_SENDER(0.00)[sven@kernel.org,linux-pwm@vger.kernel.org];
+	MIME_TRACE(0.00)[0:+];
+	FORWARDED(0.00)[lists@lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	DKIM_TRACE(0.00)[kernel.org:+];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[ukleinek@kernel.org,linux-pwm@vger.kernel.org];
-	TAGGED_FROM(0.00)[bounces-9745-lists,linux-pwm=lfdr.de];
+	FROM_NEQ_ENVFROM(0.00)[sven@kernel.org,linux-pwm@vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-9746-lists,linux-pwm=lfdr.de];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:2600:3c15::/32, country:SG];
-	TAGGED_RCPT(0.00)[linux-pwm];
-	RCPT_COUNT_FIVE(0.00)[5];
-	MISSING_XM_UA(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,vger.kernel.org:from_smtp,monoceros:mid]
+	RCVD_VIA_SMTP_AUTH(0.00)[];
+	TAGGED_RCPT(0.00)[linux-pwm,dt];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	ASN(0.00)[asn:63949, ipnet:172.232.128.0/19, country:SG];
+	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,jannau.net:email]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: 1482675F7C5
+X-Rspamd-Queue-Id: 5575375F8A3
 X-Rspamd-Action: no action
 
+On Wed, 15 Jul 2026 11:11:56 +0200, Janne Grunau <j@jannau.net> wrote:
+> diff --git a/arch/arm64/boot/dts/apple/t6031-die0.dtsi b/arch/arm64/boot/dts/apple/t6031-die0.dtsi
+> new file mode 100644
+> index 000000000000..e02c29e1d9f3
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/apple/t6031-die0.dtsi
+> @@ -0,0 +1,197 @@
+> +// SPDX-License-Identifier: GPL-2.0+ OR MIT
+> +/*
+> + * Devices used on die 0 on the Apple T6032 "M3 Ultra" SoC and present on
+> + * Apple T6030 ("M3 Pro") and T6031 / T6034 ("M3 Max").
+> + *
+> + * Copyright The Asahi Linux Contributors
+> + */
+> +
+> +	wdt: watchdog@2a02d4000 {
+> +		compatible = "apple,t6031-wdt", "apple,t8103-wdt";
+> +		reg = <0x2 0xa02d4000 0x0 0x4000>;
+> +		clocks = <&clkref>;
+> +		interrupt-parent = <&aic>;
+> +		interrupts = <AIC_IRQ 0 718 IRQ_TYPE_LEVEL_HIGH>;
+> +	};
 
---cjwt26vckx67l6lr
-Content-Type: text/plain; protected-headers=v1; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v1 1/6] pwm: tegra: Check for match_data being NULL
-MIME-Version: 1.0
+wdt belongs below the adt node.
 
-Hello,
+Reviewed-by: Sven Peter <sven@kernel.org>
 
-On Wed, Jul 15, 2026 at 01:11:00PM +0900, Mikko Perttunen wrote:
-> On Tuesday, July 14, 2026 9:02=E2=80=AFPM Uwe Kleine-K=C3=B6nig wrote:
-> > It's unlikely but not impossible that of_device_get_match_data() returns
-> > NULL. Handle this case instead of triggering a NULL pointer exception.
-> >=20
-> > Signed-off-by: Uwe Kleine-K=C3=B6nig <ukleinek@kernel.org>
-> > ---
-> >  drivers/pwm/pwm-tegra.c | 7 +++++++
-> >  1 file changed, 7 insertions(+)
-> >=20
-> > diff --git a/drivers/pwm/pwm-tegra.c b/drivers/pwm/pwm-tegra.c
-> > index 5cdbe120ba2d..53743f83869a 100644
-> > --- a/drivers/pwm/pwm-tegra.c
-> > +++ b/drivers/pwm/pwm-tegra.c
-> > @@ -322,6 +322,13 @@ static int tegra_pwm_probe(struct platform_device =
-*pdev)
-> >  	int ret;
-> > =20
-> >  	soc =3D of_device_get_match_data(&pdev->dev);
-> > +	if (!soc)
->=20
-> Very subjective, but my preference is to have curly braces whenever the
-> if block is more than one line, for clarity.
-
-If you read Documentation/process/coding-style.rst by the letter, this
-case shouldn't have braces, but I agree that adding braces here is
-clearer (and that coding-style.rst shouldn't be read by the letter).
-
-> > +		/*
-> > +		 * This can only happen if pdev was matched via pdev->name
-> > +		 * (which should not happen today) or in combination with a
-> > +		 * driver override.
-> > +		 */
->=20
-> I feel like driver_override falls in the realm of 'root can mess with
-> the system as they feel like but if they don't know what they're doing
-> they get to keep the pieces'.
-
-IMHO even root should not be able to trigger a NULL pointer exception.
-Not sure there is a general agreed on policy about that though.
-
-> So adding a check in every driver, or
-> in practice having a random mix of drivers with and without the check,
-> doesn't seem necessary to me.
->=20
-> If we actually want to check for this condition, could it be done
-> centrally instead? I.e. don't call probe if there's no match data and
-> the driver's match table implies it requires it.
-
-So you'd want to check the device-id table before calling .probe() and
-if all entries have a non-zero .driver_data don't honor the override?
-Hmm, maybe something to discuss at the "Driver Core" microconference (at
-LPC 2026 in Prague), but my spontanous reaction is that this is a
-heuristic only and might prevent valid use-cases.
-
-> > +		return dev_err_probe(dev, -ENODEV, "Unsupported device\n");
->=20
-> 'dev' is not defined (yet).
-
-Ooops, that leaked in as I reordered the patches to have the fixes
-first. Thanks for noticing.
-
-Best regards
-Uwe
-
---cjwt26vckx67l6lr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEP4GsaTp6HlmJrf7Tj4D7WH0S/k4FAmpXlzMACgkQj4D7WH0S
-/k6xdwgAlUyVMhOibDDgWf89SZtGeppTIAX3ZvxHfHzFVvBfkjxvoTWp/KxTwO2U
-58usyw6AA3wzwRjznMn2KQzdoMMXs2Aq57CFSUlWoOKB3pZaHHaQmJHMc/f9qb60
-Dw8YPruHy3Lx6+95Btz3362Ulaf45buhZhiPJjOO55lxSTo1hYzAAyux1l3z8Cpd
-SFI0M84/5R4bDNDLKnoD7JvQ1jTwbdR+GZGaXw+vwheSq4P2H7xSXtq8TYo8vPQj
-ASb4VTWYn+i2wWGXT7Ijk3QHmpBUB5Jknn96tPy1rE8S0hT0Ro9RCG61MmjZ9tD5
-M6ia/ANjOtLvzv4ISsNiIvh23O7vPQ==
-=uji5
------END PGP SIGNATURE-----
-
---cjwt26vckx67l6lr--
+-- 
+Sven Peter <sven@kernel.org>
 
