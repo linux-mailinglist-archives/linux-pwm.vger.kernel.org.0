@@ -1,243 +1,269 @@
-Return-Path: <linux-pwm+bounces-9729-lists+linux-pwm=lfdr.de@vger.kernel.org>
+Return-Path: <linux-pwm+bounces-9730-lists+linux-pwm=lfdr.de@vger.kernel.org>
 Delivered-To: lists+linux-pwm@lfdr.de
 Received: from mail.lfdr.de
 	by mail.lfdr.de with LMTP
-	id 2/JwL3gkV2pnFwEAu9opvQ
-	(envelope-from <linux-pwm+bounces-9729-lists+linux-pwm=lfdr.de@vger.kernel.org>)
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Jul 2026 08:11:04 +0200
+	id 5a/TGPtPV2pRJAEAu9opvQ
+	(envelope-from <linux-pwm+bounces-9730-lists+linux-pwm=lfdr.de@vger.kernel.org>)
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Jul 2026 11:16:43 +0200
 X-Original-To: lists+linux-pwm@lfdr.de
 Received: from sin.lore.kernel.org (sin.lore.kernel.org [104.64.211.4])
-	by mail.lfdr.de (Postfix) with ESMTPS id C137175ADB0
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Jul 2026 08:11:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTPS id 560A775C577
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Jul 2026 11:16:42 +0200 (CEST)
 Authentication-Results: mail.lfdr.de;
-	dkim=pass header.d=Nvidia.com header.s=selector2 header.b="ac8V/jB+";
-	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9729-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9729-lists+linux-pwm=lfdr.de@vger.kernel.org";
-	dmarc=pass (policy=reject) header.from=nvidia.com;
-	arc=reject ("cv is fail on i=2")
+	dkim=pass header.d=jannau.net header.s=fm1 header.b=XXVAw80L;
+	dkim=pass header.d=messagingengine.com header.s=fm2 header.b=VeFmygsB;
+	spf=pass (mail.lfdr.de: domain of "linux-pwm+bounces-9730-lists+linux-pwm=lfdr.de@vger.kernel.org" designates 104.64.211.4 as permitted sender) smtp.mailfrom="linux-pwm+bounces-9730-lists+linux-pwm=lfdr.de@vger.kernel.org";
+	dmarc=none;
+	arc=pass ("subspace.kernel.org:s=arc-20240116:i=1")
 Received: from smtp.subspace.kernel.org (conduit.subspace.kernel.org [100.90.174.1])
-	by sin.lore.kernel.org (Postfix) with ESMTP id EB240300517F
-	for <lists+linux-pwm@lfdr.de>; Wed, 15 Jul 2026 06:11:00 +0000 (UTC)
+	by sin.lore.kernel.org (Postfix) with ESMTP id 484B1301C184
+	for <lists+linux-pwm@lfdr.de>; Wed, 15 Jul 2026 09:12:07 +0000 (UTC)
 Received: from localhost.localdomain (localhost.localdomain [127.0.0.1])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 0B7A037F73A;
-	Wed, 15 Jul 2026 06:11:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37C343F0A85;
+	Wed, 15 Jul 2026 09:12:05 +0000 (UTC)
 X-Original-To: linux-pwm@vger.kernel.org
-Received: from DM5PR21CU001.outbound.protection.outlook.com (mail-centralusazon11011023.outbound.protection.outlook.com [52.101.62.23])
+Received: from fhigh-a8-smtp.messagingengine.com (fhigh-a8-smtp.messagingengine.com [103.168.172.159])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9891236E46F;
-	Wed, 15 Jul 2026 06:10:58 +0000 (UTC)
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1784095859; cv=fail; b=h3piscb9OhLjKAt+QW+juhn+Ao69Z5UZ3nfH84tOMbXBXJLj18SaFUvUnmIMtX6KVSTNcyRZ/yFIkvB3uGcT/FIawI1p4ulSeWZdwpql1GGPi1Avdxwzh7LfFkkSyZad5+Q3H0WFPZvX2/SV+PWzXJz8qeu6SrM866JJplENNN8=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1784095859; c=relaxed/simple;
-	bh=IE3pUKHJYnbcntUECXSzj2JlBWFfhoHclSK/PYlBJns=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=rZJPOxaO6s48jSKwSeRNb/e8u9OjzhQ9iqV+sXMKcP4K/4V4AYbsbtXOGZ7I5Z9FqB4OuHmNM/0S51AGWEXyF6EHVqsz0ojRH+/jmTpruWs+zQPS3I7eduPHmeQOiq0VuBFe2uQtA2ADhQDZw82+aNtpVkW2ipFWdVU3eY4Zu24=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ac8V/jB+; arc=fail smtp.client-ip=52.101.62.23
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=hNAk1sCRX0uHmtDgjYtHEz4GoW//CF7C4qZDOelYqs7P6rrMlKSIlMNCWev1wHpU+LcZaCsO3a/WEZfpT06yl3fib7eiyKeY791qM/kArJzKaqKXsx1S29yWAFs7d5Z544N55X9mh6XL2urVKYOotzhxyebN9WADPrRAfEsi6BtLpd+C7cpGlKceK838S4VIBUbvcLZhwUSWhfSA2LMIUR477pJp3RX03cEZSPj0XOZdOEL1VX0n0WPSm8i1/6DzbhIWB4Hfgu5ejM/VByk7Hzoz4zorN/1hh0lTnJXIVQaKKsS1sIhOx4Qrny72UnQRkyXs4iyr1SF3cTcJfS4Ccg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=5s+CGTAn/U9s2eBBoqWxhH+hUekWI2AyV0LU5p0I6G8=;
- b=MwrroBh8N0fPEye3Vjb7yHoqbDI2uoZddnRpoX3k9OpcbN4iKgOl/8R8m8oNTBCfXIUQ6mp5CtrKBUR4w5jxFcU872BfaNVfu+LRTAUNu/kB8kxMlu4iMrr3GrIK53Z6uvS+BPspt7DWhLqvVUdqjQUSOP5Igdp8tFGoRa8vCgNCVtYujZ9JUzi89czgg3Q5PHlYBmZzihw5R7I8aPPtssJ84PKG1S0qc8aW4cKcrM/zBu9/vKdiU+E5KHm2u555lZbJohyRzCXM0p+cmIuf6iM7Tb91LSFT3XuBatGb8ym46zCES/6bUc5q4qcuv7fNHSFl75WfdTxtnNG7XLncIA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=5s+CGTAn/U9s2eBBoqWxhH+hUekWI2AyV0LU5p0I6G8=;
- b=ac8V/jB+ucq/mmDxJJR+tfpLVHnDD9IEZCerOJQm/PdwvCYeKq/wun1dUK/H8GZFyw0tPUY0pKqBXmCYHcOsj6SXaH/SuxWX0x+WLiqGvI4IV5TZ1BVRd/nViRNDHg9sfUqznFnh7Oy+FFsK99FVhffpgfIShsHjmmGyXZTeM9BJlz4ZU8ahnuT8aCLFDCvfGMXnG1EmzOwc3n+lN9aBpshBZh3dNNYdJL5f4aP5oUHLr+q2rZg5fWbt9zi3ARs5gbMT+ILUeYBedIhaHPEjKDu0W/e3sIbDRQ0tgbmN/0POxZTzqOcBaJ1F95rkeBiQZVCwjse1ctWdc5SKNJib8w==
-Received: from SJ2PR12MB9161.namprd12.prod.outlook.com (2603:10b6:a03:566::20)
- by CH8PR12MB9742.namprd12.prod.outlook.com (2603:10b6:610:27a::19) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.21.202.18; Wed, 15 Jul
- 2026 06:10:54 +0000
-Received: from SJ2PR12MB9161.namprd12.prod.outlook.com
- ([fe80::d9d1:8c49:a703:b017]) by SJ2PR12MB9161.namprd12.prod.outlook.com
- ([fe80::d9d1:8c49:a703:b017%6]) with mapi id 15.21.0181.019; Wed, 15 Jul 2026
- 06:10:54 +0000
-From: Mikko Perttunen <mperttunen@nvidia.com>
-To: Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= <ukleinek@kernel.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>,
- Jonathan Hunter <jonathanh@nvidia.com>, Rob Herring <robh@kernel.org>,
- Krzysztof Kozlowski <krzk+dt@kernel.org>, Conor Dooley <conor+dt@kernel.org>,
- linux-pwm@vger.kernel.org, linux-tegra@vger.kernel.org,
- linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
- Thierry Reding <treding@nvidia.com>, Yi-Wei Wang <yiweiw@nvidia.com>
-Subject: Re: [PATCH v6 0/7] Tegra264 PWM support
-Date: Wed, 15 Jul 2026 15:10:49 +0900
-Message-ID: <77Xw9sqMSFyr0_DUARXXCA@nvidia.com>
-In-Reply-To: <alYBz2PVs7hCsR91@monoceros>
-References:
- <20260701-t264-pwm-v6-0-2718f61f411f@nvidia.com> <alYBz2PVs7hCsR91@monoceros>
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="utf-8"
-X-ClientProxiedBy: TY6P301CA0002.JPNP301.PROD.OUTLOOK.COM
- (2603:1096:405:3be::18) To SJ2PR12MB9161.namprd12.prod.outlook.com
- (2603:10b6:a03:566::20)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B48443ED13F;
+	Wed, 15 Jul 2026 09:11:59 +0000 (UTC)
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1784106724; cv=none; b=ikA3QrgRT/9ArlK38KGMZyW2Ft3fP2rYYryklJadsIKuwB/R23dXQkfkDmtbCIertou2TXt1v/fvQDc4tYutjA3AbHYGcoycPijgpIJhxAc4ascWxrXda//4jgj8rRmlx1SsntoZhtRIzhvBPqrNosfNeBE/SaoPu1lddqYww6E=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1784106724; c=relaxed/simple;
+	bh=WGdCRD8olgTcTbOwMTJIpRtuqgL1E83EbLrn0pZictg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ASc4bNevdUC7um3zkeYHMmghcKr4uRKZHkM774+oaTKxyhFWlTrbqKYo/uPUTuEiP6qeyas739PS62VBv9JstukTyIaWFOvFDa5Di7zMAGrkq972rENph04KHKrCeABARNxQ9sxAGrYegTxIMwUrj8z/gxm8jQ8IJ3S2N3+VDZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=jannau.net; spf=pass smtp.mailfrom=jannau.net; dkim=pass (2048-bit key) header.d=jannau.net header.i=@jannau.net header.b=XXVAw80L; dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b=VeFmygsB; arc=none smtp.client-ip=103.168.172.159
+Received: from phl-compute-05.internal (phl-compute-05.internal [10.202.2.45])
+	by mailfhigh.phl.internal (Postfix) with ESMTP id 53C30140005D;
+	Wed, 15 Jul 2026 05:11:58 -0400 (EDT)
+Received: from phl-frontend-04 ([10.202.2.163])
+  by phl-compute-05.internal (MEProxy); Wed, 15 Jul 2026 05:11:58 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=jannau.net; h=cc
+	:cc:content-transfer-encoding:content-type:content-type:date
+	:date:from:from:in-reply-to:message-id:mime-version:reply-to
+	:subject:subject:to:to; s=fm1; t=1784106718; x=1784193118; bh=aV
+	/hgiXVYoCu1+Cqb0P0yqXMulBX20+ZD1+O74lFupw=; b=XXVAw80Lga6BblLBHR
+	CUTp456s4+uMBLB72ozt40TMPActrUa3hSDn/q3S+/ZY2aFMxx12YsXRxqKgyRRM
+	UHobBVcK70wGQywH0J1FJ/44KYvAJar5BChrlxpmjIggHQZro4fb6N6PT/6ZK0nJ
+	PwIxRUBnAI0rjJiTHFvAscJldC9Q4V3oLFulH3/agNU3rSIqbhHdgDXytn+Kds6v
+	GvjalsqQmaBYPfBmHnfoUOqIumEtd4sVqSw8cT3p0mlKJvieTSma+YMSpLIjEzDP
+	Ms++8QkDzWXkbhDMGohgRETU3aRTsokxCY40/VLiLmm64Hun/Dpwc23vgbPiw9C/
+	Ev7Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+	messagingengine.com; h=cc:cc:content-transfer-encoding
+	:content-type:content-type:date:date:feedback-id:feedback-id
+	:from:from:in-reply-to:message-id:mime-version:reply-to:subject
+	:subject:to:to:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+	fm2; t=1784106718; x=1784193118; bh=aV/hgiXVYoCu1+Cqb0P0yqXMulBX
+	20+ZD1+O74lFupw=; b=VeFmygsBV9Yo02QetP5Ayxqdgid+2nUJCZYsfjFDnX7J
+	s2luWHmRTzGZpYzxKqHmMguBmrkKuulmF8rNbPbNu+AWrXUU6vx2HWUDAhXSqrEE
+	mXxOVNsnobI//glaumsXb6i6upFjDMW0VBra0M2eZaWfULeHU6yHmNgxEGaKNxQu
+	QZ04XZ8CtWzqBaDV8jDi7meX7+bTN9UCipqVrSLeYjdl3ffY9/bzB1IKz1NvBi6d
+	TIozqS/xLfvE+0jPuihJyk4cMMexywSfvKgERJCsHq9X4czdmntGU4L2jxBjQsK1
+	aP/5s6h7lGYHmwW0EH/ioDvT/UQfIcA1oRcPf1UzyA==
+X-ME-Sender: <xms:3U5XavpBlcVR9GdK9g8wVa0hJC--TXGP1IxQi_HFL4jWOxsXA-SM_g>
+    <xme:3U5XaqBnWqLG0IaQy-Pr8EZz2iZc3I0fgxS_IxD55JoQG8qv6VTfXz8eAMRC3bYVl
+    6G-wpQJK_haFs4NvwGAsDxwdfiQatHfvN3fIM0e0MHAoJllsG9tVVw>
+X-ME-Received: <xmr:3U5XatXs0R_h8G3hzyrmMkxaFATapbNv7ez-kgKly2Oap3gshFceOmcdHAuccHvPpVPWh_YgKNJMlF-tbHLGoHKaAs6pNd0uSjHhoQ>
+X-ME-Proxy-Cause: dmFkZTGaVIxi5m8iFPe70Q7AanPW/GghCFbudp+i8q/mEq0B8lDzcedxU92o9qOp2LdYI/
+    C+0/HC1qVM5O99/2CjKID3ePKwnfCTlFnefuFZdzhKEd3gTOi/HBpq8hQapbdijYDy3eMt
+    CYgmxETx0x9FmptXanVvITwTNPDOYvSMIxSoePiQm54ixLKUNzquhaW8wrTrt3lsAEKhoL
+    6OzNAxIV0a8Aok6y42cbXjn8yEA/5NsJKD/JNheMaPHzlDZbQPy6z3hbto282yPH5Ex33C
+    o+Xp0aGoSCQcsFKGREfnVbAC5yZCRa6OIbHnt4G69vL4xKCZcVHO38gsZbY/9dS1FIS9hW
+    d4Xm/4tcOML65evMPaEyZBCm4DrlGmZk6kNptXa5O06Zl1H4pdWvP7wI+38MdrH+6/7MRI
+    CMVPvl9SWabULplb9hEB9A2/hWwn+SEFjB5RewzQYtJVwsBws32U2T2ct1TqoCX65MWwF7
+    ra+k5i275aXye05pVfsu57Xm/030FmM/rjZy4+LnhytPNis5uOHsznR0YuWFHdd80ZFcyc
+    segBwgXZN7lKWoxioOMNebBw0CRXZhLuz50MOlNDlsIOZ310dx6GfdCUooXUxi7rqeg9Z6
+    2g7+MyndWo4/Z+RZleXKfGfygkWUB9sHXs6SspatzAlJBFZnS9fBmz3M2yNA
+X-ME-Proxy: <xmx:3U5Xau7lVs8PI5EDQ3oafnWg3vm_Ugc_GizRQJavWiFz_RCEfmZjag>
+    <xmx:3U5XauC-KlEUgOJMKRw1xMYsJAOatoMZJ80G_JWBI0x_0HSsv3RaSw>
+    <xmx:3U5XajAt7NdYxaEiSyakXyo5aDNmVsV7FlDA5aozBecF0Xe6A3BYkQ>
+    <xmx:3U5Xauj6ja6OzUx8K87BA0h9gY1D4_BR8cWL3RmUfCmWVuDyLxmglQ>
+    <xmx:3k5Xas4G4Sn5UDPCurviba3hspfBAkMhr3JUBiSFcHt9vnp52Et0YQc->
+Feedback-ID: i47b949f6:Fastmail
+Received: by mail.messagingengine.com (Postfix) with ESMTPA; Wed,
+ 15 Jul 2026 05:11:56 -0400 (EDT)
+From: Janne Grunau <j@jannau.net>
+Subject: [PATCH v2 00/10] Initial Apple M3 Pro, Max and Ultra device trees
+Date: Wed, 15 Jul 2026 11:11:47 +0200
+Message-Id: <20260715-apple-t603x-initial-devices-v2-0-df65b2485710@jannau.net>
 Precedence: bulk
 X-Mailing-List: linux-pwm@vger.kernel.org
 List-Id: <linux-pwm.vger.kernel.org>
 List-Subscribe: <mailto:linux-pwm+subscribe@vger.kernel.org>
 List-Unsubscribe: <mailto:linux-pwm+unsubscribe@vger.kernel.org>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: SJ2PR12MB9161:EE_|CH8PR12MB9742:EE_
-X-MS-Office365-Filtering-Correlation-Id: fc72b63a-aece-4fd9-19cb-08dee237d3b8
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|366016|10070799003|1800799024|23010399003|18002099003|22082099003|56012099006|4143699003|11063799006;
-X-Microsoft-Antispam-Message-Info:
-	tWJDc7Tet5RYR01oG3QpcCZbysTvR6/7uklYNhg5jMwK9j3vAoxqI6OCdA9nBdAdzlRdiGcRZQFOdoo/6LjxdOu17OSMYk3kVAcgJ1QHTSoAIxe435I8LN26z0j/rzDy8cRbvwbXLWfjpN+zev0l84qDMlTI0+id3hgCNkmASwSyR+JB/0zgugUbqlWFPX6gKa71RFC/efCyEh2YTLrSM56YJwhqsi5AqdjKCFQsO1UV/oyy0QsNHFaMy0nZvEM25MBlG2INvecO0W6mO/T1fbuBJJxIjyuc2xf3nq/ycY9osZ4MMIhYmA2GMwoFPMNrPcWRvPDXa+eJbcZCL+09zcn1z3gA4T0oiEJyJPgtV8zgGBz5uEg8+MZJ2FWaC/uApFgLtXUCNydjnMiiP486dkHLCaLYFCDczluHwxJgSn9laSyxkuH46oveNWuBrCJKysNw7e+Em8rV1eBPZm5R6f/Y3XbX/Rox74llsiHrStjEGVX7E37mc+/qIB399uYi9sscjYfh2e2rcXK7oGYqV7uy3s12lWWwfXitEQDBf6aiFgv5lHVrfBkvnW+7lFFAlg+I5epVjMGcTdTG/OBPAOfaRIAKpSVFnF+Xi82acBFkuzckQjSjLGTddsJa/lGEzAf63+iMmGIlg+DUsovzS99a5NZrW11QLOWM9hP0RNg=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ2PR12MB9161.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(376014)(366016)(10070799003)(1800799024)(23010399003)(18002099003)(22082099003)(56012099006)(4143699003)(11063799006);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 2
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?utf-8?B?bTl6QW9pSlc1RndTMHBDb3hSWFFRWFJDQ1l0QXhWRm0vbVVGTkE5WnhTUmp3?=
- =?utf-8?B?WlVoa1Fyc21EcVFacUdXNUJGcmJRdVZoelVVRHpPRGhwTXpFQ3JHOFhwMFk0?=
- =?utf-8?B?bjVqSnZNcURWd0dFakNKOVd3dlZDekkza2RtSGVOK0hURnNUb2tZa0ZEaUhq?=
- =?utf-8?B?bnhnaFJYSGtTMW1kRml0Z0trRCtnMDNXeDd2dVlDcFE3OEpGN0VmOUlndzRs?=
- =?utf-8?B?eW1MQmNxM0VTNEZCVFlGWVZPbDFTMGJHWWhBM3FCbm43L1VlbDRsaGlJenh4?=
- =?utf-8?B?VTlxVm51OUxPR3BETVduOWxJMWRlR2RZa2M1SG1VaWF1cllwRExiZS9PeFhU?=
- =?utf-8?B?bEs1RkFjay9nQlhDUWlUaVhtRGIvQnplT1BpUlQyUWw0eWJNNDJmRUQ3Q3JK?=
- =?utf-8?B?dmx2Q1gwSWdCYm52ZkpCNHdGVzBtUnZwMDRrWWx4WG5IQVhYTmRIQnJqamgy?=
- =?utf-8?B?QXBSZWRqSW1tcThwQXg0a1ZUaXBQVi9EMTJwL3lGbUFxVGhWc0hYanR4QVNw?=
- =?utf-8?B?SGRVRFRDVlgzeEJzOGZ3b0k4YmxTbTJpUU1Qd0ZiaTlQTW80ZklZYnFWT1ht?=
- =?utf-8?B?b0lqMTdwUndkK0hjdXpHYnQxaktJM0k4VEhKNE9xV0J3OHU0WlFsUTJoU1A4?=
- =?utf-8?B?RXFnTlBEbVZzRmwyOFp4Z0NOUGVzQUZjak4rMC9NcWl0UStMYStXT3p2Mzc2?=
- =?utf-8?B?eCtBWWZSaVZzMHJwem9OcitUMTVGR01ncjV2eXVUcC9RSi9pdXdBUDVZTVd6?=
- =?utf-8?B?bTBQdGdzN0d4c3FXYW5JWXEycVVZa1V1WUVpaG1KRm1DWWQwZzUzZTRqSjJh?=
- =?utf-8?B?b29ELy9lbUYxT2Vhb0gwd095MFl1Zk1OMkVxazl0TXV0S3gvZWlDcC9hS1JU?=
- =?utf-8?B?VS9wV25hb2hWaUJTM3o1amxNc3VidHdRUVh6bmFFTU5vWlo3eU9kdzc0dmtZ?=
- =?utf-8?B?QWcvUlU0SDByN2lxUVFSWS9yeWNEbWR2S2hpOXcweVA4ei83Y2RhTzliekdB?=
- =?utf-8?B?b1p5b2NwWEtJaFRNcVJCZERQeWplZzV2eXBtTzB4N3dna2RTQ0FaNTZCbW5M?=
- =?utf-8?B?a3ZFOGhpSXRkVHVqMTFzQkQzOGh0NGVPOWk1Qk5wTjdWV3dMZm90NVB6enZt?=
- =?utf-8?B?SXQwT29tY0g0bWJrMmFhTTNaWk1FTDk5cDNLYXZISFdFNytMcU10TmlYMVlx?=
- =?utf-8?B?dHlhcWRzYnFnVXNka3dVZzR5VFlLNUJTV245dzAyRFJxbzU4aTBBY3ptOExL?=
- =?utf-8?B?dXF1cFFwWTlnR3o0ZE9oN3FrWSt4ZGJSRW9EWWhDWEdqVmNCRlhkWG4xdllX?=
- =?utf-8?B?ZDJCOGUxcUpybEdLaTFySURtRktEcW9UZi9qQ2FHdnFqaFZ5eWVVK3JNVkhJ?=
- =?utf-8?B?S0svWlpIMFZGZ0YyWjdlUmlWc2Ewdk5EODIzd1lLaDJuYk1SUzYvUnpiN242?=
- =?utf-8?B?YmxleTU5ejlmZDZVWXRQblJSVWp0aXRXNGdFTHBrUE8wKzFkSHo2TnByRE5n?=
- =?utf-8?B?cWFocmkrZVdONGtBM1ZqbVQwZm1kMGM4VEdUMGkzYllIVmdaOVlJZVhLS3ZI?=
- =?utf-8?B?dXZzdjB6WVV4NGo2azREVjVPenZRejlHdFF4cHF6MmpiRHNUVmFxUlpUbDl3?=
- =?utf-8?B?dEFtc2VqQjZMVFB4SFJCOHBSODNPekdZN1VJNTZJekplZTh1V0o4b0VVYzZG?=
- =?utf-8?B?dGRja0N0T0VtTUg1OTNZSXFId3ZhbFFQaHIzWVFRZkVuYUxOVkJqVnFvMzMr?=
- =?utf-8?B?eGZsNDJBcWY2aXAwZG9QQlQzZHhncmNaS21seDdDaXE1OUhpOW54NmNKb3Rz?=
- =?utf-8?B?QTZJWGUzUW5xMlVhV3dDdWk2ajBOOGFnL05hK2JrZ2hUSFRORDJWWnlpZTkv?=
- =?utf-8?B?WnMyK3MzZUJiNW5tMms5N1crZCtZMm9MY0JHNlpCWllaSmtpWm9JZERDWWpm?=
- =?utf-8?B?RlFWN0tCTHFGVk5BS0psMWYyZFJ1TU9BTFZpeUlwUzRDK1hhNDV2OGVjZUQz?=
- =?utf-8?B?cW5zdkZyZ0c4MjhBZDNBOTZqTmdobnRibnk3bUxPcWFUVW0yUmxEc2hRdldE?=
- =?utf-8?B?Q2lKZ1lidmlMdWZvQ3JhbnNaTmxxZFdoZUxyV0N2V2xzTkRYUXJvamhWajQz?=
- =?utf-8?B?ZUdZeEFrTi9CQ0I3enRMelBFQzR2ZkpzcDh2cnRKbzlvVys1NEFvT1RsNWxI?=
- =?utf-8?B?RU5tY1VHQXdHdEVYYlZScHVPMHNFTTllaUFOdmNWMkN4d0F2RjIyVzVVZ2Qw?=
- =?utf-8?B?ejd3M0t3aE1rbmt6ZW9acUs1THV2MitqMFNrTm9QOHhMOFJ5dWwwTXNBTlhx?=
- =?utf-8?B?bjN6VWpSZjdJclhNYU9NYktwbEpoaWFYbitMenlnQUFzeFpWd2p6Ync2VzVs?=
- =?utf-8?Q?BWE/DToBRx9H9P+49Imc27IZkqn5VncncCx13X0cGVbLg?=
-X-MS-Exchange-AntiSpam-MessageData-1: c9hIz/eqZOh8Lw==
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: fc72b63a-aece-4fd9-19cb-08dee237d3b8
-X-MS-Exchange-CrossTenant-AuthSource: SJ2PR12MB9161.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Jul 2026 06:10:53.8010
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 3AL+R4sXVAL3p2hIbihFVSMnSepuBZOTskxUKRnB1tASTvby+D7ACRXCfM0EtCyb6topPO0Grp4otrD4w/PTyQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH8PR12MB9742
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAAAAAAC/32NwQ6CMBAFf4X07JrSpiie/A/DobSrLCGlaQvBE
+ P7dgvHqcZL3ZlYWMRBGditWFnCmSKPLIE4FM512LwSymZngouIXrkB7PyCkissFyFEiPYDNR4M
+ RBKLRwtZWKM2ywQd80nLYH82X49T2aNKu3BcdxTSG95Gfy333K9V/S3MJHJRqJVdXKUsh7712T
+ k9nh4k127Z9AK0EO23ZAAAA
+X-Change-ID: 20260705-apple-t603x-initial-devices-2eeca2d9d25a
+To: Sven Peter <sven@kernel.org>, Janne Grunau <j@jannau.net>, 
+ Neal Gompa <neal@gompa.dev>, Rob Herring <robh@kernel.org>, 
+ Krzysztof Kozlowski <krzk+dt@kernel.org>, 
+ Conor Dooley <conor+dt@kernel.org>, Thomas Gleixner <tglx@kernel.org>, 
+ Wim Van Sebroeck <wim@linux-watchdog.org>, 
+ Guenter Roeck <linux@roeck-us.net>, Andi Shyti <andi.shyti@kernel.org>, 
+ =?utf-8?q?Uwe_Kleine-K=C3=B6nig?= <ukleinek@kernel.org>, 
+ Sasha Finkelstein <k@chaosmail.tech>
+Cc: asahi@lists.linux.dev, linux-arm-kernel@lists.infradead.org, 
+ devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-watchdog@vger.kernel.org, linux-i2c@vger.kernel.org, 
+ linux-pwm@vger.kernel.org, Conor Dooley <conor.dooley@microchip.com>
+X-Mailer: b4 0.15.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5679; i=j@jannau.net;
+ h=from:subject:message-id; bh=WGdCRD8olgTcTbOwMTJIpRtuqgL1E83EbLrn0pZictg=;
+ b=owGbwMvMwCW2UNrmdq9+ahrjabUkhqxwv2u8DBmOSW9zPbn+NUkyG3lfWPzq/tXiLHa14klZ7
+ Q8OVnV0TGRhEONisBRTZEnSftnBsLpGMab2QRjMHFYmkCHSIg0MQMDCwJebmFdqpGOkZ6ptqGdo
+ pGOsY8TAxSkAU/1tM8M/G/8lIZsNHZR3xi9gSanW+sN+I652JqOIkQxb75xu128WDP/shMMrXfX
+ 5pA8IH57731e7juXdvmcRyf07pX4t1NtVLMUPAA==
+X-Developer-Key: i=j@jannau.net; a=openpgp;
+ fpr=8B336A6BE4E5695E89B8532B81E806F586338419
 X-Rspamd-Action: no action
-X-Spamd-Result: default: False [-7.16 / 15.00];
-	WHITELIST_DMARC(-7.00)[nvidia.com:D:+];
-	ARC_REJECT(1.00)[cv is fail on i=2];
-	DMARC_POLICY_ALLOW(-0.50)[nvidia.com,reject];
+X-Spamd-Result: default: False [-0.16 / 15.00];
+	SUSPICIOUS_RECIPS(1.50)[];
+	ARC_ALLOW(-1.00)[subspace.kernel.org:s=arc-20240116:i=1];
+	R_DKIM_ALLOW(-0.20)[jannau.net:s=fm1,messagingengine.com:s=fm2];
 	R_SPF_ALLOW(-0.20)[+ip4:104.64.211.4:c];
-	R_DKIM_ALLOW(-0.20)[Nvidia.com:s=selector2];
 	MAILLIST(-0.15)[generic];
 	MIME_GOOD(-0.10)[text/plain];
 	HAS_LIST_UNSUB(-0.01)[];
-	FORWARDED(0.00)[lists@lfdr.de];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	MIME_TRACE(0.00)[0:+];
-	TAGGED_FROM(0.00)[bounces-9729-lists,linux-pwm=lfdr.de];
 	RCVD_TLS_LAST(0.00)[];
-	FORGED_RECIPIENTS(0.00)[m:ukleinek@kernel.org,m:thierry.reding@gmail.com,m:jonathanh@nvidia.com,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:linux-pwm@vger.kernel.org,m:linux-tegra@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:devicetree@vger.kernel.org,m:treding@nvidia.com,m:yiweiw@nvidia.com,m:thierryreding@gmail.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
-	FORGED_SENDER_MAILLIST(0.00)[];
-	FORGED_SENDER(0.00)[mperttunen@nvidia.com,linux-pwm@vger.kernel.org];
-	FREEMAIL_CC(0.00)[gmail.com,nvidia.com,kernel.org,vger.kernel.org];
+	TAGGED_FROM(0.00)[bounces-9730-lists,linux-pwm=lfdr.de];
+	FORGED_RECIPIENTS(0.00)[m:sven@kernel.org,m:j@jannau.net,m:neal@gompa.dev,m:robh@kernel.org,m:krzk+dt@kernel.org,m:conor+dt@kernel.org,m:tglx@kernel.org,m:wim@linux-watchdog.org,m:linux@roeck-us.net,m:andi.shyti@kernel.org,m:ukleinek@kernel.org,m:k@chaosmail.tech,m:asahi@lists.linux.dev,m:linux-arm-kernel@lists.infradead.org,m:devicetree@vger.kernel.org,m:linux-kernel@vger.kernel.org,m:linux-watchdog@vger.kernel.org,m:linux-i2c@vger.kernel.org,m:linux-pwm@vger.kernel.org,m:conor.dooley@microchip.com,m:krzk@kernel.org,m:conor@kernel.org,s:lists@lfdr.de];
 	FROM_HAS_DN(0.00)[];
-	MISSING_XM_UA(0.00)[];
-	FORGED_RECIPIENTS_MAILLIST(0.00)[];
+	FORGED_SENDER(0.00)[j@jannau.net,linux-pwm@vger.kernel.org];
+	RCPT_COUNT_TWELVE(0.00)[20];
+	DMARC_NA(0.00)[jannau.net];
+	MIME_TRACE(0.00)[0:+];
+	FORGED_SENDER_MAILLIST(0.00)[];
+	FORWARDED(0.00)[lists@lfdr.de];
+	DKIM_TRACE(0.00)[jannau.net:+,messagingengine.com:+];
+	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	TO_DN_SOME(0.00)[];
 	FORGED_SENDER_FORWARDING(0.00)[];
-	RCVD_COUNT_FIVE(0.00)[5];
+	RCVD_COUNT_FIVE(0.00)[6];
 	PRECEDENCE_BULK(0.00)[];
-	FROM_NEQ_ENVFROM(0.00)[mperttunen@nvidia.com,linux-pwm@vger.kernel.org];
-	DKIM_TRACE(0.00)[Nvidia.com:+];
+	FROM_NEQ_ENVFROM(0.00)[j@jannau.net,linux-pwm@vger.kernel.org];
+	FORGED_RECIPIENTS_MAILLIST(0.00)[];
 	ALIAS_RESOLVED(0.00)[];
 	FORGED_RECIPIENTS_FORWARDING(0.00)[];
-	TO_DN_SOME(0.00)[];
 	MID_RHS_MATCH_FROM(0.00)[];
-	ASN(0.00)[asn:63949, ipnet:104.64.192.0/19, country:SG];
+	RCVD_VIA_SMTP_AUTH(0.00)[];
 	TAGGED_RCPT(0.00)[linux-pwm,dt];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[vger.kernel.org:from_smtp,nvidia.com:from_mime,nvidia.com:mid,sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,Nvidia.com:dkim]
+	DBL_BLOCKED_OPENRESOLVER(0.00)[sin.lore.kernel.org:helo,sin.lore.kernel.org:rdns,vger.kernel.org:from_smtp,msgid.link:url,jannau.net:from_mime,jannau.net:mid,jannau.net:email,jannau.net:dkim,messagingengine.com:dkim]
 X-Rspamd-Server: lfdr
-X-Rspamd-Queue-Id: C137175ADB0
+X-Rspamd-Queue-Id: 560A775C577
 
-On Tuesday, July 14, 2026 6:35=E2=80=AFPM Uwe Kleine-K=C3=B6nig wrote:
-> Hello,
->=20
-> On Wed, Jul 01, 2026 at 12:20:29PM +0900, Mikko Perttunen wrote:
-> > this adds support for the PWM controller on Tegra264. The controller
-> > is similar to previous generations, but the register fields are
-> > widened, the depth is made configurable, and the enable bit moves
-> > to a different spot.
-> >=20
-> > This series adds only basic support with fixed depth -- configurable
-> > depth will come later.
-> >=20
-> > Patch 1 adds device tree bindings for Tegra264 PWM (compatible
-> >   string).
-> >=20
-> > Patch 2 prefixes driver-local macros and static helpers with
-> >   tegra_/TEGRA_ to make their scoping clear.
-> >=20
-> > Patches 3 to 6 contain the PWM driver changes for Tegra264.
-> >=20
-> > Patch 7 adds device tree nodes for the PWM controllers on Tegra264.
->=20
-> I'm not entirely happy with the driver (as already pointed out during
-> review of earlier revisions of this series), but it's an improvement.
->=20
+This series adds device trees for Apple silicon devices with M3 Pro, Max
+and Ultra SoCs. The M3 generation has fewer devices than their M1 and M2
+predecessors. The only non-laptop device is the M3 Ultra Mac Studio. The
+Laptops are the known 14 and 16-inch Macbook Pros now with M3 Pro and
+M3 Max SoCs. The M3 Max variant with fewer CPU and GPU cores has
+additionally only a 384-bit wide memory bus instead of 512-bit of the
+full M3 Max. It has a separate identifier (T6034) and so there are six
+laptop device trees.
+Another difference to M1 and M2 Pro/Max/Ultra is that the M3 Pro is
+distinct SoC design and not a smaller M3 Max. For this reason both M3
+Max variants and the M3 Ultra will use "apple,t6030" as compatible
+prefix. In the M1 and M2 generations Pro, Max and Ultra SoCs shared
+"apple,t6000" / "apple,t6020" as common prefix. There is currently no
+known difference but M3 Pro and M3 Max are not as closely related as
+previously.
 
-I agree.
+This series adds the same level of hardware as the base M3 (T8122) has
+in v7.2-rc1. This includes CPU cores, interrupt controller, power
+states, watchdog, serial, pin controller, i2c and the boot framebuffer.
+This is intended as base so that support for additional hardware can be
+added to all M3 based devices at the same time.
 
-> I'll take a look to improve the things that annoy me in this driver and
-> I didn't want to do that on the current state which would make it
-> necessary to respin your changes.
->=20
-> So I applied patches #1 to #6 to
-> 	https://git.kernel.org/pub/scm/linux/kernel/git/ukleinek/linux.git pwm/f=
-or-next
-> .
->=20
+Merge strategy:
+Since the dt-binding add new compatible strings without driver changes
+it would be preferred if the whole [1] series would be merged through
+apple-soc/arm-soc. This will help ensuring a warning free
+`make dtbs_check` for followup series with additional M3* hardware
+support I hope to send for this cycle.
 
-Thank you!
+This series will conflict with the M4 series [3] sent A couple of days
+ago. I would prefer if this could be merged first (in order of SoC
+release).
 
-> I assume patch #7 will go via armsoc? If I should take this, too, please
-> tell me.
+[1]: I see that the M4 watchdog change was already picked up by Guenter
+     in [2]
 
-My understanding is also that #7 will be picked up by Thierry.
+Link: https://lore.kernel.org/asahi/a03c19ee-cf74-4f26-826d-f2bfb816fb3f@roeck-us.net/ [2]
+Link: https://lore.kernel.org/asahi/20260705-apple-m4-initial-devicetrees-v1-0-e5655ee56523@cyberchaos.dev/ [3]
 
-Best regards
-Mikko
+Signed-off-by: Janne Grunau <j@jannau.net>
+---
+Changes in v2:
+- fix serial0 unit address in t6030.dtsi, drop erroneously added 0
+- Fix device node reference in pinctrl_{nub,aop} gpio-ranges in t6030.dtsi
+- fix i2c6 unit address in t6031-die0.dtsi
+- fix cpu_p25 reg value in t6032.dtsi
+- drop unnecessary aic interrupt-controller from t6032.dtsi
+- drop "label" from keyboard pwm led node
+- fix copy-n-pasted pinctrl in compatible strings in the apple,s5l-fpwm
+  dt-binding commit message
+- fix yamllint errors in apple.yaml and fix warnings in newly added
+  lines
+- fix typo in i2c commit message
+- whitespace fixes in t6032.dtsi
+- add missing Signed-off-by: for pmgr and pmgr-powerstates dt-bindings
+  patches
+- drop already picked-up "[PATCH 07/11] dt-bindings: pinctrl: apple,pinctrl: ..."
+- add Conor's Accked-by: tags
+- Link to v1: https://patch.msgid.link/20260709-apple-t603x-initial-devices-v1-0-55b305833123@jannau.net
 
->=20
-> Best regards
-> Uwe
+---
+Janne Grunau (10):
+      dt-bindings: arm: apple: Add M3 Pro/Max/Ultra devices (T603x)
+      dt-bindings: interrupt-controller: apple,aic2: Invert #interrupt-cells condition
+      dt-bindings: interrupt-controller: apple,aic2: Add apple,t6031-aic3 compatible
+      dt-bindings: arm: apple: apple,pmgr: Add t6030 and t6031 compatibles
+      dt-bindings: power: apple,pmgr-pwrstate: Add t6030 and t6031 compatibles
+      dt-bindings: watchdog: apple,wdt: Add t6030 and t6031 compatibles
+      dt-bindings: i2c: apple,i2c: Add t6030 and t6031 compatibles
+      dt-bindings: pwm: apple,s5l-fpwm: Add t6030 and t6031 compatibles
+      arm64: dts: apple: Initial T603[124] (M3 Max and Ultra) device trees
+      arm64: dts: apple: Initial T6030 (M3 Pro) device trees
 
+ Documentation/devicetree/bindings/arm/apple.yaml   |   37 +
+ .../devicetree/bindings/arm/apple/apple,pmgr.yaml  |    2 +
+ .../devicetree/bindings/i2c/apple,i2c.yaml         |    2 +
+ .../bindings/interrupt-controller/apple,aic2.yaml  |   10 +-
+ .../bindings/power/apple,pmgr-pwrstate.yaml        |    2 +
+ .../devicetree/bindings/pwm/apple,s5l-fpwm.yaml    |    2 +
+ .../devicetree/bindings/watchdog/apple,wdt.yaml    |    2 +
+ arch/arm64/boot/dts/apple/Makefile                 |    7 +
+ arch/arm64/boot/dts/apple/t6030-j514s.dts          |   22 +
+ arch/arm64/boot/dts/apple/t6030-j516s.dts          |   22 +
+ arch/arm64/boot/dts/apple/t6030-pmgr.dtsi          | 1437 ++++++++++++
+ arch/arm64/boot/dts/apple/t6030.dtsi               |  524 +++++
+ arch/arm64/boot/dts/apple/t6031-base.dtsi          |  297 +++
+ arch/arm64/boot/dts/apple/t6031-die0.dtsi          |  197 ++
+ arch/arm64/boot/dts/apple/t6031-dieX.dtsi          |  107 +
+ arch/arm64/boot/dts/apple/t6031-gpio-pins.dtsi     |   53 +
+ arch/arm64/boot/dts/apple/t6031-j514c.dts          |   18 +
+ arch/arm64/boot/dts/apple/t6031-j516c.dts          |   18 +
+ arch/arm64/boot/dts/apple/t6031-pmgr.dtsi          | 2400 ++++++++++++++++++++
+ arch/arm64/boot/dts/apple/t6031.dtsi               |   48 +
+ arch/arm64/boot/dts/apple/t6032-j575d.dts          |   46 +
+ arch/arm64/boot/dts/apple/t6032.dtsi               |  416 ++++
+ arch/arm64/boot/dts/apple/t6034-j514m.dts          |   18 +
+ arch/arm64/boot/dts/apple/t6034-j516m.dts          |   18 +
+ arch/arm64/boot/dts/apple/t6034.dtsi               |   12 +
+ arch/arm64/boot/dts/apple/t603x-j514-j516.dtsi     |   66 +
+ 26 files changed, 5779 insertions(+), 4 deletions(-)
+---
+base-commit: 5f883c28f3980af462a6332fd72ff184e6985711
+change-id: 20260705-apple-t603x-initial-devices-2eeca2d9d25a
 
-
+Best regards,
+--  
+Janne Grunau <j@jannau.net>
 
 
